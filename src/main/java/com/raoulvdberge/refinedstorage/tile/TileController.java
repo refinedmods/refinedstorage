@@ -179,6 +179,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
     private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
+    private List<ICraftingStep> runningSteps = new ArrayList<>();
 
     private EnergyStorage energy = new EnergyStorage(RS.INSTANCE.config.controllerCapacity);
     private ControllerEnergyForge energyForge = new ControllerEnergyForge(this);
@@ -279,6 +280,12 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                             task.getMissing().clear();
                         }
                     }
+
+                    runningSteps = craftingTasks.stream()
+                            .map(ICraftingTask::getSteps)
+                            .flatMap(List::stream)
+                            .filter(ICraftingStep::hasStartedProcessing)
+                            .collect(Collectors.toList());
 
                     if (craftingTasksChanged) {
                         craftingMonitorUpdateRequested = true;
@@ -668,11 +675,9 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
             if (inserted > 0) {
                 ItemStack checkSteps = ItemHandlerHelper.copyStackWithSize(stack, inserted);
 
-                for (ICraftingTask task : craftingTasks) {
-                    for (ICraftingStep processable : task.getSteps().stream().filter(ICraftingStep::hasStartedProcessing).collect(Collectors.toList())) {
-                        if (processable.onReceiveOutput(checkSteps)) {
-                            return remainder; // All done
-                        }
+                for (ICraftingStep step : runningSteps) {
+                    if (step.onReceiveOutput(checkSteps)) {
+                        return remainder; // All done
                     }
                 }
             }
