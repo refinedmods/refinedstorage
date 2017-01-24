@@ -90,6 +90,9 @@ public class CraftingStepCraft extends CraftingStep {
                     toInsertItems.add(byproduct.copy());
                 }
             }
+        } else {
+            // Couldn't extract items
+            startedProcessing = false;
         }
     }
 

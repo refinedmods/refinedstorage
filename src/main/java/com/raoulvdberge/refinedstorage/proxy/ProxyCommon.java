@@ -152,11 +152,8 @@ public class ProxyCommon {
         registerTile(TileFluidStorage.class, "fluid_storage");
         registerTile(TileDiskManipulator.class, "disk_manipulator");
         registerTile(TileSecurityManager.class, "security_manager");
-
-        if (READER_WRITER_ENABLED) {
-            registerTile(TileReader.class, "reader");
-            registerTile(TileWriter.class, "writer");
-        }
+        registerTile(TileReader.class, "reader");
+        registerTile(TileWriter.class, "writer");
 
         registerBlock(RSBlocks.CONTROLLER);
         registerBlock(RSBlocks.GRID);

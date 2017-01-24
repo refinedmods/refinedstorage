@@ -39,6 +39,7 @@ public class CraftingManager implements ICraftingManager {
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
     private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
+    private List<ICraftingStep> runningSteps = new ArrayList<>();
 
     private int ticks;
 
@@ -190,6 +191,12 @@ public class CraftingManager implements ICraftingManager {
                     }
                 }
 
+                runningSteps = craftingTasks.stream()
+                        .map(ICraftingTask::getSteps)
+                        .flatMap(List::stream)
+                        .filter(ICraftingStep::hasStartedProcessing)
+                        .collect(Collectors.toList());
+
                 if (craftingTasksChanged) {
                     network.getNetwork().markCraftingMonitorForUpdate();
                 }
@@ -255,11 +262,9 @@ public class CraftingManager implements ICraftingManager {
     public void track(ItemStack stack, int size) {
         ItemStack inserted = ItemHandlerHelper.copyStackWithSize(stack, size);
 
-        for (ICraftingTask task : craftingTasks) {
-            for (ICraftingStep processable : task.getSteps().stream().filter(ICraftingStep::hasStartedProcessing).collect(Collectors.toList())) {
-                if (processable.onReceiveOutput(inserted)) {
-                    return;
-                }
+        for (ICraftingStep step : runningSteps) {
+            if (step.onReceiveOutput(inserted)) {
+                return;
             }
         }
     }

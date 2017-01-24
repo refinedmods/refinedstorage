@@ -356,6 +356,21 @@ public class CraftingTask implements ICraftingTask {
             return false;
         }
 
+        // We need to copy the size cause we'll re-add unadded stacks to the queue
+        // Do inserting on the next tick, reliefs CPU time during insertion
+        // See TileController#runningSteps
+        int times = toInsertItems.size();
+        for (int i = 0; i < times; i++) {
+            ItemStack insert = toInsertItems.poll();
+            if (insert != null) {
+                ItemStack remainder = network.insertItemTracked(insert, insert.getCount());
+
+                if (remainder != null) {
+                    toInsertItems.add(remainder);
+                }
+            }
+        }
+
         // Collect all leaf steps
         List<ICraftingStep> leafSteps = new LinkedList<>();
         Queue<ICraftingStep> steps = new LinkedList<>();
@@ -391,18 +406,7 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        // We need to copy the size cause we'll re-add unadded stacks to the queue
-        int times = toInsertItems.size();
-        for (int i = 0; i < times; i++) {
-            ItemStack insert = toInsertItems.poll();
-            if (insert != null) {
-                ItemStack remainder = network.insertItemTracked(insert, insert.getCount());
 
-                if (remainder != null) {
-                    toInsertItems.add(remainder);
-                }
-            }
-        }
 
         if (getSteps().stream().filter(ICraftingStep::hasStartedProcessing).count() == 0) {
             // When there is no started processes, restart the task.
