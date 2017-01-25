@@ -5,11 +5,11 @@ import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
@@ -192,11 +192,23 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
         if (type == IType.ITEMS) {
             if (facing instanceof IDrawerGroup) {
-                itemStorages.add(new StorageItemDrawerGroup(this, () -> (IDrawerGroup) getFacingTile()));
+                itemStorages.add(new StorageItemDrawerGroup(this, () -> {
+                    TileEntity f = getFacingTile();
+
+                    return f instanceof IDrawerGroup ? (IDrawerGroup) f : null;
+                }));
             } else if (facing instanceof IDrawer) {
-                itemStorages.add(new StorageItemDrawer(this, () -> (IDrawer) getFacingTile()));
+                itemStorages.add(new StorageItemDrawer(this, () -> {
+                    TileEntity f = getFacingTile();
+
+                    return f instanceof IDrawer ? (IDrawer) f : null;
+                }));
             } else if (facing instanceof IDeepStorageUnit) {
-                itemStorages.add(new StorageItemDSU(this, () -> (IDeepStorageUnit) getFacingTile()));
+                itemStorages.add(new StorageItemDSU(this, () -> {
+                    TileEntity f = getFacingTile();
+
+                    return f instanceof IDeepStorageUnit ? (IDeepStorageUnit) f : null;
+                }));
             } else if (IntegrationCyclopsCore.isLoaded() && StorageItemCyclops.isValid(facing, holder.getDirection().getOpposite())) {
                 itemStorages.add(new StorageItemCyclops(this));
             } else if (!(facing instanceof TileNode)) {

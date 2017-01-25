@@ -29,6 +29,7 @@
 - Exposed the Network Card inventory of the Network Transmitter so other tiles can interact with it (raoulvdberge)
 - Increased size of Detector textbox (way2muchnoise)
 - Fixed stack upgrades not working in exporter when stack size is 16 (way2muchnoise)
+- Fixed crash when rotating External Storage (raoulvdberge)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
