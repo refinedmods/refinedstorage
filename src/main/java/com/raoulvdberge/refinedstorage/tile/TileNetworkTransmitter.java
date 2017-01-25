@@ -4,8 +4,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeNetworkTr
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitter> {
     public static final TileDataParameter<Integer> DISTANCE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
@@ -41,5 +45,19 @@ public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitt
     @Nonnull
     public NetworkNodeNetworkTransmitter createNode() {
         return new NetworkNodeNetworkTransmitter(this);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getNetworkCard());
+        }
+
+        return super.getCapability(capability, facing);
     }
 }
