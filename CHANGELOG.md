@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.2.19
+- Added integration for Collosal Chests for the External Storage, Importer and Exporter improving performance (way2muchnoise)
+- Exposed the Network Card inventory of the Network Transmitter so other tiles can interact with it (raoulvdberge)
+
 ### 1.2.18
 - Performance improvements with oredict autocrafting (way2muchnoise)
 - Fixed client side crash with cable (raoulvdberge)
