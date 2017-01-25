@@ -25,6 +25,9 @@
 - Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
 - Made sure External Storage always has the correct inventory in world (raoulvdberge)
 - Using tab in a grid that isn't in autoselected mode will focus on the search box (raoulvdberge)
+- Added integration for Collosal Chests for the External Storage, Importer and Exporter improving performance (way2muchnoise)
+- Exposed the Network Card inventory of the Network Transmitter so other tiles can interact with it (raoulvdberge)
+- Increased size of Detector textbox (way2muchnoise)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
