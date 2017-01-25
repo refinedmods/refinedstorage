@@ -13,7 +13,9 @@ import org.cyclops.cyclopscore.tileentity.InventoryTileEntityBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -26,7 +28,11 @@ public class ItemStorageCyclops extends ItemStorageExternal {
     public ItemStorageCyclops(TileExternalStorage externalStorage) {
         this.externalStorage = externalStorage;
         this.opposite = externalStorage.getDirection().getOpposite();
-        this.cyclopsInv = () -> (InventoryTileEntityBase) externalStorage.getFacingTile();
+        this.cyclopsInv = () -> {
+            TileEntity f = externalStorage.getFacingTile();
+
+            return f instanceof InventoryTileEntityBase ? (InventoryTileEntityBase) f : null;
+        };
     }
 
     @Override

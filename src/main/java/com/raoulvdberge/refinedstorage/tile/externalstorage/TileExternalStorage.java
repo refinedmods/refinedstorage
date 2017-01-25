@@ -241,25 +241,37 @@ public class TileExternalStorage extends TileMultipartNode implements IItemStora
 
         if (type == IType.ITEMS) {
             if (facing instanceof IDrawerGroup) {
-                itemStorages.add(new ItemStorageDrawerGroup(this, () -> (IDrawerGroup) getFacingTile()));
+                itemStorages.add(new ItemStorageDrawerGroup(this, () -> {
+                    TileEntity f = getFacingTile();
+
+                    return f instanceof IDrawerGroup ? (IDrawerGroup) f : null;
+                }));
             } else if (facing instanceof IDrawer) {
-                itemStorages.add(new ItemStorageDrawer(this, () -> (IDrawer) getFacingTile()));
+                itemStorages.add(new ItemStorageDrawer(this, () -> {
+                    TileEntity f = getFacingTile();
+
+                    return f instanceof IDrawer ? (IDrawer) f : null;
+                }));
             } else if (facing instanceof IDeepStorageUnit) {
-                itemStorages.add(new ItemStorageDSU(this, () -> (IDeepStorageUnit) getFacingTile()));
+                itemStorages.add(new ItemStorageDSU(this, () -> {
+                    TileEntity f = getFacingTile();
+
+                    return f instanceof IDeepStorageUnit ? (IDeepStorageUnit) f : null;
+                }));
             } else if (IntegrationCyclopsCore.isLoaded() && ItemStorageCyclops.isValid(facing, getDirection().getOpposite())) {
                 itemStorages.add(new ItemStorageCyclops(this));
             } else if (!(facing instanceof TileNode)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
                 if (itemHandler != null) {
-                    itemStorages.add(new ItemStorageItemHandler(this, () -> RSUtils.getItemHandler(facing, getDirection().getOpposite())));
+                    itemStorages.add(new ItemStorageItemHandler(this, () -> RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite())));
                 }
             }
         } else if (type == IType.FLUIDS) {
             IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, getDirection().getOpposite());
 
             if (fluidHandler != null) {
-                fluidStorages.add(new FluidStorageExternal(this, () -> RSUtils.getFluidHandler(facing, getDirection().getOpposite())));
+                fluidStorages.add(new FluidStorageExternal(this, () -> RSUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite())));
             }
         }
 
