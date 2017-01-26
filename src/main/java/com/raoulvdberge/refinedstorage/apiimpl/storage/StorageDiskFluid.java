@@ -15,17 +15,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class StorageDiskFluid implements IStorageDisk<FluidStack> {
-    /**
-     * Protocol history:
-     * - 1: Initial
-     * - 2: Removed "stored" tag
-     */
-    private static final int PROTOCOL = 2;
+    private static final int PROTOCOL = 1;
 
     private static final String NBT_PROTOCOL = "Protocol";
 
     private static final String NBT_FLUIDS = "Fluids";
-    // Used client side
     private static final String NBT_STORED = "Stored";
 
     private NBTTagCompound tag;
@@ -90,6 +84,8 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                     }
 
                     if (!simulate) {
+                        tag.setInteger(NBT_STORED, getStored() + remainingSpace);
+
                         otherStack.amount += remainingSpace;
 
                         onChanged();
@@ -98,6 +94,8 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                     return isVoiding() ? null : RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
+                        tag.setInteger(NBT_STORED, getStored() + size);
+
                         otherStack.amount += size;
 
                         onChanged();
@@ -120,6 +118,8 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
             }
 
             if (!simulate) {
+                tag.setInteger(NBT_STORED, getStored() + remainingSpace);
+
                 stacks.add(RSUtils.copyStackWithSize(stack, remainingSpace));
 
                 onChanged();
@@ -128,6 +128,8 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
             return isVoiding() ? null : RSUtils.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
+                tag.setInteger(NBT_STORED, getStored() + size);
+
                 stacks.add(RSUtils.copyStackWithSize(stack, size));
 
                 onChanged();
@@ -153,6 +155,8 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                         otherStack.amount -= size;
                     }
 
+                    tag.setInteger(NBT_STORED, getStored() - size);
+
                     onChanged();
                 }
 
@@ -170,7 +174,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
     @Override
     public int getStored() {
-        return stacks.stream().mapToInt(s -> s.amount).sum();
+        return getStored(tag);
     }
 
     @Override
@@ -205,27 +209,28 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
     @Override
     public boolean isValid(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUIDS);
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUIDS) && stack.getTagCompound().hasKey(NBT_STORED);
     }
 
     public static NBTTagCompound getShareTag(NBTTagCompound tag) {
-        StorageDiskFluid storage = new StorageDiskFluid(tag, 0);
-
-        storage.readFromNBT();
-
         NBTTagCompound otherTag = new NBTTagCompound();
 
-        otherTag.setInteger(NBT_STORED, storage.getStored());
-        otherTag.setTag(NBT_FLUIDS, new NBTTagList());
+        otherTag.setInteger(NBT_STORED, getStored(tag));
+        otherTag.setTag(NBT_FLUIDS, new NBTTagList()); // To circumvent not being able to insert disks in Disk Drives (see FluidStorageNBT#isValid(ItemStack)).
         otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;
+    }
+
+    public static int getStored(NBTTagCompound tag) {
+        return tag.getInteger(NBT_STORED);
     }
 
     public static NBTTagCompound getTag() {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setTag(NBT_FLUIDS, new NBTTagList());
+        tag.setInteger(NBT_STORED, 0);
         tag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return tag;
