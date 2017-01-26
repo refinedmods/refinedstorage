@@ -164,8 +164,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, true);
 
             if (took != null) {
-                @SuppressWarnings("deprecation")
-                IBlockState state = block.getBlock().getStateFromMeta(took.getMetadata());
+                IBlockState state = block.getBlock().getStateForPlacement(getWorld(), front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), null, item);
 
                 BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(getWorld(), front, state), getWorld().getBlockState(pos), FakePlayerFactory.getMinecraft((WorldServer) getWorld()), null);
 
@@ -173,9 +172,10 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
                     return;
                 }
 
-                network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
+                took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
 
                 getWorld().setBlockState(front, state, 1 | 2);
+                block.getBlock().onBlockPlacedBy(getWorld(), front, state, null, took);
 
                 // From ItemBlock#onItemUse
                 SoundType blockSound = block.getBlock().getSoundType(state, getWorld(), pos, null);
