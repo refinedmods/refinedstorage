@@ -29,6 +29,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
@@ -151,14 +152,13 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, true);
 
             if (took != null) {
-                @SuppressWarnings("deprecation")
-                IBlockState state = block.getBlock().getStateFromMeta(took.getMetadata());
+                IBlockState state = block.getBlock().getStateForPlacement(holder.world(), front, holder.getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), null, EnumHand.MAIN_HAND);
 
                 if (!canPlace(front, state)) {
                     return;
                 }
 
-                network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
+                took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
 
                 if (item.getItem() instanceof ItemBlock) {
                     ((ItemBlock) item.getItem()).placeBlockAt(

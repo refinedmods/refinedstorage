@@ -98,8 +98,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 IBlockState frontBlockState = holder.world().getBlockState(front);
                 Block frontBlock = frontBlockState.getBlock();
 
-                @SuppressWarnings("deprecation")
-                ItemStack frontStack = frontBlock.getItem(holder.world(), front, frontBlockState);
+                ItemStack frontStack = frontBlock.getPickBlock(frontBlockState, null, holder.world(), front, null);
 
                 if (!frontStack.isEmpty()) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(holder.world(), front) != -1.0) {
