@@ -28,7 +28,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.10.2-12.18.3.2185"
+    version = "1.10.2-12.18.3.2221"
     runDir = "run"
     useDepAts = true
     mappings = "stable_29"

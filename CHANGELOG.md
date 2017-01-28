@@ -7,6 +7,9 @@
 - Autocrafting bugfixes (way2muchnoise)
 - Fixed stack upgrades not working in exporter when stack size is 16 (way2muchnoise)
 - Fixed crash when rotating External Storage (raoulvdberge)
+- Handle breaking and placing blocks better for Constructor and Destructor (way2muchnoise)
+- Updated cable part back texture and Construction and Destruction Core textures (CyanideX)
+- Updated Forge to 2221 (raoulvdberge)
 
 ### 1.2.18
 - Performance improvements with oredict autocrafting (way2muchnoise)
