@@ -31,6 +31,8 @@
 - Fixed stack upgrades not working in exporter when stack size is 16 (way2muchnoise)
 - Fixed crash when rotating External Storage (raoulvdberge)
 - Fixed disk textures not working on latest Forge (raoulvdberge)
+- Handle breaking and placing blocks better for Constructor and Destructor (way2muchnoise)
+- Updated Forge to 2226 (raoulvdberge)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
