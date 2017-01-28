@@ -25,11 +25,11 @@ public interface ICraftingStep {
     List<ItemStack> getToInsert();
 
     /**
-    * @return a list of steps the have to be done before this one can be started
-    */
+     * @return a list of steps the have to be done before this one can be started
+     */
     List<ICraftingStep> getPreliminarySteps();
 
-     /**
+    /**
      * Check if the processing can start.
      *
      * @param items  a list to compare the needed {@link ItemStack} inputs against

@@ -26,7 +26,7 @@ public class ControllerEnergyIC2 implements IControllerEnergyIC2 {
 
             @Override
             public void onLoaded() {
-                if(!this.addedToEnet && !this.parent.getWorld().isRemote && Info.isIc2Available()) {
+                if (!this.addedToEnet && !this.parent.getWorld().isRemote && Info.isIc2Available()) {
                     this.world = this.parent.getWorld();
                     this.pos = this.parent.getPos();
                     MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));

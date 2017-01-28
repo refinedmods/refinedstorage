@@ -40,6 +40,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
         InventoryTileEntityBase inv = cyclopsInv.get();
         if (inv != null) {
             int inventoryHash = inv.getInventoryHash();
+
             if (inventoryHash != oldInventoryHash) {
                 super.detectChanges(network);
                 oldInventoryHash = inventoryHash;
@@ -74,7 +75,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
         InventoryTileEntityBase inv = cyclopsInv.get();
 
-        if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
+        if (inv != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             return SlotlessItemHandlerHelper.insertItem(inv, opposite, stack, size, simulate);
         }
 
@@ -85,16 +86,24 @@ public class ItemStorageCyclops extends ItemStorageExternal {
     @Override
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         InventoryTileEntityBase inv = cyclopsInv.get();
-        return SlotlessItemHandlerHelper.extractItem(inv, opposite, stack, size, flags, simulate);
+
+        return inv != null ? SlotlessItemHandlerHelper.extractItem(inv, opposite, stack, size, flags, simulate) : null;
     }
 
     private List<ItemStack> getStacks(@Nullable InventoryTileEntityBase inv) {
         if (inv != null) {
             if (inv.getInventory() instanceof IndexedSlotlessItemHandlerWrapper.IInventoryIndexReference) {
                 return ((IndexedSlotlessItemHandlerWrapper.IInventoryIndexReference) inv.getInventory())
-                        .getIndex().values().stream().flatMap(m -> m.valueCollection().stream()).map(ItemStack::copy).collect(Collectors.toList());
+                    .getIndex()
+                    .values()
+                    .stream()
+                    .flatMap(m -> m.valueCollection().stream())
+                    .map(ItemStack::copy)
+                    .collect(Collectors.toList());
             } else {
-                return Arrays.stream(((SimpleInventory)inv.getInventory()).getItemStacks()).map(ItemStack::copy).collect(Collectors.toList());
+                return Arrays.stream(((SimpleInventory) inv.getInventory()).getItemStacks())
+                    .map(ItemStack::copy)
+                    .collect(Collectors.toList());
             }
         } else {
             return Collections.emptyList();
@@ -103,7 +112,7 @@ public class ItemStorageCyclops extends ItemStorageExternal {
 
     public static boolean isValid(TileEntity facingTE, EnumFacing facing) {
         return facingTE instanceof InventoryTileEntityBase
-                && (SlotlessItemHandlerHelper.isSlotless(facingTE, facing)
-                    || ((InventoryTileEntityBase) facingTE).getInventory() instanceof SimpleInventory);
+            && (SlotlessItemHandlerHelper.isSlotless(facingTE, facing)
+            || ((InventoryTileEntityBase) facingTE).getInventory() instanceof SimpleInventory);
     }
 }

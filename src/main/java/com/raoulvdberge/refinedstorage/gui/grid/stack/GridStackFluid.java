@@ -35,7 +35,7 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public String[] getOreIds() {
-        return new String[]{ stack.getFluid().getName() };
+        return new String[]{stack.getFluid().getName()};
     }
 
     @Override

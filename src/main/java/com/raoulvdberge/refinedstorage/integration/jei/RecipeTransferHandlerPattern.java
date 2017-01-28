@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.ContainerProcessingPatternEncoder;
 import com.raoulvdberge.refinedstorage.network.MessageProcessingPatternEncoderTransfer;
 import mezz.jei.api.gui.IGuiIngredient;
@@ -12,10 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class RecipeTransferHandlerPattern implements IRecipeTransferHandler<ContainerProcessingPatternEncoder> {
     @Override

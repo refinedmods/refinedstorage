@@ -17,8 +17,8 @@ public class FluidHandlerFluidInterface implements IFluidHandler {
         this.input = input;
         this.output = output;
         this.properties = new IFluidTankProperties[]{
-                new FluidTankPropertiesWrapper(input),
-                new FluidTankPropertiesWrapper(output)
+            new FluidTankPropertiesWrapper(input),
+            new FluidTankPropertiesWrapper(output)
         };
     }
 

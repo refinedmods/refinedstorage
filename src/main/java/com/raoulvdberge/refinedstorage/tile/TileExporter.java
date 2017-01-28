@@ -73,8 +73,8 @@ public class TileExporter extends TileMultipartNode implements IComparable, ITyp
                                 }
                             } else {
                                 if (IntegrationCyclopsCore.isLoaded()
-                                        && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), getDirection().getOpposite())
-                                        && SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, true) == null) {
+                                    && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), getDirection().getOpposite())
+                                    && SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, true) == null) {
                                     took = network.extractItem(slot, upgrades.getInteractStackSize(), compare, false);
 
                                     SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, false);

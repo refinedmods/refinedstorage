@@ -19,7 +19,7 @@ public class ImportingBehaviorCyclops implements IImportingBehavior {
         if (IFilterable.isEmpty(itemFilters)) {
             if (ticks % upgrades.getSpeed() == 0) {
                 ItemStack result = SlotlessItemHandlerHelper.extractItem(entity, facing, upgrades.getInteractStackSize(), true);
-                if (result != null &&  network.insertItem(result, result.stackSize, true) == null) {
+                if (result != null && network.insertItem(result, result.stackSize, true) == null) {
                     network.insertItem(result, result.stackSize, false);
                     SlotlessItemHandlerHelper.extractItem(entity, facing, result.copy(), upgrades.getInteractStackSize(), false);
                 }

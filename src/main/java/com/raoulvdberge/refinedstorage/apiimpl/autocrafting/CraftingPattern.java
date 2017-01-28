@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CraftingPattern implements ICraftingPattern {
     private ICraftingPatternContainer container;
@@ -107,17 +106,17 @@ public class CraftingPattern implements ICraftingPattern {
                         oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                     } else {
                         List<ItemStack> oredict =
-                                Arrays.stream(ids)
-                                        .mapToObj(OreDictionary::getOreName)
-                                        .map(OreDictionary::getOres)
-                                        .flatMap(List::stream)
-                                        .map(ItemStack::copy)
-                                        .map(Comparer::stripTags)
-                                        .map(s -> {
-                                            s.stackSize = input.stackSize;
-                                            return s;
-                                        })
-                                        .collect(Collectors.toList());
+                            Arrays.stream(ids)
+                                .mapToObj(OreDictionary::getOreName)
+                                .map(OreDictionary::getOres)
+                                .flatMap(List::stream)
+                                .map(ItemStack::copy)
+                                .map(Comparer::stripTags)
+                                .map(s -> {
+                                    s.stackSize = input.stackSize;
+                                    return s;
+                                })
+                                .collect(Collectors.toList());
                         // Add original stack as first, should prevent some issues
                         oredict.add(0, Comparer.stripTags(input.copy()));
                         oreInputs.add(oredict);

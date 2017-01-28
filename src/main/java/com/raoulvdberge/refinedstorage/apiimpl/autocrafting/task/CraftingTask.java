@@ -13,7 +13,10 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.api.util.IItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementInfo;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
@@ -122,7 +125,8 @@ public class CraftingTask implements ICraftingTask {
 
                 extraStack = toInsert.get(input, compare);
                 networkStack = networkList.get(input, compare);
-            } while (extraStack == null && networkStack == null && ++i < inputs.size() && network.getPatterns(input, compare).isEmpty());
+            }
+            while (extraStack == null && networkStack == null && ++i < inputs.size() && network.getPatterns(input, compare).isEmpty());
             if (i == inputs.size()) {
                 input = inputs.get(0).copy();
             }

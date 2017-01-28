@@ -8,8 +8,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IFluidStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStep;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStepCraft;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStepProcess;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

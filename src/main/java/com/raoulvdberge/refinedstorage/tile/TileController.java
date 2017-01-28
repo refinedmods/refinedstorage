@@ -282,10 +282,10 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                     }
 
                     runningSteps = craftingTasks.stream()
-                            .map(ICraftingTask::getSteps)
-                            .flatMap(List::stream)
-                            .filter(ICraftingStep::hasStartedProcessing)
-                            .collect(Collectors.toList());
+                        .map(ICraftingTask::getSteps)
+                        .flatMap(List::stream)
+                        .filter(ICraftingStep::hasStartedProcessing)
+                        .collect(Collectors.toList());
 
                     if (craftingTasksChanged) {
                         craftingMonitorUpdateRequested = true;
