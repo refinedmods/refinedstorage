@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.render;
 
 import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -11,8 +10,10 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class ModelDiskManipulator implements IModel {
     private static final ResourceLocation MODEL_BASE_CONNECTED = new ResourceLocation("refinedstorage:block/disk_manipulator_connected");
@@ -24,7 +25,16 @@ public class ModelDiskManipulator implements IModel {
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
-        return Lists.newArrayList(MODEL_BASE_CONNECTED, MODEL_BASE_DISCONNECTED);
+        List<ResourceLocation> dependencies = new ArrayList<>();
+
+        dependencies.add(MODEL_BASE_CONNECTED);
+        dependencies.add(MODEL_BASE_DISCONNECTED);
+        dependencies.add(MODEL_DISK);
+        dependencies.add(MODEL_DISK_NEAR_CAPACITY);
+        dependencies.add(MODEL_DISK_FULL);
+        dependencies.add(MODEL_DISK_DISCONNECTED);
+
+        return dependencies;
     }
 
     @Override

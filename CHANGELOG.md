@@ -10,6 +10,7 @@
 - Handle breaking and placing blocks better for Constructor and Destructor (way2muchnoise)
 - Updated cable part back texture and Construction and Destruction Core textures (CyanideX)
 - Updated Forge to 2221 (raoulvdberge)
+- Fixed disk textures not working on latest Forge (raoulvdberge)
 
 ### 1.2.18
 - Performance improvements with oredict autocrafting (way2muchnoise)

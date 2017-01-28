@@ -10,8 +10,10 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class ModelDiskDrive implements IModel {
     private static final ResourceLocation MODEL_BASE = new ResourceLocation("refinedstorage:block/disk_drive");
@@ -22,7 +24,15 @@ public class ModelDiskDrive implements IModel {
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
-        return Collections.singletonList(MODEL_BASE);
+        List<ResourceLocation> dependencies = new ArrayList<>();
+
+        dependencies.add(MODEL_BASE);
+        dependencies.add(MODEL_DISK);
+        dependencies.add(MODEL_DISK_NEAR_CAPACITY);
+        dependencies.add(MODEL_DISK_FULL);
+        dependencies.add(MODEL_DISK_DISCONNECTED);
+
+        return dependencies;
     }
 
     @Override
