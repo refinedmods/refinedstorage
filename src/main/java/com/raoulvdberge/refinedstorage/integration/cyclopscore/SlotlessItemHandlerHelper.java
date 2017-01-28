@@ -15,45 +15,48 @@ public class SlotlessItemHandlerHelper {
         return entity != null && entity.hasCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
     }
 
-    public static ISlotlessItemHandler getSlotlessHandler(TileEntity entity, EnumFacing facing) {
-        return entity.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
+    public static ISlotlessItemHandler getSlotlessHandler(TileEntity tile, EnumFacing facing) {
+        return tile.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
     }
 
-    public static ItemStack insertItem(TileEntity entity, EnumFacing facing, @Nonnull ItemStack stack, boolean simulate) {
-        return insertItem(getSlotlessHandler(entity, facing), stack, stack.getCount(), simulate);
+    public static ItemStack insertItem(TileEntity tile, EnumFacing facing, @Nonnull ItemStack stack, boolean simulate) {
+        return insertItem(getSlotlessHandler(tile, facing), stack, stack.getCount(), simulate);
     }
 
-    public static ItemStack insertItem(TileEntity entity, EnumFacing facing, @Nonnull ItemStack stack, int size, boolean simulate) {
-        return insertItem(getSlotlessHandler(entity, facing), stack, size, simulate);
+    public static ItemStack insertItem(TileEntity tile, EnumFacing facing, @Nonnull ItemStack stack, int size, boolean simulate) {
+        return insertItem(getSlotlessHandler(tile, facing), stack, size, simulate);
     }
 
-    public static ItemStack insertItem(ISlotlessItemHandler slotlessItemHandler, @Nonnull ItemStack stack, int size, boolean simulate) {
-        ItemStack remainder = slotlessItemHandler.insertItem(ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
+    public static ItemStack insertItem(ISlotlessItemHandler handler, @Nonnull ItemStack stack, int size, boolean simulate) {
+        ItemStack remainder = handler.insertItem(ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
         int remainderCount = -1;
-        while (!remainder.isEmpty() && remainder.getCount() != remainderCount)
-        {
+
+        while (!remainder.isEmpty() && remainder.getCount() != remainderCount) {
             remainderCount = remainder.getCount();
-            remainder = slotlessItemHandler.insertItem(remainder.copy(), simulate);
+            remainder = handler.insertItem(remainder.copy(), simulate);
         }
+
         return remainder;
     }
 
-    public static ItemStack extractItem(TileEntity entity, EnumFacing facing, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        return extractItem(getSlotlessHandler(entity, facing), stack, size, flags, simulate);
+    public static ItemStack extractItem(TileEntity tile, EnumFacing facing, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+        return extractItem(getSlotlessHandler(tile, facing), stack, size, flags, simulate);
     }
 
-    public static ItemStack extractItem(TileEntity entity, EnumFacing facing, @Nonnull ItemStack stack, int size, boolean simulate) {
-        return extractItem(getSlotlessHandler(entity, facing), stack, size, simulate);
+    public static ItemStack extractItem(TileEntity tile, EnumFacing facing, @Nonnull ItemStack stack, int size, boolean simulate) {
+        return extractItem(getSlotlessHandler(tile, facing), stack, size, simulate);
     }
 
-    public static ItemStack extractItem(ISlotlessItemHandler slotlessItemHandler, @Nonnull ItemStack stack, int size, boolean simulate) {
-        return extractItem(slotlessItemHandler, stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, simulate);
+    public static ItemStack extractItem(ISlotlessItemHandler handler, @Nonnull ItemStack stack, int size, boolean simulate) {
+        return extractItem(handler, stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, simulate);
     }
 
-    public static ItemStack extractItem(ISlotlessItemHandler slotlessItemHandler, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        ItemStack extracted = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(stack, size), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
+    public static ItemStack extractItem(ISlotlessItemHandler handler, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+        ItemStack extracted = handler.extractItem(ItemHandlerHelper.copyStackWithSize(stack, size), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
+
         while (!extracted.isEmpty() && extracted.getCount() < size) {
-            ItemStack extraExtract = slotlessItemHandler.extractItem(ItemHandlerHelper.copyStackWithSize(extracted, size - extracted.getCount()), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
+            ItemStack extraExtract = handler.extractItem(ItemHandlerHelper.copyStackWithSize(extracted, size - extracted.getCount()), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
+
             if (!extraExtract.isEmpty()) {
                 extracted.grow(extraExtract.getCount());
             } else {
@@ -61,14 +64,15 @@ public class SlotlessItemHandlerHelper {
                 break;
             }
         }
+
         return extracted;
     }
 
-    public static ItemStack extractItem(TileEntity entity, EnumFacing facing, int size, boolean simulate) {
-        return extractItem(getSlotlessHandler(entity, facing), size, simulate);
+    public static ItemStack extractItem(TileEntity tile, EnumFacing facing, int size, boolean simulate) {
+        return extractItem(getSlotlessHandler(tile, facing), size, simulate);
     }
 
-    public static ItemStack extractItem(ISlotlessItemHandler slotlessItemHandler, int size, boolean simulate) {
-        return slotlessItemHandler.extractItem(size, simulate);
+    public static ItemStack extractItem(ISlotlessItemHandler handler, int size, boolean simulate) {
+        return handler.extractItem(size, simulate);
     }
 }

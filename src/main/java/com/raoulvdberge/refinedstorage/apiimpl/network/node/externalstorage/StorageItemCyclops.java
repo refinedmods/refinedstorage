@@ -73,7 +73,7 @@ public class StorageItemCyclops extends StorageItemExternal {
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         InventoryTileEntityBase inv = cyclopsInv.get();
 
-        if (IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
+        if (inv != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
             return SlotlessItemHandlerHelper.insertItem(inv, opposite, stack, size, simulate);
         }
 
@@ -84,16 +84,24 @@ public class StorageItemCyclops extends StorageItemExternal {
     @Override
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         InventoryTileEntityBase inv = cyclopsInv.get();
-        return SlotlessItemHandlerHelper.extractItem(inv, opposite, stack, size, flags, simulate);
+
+        return inv != null ? SlotlessItemHandlerHelper.extractItem(inv, opposite, stack, size, flags, simulate) : null;
     }
 
     private NonNullList<ItemStack> getStacks(@Nullable InventoryTileEntityBase inv) {
         if (inv != null) {
             if (inv.getInventory() instanceof IndexedSlotlessItemHandlerWrapper.IInventoryIndexReference) {
                 return ((IndexedSlotlessItemHandlerWrapper.IInventoryIndexReference) inv.getInventory())
-                    .getIndex().values().stream().flatMap(m -> m.valueCollection().stream()).map(ItemStack::copy).collect(RSUtils.toNonNullList());
+                    .getIndex()
+                    .values()
+                    .stream()
+                    .flatMap(m -> m.valueCollection().stream())
+                    .map(ItemStack::copy)
+                    .collect(RSUtils.toNonNullList());
             } else {
-                return Arrays.stream(((SimpleInventory) inv.getInventory()).getItemStacks()).map(ItemStack::copy).collect(RSUtils.toNonNullList());
+                return Arrays.stream(((SimpleInventory) inv.getInventory()).getItemStacks())
+                    .map(ItemStack::copy)
+                    .collect(RSUtils.toNonNullList());
             }
         } else {
             return RSUtils.emptyNonNullList();
