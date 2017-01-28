@@ -389,6 +389,30 @@ public class ProxyCommon {
             'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 
+        // Writer
+        GameRegistry.addShapedRecipe(new ItemStack(RSBlocks.WRITER),
+            "ECE",
+            "RMR",
+            "EIE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'C', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'R', new ItemStack(Items.REDSTONE),
+            'M', new ItemStack(RSBlocks.CABLE),
+            'I', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Reader
+        GameRegistry.addShapedRecipe(new ItemStack(RSBlocks.READER),
+            "EDE",
+            "RMR",
+            "EIE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'D', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+            'R', new ItemStack(Items.REDSTONE),
+            'M', new ItemStack(RSBlocks.CABLE),
+            'I', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
         // Crafter
         GameRegistry.addRecipe(new ItemStack(RSBlocks.CRAFTER),
             "ECE",
@@ -754,12 +778,13 @@ public class ProxyCommon {
         // Security Manager
         GameRegistry.addShapedRecipe(new ItemStack(RSBlocks.SECURITY_MANAGER),
             "ECE",
-            "CMC",
-            "ECE",
+            "SMS",
+            "ESE",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
             'M', new ItemStack(RSBlocks.MACHINE_CASING),
-            'C', new ItemStack(RSItems.NETWORK_CARD)
+            'S', new ItemStack(RSItems.SECURITY_CARD),
+            'C', new ItemStack(Blocks.CHEST)
         );
 
         // Security Card

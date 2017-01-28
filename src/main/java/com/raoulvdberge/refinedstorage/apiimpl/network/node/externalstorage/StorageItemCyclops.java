@@ -39,6 +39,7 @@ public class StorageItemCyclops extends StorageItemExternal {
         InventoryTileEntityBase inv = cyclopsInv.get();
         if (inv != null) {
             int inventoryHash = inv.getInventoryHash();
+
             if (inventoryHash != oldInventoryHash) {
                 super.detectChanges(network);
                 oldInventoryHash = inventoryHash;
