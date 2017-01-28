@@ -5,12 +5,18 @@ import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 
 public class CyclopsComparer {
     public static int comparerFlagsToItemMatch(int flags) {
+        return comparerFlagsToItemMatch(flags, false);
+    }
+
+    public static int comparerFlagsToItemMatch(int flags, boolean oredictWildcard) {
         int itemMatch = 0;
-        if ((flags & IComparer.COMPARE_DAMAGE) == IComparer.COMPARE_DAMAGE) {
-            itemMatch |= ItemMatch.DAMAGE;
-        }
-        if ((flags & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT) {
-            itemMatch |= ItemMatch.NBT;
+        if (!oredictWildcard) {
+            if ((flags & IComparer.COMPARE_DAMAGE) == IComparer.COMPARE_DAMAGE) {
+                itemMatch |= ItemMatch.DAMAGE;
+            }
+            if ((flags & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT) {
+                itemMatch |= ItemMatch.NBT;
+            }
         }
         if ((flags & IComparer.COMPARE_QUANTITY) == IComparer.COMPARE_QUANTITY) {
             itemMatch |= ItemMatch.STACKSIZE;

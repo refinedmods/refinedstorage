@@ -1,14 +1,18 @@
 package com.raoulvdberge.refinedstorage.integration.cyclopscore;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.oredict.OreDictionary;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
+import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 
 import javax.annotation.Nonnull;
+import java.util.Iterator;
 
 public class SlotlessItemHandlerHelper {
     public static boolean isSlotless(TileEntity entity, EnumFacing facing) {
@@ -53,16 +57,38 @@ public class SlotlessItemHandlerHelper {
     }
 
     public static ItemStack extractItem(ISlotlessItemHandler handler, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        ItemStack extracted = handler.extractItem(ItemHandlerHelper.copyStackWithSize(stack, size), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
+        int compare = CyclopsComparer.comparerFlagsToItemMatch(flags, stack.getMetadata() == OreDictionary.WILDCARD_VALUE);
+        stack = ItemHandlerHelper.copyStackWithSize(stack, size);
+        if ((flags & IComparer.COMPARE_STRIP_NBT) == IComparer.COMPARE_STRIP_NBT) {
+            stack = Comparer.stripTags(stack);
+        }
+        ItemStack extracted = handler.extractItem(stack, compare, simulate);
 
-        while (extracted != null && extracted.stackSize < size) {
-            ItemStack extraExtract = handler.extractItem(ItemHandlerHelper.copyStackWithSize(extracted, size - extracted.stackSize), CyclopsComparer.comparerFlagsToItemMatch(flags), simulate);
+        if (extracted == null && (flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT) {
+            for (int id : OreDictionary.getOreIDs(stack)) {
+                Iterator<ItemStack> itr = OreDictionary.getOres(OreDictionary.getOreName(id)).iterator();
+                while (itr.hasNext() && extracted == null) {
+                    ItemStack oreStack = itr.next();
+                    int oreCompare = ItemMatch.NBT | (oreStack.getMetadata() == OreDictionary.WILDCARD_VALUE ? 0 : ItemMatch.DAMAGE);
+                    extracted = handler.extractItem(oreStack, oreCompare, simulate);
+                }
+                if (extracted != null) {
+                    // We found one. Woooo!
+                    break;
+                }
+            }
+        }
 
-            if (extraExtract != null) {
-                extracted.stackSize += extraExtract.stackSize;
-            } else {
-                // Nothing more to extract
-                break;
+        if (extracted != null) {
+            while (extracted.stackSize < size) {
+                ItemStack extraExtract = handler.extractItem(ItemHandlerHelper.copyStackWithSize(extracted, size - extracted.stackSize), compare, simulate);
+
+                if (extraExtract != null) {
+                    extracted.stackSize += extraExtract.stackSize;
+                } else {
+                    // Nothing more to extract
+                    break;
+                }
             }
         }
 
