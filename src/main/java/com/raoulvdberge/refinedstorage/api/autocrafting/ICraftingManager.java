@@ -36,9 +36,10 @@ public interface ICraftingManager {
      * @param stack    the stack to create a task for
      * @param pattern  the pattern
      * @param quantity the quantity
+     * @param automated    whether this crafting task is created in an automated way
      * @return the crafting task
      */
-    ICraftingTask create(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity);
+    ICraftingTask create(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated);
 
     /**
      * Creates a crafting task.
@@ -46,9 +47,10 @@ public interface ICraftingManager {
      * @param stack        the stack to create a task for
      * @param patternChain the pattern
      * @param quantity     the quantity
+     * @param automated    whether this crafting task is created in an automated way
      * @return the crafting task
      */
-    ICraftingTask create(@Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity);
+    ICraftingTask create(@Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity, boolean automated);
 
     /**
      * Schedules a crafting task if the task isn't scheduled yet.
@@ -100,6 +102,7 @@ public interface ICraftingManager {
     @Nullable
     default ICraftingPattern getPattern(ItemStack pattern, int flags) {
         ICraftingPatternChain chain = getPatternChain(pattern, flags);
+
         return chain == null ? null : chain.cycle();
     }
 
@@ -109,14 +112,15 @@ public interface ICraftingManager {
      * Internally, this makes a selection out of the available patterns.
      * It makes this selection based on the item count of the pattern outputs in the {@link IStackList<ItemStack>} provided.
      *
-     * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link IComparer}
+     * @param pattern  the stack to get a pattern for
+     * @param flags    the flags to compare on, see {@link IComparer}
      * @param itemList the {@link IStackList<ItemStack>} used to calculate the best fitting pattern
      * @return the pattern, or null if the pattern is not found
      */
     @Nullable
     default ICraftingPattern getPattern(ItemStack pattern, int flags, IStackList<ItemStack> itemList) {
         ICraftingPatternChain chain = getPatternChain(pattern, flags, itemList);
+
         return chain == null ? null : chain.cycle();
     }
 
@@ -153,8 +157,8 @@ public interface ICraftingManager {
      * Internally, this makes a selection out of the available patterns.
      * It makes this selection based on the item count of the pattern outputs in the {@link IStackList<ItemStack>} provided.
      *
-     * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link IComparer}
+     * @param pattern  the stack to get a pattern for
+     * @param flags    the flags to compare on, see {@link IComparer}
      * @param itemList the {@link IStackList<ItemStack>} used to calculate the best fitting pattern
      * @return the pattern chain, or null if the pattern chain is not found
      */

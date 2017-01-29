@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -28,7 +28,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
 
     @Override
     @Nonnull
-    public ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, @Nullable NBTTagCompound tag) {
+    public ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated, @Nullable NBTTagCompound tag) {
         if (tag != null) {
             NBTTagList stepsList = tag.getTagList(CraftingTask.NBT_STEPS, Constants.NBT.TAG_COMPOUND);
 
@@ -70,15 +70,15 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
                 }
             }
 
-            return new CraftingTask(network, stack, pattern, quantity, steps, toInsert, toTakeFluids, toInsertFluids);
+            return new CraftingTask(network, stack, pattern, quantity, steps, toInsert, toTakeFluids, toInsertFluids, tag.hasKey(CraftingTask.NBT_AUTOMATED) && tag.getBoolean(CraftingTask.NBT_AUTOMATED));
         }
 
-        return new CraftingTask(network, stack, pattern, quantity);
+        return new CraftingTask(network, stack, pattern, quantity, automated);
     }
 
     @Nonnull
     @Override
-    public ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity) {
-        return new CraftingTask(network, stack, patternChain, quantity);
+    public ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity, boolean automated) {
+        return new CraftingTask(network, stack, patternChain, quantity, automated);
     }
 }

@@ -1,10 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -67,13 +63,13 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public ICraftingTask create(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity) {
-        return API.instance().getCraftingTaskRegistry().get(pattern.getId()).create(network, stack, pattern, quantity, null);
+    public ICraftingTask create(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated) {
+        return API.instance().getCraftingTaskRegistry().get(pattern.getId()).create(network, stack, pattern, quantity, automated, null);
     }
 
     @Override
-    public ICraftingTask create(@Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity) {
-        return API.instance().getCraftingTaskRegistry().get(patternChain.getPrototype().getId()).create( network, stack, patternChain, quantity);
+    public ICraftingTask create(@Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity, boolean automated) {
+        return API.instance().getCraftingTaskRegistry().get(patternChain.getPrototype().getId()).create(network, stack, patternChain, quantity, automated);
     }
 
     @Override
@@ -242,7 +238,7 @@ public class CraftingManager implements ICraftingManager {
             ICraftingPatternChain patternChain = getPatternChain(stack, compare);
 
             if (patternChain != null) {
-                ICraftingTask task = create(stack, patternChain, toSchedule);
+                ICraftingTask task = create(stack, patternChain, toSchedule, true);
 
                 task.calculate();
                 task.getMissing().clear();
@@ -293,7 +289,7 @@ public class CraftingManager implements ICraftingManager {
 
                     ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(tag.getString(ICraftingTask.NBT_PATTERN_ID));
                     if (factory != null) {
-                        return factory.create(network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), tag);
+                        return factory.create(network, tag.hasKey(ICraftingTask.NBT_REQUESTED) ? new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_REQUESTED)) : null, pattern, tag.getInteger(ICraftingTask.NBT_QUANTITY), false, tag);
                     }
                 }
             }

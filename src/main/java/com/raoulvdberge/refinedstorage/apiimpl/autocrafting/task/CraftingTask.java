@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
@@ -38,6 +38,7 @@ public class CraftingTask implements ICraftingTask {
     public static final String NBT_TO_TAKE_FLUIDS = "ToTakeFluids";
     public static final String NBT_TO_INSERT_ITEMS = "ToInsertItems";
     public static final String NBT_TO_INSERT_FLUIDS = "ToInsertFluids";
+    public static final String NBT_AUTOMATED = "Automated";
 
     private INetworkMaster network;
     @Nullable
@@ -45,6 +46,7 @@ public class CraftingTask implements ICraftingTask {
     private ICraftingPattern pattern;
     private ICraftingPatternChain chain;
     private int quantity;
+    private boolean automated;
     private List<ICraftingStep> mainSteps = new LinkedList<>();
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
     private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
@@ -55,20 +57,23 @@ public class CraftingTask implements ICraftingTask {
     private Deque<FluidStack> toInsertFluids = new ArrayDeque<>();
     private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity) {
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, boolean automated) {
         this.network = network;
         this.requested = requested;
         this.pattern = pattern;
         this.quantity = quantity;
+        this.automated = automated;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPatternChain chain, int quantity) {
-        this(network, requested, chain.getPrototype(), quantity);
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPatternChain chain, int quantity, boolean automated) {
+        this(network, requested, chain.getPrototype(), quantity, automated);
+
         this.chain = chain;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> mainSteps, Deque<ItemStack> toInsertItems, IStackList<FluidStack> toTakeFluids, Deque<FluidStack> toInsertFluids) {
-        this(network, requested, pattern, quantity);
+    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> mainSteps, Deque<ItemStack> toInsertItems, IStackList<FluidStack> toTakeFluids, Deque<FluidStack> toInsertFluids, boolean automated) {
+        this(network, requested, pattern, quantity, automated);
+
         this.mainSteps = mainSteps;
         this.toInsertItems = toInsertItems;
         this.toTakeFluids = toTakeFluids;
@@ -133,7 +138,8 @@ public class CraftingTask implements ICraftingTask {
 
                 extraStack = toInsert.get(input, compare);
                 networkStack = networkList.get(input, compare);
-            } while (extraStack == null && networkStack == null && ++i < inputs.size() && network.getCraftingManager().hasPattern(input, compare));
+            }
+            while (extraStack == null && networkStack == null && ++i < inputs.size() && network.getCraftingManager().hasPattern(input, compare));
             if (i == inputs.size()) {
                 input = inputs.get(0).copy();
             }
@@ -330,13 +336,14 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public String toString() {
         return "\nCraftingTask{quantity=" + quantity +
-                "\n, toTake=" + toTake +
-                "\n, toTakeFluids=" + toTakeFluids +
-                "\n, toCraft=" + toCraft +
-                "\n, toInsertItems=" + toInsertItems +
-                "\n, toInsertFluids=" + toInsertFluids +
-                "\n, mainSteps=" + mainSteps +
-                '}';
+            "\n, automated=" + automated +
+            "\n, toTake=" + toTake +
+            "\n, toTakeFluids=" + toTakeFluids +
+            "\n, toCraft=" + toCraft +
+            "\n, toInsertItems=" + toInsertItems +
+            "\n, toInsertFluids=" + toInsertFluids +
+            "\n, mainSteps=" + mainSteps +
+            '}';
     }
 
     @Override
@@ -395,7 +402,7 @@ public class CraftingTask implements ICraftingTask {
 
                 if (timesUsed++ <= container.getSpeedUpdateCount()) {
                     if (!step.getPattern().isProcessing() || !container.isBlocked()) {
-                        if (step.canStartProcessing(oreDictPrepped, networkFluids)){
+                        if (step.canStartProcessing(oreDictPrepped, networkFluids)) {
                             step.setStartedProcessing();
                             step.execute(toInsertItems, toInsertFluids);
                             usedContainers.put(container, timesUsed);
@@ -405,7 +412,6 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
         }
-
 
 
         if (getSteps().stream().filter(ICraftingStep::hasStartedProcessing).count() == 0) {
@@ -486,6 +492,8 @@ public class CraftingTask implements ICraftingTask {
 
         tag.setTag(NBT_TO_INSERT_FLUIDS, toInsertFluidsList);
 
+        tag.setBoolean(NBT_AUTOMATED, automated);
+
         return tag;
     }
 
@@ -494,23 +502,23 @@ public class CraftingTask implements ICraftingTask {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
         elements.directAdd(new CraftingMonitorElementItemRender(
-                network.getCraftingManager().getTasks().indexOf(this),
-                requested != null ? requested : pattern.getOutputs().get(0),
-                quantity,
-                0
+            network.getCraftingManager().getTasks().indexOf(this),
+            requested != null ? requested : pattern.getOutputs().get(0),
+            quantity,
+            0
         ));
 
         if (!missing.isEmpty()) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 16));
 
             missing.getStacks().stream()
-                    .map(stack -> new CraftingMonitorElementError(new CraftingMonitorElementItemRender(
-                            -1,
-                            stack,
-                            stack.getCount(),
-                            32
-                    ), ""))
-                    .forEach(elements::add);
+                .map(stack -> new CraftingMonitorElementError(new CraftingMonitorElementItemRender(
+                    -1,
+                    stack,
+                    stack.getCount(),
+                    32
+                ), ""))
+                .forEach(elements::add);
 
             elements.commit();
         }
@@ -519,13 +527,13 @@ public class CraftingTask implements ICraftingTask {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));
 
             toInsertItems.stream()
-                    .map(stack -> new CraftingMonitorElementItemRender(
-                            -1,
-                            stack,
-                            stack.getCount(),
-                            32
-                    ))
-                    .forEach(elements::add);
+                .map(stack -> new CraftingMonitorElementItemRender(
+                    -1,
+                    stack,
+                    stack.getCount(),
+                    32
+                ))
+                .forEach(elements::add);
 
             elements.commit();
         }
@@ -540,10 +548,10 @@ public class CraftingTask implements ICraftingTask {
                 for (ICraftingStep step : getSteps().stream().filter(s -> !s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                                -1,
-                                step.getPattern().getOutputs().get(i),
-                                step.getPattern().getOutputs().get(i).getCount(),
-                                32
+                            -1,
+                            step.getPattern().getOutputs().get(i),
+                            step.getPattern().getOutputs().get(i).getCount(),
+                            32
                         );
 
                         if (!step.hasStartedProcessing() && !step.canStartProcessing(oreDictPrepped, networkFluids)) {
@@ -563,10 +571,10 @@ public class CraftingTask implements ICraftingTask {
                 for (ICraftingStep step : getSteps().stream().filter(s -> s.getPattern().isProcessing()).collect(Collectors.toList())) {
                     for (int i = 0; i < step.getPattern().getOutputs().size(); ++i) {
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                                -1,
-                                step.getPattern().getOutputs().get(i),
-                                step.getPattern().getOutputs().get(i).getCount(),
-                                32
+                            -1,
+                            step.getPattern().getOutputs().get(i),
+                            step.getPattern().getOutputs().get(i).getCount(),
+                            32
                         );
 
                         if (step.getPattern().getContainer().getFacingTile() == null) {
@@ -659,6 +667,11 @@ public class CraftingTask implements ICraftingTask {
         toTakeFluids.getStacks().stream().map(CraftingPreviewElementFluidStack::new).forEach(elements::add);
 
         return elements;
+    }
+
+    @Override
+    public boolean isAutomated() {
+        return automated;
     }
 
     @Override

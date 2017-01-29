@@ -169,7 +169,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
-                ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPatternChain(stack), quantity);
+                ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPatternChain(stack), quantity, false);
 
                 task.calculate();
 
@@ -193,7 +193,7 @@ public class ItemGridHandler implements IItemGridHandler {
         }
 
         if (stack != null) {
-            ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPatternChain(stack), quantity);
+            ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPatternChain(stack), quantity, false);
 
             task.calculate();
 

@@ -127,4 +127,9 @@ public interface ICraftingTask {
      * @return get a list of {@link ICraftingPreviewElement}s
      */
     List<ICraftingPreviewElement> getPreviewStacks();
+
+    /**
+     * @return whether this crafting task is created in an automated way
+     */
+    boolean isAutomated();
 }
