@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
-import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.item.ItemGridFilter;
+import com.raoulvdberge.refinedstorage.item.filter.Filter;
+import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
+import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -12,12 +12,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
-    private List<GridFilter> filters;
-    private List<GridTab> tabs;
+public class ItemHandlerFilter extends ItemHandlerBasic {
+    private List<Filter> filters;
+    private List<FilterTab> tabs;
 
-    public ItemHandlerGridFilterInGrid(List<GridFilter> filters, List<GridTab> tabs) {
-        super(4, new ItemValidatorBasic(RSItems.GRID_FILTER));
+    public ItemHandlerFilter(List<Filter> filters, List<FilterTab> tabs) {
+        super(4, new ItemValidatorBasic(RSItems.FILTER));
 
         this.filters = filters;
         this.tabs = tabs;
@@ -34,26 +34,26 @@ public class ItemHandlerGridFilterInGrid extends ItemHandlerBasic {
             ItemStack filter = getStackInSlot(i);
 
             if (!filter.isEmpty()) {
-                int compare = ItemGridFilter.getCompare(filter);
-                int mode = ItemGridFilter.getMode(filter);
-                boolean modFilter = ItemGridFilter.isModFilter(filter);
+                int compare = ItemFilter.getCompare(filter);
+                int mode = ItemFilter.getMode(filter);
+                boolean modFilter = ItemFilter.isModFilter(filter);
 
-                ItemHandlerGridFilter items = new ItemHandlerGridFilter(filter);
+                ItemHandlerFilterItems items = new ItemHandlerFilterItems(filter);
 
-                List<GridFilter> filters = new ArrayList<>();
+                List<Filter> filters = new ArrayList<>();
 
                 for (ItemStack item : items.getFilteredItems()) {
                     if (!item.isEmpty()) {
-                        filters.add(new GridFilter(item, compare, mode, modFilter));
+                        filters.add(new Filter(item, compare, mode, modFilter));
                     }
                 }
 
-                ItemStack icon = ItemGridFilter.getIcon(filter);
+                ItemStack icon = ItemFilter.getIcon(filter);
 
                 if (icon.isEmpty()) {
                     this.filters.addAll(filters);
                 } else {
-                    tabs.add(new GridTab(filters, ItemGridFilter.getName(filter), icon));
+                    tabs.add(new FilterTab(filters, ItemFilter.getName(filter), icon));
                 }
             }
         }

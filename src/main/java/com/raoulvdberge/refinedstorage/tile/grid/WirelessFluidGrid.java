@@ -4,11 +4,11 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
-import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
+import com.raoulvdberge.refinedstorage.item.filter.Filter;
+import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessFluidGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.Minecraft;
@@ -153,12 +153,12 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
-    public List<GridFilter> getFilters() {
+    public List<Filter> getFilters() {
         return Collections.emptyList();
     }
 
     @Override
-    public List<GridTab> getTabs() {
+    public List<FilterTab> getTabs() {
         return Collections.emptyList();
     }
 

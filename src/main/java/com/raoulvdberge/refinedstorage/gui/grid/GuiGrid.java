@@ -19,6 +19,7 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
+import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
@@ -309,7 +310,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         return !grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT - 4 : 0;
     }
 
-    private void drawTab(GridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
+    private void drawTab(FilterTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
         int i = grid.getTabs().indexOf(tab);
         boolean selected = i == grid.getTabSelected();
 
@@ -359,7 +360,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         tabHovering = -1;
 
-        for (GridTab tab : grid.getTabs()) {
+        for (FilterTab tab : grid.getTabs()) {
             drawTab(tab, false, x, y, mouseX, mouseY);
         }
 
@@ -391,7 +392,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), getFooter());
 
-        for (GridTab tab : grid.getTabs()) {
+        for (FilterTab tab : grid.getTabs()) {
             drawTab(tab, true, x, y, mouseX, mouseY);
         }
 

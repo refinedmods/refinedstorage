@@ -2,9 +2,9 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
-import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.item.filter.Filter;
+import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -46,9 +46,9 @@ public interface IGrid {
 
     void onTabSelectionChanged(int tab);
 
-    List<GridFilter> getFilters();
+    List<Filter> getFilters();
 
-    List<GridTab> getTabs();
+    List<FilterTab> getTabs();
 
     ItemHandlerBasic getFilter();
 

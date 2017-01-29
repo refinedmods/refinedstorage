@@ -4,12 +4,12 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
-import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterInGrid;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
+import com.raoulvdberge.refinedstorage.item.filter.Filter;
+import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.Minecraft;
@@ -40,9 +40,9 @@ public class WirelessGrid implements IGrid {
     private int tabSelected;
     private int size;
 
-    private List<GridFilter> filteredItems = new ArrayList<>();
-    private List<GridTab> tabs = new ArrayList<>();
-    private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filteredItems, tabs) {
+    private List<Filter> filters = new ArrayList<>();
+    private List<FilterTab> tabs = new ArrayList<>();
+    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -188,12 +188,12 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public List<GridFilter> getFilters() {
-        return filteredItems;
+    public List<Filter> getFilters() {
+        return filters;
     }
 
     @Override
-    public List<GridTab> getTabs() {
+    public List<FilterTab> getTabs() {
         return tabs;
     }
 

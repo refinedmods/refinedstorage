@@ -37,6 +37,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -111,7 +112,7 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageGridFluidPull.class, MessageGridFluidPull.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridFluidInsertHeld.class, MessageGridFluidInsertHeld.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageProcessingPatternEncoderClear.class, MessageProcessingPatternEncoderClear.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridFilterUpdate.class, MessageGridFilterUpdate.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageFilterUpdate.class, MessageFilterUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingPreview.class, MessageGridCraftingPreview.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingPreviewResponse.class, MessageGridCraftingPreviewResponse.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingStartResponse.class, MessageGridCraftingStartResponse.class, id++, Side.CLIENT);
@@ -199,7 +200,7 @@ public class ProxyCommon {
         registerItem(RSItems.CORE);
         registerItem(RSItems.SILICON);
         registerItem(RSItems.UPGRADE);
-        registerItem(RSItems.GRID_FILTER);
+        registerItem(RSItems.FILTER);
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.WRENCH);
         registerItem(RSItems.SECURITY_CARD);
@@ -711,7 +712,7 @@ public class ProxyCommon {
         ));
 
         // Grid Filter
-        GameRegistry.addShapedRecipe(new ItemStack(RSItems.GRID_FILTER),
+        GameRegistry.addShapedRecipe(new ItemStack(RSItems.FILTER),
             "EPE",
             "PHP",
             "EPE",
@@ -804,6 +805,14 @@ public class ProxyCommon {
 
     public void postInit(FMLPostInitializationEvent e) {
         // NO OP
+    }
+
+    public void fixMappings(FMLMissingMappingsEvent e) {
+        for (FMLMissingMappingsEvent.MissingMapping missing : e.getAll()) {
+            if (missing.resourceLocation.getResourceDomain().equals(RS.ID) && missing.resourceLocation.getResourcePath().equals("grid_filter")) {
+                missing.remap(RSItems.FILTER);
+            }
+        }
     }
 
     private void registerBlock(BlockBase block) {

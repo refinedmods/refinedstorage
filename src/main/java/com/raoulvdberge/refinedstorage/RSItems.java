@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.item.*;
+import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
 
 public final class RSItems {
     public static final ItemStorageDisk STORAGE_DISK = new ItemStorageDisk();
@@ -15,7 +16,7 @@ public final class RSItems {
     public static final ItemPattern PATTERN = new ItemPattern();
     public static final ItemUpgrade UPGRADE = new ItemUpgrade();
     public static final ItemStorageHousing STORAGE_HOUSING = new ItemStorageHousing();
-    public static final ItemGridFilter GRID_FILTER = new ItemGridFilter();
+    public static final ItemFilter FILTER = new ItemFilter();
     public static final ItemNetworkCard NETWORK_CARD = new ItemNetworkCard();
     public static final ItemFluidStorageDisk FLUID_STORAGE_DISK = new ItemFluidStorageDisk();
     public static final ItemFluidStoragePart FLUID_STORAGE_PART = new ItemFluidStoragePart();

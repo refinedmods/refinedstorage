@@ -9,13 +9,13 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
-import com.raoulvdberge.refinedstorage.gui.grid.GridFilter;
-import com.raoulvdberge.refinedstorage.gui.grid.GridTab;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterInGrid;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
+import com.raoulvdberge.refinedstorage.item.filter.Filter;
+import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
@@ -81,9 +81,9 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private InventoryCraftResult result = new InventoryCraftResult();
 
     private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN));
-    private List<GridFilter> filters = new ArrayList<>();
-    private List<GridTab> tabs = new ArrayList<>();
-    private ItemHandlerGridFilterInGrid filter = new ItemHandlerGridFilterInGrid(filters, tabs);
+    private List<Filter> filters = new ArrayList<>();
+    private List<FilterTab> tabs = new ArrayList<>();
+    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs);
 
     private EnumGridType type;
 
@@ -182,12 +182,12 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
-    public List<GridFilter> getFilters() {
+    public List<Filter> getFilters() {
         return filters;
     }
 
     @Override
-    public List<GridTab> getTabs() {
+    public List<FilterTab> getTabs() {
         return tabs;
     }
 

@@ -80,8 +80,8 @@ public class GuiHandler implements IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         if (ID == RSGui.WIRELESS_GRID) {
             return getWirelessGridContainer(player, x, y, z);
-        } else if (ID == RSGui.GRID_FILTER) {
-            return getGridFilterContainer(player, x);
+        } else if (ID == RSGui.FILTER) {
+            return getFilterContainer(player, x);
         } else if (ID == RSGui.WIRELESS_CRAFTING_MONITOR) {
             return getWirelessCraftingMonitorContainer(player, x, y);
         }
@@ -133,8 +133,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiCrafter((ContainerCrafter) getContainer(ID, player, tile));
             case RSGui.PROCESSING_PATTERN_ENCODER:
                 return new GuiProcessingPatternEncoder((ContainerProcessingPatternEncoder) getContainer(ID, player, tile), (TileProcessingPatternEncoder) tile);
-            case RSGui.GRID_FILTER:
-                return new GuiGridFilter(getGridFilterContainer(player, x));
+            case RSGui.FILTER:
+                return new GuiFilter(getFilterContainer(player, x));
             case RSGui.NETWORK_TRANSMITTER:
                 return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile);
             case RSGui.FLUID_INTERFACE:
@@ -193,7 +193,7 @@ public class GuiHandler implements IGuiHandler {
         return new ContainerCraftingMonitor(getWirelessCraftingMonitor(player, hand, controllerDimension), player);
     }
 
-    private ContainerGridFilter getGridFilterContainer(EntityPlayer player, int hand) {
-        return new ContainerGridFilter(player, player.getHeldItem(EnumHand.values()[hand]));
+    private ContainerFilter getFilterContainer(EntityPlayer player, int hand) {
+        return new ContainerFilter(player, player.getHeldItem(EnumHand.values()[hand]));
     }
 }

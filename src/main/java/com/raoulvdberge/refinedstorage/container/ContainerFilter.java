@@ -1,16 +1,16 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilterIcon;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterIcon;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerGridFilter extends ContainerBase {
+public class ContainerFilter extends ContainerBase {
     private ItemStack stack;
 
-    public ContainerGridFilter(EntityPlayer player, ItemStack stack) {
+    public ContainerFilter(EntityPlayer player, ItemStack stack) {
         super(null, player);
 
         this.stack = stack;
@@ -18,7 +18,7 @@ public class ContainerGridFilter extends ContainerBase {
         int y = 20;
         int x = 8;
 
-        ItemHandlerGridFilter filter = new ItemHandlerGridFilter(stack);
+        ItemHandlerFilterItems filter = new ItemHandlerFilterItems(stack);
 
         for (int i = 0; i < 27; ++i) {
             addSlotToContainer(new SlotFilter(filter, i, x, y));
@@ -31,7 +31,7 @@ public class ContainerGridFilter extends ContainerBase {
             }
         }
 
-        addSlotToContainer(new SlotFilter(new ItemHandlerGridFilterIcon(stack), 0, 8, 117));
+        addSlotToContainer(new SlotFilter(new ItemHandlerFilterIcon(stack), 0, 8, 117));
 
         addPlayerInventory(8, 149);
     }

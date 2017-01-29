@@ -1,10 +1,12 @@
-package com.raoulvdberge.refinedstorage.item;
+package com.raoulvdberge.refinedstorage.item.filter;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerGridFilter;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
+import com.raoulvdberge.refinedstorage.item.ItemBase;
+import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +19,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemGridFilter extends ItemBase {
+public class ItemFilter extends ItemBase {
     public static final int MODE_WHITELIST = 0;
     public static final int MODE_BLACKLIST = 1;
 
@@ -27,8 +29,8 @@ public class ItemGridFilter extends ItemBase {
     private static final String NBT_NAME = "Name";
     private static final String NBT_ICON = "Icon";
 
-    public ItemGridFilter() {
-        super("grid_filter");
+    public ItemFilter() {
+        super("filter");
 
         setMaxStackSize(1);
     }
@@ -39,10 +41,10 @@ public class ItemGridFilter extends ItemBase {
 
         if (!world.isRemote) {
             if (player.isSneaking()) {
-                return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.GRID_FILTER));
+                return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.FILTER));
             }
 
-            player.openGui(RS.INSTANCE, RSGui.GRID_FILTER, world, hand.ordinal(), 0, 0);
+            player.openGui(RS.INSTANCE, RSGui.FILTER, world, hand.ordinal(), 0, 0);
 
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
@@ -68,10 +70,10 @@ public class ItemGridFilter extends ItemBase {
         tooltip.add(TextFormatting.YELLOW + I18n.format("sidebutton.refinedstorage:mode." + (getMode(stack) == MODE_WHITELIST ? "whitelist" : "blacklist")) + TextFormatting.RESET);
 
         if (isModFilter(stack)) {
-            tooltip.add(TextFormatting.BLUE + I18n.format("gui.refinedstorage:grid_filter.mod_filter") + TextFormatting.RESET);
+            tooltip.add(TextFormatting.BLUE + I18n.format("gui.refinedstorage:filter.mod_filter") + TextFormatting.RESET);
         }
 
-        ItemHandlerGridFilter items = new ItemHandlerGridFilter(stack);
+        ItemHandlerFilterItems items = new ItemHandlerFilterItems(stack);
 
         ItemPattern.combineItems(tooltip, false, items.getFilteredItems());
     }

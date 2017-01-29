@@ -1,14 +1,14 @@
-package com.raoulvdberge.refinedstorage.gui.grid;
+package com.raoulvdberge.refinedstorage.item.filter;
 
 import net.minecraft.item.ItemStack;
 
-public class GridFilter {
+public class Filter {
     private ItemStack stack;
     private int compare;
     private int mode;
     private boolean modFilter;
 
-    public GridFilter(ItemStack stack, int compare, int mode, boolean modFilter) {
+    public Filter(ItemStack stack, int compare, int mode, boolean modFilter) {
         this.stack = stack;
         this.compare = compare;
         this.mode = mode;

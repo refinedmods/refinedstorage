@@ -6,10 +6,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class ItemHandlerGridFilter extends ItemStackHandler {
+public class ItemHandlerFilterItems extends ItemStackHandler {
     private ItemStack stack;
 
-    public ItemHandlerGridFilter(ItemStack stack) {
+    public ItemHandlerFilterItems(ItemStack stack) {
         super(27);
 
         this.stack = stack;

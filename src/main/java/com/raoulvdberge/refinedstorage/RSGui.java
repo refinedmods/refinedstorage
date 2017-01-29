@@ -18,7 +18,7 @@ public final class RSGui {
     public static final int WIRELESS_TRANSMITTER = 14;
     public static final int CRAFTER = 15;
     public static final int PROCESSING_PATTERN_ENCODER = 16;
-    public static final int GRID_FILTER = 17;
+    public static final int FILTER = 17;
     public static final int NETWORK_TRANSMITTER = 18;
     public static final int FLUID_INTERFACE = 19;
     public static final int EXTERNAL_STORAGE = 20;
