@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
-import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
@@ -69,7 +68,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class TileController extends TileBase implements INetworkMaster, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
@@ -373,20 +371,14 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     @Override
     public void sendCraftingMonitorUpdate() {
-        List<EntityPlayerMP> watchers = getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+        getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
-            .collect(Collectors.toList());
-
-        if (!watchers.isEmpty()) {
-            List<ICraftingMonitorElement> elements = craftingManager.getTasks().stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList());
-
-            watchers.forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(elements), player));
-        }
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player));
     }
 
     @Override
     public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingManager.getTasks().stream().flatMap(t -> t.getCraftingMonitorElements().stream()).collect(Collectors.toList())), player);
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player);
     }
 
     @Nullable

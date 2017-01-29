@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.inventory.IItemHandlerListener;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
@@ -16,13 +18,25 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
     public static final String ID = "crafting_monitor";
 
     private List<Filter> filters = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), new IItemHandlerListener() {
+        private ItemHandlerListenerNetworkNode base = new ItemHandlerListenerNetworkNode(NetworkNodeCraftingMonitor.this);
+
+        @Override
+        public void onChanged(int slot) {
+            base.onChanged(slot);
+
+            if (network != null) {
+                network.sendCraftingMonitorUpdate();
+            }
+        }
+    });
 
     public NetworkNodeCraftingMonitor(INetworkNodeHolder holder) {
         super(holder);
@@ -64,6 +78,11 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     @Override
     public BlockPos getNetworkPosition() {
         return network != null ? network.getPosition() : null;
+    }
+
+    @Override
+    public List<ICraftingTask> getTasks() {
+        return network != null ? network.getCraftingManager().getTasks() : Collections.emptyList();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.gui.GuiCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
@@ -62,7 +61,6 @@ public class ItemHandlerFilter extends ItemHandlerBasic {
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             GuiGrid.markForSorting();
-            GuiCraftingMonitor.markForSorting();
         }
     }
 }

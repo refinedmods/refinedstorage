@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class WirelessCraftingMonitor implements ICraftingMonitor {
@@ -34,6 +36,12 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
             }
 
             RSUtils.writeItems(this, slot, stack.getTagCompound());
+
+            TileController controller = getController();
+
+            if (controller != null) {
+                controller.sendCraftingMonitorUpdate();
+            }
         }
     };
 
@@ -71,6 +79,17 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     @Override
     public BlockPos getNetworkPosition() {
         return controller;
+    }
+
+    @Override
+    public List<ICraftingTask> getTasks() {
+        TileController controller = getController();
+
+        if (controller != null) {
+            return controller.getCraftingManager().getTasks();
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
