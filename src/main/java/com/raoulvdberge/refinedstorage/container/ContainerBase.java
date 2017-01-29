@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
-import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
@@ -37,7 +36,7 @@ public abstract class ContainerBase extends Container {
             int x = xInventory + i * 18;
             int y = yInventory + 4 + (3 * 18);
 
-            if (i == player.inventory.currentItem && (ContainerBase.this instanceof ContainerFilter || (ContainerBase.this instanceof ContainerGrid && ((ContainerGrid) ContainerBase.this).getGrid() instanceof WirelessGrid))) {
+            if (i == player.inventory.currentItem && isHeldItemDisabled()) {
                 addSlotToContainer(new SlotDisabled(player.inventory, id, x, y));
             } else {
                 addSlotToContainer(new Slot(player.inventory, id, x, y));
@@ -144,5 +143,9 @@ public abstract class ContainerBase extends Container {
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         return true;
+    }
+
+    protected boolean isHeldItemDisabled() {
+        return false;
     }
 }

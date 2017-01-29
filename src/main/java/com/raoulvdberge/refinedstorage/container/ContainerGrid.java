@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
@@ -148,5 +149,10 @@ public class ContainerGrid extends ContainerBase {
         }
 
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    protected boolean isHeldItemDisabled() {
+        return grid instanceof WirelessGrid;
     }
 }

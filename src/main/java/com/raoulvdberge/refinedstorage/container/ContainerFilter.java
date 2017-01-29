@@ -58,4 +58,9 @@ public class ContainerFilter extends ContainerBase {
 
         return stack;
     }
+
+    @Override
+    protected boolean isHeldItemDisabled() {
+        return true;
+    }
 }

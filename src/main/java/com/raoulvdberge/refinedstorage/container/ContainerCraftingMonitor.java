@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -22,5 +23,10 @@ public class ContainerCraftingMonitor extends ContainerBase {
 
     public ICraftingMonitor getCraftingMonitor() {
         return craftingMonitor;
+    }
+
+    @Override
+    protected boolean isHeldItemDisabled() {
+        return craftingMonitor instanceof WirelessCraftingMonitor;
     }
 }
