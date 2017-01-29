@@ -50,6 +50,7 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
     @Override
     public IMessage onMessage(MessageCraftingMonitorElements message, MessageContext ctx) {
         GuiCraftingMonitor.ELEMENTS = message.elements;
+        GuiCraftingMonitor.markForSorting();
 
         return null;
     }

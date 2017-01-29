@@ -1,10 +1,13 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public interface ICraftingMonitor {
     String getGuiTitle();
@@ -15,6 +18,10 @@ public interface ICraftingMonitor {
 
     @Nullable
     BlockPos getNetworkPosition();
+
+    List<Filter> getFilters();
+
+    ItemHandlerBasic getFilter();
 
     boolean isActive();
 }

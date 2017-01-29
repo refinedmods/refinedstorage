@@ -83,7 +83,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN));
     private List<Filter> filters = new ArrayList<>();
     private List<FilterTab> tabs = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs);
+    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ItemHandlerListenerNetworkNode(this));
 
     private EnumGridType type;
 

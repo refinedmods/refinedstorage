@@ -4,13 +4,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ItemHandlerBasic extends ItemStackHandler {
     private IItemHandlerListener listener;
 
     protected IItemValidator[] validators;
 
-    public ItemHandlerBasic(int size, IItemHandlerListener listener, IItemValidator... validators) {
+    public ItemHandlerBasic(int size, @Nullable IItemHandlerListener listener, IItemValidator... validators) {
         super(size);
 
         this.listener = listener;

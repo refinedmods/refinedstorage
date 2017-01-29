@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
+import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterFilter;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorCancel;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
@@ -12,8 +13,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,6 +42,8 @@ public class GuiCraftingMonitor extends GuiBase {
     private static final int ITEM_WIDTH = 143;
     private static final int ITEM_HEIGHT = 18;
 
+    private static boolean markedForSorting;
+
     private GuiButton cancelButton;
     private GuiButton cancelAllButton;
 
@@ -45,20 +51,26 @@ public class GuiCraftingMonitor extends GuiBase {
 
     private IElementDrawers drawers = new CraftingMonitorElementDrawers();
 
+    private List<ICraftingMonitorElement> elements = new ArrayList<>();
+
     private int itemSelected = -1;
 
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, ICraftingMonitor craftingMonitor) {
-        super(container, 176, 230);
+        super(container, 210, 230);
 
         this.craftingMonitor = craftingMonitor;
         this.scrollbar = new Scrollbar(157, 20, 12, 89);
     }
 
     private List<ICraftingMonitorElement> getElements() {
-        return craftingMonitor.isActive() ? ELEMENTS : Collections.emptyList();
+        return craftingMonitor.isActive() ? elements : Collections.emptyList();
+    }
+
+    public static void markForSorting() {
+        markedForSorting = true;
     }
 
     @Override
@@ -79,6 +91,23 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void update(int x, int y) {
+        if (markedForSorting) {
+            markedForSorting = false;
+
+            List<ICraftingMonitorElement> newElements = new ArrayList<>();
+
+            for (ICraftingMonitorElement element : ELEMENTS) {
+                // @TODO: We need the top level element here!
+                ItemStack stack = null;
+
+                if (stack == null || GridFilterFilter.accepts(craftingMonitor.getFilters(), stack, Item.REGISTRY.getNameForObject(stack.getItem()).getResourceDomain())) {
+                    newElements.add(element);
+                }
+            }
+
+            this.elements = newElements;
+        }
+
         scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
         scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
 

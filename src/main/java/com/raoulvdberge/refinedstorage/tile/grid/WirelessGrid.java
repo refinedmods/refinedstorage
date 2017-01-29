@@ -42,7 +42,7 @@ public class WirelessGrid implements IGrid {
 
     private List<Filter> filters = new ArrayList<>();
     private List<FilterTab> tabs = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs) {
+    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, null) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

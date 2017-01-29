@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.gui.GuiCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
@@ -9,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +18,8 @@ public class ItemHandlerFilter extends ItemHandlerBasic {
     private List<Filter> filters;
     private List<FilterTab> tabs;
 
-    public ItemHandlerFilter(List<Filter> filters, List<FilterTab> tabs) {
-        super(4, new ItemValidatorBasic(RSItems.FILTER));
+    public ItemHandlerFilter(List<Filter> filters, List<FilterTab> tabs, @Nullable IItemHandlerListener listener) {
+        super(4, listener, new ItemValidatorBasic(RSItems.FILTER));
 
         this.filters = filters;
         this.tabs = tabs;
@@ -60,6 +62,7 @@ public class ItemHandlerFilter extends ItemHandlerBasic {
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             GuiGrid.markForSorting();
+            GuiCraftingMonitor.markForSorting();
         }
     }
 }
