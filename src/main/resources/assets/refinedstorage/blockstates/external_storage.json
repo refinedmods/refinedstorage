@@ -7,7 +7,7 @@
       "line": "refinedstorage:blocks/generic_grey"
     },
     "model": "refinedstorage:cable_core",
-    "uvlock": true
+    "uvlock": false
   },
   "variants": {
     "inventory": [
