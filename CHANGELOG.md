@@ -11,6 +11,7 @@
 - Updated cable part back texture and Construction and Destruction Core textures (CyanideX)
 - Updated Forge to 2221 (raoulvdberge)
 - Fixed disk textures not working on latest Forge (raoulvdberge)
+- Updated Chinese translation (TartaricAcid)
 
 ### 1.2.18
 - Performance improvements with oredict autocrafting (way2muchnoise)
