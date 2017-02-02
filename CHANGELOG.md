@@ -5,6 +5,8 @@
 - Added Security Card (raoulvdberge)
 - Added Wireless Fluid Grid (raoulvdberge)
 - Added craft-only toggle to Exporter (raoulvdberge)
+- Added Reader (raoulvdberge)
+- Added Writer (raoulvdberge)
 - Added blocking mode to patterns in autocrafting (InusualZ)
 - Added Grid size toggle (stretched, small, medium, large) (raoulvdberge)
 - Added dismantling mode to the Wrench (raoulvdberge)
