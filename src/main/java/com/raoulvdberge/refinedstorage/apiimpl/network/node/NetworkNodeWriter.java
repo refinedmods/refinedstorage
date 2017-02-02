@@ -88,6 +88,11 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter {
     }
 
     @Override
+    public TileDataParameter<Integer> getRedstoneModeParameter() {
+        return TileWriter.REDSTONE_MODE;
+    }
+
+    @Override
     public boolean hasConnectivityState() {
         return true;
     }

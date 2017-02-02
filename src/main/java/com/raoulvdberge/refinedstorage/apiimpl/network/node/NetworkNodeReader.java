@@ -50,6 +50,11 @@ public class NetworkNodeReader extends NetworkNode implements IReader {
     }
 
     @Override
+    public TileDataParameter<Integer> getRedstoneModeParameter() {
+        return TileReader.REDSTONE_MODE;
+    }
+
+    @Override
     public boolean hasConnectivityState() {
         return true;
     }

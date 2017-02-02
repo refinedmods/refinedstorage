@@ -13,6 +13,8 @@ public interface IReaderWriter extends INetworkNode {
 
     TileDataParameter<String> getChannelParameter();
 
+    TileDataParameter<Integer> getRedstoneModeParameter();
+
     default void onAdd(String name) {
         INetworkMaster network = getNetwork();
 

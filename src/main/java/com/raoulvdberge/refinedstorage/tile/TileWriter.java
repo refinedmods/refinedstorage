@@ -32,7 +32,7 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
             return false;
         }
 
-        if (writer.getNetwork() == null) {
+        if (writer.getNetwork() == null || !writer.canUpdate()) {
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                 return TileReader.getDummyCapabilityForClient(writer, capability) != null;
             }
@@ -66,7 +66,7 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
                 return null;
             }
 
-            if (writer.getNetwork() == null) {
+            if (writer.getNetwork() == null || !writer.canUpdate()) {
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                     return TileReader.getDummyCapabilityForClient(writer, capability);
                 }

@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
+import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelAdd;
 import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelRemove;
 import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
@@ -42,6 +43,8 @@ public class GuiReaderWriter extends GuiBase {
 
     @Override
     public void init(int x, int y) {
+        addSideButton(new SideButtonRedstoneMode(this, readerWriter.getRedstoneModeParameter()));
+
         add = addButton(x + 128, y + 15, 20, 20, "+");
         remove = addButton(x + 150, y + 15, 20, 20, "-");
         name = new GuiTextField(0, fontRendererObj, x + 8 + 1, y + 20 + 1, 107, fontRendererObj.FONT_HEIGHT);
@@ -123,27 +126,23 @@ public class GuiReaderWriter extends GuiBase {
 
         name.mouseClicked(mouseX, mouseY, mouseButton);
 
-        int itemSelectedOld = itemSelected;
+        if (inBounds(8, 39, 144, 73, mouseX - guiLeft, mouseY - guiTop)) {
+            if (mouseButton == 0) {
+                int item = scrollbar.getOffset();
 
-        itemSelected = -1;
+                for (int i = 0; i < VISIBLE_ROWS; ++i) {
+                    int ix = 8;
+                    int iy = 39 + (i * ITEM_HEIGHT);
 
-        if (mouseButton == 0 && inBounds(8, 39, 144, 73, mouseX - guiLeft, mouseY - guiTop)) {
-            int item = scrollbar.getOffset();
+                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getChannels().size()) {
+                        itemSelected = item + i;
 
-            for (int i = 0; i < VISIBLE_ROWS; ++i) {
-                int ix = 8;
-                int iy = 39 + (i * ITEM_HEIGHT);
-
-                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getChannels().size()) {
-                    itemSelected = item + i;
-
-                    TileDataManager.setParameter(readerWriter.getChannelParameter(), getChannels().get(itemSelected));
+                        TileDataManager.setParameter(readerWriter.getChannelParameter(), getChannels().get(itemSelected));
+                    }
                 }
+            } else if (itemSelected != -1) {
+                TileDataManager.setParameter(readerWriter.getChannelParameter(), "");
             }
-        }
-
-        if (itemSelectedOld != -1 && itemSelected == -1) {
-            TileDataManager.setParameter(readerWriter.getChannelParameter(), "");
         }
     }
 

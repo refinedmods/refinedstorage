@@ -17,7 +17,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BlockWriter extends BlockCable {
     public BlockWriter() {
@@ -43,7 +42,7 @@ public class BlockWriter extends BlockCable {
                     IReaderWriterChannel channel = writer.getNetwork().getReaderWriterChannel(writer.getChannel());
 
                     if (channel != null) {
-                        channel.getHandlers().stream().map(h -> h.getStatus(writer, channel)).flatMap(List::stream).collect(Collectors.toList()).forEach(player::sendMessage);
+                        channel.getHandlers().stream().map(h -> h.getStatus(writer, channel)).flatMap(List::stream).forEach(player::sendMessage);
                     }
                 }
             } else if (tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side)) {

@@ -71,7 +71,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
             return false;
         }
 
-        if (reader.getNetwork() == null) {
+        if (reader.getNetwork() == null || !reader.canUpdate()) {
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                 return getDummyCapabilityForClient(reader, capability) != null;
             }
@@ -105,7 +105,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
                 return null;
             }
 
-            if (reader.getNetwork() == null) {
+            if (reader.getNetwork() == null || !reader.canUpdate()) {
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
                     return getDummyCapabilityForClient(reader, capability);
                 }
