@@ -51,6 +51,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     public static final int SORTING_TYPE_QUANTITY = 0;
     public static final int SORTING_TYPE_NAME = 1;
+    public static final int SORTING_TYPE_ID= 2;
 
     public static final int SEARCH_BOX_MODE_NORMAL = 0;
     public static final int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
@@ -559,7 +560,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     public static boolean isValidSortingType(int type) {
-        return type == SORTING_TYPE_QUANTITY || type == SORTING_TYPE_NAME;
+        return type == SORTING_TYPE_QUANTITY || type == SORTING_TYPE_NAME || type == SORTING_TYPE_ID;
     }
 
     public static boolean isValidSortingDirection(int direction) {

@@ -11,6 +11,8 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
+import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSorting;
+import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingID;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingName;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingQuantity;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
@@ -45,8 +47,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
 public class GuiGrid extends GuiBase implements IGridDisplay {
-    private static final GridSortingQuantity SORTING_QUANTITY = new GridSortingQuantity();
-    private static final GridSortingName SORTING_NAME = new GridSortingName();
+    private static final GridSorting SORTING_QUANTITY = new GridSortingQuantity();
+    private static final GridSorting SORTING_NAME = new GridSortingName();
+    private static final GridSorting SORTING_ID = new GridSortingID();
 
     public static final ListMultimap<Item, GridStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
     public static final ListMultimap<Fluid, GridStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
@@ -187,11 +190,14 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             SORTING_NAME.setSortingDirection(grid.getSortingDirection());
             SORTING_QUANTITY.setSortingDirection(grid.getSortingDirection());
+            SORTING_ID.setSortingDirection(grid.getSortingDirection());
 
             stacks.sort(SORTING_NAME);
 
             if (grid.getSortingType() == NetworkNodeGrid.SORTING_TYPE_QUANTITY) {
                 stacks.sort(SORTING_QUANTITY);
+            } else if (grid.getSortingType() == NetworkNodeGrid.SORTING_TYPE_ID) {
+                stacks.sort(SORTING_ID);
             }
         }
 
