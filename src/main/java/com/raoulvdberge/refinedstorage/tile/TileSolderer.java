@@ -68,6 +68,7 @@ public class TileSolderer extends TileNode {
     private ISoldererRecipe recipe;
 
     private boolean working = false;
+    private boolean wasWorking = false;
     private int progress = 0;
 
     public TileSolderer() {
@@ -127,12 +128,27 @@ public class TileSolderer extends TileNode {
     }
 
     @Override
+    public void update() {
+        super.update();
+
+        if (!getWorld().isRemote && working != wasWorking) {
+            wasWorking = working;
+
+            updateBlock();
+        }
+    }
+
+    @Override
     public void onConnectionChange(INetworkMaster network, boolean state) {
         super.onConnectionChange(network, state);
 
         if (!state) {
             stop();
         }
+    }
+
+    public boolean isWorking() {
+        return working;
     }
 
     private void stop() {
@@ -174,6 +190,25 @@ public class TileSolderer extends TileNode {
         tag.setInteger(NBT_PROGRESS, progress);
 
         return tag;
+    }
+
+    @Override
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        super.writeUpdate(tag);
+
+        tag.setBoolean(NBT_WORKING, working);
+
+        return tag;
+    }
+
+    @Override
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
+
+        if (tag.hasKey(NBT_WORKING)) {
+            working = tag.getBoolean(NBT_WORKING);
+            wasWorking = working;
+        }
     }
 
     public ItemHandlerBasic getItems() {

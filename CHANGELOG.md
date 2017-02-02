@@ -2,6 +2,7 @@
 
 ### 1.2.20
 - Fixed client side crash with cables (raoulvdberge)
+- Added Solderer particles (raoulvdberge)
 
 ### 1.2.19
 - Added integration for Collosal Chests for the External Storage, Importer and Exporter improving performance (way2muchnoise)
