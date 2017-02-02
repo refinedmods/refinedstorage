@@ -171,6 +171,7 @@ public class TileSolderer extends TileNode {
 
         if (tag.hasKey(NBT_WORKING)) {
             working = tag.getBoolean(NBT_WORKING);
+            wasWorking = working;
         }
 
         if (tag.hasKey(NBT_PROGRESS)) {
@@ -207,7 +208,6 @@ public class TileSolderer extends TileNode {
 
         if (tag.hasKey(NBT_WORKING)) {
             working = tag.getBoolean(NBT_WORKING);
-            wasWorking = working;
         }
     }
 
