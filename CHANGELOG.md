@@ -3,6 +3,7 @@
 ### 1.2.20
 - Fixed client side crash with cables (raoulvdberge)
 - Added Solderer particles (raoulvdberge)
+- Added Grid sorting by ID (way2muchnoise)
 
 ### 1.2.19
 - Added integration for Collosal Chests for the External Storage, Importer and Exporter improving performance (way2muchnoise)
