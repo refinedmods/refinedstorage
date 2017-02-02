@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.20
+- Fixed client side crash with cables (raoulvdberge)
+
 ### 1.2.19
 - Added integration for Collosal Chests for the External Storage, Importer and Exporter improving performance (way2muchnoise)
 - Exposed the Network Card inventory of the Network Transmitter so other tiles can interact with it (raoulvdberge)

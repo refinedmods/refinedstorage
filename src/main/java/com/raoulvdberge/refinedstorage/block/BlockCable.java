@@ -132,14 +132,14 @@ public class BlockCable extends BlockCoverable {
             .withProperty(UP, hasConnectionWith(world, pos, EnumFacing.UP))
             .withProperty(DOWN, hasConnectionWith(world, pos, EnumFacing.DOWN));
 
-        TileNode tile = (TileNode) world.getTileEntity(pos);
-        if (tile != null) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TileNode) {
             if (getPlacementType() != null) {
-                state = state.withProperty(DIRECTION, tile.getDirection());
+                state = state.withProperty(DIRECTION, ((TileNode) tile).getDirection());
             }
 
             if (hasConnectivityState()) {
-                state = state.withProperty(CONNECTED, tile.isConnected());
+                state = state.withProperty(CONNECTED, ((TileNode) tile).isConnected());
             }
         }
 
