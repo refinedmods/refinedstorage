@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSolderer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -33,6 +34,8 @@ public class TileSolderer extends TileNode<NetworkNodeSolderer> {
         }
     });
 
+    private boolean working;
+
     public TileSolderer() {
         dataManager.addWatchedParameter(DURATION);
         dataManager.addWatchedParameter(PROGRESS);
@@ -51,6 +54,28 @@ public class TileSolderer extends TileNode<NetworkNodeSolderer> {
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        super.writeUpdate(tag);
+
+        tag.setBoolean(NetworkNodeSolderer.NBT_WORKING, getNode().isWorking());
+
+        return tag;
+    }
+
+    @Override
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
+
+        if (tag.hasKey(NetworkNodeSolderer.NBT_WORKING)) {
+            working = tag.getBoolean(NetworkNodeSolderer.NBT_WORKING);
+        }
+    }
+
+    public boolean isWorking() {
+        return working;
     }
 
     @Override

@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 public class NetworkNodeSolderer extends NetworkNode {
     public static final String ID = "solderer";
 
-    private static final String NBT_WORKING = "Working";
+    public static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
     private ItemHandlerBasic items = new ItemHandlerBasic(3, new ItemHandlerListenerNetworkNode(this)) {
@@ -48,6 +48,7 @@ public class NetworkNodeSolderer extends NetworkNode {
     private ISoldererRecipe recipe;
 
     private boolean working = false;
+    private boolean wasWorking = false;
     private int progress = 0;
 
     public NetworkNodeSolderer(INetworkNodeHolder holder) {
@@ -62,6 +63,12 @@ public class NetworkNodeSolderer extends NetworkNode {
     @Override
     public void update() {
         super.update();
+
+        if (wasWorking != working) {
+            wasWorking = working;
+
+            RSUtils.updateBlock(holder.world(), holder.pos());
+        }
 
         if (network == null) {
             return;
@@ -139,6 +146,7 @@ public class NetworkNodeSolderer extends NetworkNode {
 
         if (tag.hasKey(NBT_WORKING)) {
             working = tag.getBoolean(NBT_WORKING);
+            wasWorking = working;
         }
 
         if (tag.hasKey(NBT_PROGRESS)) {

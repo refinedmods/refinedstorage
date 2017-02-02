@@ -36,6 +36,8 @@
 - Updated Chinese translation (TartaricAcid)
 - Added filtering slots for the Crafting Monitor (raoulvdberge)
 - Added way to hide tasks created in an automated way in the Crafting Monitor (raoulvdberge)
+- Added Grid sorting by ID (way2muchnoise)
+- Added Solderer particles (raoulvdberge)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
@@ -82,6 +84,11 @@
 - Removed RF support, use Forge Energy instead (raoulvdberge)
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
+
+### 1.2.20
+- Fixed client side crash with cables (raoulvdberge)
+- Added Solderer particles (raoulvdberge)
+- Added Grid sorting by ID (way2muchnoise)
 
 ### 1.2.19
 - Added integration for Collosal Chests for the External Storage, Importer and Exporter improving performance (way2muchnoise)
