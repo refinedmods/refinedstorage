@@ -256,7 +256,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                             ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), false);
 
                             if (took != null) {
-                                matrix.setInventorySlotContents(i, RSUtils.getStack(took));
+                                matrix.setInventorySlotContents(i, RSUtils.transformNullToEmpty(took));
 
                                 found = true;
 
@@ -322,7 +322,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                 }
             } else if (!slot.isEmpty()) {
                 if (slot.getCount() == 1 && network != null) {
-                    matrix.setInventorySlotContents(i, RSUtils.getStack(network.extractItem(slot, 1, false)));
+                    matrix.setInventorySlotContents(i, RSUtils.transformNullToEmpty(network.extractItem(slot, 1, false)));
                 } else {
                     matrix.decrStackSize(i, 1);
                 }

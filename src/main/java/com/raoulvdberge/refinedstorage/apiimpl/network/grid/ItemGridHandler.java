@@ -137,7 +137,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 }
             }
         } else {
-            player.inventory.setItemStack(RSUtils.getStack(network.insertItem(stack, size, false)));
+            player.inventory.setItemStack(RSUtils.transformNullToEmpty(network.insertItem(stack, size, false)));
         }
 
         player.updateHeldItem();

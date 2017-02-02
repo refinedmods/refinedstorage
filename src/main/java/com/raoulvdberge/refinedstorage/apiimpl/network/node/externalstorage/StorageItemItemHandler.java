@@ -55,7 +55,7 @@ public class StorageItemItemHandler extends StorageItemExternal {
         IItemHandler handler = handlerSupplier.get();
 
         if (handler != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
-            return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate);
+            return RSUtils.transformEmptyToNull(ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate));
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);

@@ -140,9 +140,9 @@ public class ContainerGrid extends ContainerBase {
                     IFluidGridHandler fluidHandler = grid.getNetwork().getFluidGridHandler();
 
                     if (grid.getType() != EnumGridType.FLUID && itemHandler != null) {
-                        slot.putStack(RSUtils.getStack(itemHandler.onInsert((EntityPlayerMP) player, slot.getStack())));
+                        slot.putStack(RSUtils.transformNullToEmpty(itemHandler.onInsert((EntityPlayerMP) player, slot.getStack())));
                     } else if (grid.getType() == EnumGridType.FLUID && fluidHandler != null) {
-                        slot.putStack(RSUtils.getStack(fluidHandler.onInsert((EntityPlayerMP) player, slot.getStack())));
+                        slot.putStack(RSUtils.transformNullToEmpty(fluidHandler.onInsert((EntityPlayerMP) player, slot.getStack())));
                     }
 
                     detectAndSendChanges();

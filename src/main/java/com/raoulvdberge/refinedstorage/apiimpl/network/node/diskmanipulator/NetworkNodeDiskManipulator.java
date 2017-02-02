@@ -168,12 +168,12 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             ItemStack stack = storage.getStacks().get(i);
 
             ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
-            if (extracted == null || extracted.isEmpty()) {
+            if (extracted == null) {
                 continue;
             }
 
             ItemStack remainder = network.insertItem(extracted, extracted.getCount(), false);
-            if (remainder == null || remainder.isEmpty()) {
+            if (remainder == null) {
                 break;
             }
 

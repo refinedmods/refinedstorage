@@ -42,6 +42,7 @@ public class StorageItemCyclops extends StorageItemExternal {
 
             if (inventoryHash != oldInventoryHash) {
                 super.detectChanges(network);
+
                 oldInventoryHash = inventoryHash;
             }
         }
@@ -75,7 +76,7 @@ public class StorageItemCyclops extends StorageItemExternal {
         InventoryTileEntityBase inv = cyclopsInv.get();
 
         if (inv != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
-            return SlotlessItemHandlerHelper.insertItem(inv, opposite, stack, size, simulate);
+            return RSUtils.transformEmptyToNull(SlotlessItemHandlerHelper.insertItem(inv, opposite, stack, size, simulate));
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);
@@ -86,7 +87,7 @@ public class StorageItemCyclops extends StorageItemExternal {
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
         InventoryTileEntityBase inv = cyclopsInv.get();
 
-        return inv != null ? SlotlessItemHandlerHelper.extractItem(inv, opposite, stack, size, flags, simulate) : null;
+        return inv != null ? RSUtils.transformEmptyToNull(SlotlessItemHandlerHelper.extractItem(inv, opposite, stack, size, flags, simulate)) : null;
     }
 
     private NonNullList<ItemStack> getStacks(@Nullable InventoryTileEntityBase inv) {

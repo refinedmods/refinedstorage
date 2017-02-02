@@ -50,6 +50,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -116,8 +117,13 @@ public final class RSUtils {
         return Pair.of(buf.readInt(), new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf)));
     }
 
-    public static ItemStack getStack(@Nullable ItemStack stack) {
+    public static ItemStack transformNullToEmpty(@Nullable ItemStack stack) {
         return stack == null ? ItemStack.EMPTY : stack;
+    }
+
+    @Nullable
+    public static ItemStack transformEmptyToNull(@Nonnull ItemStack stack) {
+        return stack.isEmpty() ? null : stack;
     }
 
     @SuppressWarnings("unchecked")
