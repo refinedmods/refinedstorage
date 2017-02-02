@@ -3,6 +3,8 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
 import com.raoulvdberge.refinedstorage.gui.GuiReaderWriter;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
@@ -12,6 +14,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,6 +47,18 @@ public class TileReader extends TileNode<NetworkNodeReader> {
         dataManager.addWatchedParameter(CHANNEL);
     }
 
+    public static <T> T getDummyCapabilityForClient(IReaderWriter readerWriter, Capability<T> capability) {
+        for (IReaderWriterHandlerFactory factory : API.instance().getReaderWriterHandlerRegistry().all()) {
+            T dummy = factory.create(null).getCapability(readerWriter, capability);
+
+            if (dummy != null) {
+                return dummy;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         if (super.hasCapability(capability, facing)) {
@@ -51,7 +67,15 @@ public class TileReader extends TileNode<NetworkNodeReader> {
 
         IReader reader = getNode();
 
-        if (facing != getDirection() || reader.getNetwork() == null) {
+        if (facing != getDirection()) {
+            return false;
+        }
+
+        if (reader.getNetwork() == null) {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                return getDummyCapabilityForClient(reader, capability) != null;
+            }
+
             return false;
         }
 
@@ -77,7 +101,15 @@ public class TileReader extends TileNode<NetworkNodeReader> {
         if (foundCapability == null) {
             IReader reader = getNode();
 
-            if (facing != getDirection() || reader.getNetwork() == null) {
+            if (facing != getDirection()) {
+                return null;
+            }
+
+            if (reader.getNetwork() == null) {
+                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                    return getDummyCapabilityForClient(reader, capability);
+                }
+
                 return null;
             }
 

@@ -7,6 +7,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +28,15 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
 
         IWriter writer = getNode();
 
-        if (facing != getDirection() || writer.getNetwork() == null) {
+        if (facing != getDirection()) {
+            return false;
+        }
+
+        if (writer.getNetwork() == null) {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                return TileReader.getDummyCapabilityForClient(writer, capability) != null;
+            }
+
             return false;
         }
 
@@ -52,7 +62,15 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
         if (foundCapability == null) {
             IWriter writer = getNode();
 
-            if (facing != getDirection() || writer.getNetwork() == null) {
+            if (facing != getDirection()) {
+                return null;
+            }
+
+            if (writer.getNetwork() == null) {
+                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                    return TileReader.getDummyCapabilityForClient(writer, capability);
+                }
+
                 return null;
             }
 
