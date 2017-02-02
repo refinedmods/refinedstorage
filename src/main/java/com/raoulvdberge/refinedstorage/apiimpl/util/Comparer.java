@@ -156,7 +156,7 @@ public class Comparer implements IComparer {
             return EnumActionResult.SUCCESS;
         }
 
-        if ((leftEmpty && !rightEmpty) || (!rightEmpty) && rightEmpty) {
+        if ((leftEmpty && !rightEmpty) || (!leftEmpty && rightEmpty)) {
             return EnumActionResult.FAIL;
         }
 
