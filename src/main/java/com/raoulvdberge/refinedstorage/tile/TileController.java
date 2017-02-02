@@ -446,7 +446,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
-            if (remainder == null) {
+            if (remainder == null || remainder.isEmpty()) {
                 // The external storage is responsible for sending changes, we don't need to anymore
                 if (storage instanceof StorageItemExternal && !simulate) {
                     ((StorageItemExternal) storage).detectChanges(this);
@@ -490,7 +490,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 took = storage.extract(stack, requested - received, flags, simulate);
             }
 
-            if (took != null) {
+            if (took != null && !took.isEmpty()) {
                 // The external storage is responsible for sending changes, we don't need to anymore
                 if (storage instanceof StorageItemExternal && !simulate) {
                     ((StorageItemExternal) storage).detectChanges(this);

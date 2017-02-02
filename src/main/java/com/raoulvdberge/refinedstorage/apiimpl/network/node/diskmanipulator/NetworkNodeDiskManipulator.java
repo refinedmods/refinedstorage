@@ -168,12 +168,12 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             ItemStack stack = storage.getStacks().get(i);
 
             ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
-            if (extracted == null) {
+            if (extracted == null || extracted.isEmpty()) {
                 continue;
             }
 
             ItemStack remainder = network.insertItem(extracted, extracted.getCount(), false);
-            if (remainder == null) {
+            if (remainder == null || remainder.isEmpty()) {
                 break;
             }
 
@@ -201,7 +201,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             int j = 0;
 
-            while ((toExtract == null || toExtract.getCount() == 0) && j < networkItems.size()) {
+            while ((toExtract == null || toExtract.isEmpty()) && j < networkItems.size()) {
                 toExtract = networkItems.get(j++);
             }
 

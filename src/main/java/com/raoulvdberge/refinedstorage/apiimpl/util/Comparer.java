@@ -149,11 +149,14 @@ public class Comparer implements IComparer {
             return EnumActionResult.FAIL;
         }
 
-        if (left.isEmpty() && right.isEmpty()) {
+        boolean leftEmpty = left.isEmpty();
+        boolean rightEmpty = right.isEmpty();
+
+        if (leftEmpty && rightEmpty) {
             return EnumActionResult.SUCCESS;
         }
 
-        if ((left.isEmpty() && !right.isEmpty()) || (!left.isEmpty() && right.isEmpty())) {
+        if ((leftEmpty && !rightEmpty) || (!rightEmpty) && rightEmpty) {
             return EnumActionResult.FAIL;
         }
 
