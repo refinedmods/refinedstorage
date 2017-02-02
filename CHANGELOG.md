@@ -33,6 +33,7 @@
 - Fixed disk textures not working on latest Forge (raoulvdberge)
 - Handle breaking and placing blocks better for Constructor and Destructor (way2muchnoise)
 - Updated Forge to 2226 (raoulvdberge)
+- Updated Chinese translation (TartaricAcid)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
@@ -80,12 +81,33 @@
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
 
+### 1.2.19
+- Added integration for Collosal Chests for the External Storage, Importer and Exporter improving performance (way2muchnoise)
+- Exposed the Network Card inventory of the Network Transmitter so other tiles can interact with it (raoulvdberge)
+- Increased size of Detector textbox (way2muchnoise)
+- Autocrafting bugfixes (way2muchnoise)
+- Fixed stack upgrades not working in exporter when stack size is 16 (way2muchnoise)
+- Fixed crash when rotating External Storage (raoulvdberge)
+- Handle breaking and placing blocks better for Constructor and Destructor (way2muchnoise)
+- Updated cable part back texture and Construction and Destruction Core textures (CyanideX)
+- Updated Forge to 2221 (raoulvdberge)
+- Fixed disk textures not working on latest Forge (raoulvdberge)
+- Updated Chinese translation (TartaricAcid)
+
+### 1.2.18
+- Performance improvements with oredict autocrafting (way2muchnoise)
+- Fixed client side crash with cable (raoulvdberge)
+- Fixed client side crash with disk drive (raoulvdberge)
+- Fixed crash with external storage in fluid mode (raoulvdberge)
+- Fluid Grid now first tries to get buckets from your inventory instead of the storage (raoulvdberge)
+
 ### 1.2.17
 - Ignore damage for damageable items when transferring into crafting grid (way2muchnoise)
 - Ignore tags from given items when transferring into crafting grid (way2muchnoise)
 - Remove sidedness from fluid interface (way2muchnoise)
 - Using tab in a grid that isn't in autoselected mode will focus on the search box (raoulvdberge)
 - Add Ore Dictionary grid filter (use $ as prefix like in JEI) (way2muchnoise)
+- The Stack Upgrade in a Constructor in item dropping mode will drop stacks of items at a time (raoulvdberge)
 - Fixed Constructor in liquid mode being able to place fluids <1000 mB (raoulvdberge)
 - Fixed Solderer recipe conflicts, allowing for easier automation (raoulvdberge)
 - Fixed machines not connecting with cable after Controller (raoulvdberge)

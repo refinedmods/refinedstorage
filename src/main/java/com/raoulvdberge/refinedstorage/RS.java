@@ -23,7 +23,7 @@ public final class RS {
 
     public static final String ID = "refinedstorage";
     public static final String VERSION = "1.4";
-    public static final String DEPENDENCIES = "required-after:forge@[13.19.1.2188,);";
+    public static final String DEPENDENCIES = "required-after:forge@[13.19.1.2188,);after:commoncapabilities@[1.3.1,);";
     public static final String GUI_FACTORY = "com.raoulvdberge.refinedstorage.gui.config.ModGuiFactory";
 
     @SidedProxy(clientSide = "com.raoulvdberge.refinedstorage.proxy.ProxyClient", serverSide = "com.raoulvdberge.refinedstorage.proxy.ProxyCommon")
