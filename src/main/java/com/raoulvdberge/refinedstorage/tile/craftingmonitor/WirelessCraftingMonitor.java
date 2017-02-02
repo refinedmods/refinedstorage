@@ -1,11 +1,13 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
+import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorViewAutomated;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,6 +26,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     private ItemStack stack;
     private int controllerDimension;
     private BlockPos controller;
+    private boolean viewAutomated;
 
     private List<Filter> filters = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), null) {
@@ -49,6 +52,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         this.stack = stack;
         this.controllerDimension = controllerDimension;
         this.controller = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
+        this.viewAutomated = ItemWirelessCraftingMonitor.canViewAutomated(stack);
 
         if (stack.hasTagCompound()) {
             for (int i = 0; i < 4; ++i) {
@@ -102,6 +106,18 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         return filter;
     }
 
+    @Override
+    public boolean canViewAutomated() {
+        return viewAutomated;
+    }
+
+    @Override
+    public void onViewAutomatedChanged(boolean viewAutomated) {
+        RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorViewAutomated(viewAutomated));
+
+        this.viewAutomated = viewAutomated;
+    }
+
     private TileController getController() {
         World world = DimensionManager.getWorld(controllerDimension);
 
@@ -112,6 +128,10 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         }
 
         return null;
+    }
+
+    public ItemStack getStack() {
+        return stack;
     }
 
     @Override

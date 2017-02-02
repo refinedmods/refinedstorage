@@ -26,5 +26,9 @@ public interface ICraftingMonitor {
 
     ItemHandlerBasic getFilter();
 
+    boolean canViewAutomated();
+
+    void onViewAutomatedChanged(boolean viewAutomated);
+
     boolean isActive();
 }

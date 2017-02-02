@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,6 +25,9 @@ import java.util.List;
 public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
     public static final String ID = "crafting_monitor";
 
+    private static final String NBT_VIEW_AUTOMATED = "ViewAutomated";
+
+    private boolean viewAutomated = true;
     private List<Filter> filters = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), new IItemHandlerListener() {
         private ItemHandlerListenerNetworkNode base = new ItemHandlerListenerNetworkNode(NetworkNodeCraftingMonitor.this);
@@ -102,6 +106,8 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
         RSUtils.writeItems(filter, 0, tag);
 
+        tag.setBoolean(NBT_VIEW_AUTOMATED, viewAutomated);
+
         return tag;
     }
 
@@ -110,6 +116,24 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         super.read(tag);
 
         RSUtils.readItems(filter, 0, tag);
+
+        if (tag.hasKey(NBT_VIEW_AUTOMATED)) {
+            viewAutomated = tag.getBoolean(NBT_VIEW_AUTOMATED);
+        }
+    }
+
+    @Override
+    public boolean canViewAutomated() {
+        return holder.world().isRemote ? TileCraftingMonitor.VIEW_AUTOMATED.getValue() : viewAutomated;
+    }
+
+    @Override
+    public void onViewAutomatedChanged(boolean viewAutomated) {
+        TileDataManager.setParameter(TileCraftingMonitor.VIEW_AUTOMATED, viewAutomated);
+    }
+
+    public void setViewAutomated(boolean viewAutomated) {
+        this.viewAutomated = viewAutomated;
     }
 
     public ItemHandlerFilter getFilter() {

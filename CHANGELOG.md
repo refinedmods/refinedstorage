@@ -34,6 +34,8 @@
 - Handle breaking and placing blocks better for Constructor and Destructor (way2muchnoise)
 - Updated Forge to 2226 (raoulvdberge)
 - Updated Chinese translation (TartaricAcid)
+- Added filtering slots for the Crafting Monitor (raoulvdberge)
+- Added way to hide tasks created in an automated way in the Crafting Monitor (raoulvdberge)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)

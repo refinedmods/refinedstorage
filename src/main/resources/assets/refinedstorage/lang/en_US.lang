@@ -134,6 +134,8 @@ sidebutton.refinedstorage:grid.size.1=Small
 sidebutton.refinedstorage:grid.size.2=Medium
 sidebutton.refinedstorage:grid.size.3=Large
 
+sidebutton.refinedstorage:crafting_monitor.view_automated=View tasks started in an automated way
+
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist
 sidebutton.refinedstorage:mode.blacklist=Blacklist

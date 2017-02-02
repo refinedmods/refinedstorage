@@ -17,6 +17,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nullable;
+
 public class ContainerGrid extends ContainerBase {
     public static final int TAB_WIDTH = 28;
     public static final int TAB_HEIGHT = 31;
@@ -27,7 +29,7 @@ public class ContainerGrid extends ContainerBase {
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
 
-    public ContainerGrid(IGrid grid, IGridDisplay display, TileGrid gridTile, EntityPlayer player) {
+    public ContainerGrid(IGrid grid, IGridDisplay display, @Nullable TileGrid gridTile, EntityPlayer player) {
         super(gridTile, player);
 
         this.grid = grid;

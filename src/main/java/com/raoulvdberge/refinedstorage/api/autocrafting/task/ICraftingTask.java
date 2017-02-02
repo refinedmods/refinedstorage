@@ -21,6 +21,7 @@ public interface ICraftingTask {
     String NBT_PATTERN_STACK = "PatternStack";
     String NBT_PATTERN_CONTAINER = "PatternContainer";
     String NBT_REQUESTED = "Requested";
+    String NBT_AUTOMATED = "Automated";
 
     /**
      * Calculates what this task will do, but doesn't run the task yet.
@@ -76,6 +77,7 @@ public interface ICraftingTask {
         tag.setString(NBT_PATTERN_ID, getPattern().getId());
         tag.setTag(NBT_PATTERN_STACK, getPattern().getStack().serializeNBT());
         tag.setLong(NBT_PATTERN_CONTAINER, getPattern().getContainer().getPosition().toLong());
+        tag.setBoolean(NBT_AUTOMATED, isAutomated());
 
         if (getRequested() != null) {
             tag.setTag(NBT_REQUESTED, getRequested().serializeNBT());
@@ -129,7 +131,7 @@ public interface ICraftingTask {
     List<ICraftingPreviewElement> getPreviewStacks();
 
     /**
-     * @return whether this crafting task is created in an automated way
+     * @return whether this crafting task is created in an automated way (through a Crafting Upgrade or the "Trigger task with redstone signal" option in the Crafter) for example
      */
     boolean isAutomated();
 }

@@ -38,7 +38,6 @@ public class CraftingTask implements ICraftingTask {
     public static final String NBT_TO_TAKE_FLUIDS = "ToTakeFluids";
     public static final String NBT_TO_INSERT_ITEMS = "ToInsertItems";
     public static final String NBT_TO_INSERT_FLUIDS = "ToInsertFluids";
-    public static final String NBT_AUTOMATED = "Automated";
 
     private INetworkMaster network;
     @Nullable
@@ -491,8 +490,6 @@ public class CraftingTask implements ICraftingTask {
         }
 
         tag.setTag(NBT_TO_INSERT_FLUIDS, toInsertFluidsList);
-
-        tag.setBoolean(NBT_AUTOMATED, automated);
 
         return tag;
     }

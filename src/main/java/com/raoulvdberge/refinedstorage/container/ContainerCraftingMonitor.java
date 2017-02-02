@@ -8,11 +8,13 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nullable;
+
 public class ContainerCraftingMonitor extends ContainerBase {
     private ICraftingMonitor craftingMonitor;
 
-    public ContainerCraftingMonitor(ICraftingMonitor craftingMonitor, EntityPlayer player) {
-        super(craftingMonitor instanceof TileCraftingMonitor ? (TileCraftingMonitor) craftingMonitor : null, player);
+    public ContainerCraftingMonitor(ICraftingMonitor craftingMonitor, @Nullable TileCraftingMonitor craftingMonitorTile, EntityPlayer player) {
+        super(craftingMonitorTile, player);
 
         this.craftingMonitor = craftingMonitor;
 
