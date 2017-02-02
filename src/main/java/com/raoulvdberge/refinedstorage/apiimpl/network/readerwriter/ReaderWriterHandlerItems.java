@@ -8,6 +8,9 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -15,6 +18,8 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     public static final String ID = "items";
@@ -70,6 +75,23 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
+        List<ITextComponent> components = new ArrayList<>();
+
+        IItemHandler handler = readerWriter instanceof IReader ? itemsReader : itemsWriter;
+
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            ItemStack stack = handler.getStackInSlot(i);
+
+            if (!stack.isEmpty()) {
+                components.add(new TextComponentString(stack.getCount() + "x ").appendSibling(new TextComponentTranslation(stack.getUnlocalizedName() + ".name")));
+            }
+        }
+
+        return components;
     }
 
     private class ItemHandlerReaderWriter implements IItemHandler {

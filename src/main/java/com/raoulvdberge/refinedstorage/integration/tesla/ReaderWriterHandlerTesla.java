@@ -10,10 +10,15 @@ import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
 import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
 import net.darkhax.tesla.capability.TeslaCapabilities;
+import net.darkhax.tesla.lib.TeslaUtils;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class ReaderWriterHandlerTesla implements IReaderWriterHandler {
     public static final String ID = "tesla";
@@ -80,6 +85,17 @@ public class ReaderWriterHandlerTesla implements IReaderWriterHandler {
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
+        ITeslaHolder holder = readerWriter instanceof IReader ? containerReader : containerWriter;
+
+        if (holder.getStoredPower() == 0) {
+            return Collections.emptyList();
+        }
+
+        return Collections.singletonList(new TextComponentString(TeslaUtils.getDisplayableTeslaCount(holder.getStoredPower()) + " / " + TeslaUtils.getDisplayableTeslaCount(holder.getCapacity())));
     }
 
     private class TeslaContainerReader implements ITeslaHolder, ITeslaConsumer {

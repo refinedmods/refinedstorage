@@ -104,6 +104,8 @@ misc.refinedstorage:priority=Priority
 misc.refinedstorage:oredict=Oredict
 misc.refinedstorage:blocking=Blocking
 
+misc.refinedstorage:reader_writer.redstone=Redstone strength: %d
+
 sidebutton.refinedstorage:compare.1=Compare damage
 sidebutton.refinedstorage:compare.2=Compare NBT
 sidebutton.refinedstorage:compare.8=Compare ore dictionary

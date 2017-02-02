@@ -1,11 +1,15 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -13,6 +17,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     public static final String ID = "fluids";
@@ -68,6 +74,17 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
+        FluidStack stack = readerWriter instanceof IReader ? tankReader.getFluid() : tankWriter.getFluid();
+
+        if (stack == null) {
+            return Collections.emptyList();
+        }
+
+        return Collections.singletonList(new TextComponentString(RSUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F) + "x ").appendSibling(new TextComponentTranslation(stack.getUnlocalizedName())));
     }
 
     private class FluidTankReaderWriter implements IFluidTank, IFluidHandler {

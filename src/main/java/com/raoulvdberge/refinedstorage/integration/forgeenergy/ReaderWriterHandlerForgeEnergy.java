@@ -6,12 +6,16 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHan
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     public static final String ID = "forgeenergy";
@@ -69,6 +73,17 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
+        IEnergyStorage storage = readerWriter instanceof IReader ? storageReader : storageWriter;
+
+        if (storage.getEnergyStored() == 0) {
+            return Collections.emptyList();
+        }
+
+        return Collections.singletonList(new TextComponentString(storage.getEnergyStored() + " FE / " + storage.getMaxEnergyStored() + " FE"));
     }
 
     private class EnergyStorageReaderWriter implements IEnergyStorage {

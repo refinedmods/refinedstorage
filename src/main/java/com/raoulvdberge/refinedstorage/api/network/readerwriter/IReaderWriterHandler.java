@@ -2,7 +2,10 @@ package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
 import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+
+import java.util.List;
 
 /**
  * Represents a reader writer handler. Can be for example: items, fluids, energy, ...
@@ -48,4 +51,11 @@ public interface IReaderWriterHandler {
      * @return the id of this writer, as assigned to the {@link IReaderWriterHandlerRegistry}
      */
     String getId();
+
+    /**
+     * @param readerWriter the reader writer
+     * @param channel      the channel
+     * @return status line(s) displayed when right clicking a reader or writer
+     */
+    List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel);
 }

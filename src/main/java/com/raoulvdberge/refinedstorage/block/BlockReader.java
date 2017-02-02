@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BlockReader extends BlockCable {
     public BlockReader() {
@@ -31,8 +34,20 @@ public class BlockReader extends BlockCable {
             return false;
         }
 
-        if (!world.isRemote && tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side)) {
-            ((TileReader) world.getTileEntity(pos)).getNode().onOpened(player);
+        if (!world.isRemote) {
+            NetworkNodeReader reader = ((TileReader) world.getTileEntity(pos)).getNode();
+
+            if (player.isSneaking()) {
+                if (reader.getNetwork() != null) {
+                    IReaderWriterChannel channel = reader.getNetwork().getReaderWriterChannel(reader.getChannel());
+
+                    if (channel != null) {
+                        channel.getHandlers().stream().map(h -> h.getStatus(reader, channel)).flatMap(List::stream).collect(Collectors.toList()).forEach(player::sendMessage);
+                    }
+                }
+            } else if (tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side)) {
+                reader.onOpened(player);
+            }
         }
 
         return true;
