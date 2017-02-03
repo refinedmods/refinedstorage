@@ -58,9 +58,12 @@ public class StackListItemOredicted implements IStackList<ItemStack> {
 
     @Override
     public boolean trackedRemove(@Nonnull ItemStack stack, int size) {
+        // Calling tracked remove with a stack from get causes the reference to be the same
+        // When the underlying list empties the stack the reference will become empty, thus we need to copy before hand
+        ItemStack original = stack.copy();
         boolean rvalue = underlyingList.trackedRemove(stack, size);
         if (underlyingList.needsCleanup) {
-            touchedIds.addAll(Arrays.stream(OreDictionary.getOreIDs(stack)).boxed().collect(Collectors.toList()));
+            touchedIds.addAll(Arrays.stream(OreDictionary.getOreIDs(original)).boxed().collect(Collectors.toList()));
             clean();
         }
         return rvalue;
