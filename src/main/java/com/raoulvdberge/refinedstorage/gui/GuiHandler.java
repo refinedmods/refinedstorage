@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.gui.grid.GridDisplayDummy;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
@@ -68,7 +69,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.DISK_MANIPULATOR:
                 return new ContainerDiskManipulator((TileDiskManipulator) tile, player);
             case RSGui.READER_WRITER:
-                return new ContainerReaderWriter((IReaderWriter) ((TileNode) tile).getNode(), (TileBase) tile, player);
+                return new ContainerReaderWriter((IGuiReaderWriter) ((TileNode) tile).getNode(), (TileBase) tile, player);
             case RSGui.SECURITY_MANAGER:
                 return new ContainerSecurityManager((TileSecurityManager) tile, player);
             default:
@@ -146,7 +147,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.WIRELESS_CRAFTING_MONITOR:
                 return getWirelessCraftingMonitorGui(player, x, y);
             case RSGui.READER_WRITER:
-                return new GuiReaderWriter((ContainerReaderWriter) getContainer(ID, player, tile), (IReaderWriter) ((TileNode) tile).getNode());
+                return new GuiReaderWriter((ContainerReaderWriter) getContainer(ID, player, tile), (IGuiReaderWriter) ((TileNode) tile).getNode());
             case RSGui.SECURITY_MANAGER:
                 return new GuiSecurityManager((ContainerSecurityManager) getContainer(ID, player, tile), (TileSecurityManager) tile);
             default:

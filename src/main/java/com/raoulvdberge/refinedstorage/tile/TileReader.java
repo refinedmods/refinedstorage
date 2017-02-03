@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
 import com.raoulvdberge.refinedstorage.gui.GuiReaderWriter;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
@@ -25,12 +26,12 @@ public class TileReader extends TileNode<NetworkNodeReader> {
         return new TileDataParameter<>(DataSerializers.STRING, "", new ITileDataProducer<String, T>() {
             @Override
             public String getValue(T tile) {
-                return ((IReaderWriter) tile.getNode()).getChannel();
+                return ((IGuiReaderWriter) tile.getNode()).getChannel();
             }
         }, new ITileDataConsumer<String, T>() {
             @Override
             public void setValue(T tile, String value) {
-                ((IReaderWriter) tile.getNode()).setChannel(value);
+                ((IGuiReaderWriter) tile.getNode()).setChannel(value);
 
                 tile.getNode().markDirty();
             }
@@ -47,9 +48,9 @@ public class TileReader extends TileNode<NetworkNodeReader> {
         dataManager.addWatchedParameter(CHANNEL);
     }
 
-    public static <T> T getDummyCapabilityForClient(IReaderWriter readerWriter, Capability<T> capability) {
+    private <T> T getDummyCapabilityForClient(IReader reader, Capability<T> capability) {
         for (IReaderWriterHandlerFactory factory : API.instance().getReaderWriterHandlerRegistry().all()) {
-            T dummy = factory.create(null).getCapability(readerWriter, capability);
+            T dummy = factory.create(null).getCapabilityReader(reader, capability);
 
             if (dummy != null) {
                 return dummy;
@@ -86,7 +87,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
         }
 
         for (IReaderWriterHandler handler : channel.getHandlers()) {
-            if (handler.hasCapability(reader, capability)) {
+            if (handler.hasCapabilityReader(reader, capability)) {
                 return true;
             }
         }
@@ -120,7 +121,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
             }
 
             for (IReaderWriterHandler handler : channel.getHandlers()) {
-                foundCapability = handler.getCapability(reader, capability);
+                foundCapability = handler.getCapabilityReader(reader, capability);
 
                 if (foundCapability != null) {
                     return foundCapability;

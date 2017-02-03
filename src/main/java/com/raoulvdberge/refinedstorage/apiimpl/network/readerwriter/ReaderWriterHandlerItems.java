@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -48,18 +47,28 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     }
 
     @Override
-    public boolean hasCapability(IReaderWriter readerWriter, Capability<?> capability) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && (readerWriter instanceof IReader || readerWriter instanceof IWriter);
+    public boolean hasCapabilityReader(IReader reader, Capability<?> capability) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
     }
 
     @Override
-    public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
+    public <T> T getCapabilityReader(IReader reader, Capability<T> capability) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (readerWriter instanceof IReader) {
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemsReader);
-            } else if (readerWriter instanceof IWriter) {
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemsWriter);
-            }
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemsReader);
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean hasCapabilityWriter(IWriter writer, Capability<?> capability) {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    }
+
+    @Override
+    public <T> T getCapabilityWriter(IWriter writer, Capability<T> capability) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemsWriter);
         }
 
         return null;
@@ -78,10 +87,17 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     }
 
     @Override
-    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
-        List<ITextComponent> components = new ArrayList<>();
+    public List<ITextComponent> getStatusReader(IReader reader, IReaderWriterChannel channel) {
+        return getStatus(itemsReader);
+    }
 
-        IItemHandler handler = readerWriter instanceof IReader ? itemsReader : itemsWriter;
+    @Override
+    public List<ITextComponent> getStatusWriter(IWriter writer, IReaderWriterChannel channel) {
+        return getStatus(itemsWriter);
+    }
+
+    private List<ITextComponent> getStatus(IItemHandler handler) {
+        List<ITextComponent> components = new ArrayList<>();
 
         for (int i = 0; i < handler.getSlots(); ++i) {
             ItemStack stack = handler.getStackInSlot(i);

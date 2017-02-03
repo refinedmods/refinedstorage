@@ -12,7 +12,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-public class NetworkNodeWriter extends NetworkNode implements IWriter {
+public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReaderWriter {
     public static final String ID = "writer";
 
     private static final String NBT_CHANNEL = "Channel";

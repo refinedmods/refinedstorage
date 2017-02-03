@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -46,18 +45,28 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     }
 
     @Override
-    public boolean hasCapability(IReaderWriter readerWriter, Capability<?> capability) {
-        return capability == CapabilityEnergy.ENERGY && (readerWriter instanceof IReader || readerWriter instanceof IWriter);
+    public boolean hasCapabilityReader(IReader reader, Capability<?> capability) {
+        return capability == CapabilityEnergy.ENERGY;
     }
 
     @Override
-    public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
+    public <T> T getCapabilityReader(IReader reader, Capability<T> capability) {
         if (capability == CapabilityEnergy.ENERGY) {
-            if (readerWriter instanceof IReader) {
-                return CapabilityEnergy.ENERGY.cast(storageReader);
-            } else if (readerWriter instanceof IWriter) {
-                return CapabilityEnergy.ENERGY.cast(storageWriter);
-            }
+            return CapabilityEnergy.ENERGY.cast(storageReader);
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean hasCapabilityWriter(IWriter writer, Capability<?> capability) {
+        return capability == CapabilityEnergy.ENERGY;
+    }
+
+    @Override
+    public <T> T getCapabilityWriter(IWriter writer, Capability<T> capability) {
+        if (capability == CapabilityEnergy.ENERGY) {
+            return CapabilityEnergy.ENERGY.cast(storageWriter);
         }
 
         return null;
@@ -76,9 +85,16 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     }
 
     @Override
-    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
-        IEnergyStorage storage = readerWriter instanceof IReader ? storageReader : storageWriter;
+    public List<ITextComponent> getStatusReader(IReader reader, IReaderWriterChannel channel) {
+        return getStatus(storageReader);
+    }
 
+    @Override
+    public List<ITextComponent> getStatusWriter(IWriter writer, IReaderWriterChannel channel) {
+        return getStatus(storageWriter);
+    }
+
+    private List<ITextComponent> getStatus(IEnergyStorage storage) {
         if (storage.getEnergyStored() == 0) {
             return Collections.emptyList();
         }

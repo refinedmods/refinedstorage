@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -47,18 +46,28 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     }
 
     @Override
-    public boolean hasCapability(IReaderWriter readerWriter, Capability<?> capability) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && (readerWriter instanceof IReader || readerWriter instanceof IWriter);
+    public boolean hasCapabilityReader(IReader reader, Capability<?> capability) {
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
     }
 
     @Override
-    public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
+    public <T> T getCapabilityReader(IReader reader, Capability<T> capability) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (readerWriter instanceof IReader) {
-                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tankReader);
-            } else if (readerWriter instanceof IWriter) {
-                return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tankWriter);
-            }
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tankReader);
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean hasCapabilityWriter(IWriter writer, Capability<?> capability) {
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+    }
+
+    @Override
+    public <T> T getCapabilityWriter(IWriter writer, Capability<T> capability) {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tankWriter);
         }
 
         return null;
@@ -77,8 +86,17 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     }
 
     @Override
-    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
-        FluidStack stack = readerWriter instanceof IReader ? tankReader.getFluid() : tankWriter.getFluid();
+    public List<ITextComponent> getStatusReader(IReader reader, IReaderWriterChannel channel) {
+        return getStatus(tankReader);
+    }
+
+    @Override
+    public List<ITextComponent> getStatusWriter(IWriter writer, IReaderWriterChannel channel) {
+        return getStatus(tankWriter);
+    }
+
+    private List<ITextComponent> getStatus(IFluidTank tank) {
+        FluidStack stack = tank.getFluid();
 
         if (stack == null) {
             return Collections.emptyList();

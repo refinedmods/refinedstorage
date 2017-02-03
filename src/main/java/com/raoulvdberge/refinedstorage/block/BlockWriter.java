@@ -42,7 +42,7 @@ public class BlockWriter extends BlockCable {
                     IReaderWriterChannel channel = writer.getNetwork().getReaderWriterChannel(writer.getChannel());
 
                     if (channel != null) {
-                        channel.getHandlers().stream().map(h -> h.getStatus(writer, channel)).flatMap(List::stream).forEach(player::sendMessage);
+                        channel.getHandlers().stream().map(h -> h.getStatusWriter(writer, channel)).flatMap(List::stream).forEach(player::sendMessage);
                     }
                 }
             } else if (tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side)) {

@@ -2,16 +2,16 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
-import com.raoulvdberge.refinedstorage.tile.IStorageGui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.IOException;
 
 public class GuiStorage extends GuiBase {
-    private IStorageGui gui;
+    private IGuiStorage gui;
     private String texture;
 
     private GuiButton priorityButton;
@@ -21,14 +21,14 @@ public class GuiStorage extends GuiBase {
     private int barWidth = 16;
     private int barHeight = 70;
 
-    public GuiStorage(ContainerBase container, IStorageGui gui, String texture) {
+    public GuiStorage(ContainerBase container, IGuiStorage gui, String texture) {
         super(container, 176, 223);
 
         this.gui = gui;
         this.texture = texture;
     }
 
-    public GuiStorage(ContainerBase container, IStorageGui gui) {
+    public GuiStorage(ContainerBase container, IGuiStorage gui) {
         this(container, gui, "gui/storage.png");
     }
 

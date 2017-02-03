@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -41,12 +40,22 @@ public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     }
 
     @Override
-    public boolean hasCapability(IReaderWriter readerWriter, Capability<?> capability) {
+    public boolean hasCapabilityReader(IReader reader, Capability<?> capability) {
         return false;
     }
 
     @Override
-    public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
+    public <T> T getCapabilityReader(IReader reader, Capability<T> capability) {
+        return null;
+    }
+
+    @Override
+    public boolean hasCapabilityWriter(IWriter writer, Capability<?> capability) {
+        return false;
+    }
+
+    @Override
+    public <T> T getCapabilityWriter(IWriter writer, Capability<T> capability) {
         return null;
     }
 
@@ -61,7 +70,16 @@ public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     }
 
     @Override
-    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
+    public List<ITextComponent> getStatusReader(IReader reader, IReaderWriterChannel channel) {
+        return getStatus(channel);
+    }
+
+    @Override
+    public List<ITextComponent> getStatusWriter(IWriter writer, IReaderWriterChannel channel) {
+        return getStatus(channel);
+    }
+
+    private List<ITextComponent> getStatus(IReaderWriterChannel channel) {
         int strength = getStrength(channel);
 
         if (strength == 0) {

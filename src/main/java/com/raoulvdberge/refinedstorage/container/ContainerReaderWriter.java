@@ -1,13 +1,13 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerReaderWriter extends ContainerBase {
-    private IReaderWriter readerWriter;
+    private IGuiReaderWriter readerWriter;
 
-    public ContainerReaderWriter(IReaderWriter readerWriter, TileBase tile, EntityPlayer player) {
+    public ContainerReaderWriter(IGuiReaderWriter readerWriter, TileBase tile, EntityPlayer player) {
         super(tile, player);
 
         this.readerWriter = readerWriter;
@@ -15,7 +15,7 @@ public class ContainerReaderWriter extends ContainerBase {
         addPlayerInventory(8, 127);
     }
 
-    public IReaderWriter getReaderWriter() {
+    public IGuiReaderWriter getReaderWriter() {
         return readerWriter;
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class NetworkNodeReader extends NetworkNode implements IReader {
+public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReaderWriter {
     public static final String ID = "reader";
 
     private static final String NBT_CHANNEL = "Channel";

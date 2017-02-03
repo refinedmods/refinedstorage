@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
-import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -26,18 +25,32 @@ public interface IReaderWriterHandler {
     void onWriterDisabled(IWriter writer);
 
     /**
-     * @param readerWriter the reader writer
-     * @param capability   the capability
-     * @return whether we have the given capability for the reader writer
+     * @param reader     the reader
+     * @param capability the capability
+     * @return whether we have the given capability for the reader
      */
-    boolean hasCapability(IReaderWriter readerWriter, Capability<?> capability);
+    boolean hasCapabilityReader(IReader reader, Capability<?> capability);
 
     /**
-     * @param readerWriter the reader writer
-     * @param capability   the capability
-     * @return the capability for the given reader writer
+     * @param reader     the reader
+     * @param capability the capability
+     * @return the capability for the given reader
      */
-    <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability);
+    <T> T getCapabilityReader(IReader reader, Capability<T> capability);
+
+    /**
+     * @param writer     the writer
+     * @param capability the capability
+     * @return whether we have the given capability for the writer
+     */
+    boolean hasCapabilityWriter(IWriter writer, Capability<?> capability);
+
+    /**
+     * @param writer     the writer
+     * @param capability the capability
+     * @return the capability for the given writer
+     */
+    <T> T getCapabilityWriter(IWriter writer, Capability<T> capability);
 
     /**
      * Writes this reader writer handler to NBT.
@@ -53,9 +66,16 @@ public interface IReaderWriterHandler {
     String getId();
 
     /**
-     * @param readerWriter the reader writer
-     * @param channel      the channel
-     * @return status line(s) displayed when right clicking a reader or writer
+     * @param reader  the reader
+     * @param channel the channel
+     * @return status line(s) displayed when right clicking a reader
      */
-    List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel);
+    List<ITextComponent> getStatusReader(IReader reader, IReaderWriterChannel channel);
+
+    /**
+     * @param writer  the writer
+     * @param channel the channel
+     * @return status line(s) displayed when right clicking a writer
+     */
+    List<ITextComponent> getStatusWriter(IWriter writer, IReaderWriterChannel channel);
 }

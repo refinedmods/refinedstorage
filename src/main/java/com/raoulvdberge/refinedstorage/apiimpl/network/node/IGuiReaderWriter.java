@@ -1,10 +1,9 @@
-package com.raoulvdberge.refinedstorage.tile;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 
-public interface IReaderWriter extends INetworkNode {
+public interface IGuiReaderWriter {
     String getTitle();
 
     String getChannel();
@@ -14,6 +13,10 @@ public interface IReaderWriter extends INetworkNode {
     TileDataParameter<String> getChannelParameter();
 
     TileDataParameter<Integer> getRedstoneModeParameter();
+
+    INetworkMaster getNetwork();
+
+    boolean canUpdate();
 
     default void onAdd(String name) {
         INetworkMaster network = getNetwork();

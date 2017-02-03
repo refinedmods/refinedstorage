@@ -9,13 +9,13 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.IStorageGui;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
@@ -31,7 +31,7 @@ import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IStorageGui, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
+public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
     public static final String ID = "external_storage";
 
     private static final String NBT_PRIORITY = "Priority";

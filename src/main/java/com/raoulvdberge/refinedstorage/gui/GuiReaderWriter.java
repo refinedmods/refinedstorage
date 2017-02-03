@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelAdd;
 import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelRemove;
-import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -27,14 +27,14 @@ public class GuiReaderWriter extends GuiBase {
     private GuiButton add;
     private GuiButton remove;
     private GuiTextField name;
-    private IReaderWriter readerWriter;
+    private IGuiReaderWriter readerWriter;
 
     private int itemSelected = -1;
 
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
-    public GuiReaderWriter(ContainerReaderWriter container, IReaderWriter readerWriter) {
+    public GuiReaderWriter(ContainerReaderWriter container, IGuiReaderWriter readerWriter) {
         super(container, 176, 209);
 
         this.readerWriter = readerWriter;

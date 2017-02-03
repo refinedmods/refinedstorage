@@ -1,9 +1,9 @@
-package com.raoulvdberge.refinedstorage.tile;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 
-public interface IStorageGui {
+public interface IGuiStorage {
     String getGuiTitle();
 
     TileDataParameter<Integer> getTypeParameter();

@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.tile.IReaderWriter;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.darkhax.tesla.api.ITeslaProducer;
@@ -50,26 +49,32 @@ public class ReaderWriterHandlerTesla implements IReaderWriterHandler {
     }
 
     @Override
-    public boolean hasCapability(IReaderWriter readerWriter, Capability<?> capability) {
-        if (readerWriter instanceof IReader) {
-            return capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER;
-        } else if (readerWriter instanceof IWriter) {
-            return capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_PRODUCER;
-        }
-
-        return false;
+    public boolean hasCapabilityReader(IReader reader, Capability<?> capability) {
+        return capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER;
     }
 
     @Override
-    public <T> T getCapability(IReaderWriter readerWriter, Capability<T> capability) {
-        if (readerWriter instanceof IReader || readerWriter instanceof IWriter) {
-            if (capability == TeslaCapabilities.CAPABILITY_HOLDER) {
-                return TeslaCapabilities.CAPABILITY_HOLDER.cast(container);
-            } else if (capability == TeslaCapabilities.CAPABILITY_CONSUMER && readerWriter instanceof IReader) {
-                return TeslaCapabilities.CAPABILITY_CONSUMER.cast(containerReader);
-            } else if (capability == TeslaCapabilities.CAPABILITY_PRODUCER && readerWriter instanceof IWriter) {
-                return TeslaCapabilities.CAPABILITY_PRODUCER.cast(containerWriter);
-            }
+    public <T> T getCapabilityReader(IReader reader, Capability<T> capability) {
+        if (capability == TeslaCapabilities.CAPABILITY_HOLDER) {
+            return TeslaCapabilities.CAPABILITY_HOLDER.cast(container);
+        } else if (capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
+            return TeslaCapabilities.CAPABILITY_CONSUMER.cast(containerReader);
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean hasCapabilityWriter(IWriter writer, Capability<?> capability) {
+        return capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_PRODUCER;
+    }
+
+    @Override
+    public <T> T getCapabilityWriter(IWriter writer, Capability<T> capability) {
+        if (capability == TeslaCapabilities.CAPABILITY_HOLDER) {
+            return TeslaCapabilities.CAPABILITY_HOLDER.cast(container);
+        } else if (capability == TeslaCapabilities.CAPABILITY_PRODUCER) {
+            return TeslaCapabilities.CAPABILITY_PRODUCER.cast(containerWriter);
         }
 
         return null;
@@ -88,9 +93,16 @@ public class ReaderWriterHandlerTesla implements IReaderWriterHandler {
     }
 
     @Override
-    public List<ITextComponent> getStatus(IReaderWriter readerWriter, IReaderWriterChannel channel) {
-        ITeslaHolder holder = readerWriter instanceof IReader ? containerReader : containerWriter;
+    public List<ITextComponent> getStatusReader(IReader reader, IReaderWriterChannel channel) {
+        return getStatus(containerReader);
+    }
 
+    @Override
+    public List<ITextComponent> getStatusWriter(IWriter writer, IReaderWriterChannel channel) {
+        return getStatus(containerWriter);
+    }
+
+    private List<ITextComponent> getStatus(ITeslaHolder holder) {
         if (holder.getStoredPower() == 0) {
             return Collections.emptyList();
         }
