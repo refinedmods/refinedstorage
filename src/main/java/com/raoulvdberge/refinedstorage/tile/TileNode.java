@@ -44,7 +44,9 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             getNode().update();
         }
 
-        super.update();
+        if (getNode().getHolder().world() != null) {
+            super.update();
+        }
     }
 
     @Override
