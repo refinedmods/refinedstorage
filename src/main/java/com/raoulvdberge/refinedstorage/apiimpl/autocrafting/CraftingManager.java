@@ -274,6 +274,9 @@ public class CraftingManager implements ICraftingManager {
                 patterns.addAll((((ICraftingPatternContainer) node).getPatterns()));
             }
         }
+
+        // Auto reschedules stuck tasks after a pattern rebuild
+        craftingTasks.forEach(t -> t.getMissing().clear());
     }
 
     private static ICraftingTask readCraftingTask(INetworkMaster network, NBTTagCompound tag) {

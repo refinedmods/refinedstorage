@@ -433,7 +433,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public void reschedule() {
-        List<ICraftingStep> mainSteps = this.mainSteps.stream().filter(s -> s.getPattern() == pattern).collect(Collectors.toList());
+        List<ICraftingStep> mainSteps = this.mainSteps.stream().filter(s -> s.getPattern().alike(pattern)).collect(Collectors.toList());
         missing.clear();
         this.mainSteps.clear();
         // if the list of main mainSteps is empty there is no point in rescheduling
