@@ -190,8 +190,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     @Override
     public boolean equals(Object o) {
         return o instanceof NetworkNode
-                && holder.pos().equals(((NetworkNode) o).holder.pos())
-                && holder.world().provider.getDimension() == ((NetworkNode) o).holder.world().provider.getDimension();
+            && holder.pos().equals(((NetworkNode) o).holder.pos())
+            && holder.world().provider.getDimension() == ((NetworkNode) o).holder.world().provider.getDimension();
     }
 
     @Override
