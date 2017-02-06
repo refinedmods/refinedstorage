@@ -28,8 +28,8 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public static final String ID = "storage";
 
     class StorageItem extends StorageDiskItem {
-        public StorageItem() {
-            super(NetworkNodeStorage.this.getStorageTag(), NetworkNodeStorage.this.getCapacity());
+        public StorageItem(NBTTagCompound tag) {
+            super(tag, NetworkNodeStorage.this.getCapacity());
         }
 
         @Override
@@ -73,9 +73,8 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
 
     private ItemHandlerBasic filters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
 
-    private NBTTagCompound storageTag = StorageDiskItem.getTag();
-
-    private StorageItem storage;
+    private StorageItem storage = new StorageItem(StorageDiskItem.getTag());
+    private NBTTagCompound storageTagToRead = null;
 
     private EnumItemStorageType type;
 
@@ -90,27 +89,33 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public int getEnergyUsage() {
-        return RS.INSTANCE.config.storageUsage;
-    }
-
-    @Override
     public void update() {
         super.update();
 
-        if (storage == null && storageTag != null) {
-            storage = new StorageItem();
+        if (storageTagToRead != null) {
+            storage = new StorageItem(storageTagToRead);
+
+            storage.readFromNBT();
 
             if (network != null) {
                 network.getItemStorageCache().invalidate();
             }
+
+            storageTagToRead = null;
         }
     }
 
+    public void onPlacedWithStorage(NBTTagCompound tag) {
+        storageTagToRead = tag;
+    }
+
+    @Override
+    public int getEnergyUsage() {
+        return RS.INSTANCE.config.storageUsage;
+    }
+
     public void onBreak() {
-        if (storage != null) {
-            storage.writeToNBT();
-        }
+        storage.writeToNBT();
     }
 
     @Override
@@ -122,9 +127,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
 
     @Override
     public void addItemStorages(List<IStorage<ItemStack>> storages) {
-        if (storage != null) {
-            storages.add(storage);
-        }
+        storages.add(storage);
     }
 
     @Override
@@ -137,7 +140,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
         super.read(tag);
 
         if (tag.hasKey(NBT_STORAGE)) {
-            storageTag = tag.getCompoundTag(NBT_STORAGE);
+            storageTagToRead = tag.getCompoundTag(NBT_STORAGE);
         }
     }
 
@@ -150,11 +153,9 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        if (storage != null) {
-            storage.writeToNBT();
-        }
+        storage.writeToNBT();
 
-        tag.setTag(NBT_STORAGE, storageTag);
+        tag.setTag(NBT_STORAGE, storage.getStorageTag());
 
         return tag;
     }
@@ -201,7 +202,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     public EnumItemStorageType getType() {
-        if (type == null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.STORAGE) {
+        if (type == null && holder.world() != null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.STORAGE) {
             type = (EnumItemStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockStorage.TYPE);
         }
 
@@ -242,14 +243,6 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
         this.voidExcess = voidExcess;
 
         markDirty();
-    }
-
-    public NBTTagCompound getStorageTag() {
-        return storageTag;
-    }
-
-    public void setStorageTag(NBTTagCompound storageTag) {
-        this.storageTag = storageTag;
     }
 
     public StorageDiskItem getStorage() {

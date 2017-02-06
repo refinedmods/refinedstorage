@@ -32,6 +32,10 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
         this.capacity = capacity;
     }
 
+    public NBTTagCompound getStorageTag() {
+        return tag;
+    }
+
     @Override
     public void readFromNBT() {
         NBTTagList list = (NBTTagList) tag.getTag(NBT_FLUIDS);

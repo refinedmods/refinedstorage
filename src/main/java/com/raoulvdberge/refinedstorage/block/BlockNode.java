@@ -57,6 +57,7 @@ public abstract class BlockNode extends BlockBase {
         INetworkNode node = manager.getNode(pos);
 
         manager.removeNode(pos);
+        manager.markDirty(world);
 
         if (node.getNetwork() != null) {
             node.getNetwork().getNodeGraph().rebuild();

@@ -2,7 +2,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.network;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.WorldSavedDataNetworkNode;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -36,5 +38,10 @@ public class NetworkNodeManager implements INetworkNodeManager {
     @Override
     public void clear() {
         nodes.clear();
+    }
+
+    @Override
+    public void markDirty(World world) {
+        WorldSavedDataNetworkNode.get(world).markDirty();
     }
 }

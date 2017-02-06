@@ -46,6 +46,10 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
         this.capacity = capacity;
     }
 
+    public NBTTagCompound getStorageTag() {
+        return tag;
+    }
+
     @Override
     public void readFromNBT() {
         NBTTagList list = (NBTTagList) tag.getTag(NBT_ITEMS);

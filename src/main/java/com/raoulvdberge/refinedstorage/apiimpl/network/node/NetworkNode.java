@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -84,7 +85,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     @Override
     public void markDirty() {
         if (holder.world() != null) {
-            WorldSavedDataNetworkNode.get(holder.world()).markDirty();
+            API.instance().getNetworkNodeManager(holder.world().provider.getDimension()).markDirty(holder.world());
         }
     }
 

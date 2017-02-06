@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.node;
 
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -42,4 +43,11 @@ public interface INetworkNodeManager {
      * Clears all the nodes.
      */
     void clear();
+
+    /**
+     * Marks the nodes dirty.
+     *
+     * @param world the world
+     */
+    void markDirty(World world);
 }

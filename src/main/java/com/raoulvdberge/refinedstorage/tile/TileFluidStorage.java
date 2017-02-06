@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -19,7 +18,7 @@ public class TileFluidStorage extends TileNode<NetworkNodeFluidStorage> {
     public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileFluidStorage>() {
         @Override
         public Integer getValue(TileFluidStorage tile) {
-            return StorageDiskFluid.getStored(tile.getNode().getStorageTag());
+            return tile.getNode().getStorage().getStored();
         }
     });
 

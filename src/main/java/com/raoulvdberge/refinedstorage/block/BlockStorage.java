@@ -77,7 +77,7 @@ public class BlockStorage extends BlockNode {
         super.onBlockPlacedBy(world, pos, state, player, stack);
 
         if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeStorage.NBT_STORAGE)) {
-            ((TileStorage) world.getTileEntity(pos)).getNode().setStorageTag(stack.getTagCompound().getCompoundTag(NetworkNodeStorage.NBT_STORAGE));
+            ((TileStorage) world.getTileEntity(pos)).getNode().onPlacedWithStorage(stack.getTagCompound().getCompoundTag(NetworkNodeStorage.NBT_STORAGE));
         }
     }
 
@@ -96,7 +96,10 @@ public class BlockStorage extends BlockNode {
 
         ItemStack stack = new ItemStack(RSBlocks.STORAGE, 1, getMetaFromState(state));
         stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setTag(NetworkNodeStorage.NBT_STORAGE, ((TileStorage) world.getTileEntity(pos)).getNode().getStorageTag());
+
+        storage.getNode().getStorage().writeToNBT();
+
+        stack.getTagCompound().setTag(NetworkNodeStorage.NBT_STORAGE, storage.getNode().getStorage().getStorageTag());
 
         drops.add(stack);
 

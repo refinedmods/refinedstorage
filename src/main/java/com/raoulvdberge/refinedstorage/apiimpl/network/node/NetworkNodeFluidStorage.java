@@ -28,8 +28,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public static final String ID = "fluid_storage";
 
     class StorageFluid extends StorageDiskFluid {
-        public StorageFluid() {
-            super(NetworkNodeFluidStorage.this.getStorageTag(), NetworkNodeFluidStorage.this.getCapacity());
+        public StorageFluid(NBTTagCompound tag) {
+            super(tag, NetworkNodeFluidStorage.this.getCapacity());
         }
 
         @Override
@@ -74,9 +74,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
-    private NBTTagCompound storageTag = StorageDiskFluid.getTag();
-
-    private StorageFluid storage;
+    private StorageFluid storage = new StorageFluid(StorageDiskFluid.getTag());
+    private NBTTagCompound storageTagToRead;
 
     private EnumFluidStorageType type;
 
@@ -99,13 +98,21 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void update() {
         super.update();
 
-        if (storage == null && storageTag != null) {
-            storage = new StorageFluid();
+        if (storageTagToRead != null) {
+            storage = new StorageFluid(storageTagToRead);
+
+            storage.readFromNBT();
 
             if (network != null) {
                 network.getFluidStorageCache().invalidate();
             }
+
+            storageTagToRead = null;
         }
+    }
+
+    public void onPlacedWithStorage(NBTTagCompound tag) {
+        storageTagToRead = tag;
     }
 
     public void onBreak() {
@@ -138,7 +145,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         super.read(tag);
 
         if (tag.hasKey(NBT_STORAGE)) {
-            storageTag = tag.getCompoundTag(NBT_STORAGE);
+            storageTagToRead = tag.getCompoundTag(NBT_STORAGE);
         }
     }
 
@@ -151,11 +158,9 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        if (storage != null) {
-            storage.writeToNBT();
-        }
+        storage.writeToNBT();
 
-        tag.setTag(NBT_STORAGE, storageTag);
+        tag.setTag(NBT_STORAGE, storage.getStorageTag());
 
         return tag;
     }
@@ -202,7 +207,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     public EnumFluidStorageType getType() {
-        if (type == null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.FLUID_STORAGE) {
+        if (type == null && holder.world() != null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.FLUID_STORAGE) {
             type = (EnumFluidStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockFluidStorage.TYPE);
         }
 
@@ -231,14 +236,6 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         this.mode = mode;
 
         markDirty();
-    }
-
-    public NBTTagCompound getStorageTag() {
-        return storageTag;
-    }
-
-    public void setStorageTag(NBTTagCompound storageTag) {
-        this.storageTag = storageTag;
     }
 
     public StorageDiskFluid getStorage() {
