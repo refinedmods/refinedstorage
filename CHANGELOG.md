@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.21
+- Fixed crash when placing skull (raoulvdberge)
+
 ### 1.2.20
 - Fixed client side crash with cables (raoulvdberge)
 - Added Solderer particles (raoulvdberge)

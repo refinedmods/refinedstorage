@@ -164,7 +164,7 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
             ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, true);
 
             if (took != null) {
-                IBlockState state = block.getBlock().getStateForPlacement(getWorld(), front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), null, item);
+                IBlockState state = block.getBlock().getStateForPlacement(getWorld(), front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) getWorld()), item);
 
                 BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(getWorld(), front, state), getWorld().getBlockState(pos), FakePlayerFactory.getMinecraft((WorldServer) getWorld()), null);
 
