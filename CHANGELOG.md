@@ -45,6 +45,7 @@
 - Added Solderer particles (raoulvdberge)
 - Fixed crash when placing head with Constructor (raoulvdberge)
 - Converting blocks instead of ingots to Printed Processors is now a little faster (raoulvdberge)
+- Pressing shift while starting a crafting task will skip the crafting preview (raoulvdberge)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
