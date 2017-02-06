@@ -38,6 +38,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
                 getNode().markDirty();
 
                 legacyTagToRead = null;
+
+                markDirty();
             }
 
             getNode().update();
@@ -80,8 +82,10 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        // When we have more than the direction stored, this is a legacy tag
-        if (tag.getSize() > 1) {
+        // If we have more than this stored:
+        // x, y, z, id, Direction
+        // Then this is a legacy tag!
+        if (tag.getSize() > 5) {
             legacyTagToRead = tag;
         }
     }
