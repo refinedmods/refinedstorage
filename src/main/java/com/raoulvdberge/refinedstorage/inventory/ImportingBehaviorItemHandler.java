@@ -10,7 +10,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.IItemHandler;
 
 public class ImportingBehaviorItemHandler implements IImportingBehavior {
-
     public static final IImportingBehavior INSTANCE = new ImportingBehaviorItemHandler();
 
     @Override
@@ -34,7 +33,7 @@ public class ImportingBehaviorItemHandler implements IImportingBehavior {
                 ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
 
                 if (result != null && !stack.isEmpty() && network.insertItem(result, result.getCount(), true) == null) {
-                    network.insertItem(result, result.getCount(), false);
+                    network.insertItemTracked(result, result.getCount());
 
                     handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);
                 } else {

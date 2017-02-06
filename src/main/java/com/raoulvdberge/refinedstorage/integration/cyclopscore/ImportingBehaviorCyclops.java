@@ -11,7 +11,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.IItemHandler;
 
 public class ImportingBehaviorCyclops implements IImportingBehavior {
-
     public static final IImportingBehavior INSTANCE = new ImportingBehaviorCyclops();
 
     @Override
@@ -21,13 +20,15 @@ public class ImportingBehaviorCyclops implements IImportingBehavior {
                 ItemStack result = SlotlessItemHandlerHelper.extractItem(entity, facing, upgrades.getItemInteractCount(), true);
 
                 if (result != null && !result.isEmpty() && network.insertItem(result, result.getCount(), true) == null) {
-                    network.insertItem(result, result.getCount(), false);
+                    network.insertItemTracked(result, result.getCount());
+
                     SlotlessItemHandlerHelper.extractItem(entity, facing, result.copy(), upgrades.getItemInteractCount(), false);
                 }
             }
         } else {
             return ImportingBehaviorItemHandler.INSTANCE.doImport(entity, facing, currentSlot, itemFilters, mode, compare, ticks, upgrades, network);
         }
+
         return 0;
     }
 }
