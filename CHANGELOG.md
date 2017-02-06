@@ -43,7 +43,8 @@
 - Added way to hide tasks created in an automated way in the Crafting Monitor (raoulvdberge)
 - Added Grid sorting by ID (way2muchnoise)
 - Added Solderer particles (raoulvdberge)
-- Fixed crash when placing skull (raoulvdberge)
+- Fixed crash when placing head with Constructor (raoulvdberge)
+- Converting blocks instead of ingots to Printed Processors is now a little faster (raoulvdberge)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)

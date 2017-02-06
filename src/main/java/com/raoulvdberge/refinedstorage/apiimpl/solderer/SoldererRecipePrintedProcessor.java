@@ -56,13 +56,13 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
     public int getDuration() {
         switch (type) {
             case ItemProcessor.TYPE_PRINTED_BASIC:
-                return 100 * (fullBlock ? 9 : 1);
+                return 100 * (fullBlock ? 7 : 1);
             case ItemProcessor.TYPE_PRINTED_IMPROVED:
-                return 150 * (fullBlock ? 9 : 1);
+                return 150 * (fullBlock ? 7 : 1);
             case ItemProcessor.TYPE_PRINTED_ADVANCED:
-                return 200 * (fullBlock ? 9 : 1);
+                return 200 * (fullBlock ? 7 : 1);
             case ItemProcessor.TYPE_PRINTED_SILICON:
-                return 90 * (fullBlock ? 9 : 1);
+                return 90 * (fullBlock ? 7 : 1);
             default:
                 return 0;
         }
