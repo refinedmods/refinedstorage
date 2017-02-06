@@ -152,7 +152,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, true);
 
             if (took != null) {
-                IBlockState state = block.getBlock().getStateForPlacement(holder.world(), front, holder.getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), null, EnumHand.MAIN_HAND);
+                IBlockState state = block.getBlock().getStateForPlacement(holder.world(), front, holder.getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) holder.world()), EnumHand.MAIN_HAND);
 
                 if (!canPlace(front, state)) {
                     return;

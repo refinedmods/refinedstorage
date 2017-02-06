@@ -43,6 +43,7 @@
 - Added way to hide tasks created in an automated way in the Crafting Monitor (raoulvdberge)
 - Added Grid sorting by ID (way2muchnoise)
 - Added Solderer particles (raoulvdberge)
+- Fixed crash when placing skull (raoulvdberge)
 
 ### 1.3.5
 - Fixed TPS lag on very large crafting tasks (way2muchnoise)
