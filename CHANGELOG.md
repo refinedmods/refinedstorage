@@ -1,7 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.2.21
-- Fixed crash when placing skull (raoulvdberge)
+- Fixed crash when placing head with Constructor (raoulvdberge)
 
 ### 1.2.20
 - Fixed client side crash with cables (raoulvdberge)
