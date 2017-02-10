@@ -428,7 +428,7 @@ public class ProxyCommon {
         );
 
         // Processing Pattern Encoder
-        GameRegistry.addRecipe(new ItemStack(RSBlocks.PROCESSING_PATTERN_ENCODER),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.PROCESSING_PATTERN_ENCODER),
             "ECE",
             "PMP",
             "EFE",
@@ -437,7 +437,7 @@ public class ProxyCommon {
             'P', new ItemStack(RSItems.PATTERN),
             'C', "workbench",
             'F', new ItemStack(Blocks.FURNACE)
-        );
+        ));
 
         // External Storage
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.EXTERNAL_STORAGE),
@@ -778,7 +778,7 @@ public class ProxyCommon {
         );
 
         // Security Manager
-        GameRegistry.addShapedRecipe(new ItemStack(RSBlocks.SECURITY_MANAGER),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.SECURITY_MANAGER),
             "ECE",
             "SMS",
             "ESE",
@@ -787,7 +787,7 @@ public class ProxyCommon {
             'M', new ItemStack(RSBlocks.MACHINE_CASING),
             'S', new ItemStack(RSItems.SECURITY_CARD),
             'C', "chest"
-        );
+        ));
 
         // Security Card
         GameRegistry.addShapedRecipe(new ItemStack(RSItems.SECURITY_CARD),
