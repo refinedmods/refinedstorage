@@ -435,7 +435,7 @@ public class ProxyCommon {
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'M', new ItemStack(RSBlocks.MACHINE_CASING),
             'P', new ItemStack(RSItems.PATTERN),
-            'C', new ItemStack(Blocks.CRAFTING_TABLE),
+            'C', "workbench",
             'F', new ItemStack(Blocks.FURNACE)
         );
 
@@ -786,7 +786,7 @@ public class ProxyCommon {
             'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
             'M', new ItemStack(RSBlocks.MACHINE_CASING),
             'S', new ItemStack(RSItems.SECURITY_CARD),
-            'C', new ItemStack(Blocks.CHEST)
+            'C', "chest"
         );
 
         // Security Card
