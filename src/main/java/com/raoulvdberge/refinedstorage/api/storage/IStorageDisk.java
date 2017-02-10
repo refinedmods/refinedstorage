@@ -28,9 +28,11 @@ public interface IStorageDisk<T> extends IStorage<T> {
     boolean isValid(ItemStack stack);
 
     /**
-     * Called when the storage changes.
+     * Sets a listener that is called when the storage changes.
+     *
+     * @param listener the listener
      */
-    void onChanged();
+    void setListener(Runnable listener);
 
     /**
      * Reads the storage from NBT.

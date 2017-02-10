@@ -42,6 +42,6 @@ public class NetworkNodeManager implements INetworkNodeManager {
 
     @Override
     public void markDirty(World world) {
-        WorldSavedDataNetworkNode.get(world).markDirty();
+        WorldSavedDataNetworkNode.getOrLoadData(world).markDirty();
     }
 }

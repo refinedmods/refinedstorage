@@ -27,6 +27,9 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
     private NonNullList<FluidStack> stacks = NonNullList.create();
 
+    private Runnable listener = () -> {
+    };
+
     public StorageDiskFluid(NBTTagCompound tag, int capacity) {
         this.tag = tag;
         this.capacity = capacity;
@@ -92,7 +95,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
                         otherStack.amount += remainingSpace;
 
-                        onChanged();
+                        listener.run();
                     }
 
                     return isVoiding() ? null : RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
@@ -102,7 +105,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
                         otherStack.amount += size;
 
-                        onChanged();
+                        listener.run();
                     }
 
                     return null;
@@ -126,7 +129,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
                 stacks.add(RSUtils.copyStackWithSize(stack, remainingSpace));
 
-                onChanged();
+                listener.run();
             }
 
             return isVoiding() ? null : RSUtils.copyStackWithSize(stack, size - remainingSpace);
@@ -136,7 +139,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
                 stacks.add(RSUtils.copyStackWithSize(stack, size));
 
-                onChanged();
+                listener.run();
             }
 
             return null;
@@ -161,7 +164,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
                     tag.setInteger(NBT_STORED, getStored() - size);
 
-                    onChanged();
+                    listener.run();
                 }
 
                 return RSUtils.copyStackWithSize(otherStack, size);
@@ -169,11 +172,6 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
         }
 
         return null;
-    }
-
-    @Override
-    public void onChanged() {
-        // NO OP
     }
 
     @Override
@@ -214,6 +212,11 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     @Override
     public boolean isValid(ItemStack stack) {
         return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUIDS) && stack.getTagCompound().hasKey(NBT_STORED);
+    }
+
+    @Override
+    public void setListener(Runnable listener) {
+        this.listener = listener;
     }
 
     public static NBTTagCompound getShareTag(NBTTagCompound tag) {

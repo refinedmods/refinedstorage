@@ -20,6 +20,17 @@ public class StorageItemDiskManipulator implements IStorageDisk<ItemStack> {
     public StorageItemDiskManipulator(NetworkNodeDiskManipulator diskManipulator, IStorageDisk<ItemStack> parent) {
         this.diskManipulator = diskManipulator;
         this.parent = parent;
+        this.parent.setListener(() -> {
+            diskManipulator.markDirty();
+
+            int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+
+            if (lastState != currentState) {
+                lastState = currentState;
+
+                RSUtils.updateBlock(diskManipulator.getHolder().world(), diskManipulator.getHolder().pos());
+            }
+        });
         this.lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
     }
 
@@ -39,18 +50,8 @@ public class StorageItemDiskManipulator implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public void onChanged() {
-        parent.onChanged();
-
-        diskManipulator.markDirty();
-
-        int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
-
-        if (lastState != currentState) {
-            lastState = currentState;
-
-            RSUtils.updateBlock(diskManipulator.getHolder().world(), diskManipulator.getHolder().pos());
-        }
+    public void setListener(Runnable listener) {
+        // NO OP
     }
 
     @Override

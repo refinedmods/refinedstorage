@@ -77,7 +77,7 @@ public class WorldSavedDataNetworkNode extends WorldSavedData {
         return tag;
     }
 
-    public static WorldSavedDataNetworkNode get(World world) {
+    public static WorldSavedDataNetworkNode getOrLoadData(World world) {
         MapStorage storage = world.getPerWorldStorage();
         WorldSavedDataNetworkNode instance = (WorldSavedDataNetworkNode) storage.getOrLoadData(WorldSavedDataNetworkNode.class, NAME);
 

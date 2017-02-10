@@ -30,6 +30,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     class StorageFluid extends StorageDiskFluid {
         public StorageFluid(NBTTagCompound tag) {
             super(tag, NetworkNodeFluidStorage.this.getCapacity());
+
+            this.setListener(NetworkNodeFluidStorage.this::markDirty);
         }
 
         @Override
@@ -55,13 +57,6 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         @Override
         public boolean isVoiding() {
             return voidExcess;
-        }
-
-        @Override
-        public void onChanged() {
-            super.onChanged();
-
-            markDirty();
         }
     }
 

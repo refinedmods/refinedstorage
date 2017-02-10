@@ -35,6 +35,9 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     private NBTTagCompound tag;
     private int capacity;
 
+    private Runnable listener = () -> {
+    };
+
     private NonNullList<ItemStack> stacks = NonNullList.create();
 
     /**
@@ -136,7 +139,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
                         otherStack.grow(remainingSpace);
 
-                        onChanged();
+                        listener.run();
                     }
 
                     return isVoiding() ? null : ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
@@ -146,7 +149,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
                         otherStack.grow(size);
 
-                        onChanged();
+                        listener.run();
                     }
 
                     return null;
@@ -170,7 +173,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
                 stacks.add(ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
 
-                onChanged();
+                listener.run();
             }
 
             return isVoiding() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
@@ -180,7 +183,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
                 stacks.add(ItemHandlerHelper.copyStackWithSize(stack, size));
 
-                onChanged();
+                listener.run();
             }
 
             return null;
@@ -205,7 +208,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
                     tag.setInteger(NBT_STORED, getStored() - size);
 
-                    onChanged();
+                    listener.run();
                 }
 
                 return ItemHandlerHelper.copyStackWithSize(otherStack, size);
@@ -236,13 +239,13 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public void onChanged() {
-        // NO OP
+    public boolean isValid(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ITEMS) && stack.getTagCompound().hasKey(NBT_STORED);
     }
 
     @Override
-    public boolean isValid(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ITEMS) && stack.getTagCompound().hasKey(NBT_STORED);
+    public void setListener(Runnable listener) {
+        this.listener = listener;
     }
 
     @Override

@@ -55,17 +55,10 @@ public class NetworkNodeListener {
     }
 
     @SubscribeEvent
-    public void onWorldSave(WorldEvent.Save e) {
-        WorldSavedDataNetworkNode.get(e.getWorld());
-    }
-
-    @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load e) {
-        WorldSavedDataNetworkNode.get(e.getWorld());
-    }
-
-    @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload e) {
+        // Clear all data from a possible previous load, so we start with a clean slate
         API.instance().getNetworkNodeManager(e.getWorld().provider.getDimension()).clear();
+
+        WorldSavedDataNetworkNode.getOrLoadData(e.getWorld());
     }
 }

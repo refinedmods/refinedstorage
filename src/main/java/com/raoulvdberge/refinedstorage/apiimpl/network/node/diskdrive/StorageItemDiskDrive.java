@@ -21,6 +21,17 @@ public class StorageItemDiskDrive implements IStorageDisk<ItemStack> {
     public StorageItemDiskDrive(NetworkNodeDiskDrive diskDrive, IStorageDisk<ItemStack> parent) {
         this.diskDrive = diskDrive;
         this.parent = parent;
+        this.parent.setListener(() -> {
+            diskDrive.markDirty();
+
+            int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+
+            if (lastState != currentState) {
+                lastState = currentState;
+
+                RSUtils.updateBlock(diskDrive.getHolder().world(), diskDrive.getHolder().pos());
+            }
+        });
         this.lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
     }
 
@@ -81,18 +92,8 @@ public class StorageItemDiskDrive implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public void onChanged() {
-        parent.onChanged();
-
-        diskDrive.markDirty();
-
-        int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
-
-        if (lastState != currentState) {
-            lastState = currentState;
-
-            RSUtils.updateBlock(diskDrive.getHolder().world(), diskDrive.getHolder().pos());
-        }
+    public void setListener(Runnable listener) {
+        // NO OP
     }
 
     @Override
