@@ -36,7 +36,7 @@ public class WorldSavedDataNetworkNode extends WorldSavedData {
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         if (tag.hasKey(NBT_NODES) && tag.hasKey(NBT_DIMENSION)) {
-            int dimension = tag.getInteger(NBT_DIMENSION);
+            dimension = tag.getInteger(NBT_DIMENSION);
 
             NBTTagList list = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
 
