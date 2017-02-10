@@ -377,16 +377,16 @@ public class ProxyCommon {
         );
 
         // Processing Pattern Encoder
-        GameRegistry.addRecipe(new ItemStack(RSBlocks.PROCESSING_PATTERN_ENCODER),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.PROCESSING_PATTERN_ENCODER),
             "ECE",
             "PMP",
             "EFE",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'M', new ItemStack(RSBlocks.MACHINE_CASING),
             'P', new ItemStack(RSItems.PATTERN),
-            'C', new ItemStack(Blocks.CRAFTING_TABLE),
+            'C', "workbench",
             'F', new ItemStack(Blocks.FURNACE)
-        );
+        ));
 
         // External Storage
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.EXTERNAL_STORAGE),
