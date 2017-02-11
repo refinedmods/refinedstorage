@@ -66,7 +66,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
             RSUtils.updateBlock(holder.world(), holder.pos());
         }
 
-        if (network != null && ticks % SPEED == 0) {
+        if (network != null && canUpdate() && ticks % SPEED == 0) {
             if (type == IType.ITEMS) {
                 ItemStack slot = itemFilters.getStackInSlot(0);
 

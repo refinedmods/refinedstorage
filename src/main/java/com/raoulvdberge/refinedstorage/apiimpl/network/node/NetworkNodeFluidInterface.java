@@ -86,7 +86,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
             }
         }
 
-        if (network != null && ticks % upgrades.getSpeed() == 0) {
+        if (network != null && canUpdate() && ticks % upgrades.getSpeed() == 0) {
             FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
 
             // Drain in tank

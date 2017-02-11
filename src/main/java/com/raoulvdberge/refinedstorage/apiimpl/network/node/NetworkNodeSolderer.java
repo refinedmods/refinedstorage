@@ -70,7 +70,7 @@ public class NetworkNodeSolderer extends NetworkNode {
             RSUtils.updateBlock(holder.world(), holder.pos());
         }
 
-        if (network == null) {
+        if (network == null || !canUpdate()) {
             return;
         }
 

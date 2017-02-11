@@ -57,7 +57,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     public void update() {
         super.update();
 
-        if (network != null && ticks % upgrades.getSpeed() == 0) {
+        if (network != null && canUpdate() && ticks % upgrades.getSpeed() == 0) {
             if (type == IType.ITEMS) {
                 IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), holder.getDirection().getOpposite());
 
