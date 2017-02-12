@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.4.1
+- Added Storage Monitor (raoulvdberge)
 - Fixed Processing Pattern Encoder and Reader recipes not supporting oredict workbench and chest (VT-14)
 - Fixed network nodes not saving correctly (raoulvdberge)
 - Fixed network nodes not respecting redstone mode (raoulvdberge)
