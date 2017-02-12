@@ -800,6 +800,19 @@ public class ProxyCommon {
             'C', new ItemStack(RSItems.NETWORK_CARD),
             'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
+
+        // Storage Monitor
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.STORAGE_MONITOR),
+            "PCG",
+            "EMG",
+            "PDG",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
+            'C', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
+            'D', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
+            'M', new ItemStack(RSBlocks.MACHINE_CASING),
+            'G', "blockGlass"
+        ));
     }
 
     public void init(FMLInitializationEvent e) {

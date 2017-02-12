@@ -9,11 +9,15 @@ import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class NetworkNodeStorageMonitor extends NetworkNode implements IComparable, IType {
     public static final String ID = "storage_monitor";
+
+    private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_TYPE = "Type";
 
     private ItemHandlerBasic itemFilter = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this)) {
         @Override
@@ -76,6 +80,8 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     public void setCompare(int compare) {
         this.compare = compare;
 
+        RSUtils.updateBlock(holder.world(), holder.pos());
+
         markDirty();
     }
 
@@ -88,12 +94,43 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     public void setType(int type) {
         this.type = type;
 
+        RSUtils.updateBlock(holder.world(), holder.pos());
+
         markDirty();
     }
 
     @Override
     public IItemHandler getFilterInventory() {
         return getType() == IType.ITEMS ? itemFilter : fluidFilter;
+    }
+
+    @Override
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
+
+        tag.setInteger(NBT_COMPARE, compare);
+        tag.setInteger(NBT_TYPE, type);
+
+        RSUtils.writeItems(itemFilter, 0, tag);
+        RSUtils.writeItems(fluidFilter, 1, tag);
+
+        return tag;
+    }
+
+    @Override
+    public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
+
+        if (tag.hasKey(NBT_COMPARE)) {
+            compare = tag.getInteger(NBT_COMPARE);
+        }
+
+        if (tag.hasKey(NBT_TYPE)) {
+            type = tag.getInteger(NBT_TYPE);
+        }
+
+        RSUtils.readItems(itemFilter, 0, tag);
+        RSUtils.readItems(fluidFilter, 1, tag);
     }
 
     public ItemHandlerBasic getItemFilter() {
@@ -136,5 +173,10 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
                 return 0;
             }
         }
+    }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
     }
 }

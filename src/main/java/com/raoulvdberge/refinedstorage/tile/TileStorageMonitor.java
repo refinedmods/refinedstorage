@@ -7,7 +7,8 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fluids.FluidStack;
+
+import javax.annotation.Nullable;
 
 public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
     private static final String NBT_TYPE = "Type";
@@ -19,8 +20,8 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
 
     private int type;
     private int amount;
-    private ItemStack itemStack = ItemStack.EMPTY;
-    private FluidStack fluidStack;
+    @Nullable
+    private ItemStack itemStack;
 
     public TileStorageMonitor() {
         dataManager.addWatchedParameter(COMPARE);
@@ -37,7 +38,13 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
         super.writeUpdate(tag);
 
         tag.setInteger(NBT_TYPE, getNode().getType());
-        tag.setTag(NBT_STACK, getNode().getType() == IType.ITEMS ? getNode().getItemFilter().getStackInSlot(0).writeToNBT(new NBTTagCompound()) : getNode().getFluidFilter().getFluidStackInSlot(0).writeToNBT(new NBTTagCompound()));
+
+        ItemStack stack = getNode().getType() == IType.ITEMS ? getNode().getItemFilter().getStackInSlot(0) : getNode().getFluidFilter().getStackInSlot(0);
+
+        if (!stack.isEmpty()) {
+            tag.setTag(NBT_STACK, stack.writeToNBT(new NBTTagCompound()));
+        }
+
         tag.setInteger(NBT_AMOUNT, getNode().getAmount());
 
         return tag;
@@ -48,21 +55,16 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
         super.readUpdate(tag);
 
         type = tag.getInteger(NBT_TYPE);
-
-        if (type == IType.ITEMS) {
-            itemStack = new ItemStack(tag.getCompoundTag(NBT_STACK));
-        } else {
-            fluidStack = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag(NBT_STACK));
-        }
-
+        itemStack = tag.hasKey(NBT_STACK) ? new ItemStack(tag.getCompoundTag(NBT_STACK)) : null;
         amount = tag.getInteger(NBT_AMOUNT);
     }
 
     @Override
     protected boolean canUpdateCauseRerender(NBTTagCompound tag) {
         EnumFacing receivedDirection = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+        boolean receivedActive = tag.getBoolean(NBT_ACTIVE);
 
-        return receivedDirection != getDirection();
+        return receivedDirection != getDirection() || receivedActive != getNode().isActive();
     }
 
     public int getType() {
@@ -73,11 +75,8 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
         return amount;
     }
 
+    @Nullable
     public ItemStack getItemStack() {
         return itemStack;
-    }
-
-    public FluidStack getFluidStack() {
-        return fluidStack;
     }
 }

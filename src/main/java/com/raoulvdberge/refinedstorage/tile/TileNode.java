@@ -24,7 +24,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private NBTTagCompound legacyTagToRead;
-    private static final String NBT_ACTIVE = "Active";
+    protected static final String NBT_ACTIVE = "Active";
 
     public TileNode() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -99,9 +99,9 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     }
 
     public void readUpdate(NBTTagCompound tag) {
-        getNode().setActive(tag.getBoolean(NBT_ACTIVE));
-
         super.readUpdate(tag);
+
+        getNode().setActive(tag.getBoolean(NBT_ACTIVE));
     }
 
     public IItemHandler getDrops() {

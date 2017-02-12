@@ -33,7 +33,7 @@ public class BlockStorageMonitor extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
-        return null;
+    public boolean hasConnectivityState() {
+        return true;
     }
 }
