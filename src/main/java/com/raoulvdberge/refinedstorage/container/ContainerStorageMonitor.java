@@ -17,26 +17,12 @@ public class ContainerStorageMonitor extends ContainerBase {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = ItemStack.EMPTY;
-
         Slot slot = getSlot(index);
 
-        if (slot.getHasStack()) {
-            stack = slot.getStack();
+        ItemStack stack = slot.getStack();
 
-            if (index < 4) {
-                if (!mergeItemStack(stack, 4, inventorySlots.size(), false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!mergeItemStack(stack, 0, 4, false)) {
-                return mergeItemStackToFilters(stack, 4, 4 + 1);
-            }
-
-            if (stack.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
+        if (index > 0 && slot.getHasStack()) {
+            return mergeItemStackToFilters(stack, 0, 1);
         }
 
         return stack;

@@ -16,7 +16,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 
 public abstract class TileBase extends TileEntity implements ITickable {
-    private static final String NBT_DIRECTION = "Direction";
+    protected static final String NBT_DIRECTION = "Direction";
 
     private EnumFacing direction = EnumFacing.NORTH;
 
@@ -65,9 +65,17 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     public void readUpdate(NBTTagCompound tag) {
+        boolean doRerender = canUpdateCauseRerender(tag);
+
         direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
 
-        RSUtils.updateBlock(getWorld(), pos);
+        if (doRerender) {
+            RSUtils.updateBlock(getWorld(), pos);
+        }
+    }
+
+    protected boolean canUpdateCauseRerender(NBTTagCompound tag) {
+        return true;
     }
 
     @Override

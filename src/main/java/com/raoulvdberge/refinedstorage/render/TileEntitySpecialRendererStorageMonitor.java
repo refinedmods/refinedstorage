@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.render;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -8,7 +9,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
@@ -27,7 +27,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
 
         GlStateManager.scale(0.4F, -0.4F, -0.015F);
 
-        ItemStack stack = new ItemStack(Blocks.PISTON);
+        ItemStack stack = tile.getItemStack();
 
         RenderItem itemRender = Minecraft.getMinecraft().getRenderItem();
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -60,7 +60,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
         float factor = 2.0f;
         GlStateManager.scale(size * factor, size * factor, size);
 
-        Minecraft.getMinecraft().fontRendererObj.drawString("It works", 0, 0, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRendererObj.drawString(RSUtils.formatQuantity(tile.getAmount()), 0, 0, 0xFFFFFF);
 
         GlStateManager.popMatrix();
 
