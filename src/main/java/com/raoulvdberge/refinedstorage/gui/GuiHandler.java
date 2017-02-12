@@ -72,6 +72,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerReaderWriter((IGuiReaderWriter) ((TileNode) tile).getNode(), (TileBase) tile, player);
             case RSGui.SECURITY_MANAGER:
                 return new ContainerSecurityManager((TileSecurityManager) tile, player);
+            case RSGui.STORAGE_MONITOR:
+                return new ContainerStorageMonitor((TileStorageMonitor) tile, player);
             default:
                 return null;
         }
@@ -150,6 +152,8 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiReaderWriter((ContainerReaderWriter) getContainer(ID, player, tile), (IGuiReaderWriter) ((TileNode) tile).getNode());
             case RSGui.SECURITY_MANAGER:
                 return new GuiSecurityManager((ContainerSecurityManager) getContainer(ID, player, tile), (TileSecurityManager) tile);
+            case RSGui.STORAGE_MONITOR:
+                return new GuiStorageMonitor((ContainerStorageMonitor) getContainer(ID, player, tile));
             default:
                 return null;
         }

@@ -125,7 +125,6 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
         return tag;
     }
 
-
     @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);

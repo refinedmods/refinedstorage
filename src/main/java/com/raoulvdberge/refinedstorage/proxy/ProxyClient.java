@@ -12,7 +12,9 @@ import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewRespons
 import com.raoulvdberge.refinedstorage.render.BakedModelPattern;
 import com.raoulvdberge.refinedstorage.render.ModelDiskDrive;
 import com.raoulvdberge.refinedstorage.render.ModelDiskManipulator;
+import com.raoulvdberge.refinedstorage.render.TileEntitySpecialRendererStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileController;
+import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -36,6 +38,7 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -49,6 +52,9 @@ public class ProxyClient extends ProxyCommon {
         super.preInit(e);
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        // TESRs
+        ClientRegistry.bindTileEntitySpecialRenderer(TileStorageMonitor.class, new TileEntitySpecialRendererStorageMonitor());
 
         // Item Variants
         ModelBakery.registerItemVariants(RSItems.STORAGE_DISK,
@@ -201,6 +207,7 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DISK_MANIPULATOR), 0, new ModelResourceLocation("refinedstorage:disk_manipulator", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.SECURITY_MANAGER), 0, new ModelResourceLocation("refinedstorage:security_manager", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE_MONITOR), 0, new ModelResourceLocation("refinedstorage:storage_monitor", "inventory"));
 
         ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
             @Override

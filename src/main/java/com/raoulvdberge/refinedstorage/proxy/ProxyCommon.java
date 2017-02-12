@@ -156,6 +156,7 @@ public class ProxyCommon {
         registerTile(TileSecurityManager.class, "security_manager");
         registerTile(TileReader.class, "reader");
         registerTile(TileWriter.class, "writer");
+        registerTile(TileStorageMonitor.class, "storage_monitor");
 
         registerBlock(RSBlocks.CONTROLLER);
         registerBlock(RSBlocks.GRID);
@@ -175,6 +176,7 @@ public class ProxyCommon {
         registerBlock(RSBlocks.SECURITY_MANAGER);
         registerBlock(RSBlocks.READER);
         registerBlock(RSBlocks.WRITER);
+        registerBlock(RSBlocks.STORAGE_MONITOR);
 
         registerBlock(RSBlocks.DETECTOR);
         registerBlock(RSBlocks.RELAY);

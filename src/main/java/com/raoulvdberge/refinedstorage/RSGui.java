@@ -27,4 +27,5 @@ public final class RSGui {
     public static final int WIRELESS_CRAFTING_MONITOR = 23;
     public static final int READER_WRITER = 24;
     public static final int SECURITY_MANAGER = 25;
+    public static final int STORAGE_MONITOR = 26;
 }
