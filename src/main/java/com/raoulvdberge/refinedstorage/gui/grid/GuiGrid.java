@@ -514,8 +514,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             updateJEI();
         }
 
-        boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop + getTabDelta());
-        boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop + getTabDelta());
+        boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
+        boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
         if (clickedCreatePattern) {
             BlockPos gridPos = ((NetworkNodeGrid) grid).getPos();

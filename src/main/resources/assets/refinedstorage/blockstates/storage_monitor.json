@@ -4,12 +4,12 @@
     "model": "cube",
     "textures": {
       "particle": "refinedstorage:blocks/side",
-      "north": "refinedstorage:blocks/machine_casing",
-      "east": "refinedstorage:blocks/grid_left",
-      "south": "refinedstorage:blocks/grid_back",
-      "west": "refinedstorage:blocks/grid_right",
-      "up": "refinedstorage:blocks/grid_top",
-      "down": "refinedstorage:blocks/bottom"
+      "north": "refinedstorage:blocks/interface_disconnected",
+      "east": "refinedstorage:blocks/side",
+      "south": "refinedstorage:blocks/side",
+      "west": "refinedstorage:blocks/side",
+      "up": "refinedstorage:blocks/side",
+      "down": "refinedstorage:blocks/side"
     }
   },
   "variants": {
