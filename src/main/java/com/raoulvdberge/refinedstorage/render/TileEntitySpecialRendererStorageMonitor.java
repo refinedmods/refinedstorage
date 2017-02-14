@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
@@ -17,9 +18,67 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
     public void renderTileEntityAt(TileStorageMonitor tile, double x, double y, double z, float partialTicks, int destroyStage) {
         setLightmapDisabled(true);
 
+        float disX = 0, disXText = 0;
+        float disY = 0.5F, disYText = 0.2F;
+        float disZ = 0, disZText = 0;
+        float spacing = 0.01F;
+
+        float rotX = 0;
+        float rotY = 0;
+        float rotZ = 0;
+
+        String amount = tile.getType() == IType.ITEMS ? RSUtils.formatQuantity(tile.getAmount()) : RSUtils.QUANTITY_FORMATTER.format((float) tile.getAmount() / 1000F);
+
+        // Very bad, but I don't know how to translate a 2D font width to a 3D font width...
+        float textWidth = 0;
+        for (int i = 0; i < amount.length(); ++i) {
+            char c = amount.charAt(i);
+            if (c == '.') {
+                textWidth += 0.005F;
+            } else {
+                textWidth += 0.026F;
+            }
+        }
+
+        if (tile.getDirection() == EnumFacing.NORTH) {
+            disX = 0.5F;
+            disXText = disX + textWidth;
+
+            disZ = -spacing;
+            disZText = disZ - spacing;
+
+            rotZ = 1F;
+        } else if (tile.getDirection() == EnumFacing.WEST) {
+            disX = -spacing;
+            disXText = disX - spacing;
+
+            disZ = 0.5F;
+            disZText = disZ - textWidth;
+
+            rotZ = 1F;
+            rotX = 1F;
+        } else if (tile.getDirection() == EnumFacing.SOUTH) {
+            disX = 0.5F;
+            disXText = disX - textWidth;
+
+            disZ = 1F + spacing;
+            disZText = disZ + spacing;
+
+            rotX = 1F;
+        } else if (tile.getDirection() == EnumFacing.EAST) {
+            disX = 1F + spacing;
+            disXText = disX + spacing;
+
+            disZ = 0.5F;
+            disZText = disZ + textWidth;
+
+            rotZ = 1F;
+            rotX = -1F;
+        }
+
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.5F, y + 0.5F, z - 0.01F);
-        GlStateManager.rotate(180F, 0F, 0F, 1F);
+        GlStateManager.translate(x + disX, y + disY, z + disZ);
+        GlStateManager.rotate(180F, rotX, rotY, rotZ);
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.depthMask(false);
         GlStateManager.enableBlend();
@@ -52,21 +111,9 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
         GlStateManager.popMatrix();
 
         GlStateManager.pushMatrix();
-        String amount = tile.getType() == IType.ITEMS ? RSUtils.formatQuantity(tile.getAmount()) : RSUtils.QUANTITY_FORMATTER.format((float) tile.getAmount() / 1000F);
 
-        // Very bad, but I don't know how to translate a 2D font width to a 3D font width...
-        float textWidth = 0;
-        for (int i = 0; i < amount.length(); ++i) {
-            char c = amount.charAt(i);
-            if (c == '.') {
-                textWidth += 0.005F;
-            } else {
-                textWidth += 0.024F;
-            }
-        }
-
-        GlStateManager.translate(x + 0.5F + textWidth, y + 0.2F, z - 0.02F);
-        GlStateManager.rotate(180F, 0F, 0F, 1F);
+        GlStateManager.translate(x + disXText, y + disYText, z + disZText);
+        GlStateManager.rotate(180F, rotX, rotY, rotZ);
         float size = 0.00450F;
         float factor = 2.0f;
         GlStateManager.scale(size * factor, size * factor, size);
