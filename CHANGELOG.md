@@ -8,6 +8,7 @@
 - Fixed "Clear" and "Create Pattern" buttons not working correctly when using Grid Filter tabs (raoulvdberge)
 - Fixed Wrench in Dismantling Mode voiding Storage Block contents (raoulvdberge)
 - Fixed OPs not having global permissions on secured storage systems (raoulvdberge)
+- Fixed crash when Destructor tries to break secured network block (raoulvdberge)
 
 ### 1.4
 - Added Security Manager (raoulvdberge)

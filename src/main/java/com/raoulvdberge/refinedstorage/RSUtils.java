@@ -327,6 +327,13 @@ public final class RSUtils {
     }
 
     public static void sendNoPermissionMessage(EntityPlayer player) {
+        // When a fake player isn't allowed to do something, we can't send a no permission message because there is no connection associated to the fake player.
+        // For example when a Destructor is attempting to break a network block on a secured network with the fake player.
+        // So, we first check if there is a connection.
+        if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection == null) {
+            return;
+        }
+
         player.sendMessage(new TextComponentTranslation("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
     }
 
