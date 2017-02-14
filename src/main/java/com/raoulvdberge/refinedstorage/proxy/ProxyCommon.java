@@ -161,6 +161,7 @@ public class ProxyCommon {
         registerBlock(RSBlocks.CONTROLLER);
         registerBlock(RSBlocks.GRID);
         registerBlock(RSBlocks.CRAFTING_MONITOR);
+        registerBlock(RSBlocks.STORAGE_MONITOR);
         registerBlock(RSBlocks.CRAFTER);
         registerBlock(RSBlocks.PROCESSING_PATTERN_ENCODER);
         registerBlock(RSBlocks.DISK_DRIVE);
@@ -176,7 +177,6 @@ public class ProxyCommon {
         registerBlock(RSBlocks.SECURITY_MANAGER);
         registerBlock(RSBlocks.READER);
         registerBlock(RSBlocks.WRITER);
-        registerBlock(RSBlocks.STORAGE_MONITOR);
 
         registerBlock(RSBlocks.DETECTOR);
         registerBlock(RSBlocks.RELAY);
