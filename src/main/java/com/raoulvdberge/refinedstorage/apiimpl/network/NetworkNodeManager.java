@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.WorldSavedDataNetworkNode;
+import com.raoulvdberge.refinedstorage.network.MessageNodeRemove;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -14,6 +14,12 @@ import java.util.Map;
 public class NetworkNodeManager implements INetworkNodeManager {
     private Map<BlockPos, INetworkNode> nodes = new HashMap<>();
 
+    private int dimension;
+
+    public NetworkNodeManager(int dimension) {
+        this.dimension = dimension;
+    }
+
     @Override
     @Nullable
     public INetworkNode getNode(BlockPos pos) {
@@ -21,8 +27,12 @@ public class NetworkNodeManager implements INetworkNodeManager {
     }
 
     @Override
-    public void removeNode(BlockPos pos) {
+    public void removeNode(BlockPos pos, boolean notifyClient) {
         nodes.remove(pos);
+
+        if (notifyClient) {
+            RS.INSTANCE.network.sendToAll(new MessageNodeRemove(dimension, pos));
+        }
     }
 
     @Override
@@ -38,10 +48,5 @@ public class NetworkNodeManager implements INetworkNodeManager {
     @Override
     public void clear() {
         nodes.clear();
-    }
-
-    @Override
-    public void markDirty(World world) {
-        WorldSavedDataNetworkNode.getOrLoadData(world).markDirty();
     }
 }

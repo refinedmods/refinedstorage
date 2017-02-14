@@ -23,6 +23,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.WorldSavedDataNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
@@ -44,10 +45,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiPredicate;
 
 public class API implements IRSAPI {
     private static final IRSAPI INSTANCE = new API();
@@ -98,10 +97,15 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public INetworkNodeManager getNetworkNodeManager(int dimension) {
+    public INetworkNodeManager getNetworkNodeManager(final int dimension) {
         Map<Integer, INetworkNodeManager> provider = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? networkNodeProviderClient : networkNodeProviderServer;
 
-        return provider.computeIfAbsent(dimension, r -> new NetworkNodeManager());
+        return provider.computeIfAbsent(dimension, r -> new NetworkNodeManager(dimension));
+    }
+
+    @Override
+    public void markNetworkNodesDirty(World world) {
+        WorldSavedDataNetworkNode.getOrLoadData(world).markDirty();
     }
 
     @Override

@@ -38,7 +38,7 @@ public class MessageNodeRemove implements IMessage, IMessageHandler<MessageNodeR
         Minecraft.getMinecraft().addScheduledTask(() -> {
             INetworkNodeManager manager = API.instance().getNetworkNodeManager(message.dim);
 
-            manager.removeNode(message.pos);
+            manager.removeNode(message.pos, false);
         });
 
         return null;

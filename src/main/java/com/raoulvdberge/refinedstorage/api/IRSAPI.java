@@ -43,6 +43,13 @@ public interface IRSAPI {
     INetworkNodeManager getNetworkNodeManager(int dimension);
 
     /**
+     * Marks the network node saved data dirty for a given world.
+     *
+     * @param world the world
+     */
+    void markNetworkNodesDirty(World world);
+
+    /**
      * @return the default storage disk behavior
      */
     IStorageDiskBehavior getDefaultStorageDiskBehavior();

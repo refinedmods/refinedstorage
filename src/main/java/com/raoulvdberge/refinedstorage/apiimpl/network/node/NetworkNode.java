@@ -85,7 +85,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     @Override
     public void markDirty() {
         if (holder.world() != null) {
-            API.instance().getNetworkNodeManager(holder.world().provider.getDimension()).markDirty(holder.world());
+            API.instance().markNetworkNodesDirty(holder.world());
         }
     }
 

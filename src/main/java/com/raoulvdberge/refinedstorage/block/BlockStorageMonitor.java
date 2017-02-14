@@ -31,9 +31,9 @@ public class BlockStorageMonitor extends BlockNode {
         if (!world.isRemote) {
             ItemStack holding = player.inventory.getCurrentItem();
 
-            if (player.isSneaking() || holding.isEmpty()) {
+            if (player.isSneaking()) {
                 tryOpenNetworkGui(RSGui.STORAGE_MONITOR, player, world, pos, side);
-            } else {
+            } else if (!holding.isEmpty()) {
                 NetworkNodeStorageMonitor storageMonitor = ((TileStorageMonitor) world.getTileEntity(pos)).getNode();
 
                 if (storageMonitor.getType() != IType.ITEMS) {
