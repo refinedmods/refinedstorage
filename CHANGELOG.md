@@ -2,10 +2,11 @@
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)
-- Fixed Processing Pattern Encoder and Reader recipes not supporting oredict workbench and chest (VT-14)
+- Fixed Processing Pattern Encoder and Security Manager recipes not supporting oredict workbench and chest (VT-14)
 - Fixed network nodes not saving correctly (raoulvdberge)
 - Fixed network nodes not respecting redstone mode (raoulvdberge)
 - Fixed "Clear" and "Create Pattern" buttons not working correctly when using Grid Filter tabs (raoulvdberge)
+- Fixed Wrench in Dismantling Mode voiding Storage Block contents (raoulvdberge)
 
 ### 1.4
 - Added Security Manager (raoulvdberge)

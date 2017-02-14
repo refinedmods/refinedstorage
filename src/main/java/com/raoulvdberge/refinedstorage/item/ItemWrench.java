@@ -129,13 +129,12 @@ public class ItemWrench extends ItemBase {
 
                 ((TileNode) tile).writeConfiguration(data);
 
-                ItemStack tileStack = new ItemStack(
-                    state.getBlock(),
-                    1,
-                    state.getBlock().getMetaFromState(state)
-                );
+                ItemStack tileStack = state.getBlock().getDrops(world, pos, state, 0).get(0);
 
-                tileStack.setTagCompound(new NBTTagCompound());
+                if (!tileStack.hasTagCompound()) {
+                    tileStack.setTagCompound(new NBTTagCompound());
+                }
+
                 tileStack.getTagCompound().setTag(BlockNode.NBT_REFINED_STORAGE_DATA, data);
 
                 world.setBlockToAir(pos);
