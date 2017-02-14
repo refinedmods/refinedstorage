@@ -67,6 +67,8 @@ public class NetworkNodeSolderer extends NetworkNode {
         if (wasWorking != working) {
             wasWorking = working;
 
+            markDirty();
+
             RSUtils.updateBlock(holder.world(), holder.pos());
         }
 
@@ -110,9 +112,9 @@ public class NetworkNodeSolderer extends NetworkNode {
                     recipe = null;
                     progress = 0;
                     // Don't set working to false yet, wait till the next update because we may have another stack waiting.
-
-                    markDirty();
                 }
+
+                markDirty();
             }
         }
     }
@@ -130,8 +132,6 @@ public class NetworkNodeSolderer extends NetworkNode {
         progress = 0;
         working = false;
         recipe = null;
-
-        markDirty();
     }
 
     @Override

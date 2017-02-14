@@ -12,7 +12,7 @@ public class NetworkNodeRelay extends NetworkNode {
     public NetworkNodeRelay(INetworkNodeHolder holder) {
         super(holder);
 
-        setRedstoneMode(RedstoneMode.LOW);
+        this.redstoneMode = RedstoneMode.LOW;
     }
 
     @Override

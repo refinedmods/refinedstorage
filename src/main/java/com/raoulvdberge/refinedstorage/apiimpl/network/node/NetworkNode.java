@@ -24,11 +24,9 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     protected INetworkMaster network;
     protected INetworkNodeHolder holder;
     protected int ticks;
-
-    private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private boolean couldUpdate;
-
     private boolean active;
 
     public NetworkNode(INetworkNodeHolder holder) {

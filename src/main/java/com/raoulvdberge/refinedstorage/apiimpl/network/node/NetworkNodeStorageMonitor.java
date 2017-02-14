@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -178,5 +179,10 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     @Override
     public boolean hasConnectivityState() {
         return true;
+    }
+
+    @Override
+    public void setRedstoneMode(RedstoneMode mode) {
+        // NO OP
     }
 }
