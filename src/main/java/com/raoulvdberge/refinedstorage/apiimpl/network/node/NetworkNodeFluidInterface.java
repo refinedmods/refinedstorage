@@ -12,6 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class NetworkNodeFluidInterface extends NetworkNode implements IComparable {
@@ -221,6 +223,11 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
     public FluidTank getTankOut() {
         return tankOut;
+    }
+
+    @Override
+    public IItemHandler getDrops() {
+        return new CombinedInvWrapper(in, upgrades);
     }
 
     @Override
