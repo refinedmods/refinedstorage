@@ -2,6 +2,7 @@
 
 ### 1.2.22
 - Fixed recipe for Processing Pattern Encoder not using oredictionary for the workbench (VT-14)
+- Fixed Fluid Interface not dropping inventory contents (raoulvdberge)
 
 ### 1.2.21
 - Fixed crash when placing head with Constructor (raoulvdberge)

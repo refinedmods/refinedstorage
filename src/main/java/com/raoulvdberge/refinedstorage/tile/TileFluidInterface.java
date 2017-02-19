@@ -20,6 +20,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class TileFluidInterface extends TileNode implements IComparable {
     public static final int TANK_CAPACITY = 16000;
@@ -221,6 +223,11 @@ public class TileFluidInterface extends TileNode implements IComparable {
 
     public ItemHandlerFluid getOut() {
         return out;
+    }
+
+    @Override
+    public IItemHandler getDrops() {
+        return new CombinedInvWrapper(in, upgrades);
     }
 
     @Override
