@@ -144,6 +144,11 @@ public class BlockCable extends BlockNode {
         return boxes;
     }
 
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return CORE_AABB;
+    }
+
     public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
         return Collections.emptyList();
     }
