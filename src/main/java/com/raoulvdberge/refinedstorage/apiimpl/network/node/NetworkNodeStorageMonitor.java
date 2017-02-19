@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -9,12 +10,20 @@ import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class NetworkNodeStorageMonitor extends NetworkNode implements IComparable, IType {
+    public static final int DEPOSIT_ALL_MAX_DELAY = 500;
+
     public static final String ID = "storage_monitor";
 
     private static final String NBT_COMPARE = "Compare";
@@ -38,6 +47,8 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         }
     };
 
+    private Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
+
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
 
@@ -60,6 +71,49 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
 
             RSUtils.updateBlock(holder.world(), holder.pos());
         }
+    }
+
+    public boolean depositAll(EntityPlayer player) {
+        if (type != IType.ITEMS || network == null) {
+            return false;
+        }
+
+        Pair<ItemStack, Long> deposit = deposits.get(player.getGameProfile().getName());
+
+        if (deposit == null) {
+            return false;
+        }
+
+        ItemStack inserted = deposit.getKey();
+        long insertedAt = deposit.getValue();
+
+        if (Minecraft.getSystemTime() - insertedAt < DEPOSIT_ALL_MAX_DELAY) {
+            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+                ItemStack toInsert = player.inventory.getStackInSlot(i);
+
+                if (API.instance().getComparer().isEqual(inserted, toInsert, compare)) {
+                    player.inventory.setInventorySlotContents(i, RSUtils.transformNullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public boolean deposit(EntityPlayer player, ItemStack toInsert) {
+        if (type != IType.ITEMS) {
+            return false;
+        }
+
+        ItemStack filter = itemFilter.getStackInSlot(0);
+
+        if (network != null && !filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, RSUtils.transformNullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
+
+            deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, Minecraft.getSystemTime()));
+        }
+
+        return true;
     }
 
     @Override

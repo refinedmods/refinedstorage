@@ -1,8 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -29,21 +27,17 @@ public class BlockStorageMonitor extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            ItemStack holding = player.inventory.getCurrentItem();
+            ItemStack held = player.inventory.getCurrentItem();
 
             if (player.isSneaking()) {
                 tryOpenNetworkGui(RSGui.STORAGE_MONITOR, player, world, pos, side);
-            } else if (!holding.isEmpty()) {
+            } else {
                 NetworkNodeStorageMonitor storageMonitor = ((TileStorageMonitor) world.getTileEntity(pos)).getNode();
 
-                if (storageMonitor.getType() != IType.ITEMS) {
-                    return false;
-                }
-
-                ItemStack displaying = storageMonitor.getItemFilter().getStackInSlot(0);
-
-                if (storageMonitor.getNetwork() != null && !displaying.isEmpty() && API.instance().getComparer().isEqual(displaying, holding, storageMonitor.getCompare())) {
-                    player.inventory.setInventorySlotContents(player.inventory.currentItem, RSUtils.transformNullToEmpty(storageMonitor.getNetwork().insertItemTracked(holding, holding.getCount())));
+                if (!held.isEmpty()) {
+                    return storageMonitor.deposit(player, held);
+                } else {
+                    return storageMonitor.depositAll(player);
                 }
             }
         }
