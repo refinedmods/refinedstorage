@@ -19,7 +19,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
         setLightmapDisabled(true);
 
         float disX = 0, disXText = 0;
-        float disY = 0.5F, disYText = 0.2F;
+        float disY = 0.5F, disYText = 0.23F;
         float disZ = 0, disZText = 0;
         float spacing = 0.01F;
 

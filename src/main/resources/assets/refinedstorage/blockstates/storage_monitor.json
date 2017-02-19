@@ -4,19 +4,19 @@
     "model": "cube",
     "textures": {
       "particle": "refinedstorage:blocks/side",
-      "north": "refinedstorage:blocks/interface_disconnected",
-      "east": "refinedstorage:blocks/side",
-      "south": "refinedstorage:blocks/side",
-      "west": "refinedstorage:blocks/side",
-      "up": "refinedstorage:blocks/side",
-      "down": "refinedstorage:blocks/side"
+      "north": "refinedstorage:blocks/storage_monitor_front",
+      "east": "refinedstorage:blocks/storage_monitor_left",
+      "south": "refinedstorage:blocks/grid_back",
+      "west": "refinedstorage:blocks/storage_monitor_right",
+      "up": "refinedstorage:blocks/storage_monitor_top",
+      "down": "refinedstorage:blocks/bottom"
     }
   },
   "variants": {
     "connected": {
       "true": {
         "textures": {
-          "north": "refinedstorage:blocks/interface_connected"
+          "north": "refinedstorage:blocks/storage_monitor_front"
         }
       },
       "false": {
