@@ -27,6 +27,4 @@ public class PartCable implements IMultipart {
     public Block getBlock() {
         return RSBlocks.CABLE;
     }
-
-
 }
