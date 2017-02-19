@@ -9,6 +9,7 @@
 - Fixed OPs not having global permissions on secured storage systems (raoulvdberge)
 - Fixed crash when Destructor tries to break secured network block (raoulvdberge)
 - Fixed Fluid Interface not dropping inventory contents (raoulvdberge)
+- Updated Forge to 2232 (raoulvdberge)
 
 ### 1.4
 - Added Security Manager (raoulvdberge)
