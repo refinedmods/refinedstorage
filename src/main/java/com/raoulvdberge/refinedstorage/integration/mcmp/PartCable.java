@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.integration.mcmp;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import mcmultipart.api.container.IPartInfo;
 import mcmultipart.api.multipart.IMultipart;
 import mcmultipart.api.slot.EnumCenterSlot;
 import mcmultipart.api.slot.IPartSlot;
@@ -26,5 +28,10 @@ public class PartCable implements IMultipart {
     @Override
     public Block getBlock() {
         return RSBlocks.CABLE;
+    }
+
+    @Override
+    public void onPartChanged(IPartInfo part, IPartInfo otherPart) {
+        API.instance().discoverNode(part.getWorld(), part.getContainer().getPos());
     }
 }

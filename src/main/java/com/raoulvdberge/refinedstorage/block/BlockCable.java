@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import net.minecraft.block.properties.PropertyBool;
@@ -93,7 +94,29 @@ public class BlockCable extends BlockNode {
         TileEntity otherTile = world.getTileEntity(pos.offset(direction));
         EnumFacing otherTileSide = direction.getOpposite();
 
-        return otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide);
+        if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
+            return !IntegrationMCMP.isLoaded() || IntegrationMCMP.hasConnectionWith(world, pos, Collections.singletonList(directionToAABB(direction)));
+        }
+
+        return false;
+    }
+
+    public static AxisAlignedBB directionToAABB(EnumFacing facing) {
+        if (facing == EnumFacing.NORTH) {
+            return NORTH_AABB;
+        } else if (facing == EnumFacing.EAST) {
+            return EAST_AABB;
+        } else if (facing == EnumFacing.SOUTH) {
+            return SOUTH_AABB;
+        } else if (facing == EnumFacing.WEST) {
+            return WEST_AABB;
+        } else if (facing == EnumFacing.UP) {
+            return UP_AABB;
+        } else if (facing == EnumFacing.DOWN) {
+            return DOWN_AABB;
+        }
+
+        return NORTH_AABB;
     }
 
     private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {
