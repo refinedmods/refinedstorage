@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.4.2
+- Added integration for MCMultiPart, this is an optional dependency (raoulvdberge)
+- Fixed a crash with the Constructor (raoulvdberge)
+
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)
 - Fixed Processing Pattern Encoder and Security Manager recipes not supporting oredict workbench and chest (VT-14)
