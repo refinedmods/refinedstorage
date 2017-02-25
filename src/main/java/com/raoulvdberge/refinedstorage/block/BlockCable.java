@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
+import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import net.minecraft.block.properties.PropertyBool;
@@ -95,7 +96,12 @@ public class BlockCable extends BlockNode {
         EnumFacing otherTileSide = direction.getOpposite();
 
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
-            return !IntegrationMCMP.isLoaded() || IntegrationMCMP.hasConnectionWith(world, pos, Collections.singletonList(directionToAABB(direction)));
+            if (IntegrationMCMP.isLoaded()) {
+                return RSMCMPAddon.hasConnectionWith(world, pos, Collections.singletonList(BlockCable.directionToAABB(direction)))
+                    && RSMCMPAddon.hasConnectionWith(world, pos.offset(direction), Collections.singletonList(BlockCable.directionToAABB(direction.getOpposite())));
+            }
+
+            return true;
         }
 
         return false;

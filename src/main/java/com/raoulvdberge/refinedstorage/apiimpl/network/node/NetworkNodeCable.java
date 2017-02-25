@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.BlockCable;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
+import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nullable;
@@ -27,6 +28,11 @@ public class NetworkNodeCable extends NetworkNode {
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return !IntegrationMCMP.isLoaded() || IntegrationMCMP.hasConnectionWith(holder.world(), holder.pos(), Collections.singletonList(BlockCable.directionToAABB(direction)));
+        if (IntegrationMCMP.isLoaded() && direction != null) {
+            return RSMCMPAddon.hasConnectionWith(holder.world(), holder.pos(), Collections.singletonList(BlockCable.directionToAABB(direction)))
+                && RSMCMPAddon.hasConnectionWith(holder.world(), holder.pos().offset(direction), Collections.singletonList(BlockCable.directionToAABB(direction.getOpposite())));
+        }
+
+        return true;
     }
 }
