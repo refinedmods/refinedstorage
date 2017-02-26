@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
+import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -82,23 +83,35 @@ public class BlockCable extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return super.getActualState(state, world, pos)
-            .withProperty(NORTH, hasConnectionWith(world, pos, EnumFacing.NORTH))
-            .withProperty(EAST, hasConnectionWith(world, pos, EnumFacing.EAST))
-            .withProperty(SOUTH, hasConnectionWith(world, pos, EnumFacing.SOUTH))
-            .withProperty(WEST, hasConnectionWith(world, pos, EnumFacing.WEST))
-            .withProperty(UP, hasConnectionWith(world, pos, EnumFacing.UP))
-            .withProperty(DOWN, hasConnectionWith(world, pos, EnumFacing.DOWN));
+        TileEntity tile = world.getTileEntity(pos);
+
+        state = super.getActualState(state, world, pos)
+            .withProperty(NORTH, hasConnectionWith(world, pos, tile, EnumFacing.NORTH))
+            .withProperty(EAST, hasConnectionWith(world, pos, tile, EnumFacing.EAST))
+            .withProperty(SOUTH, hasConnectionWith(world, pos, tile, EnumFacing.SOUTH))
+            .withProperty(WEST, hasConnectionWith(world, pos, tile, EnumFacing.WEST))
+            .withProperty(UP, hasConnectionWith(world, pos, tile, EnumFacing.UP))
+            .withProperty(DOWN, hasConnectionWith(world, pos, tile, EnumFacing.DOWN));
+
+        return state;
     }
 
-    private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
+    private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, TileEntity tile, EnumFacing direction) {
+        if (!(tile instanceof TileNode)) {
+            return false;
+        }
+
         TileEntity otherTile = world.getTileEntity(pos.offset(direction));
         EnumFacing otherTileSide = direction.getOpposite();
 
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
+            if (getPlacementType() != null && ((TileNode) tile).getNode().getHolder().getDirection() == direction.getOpposite()) {
+                return false;
+            }
+
             if (IntegrationMCMP.isLoaded()) {
-                return RSMCMPAddon.hasConnectionWith(world, pos, Collections.singletonList(BlockCable.directionToAABB(direction)))
-                    && RSMCMPAddon.hasConnectionWith(world, pos.offset(direction), Collections.singletonList(BlockCable.directionToAABB(direction.getOpposite())));
+                return RSMCMPAddon.hasConnectionWith(tile, Collections.singletonList(BlockCable.directionToAABB(direction)))
+                    && RSMCMPAddon.hasConnectionWith(otherTile, Collections.singletonList(BlockCable.directionToAABB(direction.getOpposite())));
             }
 
             return true;

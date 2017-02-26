@@ -14,8 +14,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -62,9 +60,7 @@ public class RSMCMPAddon implements IMCMPAddon {
         });
     }
 
-    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos, List<AxisAlignedBB> aabbs) {
-        TileEntity tile = world.getTileEntity(pos);
-
+    public static boolean hasConnectionWith(TileEntity tile, List<AxisAlignedBB> boxes) {
         if (tile != null && tile.hasCapability(MCMPCapabilities.MULTIPART_TILE, null)) {
             IMultipartTile multipartTile = tile.getCapability(MCMPCapabilities.MULTIPART_TILE, null);
 
@@ -72,7 +68,7 @@ public class RSMCMPAddon implements IMCMPAddon {
                 for (IPartInfo info : ((PartCableTile) multipartTile).getInfo().getContainer().getParts().values()) {
                     IMultipart multipart = info.getPart();
 
-                    if (MultipartOcclusionHelper.testBoxIntersection(aabbs, multipart.getOcclusionBoxes(info))) {
+                    if (MultipartOcclusionHelper.testBoxIntersection(boxes, multipart.getOcclusionBoxes(info))) {
                         return false;
                     }
                 }
