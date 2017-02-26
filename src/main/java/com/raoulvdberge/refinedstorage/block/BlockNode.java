@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -47,22 +48,34 @@ public abstract class BlockNode extends BlockBase {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        super.breakBlock(world, pos, state);
+    public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
+        super.onBlockDestroyedByPlayer(world, pos, state);
 
-        // Sanity check
-        if (world.getBlockState(pos).getBlock() == this) {
-            INetworkNodeManager manager = API.instance().getNetworkNodeManager(world.provider.getDimension());
+        if (!world.isRemote) {
+            removeNode(world, pos);
+        }
+    }
 
-            INetworkNode node = manager.getNode(pos);
+    @Override
+    public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
+        super.onBlockDestroyedByExplosion(world, pos, explosion);
 
-            manager.removeNode(pos, true);
+        if (!world.isRemote) {
+            removeNode(world, pos);
+        }
+    }
 
-            API.instance().markNetworkNodesDirty(world);
+    private void removeNode(World world, BlockPos pos) {
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world.provider.getDimension());
 
-            if (node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().rebuild();
-            }
+        INetworkNode node = manager.getNode(pos);
+
+        manager.removeNode(pos, true);
+
+        API.instance().markNetworkNodesDirty(world);
+
+        if (node.getNetwork() != null) {
+            node.getNetwork().getNodeGraph().rebuild();
         }
     }
 
