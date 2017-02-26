@@ -82,10 +82,19 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        // If we have more than this stored:
-        // x, y, z, id, Direction
-        // Then this is a legacy tag!
-        if (tag.getSize() > 5) {
+        // Ugly code for checking if this is a legacy tile. Sue me.
+        boolean hasMeta = tag.hasKey("x") && tag.hasKey("y") && tag.hasKey("z") && tag.hasKey("id");
+        boolean hasForgeData = tag.hasKey("ForgeData");
+        boolean hasForgeCaps = tag.hasKey("ForgeCaps");
+
+        // + 1 because of "Direction".
+        if (tag.getSize() == 4 + 1 && hasMeta) {
+            // NO OP
+        } else if (tag.getSize() == 5 + 1 && hasMeta && (hasForgeData || hasForgeCaps)) {
+            // NO OP
+        } else if (tag.getSize() == 6 + 1 && hasMeta && hasForgeData && hasForgeCaps) {
+            // NO OP
+        } else {
             legacyTagToRead = tag;
         }
     }

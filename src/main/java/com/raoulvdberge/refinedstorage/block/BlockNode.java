@@ -50,16 +50,19 @@ public abstract class BlockNode extends BlockBase {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         super.breakBlock(world, pos, state);
 
-        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world.provider.getDimension());
+        // Sanity check
+        if (world.getBlockState(pos).getBlock() == this) {
+            INetworkNodeManager manager = API.instance().getNetworkNodeManager(world.provider.getDimension());
 
-        INetworkNode node = manager.getNode(pos);
+            INetworkNode node = manager.getNode(pos);
 
-        manager.removeNode(pos, true);
+            manager.removeNode(pos, true);
 
-        API.instance().markNetworkNodesDirty(world);
+            API.instance().markNetworkNodesDirty(world);
 
-        if (node.getNetwork() != null) {
-            node.getNetwork().getNodeGraph().rebuild();
+            if (node.getNetwork() != null) {
+                node.getNetwork().getNodeGraph().rebuild();
+            }
         }
     }
 
