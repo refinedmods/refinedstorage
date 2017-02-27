@@ -5,9 +5,13 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
+import mcmultipart.api.multipart.IMultipartTile;
+import mcmultipart.api.slot.EnumCenterSlot;
+import mcmultipart.block.TileMultipartContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -24,6 +28,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.Optional;
 
 public abstract class BlockBase extends Block {
     public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
@@ -79,7 +85,17 @@ public abstract class BlockBase extends Block {
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (getPlacementType() != null) {
-            return state.withProperty(DIRECTION, ((TileBase) world.getTileEntity(pos)).getDirection());
+            TileEntity tile = world.getTileEntity(pos);
+
+            if (tile instanceof TileBase) {
+                return state.withProperty(DIRECTION, ((TileBase) tile).getDirection());
+            } else if (IntegrationMCMP.isLoaded() && tile instanceof TileMultipartContainer.Ticking) {
+                Optional<IMultipartTile> multipartTile = ((TileMultipartContainer.Ticking) tile).getPartTile(EnumCenterSlot.CENTER);
+
+                if (multipartTile.isPresent()) {
+                    return state.withProperty(DIRECTION, ((TileBase) multipartTile.get().getTileEntity()).getDirection());
+                }
+            }
         }
 
         return state;

@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
+import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.render.BakedModelPattern;
@@ -15,6 +16,11 @@ import com.raoulvdberge.refinedstorage.render.ModelDiskManipulator;
 import com.raoulvdberge.refinedstorage.render.TileEntitySpecialRendererStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
+import mcmultipart.api.container.IPartInfo;
+import mcmultipart.api.slot.EnumCenterSlot;
+import mcmultipart.block.BlockMultipartContainer;
+import mcmultipart.block.TileMultipartContainer;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -45,6 +51,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ProxyClient extends ProxyCommon {
     @Override
@@ -293,18 +300,38 @@ public class ProxyClient extends ProxyCommon {
 
         IBlockState state = player.getEntityWorld().getBlockState(pos);
 
-        if (!(state.getBlock() instanceof BlockCable)) {
+        BlockCable cable = null;
+
+        if (state.getBlock() instanceof BlockCable) {
+            cable = (BlockCable) state.getBlock();
+        } else if (IntegrationMCMP.isLoaded() && state.getBlock() instanceof BlockMultipartContainer) {
+            Optional<TileMultipartContainer> multipartContainer = BlockMultipartContainer.getTile(player.getEntityWorld(), pos);
+
+            if (multipartContainer.isPresent()) {
+                Optional<IPartInfo> info = multipartContainer.get().get(EnumCenterSlot.CENTER);
+
+                if (info.isPresent()) {
+                    Block block = info.get().getPart().getBlock();
+
+                    if (block instanceof BlockCable) {
+                        cable = (BlockCable) block;
+                    }
+                }
+            }
+        }
+
+        if (cable == null) {
             return;
         }
 
-        state = ((BlockCable) state.getBlock()).getActualState(state, player.getEntityWorld(), pos);
+        state = cable.getActualStateForRendering(player.getEntityWorld(), pos);
 
-        if (((BlockCable) state.getBlock()).collisionRayTrace(state, player.getEntityWorld(), pos, RSUtils.getStart(player), RSUtils.getEnd(player)) == null) {
+        if (cable.collisionRayTrace(state, player.getEntityWorld(), pos, RSUtils.getStart(player), RSUtils.getEnd(player)) == null) {
             return;
         }
 
-        List<AxisAlignedBB> unionized = ((BlockCable) state.getBlock()).getUnionizedCollisionBoxes(state);
-        List<AxisAlignedBB> nonUnionized = ((BlockCable) state.getBlock()).getNonUnionizedCollisionBoxes(state);
+        List<AxisAlignedBB> unionized = cable.getUnionizedCollisionBoxes(state);
+        List<AxisAlignedBB> nonUnionized = cable.getNonUnionizedCollisionBoxes(state);
 
         e.setCanceled(true);
 

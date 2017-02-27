@@ -3,7 +3,11 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
+import mcmultipart.api.multipart.IMultipartTile;
+import mcmultipart.api.slot.EnumCenterSlot;
+import mcmultipart.block.TileMultipartContainer;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -14,6 +18,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import java.util.Optional;
 
 public abstract class BlockNode extends BlockBase {
     public static final String NBT_REFINED_STORAGE_DATA = "RefinedStorageData";
@@ -97,11 +103,33 @@ public abstract class BlockNode extends BlockBase {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        state = super.getActualState(state, world, pos);
+
         if (hasConnectivityState()) {
-            return super.getActualState(state, world, pos).withProperty(CONNECTED, ((TileNode) world.getTileEntity(pos)).getNode().isActive());
+            TileNode tile = getNode(world, pos);
+
+            if (tile != null) {
+                return state.withProperty(CONNECTED, tile.getNode().isActive());
+            }
         }
 
-        return super.getActualState(state, world, pos);
+        return state;
+    }
+
+    public static TileNode getNode(IBlockAccess world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof TileNode) {
+            return (TileNode) tile;
+        } else if (IntegrationMCMP.isLoaded() && tile instanceof TileMultipartContainer.Ticking) {
+            Optional<IMultipartTile> multipartTile = ((TileMultipartContainer.Ticking) tile).getPartTile(EnumCenterSlot.CENTER);
+
+            if (multipartTile.isPresent()) {
+                return (TileNode) multipartTile.get().getTileEntity();
+            }
+        }
+
+        return null;
     }
 
     public boolean hasConnectivityState() {

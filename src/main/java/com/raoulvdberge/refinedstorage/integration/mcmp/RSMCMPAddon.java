@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.integration.mcmp;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
+import com.raoulvdberge.refinedstorage.block.BlockCable;
 import mcmultipart.api.addon.IMCMPAddon;
 import mcmultipart.api.addon.MCMPAddon;
 import mcmultipart.api.container.IPartInfo;
@@ -30,13 +31,35 @@ public class RSMCMPAddon implements IMCMPAddon {
     public void registerParts(IMultipartRegistry registry) {
         MinecraftForge.EVENT_BUS.register(this);
 
-        registry.registerPartWrapper(RSBlocks.CABLE, new PartCable());
-        registry.registerStackWrapper(Item.getItemFromBlock(RSBlocks.CABLE), s -> true, RSBlocks.CABLE);
+        register(registry, RSBlocks.CABLE);
+        register(registry, RSBlocks.CONSTRUCTOR);
+        register(registry, RSBlocks.DESTRUCTOR);
+        register(registry, RSBlocks.IMPORTER);
+        register(registry, RSBlocks.EXPORTER);
+        register(registry, RSBlocks.EXTERNAL_STORAGE);
+        register(registry, RSBlocks.READER);
+        register(registry, RSBlocks.WRITER);
+    }
+
+    private void register(IMultipartRegistry registry, BlockCable block) {
+        registry.registerPartWrapper(block, new PartCable(block));
+        registry.registerStackWrapper(Item.getItemFromBlock(block), s -> true, block);
     }
 
     @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent<TileEntity> e) {
-        e.addCapability(new ResourceLocation("refinedstorage:cable"), new ICapabilityProvider() {
+        register(e, "cable");
+        register(e, "constructor");
+        register(e, "destructor");
+        register(e, "importer");
+        register(e, "exporter");
+        register(e, "external_storage");
+        register(e, "reader");
+        register(e, "writer");
+    }
+
+    private void register(AttachCapabilitiesEvent<TileEntity> e, String id) {
+        e.addCapability(new ResourceLocation("refinedstorage:" + id), new ICapabilityProvider() {
             private PartCableTile tile;
 
             @Override

@@ -30,13 +30,13 @@ public class BlockCable extends BlockNode {
         return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
     }
 
-    protected static AxisAlignedBB CORE_AABB = createAABB(6, 6, 6, 10, 10, 10);
-    protected static AxisAlignedBB NORTH_AABB = createAABB(6, 6, 0, 10, 10, 6);
-    protected static AxisAlignedBB EAST_AABB = createAABB(10, 6, 6, 16, 10, 10);
-    protected static AxisAlignedBB SOUTH_AABB = createAABB(6, 6, 10, 10, 10, 16);
-    protected static AxisAlignedBB WEST_AABB = createAABB(0, 6, 6, 6, 10, 10);
-    protected static AxisAlignedBB UP_AABB = createAABB(6, 10, 6, 10, 16, 10);
-    protected static AxisAlignedBB DOWN_AABB = createAABB(6, 0, 6, 10, 6, 10);
+    public static final AxisAlignedBB CORE_AABB = createAABB(6, 6, 6, 10, 10, 10);
+    protected static final AxisAlignedBB NORTH_AABB = createAABB(6, 6, 0, 10, 10, 6);
+    protected static final AxisAlignedBB EAST_AABB = createAABB(10, 6, 6, 16, 10, 10);
+    protected static final AxisAlignedBB SOUTH_AABB = createAABB(6, 6, 10, 10, 10, 16);
+    protected static final AxisAlignedBB WEST_AABB = createAABB(0, 6, 6, 6, 10, 10);
+    protected static final AxisAlignedBB UP_AABB = createAABB(6, 10, 6, 10, 16, 10);
+    protected static final AxisAlignedBB DOWN_AABB = createAABB(6, 0, 6, 10, 6, 10);
 
     protected static final PropertyBool NORTH = PropertyBool.create("north");
     protected static final PropertyBool EAST = PropertyBool.create("east");
@@ -83,7 +83,7 @@ public class BlockCable extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
+        TileNode tile = getNode(world, pos);
 
         state = super.getActualState(state, world, pos)
             .withProperty(NORTH, hasConnectionWith(world, pos, tile, EnumFacing.NORTH))
@@ -94,6 +94,19 @@ public class BlockCable extends BlockNode {
             .withProperty(DOWN, hasConnectionWith(world, pos, tile, EnumFacing.DOWN));
 
         return state;
+    }
+
+    // This is used for rendering the box outlines in the client proxy.
+    // We use this because MCMP wraps the block in a MCMP wrapper block, creating issues where
+    // it cannot assign properties to the MCMP blockstate. Here, we make sure that it uses our block state.
+    private IBlockState stateForRendering;
+
+    public IBlockState getActualStateForRendering(IBlockAccess world, BlockPos pos) {
+        if (stateForRendering == null) {
+            stateForRendering = createBlockState().getBaseState();
+        }
+
+        return getActualState(stateForRendering, world, pos);
     }
 
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, TileEntity tile, EnumFacing direction) {
@@ -184,11 +197,6 @@ public class BlockCable extends BlockNode {
         }
 
         return boxes;
-    }
-
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return CORE_AABB;
     }
 
     public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
