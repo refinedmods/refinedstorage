@@ -85,7 +85,7 @@ public class BakedModelPattern implements IBakedModel, IPerspectiveAwareModel {
             public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(world, stack);
 
-                if (GuiBase.isShiftKeyDown() && pattern.isValid() && pattern.getOutputs().size() == 1) {
+                if (displayPatternOutput(pattern)) {
                     return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(pattern.getOutputs().get(0), world, entity);
                 }
 
@@ -99,5 +99,14 @@ public class BakedModelPattern implements IBakedModel, IPerspectiveAwareModel {
         return Pair.of(this,
                 transforms.get(cameraTransformType) != null ?
                         transforms.get(cameraTransformType).getMatrix() : get(0, 0, 0, 0, 0, 0, 1.0f).getMatrix());
+    }
+
+    /**
+     * Determines if the pattern output should be displayed
+     * @param pattern The pattern to check
+     * @return True to render output, not pattern item
+     */
+    public static boolean displayPatternOutput(CraftingPattern pattern) {
+        return GuiBase.isShiftKeyDown() && pattern.isValid() && pattern.getOutputs().size() == 1;
     }
 }

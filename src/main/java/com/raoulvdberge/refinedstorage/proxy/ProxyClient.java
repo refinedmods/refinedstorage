@@ -268,14 +268,15 @@ public class ProxyClient extends ProxyCommon {
         super.init(e);
 
         // Register IItemColor to handle passthrough
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
+        ItemColors mcColors = Minecraft.getMinecraft().getItemColors();
+        mcColors.registerItemColorHandler(new IItemColor() {
             @Override
             public int getColorFromItemstack(ItemStack stack, int tintIndex) {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
 
-                if (GuiBase.isShiftKeyDown() && pattern.isValid() && pattern.getOutputs().size() == 1 &&
-                        Minecraft.getMinecraft().getItemColors().getColorFromItemstack(pattern.getOutputs().get(0), tintIndex) != -1) {
-                    return Minecraft.getMinecraft().getItemColors().getColorFromItemstack(pattern.getOutputs().get(0), tintIndex); // Take the item
+                if (BakedModelPattern.displayPatternOutput(pattern) &&
+                        mcColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex) != -1) {
+                    return mcColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex); // Take the item
                 }
 
                 return 0xFFFFFF; // Full white, no need to apply color
