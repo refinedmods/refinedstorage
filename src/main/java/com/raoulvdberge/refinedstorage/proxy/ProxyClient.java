@@ -4,7 +4,9 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.block.*;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
@@ -30,10 +32,13 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -46,6 +51,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -255,6 +261,26 @@ public class ProxyClient extends ProxyCommon {
 
             return new ModelResourceLocation("refinedstorage:controller", "direction=north,energy=" + energy);
         });
+    }
+
+    @Override
+    public void init(FMLInitializationEvent e) {
+        super.init(e);
+
+        // Register IItemColor to handle passthrough
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
+            @Override
+            public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+                CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
+
+                if (GuiBase.isShiftKeyDown() && pattern.isValid() && pattern.getOutputs().size() == 1 &&
+                        Minecraft.getMinecraft().getItemColors().getColorFromItemstack(pattern.getOutputs().get(0), tintIndex) != -1) {
+                    return Minecraft.getMinecraft().getItemColors().getColorFromItemstack(pattern.getOutputs().get(0), tintIndex); // Take the item
+                }
+
+                return 0xFFFFFF; // Full white, no need to apply color
+            }
+        }, RSItems.PATTERN);
     }
 
     public static void onReceiveCraftingPreviewResponse(MessageGridCraftingPreviewResponse message) {
