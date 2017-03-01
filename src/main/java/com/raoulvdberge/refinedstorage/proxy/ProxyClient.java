@@ -28,13 +28,11 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -262,20 +260,20 @@ public class ProxyClient extends ProxyCommon {
     public void init(FMLInitializationEvent e) {
         super.init(e);
 
-        // Register IItemColor to handle passthrough
-        ItemColors mcColors = Minecraft.getMinecraft().getItemColors();
-        mcColors.registerItemColorHandler(new IItemColor() {
-            @Override
-            public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-                CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
+        ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
 
-                if (BakedModelPattern.canDisplayPatternOutput(pattern) &&
-                    mcColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex) != -1) {
-                    return mcColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex); // Take the item
+        itemColors.registerItemColorHandler((stack, tintIndex) -> {
+            CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
+
+            if (BakedModelPattern.canDisplayPatternOutput(pattern)) {
+                int color = itemColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex);
+
+                if (color != -1) {
+                    return color;
                 }
-
-                return 0xFFFFFF; // Full white, no need to apply color
             }
+
+            return 0xFFFFFF; // Full white, no need to apply color
         }, RSItems.PATTERN);
     }
 
