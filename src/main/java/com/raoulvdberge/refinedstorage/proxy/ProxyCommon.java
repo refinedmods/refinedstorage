@@ -210,6 +210,9 @@ public class ProxyCommon {
 
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
+        OreDictionary.registerOre("ingotQuartzEnrichedIron", RSItems.QUARTZ_ENRICHED_IRON);
+        OreDictionary.registerOre("blockQuartzEnrichedIron", RSBlocks.QUARTZ_ENRICHED_IRON);
+
         // Processors
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC, false));
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_IMPROVED, false));
