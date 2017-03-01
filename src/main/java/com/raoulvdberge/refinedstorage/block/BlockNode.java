@@ -19,6 +19,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 public abstract class BlockNode extends BlockBase {
@@ -116,6 +117,11 @@ public abstract class BlockNode extends BlockBase {
         return state;
     }
 
+    public boolean hasConnectivityState() {
+        return false;
+    }
+
+    @Nullable
     public static TileNode getNode(IBlockAccess world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
 
@@ -130,9 +136,5 @@ public abstract class BlockNode extends BlockBase {
         }
 
         return null;
-    }
-
-    public boolean hasConnectivityState() {
-        return false;
     }
 }

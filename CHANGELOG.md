@@ -3,6 +3,7 @@
 ### 1.4.2
 - Added integration for MCMultiPart, this is an optional dependency (raoulvdberge)
 - Fixed a crash with the Constructor (raoulvdberge)
+- Fixed Crafting Pattern model (pauljoda)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)
