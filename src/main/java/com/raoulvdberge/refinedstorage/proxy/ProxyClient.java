@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.block.*;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
@@ -274,7 +273,7 @@ public class ProxyClient extends ProxyCommon {
             public int getColorFromItemstack(ItemStack stack, int tintIndex) {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
 
-                if (BakedModelPattern.displayPatternOutput(pattern) &&
+                if (BakedModelPattern.canDisplayPatternOutput(pattern) &&
                         mcColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex) != -1) {
                     return mcColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex); // Take the item
                 }

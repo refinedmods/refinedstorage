@@ -26,22 +26,23 @@ import java.util.List;
 public class BakedModelPattern implements IBakedModel, IPerspectiveAwareModel {
     private IBakedModel patternModel;
 
+    private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> TRANSFORMS = ImmutableMap.<ItemCameraTransforms.TransformType, TRSRTransformation>builder()
+        .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, get(0, 3, 1, 0, 0, 0, 0.55f))
+        .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, get(0, 3, 1, 0, 0, 0, 0.55f))
+        .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, get(1.13f, 3.2f, 1.13f, 0, -90, 25, 0.68f))
+        .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, get(1.13f, 3.2f, 1.13f, 0, 90, -25, 0.68f))
+        .put(ItemCameraTransforms.TransformType.GROUND, get(0, 2, 0, 0, 0, 0, 0.5f))
+        .put(ItemCameraTransforms.TransformType.HEAD, get(0, 13, 7, 0, 180, 0, 1))
+        .build();
+
     private static TRSRTransformation get(float tx, float ty, float tz, float ax, float ay, float az, float s) {
         return new TRSRTransformation(
-                new javax.vecmath.Vector3f(tx / 16, ty / 16, tz / 16),
-                TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(ax, ay, az)),
-                new javax.vecmath.Vector3f(s, s, s),
-                null);
+            new javax.vecmath.Vector3f(tx / 16, ty / 16, tz / 16),
+            TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(ax, ay, az)),
+            new javax.vecmath.Vector3f(s, s, s),
+            null
+        );
     }
-
-    private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> transforms =
-            ImmutableMap.<ItemCameraTransforms.TransformType, TRSRTransformation>builder()
-                    .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND,     get(0, 3, 1, 0, 0, 0, 0.55f))
-                    .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND,      get(0, 3, 1, 0, 0, 0, 0.55f))
-                    .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND,     get(1.13f, 3.2f, 1.13f, 0, -90, 25, 0.68f))
-                    .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,      get(1.13f, 3.2f, 1.13f, 0, 90, -25, 0.68f))
-                    .put(ItemCameraTransforms.TransformType.GROUND,                      get(0, 2, 0, 0, 0, 0, 0.5f))
-                    .put(ItemCameraTransforms.TransformType.HEAD,                        get(0, 13, 7, 0, 180, 0, 1)).build();
 
     public BakedModelPattern(IBakedModel patternModel) {
         this.patternModel = patternModel;
@@ -85,7 +86,7 @@ public class BakedModelPattern implements IBakedModel, IPerspectiveAwareModel {
             public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(world, stack);
 
-                if (displayPatternOutput(pattern)) {
+                if (canDisplayPatternOutput(pattern)) {
                     return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(pattern.getOutputs().get(0), world, entity);
                 }
 
@@ -96,17 +97,10 @@ public class BakedModelPattern implements IBakedModel, IPerspectiveAwareModel {
 
     @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-        return Pair.of(this,
-                transforms.get(cameraTransformType) != null ?
-                        transforms.get(cameraTransformType).getMatrix() : get(0, 0, 0, 0, 0, 0, 1.0f).getMatrix());
+        return Pair.of(this, TRANSFORMS.get(cameraTransformType) != null ? TRANSFORMS.get(cameraTransformType).getMatrix() : get(0, 0, 0, 0, 0, 0, 1.0f).getMatrix());
     }
 
-    /**
-     * Determines if the pattern output should be displayed
-     * @param pattern The pattern to check
-     * @return True to render output, not pattern item
-     */
-    public static boolean displayPatternOutput(CraftingPattern pattern) {
+    public static boolean canDisplayPatternOutput(CraftingPattern pattern) {
         return GuiBase.isShiftKeyDown() && pattern.isValid() && pattern.getOutputs().size() == 1;
     }
 }
