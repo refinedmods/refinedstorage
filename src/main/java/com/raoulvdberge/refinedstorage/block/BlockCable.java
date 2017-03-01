@@ -114,7 +114,7 @@ public class BlockCable extends BlockNode {
         EnumFacing otherTileSide = direction.getOpposite();
 
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
-            if (getPlacementType() != null && ((TileNode) tile).getNode().getHolder().getDirection() == direction.getOpposite()) {
+            if (getPlacementType() != null && ((TileNode) tile).getNode().getFacingTile() == otherTile) {
                 return false;
             }
 
