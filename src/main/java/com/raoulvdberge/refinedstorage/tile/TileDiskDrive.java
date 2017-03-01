@@ -4,8 +4,10 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.*;
+import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -20,6 +22,46 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public static final TileDataParameter<Integer> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
     public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
+    public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDiskDrive>() {
+        @Override
+        public Integer getValue(TileDiskDrive tile) {
+            int stored = 0;
+
+            for (IStorageDisk storage : tile.getNode().getItemStorages()) {
+                if (storage != null) {
+                    stored += storage.getStored();
+                }
+            }
+
+            for (IStorageDisk storage : tile.getNode().getFluidStorages()) {
+                if (storage != null) {
+                    stored += storage.getStored();
+                }
+            }
+
+            return stored;
+        }
+    });
+    public static final TileDataParameter<Integer> CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDiskDrive>() {
+        @Override
+        public Integer getValue(TileDiskDrive tile) {
+            int capacity = 0;
+
+            for (IStorageDisk storage : tile.getNode().getItemStorages()) {
+                if (storage != null) {
+                    capacity += storage.getCapacity();
+                }
+            }
+
+            for (IStorageDisk storage : tile.getNode().getFluidStorages()) {
+                if (storage != null) {
+                    capacity += storage.getCapacity();
+                }
+            }
+
+            return capacity;
+        }
+    });
 
     private static final String NBT_DISK_STATE = "DiskState_%d";
 
@@ -38,6 +80,8 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(VOID_EXCESS);
         dataManager.addWatchedParameter(ACCESS_TYPE);
+        dataManager.addWatchedParameter(STORED);
+        dataManager.addWatchedParameter(CAPACITY);
 
         initDiskState(diskState);
     }

@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
@@ -12,10 +11,6 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
-import com.raoulvdberge.refinedstorage.block.FluidStorageType;
-import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.IItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -309,38 +304,12 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     @Override
     public int getStored() {
-        int stored = 0;
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            ItemStack disk = disks.getStackInSlot(i);
-
-            if (!disk.isEmpty()) {
-                stored += disk.getItem() == RSItems.STORAGE_DISK ? StorageDiskItem.getStored(disk.getTagCompound()) : StorageDiskFluid.getStored(disk.getTagCompound());
-            }
-        }
-
-        return stored;
+        return TileDiskDrive.STORED.getValue();
     }
 
     @Override
     public int getCapacity() {
-        int capacity = 0;
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            ItemStack disk = disks.getStackInSlot(i);
-
-            if (!disk.isEmpty()) {
-                int diskCapacity = disk.getItem() == RSItems.STORAGE_DISK ? ItemStorageType.getById(disk.getItemDamage()).getCapacity() : FluidStorageType.getById(disk.getItemDamage()).getCapacity();
-
-                if (diskCapacity == -1) {
-                    return -1;
-                }
-
-                capacity += diskCapacity;
-            }
-        }
-
-        return capacity;
+        return TileDiskDrive.CAPACITY.getValue();
     }
 
     @Override
