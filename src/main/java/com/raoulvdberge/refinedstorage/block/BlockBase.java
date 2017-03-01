@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -112,8 +113,25 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        TileEntity tile = world.getTileEntity(pos);
+    public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
+        super.onBlockDestroyedByPlayer(world, pos, state);
+
+        if (!world.isRemote) {
+            dropContents(world, pos);
+        }
+    }
+
+    @Override
+    public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
+        super.onBlockDestroyedByExplosion(world, pos, explosion);
+
+        if (!world.isRemote) {
+            dropContents(world, pos);
+        }
+    }
+
+    private void dropContents(World world, BlockPos pos) {
+        TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
 
         if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
             IItemHandler handler = ((TileBase) tile).getDrops();
@@ -124,8 +142,6 @@ public abstract class BlockBase extends Block {
                 }
             }
         }
-
-        super.breakBlock(world, pos, state);
     }
 
     @Override
