@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import net.minecraft.util.IStringSerializable;
 
-public enum EnumItemStorageType implements IStringSerializable {
+public enum ItemStorageType implements IStringSerializable {
     TYPE_1K(0, 1000, "1k"),
     TYPE_4K(1, 4000, "4k"),
     TYPE_16K(2, 16000, "16k"),
@@ -13,7 +13,7 @@ public enum EnumItemStorageType implements IStringSerializable {
     private int capacity;
     private String name;
 
-    EnumItemStorageType(int id, int capacity, String name) {
+    ItemStorageType(int id, int capacity, String name) {
         this.id = id;
         this.capacity = capacity;
         this.name = name;
@@ -37,8 +37,8 @@ public enum EnumItemStorageType implements IStringSerializable {
         return name;
     }
 
-    public static EnumItemStorageType getById(int id) {
-        for (EnumItemStorageType type : EnumItemStorageType.values()) {
+    public static ItemStorageType getById(int id) {
+        for (ItemStorageType type : ItemStorageType.values()) {
             if (type.getId() == id) {
                 return type;
             }

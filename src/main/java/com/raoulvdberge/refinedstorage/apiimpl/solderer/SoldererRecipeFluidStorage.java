@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.solderer;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
-import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
+import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import com.raoulvdberge.refinedstorage.item.ItemBlockFluidStorage;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
 import net.minecraft.item.ItemStack;
@@ -12,10 +12,10 @@ import net.minecraft.util.NonNullList;
 import javax.annotation.Nonnull;
 
 public class SoldererRecipeFluidStorage implements ISoldererRecipe {
-    private EnumFluidStorageType type;
+    private FluidStorageType type;
     private NonNullList<ItemStack> rows = NonNullList.create();
 
-    public SoldererRecipeFluidStorage(EnumFluidStorageType type, int storagePart) {
+    public SoldererRecipeFluidStorage(FluidStorageType type, int storagePart) {
         this.type = type;
 
         this.rows.add(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC));

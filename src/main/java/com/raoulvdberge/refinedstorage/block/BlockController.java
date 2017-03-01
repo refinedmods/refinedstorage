@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockController extends BlockBase {
-    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumControllerType.class);
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", ControllerType.class);
 
     private static final PropertyInteger ENERGY = PropertyInteger.create("energy", 0, 7);
 
@@ -51,12 +51,12 @@ public class BlockController extends BlockBase {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(TYPE, meta == 0 ? EnumControllerType.NORMAL : EnumControllerType.CREATIVE);
+        return getDefaultState().withProperty(TYPE, meta == 0 ? ControllerType.NORMAL : ControllerType.CREATIVE);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(TYPE) == EnumControllerType.NORMAL ? 0 : 1;
+        return state.getValue(TYPE) == ControllerType.NORMAL ? 0 : 1;
     }
 
     @Override

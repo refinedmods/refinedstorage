@@ -26,17 +26,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class BlockCable extends BlockNode {
-    protected static AxisAlignedBB createAABB(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
-        return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
-    }
-
-    public static final AxisAlignedBB CORE_AABB = createAABB(6, 6, 6, 10, 10, 10);
-    protected static final AxisAlignedBB NORTH_AABB = createAABB(6, 6, 0, 10, 10, 6);
-    protected static final AxisAlignedBB EAST_AABB = createAABB(10, 6, 6, 16, 10, 10);
-    protected static final AxisAlignedBB SOUTH_AABB = createAABB(6, 6, 10, 10, 10, 16);
-    protected static final AxisAlignedBB WEST_AABB = createAABB(0, 6, 6, 6, 10, 10);
-    protected static final AxisAlignedBB UP_AABB = createAABB(6, 10, 6, 10, 16, 10);
-    protected static final AxisAlignedBB DOWN_AABB = createAABB(6, 0, 6, 10, 6, 10);
+    public static final AxisAlignedBB CORE_AABB = RSUtils.getAABB(6, 6, 6, 10, 10, 10);
+    private static final AxisAlignedBB NORTH_AABB = RSUtils.getAABB(6, 6, 0, 10, 10, 6);
+    private static final AxisAlignedBB EAST_AABB = RSUtils.getAABB(10, 6, 6, 16, 10, 10);
+    private static final AxisAlignedBB SOUTH_AABB = RSUtils.getAABB(6, 6, 10, 10, 10, 16);
+    private static final AxisAlignedBB WEST_AABB = RSUtils.getAABB(0, 6, 6, 6, 10, 10);
+    private static final AxisAlignedBB UP_AABB = RSUtils.getAABB(6, 10, 6, 10, 16, 10);
+    private static final AxisAlignedBB DOWN_AABB = RSUtils.getAABB(6, 0, 6, 10, 6, 10);
 
     protected static final PropertyBool NORTH = PropertyBool.create("north");
     protected static final PropertyBool EAST = PropertyBool.create("east");
@@ -123,8 +119,8 @@ public class BlockCable extends BlockNode {
             }
 
             if (IntegrationMCMP.isLoaded()) {
-                return RSMCMPAddon.hasConnectionWith(tile, Collections.singletonList(BlockCable.directionToAABB(direction)))
-                    && RSMCMPAddon.hasConnectionWith(otherTile, Collections.singletonList(BlockCable.directionToAABB(direction.getOpposite())));
+                return RSMCMPAddon.hasConnectionWith(tile, Collections.singletonList(BlockCable.getCableExtensionAABB(direction)))
+                    && RSMCMPAddon.hasConnectionWith(otherTile, Collections.singletonList(BlockCable.getCableExtensionAABB(direction.getOpposite())));
             }
 
             return true;
@@ -133,38 +129,16 @@ public class BlockCable extends BlockNode {
         return false;
     }
 
-    public static AxisAlignedBB directionToAABB(EnumFacing facing) {
-        if (facing == EnumFacing.NORTH) {
-            return NORTH_AABB;
-        } else if (facing == EnumFacing.EAST) {
-            return EAST_AABB;
-        } else if (facing == EnumFacing.SOUTH) {
-            return SOUTH_AABB;
-        } else if (facing == EnumFacing.WEST) {
-            return WEST_AABB;
-        } else if (facing == EnumFacing.UP) {
-            return UP_AABB;
-        } else if (facing == EnumFacing.DOWN) {
-            return DOWN_AABB;
-        }
-
-        return NORTH_AABB;
-    }
-
-    private boolean isInAABB(AxisAlignedBB aabb, float hitX, float hitY, float hitZ) {
-        return hitX >= aabb.minX && hitX <= aabb.maxX && hitY >= aabb.minY && hitY <= aabb.maxY && hitZ >= aabb.minZ && hitZ <= aabb.maxZ;
-    }
-
     protected boolean hitCablePart(IBlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
         state = getActualState(state, world, pos);
 
-        return isInAABB(CORE_AABB, hitX, hitY, hitZ) ||
-            (state.getValue(NORTH) && isInAABB(NORTH_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(EAST) && isInAABB(EAST_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(SOUTH) && isInAABB(SOUTH_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(WEST) && isInAABB(WEST_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(UP) && isInAABB(UP_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(DOWN) && isInAABB(DOWN_AABB, hitX, hitY, hitZ));
+        return RSUtils.isInAABB(CORE_AABB, hitX, hitY, hitZ) ||
+            (state.getValue(NORTH) && RSUtils.isInAABB(NORTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(EAST) && RSUtils.isInAABB(EAST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(SOUTH) && RSUtils.isInAABB(SOUTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(WEST) && RSUtils.isInAABB(WEST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(UP) && RSUtils.isInAABB(UP_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(DOWN) && RSUtils.isInAABB(DOWN_AABB, hitX, hitY, hitZ));
     }
 
     public List<AxisAlignedBB> getUnionizedCollisionBoxes(IBlockState state) {
@@ -258,7 +232,25 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
+    public PlacementType getPlacementType() {
         return null;
+    }
+
+    public static AxisAlignedBB getCableExtensionAABB(EnumFacing facing) {
+        if (facing == EnumFacing.NORTH) {
+            return NORTH_AABB;
+        } else if (facing == EnumFacing.EAST) {
+            return EAST_AABB;
+        } else if (facing == EnumFacing.SOUTH) {
+            return SOUTH_AABB;
+        } else if (facing == EnumFacing.WEST) {
+            return WEST_AABB;
+        } else if (facing == EnumFacing.UP) {
+            return UP_AABB;
+        } else if (facing == EnumFacing.DOWN) {
+            return DOWN_AABB;
+        }
+
+        return NORTH_AABB;
     }
 }

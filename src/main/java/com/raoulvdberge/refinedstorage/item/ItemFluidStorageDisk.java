@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
-import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
+import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -133,6 +133,6 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     @Nonnull
     @Override
     public IStorageDisk<FluidStack> create(ItemStack disk) {
-        return API.instance().getDefaultStorageDiskBehavior().createFluidStorage(disk.getTagCompound(), EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity());
+        return API.instance().getDefaultStorageDiskBehavior().createFluidStorage(disk.getTagCompound(), FluidStorageType.getById(disk.getItemDamage()).getCapacity());
     }
 }

@@ -18,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockGrid extends BlockNode {
-    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumGridType.class);
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", GridType.class);
 
     public BlockGrid() {
         super("grid");
@@ -45,12 +45,12 @@ public class BlockGrid extends BlockNode {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(TYPE, meta == 0 ? EnumGridType.NORMAL : (meta == 1 ? EnumGridType.CRAFTING : (meta == 2 ? EnumGridType.PATTERN : EnumGridType.FLUID)));
+        return getDefaultState().withProperty(TYPE, meta == 0 ? GridType.NORMAL : (meta == 1 ? GridType.CRAFTING : (meta == 2 ? GridType.PATTERN : GridType.FLUID)));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return state.getValue(TYPE) == EnumGridType.NORMAL ? 0 : (state.getValue(TYPE) == EnumGridType.CRAFTING ? 1 : (state.getValue(TYPE) == EnumGridType.PATTERN ? 2 : 3));
+        return state.getValue(TYPE) == GridType.NORMAL ? 0 : (state.getValue(TYPE) == GridType.CRAFTING ? 1 : (state.getValue(TYPE) == GridType.PATTERN ? 2 : 3));
     }
 
     @Override

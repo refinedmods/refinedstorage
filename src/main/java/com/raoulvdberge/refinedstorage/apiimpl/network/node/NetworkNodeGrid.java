@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -86,7 +86,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private List<FilterTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ItemHandlerListenerNetworkNode(this));
 
-    private EnumGridType type;
+    private GridType type;
 
     private int viewType = VIEW_TYPE_NORMAL;
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
@@ -150,17 +150,17 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         this.oredictPattern = oredictPattern;
     }
 
-    public EnumGridType getType() {
+    public GridType getType() {
         if (type == null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.GRID) {
-            type = (EnumGridType) holder.world().getBlockState(holder.pos()).getValue(BlockGrid.TYPE);
+            type = (GridType) holder.world().getBlockState(holder.pos()).getValue(BlockGrid.TYPE);
         }
 
-        return type == null ? EnumGridType.NORMAL : type;
+        return type == null ? GridType.NORMAL : type;
     }
 
     public void onOpened(EntityPlayer player) {
         if (network != null) {
-            if (getType() == EnumGridType.FLUID) {
+            if (getType() == GridType.FLUID) {
                 network.sendFluidStorageToClient((EntityPlayerMP) player);
             } else {
                 network.sendItemStorageToClient((EntityPlayerMP) player);
@@ -170,7 +170,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public String getGuiTitle() {
-        return getType() == EnumGridType.FLUID ? "gui.refinedstorage:fluid_grid" : "gui.refinedstorage:grid";
+        return getType() == GridType.FLUID ? "gui.refinedstorage:fluid_grid" : "gui.refinedstorage:grid";
     }
 
     public IItemHandler getPatterns() {
@@ -211,7 +211,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
-        if (network != null && getType() == EnumGridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        if (network != null && getType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
         }
 
@@ -221,7 +221,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
             if (!slot.isEmpty()) {
                 // Only if we are a crafting grid. Pattern grids can just be emptied.
-                if (getType() == EnumGridType.CRAFTING) {
+                if (getType() == GridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
                     if (network != null) {
                         if (network.insertItem(slot, slot.getCount(), true) != null) {
@@ -247,7 +247,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                 ItemStack[] possibilities = recipe[i];
 
                 // If we are a crafting grid
-                if (getType() == EnumGridType.CRAFTING) {
+                if (getType() == GridType.CRAFTING) {
                     boolean found = false;
 
                     // If we are connected, first try to get the possibilities from the network
@@ -285,7 +285,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                             }
                         }
                     }
-                } else if (getType() == EnumGridType.PATTERN) {
+                } else if (getType() == GridType.PATTERN) {
                     // If we are a pattern grid we can just set the slot
                     matrix.setInventorySlotContents(i, possibilities[0]);
                 }

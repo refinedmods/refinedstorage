@@ -193,7 +193,7 @@ public abstract class BlockBase extends Block {
         return super.canEntityDestroy(state, world, pos, entity);
     }
 
-    public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.HORIZONTAL;
+    public PlacementType getPlacementType() {
+        return PlacementType.HORIZONTAL;
     }
 }

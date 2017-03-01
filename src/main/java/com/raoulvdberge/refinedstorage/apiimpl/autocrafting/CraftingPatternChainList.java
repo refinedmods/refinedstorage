@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -90,8 +90,8 @@ public class CraftingPatternChainList implements Iterable<CraftingPatternChainLi
         }
 
         @Override
-        public boolean add(ICraftingPattern iCraftingPattern) {
-            return isValidForChain(iCraftingPattern) && innerList.add(iCraftingPattern);
+        public boolean add(ICraftingPattern pattern) {
+            return isValidForChain(pattern) && innerList.add(pattern);
         }
 
         @Override
@@ -107,6 +107,7 @@ public class CraftingPatternChainList implements Iterable<CraftingPatternChainLi
         @Override
         public boolean addAll(Collection<? extends ICraftingPattern> c) {
             c.removeIf(p -> !isValidForChain(p));
+
             return innerList.addAll(c);
         }
 

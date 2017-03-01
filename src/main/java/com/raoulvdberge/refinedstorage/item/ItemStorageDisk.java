@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
-import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
+import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -143,6 +143,6 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
     @Nonnull
     @Override
     public IStorageDisk<ItemStack> create(ItemStack disk) {
-        return API.instance().getDefaultStorageDiskBehavior().createItemStorage(disk.getTagCompound(), EnumItemStorageType.getById(disk.getItemDamage()).getCapacity());
+        return API.instance().getDefaultStorageDiskBehavior().createItemStorage(disk.getTagCompound(), ItemStorageType.getById(disk.getItemDamage()).getCapacity());
     }
 }

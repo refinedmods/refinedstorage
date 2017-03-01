@@ -6,7 +6,7 @@ public class BlockQuartzEnrichedIron extends BlockBase {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
+    public PlacementType getPlacementType() {
         return null;
     }
 }

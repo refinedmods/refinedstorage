@@ -2,14 +2,16 @@ package com.raoulvdberge.refinedstorage.block;
 
 import net.minecraft.util.IStringSerializable;
 
-public enum EnumControllerType implements IStringSerializable {
+public enum GridType implements IStringSerializable {
     NORMAL(0, "normal"),
-    CREATIVE(1, "creative");
+    CRAFTING(1, "crafting"),
+    PATTERN(2, "pattern"),
+    FLUID(3, "fluid");
 
     private int id;
     private String name;
 
-    EnumControllerType(int id, String name) {
+    GridType(int id, String name) {
         this.id = id;
         this.name = name;
     }

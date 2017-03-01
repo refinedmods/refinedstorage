@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.NetworkNodeExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import net.minecraft.block.Block;
@@ -17,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockExternalStorage extends BlockCable {
-    private static final AxisAlignedBB HEAD_NORTH_AABB = createAABB(3, 3, 0, 13, 13, 2);
-    private static final AxisAlignedBB HEAD_EAST_AABB = createAABB(14, 3, 3, 16, 13, 13);
-    private static final AxisAlignedBB HEAD_SOUTH_AABB = createAABB(3, 3, 14, 13, 13, 16);
-    private static final AxisAlignedBB HEAD_WEST_AABB = createAABB(0, 3, 3, 2, 13, 13);
-    private static final AxisAlignedBB HEAD_UP_AABB = createAABB(3, 14, 3, 13, 16, 13);
-    private static final AxisAlignedBB HEAD_DOWN_AABB = createAABB(3, 0, 3, 13, 2, 13);
+    private static final AxisAlignedBB HEAD_NORTH_AABB = RSUtils.getAABB(3, 3, 0, 13, 13, 2);
+    private static final AxisAlignedBB HEAD_EAST_AABB = RSUtils.getAABB(14, 3, 3, 16, 13, 13);
+    private static final AxisAlignedBB HEAD_SOUTH_AABB = RSUtils.getAABB(3, 3, 14, 13, 13, 16);
+    private static final AxisAlignedBB HEAD_WEST_AABB = RSUtils.getAABB(0, 3, 3, 2, 13, 13);
+    private static final AxisAlignedBB HEAD_UP_AABB = RSUtils.getAABB(3, 14, 3, 13, 16, 13);
+    private static final AxisAlignedBB HEAD_DOWN_AABB = RSUtils.getAABB(3, 0, 3, 13, 2, 13);
 
     public BlockExternalStorage() {
         super("external_storage");
@@ -95,7 +96,7 @@ public class BlockExternalStorage extends BlockCable {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.ANY;
+    public PlacementType getPlacementType() {
+        return PlacementType.ANY;
     }
 }

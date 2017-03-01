@@ -272,7 +272,7 @@ public class ProxyCommon {
         );
 
         // Controller
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.CONTROLLER, 1, EnumControllerType.NORMAL.getId()),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.CONTROLLER, 1, ControllerType.NORMAL.getId()),
             "EDE",
             "SMS",
             "ESE",
@@ -322,7 +322,7 @@ public class ProxyCommon {
         );
 
         // Grid
-        GameRegistry.addRecipe(new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+        GameRegistry.addRecipe(new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()),
             "ECE",
             "PMP",
             "EDE",
@@ -335,29 +335,29 @@ public class ProxyCommon {
 
         // Crafting Grid
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.CRAFTING.getId()),
+            new ItemStack(RSBlocks.GRID, 1, GridType.CRAFTING.getId()),
             500,
             new ItemStack(Blocks.CRAFTING_TABLE),
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId())
+            new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId())
         ));
 
         // Pattern Grid
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.PATTERN.getId()),
+            new ItemStack(RSBlocks.GRID, 1, GridType.PATTERN.getId()),
             500,
             new ItemStack(RSItems.PATTERN),
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId())
+            new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId())
         ));
 
         // Fluid Grid
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.FLUID.getId()),
+            new ItemStack(RSBlocks.GRID, 1, GridType.FLUID.getId()),
             500,
             new ItemStack(Items.BUCKET),
             new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId())
+            new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId())
         ));
 
         // Wireless Grid
@@ -367,7 +367,7 @@ public class ProxyCommon {
             "EAE",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(Items.ENDER_PEARL),
-            'G', new ItemStack(RSBlocks.GRID, 1, EnumGridType.NORMAL.getId()),
+            'G', new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()),
             'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 
@@ -378,7 +378,7 @@ public class ProxyCommon {
             "EAE",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(Items.ENDER_PEARL),
-            'G', new ItemStack(RSBlocks.GRID, 1, EnumGridType.FLUID.getId()),
+            'G', new ItemStack(RSBlocks.GRID, 1, GridType.FLUID.getId()),
             'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 
@@ -674,16 +674,16 @@ public class ProxyCommon {
         );
 
         // Storage Blocks
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(EnumItemStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
+        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(ItemStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));
+        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(ItemStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
+        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(ItemStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
+        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(ItemStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
 
         // Fluid Storage Blocks
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_64K, ItemFluidStoragePart.TYPE_64K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_128K, ItemFluidStoragePart.TYPE_128K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_256K, ItemFluidStoragePart.TYPE_256K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(EnumFluidStorageType.TYPE_512K, ItemFluidStoragePart.TYPE_512K));
+        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(FluidStorageType.TYPE_64K, ItemFluidStoragePart.TYPE_64K));
+        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(FluidStorageType.TYPE_128K, ItemFluidStoragePart.TYPE_128K));
+        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(FluidStorageType.TYPE_256K, ItemFluidStoragePart.TYPE_256K));
+        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(FluidStorageType.TYPE_512K, ItemFluidStoragePart.TYPE_512K));
 
         // Crafting Monitor
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.CRAFTING_MONITOR),

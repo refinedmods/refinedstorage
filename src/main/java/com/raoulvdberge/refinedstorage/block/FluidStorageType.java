@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import net.minecraft.util.IStringSerializable;
 
-public enum EnumFluidStorageType implements IStringSerializable {
+public enum FluidStorageType implements IStringSerializable {
     TYPE_64K(0, 64000, "64k"),
     TYPE_128K(1, 128000, "128k"),
     TYPE_256K(2, 256000, "256k"),
@@ -13,7 +13,7 @@ public enum EnumFluidStorageType implements IStringSerializable {
     private int capacity;
     private String name;
 
-    EnumFluidStorageType(int id, int capacity, String name) {
+    FluidStorageType(int id, int capacity, String name) {
         this.id = id;
         this.capacity = capacity;
         this.name = name;
@@ -37,8 +37,8 @@ public enum EnumFluidStorageType implements IStringSerializable {
         return name;
     }
 
-    public static EnumFluidStorageType getById(int id) {
-        for (EnumFluidStorageType type : EnumFluidStorageType.values()) {
+    public static FluidStorageType getById(int id) {
+        for (FluidStorageType type : FluidStorageType.values()) {
             if (type.getId() == id) {
                 return type;
             }

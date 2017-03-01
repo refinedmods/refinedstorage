@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.tile.TileConstructor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,19 +16,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockConstructor extends BlockCable {
-    public static final AxisAlignedBB HOLDER_NORTH_AABB = createAABB(7, 7, 2, 9, 9, 6);
-    public static final AxisAlignedBB HOLDER_EAST_AABB = createAABB(10, 7, 7, 14, 9, 9);
-    public static final AxisAlignedBB HOLDER_SOUTH_AABB = createAABB(7, 7, 10, 9, 9, 14);
-    public static final AxisAlignedBB HOLDER_WEST_AABB = createAABB(2, 7, 7, 6, 9, 9);
-    public static final AxisAlignedBB HOLDER_UP_AABB = createAABB(7, 10, 7, 9, 14, 9);
-    public static final AxisAlignedBB HOLDER_DOWN_AABB = createAABB(7, 2, 7, 9, 6, 9);
+    public static final AxisAlignedBB HOLDER_NORTH_AABB = RSUtils.getAABB(7, 7, 2, 9, 9, 6);
+    public static final AxisAlignedBB HOLDER_EAST_AABB = RSUtils.getAABB(10, 7, 7, 14, 9, 9);
+    public static final AxisAlignedBB HOLDER_SOUTH_AABB = RSUtils.getAABB(7, 7, 10, 9, 9, 14);
+    public static final AxisAlignedBB HOLDER_WEST_AABB = RSUtils.getAABB(2, 7, 7, 6, 9, 9);
+    public static final AxisAlignedBB HOLDER_UP_AABB = RSUtils.getAABB(7, 10, 7, 9, 14, 9);
+    public static final AxisAlignedBB HOLDER_DOWN_AABB = RSUtils.getAABB(7, 2, 7, 9, 6, 9);
 
-    public static final AxisAlignedBB HEAD_NORTH_AABB = createAABB(0, 0, 0, 16, 16, 2);
-    public static final AxisAlignedBB HEAD_EAST_AABB = createAABB(14, 0, 0, 16, 16, 16);
-    public static final AxisAlignedBB HEAD_SOUTH_AABB = createAABB(0, 0, 14, 16, 16, 16);
-    public static final AxisAlignedBB HEAD_WEST_AABB = createAABB(0, 0, 0, 2, 16, 16);
-    public static final AxisAlignedBB HEAD_DOWN_AABB = createAABB(0, 0, 0, 16, 2, 16);
-    public static final AxisAlignedBB HEAD_UP_AABB = createAABB(0, 14, 0, 16, 16, 16);
+    public static final AxisAlignedBB HEAD_NORTH_AABB = RSUtils.getAABB(0, 0, 0, 16, 16, 2);
+    public static final AxisAlignedBB HEAD_EAST_AABB = RSUtils.getAABB(14, 0, 0, 16, 16, 16);
+    public static final AxisAlignedBB HEAD_SOUTH_AABB = RSUtils.getAABB(0, 0, 14, 16, 16, 16);
+    public static final AxisAlignedBB HEAD_WEST_AABB = RSUtils.getAABB(0, 0, 0, 2, 16, 16);
+    public static final AxisAlignedBB HEAD_DOWN_AABB = RSUtils.getAABB(0, 0, 0, 16, 2, 16);
+    public static final AxisAlignedBB HEAD_UP_AABB = RSUtils.getAABB(0, 14, 0, 16, 16, 16);
 
     public BlockConstructor() {
         super("constructor");
@@ -91,7 +92,7 @@ public class BlockConstructor extends BlockCable {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.ANY;
+    public PlacementType getPlacementType() {
+        return PlacementType.ANY;
     }
 }

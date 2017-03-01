@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import io.netty.buffer.ByteBuf;
@@ -37,7 +37,7 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
-            if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) {
+            if (grid.getType() == GridType.CRAFTING || grid.getType() == GridType.PATTERN) {
                 ItemStack[][] actualRecipe = new ItemStack[9][];
 
                 for (int x = 0; x < actualRecipe.length; x++) {

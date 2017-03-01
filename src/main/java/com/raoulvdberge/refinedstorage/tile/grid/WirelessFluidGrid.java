@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
@@ -53,8 +53,8 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
-    public EnumGridType getType() {
-        return EnumGridType.FLUID;
+    public GridType getType() {
+        return GridType.FLUID;
     }
 
     @Override

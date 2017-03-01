@@ -70,7 +70,7 @@ public class BlockReader extends BlockCable {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.ANY_FACE_PLAYER;
+    public PlacementType getPlacementType() {
+        return PlacementType.ANY_FACE_PLAYER;
     }
 }

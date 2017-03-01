@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.integration.craftingtweaks;
 
 import com.google.common.base.Function;
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
@@ -28,7 +28,7 @@ public final class IntegrationCraftingTweaks {
     public static class ContainerCallback implements Function<ContainerGrid, Boolean> {
         @Override
         public Boolean apply(ContainerGrid containerGrid) {
-            return containerGrid.getGrid().getType() == EnumGridType.CRAFTING;
+            return containerGrid.getGrid().getType() == GridType.CRAFTING;
         }
     }
 }

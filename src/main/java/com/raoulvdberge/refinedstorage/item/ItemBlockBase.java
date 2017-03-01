@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.block.EnumPlacementType;
+import com.raoulvdberge.refinedstorage.block.PlacementType;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -13,9 +13,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemBlockBase extends ItemBlock {
-    private EnumPlacementType placementType;
+    private PlacementType placementType;
 
-    public ItemBlockBase(Block block, EnumPlacementType placementType, boolean subtypes) {
+    public ItemBlockBase(Block block, PlacementType placementType, boolean subtypes) {
         super(block);
 
         setRegistryName(block.getRegistryName());

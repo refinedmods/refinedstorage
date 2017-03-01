@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
-import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
+import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
@@ -71,7 +71,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private StorageItem storage = new StorageItem(StorageDiskItem.getTag());
     private NBTTagCompound storageTagToRead = null;
 
-    private EnumItemStorageType type;
+    private ItemStorageType type;
 
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
@@ -196,12 +196,12 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
         accessType = RSUtils.readAccessType(tag);
     }
 
-    public EnumItemStorageType getType() {
+    public ItemStorageType getType() {
         if (type == null && holder.world() != null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.STORAGE) {
-            type = (EnumItemStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockStorage.TYPE);
+            type = (ItemStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockStorage.TYPE);
         }
 
-        return type == null ? EnumItemStorageType.TYPE_1K : type;
+        return type == null ? ItemStorageType.TYPE_1K : type;
     }
 
     @Override

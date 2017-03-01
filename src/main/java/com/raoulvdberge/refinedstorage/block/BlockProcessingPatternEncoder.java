@@ -49,7 +49,7 @@ public class BlockProcessingPatternEncoder extends BlockBase {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
+    public PlacementType getPlacementType() {
         return null;
     }
 }

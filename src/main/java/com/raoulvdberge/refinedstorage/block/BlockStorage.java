@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockStorage extends BlockNode {
-    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumItemStorageType.class);
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", ItemStorageType.class);
 
     public BlockStorage() {
         super("storage");
@@ -50,12 +50,12 @@ public class BlockStorage extends BlockNode {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(TYPE, EnumItemStorageType.getById(meta));
+        return getDefaultState().withProperty(TYPE, ItemStorageType.getById(meta));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return ((EnumItemStorageType) state.getValue(TYPE)).getId();
+        return ((ItemStorageType) state.getValue(TYPE)).getId();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
+    public PlacementType getPlacementType() {
         return null;
     }
 }

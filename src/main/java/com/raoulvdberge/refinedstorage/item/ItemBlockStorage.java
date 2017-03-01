@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
-import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
+import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,12 +25,12 @@ public class ItemBlockStorage extends ItemBlockBase {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        EnumItemStorageType type = EnumItemStorageType.getById(stack.getMetadata());
+        ItemStorageType type = ItemStorageType.getById(stack.getMetadata());
 
         if (type != null && isValid(stack)) {
             NBTTagCompound tag = stack.getTagCompound().getCompoundTag(NetworkNodeStorage.NBT_STORAGE);
 
-            if (type == EnumItemStorageType.TYPE_CREATIVE) {
+            if (type == ItemStorageType.TYPE_CREATIVE) {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageDiskItem.getStored(tag)));
             } else {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageDiskItem.getStored(tag), type.getCapacity()));
@@ -42,7 +42,7 @@ public class ItemBlockStorage extends ItemBlockBase {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
-        EnumItemStorageType type = EnumItemStorageType.getById(stack.getMetadata());
+        ItemStorageType type = ItemStorageType.getById(stack.getMetadata());
 
         if (type != null && stack.getCount() == 1 && isValid(stack) && StorageDiskItem.getStored(stack.getTagCompound().getCompoundTag(NetworkNodeStorage.NBT_STORAGE)) <= 0 && stack.getMetadata() != ItemStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
             ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, 1, stack.getMetadata());

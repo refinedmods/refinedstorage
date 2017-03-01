@@ -29,8 +29,8 @@ public class NetworkNodeCable extends NetworkNode {
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
         if (IntegrationMCMP.isLoaded() && direction != null) {
-            return RSMCMPAddon.hasConnectionWith(holder.world().getTileEntity(holder.pos()), Collections.singletonList(BlockCable.directionToAABB(direction)))
-                && RSMCMPAddon.hasConnectionWith(holder.world().getTileEntity(holder.pos().offset(direction)), Collections.singletonList(BlockCable.directionToAABB(direction.getOpposite())));
+            return RSMCMPAddon.hasConnectionWith(holder.world().getTileEntity(holder.pos()), Collections.singletonList(BlockCable.getCableExtensionAABB(direction)))
+                && RSMCMPAddon.hasConnectionWith(holder.world().getTileEntity(holder.pos().offset(direction)), Collections.singletonList(BlockCable.getCableExtensionAABB(direction.getOpposite())));
         }
 
         return true;

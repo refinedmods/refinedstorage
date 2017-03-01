@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.block.EnumControllerType;
+import com.raoulvdberge.refinedstorage.block.ControllerType;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +19,7 @@ public class ItemBlockController extends ItemBlockBase {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        if (stack.getMetadata() != EnumControllerType.CREATIVE.getId()) {
+        if (stack.getMetadata() != ControllerType.CREATIVE.getId()) {
             tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getEnergyCapacity(stack)));
         }
     }
@@ -46,7 +46,7 @@ public class ItemBlockController extends ItemBlockBase {
             tag = new NBTTagCompound();
         }
 
-        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == EnumControllerType.CREATIVE.getId() ? RS.INSTANCE.config.controllerCapacity : 0);
+        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == ControllerType.CREATIVE.getId() ? RS.INSTANCE.config.controllerCapacity : 0);
 
         return stack;
     }

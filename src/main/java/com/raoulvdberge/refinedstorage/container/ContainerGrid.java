@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
@@ -46,7 +46,7 @@ public class ContainerGrid extends ContainerBase {
 
         addPlayerInventory(8, display.getYPlayerInventory());
 
-        if (grid.getType() == EnumGridType.CRAFTING) {
+        if (grid.getType() == GridType.CRAFTING) {
             int x = 26;
             int y = headerAndSlots + 4;
 
@@ -62,7 +62,7 @@ public class ContainerGrid extends ContainerBase {
             }
 
             addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), (NetworkNodeGrid) grid, 0, 130 + 4, headerAndSlots + 22));
-        } else if (grid.getType() == EnumGridType.PATTERN) {
+        } else if (grid.getType() == GridType.PATTERN) {
             int x = 8;
             int y = headerAndSlots + 4;
 
@@ -83,7 +83,7 @@ public class ContainerGrid extends ContainerBase {
             addSlotToContainer(new SlotOutput(((NetworkNodeGrid) grid).getPatterns(), 1, 152, headerAndSlots + 40));
         }
 
-        if (grid.getType() != EnumGridType.FLUID) {
+        if (grid.getType() != GridType.FLUID) {
             for (int i = 0; i < 4; ++i) {
                 addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i) + getTabDelta()));
             }
@@ -139,9 +139,9 @@ public class ContainerGrid extends ContainerBase {
                     IItemGridHandler itemHandler = grid.getNetwork().getItemGridHandler();
                     IFluidGridHandler fluidHandler = grid.getNetwork().getFluidGridHandler();
 
-                    if (grid.getType() != EnumGridType.FLUID && itemHandler != null) {
+                    if (grid.getType() != GridType.FLUID && itemHandler != null) {
                         slot.putStack(RSUtils.transformNullToEmpty(itemHandler.onInsert((EntityPlayerMP) player, slot.getStack())));
-                    } else if (grid.getType() == EnumGridType.FLUID && fluidHandler != null) {
+                    } else if (grid.getType() == GridType.FLUID && fluidHandler != null) {
                         slot.putStack(RSUtils.transformNullToEmpty(fluidHandler.onInsert((EntityPlayerMP) player, slot.getStack())));
                     }
 

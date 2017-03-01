@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
-import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
+import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
@@ -72,7 +72,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     private StorageFluid storage = new StorageFluid(StorageDiskFluid.getTag());
     private NBTTagCompound storageTagToRead;
 
-    private EnumFluidStorageType type;
+    private FluidStorageType type;
 
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
@@ -201,12 +201,12 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         accessType = RSUtils.readAccessType(tag);
     }
 
-    public EnumFluidStorageType getType() {
+    public FluidStorageType getType() {
         if (type == null && holder.world() != null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.FLUID_STORAGE) {
-            type = (EnumFluidStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockFluidStorage.TYPE);
+            type = (FluidStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockFluidStorage.TYPE);
         }
 
-        return type == null ? EnumFluidStorageType.TYPE_64K : type;
+        return type == null ? FluidStorageType.TYPE_64K : type;
     }
 
     @Override

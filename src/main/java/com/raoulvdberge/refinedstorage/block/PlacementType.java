@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-public enum EnumPlacementType {
+public enum PlacementType {
     ANY(
         EnumFacing.VALUES
     ),
@@ -20,7 +20,7 @@ public enum EnumPlacementType {
 
     final EnumFacing[] allowed;
 
-    EnumPlacementType(EnumFacing... allowed) {
+    PlacementType(EnumFacing... allowed) {
         this.allowed = allowed;
     }
 

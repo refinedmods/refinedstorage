@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.minecraft.util.text.TextFormatting;
@@ -32,7 +32,7 @@ public class SideButtonGridSortingType extends SideButton {
         if (type == NetworkNodeGrid.SORTING_TYPE_QUANTITY) {
             type = NetworkNodeGrid.SORTING_TYPE_NAME;
         } else if (type == NetworkNodeGrid.SORTING_TYPE_NAME) {
-            if (grid.getType() == EnumGridType.FLUID) {
+            if (grid.getType() == GridType.FLUID) {
                 type = NetworkNodeGrid.SORTING_TYPE_QUANTITY;
             } else {
                 type = NetworkNodeGrid.SORTING_TYPE_ID;

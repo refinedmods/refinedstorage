@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockFluidStorage extends BlockNode {
-    public static final PropertyEnum TYPE = PropertyEnum.create("type", EnumFluidStorageType.class);
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", FluidStorageType.class);
 
     public BlockFluidStorage() {
         super("fluid_storage");
@@ -50,12 +50,12 @@ public class BlockFluidStorage extends BlockNode {
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(TYPE, EnumFluidStorageType.getById(meta));
+        return getDefaultState().withProperty(TYPE, FluidStorageType.getById(meta));
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return ((EnumFluidStorageType) state.getValue(TYPE)).getId();
+        return ((FluidStorageType) state.getValue(TYPE)).getId();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class BlockFluidStorage extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
+    public PlacementType getPlacementType() {
         return null;
     }
 }

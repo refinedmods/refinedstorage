@@ -48,7 +48,7 @@ public class BlockDestructor extends BlockCable {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.ANY;
+    public PlacementType getPlacementType() {
+        return PlacementType.ANY;
     }
 }

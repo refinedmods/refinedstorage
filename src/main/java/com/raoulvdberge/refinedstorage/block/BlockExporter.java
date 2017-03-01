@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,24 +16,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockExporter extends BlockCable {
-    private static final AxisAlignedBB LINE_NORTH_1_AABB = createAABB(6, 6, 0, 10, 10, 2);
-    private static final AxisAlignedBB LINE_NORTH_2_AABB = createAABB(5, 5, 2, 11, 11, 4);
-    private static final AxisAlignedBB LINE_NORTH_3_AABB = createAABB(3, 3, 4, 13, 13, 6);
-    private static final AxisAlignedBB LINE_EAST_1_AABB = createAABB(14, 6, 6, 16, 10, 10);
-    private static final AxisAlignedBB LINE_EAST_2_AABB = createAABB(12, 5, 5, 14, 11, 11);
-    private static final AxisAlignedBB LINE_EAST_3_AABB = createAABB(10, 3, 3, 12, 13, 13);
-    private static final AxisAlignedBB LINE_SOUTH_1_AABB = createAABB(6, 6, 14, 10, 10, 16);
-    private static final AxisAlignedBB LINE_SOUTH_2_AABB = createAABB(5, 5, 12, 11, 11, 14);
-    private static final AxisAlignedBB LINE_SOUTH_3_AABB = createAABB(3, 3, 10, 13, 13, 12);
-    private static final AxisAlignedBB LINE_WEST_1_AABB = createAABB(0, 6, 6, 2, 10, 10);
-    private static final AxisAlignedBB LINE_WEST_2_AABB = createAABB(2, 5, 5, 4, 11, 11);
-    private static final AxisAlignedBB LINE_WEST_3_AABB = createAABB(4, 3, 3, 6, 13, 13);
-    private static final AxisAlignedBB LINE_UP_1_AABB = createAABB(6, 14, 6, 10, 16, 10);
-    private static final AxisAlignedBB LINE_UP_2_AABB = createAABB(5, 12, 5, 11, 14, 11);
-    private static final AxisAlignedBB LINE_UP_3_AABB = createAABB(3, 10, 3, 13, 12, 13);
-    private static final AxisAlignedBB LINE_DOWN_1_AABB = createAABB(6, 0, 6, 10, 2, 10);
-    private static final AxisAlignedBB LINE_DOWN_2_AABB = createAABB(5, 2, 5, 11, 4, 11);
-    private static final AxisAlignedBB LINE_DOWN_3_AABB = createAABB(3, 4, 3, 13, 6, 13);
+    private static final AxisAlignedBB LINE_NORTH_1_AABB = RSUtils.getAABB(6, 6, 0, 10, 10, 2);
+    private static final AxisAlignedBB LINE_NORTH_2_AABB = RSUtils.getAABB(5, 5, 2, 11, 11, 4);
+    private static final AxisAlignedBB LINE_NORTH_3_AABB = RSUtils.getAABB(3, 3, 4, 13, 13, 6);
+    private static final AxisAlignedBB LINE_EAST_1_AABB = RSUtils.getAABB(14, 6, 6, 16, 10, 10);
+    private static final AxisAlignedBB LINE_EAST_2_AABB = RSUtils.getAABB(12, 5, 5, 14, 11, 11);
+    private static final AxisAlignedBB LINE_EAST_3_AABB = RSUtils.getAABB(10, 3, 3, 12, 13, 13);
+    private static final AxisAlignedBB LINE_SOUTH_1_AABB = RSUtils.getAABB(6, 6, 14, 10, 10, 16);
+    private static final AxisAlignedBB LINE_SOUTH_2_AABB = RSUtils.getAABB(5, 5, 12, 11, 11, 14);
+    private static final AxisAlignedBB LINE_SOUTH_3_AABB = RSUtils.getAABB(3, 3, 10, 13, 13, 12);
+    private static final AxisAlignedBB LINE_WEST_1_AABB = RSUtils.getAABB(0, 6, 6, 2, 10, 10);
+    private static final AxisAlignedBB LINE_WEST_2_AABB = RSUtils.getAABB(2, 5, 5, 4, 11, 11);
+    private static final AxisAlignedBB LINE_WEST_3_AABB = RSUtils.getAABB(4, 3, 3, 6, 13, 13);
+    private static final AxisAlignedBB LINE_UP_1_AABB = RSUtils.getAABB(6, 14, 6, 10, 16, 10);
+    private static final AxisAlignedBB LINE_UP_2_AABB = RSUtils.getAABB(5, 12, 5, 11, 14, 11);
+    private static final AxisAlignedBB LINE_UP_3_AABB = RSUtils.getAABB(3, 10, 3, 13, 12, 13);
+    private static final AxisAlignedBB LINE_DOWN_1_AABB = RSUtils.getAABB(6, 0, 6, 10, 2, 10);
+    private static final AxisAlignedBB LINE_DOWN_2_AABB = RSUtils.getAABB(5, 2, 5, 11, 4, 11);
+    private static final AxisAlignedBB LINE_DOWN_3_AABB = RSUtils.getAABB(3, 4, 3, 13, 6, 13);
 
     public BlockExporter() {
         super("exporter");
@@ -97,7 +98,7 @@ public class BlockExporter extends BlockCable {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.ANY;
+    public PlacementType getPlacementType() {
+        return PlacementType.ANY;
     }
 }

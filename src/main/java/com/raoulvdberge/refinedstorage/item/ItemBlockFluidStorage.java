@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
-import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
+import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,12 +25,12 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        EnumFluidStorageType type = EnumFluidStorageType.getById(stack.getMetadata());
+        FluidStorageType type = FluidStorageType.getById(stack.getMetadata());
 
         if (type != null && isValid(stack)) {
             NBTTagCompound tag = stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE);
 
-            if (type == EnumFluidStorageType.TYPE_CREATIVE) {
+            if (type == FluidStorageType.TYPE_CREATIVE) {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageDiskFluid.getStored(tag)));
             } else {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageDiskFluid.getStored(tag), type.getCapacity()));
@@ -42,7 +42,7 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
-        EnumFluidStorageType type = EnumFluidStorageType.getById(stack.getMetadata());
+        FluidStorageType type = FluidStorageType.getById(stack.getMetadata());
 
         if (type != null && stack.getCount() == 1 && isValid(stack) && StorageDiskFluid.getStored(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE)) <= 0 && stack.getMetadata() != ItemFluidStorageDisk.TYPE_CREATIVE && !world.isRemote && player.isSneaking()) {
             ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, 1, stack.getMetadata());

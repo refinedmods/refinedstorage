@@ -31,8 +31,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.block.BlockController;
-import com.raoulvdberge.refinedstorage.block.EnumControllerType;
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.ControllerType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
@@ -173,7 +173,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
     private boolean craftingMonitorUpdateRequested;
 
-    private EnumControllerType type;
+    private ControllerType type;
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -246,7 +246,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
 
             networkItemHandler.update();
 
-            if (getType() == EnumControllerType.NORMAL) {
+            if (getType() == ControllerType.NORMAL) {
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
                     energy.setEnergyStored(energy.getMaxEnergyStored());
                 } else if (energy.getEnergyStored() - getEnergyUsage() >= 0) {
@@ -254,7 +254,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 } else {
                     energy.setEnergyStored(0);
                 }
-            } else if (getType() == EnumControllerType.CREATIVE) {
+            } else if (getType() == ControllerType.CREATIVE) {
                 energy.setEnergyStored(energy.getMaxEnergyStored());
             }
 
@@ -317,7 +317,7 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendItemStorageToClient() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
             .forEach(this::sendItemStorageToClient);
     }
 
@@ -329,14 +329,14 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, EnumGridType.NORMAL, EnumGridType.CRAFTING, EnumGridType.PATTERN))
+            .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
             .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
     }
 
     @Override
     public void sendFluidStorageToClient() {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .filter(player -> isWatchingGrid(player, GridType.FLUID))
             .forEach(this::sendFluidStorageToClient);
     }
 
@@ -348,11 +348,11 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     @Override
     public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
         getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, EnumGridType.FLUID))
+            .filter(player -> isWatchingGrid(player, GridType.FLUID))
             .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
     }
 
-    private boolean isWatchingGrid(EntityPlayer player, EnumGridType... types) {
+    private boolean isWatchingGrid(EntityPlayer player, GridType... types) {
         if (player.openContainer.getClass() == ContainerGrid.class) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
@@ -742,12 +742,12 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         return this;
     }
 
-    public EnumControllerType getType() {
+    public ControllerType getType() {
         if (type == null && getWorld().getBlockState(pos).getBlock() == RSBlocks.CONTROLLER) {
-            this.type = (EnumControllerType) getWorld().getBlockState(pos).getValue(BlockController.TYPE);
+            this.type = (ControllerType) getWorld().getBlockState(pos).getValue(BlockController.TYPE);
         }
 
-        return type == null ? EnumControllerType.NORMAL : type;
+        return type == null ? ControllerType.NORMAL : type;
     }
 
     @Override

@@ -58,7 +58,7 @@ public class BlockDiskManipulator extends BlockNode {
     }
 
     @Override
-    public EnumPlacementType getPlacementType() {
-        return EnumPlacementType.HORIZONTAL;
+    public PlacementType getPlacementType() {
+        return PlacementType.HORIZONTAL;
     }
 }

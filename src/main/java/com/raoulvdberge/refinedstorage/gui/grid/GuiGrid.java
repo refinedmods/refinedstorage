@@ -6,7 +6,7 @@ import com.google.common.collect.Multimaps;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
@@ -92,7 +92,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, grid.getType() == EnumGridType.FLUID ? 193 : 227, 0);
+        super(container, grid.getType() == GridType.FLUID ? 193 : 227, 0);
 
         this.grid = grid;
         this.wasConnected = this.grid.isActive();
@@ -137,11 +137,11 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             searchField.yPosition = sy;
         }
 
-        if (grid.getType() == EnumGridType.PATTERN) {
+        if (grid.getType() == GridType.PATTERN) {
             oredictPattern = addCheckBox(x + 64, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 46, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
         }
 
-        if (grid.getType() != EnumGridType.FLUID) {
+        if (grid.getType() != GridType.FLUID) {
             addSideButton(new SideButtonGridViewType(this, grid));
         }
 
@@ -166,7 +166,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         List<IGridStack> stacks = new ArrayList<>();
 
         if (grid.isActive()) {
-            stacks.addAll(grid.getType() == EnumGridType.FLUID ? FLUIDS.values() : ITEMS.values());
+            stacks.addAll(grid.getType() == GridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
             List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
                 grid,
@@ -244,16 +244,16 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public int getFooter() {
-        return (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) ? 156 : 99;
+        return (grid.getType() == GridType.CRAFTING || grid.getType() == GridType.PATTERN) ? 156 : 99;
     }
 
     @Override
     public int getYPlayerInventory() {
         int yp = getTabDelta() + getHeader() + (getVisibleRows() * 18);
 
-        if (grid.getType() == EnumGridType.NORMAL || grid.getType() == EnumGridType.FLUID) {
+        if (grid.getType() == GridType.NORMAL || grid.getType() == GridType.FLUID) {
             yp += 16;
-        } else if (grid.getType() == EnumGridType.CRAFTING || grid.getType() == EnumGridType.PATTERN) {
+        } else if (grid.getType() == GridType.CRAFTING || grid.getType() == GridType.PATTERN) {
             yp += 73;
         }
 
@@ -309,7 +309,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == EnumGridType.PATTERN && inBounds(152, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
+        return grid.getType() == GridType.PATTERN && inBounds(152, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
     }
 
     private int getTabDelta() {
@@ -370,9 +370,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             drawTab(tab, false, x, y, mouseX, mouseY);
         }
 
-        if (grid.getType() == EnumGridType.CRAFTING) {
+        if (grid.getType() == GridType.CRAFTING) {
             bindTexture("gui/crafting_grid.png");
-        } else if (grid.getType() == EnumGridType.PATTERN) {
+        } else if (grid.getType() == GridType.PATTERN) {
             bindTexture("gui/pattern_grid.png");
         } else {
             bindTexture("gui/grid.png");
@@ -380,9 +380,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         int yy = y + getTabDelta();
 
-        drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), getHeader());
+        drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getHeader());
 
-        if (grid.getType() != EnumGridType.FLUID) {
+        if (grid.getType() != GridType.FLUID) {
             drawTexture(x + screenWidth - 34 + 4, y + getTabDelta(), 197, 0, 30, 82);
         }
 
@@ -391,18 +391,18 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            drawTexture(x, yy, 0, getHeader() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), 18);
+            drawTexture(x, yy, 0, getHeader() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), 18);
         }
 
         yy += 18;
 
-        drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth - (grid.getType() != EnumGridType.FLUID ? 34 : 0), getFooter());
+        drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getFooter());
 
         for (FilterTab tab : grid.getTabs()) {
             drawTab(tab, true, x, y, mouseX, mouseY);
         }
 
-        if (grid.getType() == EnumGridType.PATTERN) {
+        if (grid.getType() == GridType.PATTERN) {
             int ty = 0;
 
             if (isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
@@ -529,11 +529,11 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
-                RS.INSTANCE.network.sendToServer(grid.getType() == EnumGridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
+                RS.INSTANCE.network.sendToServer(grid.getType() == GridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
             }
 
             if (isOverSlotWithItem()) {
-                if (grid.getType() != EnumGridType.FLUID && (held.isEmpty() || (!held.isEmpty() && clickedButton == 2))) {
+                if (grid.getType() != GridType.FLUID && (held.isEmpty() || (!held.isEmpty() && clickedButton == 2))) {
                     GridStackItem stack = (GridStackItem) STACKS.get(slotNumber);
 
                     if (stack.isCraftable() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) && CAN_CRAFT) {
@@ -555,7 +555,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
                         RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
                     }
-                } else if (grid.getType() == EnumGridType.FLUID && held.isEmpty()) {
+                } else if (grid.getType() == GridType.FLUID && held.isEmpty()) {
                     RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                 }
             }

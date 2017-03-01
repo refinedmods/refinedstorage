@@ -14,8 +14,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
-import com.raoulvdberge.refinedstorage.block.EnumFluidStorageType;
-import com.raoulvdberge.refinedstorage.block.EnumItemStorageType;
+import com.raoulvdberge.refinedstorage.block.FluidStorageType;
+import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.IItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -330,7 +330,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
             ItemStack disk = disks.getStackInSlot(i);
 
             if (!disk.isEmpty()) {
-                int diskCapacity = disk.getItem() == RSItems.STORAGE_DISK ? EnumItemStorageType.getById(disk.getItemDamage()).getCapacity() : EnumFluidStorageType.getById(disk.getItemDamage()).getCapacity();
+                int diskCapacity = disk.getItem() == RSItems.STORAGE_DISK ? ItemStorageType.getById(disk.getItemDamage()).getCapacity() : FluidStorageType.getById(disk.getItemDamage()).getCapacity();
 
                 if (diskCapacity == -1) {
                     return -1;

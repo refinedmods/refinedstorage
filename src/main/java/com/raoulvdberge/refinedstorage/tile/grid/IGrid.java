@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.block.EnumGridType;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public interface IGrid {
-    EnumGridType getType();
+    GridType getType();
 
     @Nullable
     INetworkMaster getNetwork();
