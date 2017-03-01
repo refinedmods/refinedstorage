@@ -10,11 +10,18 @@ import mcmultipart.api.multipart.IMultipartRegistry;
 import mcmultipart.api.multipart.IMultipartTile;
 import mcmultipart.api.multipart.MultipartOcclusionHelper;
 import mcmultipart.api.ref.MCMPCapabilities;
+import mcmultipart.api.slot.EnumCenterSlot;
+import mcmultipart.block.BlockMultipartContainer;
+import mcmultipart.block.TileMultipartContainer;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -24,6 +31,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 @MCMPAddon
 public class RSMCMPAddon implements IMCMPAddon {
@@ -99,5 +107,38 @@ public class RSMCMPAddon implements IMCMPAddon {
         }
 
         return true;
+    }
+
+    @Nullable
+    public static TileEntity unwrapTile(IBlockAccess world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof TileMultipartContainer.Ticking) {
+            Optional<IMultipartTile> multipartTile = ((TileMultipartContainer.Ticking) tile).getPartTile(EnumCenterSlot.CENTER);
+
+            if (multipartTile.isPresent()) {
+                return multipartTile.get().getTileEntity();
+            }
+        }
+
+        return tile;
+    }
+
+    public static Block unwrapBlock(IBlockAccess world, BlockPos pos) {
+        IBlockState state = world.getBlockState(pos);
+
+        if (state.getBlock() instanceof BlockMultipartContainer) {
+            Optional<TileMultipartContainer> multipartContainer = BlockMultipartContainer.getTile(world, pos);
+
+            if (multipartContainer.isPresent()) {
+                Optional<IPartInfo> info = multipartContainer.get().get(EnumCenterSlot.CENTER);
+
+                if (info.isPresent()) {
+                    return info.get().getPart().getBlock();
+                }
+            }
+        }
+
+        return state.getBlock();
     }
 }

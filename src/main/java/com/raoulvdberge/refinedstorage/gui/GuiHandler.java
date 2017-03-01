@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.gui.grid.GridDisplayDummy;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
+import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
@@ -15,9 +16,6 @@ import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
-import mcmultipart.api.multipart.IMultipartTile;
-import mcmultipart.api.slot.EnumCenterSlot;
-import mcmultipart.block.TileMultipartContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -26,8 +24,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
-
-import java.util.Optional;
 
 public class GuiHandler implements IGuiHandler {
     private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
@@ -95,24 +91,12 @@ public class GuiHandler implements IGuiHandler {
             return getWirelessCraftingMonitorContainer(player, x, y);
         }
 
-        return getContainer(ID, player, unwrapMultipart(world.getTileEntity(new BlockPos(x, y, z))));
-    }
-
-    private TileEntity unwrapMultipart(TileEntity tile) {
-        if (IntegrationMCMP.isLoaded() && tile instanceof TileMultipartContainer.Ticking) {
-            Optional<IMultipartTile> multipartTile = ((TileMultipartContainer.Ticking) tile).getPartTile(EnumCenterSlot.CENTER);
-
-            if (multipartTile.isPresent()) {
-                return multipartTile.get().getTileEntity();
-            }
-        }
-
-        return tile;
+        return getContainer(ID, player, IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, new BlockPos(x, y, z)) : world.getTileEntity(new BlockPos(x, y, z)));
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity tile = unwrapMultipart(world.getTileEntity(new BlockPos(x, y, z)));
+        TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, new BlockPos(x, y, z)) : world.getTileEntity(new BlockPos(x, y, z));
 
         switch (ID) {
             case RSGui.CONTROLLER:

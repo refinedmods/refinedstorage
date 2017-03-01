@@ -4,10 +4,8 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
+import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
-import mcmultipart.api.multipart.IMultipartTile;
-import mcmultipart.api.slot.EnumCenterSlot;
-import mcmultipart.block.TileMultipartContainer;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -18,9 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
 
 public abstract class BlockNode extends BlockBase {
     public static final String NBT_REFINED_STORAGE_DATA = "RefinedStorageData";
@@ -107,10 +102,10 @@ public abstract class BlockNode extends BlockBase {
         state = super.getActualState(state, world, pos);
 
         if (hasConnectivityState()) {
-            TileNode tile = getNode(world, pos);
+            TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
 
-            if (tile != null) {
-                return state.withProperty(CONNECTED, tile.getNode().isActive());
+            if (tile instanceof TileNode) {
+                return state.withProperty(CONNECTED, ((TileNode) tile).getNode().isActive());
             }
         }
 
@@ -119,22 +114,5 @@ public abstract class BlockNode extends BlockBase {
 
     public boolean hasConnectivityState() {
         return false;
-    }
-
-    @Nullable
-    public static TileNode getNode(IBlockAccess world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
-
-        if (tile instanceof TileNode) {
-            return (TileNode) tile;
-        } else if (IntegrationMCMP.isLoaded() && tile instanceof TileMultipartContainer.Ticking) {
-            Optional<IMultipartTile> multipartTile = ((TileMultipartContainer.Ticking) tile).getPartTile(EnumCenterSlot.CENTER);
-
-            if (multipartTile.isPresent()) {
-                return (TileNode) multipartTile.get().getTileEntity();
-            }
-        }
-
-        return null;
     }
 }

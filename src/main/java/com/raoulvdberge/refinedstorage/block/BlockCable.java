@@ -79,7 +79,7 @@ public class BlockCable extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        TileNode tile = getNode(world, pos);
+        TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
 
         state = super.getActualState(state, world, pos)
             .withProperty(NORTH, hasConnectionWith(world, pos, tile, EnumFacing.NORTH))
