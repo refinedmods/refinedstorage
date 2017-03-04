@@ -89,13 +89,13 @@ public class StorageItemDrawer extends StorageItemExternal {
                 return null;
             }
 
-            int returnSize = size - inserted;
+            int remainder = size - inserted;
 
             if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) {
-                returnSize = -returnSize;
+                return null;
             }
 
-            return ItemHandlerHelper.copyStackWithSize(stack, returnSize);
+            return ItemHandlerHelper.copyStackWithSize(stack, remainder);
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);
