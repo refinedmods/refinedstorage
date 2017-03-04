@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.23
+- Fixed crash in storage cache (raoulvdberge)
+
 ### 1.2.22
 - Fixed recipe for Processing Pattern Encoder not using oredictionary for the workbench (VT-14)
 - Fixed Fluid Interface not dropping inventory contents (raoulvdberge)

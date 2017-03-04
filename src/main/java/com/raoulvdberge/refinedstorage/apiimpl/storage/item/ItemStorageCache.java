@@ -12,11 +12,12 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemStorageCache implements IItemStorageCache {
     private INetworkMaster network;
-    private List<IItemStorage> storages = new ArrayList<>();
+    private List<IItemStorage> storages = Collections.synchronizedList(new ArrayList<>());
     private IItemStackList list = API.instance().createItemStackList();
 
     public ItemStorageCache(INetworkMaster network) {
