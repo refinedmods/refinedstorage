@@ -127,6 +127,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
         if (node == null) {
             manager.setNode(pos, node = createNode());
+
+            API.instance().markNetworkNodesDirty(getWorld());
         }
 
         if (node.getHolder().world() == null) {
