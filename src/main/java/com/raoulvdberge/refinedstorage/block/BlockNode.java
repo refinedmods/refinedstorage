@@ -13,7 +13,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -50,24 +49,7 @@ public abstract class BlockNode extends BlockBase {
     }
 
     @Override
-    public void onBlockDestroyedByPlayer(World world, BlockPos pos, IBlockState state) {
-        super.onBlockDestroyedByPlayer(world, pos, state);
-
-        if (!world.isRemote) {
-            removeNode(world, pos);
-        }
-    }
-
-    @Override
-    public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {
-        super.onBlockDestroyedByExplosion(world, pos, explosion);
-
-        if (!world.isRemote) {
-            removeNode(world, pos);
-        }
-    }
-
-    private void removeNode(World world, BlockPos pos) {
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
         INetworkNodeManager manager = API.instance().getNetworkNodeManager(world.provider.getDimension());
 
         INetworkNode node = manager.getNode(pos);
@@ -79,6 +61,8 @@ public abstract class BlockNode extends BlockBase {
         if (node.getNetwork() != null) {
             node.getNetwork().getNodeGraph().rebuild();
         }
+
+        super.breakBlock(world, pos, state);
     }
 
     @Override
