@@ -5,6 +5,7 @@
 - Fixed a crash with the Constructor (raoulvdberge)
 - Fixed Crafting Pattern model (pauljoda)
 - Fixed Quartz Enriched Iron and the block form of it not having an oredictionary entry (raoulvdberge)
+- Fixed crash in storage cache (raoulvdberge)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)
