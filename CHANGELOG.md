@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.2.23
+- Implemented support for the Forge update JSON system (raoulvdberge)
 - Fixed crash in storage cache (raoulvdberge)
 - Fixed Crafting Pattern model (pauljoda)
 

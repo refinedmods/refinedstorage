@@ -5,11 +5,11 @@
       "description": "An elegant solution to your hoarding problem",
       "version": "1.2.23",
       "mcversion": "1.10.2",
-      "url": "",
+      "url": "https://refinedstorage.raoulvdberge.com",
       "updateUrl": "",
       "authorList": ["Refined Storage contributors"],
       "credits": "",
-      "logoFile": "/assets/refinedstorage/textures/logo.png",
+      "logoFile": "assets/refinedstorage/textures/logo.png",
       "screenshots": [],
       "dependencies": []
     }
