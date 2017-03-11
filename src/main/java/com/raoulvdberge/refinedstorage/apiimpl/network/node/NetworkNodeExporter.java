@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -12,6 +13,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -65,77 +67,15 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     for (int i = 0; i < itemFilters.getSlots(); ++i) {
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
-                        if (slot.isEmpty()) {
-                            continue;
-                        }
-
-                        if (craftOnly) {
-                            if (craftOnlyTask[i] == null) {
-                                craftOnlyTask[i] = network.getCraftingManager().schedule(slot, 1, compare);
-
-                                if (craftOnlyTask[i] != null) {
-                                    craftOnlyToExtract[i] = craftOnlyTask[i].getPattern().getQuantityPerRequest(slot, compare);
-                                }
-                            } else if (craftOnlyTask[i].isFinished() && craftOnlyTask[i].getMissing().isEmpty()) {
-                                ItemStack took = network.extractItem(slot, 1, compare, true);
-
-                                if (took != null && ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-                                    took = network.extractItem(slot, 1, compare, false);
-
-                                    ItemHandlerHelper.insertItem(handler, took, false);
-
-                                    craftOnlyToExtract[i]--;
-
-                                    if (craftOnlyToExtract[i] <= 0) {
-                                        craftOnlyToExtract[i] = null;
-                                        craftOnlyTask[i] = null;
+                        if (!slot.isEmpty()) {
+                            if (slot.getItem() == RSItems.FILTER) {
+                                for (ItemStack slotInFilter : ItemFilter.getFilterItemsFromCache(slot)) {
+                                    if (!slotInFilter.isEmpty()) {
+                                        doExport(handler, -1, slotInFilter);
                                     }
-                                }
-                            } else if (!network.getCraftingManager().getTasks().contains(craftOnlyTask[i])) {
-                                craftOnlyTask[i] = null;
-                            }
-                        } else {
-                            int stackSize = upgrades.getItemInteractCount();
-
-                            boolean skipSlot = false;
-
-                            if (regulator) {
-                                for (int index = 0; index < handler.getSlots(); index++) {
-                                    ItemStack exporterStack = handler.getStackInSlot(index);
-
-                                    if (API.instance().getComparer().isEqual(slot, exporterStack, compare)) {
-                                        if (exporterStack.getCount() >= slot.getCount()) {
-                                            skipSlot = true;
-                                            break;
-                                        } else {
-                                            stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - exporterStack.getCount() : 1;
-                                        }
-                                    }
-                                }
-                            }
-
-                            if (skipSlot) {
-                                continue;
-                            }
-
-                            ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
-
-                            if (took == null) {
-                                if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                    network.getCraftingManager().schedule(slot, 1, compare);
                                 }
                             } else {
-                                if (IntegrationCyclopsCore.isLoaded()
-                                        && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), holder.getDirection().getOpposite())
-                                        && SlotlessItemHandlerHelper.insertItem(getFacingTile(), holder.getDirection().getOpposite(), took, true).isEmpty()) {
-                                    took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
-
-                                    SlotlessItemHandlerHelper.insertItem(getFacingTile(), holder.getDirection().getOpposite(), took, false);
-                                } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-                                    took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
-
-                                    ItemHandlerHelper.insertItem(handler, took, false);
-                                }
+                                doExport(handler, i, slot);
                             }
                         }
                     }
@@ -190,6 +130,71 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private void doExport(IItemHandler handler, int i, ItemStack slot) {
+        if (craftOnly && i >= 0) {
+            if (craftOnlyTask[i] == null) {
+                craftOnlyTask[i] = network.getCraftingManager().schedule(slot, 1, compare);
+
+                if (craftOnlyTask[i] != null) {
+                    craftOnlyToExtract[i] = craftOnlyTask[i].getPattern().getQuantityPerRequest(slot, compare);
+                }
+            } else if (craftOnlyTask[i].isFinished() && craftOnlyTask[i].getMissing().isEmpty()) {
+                ItemStack took = network.extractItem(slot, 1, compare, true);
+
+                if (took != null && ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
+                    took = network.extractItem(slot, 1, compare, false);
+
+                    ItemHandlerHelper.insertItem(handler, took, false);
+
+                    craftOnlyToExtract[i]--;
+
+                    if (craftOnlyToExtract[i] <= 0) {
+                        craftOnlyToExtract[i] = null;
+                        craftOnlyTask[i] = null;
+                    }
+                }
+            } else if (!network.getCraftingManager().getTasks().contains(craftOnlyTask[i])) {
+                craftOnlyTask[i] = null;
+            }
+        } else {
+            int stackSize = upgrades.getItemInteractCount();
+
+            if (regulator) {
+                for (int index = 0; index < handler.getSlots(); index++) {
+                    ItemStack exporterStack = handler.getStackInSlot(index);
+
+                    if (API.instance().getComparer().isEqual(slot, exporterStack, compare)) {
+                        if (exporterStack.getCount() >= slot.getCount()) {
+                            return;
+                        } else {
+                            stackSize = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? slot.getCount() - exporterStack.getCount() : 1;
+                        }
+                    }
+                }
+            }
+
+            ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
+
+            if (took == null) {
+                if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                    network.getCraftingManager().schedule(slot, 1, compare);
+                }
+            } else {
+                if (IntegrationCyclopsCore.isLoaded()
+                    && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), holder.getDirection().getOpposite())
+                    && SlotlessItemHandlerHelper.insertItem(getFacingTile(), holder.getDirection().getOpposite(), took, true).isEmpty()) {
+                    took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
+
+                    SlotlessItemHandlerHelper.insertItem(getFacingTile(), holder.getDirection().getOpposite(), took, false);
+                } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
+                    took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
+
+                    ItemHandlerHelper.insertItem(handler, took, false);
                 }
             }
         }
