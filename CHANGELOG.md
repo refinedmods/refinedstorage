@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.4.2
+- Implemented support for the Forge update JSON system (raoulvdberge)
 - Added integration for MCMultiPart, this is an optional dependency (raoulvdberge)
 - Fixed a crash with the Constructor (raoulvdberge)
 - Fixed Crafting Pattern model (pauljoda)

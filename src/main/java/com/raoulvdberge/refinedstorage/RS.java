@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-@Mod(modid = RS.ID, version = RS.VERSION, dependencies = RS.DEPENDENCIES, guiFactory = RS.GUI_FACTORY)
+@Mod(modid = RS.ID, version = RS.VERSION, dependencies = RS.DEPENDENCIES, guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON)
 public final class RS {
     static {
         FluidRegistry.enableUniversalBucket();
@@ -25,6 +25,7 @@ public final class RS {
     public static final String VERSION = "1.4.2";
     public static final String DEPENDENCIES = "required-after:forge@[13.19.1.2188,);after:commoncapabilities@[1.3.1,);";
     public static final String GUI_FACTORY = "com.raoulvdberge.refinedstorage.gui.config.ModGuiFactory";
+    public static final String UPDATE_JSON = "https://refinedstorage.raoulvdberge.com/update";
 
     @SidedProxy(clientSide = "com.raoulvdberge.refinedstorage.proxy.ProxyClient", serverSide = "com.raoulvdberge.refinedstorage.proxy.ProxyCommon")
     public static ProxyCommon PROXY;
