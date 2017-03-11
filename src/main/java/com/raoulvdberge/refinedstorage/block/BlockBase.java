@@ -113,6 +113,17 @@ public abstract class BlockBase extends Block {
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        dropContents(world, pos);
+        removeTile(world, pos, state);
+    }
+
+    protected void removeTile(World world, BlockPos pos, IBlockState state) {
+        if (hasTileEntity(state)) {
+            world.removeTileEntity(pos);
+        }
+    }
+
+    protected void dropContents(World world, BlockPos pos) {
         TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
 
         if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
@@ -124,8 +135,6 @@ public abstract class BlockBase extends Block {
                 }
             }
         }
-
-        super.breakBlock(world, pos, state);
     }
 
     @Override
