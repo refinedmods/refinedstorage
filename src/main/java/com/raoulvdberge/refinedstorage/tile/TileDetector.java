@@ -65,7 +65,6 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
         dataManager.addWatchedParameter(AMOUNT);
     }
 
-
     @Override
     public void readUpdate(NBTTagCompound tag) {
         getNode().setPowered(tag.getBoolean(NBT_POWERED));

@@ -7,6 +7,7 @@
 - Fixed Crafting Pattern model (pauljoda)
 - Fixed Quartz Enriched Iron and the block form of it not having an oredictionary entry (raoulvdberge)
 - Fixed crash in storage cache (raoulvdberge)
+- The Detector no longer outputs a strong redstone signal (raoulvdberge)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)
