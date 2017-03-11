@@ -117,8 +117,9 @@ public class Comparer implements IComparer {
             return validity == EnumActionResult.SUCCESS;
         }
 
-        int code = API.instance().getItemStackHashCode(left);
-        code = 31 * code + API.instance().getItemStackHashCode(right);
+        // We do not care about the NBT tag since the oredict doesn't care either, and generating a NBT hashcode is slow.
+        int code = API.instance().getItemStackHashCode(left, false);
+        code = 31 * code + API.instance().getItemStackHashCode(right, false);
 
         if (oredictCache.containsKey(code)) {
             return oredictCache.get(code);

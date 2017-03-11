@@ -186,8 +186,8 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public int getItemStackHashCode(ItemStack stack) {
-        return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * (stack.hasTagCompound() ? stack.getTagCompound().hashCode() : 1);
+    public int getItemStackHashCode(ItemStack stack, boolean tag) {
+        return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * ((tag && stack.hasTagCompound()) ? stack.getTagCompound().hashCode() : 1);
     }
 
     @Override
