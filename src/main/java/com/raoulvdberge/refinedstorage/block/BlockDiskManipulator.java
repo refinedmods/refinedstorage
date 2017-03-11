@@ -46,7 +46,15 @@ public class BlockDiskManipulator extends BlockNode {
 
     @Override
     public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return ((IExtendedBlockState) super.getExtendedState(state, world, pos)).withProperty(DISK_STATE, ((TileDiskManipulator) world.getTileEntity(pos)).getDiskState());
+        IBlockState s = super.getExtendedState(state, world, pos);
+
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof TileDiskManipulator) {
+            s = ((IExtendedBlockState) s).withProperty(DISK_STATE, ((TileDiskManipulator) tile).getDiskState());
+        }
+
+        return s;
     }
 
     @Override
