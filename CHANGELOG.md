@@ -6,6 +6,7 @@
 - Fixed Crafting Pattern model (pauljoda)
 - Fixed Constructor not working on Botania flowers (raoulvdberge)
 - Fixed Disk Manipulator crash (raoulvdberge)
+- Fixed slow oredict comparisons causing TPS lag (raoulvdberge)
 - The Detector no longer outputs a strong redstone signal (raoulvdberge)
 
 ### 1.2.22
