@@ -6,6 +6,7 @@
 - Fixed Crafting Pattern model (pauljoda)
 - Fixed Constructor not working on Botania flowers (raoulvdberge)
 - Fixed Disk Manipulator crash (raoulvdberge)
+- The Detector no longer outputs a strong redstone signal (raoulvdberge)
 
 ### 1.2.22
 - Fixed recipe for Processing Pattern Encoder not using oredictionary for the workbench (VT-14)

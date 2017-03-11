@@ -58,12 +58,6 @@ public class BlockDetector extends BlockNode {
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return getWeakPower(state, world, pos, side);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
     public boolean canProvidePower(IBlockState state) {
         return true;
     }
