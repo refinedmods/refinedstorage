@@ -24,6 +24,7 @@ import net.minecraft.dispenser.PositionImpl;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -174,8 +175,23 @@ public class TileConstructor extends TileMultipartNode implements IComparable, I
 
                 took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
 
-                getWorld().setBlockState(front, state, 1 | 2);
-                block.getBlock().onBlockPlacedBy(getWorld(), front, state, null, took);
+                if (item.getItem() instanceof ItemBlock) {
+                    ((ItemBlock) item.getItem()).placeBlockAt(
+                        took,
+                        FakePlayerFactory.getMinecraft((WorldServer) getWorld()),
+                        getWorld(),
+                        front,
+                        getDirection(),
+                        0,
+                        0,
+                        0,
+                        state
+                    );
+                } else {
+                    getWorld().setBlockState(front, state, 1 | 2);
+
+                    state.getBlock().onBlockPlacedBy(getWorld(), front, state, FakePlayerFactory.getMinecraft((WorldServer) getWorld()), took);
+                }
 
                 // From ItemBlock#onItemUse
                 SoundType blockSound = block.getBlock().getSoundType(state, getWorld(), pos, null);
