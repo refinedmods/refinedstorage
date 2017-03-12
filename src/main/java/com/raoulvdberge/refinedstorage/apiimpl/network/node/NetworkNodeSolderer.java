@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
@@ -23,7 +23,7 @@ public class NetworkNodeSolderer extends NetworkNode {
     public static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
-    private ItemHandlerBasic items = new ItemHandlerBasic(3, new ItemHandlerListenerNetworkNode(this)) {
+    private ItemHandlerBase items = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         @Nonnull
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -36,7 +36,7 @@ public class NetworkNodeSolderer extends NetworkNode {
             return stack;
         }
     };
-    private ItemHandlerBasic result = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this)) {
+    private ItemHandlerBase result = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         @Nonnull
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -173,11 +173,11 @@ public class NetworkNodeSolderer extends NetworkNode {
         return tag;
     }
 
-    public ItemHandlerBasic getItems() {
+    public ItemHandlerBase getItems() {
         return items;
     }
 
-    public ItemHandlerBasic getResult() {
+    public ItemHandlerBase getResult() {
         return result;
     }
 

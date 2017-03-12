@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -50,7 +50,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     private static final int BASE_SPEED = 20;
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this)) {
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

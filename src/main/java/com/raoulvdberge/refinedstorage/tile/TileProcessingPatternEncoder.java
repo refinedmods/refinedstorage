@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.gui.GuiProcessingPatternEncoder;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
@@ -61,8 +61,8 @@ public class TileProcessingPatternEncoder extends TileBase {
         }
     });
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerListenerTile(this), new ItemValidatorBasic(RSItems.PATTERN));
-    private ItemHandlerBasic configuration = new ItemHandlerBasic(9 * 2, new ItemHandlerListenerTile(this));
+    private ItemHandlerBase patterns = new ItemHandlerBase(2, new ItemHandlerListenerTile(this), new ItemValidatorBasic(RSItems.PATTERN));
+    private ItemHandlerBase configuration = new ItemHandlerBase(9 * 2, new ItemHandlerListenerTile(this));
 
     private boolean oredictPattern;
     private boolean blockingTask = false;
@@ -141,11 +141,11 @@ public class TileProcessingPatternEncoder extends TileBase {
         return inputsFilled > 0 && outputsFilled > 0 && !patterns.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty();
     }
 
-    public ItemHandlerBasic getPatterns() {
+    public ItemHandlerBase getPatterns() {
         return patterns;
     }
 
-    public ItemHandlerBasic getConfiguration() {
+    public ItemHandlerBase getConfiguration() {
         return configuration;
     }
 

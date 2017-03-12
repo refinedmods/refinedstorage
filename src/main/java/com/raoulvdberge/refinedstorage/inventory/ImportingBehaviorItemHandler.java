@@ -27,12 +27,12 @@ public class ImportingBehaviorItemHandler implements IImportingBehavior {
         if (handler.getSlots() > 0) {
             ItemStack stack = handler.getStackInSlot(currentSlot);
 
-            if (stack == null || stack.isEmpty() || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
+            if (stack.isEmpty() || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
                 currentSlot++;
             } else if (ticks % upgrades.getSpeed() == 0) {
                 ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
 
-                if (result != null && !stack.isEmpty() && network.insertItem(result, result.getCount(), true) == null) {
+                if (!result.isEmpty() && network.insertItem(result, result.getCount(), true) == null) {
                     network.insertItemTracked(result, result.getCount());
 
                     handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);

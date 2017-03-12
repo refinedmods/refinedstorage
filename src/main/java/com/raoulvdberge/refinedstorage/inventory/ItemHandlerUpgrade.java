@@ -3,9 +3,12 @@ package com.raoulvdberge.refinedstorage.inventory;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 
-public class ItemHandlerUpgrade extends ItemHandlerBasic {
-    public ItemHandlerUpgrade(int size, IItemHandlerListener listener, int... supportedUpgrades) {
-        super(size, listener, new IItemValidator[supportedUpgrades.length]);
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
+
+public class ItemHandlerUpgrade extends ItemHandlerBase {
+    public ItemHandlerUpgrade(int size, @Nullable Consumer<Integer> listener, int... supportedUpgrades) {
+        super(size, listener, new ItemValidatorBasic[supportedUpgrades.length]);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {
             this.validators[i] = new ItemValidatorBasic(RSItems.UPGRADE, supportedUpgrades[i]);
@@ -64,12 +67,12 @@ public class ItemHandlerUpgrade extends ItemHandlerBasic {
         return 0;
     }
 
+    public int getItemInteractCount() {
+        return hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
+    }
+
     @Override
     public int getSlotLimit(int slot) {
         return 1;
-    }
-
-    public int getItemInteractCount() {
-        return hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
     }
 }

@@ -2,7 +2,9 @@ package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 
-public class ItemHandlerListenerNetworkNode implements IItemHandlerListener {
+import java.util.function.Consumer;
+
+public class ItemHandlerListenerNetworkNode implements Consumer<Integer> {
     private INetworkNode node;
 
     public ItemHandlerListenerNetworkNode(INetworkNode node) {
@@ -10,7 +12,7 @@ public class ItemHandlerListenerNetworkNode implements IItemHandlerListener {
     }
 
     @Override
-    public void onChanged(int slot) {
+    public void accept(Integer slot) {
         node.markDirty();
     }
 }

@@ -3,16 +3,12 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorage;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.IItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
@@ -26,8 +22,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
+    public static final Predicate<ItemStack> VALIDATOR_STORAGE_DISK = s -> s.getItem() instanceof IStorageDiskProvider && ((IStorageDiskProvider) s.getItem()).create(s).isValid(s);
+
     public static final String ID = "disk_drive";
 
     private static final String NBT_PRIORITY = "Priority";
@@ -36,7 +35,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private static final String NBT_TYPE = "Type";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
 
-    private ItemHandlerBasic disks = new ItemHandlerBasic(8, new ItemHandlerListenerNetworkNode(this), IItemValidator.STORAGE_DISK) {
+    private ItemHandlerBase disks = new ItemHandlerBase(8, new ItemHandlerListenerNetworkNode(this), VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -74,7 +73,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         }
     };
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
     private IStorageDisk[] itemStorages = new IStorageDisk[8];
@@ -374,7 +373,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
-    public ItemHandlerBasic getItemFilters() {
+    public ItemHandlerBase getItemFilters() {
         return itemFilters;
     }
 

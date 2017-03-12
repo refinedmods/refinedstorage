@@ -55,7 +55,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
     private FluidHandlerFluidInterface tank = new FluidHandlerFluidInterface(tankIn, tankOut);
 
-    private ItemHandlerBasic in = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase in = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid out = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
@@ -205,7 +205,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         return upgrades;
     }
 
-    public ItemHandlerBasic getIn() {
+    public ItemHandlerBase getIn() {
         return in;
     }
 

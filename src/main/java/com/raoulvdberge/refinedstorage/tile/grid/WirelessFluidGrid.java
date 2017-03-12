@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
@@ -163,7 +163,7 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
-    public ItemHandlerBasic getFilter() {
+    public ItemHandlerBase getFilter() {
         return null;
     }
 

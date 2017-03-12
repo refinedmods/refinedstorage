@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
@@ -102,7 +102,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public ItemHandlerBasic getFilter() {
+    public ItemHandlerBase getFilter() {
         return filter;
     }
 

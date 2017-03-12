@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerInterface;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -19,10 +19,10 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private static final String NBT_COMPARE = "Compare";
 
-    private ItemHandlerBasic importItems = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase importItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerBasic exportSpecimenItems = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerBasic exportItems = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase exportSpecimenItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase exportItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
 
     private ItemHandlerInterface items = new ItemHandlerInterface(importItems, exportItems);
 

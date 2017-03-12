@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
@@ -26,7 +26,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
     private static final String NBT_BLOCKED = "Blocked";
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this), s -> {
+    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> {
         // We can only validate the crafting pattern if the world exists.
         // If the world doesn't exist, this is probably called while reading and in that case it doesn't matter.
         if (holder.world() != null) {

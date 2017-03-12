@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
@@ -29,7 +29,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBasic itemFilter = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this)) {
+    private ItemHandlerBase itemFilter = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         public void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -188,7 +188,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         RSUtils.readItems(fluidFilter, 1, tag);
     }
 
-    public ItemHandlerBasic getItemFilter() {
+    public ItemHandlerBase getItemFilter() {
         return itemFilter;
     }
 

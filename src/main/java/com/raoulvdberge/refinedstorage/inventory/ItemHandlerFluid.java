@@ -5,10 +5,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ItemHandlerFluid extends ItemHandlerBasic {
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
+
+public class ItemHandlerFluid extends ItemHandlerBase {
     private FluidStack[] fluids;
 
-    public ItemHandlerFluid(int size, IItemHandlerListener listener) {
+    public ItemHandlerFluid(int size, @Nullable Consumer<Integer> listener) {
         super(size, listener, s -> RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(s, 1), true).getValue() != null);
 
         this.fluids = new FluidStack[size];

@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
@@ -33,7 +33,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         }
     };
 
-    private ItemHandlerBasic networkCard = new ItemHandlerBasic(1, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
+    private ItemHandlerBase networkCard = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -91,7 +91,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         );
     }
 
-    public ItemHandlerBasic getNetworkCard() {
+    public ItemHandlerBase getNetworkCard() {
         return networkCard;
     }
 

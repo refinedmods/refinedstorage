@@ -6,7 +6,11 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.*;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -43,7 +47,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
-    private ItemHandlerBasic inputDisks = new ItemHandlerBasic(3, new ItemHandlerListenerNetworkNode(this), IItemValidator.STORAGE_DISK) {
+    private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -77,7 +81,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerBasic outputDisks = new ItemHandlerBasic(3, new ItemHandlerListenerNetworkNode(this), IItemValidator.STORAGE_DISK) {
+    private ItemHandlerBase outputDisks = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -101,7 +105,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         super(holder);
     }
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
     @Override
@@ -387,7 +391,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         return outputDisks;
     }
 
-    public ItemHandlerBasic getItemFilters() {
+    public ItemHandlerBase getItemFilters() {
         return itemFilters;
     }
 

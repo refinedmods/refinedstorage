@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.block.GridType;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -50,7 +50,7 @@ public interface IGrid {
 
     List<FilterTab> getTabs();
 
-    ItemHandlerBasic getFilter();
+    ItemHandlerBase getFilter();
 
     TileDataParameter<Integer> getRedstoneModeConfig();
 

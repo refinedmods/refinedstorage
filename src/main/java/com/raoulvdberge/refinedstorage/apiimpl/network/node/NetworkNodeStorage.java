@@ -11,7 +11,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
@@ -66,7 +66,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private static final String NBT_MODE = "Mode";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
 
-    private ItemHandlerBasic filters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase filters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
 
     private StorageItem storage = new StorageItem(StorageDiskItem.getTag());
     private NBTTagCompound storageTagToRead = null;
@@ -244,7 +244,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
         return storage;
     }
 
-    public ItemHandlerBasic getFilters() {
+    public ItemHandlerBase getFilters() {
         return filters;
     }
 

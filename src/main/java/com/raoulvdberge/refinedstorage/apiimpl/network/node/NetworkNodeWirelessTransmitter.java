@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
@@ -64,7 +64,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
         return holder.world().provider.getDimension();
     }
 
-    public ItemHandlerBasic getUpgrades() {
+    public ItemHandlerBase getUpgrades() {
         return upgrades;
     }
 

@@ -3,7 +3,9 @@ package com.raoulvdberge.refinedstorage.inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ItemValidatorBasic implements IItemValidator {
+import java.util.function.Predicate;
+
+public class ItemValidatorBasic implements Predicate<ItemStack> {
     private Item item;
     private int damage = -1;
 
@@ -17,15 +19,7 @@ public class ItemValidatorBasic implements IItemValidator {
     }
 
     @Override
-    public boolean isValid(ItemStack stack) {
-        if (stack.getItem() == item) {
-            if (damage != -1 && stack.getItemDamage() != damage) {
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
+    public boolean test(ItemStack stack) {
+        return stack.getItem() == item && !(damage != -1 && stack.getItemDamage() != damage);
     }
 }

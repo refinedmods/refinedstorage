@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -34,7 +34,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private static final String NBT_REGULATOR = "Regulator";
     private static final String NBT_CRAFT_ONLY = "CraftOnly";
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
@@ -301,7 +301,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
         return holder.world().isRemote ? TileExporter.REGULATOR.getValue() : regulator;
     }
 
-    public ItemHandlerBasic getItemFilters() {
+    public ItemHandlerBase getItemFilters() {
         return itemFilters;
     }
 

@@ -5,20 +5,23 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
-public class ItemHandlerBasic extends ItemStackHandler {
-    private IItemHandlerListener listener;
+public class ItemHandlerBase extends ItemStackHandler {
+    @Nullable
+    private Consumer<Integer> listener;
 
-    protected IItemValidator[] validators;
+    protected Predicate<ItemStack>[] validators;
 
-    public ItemHandlerBasic(int size, @Nullable IItemHandlerListener listener, IItemValidator... validators) {
+    public ItemHandlerBase(int size, @Nullable Consumer<Integer> listener, Predicate<ItemStack>... validators) {
         super(size);
 
         this.listener = listener;
         this.validators = validators;
     }
 
-    public ItemHandlerBasic(int size, IItemValidator... validators) {
+    public ItemHandlerBase(int size, Predicate<ItemStack>... validators) {
         this(size, null, validators);
     }
 
@@ -35,8 +38,8 @@ public class ItemHandlerBasic extends ItemStackHandler {
     @Nonnull
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         if (validators.length > 0) {
-            for (IItemValidator validator : validators) {
-                if (validator.isValid(stack)) {
+            for (Predicate<ItemStack> validator : validators) {
+                if (validator.test(stack)) {
                     return super.insertItem(slot, stack, simulate);
                 }
             }
@@ -52,7 +55,7 @@ public class ItemHandlerBasic extends ItemStackHandler {
         super.onContentsChanged(slot);
 
         if (listener != null) {
-            listener.onChanged(slot);
+            listener.accept(slot);
         }
     }
 

@@ -13,7 +13,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
@@ -39,7 +39,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBasic itemFilters = new ItemHandlerBasic(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
     private int priority = 0;
@@ -333,7 +333,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
-    public ItemHandlerBasic getItemFilters() {
+    public ItemHandlerBase getItemFilters() {
         return itemFilters;
     }
 

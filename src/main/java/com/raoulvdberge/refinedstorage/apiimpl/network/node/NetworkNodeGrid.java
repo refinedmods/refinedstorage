@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBasic;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
@@ -81,7 +81,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
 
-    private ItemHandlerBasic patterns = new ItemHandlerBasic(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN));
+    private ItemHandlerBase patterns = new ItemHandlerBase(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN));
     private List<Filter> filters = new ArrayList<>();
     private List<FilterTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ItemHandlerListenerNetworkNode(this));
@@ -178,7 +178,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
-    public ItemHandlerBasic getFilter() {
+    public ItemHandlerBase getFilter() {
         return filter;
     }
 
