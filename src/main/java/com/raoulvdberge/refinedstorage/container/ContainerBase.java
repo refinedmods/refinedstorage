@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
@@ -59,13 +60,15 @@ public abstract class ContainerBase extends Container {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         if (slot instanceof SlotFilter) {
+            if (slot.getStack().getItem() == RSItems.FILTER) {
+                return super.slotClick(id, dragType, clickType, player);
+            }
+
             if (((SlotFilter) slot).allowsSize()) {
                 if (clickType == ClickType.QUICK_MOVE) {
                     slot.putStack(ItemStack.EMPTY);
                 } else if (!player.inventory.getItemStack().isEmpty()) {
-                    int amount = player.inventory.getItemStack().getCount();
-
-                    slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), amount));
+                    slot.putStack(player.inventory.getItemStack().copy());
                 } else if (slot.getHasStack()) {
                     int amount = slot.getStack().getCount();
 
@@ -80,6 +83,10 @@ public abstract class ContainerBase extends Container {
             } else if (player.inventory.getItemStack().isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else if (slot.isItemValid(player.inventory.getItemStack())) {
+                if (player.inventory.getItemStack().getItem() == RSItems.FILTER) {
+                    return super.slotClick(id, dragType, clickType, player);
+                }
+
                 slot.putStack(player.inventory.getItemStack().copy());
             }
 
@@ -117,6 +124,10 @@ public abstract class ContainerBase extends Container {
             if (getStackFromSlot(slot).isEmpty() && slot.isItemValid(stack)) {
                 slot.putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
                 slot.onSlotChanged();
+
+                if (stack.getItem() == RSItems.FILTER) {
+                    stack.setCount(0);
+                }
 
                 return ItemStack.EMPTY;
             }
