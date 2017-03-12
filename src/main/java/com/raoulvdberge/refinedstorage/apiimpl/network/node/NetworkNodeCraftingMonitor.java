@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.inventory.IItemHandlerListener;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
@@ -29,16 +28,12 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
     private boolean viewAutomated = true;
     private List<Filter> filters = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), new IItemHandlerListener() {
-        private ItemHandlerListenerNetworkNode base = new ItemHandlerListenerNetworkNode(NetworkNodeCraftingMonitor.this);
+    private ItemHandlerListenerNetworkNode filterListener = new ItemHandlerListenerNetworkNode(this);
+    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), slot -> {
+        filterListener.accept(slot);
 
-        @Override
-        public void onChanged(int slot) {
-            base.onChanged(slot);
-
-            if (network != null) {
-                network.sendCraftingMonitorUpdate();
-            }
+        if (network != null) {
+            network.sendCraftingMonitorUpdate();
         }
     });
 

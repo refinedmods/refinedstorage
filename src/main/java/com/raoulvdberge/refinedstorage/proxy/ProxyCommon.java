@@ -22,7 +22,6 @@ import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
-import com.raoulvdberge.refinedstorage.integration.tesla.ReaderWriterHandlerTesla;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
@@ -54,10 +53,6 @@ public class ProxyCommon {
     protected List<BlockCable> cableTypes = new ArrayList<>();
 
     public void preInit(FMLPreInitializationEvent e) {
-        if (IntegrationCraftingTweaks.isLoaded()) {
-            IntegrationCraftingTweaks.register();
-        }
-
         CapabilityNetworkNodeProxy.register();
 
         API.deliver(e.getAsmData());
@@ -88,8 +83,12 @@ public class ProxyCommon {
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerForgeEnergy.ID, ReaderWriterHandlerForgeEnergy::new);
 
+        if (IntegrationCraftingTweaks.isLoaded()) {
+            IntegrationCraftingTweaks.register();
+        }
+
         if (IntegrationTesla.isLoaded()) {
-            API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerTesla.ID, ReaderWriterHandlerTesla::new);
+            IntegrationTesla.register();
         }
 
         int id = 0;

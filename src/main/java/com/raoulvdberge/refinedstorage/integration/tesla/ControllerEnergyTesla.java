@@ -1,13 +1,13 @@
 package com.raoulvdberge.refinedstorage.integration.tesla;
 
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.ControllerEnergyForge;
 import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class ControllerEnergyTesla implements ITeslaHolder, ITeslaConsumer {
-    private ControllerEnergyForge energy;
+    private IEnergyStorage energy;
 
-    public ControllerEnergyTesla(ControllerEnergyForge energy) {
+    public ControllerEnergyTesla(IEnergyStorage energy) {
         this.energy = energy;
     }
 

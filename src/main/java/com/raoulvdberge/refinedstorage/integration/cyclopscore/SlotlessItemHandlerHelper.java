@@ -57,7 +57,7 @@ public class SlotlessItemHandlerHelper {
     }
 
     public static ItemStack extractItem(ISlotlessItemHandler handler, @Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        int compare = CyclopsComparer.comparerFlagsToItemMatch(flags, stack.getMetadata() == OreDictionary.WILDCARD_VALUE);
+        int compare = comparerFlagsToItemMatch(flags, stack.getMetadata() == OreDictionary.WILDCARD_VALUE);
         stack = ItemHandlerHelper.copyStackWithSize(stack, size);
         if ((flags & IComparer.COMPARE_STRIP_NBT) == IComparer.COMPARE_STRIP_NBT) {
             stack = Comparer.stripTags(stack);
@@ -101,5 +101,39 @@ public class SlotlessItemHandlerHelper {
 
     public static ItemStack extractItem(ISlotlessItemHandler slotlessItemHandler, int size, boolean simulate) {
         return slotlessItemHandler.extractItem(size, simulate);
+    }
+
+    public static int comparerFlagsToItemMatch(int flags) {
+        return comparerFlagsToItemMatch(flags, false);
+    }
+
+    public static int comparerFlagsToItemMatch(int flags, boolean oredictWildcard) {
+        int itemMatch = 0;
+        if (!oredictWildcard) {
+            if ((flags & IComparer.COMPARE_DAMAGE) == IComparer.COMPARE_DAMAGE) {
+                itemMatch |= ItemMatch.DAMAGE;
+            }
+            if ((flags & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT) {
+                itemMatch |= ItemMatch.NBT;
+            }
+        }
+        if ((flags & IComparer.COMPARE_QUANTITY) == IComparer.COMPARE_QUANTITY) {
+            itemMatch |= ItemMatch.STACKSIZE;
+        }
+        return itemMatch;
+    }
+
+    public static int itemMatchToComparerFlags(int itemMatch) {
+        int flags = 0;
+        if ((itemMatch & ItemMatch.DAMAGE) == ItemMatch.DAMAGE) {
+            flags |= IComparer.COMPARE_DAMAGE;
+        }
+        if ((itemMatch & ItemMatch.NBT) == ItemMatch.NBT) {
+            flags |= IComparer.COMPARE_NBT;
+        }
+        if ((itemMatch & ItemMatch.STACKSIZE) == ItemMatch.STACKSIZE) {
+            flags |= IComparer.COMPARE_QUANTITY;
+        }
+        return flags;
     }
 }

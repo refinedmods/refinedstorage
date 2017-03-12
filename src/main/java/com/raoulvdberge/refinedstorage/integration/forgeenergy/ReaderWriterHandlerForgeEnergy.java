@@ -36,12 +36,10 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
 
     @Override
     public void update(IReaderWriterChannel channel) {
-        // NO OP
     }
 
     @Override
     public void onWriterDisabled(IWriter writer) {
-        // NO OP
     }
 
     @Override
@@ -106,7 +104,7 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
         private IEnergyStorage parent;
         private boolean canExtract, canReceive;
 
-        public EnergyStorageReaderWriter(IEnergyStorage parent, boolean canExtract, boolean canReceive) {
+        EnergyStorageReaderWriter(IEnergyStorage parent, boolean canExtract, boolean canReceive) {
             this.canExtract = canExtract;
             this.canReceive = canReceive;
             this.parent = parent;

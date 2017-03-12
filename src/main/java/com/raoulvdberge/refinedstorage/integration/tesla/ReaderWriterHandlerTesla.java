@@ -40,12 +40,10 @@ public class ReaderWriterHandlerTesla implements IReaderWriterHandler {
 
     @Override
     public void update(IReaderWriterChannel channel) {
-        // NO OP
     }
 
     @Override
     public void onWriterDisabled(IWriter writer) {
-        // NO OP
     }
 
     @Override
