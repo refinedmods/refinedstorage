@@ -5,7 +5,7 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.input.Keyboard;
 
-public class RSKeyBindings {
+public final class RSKeyBindings {
     private static final String categoryName = RS.ID;
 
     public static final KeyBinding focusSearchBar = new KeyBinding("key.rs.focusSearchBar", KeyConflictContext.GUI, Keyboard.KEY_TAB, categoryName);
