@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.block.EnumGridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
@@ -24,6 +25,7 @@ import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -382,6 +384,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (isOverCreatePattern(mouseX, mouseY)) {
             drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
         }
+
+        if (eatItem-- > 0) {
+            drawTooltip(0, height / 2 - eatItem / 20, getFoodLines());
+        }
     }
 
     @Override
@@ -472,7 +478,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             updateJEI();
 
             sortItems();
-        } else if (keyCode == Keyboard.KEY_TAB && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
+        } else if (keyCode == RSKeyBindings.focusSearchBar.getKeyCode() && (grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == TileGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
             searchField.setFocused(!searchField.isFocused());
         } else {
             super.keyTyped(character, keyCode);
@@ -500,5 +506,35 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (oredictPattern != null) {
             oredictPattern.setIsChecked(checked);
         }
+    }
+
+    private int eatItem;
+    private int secondLine;
+    private String[] secondLines = {
+            "And it was really tasty",
+            "But it wasn't that tasty",
+            "And it didn't taste too good",
+            "But it left this weird taste",
+            "And it'll pass real slow"
+    };
+
+    @Override
+    public void eatItem(boolean food) {
+        if (Calendar.getInstance().get(Calendar.DAY_OF_MONTH) == 1 && Calendar.getInstance().get(Calendar.MONTH) == 3) {
+            eatItem = 300;
+            if (food) {
+                secondLine = 0;
+            } else {
+                secondLine = (int) (Math.random() * 4 + 1);
+            }
+            Minecraft.getMinecraft().player.playSound(SoundEvents.ENTITY_PLAYER_BURP, 1.0F, 1.0F);
+        }
+    }
+
+    private List<String> getFoodLines() {
+        List<String> list = new ArrayList<>(2);
+        list.add("RS got a little hungry and ate some of that");
+        list.add(secondLines[secondLine]);
+        return list;
     }
 }

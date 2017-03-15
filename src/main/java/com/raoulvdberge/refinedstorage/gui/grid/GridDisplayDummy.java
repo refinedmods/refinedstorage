@@ -26,4 +26,9 @@ public class GridDisplayDummy implements IGridDisplay {
     public int getYPlayerInventory() {
         return 0;
     }
+
+    @Override
+    public void eatItem(boolean food) {
+        // NO OP
+    }
 }

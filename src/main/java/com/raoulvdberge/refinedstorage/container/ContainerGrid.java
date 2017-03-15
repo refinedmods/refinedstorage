@@ -10,7 +10,9 @@ import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerGrid extends ContainerBase {
@@ -127,6 +129,14 @@ public class ContainerGrid extends ContainerBase {
                     }
 
                     detectAndSendChanges();
+                }
+            }
+        } else {
+            Slot slot = inventorySlots.get(slotIndex);
+            if (slot.getHasStack() && slot != patternResultSlot && !(slot instanceof SlotSpecimenLegacy)) {
+                boolean food = slot.getStack().getItem() instanceof ItemFood;
+                if (food || Math.random() < 0.1) {
+                    display.eatItem(food);
                 }
             }
         }
