@@ -2,7 +2,7 @@
 
 ### 1.2.24
 - Made the keybinding to focus on the Grid search bar configurable (way2muchnoise)
-- Fixed autocrafting with oredict not possible with Draconic Evolution (way2muchnoise)
+- Autocrafting bugfixes (way2muchnoise)
 
 ### 1.2.23
 - Implemented support for the Forge update JSON system (raoulvdberge)
