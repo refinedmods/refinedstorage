@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -57,4 +58,11 @@ public interface INetworkNode {
      * @return the world where this node is in
      */
     World getNodeWorld();
+
+    /**
+     * Return an ItemStack representing the node in question
+     *
+     * @return ItemStack
+     */
+    ItemStack getNodeItemStack();
 }
