@@ -111,10 +111,8 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
 
             for (INetworkNode node : tile.nodeGraph.all()) {
                 if (node.canUpdate()) {
-                    IBlockState state = tile.getWorld().getBlockState(node.getPosition());
-
                     ClientNode clientNode = new ClientNode(
-                        new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)),
+                        node.getNodeItemStack(),
                         1,
                         node.getEnergyUsage()
                     );
