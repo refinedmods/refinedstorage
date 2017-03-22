@@ -1,6 +1,9 @@
 # Refined Storage Changelog
 
 ### 1.2.24
+- Fire playerCrafting event when shift clicking in the grid (way2muchnoise)
+
+### 1.2.24
 - Made the keybinding to focus on the Grid search bar configurable (way2muchnoise)
 - Autocrafting bugfixes (way2muchnoise)
 
