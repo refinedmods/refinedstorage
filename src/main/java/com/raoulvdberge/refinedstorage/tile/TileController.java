@@ -5,6 +5,7 @@ import cofh.api.energy.IEnergyReceiver;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.autocrafting.AutoCraftingEvent;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
@@ -271,6 +272,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                         ICraftingTask task = craftingTaskIterator.next();
 
                         if (task.update(usedCrafters)) {
+                            AutoCraftingEvent.fire(task.getRequested(), task.getQuantity());
                             craftingTaskIterator.remove();
 
                             craftingTasksChanged = true;
