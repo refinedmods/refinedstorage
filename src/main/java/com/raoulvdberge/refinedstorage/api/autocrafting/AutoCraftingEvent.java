@@ -22,6 +22,10 @@ public class AutoCraftingEvent extends Event {
         return crafted;
     }
 
+    public INetworkMaster getNetwork() {
+        return network;
+    }
+
     public static void fire(INetworkMaster network, ItemStack crafted) {
         MinecraftForge.EVENT_BUS.post(new AutoCraftingEvent(network, crafted));
     }
