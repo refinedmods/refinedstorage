@@ -1,6 +1,6 @@
 # Refined Storage Changelog
 
-### 1.2.24
+### 1.2.25
 - Fire event on completion of an autocrafting task (way2muchnoise)
 - Fire playerCrafting event when shift clicking in the grid (way2muchnoise)
 - Allow INodeNetwork instances to return an ItemStack for display in Controller GUI (bmwalter68)
