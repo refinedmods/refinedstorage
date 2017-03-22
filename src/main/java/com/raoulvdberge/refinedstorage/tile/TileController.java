@@ -272,7 +272,7 @@ public class TileController extends TileBase implements INetworkMaster, IEnergyR
                         ICraftingTask task = craftingTaskIterator.next();
 
                         if (task.update(usedCrafters)) {
-                            AutoCraftingEvent.fire(task.getRequested(), task.getQuantity());
+                            AutoCraftingEvent.fire(this, task.getRequested(), task.getQuantity());
                             craftingTaskIterator.remove();
 
                             craftingTasksChanged = true;

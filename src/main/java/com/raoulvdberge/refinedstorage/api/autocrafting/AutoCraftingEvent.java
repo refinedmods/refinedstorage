@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
+import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -10,20 +11,22 @@ import net.minecraftforge.items.ItemHandlerHelper;
  */
 public class AutoCraftingEvent extends Event {
     private ItemStack crafted;
+    private INetworkMaster network;
 
-    private AutoCraftingEvent(ItemStack crafted) {
+    private AutoCraftingEvent(INetworkMaster network, ItemStack crafted) {
         this.crafted = crafted;
+        this.network = network;
     }
 
     public ItemStack getCrafted() {
         return crafted;
     }
 
-    public static void fire(ItemStack crafted) {
-        MinecraftForge.EVENT_BUS.post(new AutoCraftingEvent(crafted));
+    public static void fire(INetworkMaster network, ItemStack crafted) {
+        MinecraftForge.EVENT_BUS.post(new AutoCraftingEvent(network, crafted));
     }
 
-    public static void fire(ItemStack crafted, int quantity) {
-        fire(ItemHandlerHelper.copyStackWithSize(crafted, quantity));
+    public static void fire(INetworkMaster network, ItemStack crafted, int quantity) {
+        fire(network, ItemHandlerHelper.copyStackWithSize(crafted, quantity));
     }
 }
