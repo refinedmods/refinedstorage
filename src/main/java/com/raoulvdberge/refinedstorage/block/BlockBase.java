@@ -30,7 +30,7 @@ import net.minecraftforge.items.IItemHandler;
 public abstract class BlockBase extends Block {
     public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
 
-    private String name;
+    private final String name;
 
     public BlockBase(String name) {
         super(Material.ROCK);

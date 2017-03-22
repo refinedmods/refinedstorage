@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public abstract class ItemBase extends Item {
-    private String name;
+    private final String name;
 
     public ItemBase(String name) {
         this.name = name;

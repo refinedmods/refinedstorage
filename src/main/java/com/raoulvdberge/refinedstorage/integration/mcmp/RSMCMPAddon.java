@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.integration.mcmp;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.block.BlockCable;
+import com.raoulvdberge.refinedstorage.tile.*;
 import mcmultipart.api.addon.IMCMPAddon;
 import mcmultipart.api.addon.MCMPAddon;
 import mcmultipart.api.container.IPartInfo;
@@ -56,14 +57,25 @@ public class RSMCMPAddon implements IMCMPAddon {
 
     @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent<TileEntity> e) {
-        register(e, "cable");
-        register(e, "constructor");
-        register(e, "destructor");
-        register(e, "importer");
-        register(e, "exporter");
-        register(e, "external_storage");
-        register(e, "reader");
-        register(e, "writer");
+        TileEntity tile = e.getObject();
+
+        if (tile instanceof TileCable) {
+            register(e, "cable");
+        } else if (tile instanceof TileConstructor) {
+            register(e, "constructor");
+        } else if (tile instanceof TileDestructor) {
+            register(e, "destructor");
+        } else if (tile instanceof TileImporter) {
+            register(e, "importer");
+        } else if (tile instanceof TileExporter) {
+            register(e, "exporter");
+        } else if (tile instanceof TileExternalStorage) {
+            register(e, "external_storage");
+        } else if (tile instanceof TileReader) {
+            register(e, "reader");
+        } else if (tile instanceof TileWriter) {
+            register(e, "writer");
+        }
     }
 
     private void register(AttachCapabilitiesEvent<TileEntity> e, String id) {
