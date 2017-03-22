@@ -10,6 +10,10 @@
 - Fixed crash in storage cache (raoulvdberge)
 - Fixed slow oredict comparisons causing TPS lag (raoulvdberge)
 - The Detector no longer outputs a strong redstone signal (raoulvdberge)
+- Made the keybinding to focus on the Grid search bar configurable (way2muchnoise)
+- Autocrafting bugfixes (way2muchnoise)
+- Fire event on completion of an autocrafting task (way2muchnoise)
+- Fire playerCrafting event when shift clicking in the grid (way2muchnoise)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)
@@ -115,6 +119,32 @@
 - Removed RF support, use Forge Energy instead (raoulvdberge)
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
+
+### 1.2.25
+- Fire event on completion of an autocrafting task (way2muchnoise)
+- Fire playerCrafting event when shift clicking in the grid (way2muchnoise)
+- Allow INodeNetwork instances to return an ItemStack for display in Controller GUI (bmwalter68)
+
+### 1.2.24
+- Made the keybinding to focus on the Grid search bar configurable (way2muchnoise)
+- Autocrafting bugfixes (way2muchnoise)
+
+### 1.2.23
+- Implemented support for the Forge update JSON system (raoulvdberge)
+- Fixed crash in storage cache (raoulvdberge)
+- Fixed Crafting Pattern model (pauljoda)
+- Fixed Constructor not working on Botania flowers (raoulvdberge)
+- Fixed Disk Manipulator crash (raoulvdberge)
+- Fixed slow oredict comparisons causing TPS lag (raoulvdberge)
+- The Detector no longer outputs a strong redstone signal (raoulvdberge)
+
+### 1.2.22
+- Fixed recipe for Processing Pattern Encoder not using oredictionary for the workbench (VT-14)
+- Fixed Fluid Interface not dropping inventory contents (raoulvdberge)
+- Fixed glitchy upgrade recipes in the Solderer (raoulvdberge)
+
+### 1.2.21
+- Fixed crash when placing head with Constructor (raoulvdberge)
 
 ### 1.2.20
 - Fixed client side crash with cables (raoulvdberge)
