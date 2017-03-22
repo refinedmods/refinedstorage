@@ -12,6 +12,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Comparer implements IComparer {
     private Map<Integer, Boolean> oredictCache = new HashMap<>();
@@ -209,6 +211,14 @@ public class Comparer implements IComparer {
                 case "fluxnetworks":
                     stack.getTagCompound().removeTag("dropped");
                     stack.getTagCompound().removeTag("energy");
+                    break;
+                case "draconicevolution":
+                    stack.getTagCompound().removeTag("Energy");
+                    stack.getTagCompound().removeTag("DEUpgrades");
+                    Set<String> profiles = stack.getTagCompound().getKeySet().stream().filter(key -> key.startsWith("Profile")).collect(Collectors.toSet());
+                    for (String profile : profiles) {
+                        stack.getTagCompound().removeTag(profile);
+                    }
                     break;
                 case "minecraft":
                     stack.getTagCompound().removeTag("RepairCost");

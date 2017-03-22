@@ -1,9 +1,6 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.*;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
@@ -259,6 +256,8 @@ public class ProxyClient extends ProxyCommon {
     @Override
     public void init(FMLInitializationEvent e) {
         super.init(e);
+
+        RSKeyBindings.init();
 
         ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
 
