@@ -150,9 +150,19 @@ public class BlockCable extends BlockCoverable {
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
 
-        // We can always connect to an INetworkMaster, but INetworkNode needs to be checked for conductivity
-        if (facing instanceof INetworkMaster || (facing instanceof INetworkNode && ((INetworkNode) facing).canConduct(direction.getOpposite()))) {
+        // No need to check via getConnectableConditions() if the target block can't conduct back
+        if (facing instanceof INetworkNode && !((INetworkNode) facing).canConduct(direction.getOpposite())) {
+            return false;
+        }
+
+        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
+        if (isConnectable) {
             TileEntity tile = world.getTileEntity(pos);
+
+            // The target block isConnectable, can we conduct to them?
+            if (tile instanceof INetworkNode && !((INetworkNode) tile).canConduct(direction)) {
+                return false;
+            }
 
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
             if (tile instanceof TileMultipartNode) {
