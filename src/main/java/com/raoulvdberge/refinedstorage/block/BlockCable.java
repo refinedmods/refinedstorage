@@ -150,12 +150,17 @@ public class BlockCable extends BlockCoverable {
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
 
+        // No need to test anything else if the adjacent block has no TileEntity
+        if (facing == null) {
+            return false;
+        }
+
         // No need to check via getConnectableConditions() if the target block can't conduct back
         if (facing instanceof INetworkNode && !((INetworkNode) facing).canConduct(direction.getOpposite())) {
             return false;
         }
 
-        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
+        boolean isConnectable = API.instance().hasConnectableConditions(facing);
         if (isConnectable) {
             TileEntity tile = world.getTileEntity(pos);
 
