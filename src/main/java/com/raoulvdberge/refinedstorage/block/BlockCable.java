@@ -159,20 +159,15 @@ public class BlockCable extends BlockCoverable {
         if (isConnectable) {
             TileEntity tile = world.getTileEntity(pos);
 
-            // The target block isConnectable, can we conduct to them?
-            if (tile instanceof INetworkNode && !((INetworkNode) tile).canConduct(direction)) {
-                return false;
-            }
+            // Special checks for INetworkNodes
+            if (tile instanceof INetworkNode) {
 
-            // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
-            if (tile instanceof TileMultipartNode) {
-                TileMultipartNode multipartNode = (TileMultipartNode) tile;
-
-                if (getPlacementType() != null && multipartNode != null && multipartNode.getFacingTile() == facing) {
+                // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
+                if (tile instanceof TileMultipartNode && getPlacementType() != null && ((TileMultipartNode) tile).getFacingTile() == facing) {
                     return false;
                 }
 
-                return !TileMultipartNode.hasBlockingMicroblock(world, pos, direction) && !TileMultipartNode.hasBlockingMicroblock(world, pos.offset(direction), direction.getOpposite());
+                return ((INetworkNode) tile).canConduct(direction);
             }
 
             return true;
