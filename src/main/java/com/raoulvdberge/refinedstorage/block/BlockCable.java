@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.*;
 import mcmultipart.block.BlockCoverable;
@@ -149,8 +150,8 @@ public class BlockCable extends BlockCoverable {
     private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, EnumFacing direction) {
         TileEntity facing = world.getTileEntity(pos.offset(direction));
 
-        boolean isConnectable = API.instance().getConnectableConditions().stream().anyMatch(p -> p.test(facing));
-        if (isConnectable) {
+        // We can always connect to an INetworkMaster, but INetworkNode needs to be checked for conductivity
+        if (facing instanceof INetworkMaster || (facing instanceof INetworkNode && ((INetworkNode) facing).canConduct(direction.getOpposite()))) {
             TileEntity tile = world.getTileEntity(pos);
 
             // Do not render a cable extension where our cable "head" is (e.g. importer, exporter, external storage heads).
