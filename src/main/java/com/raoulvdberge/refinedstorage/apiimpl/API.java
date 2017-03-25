@@ -142,9 +142,4 @@ public class API implements IRSAPI {
             }
         }
     }
-
-	@Override
-	public boolean hasConnectableConditions(TileEntity te) {
-		return connectableConditions.stream().anyMatch(p -> p.test(te));
-	}
 }
