@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.gui.grid;
 
-
 public class GridDisplayDummy implements IGridDisplay {
     @Override
     public int getVisibleRows() {
@@ -25,10 +24,5 @@ public class GridDisplayDummy implements IGridDisplay {
     @Override
     public int getYPlayerInventory() {
         return 0;
-    }
-
-    @Override
-    public void eatItem(boolean food) {
-        // NO OP
     }
 }

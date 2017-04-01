@@ -10,6 +10,4 @@ public interface IGridDisplay {
     int getFooter();
 
     int getYPlayerInventory();
-
-    void eatItem(boolean food);
 }
