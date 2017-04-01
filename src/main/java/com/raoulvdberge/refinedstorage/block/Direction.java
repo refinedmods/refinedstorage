@@ -4,7 +4,8 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import scala.actors.threadpool.Arrays;
+
+import java.util.Arrays;
 
 public enum Direction {
     ANY(EnumFacing.VALUES),
