@@ -20,6 +20,7 @@
 - Removed support for the Deep Storage Unit API (raoulvdberge)
 - Performance improvements related to storage inserting and extracting (raoulvdberge)
 - Fixed crash with External Storage (raoulvdberge)
+- Fixed Interface duping items on extract-only storages (raoulvdberge)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)

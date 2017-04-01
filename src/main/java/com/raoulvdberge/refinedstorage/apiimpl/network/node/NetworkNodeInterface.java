@@ -64,7 +64,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
             if (remainder == null) {
                 importItems.extractItemInternal(currentSlot, size, false);
-            } else {
+            } else if (size - remainder.getCount() > 0) {
                 importItems.extractItemInternal(currentSlot, size - remainder.getCount(), false);
 
                 currentSlot++;
