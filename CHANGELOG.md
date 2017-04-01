@@ -22,6 +22,7 @@
 - Performance improvements related to storage inserting and extracting (raoulvdberge)
 - Fixed crash with External Storage (raoulvdberge)
 - Fixed Interface duping items on extract-only storages (raoulvdberge)
+- Fixed controls menu showing unlocalized text for Refined Storage keybindings (raoulvdberge)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)
