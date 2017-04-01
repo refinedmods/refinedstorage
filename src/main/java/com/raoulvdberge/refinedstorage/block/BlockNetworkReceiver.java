@@ -16,7 +16,7 @@ public class BlockNetworkReceiver extends BlockNode {
     }
 
     @Override
-    public PlacementType getPlacementType() {
+    public Direction getDirection() {
         return null;
     }
 

@@ -1,27 +1,24 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import scala.actors.threadpool.Arrays;
 
-public enum PlacementType {
-    ANY(
-        EnumFacing.VALUES
-    ),
-    ANY_FACE_PLAYER(
-        EnumFacing.VALUES
-    ),
-    HORIZONTAL(
-        EnumFacing.NORTH,
-        EnumFacing.EAST,
-        EnumFacing.SOUTH,
-        EnumFacing.WEST
-    );
+public enum Direction {
+    ANY(EnumFacing.VALUES),
+    ANY_FACE_PLAYER(EnumFacing.VALUES),
+    HORIZONTAL(EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST);
 
-    final EnumFacing[] allowed;
+    private final PropertyDirection property;
 
-    PlacementType(EnumFacing... allowed) {
-        this.allowed = allowed;
+    Direction(EnumFacing... allowed) {
+        this.property = PropertyDirection.create("direction", Arrays.asList(allowed));
+    }
+
+    public PropertyDirection getProperty() {
+        return property;
     }
 
     public EnumFacing getFrom(EnumFacing facing, BlockPos pos, EntityLivingBase entity) {

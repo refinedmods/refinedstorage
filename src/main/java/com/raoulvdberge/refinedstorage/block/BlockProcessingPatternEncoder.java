@@ -49,7 +49,7 @@ public class BlockProcessingPatternEncoder extends BlockBase {
     }
 
     @Override
-    public PlacementType getPlacementType() {
+    public Direction getDirection() {
         return null;
     }
 }

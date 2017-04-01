@@ -10,6 +10,11 @@
     }
   },
   "variants": {
+    "inventory": [
+      {
+        "transform": "forge:default-block"
+      }
+    ],
     "energy": {
       "0": {
         "textures": {

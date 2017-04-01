@@ -6,7 +6,7 @@ public class BlockMachineCasing extends BlockBase {
     }
 
     @Override
-    public PlacementType getPlacementType() {
+    public Direction getDirection() {
         return null;
     }
 }

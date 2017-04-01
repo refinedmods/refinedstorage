@@ -33,7 +33,7 @@ public class BlockExternalStorage extends BlockCable {
     public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
-        switch (state.getValue(DIRECTION)) {
+        switch (state.getValue(getDirection().getProperty())) {
             case NORTH:
                 boxes.add(BlockConstructor.HOLDER_NORTH_AABB);
                 boxes.add(HEAD_NORTH_AABB);
@@ -96,7 +96,7 @@ public class BlockExternalStorage extends BlockCable {
     }
 
     @Override
-    public PlacementType getPlacementType() {
-        return PlacementType.ANY;
+    public Direction getDirection() {
+        return Direction.ANY;
     }
 }

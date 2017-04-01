@@ -87,7 +87,7 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
-    public PlacementType getPlacementType() {
+    public Direction getDirection() {
         return null;
     }
 }

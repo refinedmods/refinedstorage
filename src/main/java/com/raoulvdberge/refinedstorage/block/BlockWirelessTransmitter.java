@@ -85,7 +85,7 @@ public class BlockWirelessTransmitter extends BlockNode {
     }
 
     @Override
-    public PlacementType getPlacementType() {
+    public Direction getDirection() {
         return null;
     }
 

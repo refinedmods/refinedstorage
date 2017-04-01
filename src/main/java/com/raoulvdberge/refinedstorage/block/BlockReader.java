@@ -70,7 +70,7 @@ public class BlockReader extends BlockCable {
     }
 
     @Override
-    public PlacementType getPlacementType() {
-        return PlacementType.ANY_FACE_PLAYER;
+    public Direction getDirection() {
+        return Direction.ANY_FACE_PLAYER;
     }
 }

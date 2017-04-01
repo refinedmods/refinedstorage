@@ -12,7 +12,6 @@ import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -28,8 +27,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
 public abstract class BlockBase extends Block {
-    public static final PropertyDirection DIRECTION = PropertyDirection.create("direction");
-
     private final String name;
 
     public BlockBase(String name) {
@@ -50,8 +47,8 @@ public abstract class BlockBase extends Block {
     protected BlockStateContainer.Builder createBlockStateBuilder() {
         BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
 
-        if (getPlacementType() != null) {
-            builder.add(DIRECTION);
+        if (getDirection() != null) {
+            builder.add(getDirection().getProperty());
         }
 
         return builder;
@@ -63,7 +60,7 @@ public abstract class BlockBase extends Block {
     }
 
     public Item createItem() {
-        return new ItemBlockBase(this, getPlacementType(), false);
+        return new ItemBlockBase(this, getDirection(), false);
     }
 
     @Override
@@ -80,11 +77,11 @@ public abstract class BlockBase extends Block {
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        if (getPlacementType() != null) {
+        if (getDirection() != null) {
             TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
 
             if (tile instanceof TileBase) {
-                return state.withProperty(DIRECTION, ((TileBase) tile).getDirection());
+                return state.withProperty(getDirection().getProperty(), ((TileBase) tile).getDirection());
             }
         }
 
@@ -98,10 +95,10 @@ public abstract class BlockBase extends Block {
 
     @Override
     public boolean rotateBlock(World world, BlockPos pos, EnumFacing axis) {
-        if (!world.isRemote && getPlacementType() != null) {
+        if (!world.isRemote && getDirection() != null) {
             TileBase tile = (TileBase) world.getTileEntity(pos);
 
-            tile.setDirection(getPlacementType().cycle(tile.getDirection()));
+            tile.setDirection(getDirection().cycle(tile.getDirection()));
 
             RSUtils.updateBlock(world, pos);
 
@@ -192,7 +189,7 @@ public abstract class BlockBase extends Block {
         return super.canEntityDestroy(state, world, pos, entity);
     }
 
-    public PlacementType getPlacementType() {
-        return PlacementType.HORIZONTAL;
+    public Direction getDirection() {
+        return Direction.HORIZONTAL;
     }
 }

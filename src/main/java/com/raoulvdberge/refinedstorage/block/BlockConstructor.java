@@ -38,7 +38,7 @@ public class BlockConstructor extends BlockCable {
     public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
-        switch (state.getValue(DIRECTION)) {
+        switch (state.getValue(getDirection().getProperty())) {
             case NORTH:
                 boxes.add(HOLDER_NORTH_AABB);
                 boxes.add(HEAD_NORTH_AABB);
@@ -92,7 +92,7 @@ public class BlockConstructor extends BlockCable {
     }
 
     @Override
-    public PlacementType getPlacementType() {
-        return PlacementType.ANY;
+    public Direction getDirection() {
+        return Direction.ANY;
     }
 }

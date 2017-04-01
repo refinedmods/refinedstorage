@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.block.PlacementType;
+import com.raoulvdberge.refinedstorage.block.Direction;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -13,14 +13,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemBlockBase extends ItemBlock {
-    private PlacementType placementType;
+    private Direction direction;
 
-    public ItemBlockBase(Block block, PlacementType placementType, boolean subtypes) {
+    public ItemBlockBase(Block block, Direction direction, boolean subtypes) {
         super(block);
 
         setRegistryName(block.getRegistryName());
 
-        this.placementType = placementType;
+        this.direction = direction;
 
         if (subtypes) {
             setMaxDamage(0);
@@ -46,11 +46,11 @@ public class ItemBlockBase extends ItemBlock {
     public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
         boolean result = super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
 
-        if (result && placementType != null) {
+        if (result && direction != null) {
             TileEntity tile = world.getTileEntity(pos);
 
             if (tile instanceof TileBase) {
-                ((TileBase) tile).setDirection(placementType.getFrom(side, pos, player));
+                ((TileBase) tile).setDirection(direction.getFrom(side, pos, player));
             }
         }
 

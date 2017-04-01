@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ItemBlockController extends ItemBlockBase {
     public ItemBlockController() {
-        super(RSBlocks.CONTROLLER, RSBlocks.CONTROLLER.getPlacementType(), true);
+        super(RSBlocks.CONTROLLER, RSBlocks.CONTROLLER.getDirection(), true);
     }
 
     @Override

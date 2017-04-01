@@ -60,20 +60,14 @@ public class BlockCable extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        BlockStateContainer.Builder builder = super.createBlockStateBuilder();
-
-        builder.add(NORTH)
+        return super.createBlockStateBuilder()
+                .add(NORTH)
             .add(EAST)
             .add(SOUTH)
             .add(WEST)
             .add(UP)
-            .add(DOWN);
-
-        if (getPlacementType() != null) {
-            builder.add(DIRECTION);
-        }
-
-        return builder.build();
+                .add(DOWN)
+                .build();
     }
 
     @Override
@@ -114,7 +108,7 @@ public class BlockCable extends BlockNode {
         EnumFacing otherTileSide = direction.getOpposite();
 
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
-            if (getPlacementType() != null && ((TileNode) tile).getNode().getFacingTile() == otherTile) {
+            if (getDirection() != null && ((TileNode) tile).getNode().getFacingTile() == otherTile) {
                 return false;
             }
 
@@ -219,8 +213,8 @@ public class BlockCable extends BlockNode {
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase entity) {
         IBlockState state = super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, entity);
 
-        if (getPlacementType() != null) {
-            return state.withProperty(DIRECTION, getPlacementType().getFrom(facing, pos, entity));
+        if (getDirection() != null) {
+            return state.withProperty(getDirection().getProperty(), getDirection().getFrom(facing, pos, entity));
         }
 
         return state;
@@ -232,7 +226,7 @@ public class BlockCable extends BlockNode {
     }
 
     @Override
-    public PlacementType getPlacementType() {
+    public Direction getDirection() {
         return null;
     }
 

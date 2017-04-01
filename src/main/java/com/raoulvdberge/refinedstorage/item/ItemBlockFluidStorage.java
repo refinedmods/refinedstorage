@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ItemBlockFluidStorage extends ItemBlockBase {
     public ItemBlockFluidStorage() {
-        super(RSBlocks.FLUID_STORAGE, RSBlocks.FLUID_STORAGE.getPlacementType(), true);
+        super(RSBlocks.FLUID_STORAGE, RSBlocks.FLUID_STORAGE.getDirection(), true);
     }
 
     @Override

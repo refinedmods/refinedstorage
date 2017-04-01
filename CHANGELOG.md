@@ -14,6 +14,8 @@
 - Autocrafting bugfixes (way2muchnoise)
 - Fire event on completion of an autocrafting task (way2muchnoise)
 - Fire playerCrafting event when shift clicking in the grid (way2muchnoise)
+- Fixed controller model warning during launch (raoulvdberge)
+- Improved memory usage of some models (raoulvdberge)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)

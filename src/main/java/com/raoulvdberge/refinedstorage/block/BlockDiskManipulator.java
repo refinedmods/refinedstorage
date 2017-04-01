@@ -64,9 +64,4 @@ public class BlockDiskManipulator extends BlockNode {
     public boolean hasConnectivityState() {
         return true;
     }
-
-    @Override
-    public PlacementType getPlacementType() {
-        return PlacementType.HORIZONTAL;
-    }
 }

@@ -161,6 +161,7 @@ public class ProxyCommon {
         registerBlock(RSBlocks.GRID);
         registerBlock(RSBlocks.CRAFTING_MONITOR);
         registerBlock(RSBlocks.STORAGE_MONITOR);
+        registerBlock(RSBlocks.SECURITY_MANAGER);
         registerBlock(RSBlocks.CRAFTER);
         registerBlock(RSBlocks.PROCESSING_PATTERN_ENCODER);
         registerBlock(RSBlocks.DISK_DRIVE);
@@ -173,7 +174,6 @@ public class ProxyCommon {
         registerBlock(RSBlocks.EXTERNAL_STORAGE);
         registerBlock(RSBlocks.CONSTRUCTOR);
         registerBlock(RSBlocks.DESTRUCTOR);
-        registerBlock(RSBlocks.SECURITY_MANAGER);
         registerBlock(RSBlocks.READER);
         registerBlock(RSBlocks.WRITER);
 
@@ -840,7 +840,7 @@ public class ProxyCommon {
 
     private void registerBlock(BlockCable cable) {
         GameRegistry.<Block>register(cable);
-        GameRegistry.register(new ItemBlockBase(cable, cable.getPlacementType(), false));
+        GameRegistry.register(new ItemBlockBase(cable, cable.getDirection(), false));
 
         cableTypes.add(cable);
     }

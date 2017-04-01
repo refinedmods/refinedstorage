@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.render;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.raoulvdberge.refinedstorage.block.BlockBase;
+import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.block.BlockDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import net.minecraft.block.state.IBlockState;
@@ -71,7 +71,7 @@ public class BakedModelDiskDrive implements IBakedModel {
     private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         public List<BakedQuad> load(CacheKey key) throws Exception {
-            EnumFacing facing = key.state.getValue(BlockBase.DIRECTION);
+            EnumFacing facing = key.state.getValue(RSBlocks.DISK_DRIVE.getDirection().getProperty());
 
             List<BakedQuad> quads = models.get(facing).getQuads(key.state, key.side, 0);
 

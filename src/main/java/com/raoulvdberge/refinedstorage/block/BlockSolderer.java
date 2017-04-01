@@ -61,7 +61,7 @@ public class BlockSolderer extends BlockNode {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileSolderer && ((TileSolderer) tile).isWorking()) {
-            EnumFacing direction = getActualState(state, world, pos).getValue(DIRECTION);
+            EnumFacing direction = getActualState(state, world, pos).getValue(getDirection().getProperty());
 
             double x = 0;
             double y = (double) pos.getY() + 0.6D + rand.nextDouble() / 32F;
@@ -107,10 +107,5 @@ public class BlockSolderer extends BlockNode {
     @SuppressWarnings("deprecation")
     public boolean isFullCube(IBlockState state) {
         return false;
-    }
-
-    @Override
-    public PlacementType getPlacementType() {
-        return PlacementType.HORIZONTAL;
     }
 }

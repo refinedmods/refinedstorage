@@ -69,6 +69,6 @@ public class BlockGrid extends BlockNode {
 
     @Override
     public Item createItem() {
-        return new ItemBlockBase(this, getPlacementType(), true);
+        return new ItemBlockBase(this, getDirection(), true);
     }
 }

@@ -36,7 +36,7 @@ public class BlockFluidInterface extends BlockNode {
     }
 
     @Override
-    public PlacementType getPlacementType() {
+    public Direction getDirection() {
         return null;
     }
 }
