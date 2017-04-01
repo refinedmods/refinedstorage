@@ -60,7 +60,7 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonAccessType(this, gui.getAccessTypeParameter()));
         }
 
-        int buttonWidth = 10 + fontRendererObj.getStringWidth(t("misc.refinedstorage:priority"));
+        int buttonWidth = 10 + fontRenderer.getStringWidth(t("misc.refinedstorage:priority"));
 
         priorityButton = addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, t("misc.refinedstorage:priority"));
     }

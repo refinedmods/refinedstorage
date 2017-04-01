@@ -47,7 +47,7 @@ public class GuiReaderWriter extends GuiBase {
 
         add = addButton(x + 128, y + 15, 20, 20, "+");
         remove = addButton(x + 150, y + 15, 20, 20, "-");
-        name = new GuiTextField(0, fontRendererObj, x + 8 + 1, y + 20 + 1, 107, fontRendererObj.FONT_HEIGHT);
+        name = new GuiTextField(0, fontRenderer, x + 8 + 1, y + 20 + 1, 107, fontRenderer.FONT_HEIGHT);
         name.setEnableBackgroundDrawing(false);
         name.setVisible(true);
         name.setTextColor(16777215);

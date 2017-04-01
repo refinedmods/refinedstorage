@@ -62,13 +62,13 @@ public class BlockCable extends BlockNode {
     @Override
     protected BlockStateContainer createBlockState() {
         return super.createBlockStateBuilder()
-                .add(NORTH)
+            .add(NORTH)
             .add(EAST)
             .add(SOUTH)
             .add(WEST)
             .add(UP)
-                .add(DOWN)
-                .build();
+            .add(DOWN)
+            .build();
     }
 
     @Override

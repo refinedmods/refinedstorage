@@ -118,7 +118,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
         float factor = 2.0f;
         GlStateManager.scale(size * factor, size * factor, size);
 
-        Minecraft.getMinecraft().fontRendererObj.drawString(amount, 0, 0, 0xFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawString(amount, 0, 0, 0xFFFFFF);
 
         GlStateManager.popMatrix();
 

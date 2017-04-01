@@ -73,8 +73,8 @@ public class GuiCraftingMonitor extends GuiBase {
         String cancel = t("gui.cancel");
         String cancelAll = t("misc.refinedstorage:cancel_all");
 
-        int cancelButtonWidth = 14 + fontRendererObj.getStringWidth(cancel);
-        int cancelAllButtonWidth = 14 + fontRendererObj.getStringWidth(cancelAll);
+        int cancelButtonWidth = 14 + fontRenderer.getStringWidth(cancel);
+        int cancelAllButtonWidth = 14 + fontRenderer.getStringWidth(cancelAll);
 
         cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 20, cancel, false);
         cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 20, cancelAll, false);

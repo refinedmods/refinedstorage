@@ -250,7 +250,7 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawItemOverlay(ItemStack stack, String text, int x, int y) {
-        itemRender.renderItemOverlayIntoGUI(fontRendererObj, stack, x, y, "");
+        itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, x, y, "");
 
         if (text != null) {
             drawQuantity(x, y, text);
@@ -258,7 +258,7 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawQuantity(int x, int y, String qty) {
-        boolean large = fontRendererObj.getUnicodeFlag() || RS.INSTANCE.config.largeFont;
+        boolean large = fontRenderer.getUnicodeFlag() || RS.INSTANCE.config.largeFont;
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 1);
@@ -274,7 +274,7 @@ public abstract class GuiBase extends GuiContainer {
         GlStateManager.blendFunc(770, 771);
         GlStateManager.disableDepth();
 
-        fontRendererObj.drawStringWithShadow(qty, (large ? 16 : 30) - fontRendererObj.getStringWidth(qty), large ? 8 : 22, 16777215);
+        fontRenderer.drawStringWithShadow(qty, (large ? 16 : 30) - fontRenderer.getStringWidth(qty), large ? 8 : 22, 16777215);
 
         GlStateManager.enableDepth();
         GlStateManager.enableTexture2D();
@@ -290,7 +290,7 @@ public abstract class GuiBase extends GuiContainer {
 
     public void drawString(int x, int y, String message, int color) {
         GlStateManager.disableLighting();
-        fontRendererObj.drawString(message, x, y, color);
+        fontRenderer.drawString(message, x, y, color);
         GlStateManager.enableLighting();
     }
 
@@ -304,7 +304,7 @@ public abstract class GuiBase extends GuiContainer {
 
     public void drawTooltip(@Nonnull ItemStack stack, int x, int y, List<String> lines) {
         GlStateManager.disableLighting();
-        GuiUtils.drawHoveringText(stack, lines, x, y, width - guiLeft, height, -1, fontRendererObj);
+        GuiUtils.drawHoveringText(stack, lines, x, y, width - guiLeft, height, -1, fontRenderer);
         GlStateManager.enableLighting();
     }
 

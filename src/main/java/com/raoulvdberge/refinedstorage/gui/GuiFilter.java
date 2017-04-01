@@ -41,7 +41,7 @@ public class GuiFilter extends GuiBase {
         toggleModFilter = addCheckBox(0, y + 71 + 25, t("gui.refinedstorage:filter.mod_filter"), modFilter);
         toggleMode = addButton(x + 7, y + 71 + 21, 0, 20, "");
         updateModeButton(mode);
-        nameField = new GuiTextField(0, fontRendererObj, x + 34, y + 121, 137 - 6, fontRendererObj.FONT_HEIGHT);
+        nameField = new GuiTextField(0, fontRenderer, x + 34, y + 121, 137 - 6, fontRenderer.FONT_HEIGHT);
         nameField.setText(name);
         nameField.setEnableBackgroundDrawing(false);
         nameField.setVisible(true);
@@ -53,7 +53,7 @@ public class GuiFilter extends GuiBase {
     private void updateModeButton(int mode) {
         String text = mode == ItemFilter.MODE_WHITELIST ? t("sidebutton.refinedstorage:mode.whitelist") : t("sidebutton.refinedstorage:mode.blacklist");
 
-        toggleMode.setWidth(fontRendererObj.getStringWidth(text) + 12);
+        toggleMode.setWidth(fontRenderer.getStringWidth(text) + 12);
         toggleMode.displayString = text;
         toggleModFilter.xPosition = toggleMode.xPosition + toggleMode.getButtonWidth() + 4;
     }

@@ -83,7 +83,7 @@ public class GuiCraftingStart extends GuiBase {
         startButton = addButton(x + pos.getFirst(), y + pos.getSecond(), 50, 20, getStartButtonText());
         cancelButton = addButton(x + pos.getFirst(), y + pos.getSecond() + 24, 50, 20, t("gui.cancel"));
 
-        amountField = new GuiTextField(0, fontRendererObj, x + getAmountPos().getFirst(), y + getAmountPos().getSecond(), 69 - 6, fontRendererObj.FONT_HEIGHT);
+        amountField = new GuiTextField(0, fontRenderer, x + getAmountPos().getFirst(), y + getAmountPos().getSecond(), 69 - 6, fontRenderer.FONT_HEIGHT);
         amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
         amountField.setText(String.valueOf(getAmount()));

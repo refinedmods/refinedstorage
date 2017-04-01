@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public abstract class MessageHandlerPlayerToServer<T extends IMessage> implements IMessageHandler<T, IMessage> {
     @Override
     public IMessage onMessage(final T message, MessageContext context) {
-        final EntityPlayerMP player = context.getServerHandler().playerEntity;
+        final EntityPlayerMP player = context.getServerHandler().player;
 
         player.getServerWorld().addScheduledTask(() -> handle(message, player));
 

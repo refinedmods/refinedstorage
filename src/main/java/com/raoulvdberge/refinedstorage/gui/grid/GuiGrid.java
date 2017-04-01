@@ -127,7 +127,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         int sy = y + 6 + 1 + getTabDelta();
 
         if (searchField == null) {
-            searchField = new GuiTextField(0, fontRendererObj, sx, sy, 88 - 6, fontRendererObj.FONT_HEIGHT);
+            searchField = new GuiTextField(0, fontRenderer, sx, sy, 88 - 6, fontRenderer.FONT_HEIGHT);
             searchField.setEnableBackgroundDrawing(false);
             searchField.setVisible(true);
             searchField.setTextColor(16777215);

@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.4.2
+- Updated Forge to 2261 (raoulvdberge)
 - Implemented support for the Forge update JSON system (raoulvdberge)
 - Added integration for MCMultiPart, this is an optional dependency (raoulvdberge)
 - You can now specify more items to export, import, filter, etc by inserting the Filter item (raoulvdberge)
