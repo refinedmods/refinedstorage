@@ -1,16 +1,16 @@
 package com.raoulvdberge.refinedstorage.api.storage;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public interface IStorage<T> {
     /**
      * @return stacks stored in this storage
      */
-    NonNullList<T> getStacks();
+    Collection<T> getStacks();
 
     /**
      * Inserts a stack to this storage.

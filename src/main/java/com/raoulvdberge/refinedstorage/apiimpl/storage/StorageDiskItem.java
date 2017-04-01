@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
@@ -9,11 +11,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * A implementation of {@link IStorage<ItemStack>} that stores storage items in NBT.
@@ -38,7 +40,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     private Runnable listener = () -> {
     };
 
-    private NonNullList<ItemStack> stacks = NonNullList.create();
+    private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
 
     /**
      * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link StorageDiskItem#getTag()} if it doesn't exist yet
@@ -70,7 +72,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
             stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
 
             if (!stack.isEmpty()) {
-                stacks.add(stack);
+                stacks.put(stack.getItem(), stack);
             }
         }
     }
@@ -82,7 +84,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
         // Dummy value for extracting ForgeCaps
         NBTTagCompound dummy = new NBTTagCompound();
 
-        for (ItemStack stack : stacks) {
+        for (ItemStack stack : stacks.values()) {
             NBTTagCompound itemTag = new NBTTagCompound();
 
             itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
@@ -114,14 +116,14 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public NonNullList<ItemStack> getStacks() {
-        return stacks;
+    public Collection<ItemStack> getStacks() {
+        return stacks.values();
     }
 
     @Override
     @Nullable
     public synchronized ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-        for (ItemStack otherStack : stacks) {
+        for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
                     int remainingSpace = getCapacity() - getStored();
@@ -171,7 +173,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
-                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
+                stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
 
                 listener.run();
             }
@@ -181,7 +183,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
 
-                stacks.add(ItemHandlerHelper.copyStackWithSize(stack, size));
+                stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, size));
 
                 listener.run();
             }
@@ -193,7 +195,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     @Override
     @Nullable
     public synchronized ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        for (ItemStack otherStack : stacks) {
+        for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.getCount()) {
                     size = otherStack.getCount();
@@ -201,7 +203,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
                 if (!simulate) {
                     if (otherStack.getCount() - size == 0) {
-                        stacks.remove(otherStack);
+                        stacks.remove(otherStack.getItem(), otherStack);
                     } else {
                         otherStack.shrink(size);
                     }
@@ -267,7 +269,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
         NBTTagCompound otherTag = new NBTTagCompound();
 
         otherTag.setInteger(NBT_STORED, getStored(tag));
-        otherTag.setTag(NBT_ITEMS, new NBTTagList()); // To circumvent not being able to insert disks in Disk Drives (see ItemStorageNBT#isValid(ItemStack)).
+        otherTag.setTag(NBT_ITEMS, new NBTTagList());
         otherTag.setInteger(NBT_PROTOCOL, PROTOCOL);
 
         return otherTag;

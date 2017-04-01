@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class StorageItemExternal implements IStorage<ItemStack> {
@@ -21,12 +22,12 @@ public abstract class StorageItemExternal implements IStorage<ItemStack> {
         }
 
         if (cache == null) {
-            cache = getStacks();
+            cache = new ArrayList<>(getStacks());
 
             return;
         }
 
-        List<ItemStack> newStacks = getStacks();
+        List<ItemStack> newStacks = new ArrayList<>(getStacks());
 
         for (int i = 0; i < newStacks.size(); ++i) {
             ItemStack actual = newStacks.get(i);

@@ -7,7 +7,6 @@ import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.cyclops.cyclopscore.inventory.IndexedSlotlessItemHandlerWrapper;
 import org.cyclops.cyclopscore.inventory.SimpleInventory;
@@ -16,7 +15,10 @@ import org.cyclops.cyclopscore.tileentity.InventoryTileEntityBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class StorageItemCyclops extends StorageItemExternal {
     private NetworkNodeExternalStorage externalStorage;
@@ -49,7 +51,7 @@ public class StorageItemCyclops extends StorageItemExternal {
     }
 
     @Override
-    public NonNullList<ItemStack> getStacks() {
+    public Collection<ItemStack> getStacks() {
         return getStacks(cyclopsInv.get());
     }
 
@@ -90,7 +92,7 @@ public class StorageItemCyclops extends StorageItemExternal {
         return inv != null ? RSUtils.transformEmptyToNull(SlotlessItemHandlerHelper.extractItem(inv, opposite, stack, size, flags, simulate)) : null;
     }
 
-    private NonNullList<ItemStack> getStacks(@Nullable InventoryTileEntityBase inv) {
+    private Collection<ItemStack> getStacks(@Nullable InventoryTileEntityBase inv) {
         if (inv != null) {
             if (inv.getInventory() instanceof IndexedSlotlessItemHandlerWrapper.IInventoryIndexReference) {
                 return ((IndexedSlotlessItemHandlerWrapper.IInventoryIndexReference) inv.getInventory())
@@ -99,14 +101,14 @@ public class StorageItemCyclops extends StorageItemExternal {
                     .stream()
                     .flatMap(m -> m.valueCollection().stream())
                     .map(ItemStack::copy)
-                    .collect(RSUtils.toNonNullList());
+                    .collect(Collectors.toList());
             } else {
                 return Arrays.stream(((SimpleInventory) inv.getInventory()).getItemStacks())
                     .map(ItemStack::copy)
-                    .collect(RSUtils.toNonNullList());
+                    .collect(Collectors.toList());
             }
         } else {
-            return RSUtils.emptyNonNullList();
+            return Collections.emptyList();
         }
     }
 

@@ -6,11 +6,11 @@ import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public class StorageFluidDiskManipulator implements IStorageDisk<FluidStack> {
     private NetworkNodeDiskManipulator diskManipulator;
@@ -70,7 +70,7 @@ public class StorageFluidDiskManipulator implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    public NonNullList<FluidStack> getStacks() {
+    public Collection<FluidStack> getStacks() {
         return parent.getStacks();
     }
 

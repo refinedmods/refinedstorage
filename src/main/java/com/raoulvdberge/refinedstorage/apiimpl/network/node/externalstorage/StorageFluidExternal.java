@@ -6,13 +6,14 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 public class StorageFluidExternal implements IStorage<FluidStack> {
@@ -37,8 +38,8 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
     }
 
     @Override
-    public NonNullList<FluidStack> getStacks() {
-        return getContents() == null ? RSUtils.emptyNonNullList() : NonNullList.withSize(1, getContents().copy());
+    public Collection<FluidStack> getStacks() {
+        return getContents() == null ? Collections.emptyList() : Collections.singletonList(getContents().copy());
     }
 
     @Override

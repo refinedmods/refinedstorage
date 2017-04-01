@@ -2,13 +2,15 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class StorageItemDrawerGroup extends StorageItemExternal {
@@ -21,20 +23,20 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
     }
 
     @Override
-    public NonNullList<ItemStack> getStacks() {
+    public Collection<ItemStack> getStacks() {
         IDrawerGroup group = groupSupplier.get();
 
         if (group == null) {
-            return RSUtils.emptyNonNullList();
+            return Collections.emptyList();
         }
 
-        NonNullList<ItemStack> stacks = NonNullList.create();
+        List<ItemStack> stacks = new ArrayList<>();
 
         for (int i = 0; i < group.getDrawerCount(); ++i) {
             IDrawer drawer = group.getDrawer(i);
 
             if (group.isDrawerEnabled(i)) {
-                stacks.addAll(StorageItemDrawer.getStacks(drawer));
+                stacks.add(StorageItemDrawer.getStack(drawer));
             }
         }
 

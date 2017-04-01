@@ -168,9 +168,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             return;
         }
 
-        for (int i = 0; i < storage.getStacks().size(); i++) {
-            ItemStack stack = storage.getStacks().get(i);
-
+        for (ItemStack stack : storage.getStacks()) {
             ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
             if (extracted == null) {
                 continue;
@@ -245,11 +243,13 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
 
         FluidStack extracted = null;
-        int i = 0;
 
-        while (extracted == null && storage.getStacks().size() > i) {
-            FluidStack stack = storage.getStacks().get(i++);
+        for (FluidStack stack : storage.getStacks()) {
             extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
+
+            if (extracted != null) {
+                break;
+            }
         }
 
         if (extracted == null) {

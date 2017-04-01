@@ -2,16 +2,16 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 public class StorageItemDrawer extends StorageItemExternal {
@@ -31,8 +31,8 @@ public class StorageItemDrawer extends StorageItemExternal {
     }
 
     @Override
-    public NonNullList<ItemStack> getStacks() {
-        return getStacks(drawerSupplier.get());
+    public Collection<ItemStack> getStacks() {
+        return Collections.singletonList(getStack(drawerSupplier.get()));
     }
 
     @Override
@@ -62,12 +62,12 @@ public class StorageItemDrawer extends StorageItemExternal {
         return externalStorage.getAccessType();
     }
 
-    public static NonNullList<ItemStack> getStacks(@Nullable IDrawer drawer) {
+    public static ItemStack getStack(@Nullable IDrawer drawer) {
         if (drawer != null && !drawer.isEmpty() && drawer.getStoredItemCount() > 0) {
-            return NonNullList.withSize(1, ItemHandlerHelper.copyStackWithSize(drawer.getStoredItemPrototype(), drawer.getStoredItemCount()));
+            return ItemHandlerHelper.copyStackWithSize(drawer.getStoredItemPrototype(), drawer.getStoredItemCount());
         }
 
-        return RSUtils.emptyNonNullList();
+        return ItemStack.EMPTY;
     }
 
     public static ItemStack insert(NetworkNodeExternalStorage externalStorage, @Nullable IDrawer drawer, @Nonnull ItemStack stack, int size, boolean simulate) {

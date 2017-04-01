@@ -26,7 +26,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
-import powercrystals.minefactoryreloaded.api.IDeepStorageUnit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,12 +201,6 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
                     TileEntity f = getFacingTile();
 
                     return f instanceof IDrawer ? (IDrawer) f : null;
-                }));
-            } else if (facing instanceof IDeepStorageUnit) {
-                itemStorages.add(new StorageItemDSU(this, () -> {
-                    TileEntity f = getFacingTile();
-
-                    return f instanceof IDeepStorageUnit ? (IDeepStorageUnit) f : null;
                 }));
             } else if (IntegrationCyclopsCore.isLoaded() && StorageItemCyclops.isValid(facing, holder.getDirection().getOpposite())) {
                 itemStorages.add(new StorageItemCyclops(this));

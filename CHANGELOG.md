@@ -17,6 +17,9 @@
 - Fixed controller model warning during launch (raoulvdberge)
 - Improved memory usage of some models (raoulvdberge)
 - Fixed not rendering some tooltips correctly (raoulvdberge)
+- Removed support for the Deep Storage Unit API (raoulvdberge)
+- Performance improvements related to storage inserting and extracting (raoulvdberge)
+- Fixed crash with External Storage (raoulvdberge)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)

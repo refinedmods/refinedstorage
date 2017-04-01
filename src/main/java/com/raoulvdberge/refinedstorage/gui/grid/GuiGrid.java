@@ -581,7 +581,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             updateJEI();
 
             sortItems();
-        } else if (keyCode == RSKeyBindings.focusSearchBar.getKeyCode() && (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
+        } else if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
             searchField.setFocused(!searchField.isFocused());
         } else {
             super.keyTyped(character, keyCode);
