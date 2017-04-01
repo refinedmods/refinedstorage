@@ -12,6 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +93,7 @@ public class BlockConstructor extends BlockCable {
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return Direction.ANY;
     }

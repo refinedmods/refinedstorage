@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BlockDetector extends BlockNode {
     private static final AxisAlignedBB AABB_DETECTOR = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 5D / 16D, 1.0D);
 
@@ -87,6 +89,7 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return null;
     }

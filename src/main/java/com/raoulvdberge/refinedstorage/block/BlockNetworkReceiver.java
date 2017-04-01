@@ -5,6 +5,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BlockNetworkReceiver extends BlockNode {
     public BlockNetworkReceiver() {
         super("network_receiver");
@@ -16,6 +18,7 @@ public class BlockNetworkReceiver extends BlockNode {
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return null;
     }

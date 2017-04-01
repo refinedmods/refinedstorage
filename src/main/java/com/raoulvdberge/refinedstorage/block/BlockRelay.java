@@ -10,6 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BlockRelay extends BlockNode {
     public BlockRelay() {
         super("relay");
@@ -30,6 +32,7 @@ public class BlockRelay extends BlockNode {
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return null;
     }

@@ -17,6 +17,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlockWirelessTransmitter extends BlockNode {
@@ -85,6 +86,7 @@ public class BlockWirelessTransmitter extends BlockNode {
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return null;
     }

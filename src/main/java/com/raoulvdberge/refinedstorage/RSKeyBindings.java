@@ -6,9 +6,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import org.lwjgl.input.Keyboard;
 
 public final class RSKeyBindings {
-    private static final String categoryName = RS.ID;
-
-    public static final KeyBinding focusSearchBar = new KeyBinding("key.rs.focusSearchBar", KeyConflictContext.GUI, Keyboard.KEY_TAB, categoryName);
+    public static final KeyBinding focusSearchBar = new KeyBinding("key.refinedstorage.focusSearchBar", KeyConflictContext.GUI, Keyboard.KEY_TAB, "Refined Storage");
 
     public static void init() {
         ClientRegistry.registerKeyBinding(focusSearchBar);

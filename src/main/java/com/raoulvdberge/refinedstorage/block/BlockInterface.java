@@ -11,6 +11,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BlockInterface extends BlockNode {
     public BlockInterface() {
         super("interface");
@@ -36,6 +38,7 @@ public class BlockInterface extends BlockNode {
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return null;
     }

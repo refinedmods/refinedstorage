@@ -26,6 +26,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
+
 public abstract class BlockBase extends Block {
     private final String name;
 
@@ -189,6 +191,7 @@ public abstract class BlockBase extends Block {
         return super.canEntityDestroy(state, world, pos, entity);
     }
 
+    @Nullable
     public Direction getDirection() {
         return Direction.HORIZONTAL;
     }

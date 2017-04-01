@@ -73,16 +73,16 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     private int slotNumber;
 
     private Deque<Integer> konami = new ArrayDeque<>(Arrays.asList(
-            Keyboard.KEY_UP,
-            Keyboard.KEY_UP,
-            Keyboard.KEY_DOWN,
-            Keyboard.KEY_DOWN,
-            Keyboard.KEY_LEFT,
-            Keyboard.KEY_RIGHT,
-            Keyboard.KEY_LEFT,
-            Keyboard.KEY_RIGHT,
-            Keyboard.KEY_B,
-            Keyboard.KEY_A
+        Keyboard.KEY_UP,
+        Keyboard.KEY_UP,
+        Keyboard.KEY_DOWN,
+        Keyboard.KEY_DOWN,
+        Keyboard.KEY_LEFT,
+        Keyboard.KEY_RIGHT,
+        Keyboard.KEY_LEFT,
+        Keyboard.KEY_RIGHT,
+        Keyboard.KEY_B,
+        Keyboard.KEY_A
     ));
 
     private int[] konamiOffsetsX;
@@ -170,9 +170,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             stacks.addAll(grid.getType() == GridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
             List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
-                    grid,
-                    searchField.getText(),
-                    (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
+                grid,
+                searchField.getText(),
+                (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
             );
 
             Iterator<IGridStack> t = stacks.iterator();

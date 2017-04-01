@@ -16,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlockWriter extends BlockCable {
@@ -91,6 +92,7 @@ public class BlockWriter extends BlockCable {
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return Direction.ANY_FACE_PLAYER;
     }

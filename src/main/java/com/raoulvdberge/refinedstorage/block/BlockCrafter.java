@@ -10,6 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BlockCrafter extends BlockNode {
     public BlockCrafter() {
         super("crafter");
@@ -30,6 +32,7 @@ public class BlockCrafter extends BlockNode {
     }
 
     @Override
+    @Nullable
     public Direction getDirection() {
         return Direction.ANY_FACE_PLAYER;
     }
