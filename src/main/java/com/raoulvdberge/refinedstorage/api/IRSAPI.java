@@ -106,4 +106,9 @@ public interface IRSAPI {
      * @return a set with the predicates to check if a block is connectable
      */
     Set<Predicate<TileEntity>> getConnectableConditions();
+
+    /**
+     * @return whether the provided TileEntity matches any of the current connectable conditions
+     */
+    boolean hasConnectableConditions(TileEntity te);
 }
