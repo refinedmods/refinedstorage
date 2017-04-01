@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.2.26
+- Fixed Interface duping items on extract-only storages (raoulvdberge)
+
 ### 1.2.25
 - Fire event on completion of an autocrafting task (way2muchnoise)
 - Fire playerCrafting event when shift clicking in the grid (way2muchnoise)

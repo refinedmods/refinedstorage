@@ -61,7 +61,7 @@ public class TileInterface extends TileNode implements IComparable {
 
             if (remainder == null) {
                 importItems.extractItemInternal(currentSlot, size, false);
-            } else {
+            } else if (size - remainder.stackSize > 0) {
                 importItems.extractItemInternal(currentSlot, size - remainder.stackSize, false);
                 currentSlot++;
             }
