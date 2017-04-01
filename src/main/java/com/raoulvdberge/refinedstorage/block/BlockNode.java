@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
@@ -59,12 +60,12 @@ public abstract class BlockNode extends BlockBase {
             for (EnumFacing facing : EnumFacing.VALUES) {
                 TileEntity tile = world.getTileEntity(pos.offset(facing));
 
-                if (tile instanceof TileNode && ((TileNode) tile).isConnected()) {
-                    ((TileNode) tile).getNetwork().getNodeGraph().rebuild();
+                if (tile instanceof INetworkNode && ((INetworkNode) tile).isConnected()) {
+                    ((INetworkNode) tile).getNetwork().getNodeGraph().rebuild();
 
                     break;
-                } else if (tile instanceof TileController) {
-                    ((TileController) tile).getNodeGraph().rebuild();
+                } else if (tile instanceof INetworkMaster) {
+                    ((INetworkMaster) tile).getNodeGraph().rebuild();
 
                     break;
                 }
