@@ -16,6 +16,7 @@
 - Fire playerCrafting event when shift clicking in the grid (way2muchnoise)
 - Fixed controller model warning during launch (raoulvdberge)
 - Improved memory usage of some models (raoulvdberge)
+- Fixed not rendering some tooltips correctly (raoulvdberge)
 
 ### 1.4.1
 - Added Storage Monitor (raoulvdberge)

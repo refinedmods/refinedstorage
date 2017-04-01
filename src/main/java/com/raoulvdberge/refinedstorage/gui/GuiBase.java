@@ -20,6 +20,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -293,14 +294,22 @@ public abstract class GuiBase extends GuiContainer {
         GlStateManager.enableLighting();
     }
 
-    public void drawTooltip(int x, int y, String message) {
-        drawTooltip(x, y, Arrays.asList(message.split("\n")));
+    public void drawTooltip(@Nonnull ItemStack stack, int x, int y, String lines) {
+        drawTooltip(stack, x, y, Arrays.asList(lines.split("\n")));
+    }
+
+    public void drawTooltip(int x, int y, String lines) {
+        drawTooltip(ItemStack.EMPTY, x, y, lines);
+    }
+
+    public void drawTooltip(@Nonnull ItemStack stack, int x, int y, List<String> lines) {
+        GlStateManager.disableLighting();
+        GuiUtils.drawHoveringText(stack, lines, x, y, width - guiLeft, height, -1, fontRendererObj);
+        GlStateManager.enableLighting();
     }
 
     public void drawTooltip(int x, int y, List<String> lines) {
-        GlStateManager.disableLighting();
-        GuiUtils.drawHoveringText(null, lines, x, y, width - guiLeft, height, -1, fontRendererObj);
-        GlStateManager.enableLighting();
+        drawTooltip(ItemStack.EMPTY, x, y, lines);
     }
 
     public void drawTexture(int x, int y, int textureX, int textureY, int width, int height) {

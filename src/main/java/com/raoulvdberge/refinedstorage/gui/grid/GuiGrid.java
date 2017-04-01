@@ -73,16 +73,16 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     private int slotNumber;
 
     private Deque<Integer> konami = new ArrayDeque<>(Arrays.asList(
-        Keyboard.KEY_UP,
-        Keyboard.KEY_UP,
-        Keyboard.KEY_DOWN,
-        Keyboard.KEY_DOWN,
-        Keyboard.KEY_LEFT,
-        Keyboard.KEY_RIGHT,
-        Keyboard.KEY_LEFT,
-        Keyboard.KEY_RIGHT,
-        Keyboard.KEY_B,
-        Keyboard.KEY_A
+            Keyboard.KEY_UP,
+            Keyboard.KEY_UP,
+            Keyboard.KEY_DOWN,
+            Keyboard.KEY_DOWN,
+            Keyboard.KEY_LEFT,
+            Keyboard.KEY_RIGHT,
+            Keyboard.KEY_LEFT,
+            Keyboard.KEY_RIGHT,
+            Keyboard.KEY_B,
+            Keyboard.KEY_A
     ));
 
     private int[] konamiOffsetsX;
@@ -170,9 +170,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             stacks.addAll(grid.getType() == GridType.FLUID ? FLUIDS.values() : ITEMS.values());
 
             List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
-                grid,
-                searchField.getText(),
-                (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
+                    grid,
+                    searchField.getText(),
+                    (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
             );
 
             Iterator<IGridStack> t = stacks.iterator();
@@ -284,7 +284,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         }
     }
 
-    private boolean isOverSlotWithItem() {
+    private boolean isOverSlotWithStack() {
         return grid.isActive() && isOverSlot() && slotNumber < STACKS.size();
     }
 
@@ -470,8 +470,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             }
         }
 
-        if (isOverSlotWithItem()) {
-            drawTooltip(mouseX, mouseY, STACKS.get(slotNumber).getTooltip());
+        if (isOverSlotWithStack()) {
+            IGridStack stack = STACKS.get(slotNumber);
+
+            drawTooltip(stack instanceof GridStackItem ? ((GridStackItem) stack).getStack() : ItemStack.EMPTY, mouseX, mouseY, stack.getTooltip());
         }
 
         if (isOverClear(mouseX, mouseY)) {
@@ -533,7 +535,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 RS.INSTANCE.network.sendToServer(grid.getType() == GridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
             }
 
-            if (isOverSlotWithItem()) {
+            if (isOverSlotWithStack()) {
                 if (grid.getType() != GridType.FLUID && (held.isEmpty() || (!held.isEmpty() && clickedButton == 2))) {
                     GridStackItem stack = (GridStackItem) STACKS.get(slotNumber);
 

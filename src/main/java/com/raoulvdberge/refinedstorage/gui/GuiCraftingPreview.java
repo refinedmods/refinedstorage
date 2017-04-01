@@ -145,7 +145,7 @@ public class GuiCraftingPreview extends GuiBase {
             }
 
             if (hoveringStack != null) {
-                drawTooltip(mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().player, false));
+                drawTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().player, false));
             } else if (hoveringFluid != null) {
                 drawTooltip(mouseX, mouseY, hoveringFluid.getLocalizedName());
             }
