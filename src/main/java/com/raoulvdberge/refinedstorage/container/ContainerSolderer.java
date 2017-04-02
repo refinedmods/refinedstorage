@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSolderer;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
 import com.raoulvdberge.refinedstorage.tile.TileSolderer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +16,7 @@ public class ContainerSolderer extends ContainerBase {
         int y = 20;
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(solderer.getNode().getItems(), i, x, y));
+            addSlotToContainer(new SlotItemHandler(solderer.getNode().getIngredients(), i, x, y));
 
             y += 18;
         }

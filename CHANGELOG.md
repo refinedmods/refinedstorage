@@ -2,6 +2,7 @@
 
 ### 1.4.3
 - Storage Monitors don't render any quantity text when no item is specified to monitor anymore (raoulvdberge)
+- The Solderer isn't sided anymore (raoulvdberge)
 
 ### 1.4.2
 - Updated Forge to 2261 (raoulvdberge)

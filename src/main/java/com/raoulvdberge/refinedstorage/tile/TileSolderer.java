@@ -45,7 +45,7 @@ public class TileSolderer extends TileNode<NetworkNodeSolderer> {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? getNode().getResult() : getNode().getItems());
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getItems());
         }
 
         return super.getCapability(capability, facing);

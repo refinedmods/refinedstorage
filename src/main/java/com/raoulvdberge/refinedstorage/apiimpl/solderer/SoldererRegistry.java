@@ -24,18 +24,18 @@ public class SoldererRegistry implements ISoldererRegistry {
 
     @Override
     @Nullable
-    public ISoldererRecipe getRecipe(@Nonnull IItemHandler rows) {
+    public ISoldererRecipe getRecipe(@Nonnull IItemHandler ingredients) {
         for (ISoldererRecipe recipe : recipes) {
             boolean found = true;
 
             for (int i = 0; i < 3; ++i) {
-                if (!API.instance().getComparer().isEqual(recipe.getRow(i), rows.getStackInSlot(i), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | IComparer.COMPARE_OREDICT | IComparer.COMPARE_STRIP_NBT)) {
+                if (!API.instance().getComparer().isEqual(recipe.getRow(i), ingredients.getStackInSlot(i), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | IComparer.COMPARE_OREDICT | IComparer.COMPARE_STRIP_NBT)) {
                     found = false;
                 }
 
                 ItemStack row = recipe.getRow(i);
 
-                if (rows.getStackInSlot(i).getCount() < row.getCount()) {
+                if (ingredients.getStackInSlot(i).getCount() < row.getCount()) {
                     found = false;
                 }
             }

@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,7 @@ public class NetworkNodeSolderer extends NetworkNode {
     public static final String NBT_WORKING = "Working";
     private static final String NBT_PROGRESS = "Progress";
 
-    private ItemHandlerBase items = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this)) {
+    private ItemHandlerBase ingredients = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         @Nonnull
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
@@ -36,6 +37,7 @@ public class NetworkNodeSolderer extends NetworkNode {
             return stack;
         }
     };
+
     private ItemHandlerBase result = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this)) {
         @Override
         @Nonnull
@@ -43,6 +45,9 @@ public class NetworkNodeSolderer extends NetworkNode {
             return stack;
         }
     };
+
+    private ItemHandlerProxy items = new ItemHandlerProxy(ingredients, result);
+
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
     private ISoldererRecipe recipe;
@@ -76,10 +81,10 @@ public class NetworkNodeSolderer extends NetworkNode {
             return;
         }
 
-        if (items.getStackInSlot(1).isEmpty() && items.getStackInSlot(2).isEmpty() && result.getStackInSlot(0).isEmpty()) {
+        if (ingredients.getStackInSlot(1).isEmpty() && ingredients.getStackInSlot(2).isEmpty() && result.getStackInSlot(0).isEmpty()) {
             stop();
         } else {
-            ISoldererRecipe newRecipe = API.instance().getSoldererRegistry().getRecipe(items);
+            ISoldererRecipe newRecipe = API.instance().getSoldererRegistry().getRecipe(ingredients);
 
             if (newRecipe == null) {
                 stop();
@@ -105,7 +110,7 @@ public class NetworkNodeSolderer extends NetworkNode {
 
                     for (int i = 0; i < 3; ++i) {
                         if (!recipe.getRow(i).isEmpty()) {
-                            items.extractItem(i, recipe.getRow(i).getCount(), false);
+                            ingredients.extractItem(i, recipe.getRow(i).getCount(), false);
                         }
                     }
 
@@ -138,11 +143,11 @@ public class NetworkNodeSolderer extends NetworkNode {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(items, 0, tag);
+        RSUtils.readItems(ingredients, 0, tag);
         RSUtils.readItems(upgrades, 1, tag);
         RSUtils.readItems(result, 2, tag);
 
-        recipe = API.instance().getSoldererRegistry().getRecipe(items);
+        recipe = API.instance().getSoldererRegistry().getRecipe(ingredients);
 
         if (tag.hasKey(NBT_WORKING)) {
             working = tag.getBoolean(NBT_WORKING);
@@ -163,7 +168,7 @@ public class NetworkNodeSolderer extends NetworkNode {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(items, 0, tag);
+        RSUtils.writeItems(ingredients, 0, tag);
         RSUtils.writeItems(upgrades, 1, tag);
         RSUtils.writeItems(result, 2, tag);
 
@@ -173,12 +178,16 @@ public class NetworkNodeSolderer extends NetworkNode {
         return tag;
     }
 
-    public ItemHandlerBase getItems() {
-        return items;
+    public ItemHandlerBase getIngredients() {
+        return ingredients;
     }
 
     public ItemHandlerBase getResult() {
         return result;
+    }
+
+    public ItemHandlerProxy getItems() {
+        return items;
     }
 
     public IItemHandler getUpgrades() {
@@ -199,6 +208,6 @@ public class NetworkNodeSolderer extends NetworkNode {
 
     @Override
     public IItemHandler getDrops() {
-        return new CombinedInvWrapper(items, result, upgrades);
+        return new CombinedInvWrapper(ingredients, result, upgrades);
     }
 }
