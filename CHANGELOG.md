@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.3
+- Storage Monitors don't render any quantity text when no item is specified to monitor anymore (raoulvdberge)
+
 ### 1.4.2
 - Updated Forge to 2261 (raoulvdberge)
 - Implemented support for the Forge update JSON system (raoulvdberge)
