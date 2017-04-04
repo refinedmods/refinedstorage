@@ -3,6 +3,7 @@
 ### 1.4.3
 - Storage Monitors don't render any quantity text when no item is specified to monitor anymore (raoulvdberge)
 - Fixed bug where disks in Disk Drive didn't respect access type or void excess stacks option (raoulvdberge)
+- Fixed crash in Disk Manipulator (raoulvdberge)
 - The Solderer inventory isn't sided anymore (raoulvdberge)
 
 ### 1.4.2

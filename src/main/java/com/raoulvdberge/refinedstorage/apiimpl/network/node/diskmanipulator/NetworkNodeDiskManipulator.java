@@ -25,6 +25,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IFilterable, IType {
     public static final String ID = "disk_manipulator";
@@ -42,8 +43,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
 
-    private IStorageDisk[] itemStorages = new IStorageDisk[6];
-    private IStorageDisk[] fluidStorages = new IStorageDisk[6];
+    private IStorageDisk<ItemStack>[] itemStorages = new IStorageDisk[6];
+    private IStorageDisk<FluidStack>[] fluidStorages = new IStorageDisk[6];
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
@@ -136,7 +137,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 return;
             }
 
-            IStorageDisk storage = itemStorages[slot];
+            IStorageDisk<ItemStack> storage = itemStorages[slot];
 
             if (ioMode == IO_MODE_INSERT) {
                 insertItemIntoNetwork(storage, slot);
@@ -152,7 +153,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 return;
             }
 
-            IStorageDisk storage = fluidStorages[slot];
+            IStorageDisk<FluidStack> storage = fluidStorages[slot];
 
             if (ioMode == IO_MODE_INSERT) {
                 insertFluidIntoNetwork(storage, slot);
@@ -168,7 +169,10 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             return;
         }
 
-        for (ItemStack stack : storage.getStacks()) {
+        List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
+        for (int i = 0; i < stacks.size(); ++i) {
+            ItemStack stack = stacks.get(i);
+
             ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
             if (extracted == null) {
                 continue;
@@ -242,14 +246,15 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             return;
         }
 
+        List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
+
         FluidStack extracted = null;
+        int i = 0;
 
-        for (FluidStack stack : storage.getStacks()) {
+        while (extracted == null && stacks.size() > i) {
+            FluidStack stack = stacks.get(i++);
+
             extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
-
-            if (extracted != null) {
-                break;
-            }
         }
 
         if (extracted == null) {
