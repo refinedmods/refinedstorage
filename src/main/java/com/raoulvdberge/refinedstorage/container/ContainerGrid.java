@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
@@ -42,6 +43,12 @@ public class ContainerGrid extends ContainerBase {
         this.inventorySlots.clear();
         this.inventoryItemStacks.clear();
 
+        if (grid.getType() != GridType.FLUID) {
+            for (int i = 0; i < 4; ++i) {
+                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i) + getTabDelta()));
+            }
+        }
+
         int headerAndSlots = getTabDelta() + display.getHeader() + (display.getVisibleRows() * 18);
 
         addPlayerInventory(8, display.getYPlayerInventory());
@@ -81,12 +88,6 @@ public class ContainerGrid extends ContainerBase {
 
             addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 152, headerAndSlots + 4));
             addSlotToContainer(new SlotOutput(((NetworkNodeGrid) grid).getPatterns(), 1, 152, headerAndSlots + 40));
-        }
-
-        if (grid.getType() != GridType.FLUID) {
-            for (int i = 0; i < 4; ++i) {
-                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i) + getTabDelta()));
-            }
         }
     }
 
@@ -136,13 +137,34 @@ public class ContainerGrid extends ContainerBase {
                     sendCraftingSlots();
                     detectAndSendChanges();
                 } else if (slot != patternResultSlot && !(slot instanceof SlotFilterLegacy) && grid.getNetwork() != null) {
+                    ItemStack stack = slot.getStack();
+
+                    if (grid.getType() != GridType.FLUID && stack.getItem() == RSItems.FILTER) {
+                        int startIndex = 0;
+                        int endIndex = 4;
+
+                        // Move to player inventory instead
+                        if (slotIndex < 4) {
+                            startIndex = 4;
+                            endIndex = 4 + (9 * 4);
+                        }
+
+                        if (mergeItemStack(stack, startIndex, endIndex, false)) {
+                            slot.onSlotChanged();
+
+                            detectAndSendChanges();
+
+                            return ItemStack.EMPTY;
+                        }
+                    }
+
                     IItemGridHandler itemHandler = grid.getNetwork().getItemGridHandler();
                     IFluidGridHandler fluidHandler = grid.getNetwork().getFluidGridHandler();
 
                     if (grid.getType() != GridType.FLUID && itemHandler != null) {
-                        slot.putStack(RSUtils.transformNullToEmpty(itemHandler.onInsert((EntityPlayerMP) player, slot.getStack())));
+                        slot.putStack(RSUtils.transformNullToEmpty(itemHandler.onInsert((EntityPlayerMP) player, stack)));
                     } else if (grid.getType() == GridType.FLUID && fluidHandler != null) {
-                        slot.putStack(RSUtils.transformNullToEmpty(fluidHandler.onInsert((EntityPlayerMP) player, slot.getStack())));
+                        slot.putStack(RSUtils.transformNullToEmpty(fluidHandler.onInsert((EntityPlayerMP) player, stack)));
                     }
 
                     detectAndSendChanges();
