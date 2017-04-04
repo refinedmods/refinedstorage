@@ -50,9 +50,7 @@ public interface IStorage<T> {
     /**
      * @return the access type of this storage
      */
-    default AccessType getAccessType() {
-        return AccessType.INSERT_EXTRACT;
-    }
+    AccessType getAccessType();
 
     /**
      * Returns the delta that needs to be added to the item or fluid storage cache AFTER insertion of the stack.

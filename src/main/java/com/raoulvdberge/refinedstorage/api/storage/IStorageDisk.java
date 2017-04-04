@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.api.storage;
 
 import net.minecraft.item.ItemStack;
 
+import java.util.function.Supplier;
+
 /**
  * Represents a storage disk.
  *
@@ -14,11 +16,6 @@ public interface IStorageDisk<T> extends IStorage<T> {
     int getCapacity();
 
     /**
-     * @return whether this storage voids excess stacks
-     */
-    boolean isVoiding();
-
-    /**
      * Returns whether the storage disk is valid.
      * Determines if it can be inserted in a disk drive.
      *
@@ -28,11 +25,14 @@ public interface IStorageDisk<T> extends IStorage<T> {
     boolean isValid(ItemStack stack);
 
     /**
-     * Sets a listener that is called when the storage changes.
+     * When this storage disk is inserted into a storage disk container, it has to adjust to the container's settings
+     * and use the following parameters instead.
      *
-     * @param listener the listener
+     * @param listener   the listener to be called when the storage changes
+     * @param voidExcess a supplier whether this storage should void excess stacks
+     * @param accessType the access type of the container
      */
-    void setListener(Runnable listener);
+    void onPassContainerContext(Runnable listener, Supplier<Boolean> voidExcess, Supplier<AccessType> accessType);
 
     /**
      * Reads the storage from NBT.

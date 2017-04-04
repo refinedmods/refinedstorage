@@ -28,10 +28,14 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public static final String ID = "storage";
 
     class StorageItem extends StorageDiskItem {
-        public StorageItem(NBTTagCompound tag) {
+        StorageItem(NBTTagCompound tag) {
             super(tag, NetworkNodeStorage.this.getCapacity());
 
-            this.setListener(NetworkNodeStorage.this::markDirty);
+            this.onPassContainerContext(
+                NetworkNodeStorage.this::markDirty,
+                NetworkNodeStorage.this::getVoidExcess,
+                NetworkNodeStorage.this::getAccessType
+            );
         }
 
         @Override
@@ -46,16 +50,6 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
             }
 
             return super.insert(stack, size, simulate);
-        }
-
-        @Override
-        public AccessType getAccessType() {
-            return accessType;
-        }
-
-        @Override
-        public boolean isVoiding() {
-            return voidExcess;
         }
     }
 

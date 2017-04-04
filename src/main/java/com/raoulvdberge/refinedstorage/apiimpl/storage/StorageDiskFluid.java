@@ -16,6 +16,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     private static final int PROTOCOL = 1;
@@ -32,6 +33,8 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
     private Runnable listener = () -> {
     };
+    private Supplier<Boolean> voidExcess;
+    private Supplier<AccessType> accessType;
 
     public StorageDiskFluid(NBTTagCompound tag, int capacity) {
         this.tag = tag;
@@ -86,7 +89,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        if (isVoiding()) {
+                        if (voidExcess.get()) {
                             return null;
                         }
 
@@ -101,7 +104,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                         listener.run();
                     }
 
-                    return isVoiding() ? null : RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
+                    return voidExcess.get() ? null : RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + size);
@@ -120,7 +123,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
-                if (isVoiding()) {
+                if (voidExcess.get()) {
                     return null;
                 }
 
@@ -135,7 +138,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                 listener.run();
             }
 
-            return isVoiding() ? null : RSUtils.copyStackWithSize(stack, size - remainingSpace);
+            return voidExcess.get() ? null : RSUtils.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
@@ -188,13 +191,13 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    public int getCapacity() {
-        return capacity;
+    public AccessType getAccessType() {
+        return accessType.get();
     }
 
     @Override
-    public boolean isVoiding() {
-        return false;
+    public int getCapacity() {
+        return capacity;
     }
 
     @Override
@@ -205,7 +208,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
         int inserted = remainder == null ? size : (size - remainder.amount);
 
-        if (isVoiding() && storedPreInsertion + inserted > getCapacity()) {
+        if (voidExcess.get() && storedPreInsertion + inserted > getCapacity()) {
             inserted = getCapacity() - storedPreInsertion;
         }
 
@@ -218,8 +221,10 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    public void setListener(Runnable listener) {
+    public void onPassContainerContext(Runnable listener, Supplier<Boolean> voidExcess, Supplier<AccessType> accessType) {
         this.listener = listener;
+        this.voidExcess = voidExcess;
+        this.accessType = accessType;
     }
 
     public static NBTTagCompound getShareTag(NBTTagCompound tag) {

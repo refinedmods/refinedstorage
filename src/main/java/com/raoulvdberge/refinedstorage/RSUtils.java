@@ -117,7 +117,7 @@ public final class RSUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static void createStorages(ItemStack disk, int slot, IStorageDisk<ItemStack>[] itemStorages, IStorageDisk<FluidStack>[] fluidStorages, Function<IStorageDisk, IStorageDisk> itemStorageWrapper, Function<IStorageDisk, IStorageDisk> fluidStorageWrapper) {
+    public static void createStorages(ItemStack disk, int slot, IStorageDisk<ItemStack>[] itemStorages, IStorageDisk<FluidStack>[] fluidStorages, Function<IStorageDisk<ItemStack>, IStorageDisk> itemStorageWrapper, Function<IStorageDisk<FluidStack>, IStorageDisk> fluidStorageWrapper) {
         if (disk.isEmpty()) {
             itemStorages[slot] = null;
             fluidStorages[slot] = null;

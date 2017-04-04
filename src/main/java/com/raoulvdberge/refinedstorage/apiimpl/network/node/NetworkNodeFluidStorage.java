@@ -28,10 +28,14 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public static final String ID = "fluid_storage";
 
     class StorageFluid extends StorageDiskFluid {
-        public StorageFluid(NBTTagCompound tag) {
+        StorageFluid(NBTTagCompound tag) {
             super(tag, NetworkNodeFluidStorage.this.getCapacity());
 
-            this.setListener(NetworkNodeFluidStorage.this::markDirty);
+            this.onPassContainerContext(
+                NetworkNodeFluidStorage.this::markDirty,
+                NetworkNodeFluidStorage.this::getVoidExcess,
+                NetworkNodeFluidStorage.this::getAccessType
+            );
         }
 
         @Override
@@ -47,16 +51,6 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
             }
 
             return super.insert(stack, size, simulate);
-        }
-
-        @Override
-        public AccessType getAccessType() {
-            return accessType;
-        }
-
-        @Override
-        public boolean isVoiding() {
-            return voidExcess;
         }
     }
 

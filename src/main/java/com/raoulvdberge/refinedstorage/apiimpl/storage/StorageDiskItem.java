@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -16,10 +15,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Supplier;
 
-/**
- * A implementation of {@link IStorage<ItemStack>} that stores storage items in NBT.
- */
 public class StorageDiskItem implements IStorageDisk<ItemStack> {
     private static final int PROTOCOL = 1;
 
@@ -39,13 +36,11 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
     private Runnable listener = () -> {
     };
+    private Supplier<Boolean> voidExcess;
+    private Supplier<AccessType> accessType;
 
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
 
-    /**
-     * @param tag      The NBT tag we are reading from and writing the amount stored to, has to be initialized with {@link StorageDiskItem#getTag()} if it doesn't exist yet
-     * @param capacity The capacity of this storage, -1 for infinite capacity
-     */
     public StorageDiskItem(NBTTagCompound tag, int capacity) {
         this.tag = tag;
         this.capacity = capacity;
@@ -129,7 +124,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        if (isVoiding()) {
+                        if (voidExcess.get()) {
                             return null;
                         }
 
@@ -144,7 +139,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                         listener.run();
                     }
 
-                    return isVoiding() ? null : ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
+                    return voidExcess.get() ? null : ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + size);
@@ -163,7 +158,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
-                if (isVoiding()) {
+                if (voidExcess.get()) {
                     return null;
                 }
 
@@ -178,7 +173,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                 listener.run();
             }
 
-            return isVoiding() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
+            return voidExcess.get() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
@@ -231,13 +226,13 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public int getCapacity() {
-        return capacity;
+    public AccessType getAccessType() {
+        return accessType.get();
     }
 
     @Override
-    public boolean isVoiding() {
-        return false;
+    public int getCapacity() {
+        return capacity;
     }
 
     @Override
@@ -246,8 +241,10 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public void setListener(Runnable listener) {
+    public void onPassContainerContext(Runnable listener, Supplier<Boolean> voidExcess, Supplier<AccessType> accessType) {
         this.listener = listener;
+        this.voidExcess = voidExcess;
+        this.accessType = accessType;
     }
 
     @Override
@@ -258,7 +255,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
         int inserted = remainder == null ? size : (size - remainder.getCount());
 
-        if (isVoiding() && storedPreInsertion + inserted > getCapacity()) {
+        if (voidExcess.get() && storedPreInsertion + inserted > getCapacity()) {
             inserted = getCapacity() - storedPreInsertion;
         }
 

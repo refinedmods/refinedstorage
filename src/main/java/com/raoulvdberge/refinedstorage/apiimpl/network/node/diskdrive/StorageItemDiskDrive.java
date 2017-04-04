@@ -12,6 +12,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 public class StorageItemDiskDrive implements IStorageDisk<ItemStack> {
     private NetworkNodeDiskDrive diskDrive;
@@ -21,23 +22,32 @@ public class StorageItemDiskDrive implements IStorageDisk<ItemStack> {
     public StorageItemDiskDrive(NetworkNodeDiskDrive diskDrive, IStorageDisk<ItemStack> parent) {
         this.diskDrive = diskDrive;
         this.parent = parent;
-        this.parent.setListener(() -> {
-            diskDrive.markDirty();
+        this.onPassContainerContext(
+            () -> {
+                diskDrive.markDirty();
 
-            int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+                int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
 
-            if (lastState != currentState) {
-                lastState = currentState;
+                if (lastState != currentState) {
+                    lastState = currentState;
 
-                RSUtils.updateBlock(diskDrive.getHolder().world(), diskDrive.getHolder().pos());
-            }
-        });
+                    RSUtils.updateBlock(diskDrive.getHolder().world(), diskDrive.getHolder().pos());
+                }
+            },
+            diskDrive::getVoidExcess,
+            diskDrive::getAccessType
+        );
         this.lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
     }
 
     @Override
     public int getPriority() {
         return diskDrive.getPriority();
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return parent.getAccessType();
     }
 
     @Override
@@ -67,11 +77,6 @@ public class StorageItemDiskDrive implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public AccessType getAccessType() {
-        return diskDrive.getAccessType();
-    }
-
-    @Override
     public int getCacheDelta(int storedPreInsertion, int size, @Nullable ItemStack remainder) {
         return parent.getCacheDelta(storedPreInsertion, size, remainder);
     }
@@ -82,18 +87,13 @@ public class StorageItemDiskDrive implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public boolean isVoiding() {
-        return diskDrive.getVoidExcess();
-    }
-
-    @Override
     public boolean isValid(ItemStack stack) {
         return parent.isValid(stack);
     }
 
     @Override
-    public void setListener(Runnable listener) {
-        // NO OP
+    public void onPassContainerContext(Runnable listener, Supplier<Boolean> voidExcess, Supplier<AccessType> accessType) {
+        parent.onPassContainerContext(listener, voidExcess, accessType);
     }
 
     @Override

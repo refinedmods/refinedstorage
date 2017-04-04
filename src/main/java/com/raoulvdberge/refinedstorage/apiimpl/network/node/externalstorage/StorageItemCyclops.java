@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
@@ -63,6 +64,11 @@ public class StorageItemCyclops extends StorageItemExternal {
     @Override
     public int getPriority() {
         return this.externalStorage.getPriority();
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return this.externalStorage.getAccessType();
     }
 
     @Override

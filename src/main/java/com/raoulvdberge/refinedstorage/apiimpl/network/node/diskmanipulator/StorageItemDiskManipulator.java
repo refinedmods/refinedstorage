@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
@@ -11,6 +12,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 public class StorageItemDiskManipulator implements IStorageDisk<ItemStack> {
     private NetworkNodeDiskManipulator diskManipulator;
@@ -20,17 +22,21 @@ public class StorageItemDiskManipulator implements IStorageDisk<ItemStack> {
     public StorageItemDiskManipulator(NetworkNodeDiskManipulator diskManipulator, IStorageDisk<ItemStack> parent) {
         this.diskManipulator = diskManipulator;
         this.parent = parent;
-        this.parent.setListener(() -> {
-            diskManipulator.markDirty();
+        this.onPassContainerContext(
+            () -> {
+                diskManipulator.markDirty();
 
-            int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+                int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
 
-            if (lastState != currentState) {
-                lastState = currentState;
+                if (lastState != currentState) {
+                    lastState = currentState;
 
-                RSUtils.updateBlock(diskManipulator.getHolder().world(), diskManipulator.getHolder().pos());
-            }
-        });
+                    RSUtils.updateBlock(diskManipulator.getHolder().world(), diskManipulator.getHolder().pos());
+                }
+            },
+            () -> false,
+            () -> AccessType.INSERT_EXTRACT
+        );
         this.lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
     }
 
@@ -40,18 +46,13 @@ public class StorageItemDiskManipulator implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public boolean isVoiding() {
-        return parent.isVoiding();
-    }
-
-    @Override
     public boolean isValid(ItemStack stack) {
         return parent.isValid(stack);
     }
 
     @Override
-    public void setListener(Runnable listener) {
-        // NO OP
+    public void onPassContainerContext(Runnable listener, Supplier<Boolean> voidExcess, Supplier<AccessType> accessType) {
+        parent.onPassContainerContext(listener, voidExcess, accessType);
     }
 
     @Override
@@ -102,6 +103,11 @@ public class StorageItemDiskManipulator implements IStorageDisk<ItemStack> {
     @Override
     public int getPriority() {
         return parent.getPriority();
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return parent.getAccessType();
     }
 
     @Override
