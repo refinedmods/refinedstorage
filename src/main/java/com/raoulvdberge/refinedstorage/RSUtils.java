@@ -48,6 +48,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -55,9 +57,7 @@ import javax.annotation.Nullable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.function.Function;
 
 public final class RSUtils {
@@ -69,8 +69,53 @@ public final class RSUtils {
     private static final String NBT_SLOT = "Slot";
     private static final String NBT_ACCESS_TYPE = "AccessType";
 
+    private static final Map<Integer, List<ItemStack>> OREDICT_CACHE = new HashMap<>();
+    private static final Map<Integer, Boolean> OREDICT_EQUIVALENCY_CACHE = new HashMap<>();
+
     static {
         QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
+    }
+
+    public static List<ItemStack> getEquivalentStacks(ItemStack stack) {
+        int hash = API.instance().getItemStackHashCode(stack, false);
+
+        if (OREDICT_CACHE.containsKey(hash)) {
+            return OREDICT_CACHE.get(hash);
+        }
+
+        List<ItemStack> ores = new ArrayList<>();
+
+        for (int id : OreDictionary.getOreIDs(stack)) {
+            ores.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
+        }
+
+        OREDICT_CACHE.put(hash, ores);
+
+        return ores;
+    }
+
+    public static boolean areStacksEquivalent(ItemStack left, ItemStack right) {
+        int code = API.instance().getItemStackHashCode(left, false);
+        code = 31 * code + API.instance().getItemStackHashCode(right, false);
+
+        if (OREDICT_EQUIVALENCY_CACHE.containsKey(code)) {
+            return OREDICT_EQUIVALENCY_CACHE.get(code);
+        }
+
+        int[] leftIds = OreDictionary.getOreIDs(left);
+        int[] rightIds = OreDictionary.getOreIDs(right);
+
+        for (int i : rightIds) {
+            if (ArrayUtils.contains(leftIds, i)) {
+                OREDICT_EQUIVALENCY_CACHE.put(code, true);
+
+                return true;
+            }
+        }
+
+        OREDICT_EQUIVALENCY_CACHE.put(code, false);
+
+        return false;
     }
 
     public static void writeItemStack(ByteBuf buf, ItemStack stack) {

@@ -1,23 +1,18 @@
 package com.raoulvdberge.refinedstorage.apiimpl.util;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockNode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Comparer implements IComparer {
-    private Map<Integer, Boolean> oredictCache = new HashMap<>();
-
     @Override
     public boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right, int flags) {
         EnumActionResult validity = validityCheck(left, right);
@@ -119,28 +114,7 @@ public class Comparer implements IComparer {
             return validity == EnumActionResult.SUCCESS;
         }
 
-        // We do not care about the NBT tag since the oredict doesn't care either, and generating a NBT hashcode is slow.
-        int code = API.instance().getItemStackHashCode(left, false);
-        code = 31 * code + API.instance().getItemStackHashCode(right, false);
-
-        if (oredictCache.containsKey(code)) {
-            return oredictCache.get(code);
-        }
-
-        int[] leftIds = OreDictionary.getOreIDs(left);
-        int[] rightIds = OreDictionary.getOreIDs(right);
-
-        for (int i : rightIds) {
-            if (ArrayUtils.contains(leftIds, i)) {
-                oredictCache.put(code, true);
-
-                return true;
-            }
-        }
-
-        oredictCache.put(code, false);
-
-        return false;
+        return RSUtils.areStacksEquivalent(left, right);
     }
 
     private EnumActionResult validityCheck(@Nullable ItemStack left, @Nullable ItemStack right) {

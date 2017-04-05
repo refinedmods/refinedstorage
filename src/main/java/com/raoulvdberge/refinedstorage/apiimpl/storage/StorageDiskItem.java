@@ -2,9 +2,11 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,6 +16,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Supplier;
 
@@ -190,7 +193,23 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     @Override
     @Nullable
     public synchronized ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        for (ItemStack otherStack : stacks.get(stack.getItem())) {
+        Collection<ItemStack> toAttempt = null;
+
+        if ((flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT) {
+            for (ItemStack ore : RSUtils.getEquivalentStacks(stack)) {
+                if (toAttempt == null) {
+                    toAttempt = new ArrayList<>(stacks.get(ore.getItem()));
+                } else {
+                    toAttempt.addAll(stacks.get(ore.getItem()));
+                }
+            }
+        }
+
+        if (toAttempt == null) {
+            toAttempt = stacks.get(stack.getItem());
+        }
+
+        for (ItemStack otherStack : toAttempt) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.getCount()) {
                     size = otherStack.getCount();

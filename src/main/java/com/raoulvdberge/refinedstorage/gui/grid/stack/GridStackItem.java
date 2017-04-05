@@ -71,6 +71,7 @@ public class GridStackItem implements IGridStack {
         if (oreIds == null) {
             oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).collect(Collectors.toList()).toArray(new String[0]);
         }
+
         return oreIds;
     }
 
