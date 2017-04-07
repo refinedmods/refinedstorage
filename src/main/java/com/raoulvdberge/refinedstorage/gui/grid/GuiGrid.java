@@ -52,6 +52,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     private static final GridSorting SORTING_NAME = new GridSortingName();
     private static final GridSorting SORTING_ID = new GridSortingID();
 
+    private static final List<String> SEARCH_HISTORY = new ArrayList<>();
+
     public static final ListMultimap<Item, GridStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
     public static final ListMultimap<Fluid, GridStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
@@ -71,6 +73,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     private int tabHovering = -1;
 
     private int slotNumber;
+
+    private int searchHistory = -1;
 
     private Deque<Integer> konami = new ArrayDeque<>(Arrays.asList(
         Keyboard.KEY_UP,
@@ -502,6 +506,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, clickedButton);
 
+        boolean wasSearchFieldFocused = searchField.isFocused();
+
         searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
         if (tabHovering >= 0 && tabHovering < grid.getTabs().size()) {
@@ -515,6 +521,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             sortItems();
 
             updateJEI();
+        } else if (wasSearchFieldFocused != searchField.isFocused()) {
+            saveHistory();
         }
 
         boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
@@ -581,10 +589,64 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             updateJEI();
 
             sortItems();
+        } else if (searchField.isFocused() && (keyCode == Keyboard.KEY_UP || keyCode == Keyboard.KEY_DOWN || keyCode == Keyboard.KEY_RETURN)) {
+            if (keyCode == Keyboard.KEY_UP) {
+                updateSearchHistory(-1);
+            } else if (keyCode == Keyboard.KEY_DOWN) {
+                updateSearchHistory(1);
+            } else {
+                saveHistory();
+
+                if (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
+                    searchField.setFocused(false);
+                }
+            }
         } else if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
             searchField.setFocused(!searchField.isFocused());
+
+            saveHistory();
         } else {
             super.keyTyped(character, keyCode);
+        }
+    }
+
+    private void updateSearchHistory(int delta) {
+        if (searchHistory == -1) {
+            searchHistory = SEARCH_HISTORY.size();
+        }
+
+        searchHistory += delta;
+
+        if (searchHistory < 0) {
+            searchHistory = 0;
+        } else if (searchHistory > SEARCH_HISTORY.size() - 1) {
+            searchHistory = SEARCH_HISTORY.size() - 1;
+
+            if (delta == 1) {
+                searchField.setText("");
+
+                sortItems();
+
+                updateJEI();
+
+                return;
+            }
+        }
+
+        searchField.setText(SEARCH_HISTORY.get(searchHistory));
+
+        sortItems();
+
+        updateJEI();
+    }
+
+    private void saveHistory() {
+        if (!SEARCH_HISTORY.isEmpty() && SEARCH_HISTORY.get(SEARCH_HISTORY.size() - 1).equals(searchField.getText())) {
+            return;
+        }
+
+        if (!searchField.getText().trim().isEmpty()) {
+            SEARCH_HISTORY.add(searchField.getText());
         }
     }
 
