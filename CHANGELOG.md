@@ -8,6 +8,7 @@
 - You can now shift click Grid Filters into a Grid instead of manually inserting them (raoulvdberge)
 - The Solderer inventory isn't sided anymore (raoulvdberge)
 - You can now use up and down arrows to scroll through Grid search history (raoulvdberge)
+- Fixed Grid crash (raoulvdberge)
 
 ### 1.4.2
 - Updated Forge to 2261 (raoulvdberge)

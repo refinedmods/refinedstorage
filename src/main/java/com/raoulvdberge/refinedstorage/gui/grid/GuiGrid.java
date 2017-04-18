@@ -421,7 +421,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             drawTexture(x + 152, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
-        searchField.drawTextBox();
+        if (searchField != null) {
+            searchField.drawTextBox();
+        }
     }
 
     @Override
