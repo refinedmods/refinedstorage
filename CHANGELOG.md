@@ -1,6 +1,9 @@
 # Refined Storage Changelog
 
 ### 1.4.3
+- Updated Forge to 2282 (raoulvdberge)
+- Updated JEI version (raoulvdberge)
+- Updated MCMultiPart version (raoulvdberge)
 - Storage Monitors don't render any quantity text when no item is specified to monitor anymore (raoulvdberge)
 - Fixed bug where disks in Disk Drive didn't respect access type or void excess stacks option (raoulvdberge)
 - Fixed crash in Disk Manipulator (raoulvdberge)

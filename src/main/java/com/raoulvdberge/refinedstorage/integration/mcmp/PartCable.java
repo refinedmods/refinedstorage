@@ -52,6 +52,6 @@ public class PartCable implements IMultipart {
 
     @Override
     public void onPartChanged(IPartInfo part, IPartInfo otherPart) {
-        API.instance().discoverNode(part.getWorld(), part.getContainer().getPos());
+        API.instance().discoverNode(part.getActualWorld(), part.getContainer().getPartPos());
     }
 }

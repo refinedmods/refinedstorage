@@ -25,9 +25,9 @@ public class RSJEIPlugin extends BlankModPlugin {
 
         registry.addRecipeCategories(new RecipeCategorySolderer(registry.getJeiHelpers().getGuiHelper()));
 
-        registry.addRecipeHandlers(new RecipeHandlerSolderer());
+        registry.handleRecipes(RecipeWrapperSolderer.class, recipe -> recipe, RecipeCategorySolderer.ID);
 
-        registry.addRecipes(RecipeMakerSolderer.getRecipes());
+        registry.addRecipes(RecipeMakerSolderer.getRecipes(), RecipeCategorySolderer.ID);
 
         registry.addRecipeCategoryCraftingItem(new ItemStack(RSBlocks.SOLDERER), RecipeCategorySolderer.ID);
 
