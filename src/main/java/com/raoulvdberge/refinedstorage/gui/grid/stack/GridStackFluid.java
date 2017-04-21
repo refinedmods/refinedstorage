@@ -35,7 +35,7 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public String[] getOreIds() {
-        return new String[]{ stack.getFluid().getName() };
+        return new String[]{stack.getFluid().getName()};
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GridStackFluid implements IGridStack {
     public void draw(GuiBase gui, int x, int y, boolean isOverWithShift) {
         GuiBase.FLUID_RENDERER.draw(gui.mc, x, y, stack);
 
-        gui.drawQuantity(x, y, RSUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F));
+        gui.drawQuantity(x, y, RSUtils.formatQuantity((int) ((float) stack.amount / 1000F)));
     }
 
     @Override
