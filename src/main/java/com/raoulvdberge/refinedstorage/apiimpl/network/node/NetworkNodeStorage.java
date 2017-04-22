@@ -323,5 +323,9 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
         this.priority = priority;
 
         markDirty();
+
+        if (network != null) {
+            network.getItemStorageCache().sort();
+        }
     }
 }

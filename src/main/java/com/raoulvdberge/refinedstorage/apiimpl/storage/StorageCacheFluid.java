@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -33,6 +34,8 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
 
         list.clear();
 
+        sort();
+
         for (IStorage<FluidStack> storage : storages) {
             if (storage.getAccessType() == AccessType.INSERT) {
                 continue;
@@ -60,6 +63,11 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
         if (list.remove(stack, size)) {
             network.sendFluidStorageDeltaToClient(stack, -size);
         }
+    }
+
+    @Override
+    public void sort() {
+        storages.sort(RSUtils.STORAGE_COMPARATOR);
     }
 
     @Override

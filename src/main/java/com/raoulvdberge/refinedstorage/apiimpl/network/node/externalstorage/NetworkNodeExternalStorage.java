@@ -181,6 +181,11 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         this.priority = priority;
 
         markDirty();
+
+        if (network != null) {
+            network.getItemStorageCache().sort();
+            network.getFluidStorageCache().sort();
+        }
     }
 
     public void updateStorage(INetworkMaster network) {

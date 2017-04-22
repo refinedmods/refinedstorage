@@ -338,6 +338,11 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         this.priority = priority;
 
         markDirty();
+
+        if (network != null) {
+            network.getItemStorageCache().sort();
+            network.getFluidStorageCache().sort();
+        }
     }
 
     public IItemHandler getDisks() {

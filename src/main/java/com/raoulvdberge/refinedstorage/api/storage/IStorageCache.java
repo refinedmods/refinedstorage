@@ -16,6 +16,7 @@ import java.util.List;
 public interface IStorageCache<T> {
     /**
      * Invalidates the cache.
+     * Should also call {@link IStorageCache#sort()} to sort the storages correctly.
      * Typically called when a {@link IStorageProvider} is added or removed from the network.
      */
     void invalidate();
@@ -44,6 +45,12 @@ public interface IStorageCache<T> {
      * @param size  the size to remove
      */
     void remove(@Nonnull T stack, int size);
+
+    /**
+     * Resorts the storages in this cache according to their priority. This needs to be called when the priority
+     * of a storage changes.
+     */
+    void sort();
 
     /**
      * @return the list behind this cache

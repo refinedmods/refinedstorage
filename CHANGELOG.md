@@ -13,6 +13,7 @@
 - You can now use up and down arrows to scroll through Grid search history (raoulvdberge)
 - Fixed Grid crash (raoulvdberge)
 - Fixed Fluid Grid not formatting large quantities correctly (raoulvdberge)
+- Small performance improvement: only sort the storages when needed (raoulvdberge)
 
 ### 1.4.2
 - Updated Forge to 2261 (raoulvdberge)

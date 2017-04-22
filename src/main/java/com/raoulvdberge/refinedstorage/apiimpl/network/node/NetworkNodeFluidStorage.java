@@ -316,6 +316,10 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         this.priority = priority;
 
         markDirty();
+
+        if (network != null) {
+            network.getFluidStorageCache().sort();
+        }
     }
 
     @Override

@@ -142,12 +142,6 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
         return (left.getEnergyUsage() > right.getEnergyUsage()) ? -1 : 1;
     };
 
-    private static final Comparator<IStorage> STORAGE_COMPARATOR = (left, right) -> {
-        int compare = Integer.compare(right.getPriority(), left.getPriority());
-
-        return compare != 0 ? compare : Integer.compare(right.getStored(), left.getStored());
-    };
-
     private IItemGridHandler itemGridHandler = new ItemGridHandler(this);
     private IFluidGridHandler fluidGridHandler = new FluidGridHandler(this);
 
@@ -222,9 +216,6 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
     public void update() {
         if (!getWorld().isRemote) {
             if (canRun()) {
-                itemStorage.getStorages().sort(STORAGE_COMPARATOR);
-                fluidStorage.getStorages().sort(STORAGE_COMPARATOR);
-
                 craftingManager.update();
 
                 for (IReaderWriterChannel channel : readerWriterChannels.values()) {

@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -62,6 +63,12 @@ import java.util.function.Function;
 
 public final class RSUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
+
+    public static final Comparator<IStorage> STORAGE_COMPARATOR = (left, right) -> {
+        int compare = Integer.compare(right.getPriority(), left.getPriority());
+
+        return compare != 0 ? compare : Integer.compare(right.getStored(), left.getStored());
+    };
 
     public static final DecimalFormat QUANTITY_FORMATTER = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
 
