@@ -15,6 +15,7 @@
 - Fixed Fluid Grid not formatting large quantities correctly (raoulvdberge)
 - Small performance improvement: only sort the storages when needed (raoulvdberge)
 - Display progress bar on JEI recipes for the Solderer (raoulvdberge)
+- Shift clicking patterns in the Pattern Grid now puts the patterns in the pattern slot (raoulvdberge)
 
 ### 1.4.2
 - Updated Forge to 2261 (raoulvdberge)
