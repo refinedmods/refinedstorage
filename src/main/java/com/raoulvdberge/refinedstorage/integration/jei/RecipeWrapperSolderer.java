@@ -1,16 +1,35 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
+import mezz.jei.api.IGuiHelper;
+import mezz.jei.api.gui.IDrawableAnimated;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
 public class RecipeWrapperSolderer extends BlankRecipeWrapper {
+    private IDrawableAnimated progress;
+
     private List<ItemStack> inputs;
     private ItemStack output;
 
-    public RecipeWrapperSolderer(List<ItemStack> inputs, ItemStack output) {
+    public RecipeWrapperSolderer(IGuiHelper guiHelper, int duration, List<ItemStack> inputs, ItemStack output) {
+        this.progress = guiHelper.createAnimatedDrawable(
+            guiHelper.createDrawable(
+                new ResourceLocation("refinedstorage", "textures/gui/solderer.png"),
+                212,
+                0,
+                22,
+                15
+            ),
+            duration,
+            IDrawableAnimated.StartDirection.LEFT,
+            false
+        );
+
         this.inputs = inputs;
         this.output = output;
     }
@@ -36,6 +55,13 @@ public class RecipeWrapperSolderer extends BlankRecipeWrapper {
         }
 
         return ItemStack.areItemStacksEqual(output, other.output);
+    }
+
+    @Override
+    public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
+        super.drawInfo(minecraft, recipeWidth, recipeHeight, mouseX, mouseY);
+
+        progress.draw(minecraft, 40, 18);
     }
 
     @Override

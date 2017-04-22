@@ -18,7 +18,7 @@ public class RecipeCategorySolderer extends BlankRecipeCategory<RecipeWrapperSol
     private IDrawable background;
 
     public RecipeCategorySolderer(IGuiHelper helper) {
-        background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 43, 19, 101, 54);
+        this.background = helper.createDrawable(new ResourceLocation("refinedstorage", "textures/gui/solderer.png"), 43, 19, 101, 54);
     }
 
     @Override
