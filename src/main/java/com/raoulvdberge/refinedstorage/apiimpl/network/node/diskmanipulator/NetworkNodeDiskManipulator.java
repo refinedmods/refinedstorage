@@ -216,14 +216,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
         } else {
             while (itemFilters.getSlots() > i && extracted == null) {
-                ItemStack stack = null;
+                ItemStack filterStack = ItemStack.EMPTY;
 
-                while (itemFilters.getSlots() > i && stack == null) {
-                    stack = itemFilters.getStackInSlot(i++);
+                while (itemFilters.getSlots() > i && filterStack == null) {
+                    filterStack = itemFilters.getStackInSlot(i++);
                 }
 
-                if (stack != null) {
-                    extracted = network.extractItem(stack, upgrades.getItemInteractCount(), compare, false);
+                if (!filterStack.isEmpty()) {
+                    extracted = network.extractItem(filterStack, upgrades.getItemInteractCount(), compare, false);
                 }
             }
         }
@@ -293,14 +293,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
         } else {
             while (fluidFilters.getSlots() > i && extracted == null) {
-                FluidStack stack = null;
+                FluidStack filterStack = null;
 
-                while (fluidFilters.getSlots() > i && stack == null) {
-                    stack = fluidFilters.getFluidStackInSlot(i++);
+                while (fluidFilters.getSlots() > i && filterStack == null) {
+                    filterStack = fluidFilters.getFluidStackInSlot(i++);
                 }
 
-                if (stack != null) {
-                    extracted = network.extractFluid(stack, upgrades.getItemInteractCount(), compare, false);
+                if (filterStack != null) {
+                    extracted = network.extractFluid(filterStack, upgrades.getItemInteractCount(), compare, false);
                 }
             }
         }

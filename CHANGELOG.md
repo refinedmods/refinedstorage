@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.4
+- Fixed Disk Manipulator crashing due to empty stack (raoulvdberge)
+
 ### 1.4.3
 - Updated Forge to 2282 (raoulvdberge)
 - Updated JEI version (raoulvdberge)
