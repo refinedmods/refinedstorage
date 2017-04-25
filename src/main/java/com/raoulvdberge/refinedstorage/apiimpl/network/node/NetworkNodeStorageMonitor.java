@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -12,8 +13,10 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
@@ -78,6 +81,10 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
             return false;
         }
 
+        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+            return false;
+        }
+
         Pair<ItemStack, Long> deposit = deposits.get(player.getGameProfile().getName());
 
         if (deposit == null) {
@@ -101,19 +108,47 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     public boolean deposit(EntityPlayer player, ItemStack toInsert) {
-        if (type != IType.ITEMS) {
+        if (type != IType.ITEMS || network == null) {
+            return false;
+        }
+
+        if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return false;
         }
 
         ItemStack filter = itemFilter.getStackInSlot(0);
 
-        if (network != null && !filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
+        if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, RSUtils.transformNullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
 
             deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, Minecraft.getSystemTime()));
         }
 
         return true;
+    }
+
+    public void extract(EntityPlayer player, EnumFacing side) {
+        if (type != IType.ITEMS || network != null || holder.getDirection() != side) {
+            return;
+        }
+
+        if (!network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+            return;
+        }
+
+        ItemStack filter = itemFilter.getStackInSlot(0);
+
+        int toExtract = player.isSneaking() ? 1 : 64;
+
+        if (!filter.isEmpty()) {
+            ItemStack result = network.extractItem(filter, toExtract, compare, false);
+
+            if (result != null) {
+                if (!player.inventory.addItemStackToInventory(result.copy())) {
+                    InventoryHelper.spawnItemStack(holder.world(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), result);
+                }
+            }
+        }
     }
 
     @Override

@@ -3,11 +3,9 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
-import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -56,27 +54,7 @@ public class BlockStorageMonitor extends BlockNode {
                 return;
             }
 
-            EnumFacing side = rayResult.sideHit;
-
-            NetworkNodeStorageMonitor storageMonitor = ((TileStorageMonitor) world.getTileEntity(pos)).getNode();
-
-            if (storageMonitor.getHolder().getDirection() != side || storageMonitor.getType() != IType.ITEMS) {
-                return;
-            }
-
-            ItemStack displaying = storageMonitor.getItemFilter().getStackInSlot(0);
-
-            int toExtract = player.isSneaking() ? 1 : 64;
-
-            if (storageMonitor.getNetwork() != null && !displaying.isEmpty()) {
-                ItemStack result = storageMonitor.getNetwork().extractItem(displaying, toExtract, storageMonitor.getCompare(), false);
-
-                if (result != null) {
-                    if (!player.inventory.addItemStackToInventory(result.copy())) {
-                        InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), result);
-                    }
-                }
-            }
+            ((TileStorageMonitor) world.getTileEntity(pos)).getNode().extract(player, rayResult.sideHit);
         }
     }
 
