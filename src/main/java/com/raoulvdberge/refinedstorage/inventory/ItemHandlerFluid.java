@@ -30,6 +30,7 @@ public class ItemHandlerFluid extends ItemHandlerBase {
         }
     }
 
+    @Nullable
     public FluidStack getFluidStackInSlot(int slot) {
         return fluids[slot];
     }

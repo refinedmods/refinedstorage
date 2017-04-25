@@ -218,7 +218,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             while (itemFilters.getSlots() > i && extracted == null) {
                 ItemStack filterStack = ItemStack.EMPTY;
 
-                while (itemFilters.getSlots() > i && filterStack == null) {
+                while (itemFilters.getSlots() > i && filterStack.isEmpty()) {
                     filterStack = itemFilters.getStackInSlot(i++);
                 }
 
