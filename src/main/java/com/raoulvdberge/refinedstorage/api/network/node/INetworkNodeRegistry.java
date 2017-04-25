@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
- * This registry holds factories for reading network nodes from NBT.
+ * This registry holds factories for reading and writing network nodes from and to NBT.
  */
 public interface INetworkNodeRegistry {
     /**

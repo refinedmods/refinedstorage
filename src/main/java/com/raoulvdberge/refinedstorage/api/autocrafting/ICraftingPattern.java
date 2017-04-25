@@ -36,7 +36,7 @@ public interface ICraftingPattern {
     boolean isOredict();
 
     /**
-     * @return true if the crafting pattern may block crafting step
+     * @return true if the crafting pattern may block other crafting tasks that are the same, false otherwise
      */
     boolean isBlocking();
 
@@ -74,7 +74,7 @@ public interface ICraftingPattern {
     List<ItemStack> getByproducts();
 
     /**
-     * @return the id of the factory that creates a crafting task for this pattern, as defined in the registry
+     * @return the id of the factory that creates a crafting task for this pattern, as defined in the {@link com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry}
      */
     String getId();
 
@@ -111,7 +111,7 @@ public interface ICraftingPattern {
      * Used to balance out {@link com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep}s over alike {@link ICraftingPattern}s
      *
      * @param pattern the {@link ICraftingPattern} to compare against
-     * @return true if the patterns are alike
+     * @return true if the patterns are alike, false otherwise
      */
     boolean alike(ICraftingPattern pattern);
 }

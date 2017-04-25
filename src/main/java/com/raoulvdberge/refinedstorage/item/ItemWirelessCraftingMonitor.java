@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
+
 public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     private static final String NBT_VIEW_AUTOMATED = "ViewAutomated";
 
@@ -22,6 +24,7 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     }
 
     @Override
+    @Nonnull
     public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
         return new NetworkItemWirelessCraftingMonitor(handler, player, stack);
     }

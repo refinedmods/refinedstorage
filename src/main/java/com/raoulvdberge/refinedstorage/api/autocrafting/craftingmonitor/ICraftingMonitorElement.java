@@ -5,6 +5,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 /**
  * Represents a crafting monitor element.
  */
@@ -23,7 +25,7 @@ public interface ICraftingMonitorElement {
     boolean canDrawSelection();
 
     /**
-     * Returns the position where the corresponding task is in the crafting task list.
+     * Returns the position of the corresponding task in the crafting task list.
      * Used for cancelling tasks.
      *
      * @return the id, or -1 if no task is associated with this element
@@ -40,6 +42,7 @@ public interface ICraftingMonitorElement {
     /**
      * @return the tooltip of this element, or null for no tooltip
      */
+    @Nullable
     default String getTooltip() {
         return null;
     }
@@ -55,7 +58,7 @@ public interface ICraftingMonitorElement {
      * Merge an element into the current element.
      *
      * @param element the element to merged with the current one
-     * @return true if merge was successful
+     * @return true if merge was successful, false otherwise
      */
     boolean merge(ICraftingMonitorElement element);
 

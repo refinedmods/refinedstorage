@@ -32,7 +32,7 @@ public interface INetworkMaster {
     BlockPos getPosition();
 
     /**
-     * @return if this network is able to run (usually corresponds to the redstone configuration)
+     * @return true if this network is able to run (usually corresponds to the redstone configuration), false otherwise
      */
     boolean canRun();
 

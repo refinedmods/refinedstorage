@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
- * This registry holds factories for crafting preview elements (for deserialization from the network).
+ * This registry holds factories for crafting preview elements (for serialization and deserialization over the network).
  */
 public interface ICraftingPreviewElementRegistry {
     /**

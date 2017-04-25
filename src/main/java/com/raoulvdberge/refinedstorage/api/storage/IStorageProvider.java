@@ -6,7 +6,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.List;
 
 /**
- * Provides a storage to the network. Implement this on {@link com.raoulvdberge.refinedstorage.api.network.node.INetworkNode}s.
+ * Represents a node that provides the network with storage.
  */
 public interface IStorageProvider {
     /**

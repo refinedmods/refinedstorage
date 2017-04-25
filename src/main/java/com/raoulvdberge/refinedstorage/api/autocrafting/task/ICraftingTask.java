@@ -29,11 +29,6 @@ public interface ICraftingTask {
     void calculate();
 
     /**
-     * Called when this task is cancelled.
-     */
-    void onCancelled();
-
-    /**
      * Updates this task. Gets called every few ticks, depending on the speed of the pattern container.
      * {@link ICraftingTask#calculate()} must be run before this!
      *
@@ -41,6 +36,11 @@ public interface ICraftingTask {
      * @return true if this crafting task is finished and can be deleted from the list, false otherwise
      */
     boolean update(Map<ICraftingPatternContainer, Integer> usedContainers);
+
+    /**
+     * Called when this task is cancelled.
+     */
+    void onCancelled();
 
     /**
      * Reschedule the task. This does a recalculation and restart of the task.
@@ -94,9 +94,11 @@ public interface ICraftingTask {
     List<ICraftingMonitorElement> getCraftingMonitorElements();
 
     /**
-     * @return the crafting pattern corresponding to this task
+     * {@link ICraftingTask#calculate()} must be run before this!
+     *
+     * @return get a list of {@link ICraftingPreviewElement}s
      */
-    ICraftingPattern getPattern();
+    List<ICraftingPreviewElement> getPreviewStacks();
 
     /**
      * {@link ICraftingTask#calculate()} must be run before this!
@@ -106,15 +108,20 @@ public interface ICraftingTask {
     List<ICraftingStep> getSteps();
 
     /**
-     * Used to check if the crafting task has recursive elements (eg. block needs 9 ingots, ingots are crafted by a block)
+     * @return the crafting pattern corresponding to this task
+     */
+    ICraftingPattern getPattern();
+
+    /**
+     * Used to check if the crafting task has recursive elements (eg. block needs 9 ingots, ingots are crafted by a block).
      * {@link ICraftingTask#calculate()} must be run before this!
      *
-     * @return true if no recursion was found
+     * @return true if no recursion was found, false otherwise
      */
     boolean isValid();
 
     /**
-     * @return whether the task is finished
+     * @return true if the task is finished, false otherwise
      */
     boolean isFinished();
 
@@ -124,14 +131,10 @@ public interface ICraftingTask {
     IStackList<ItemStack> getMissing();
 
     /**
-     * {@link ICraftingTask#calculate()} must be run before this!
+     * Returns whether the crafting task is created in an automated way.
+     * For example: through the Crafting Upgrade or the "Trigger task with redstone signal" option in the crafter.
      *
-     * @return get a list of {@link ICraftingPreviewElement}s
-     */
-    List<ICraftingPreviewElement> getPreviewStacks();
-
-    /**
-     * @return whether this crafting task is created in an automated way (through a Crafting Upgrade or the "Trigger task with redstone signal" option in the Crafter) for example
+     * @return true if this crafting task is created in an automated way, false otherwise
      */
     boolean isAutomated();
 }

@@ -31,7 +31,7 @@ public interface IStackList<T> {
      *
      * @param stack the stack
      * @param size  the size to remove
-     * @return whether the remove was successful for the full amount
+     * @return true if the remove was successful for the full amount, false otherwise
      */
     boolean remove(@Nonnull T stack, int size);
 
@@ -39,7 +39,7 @@ public interface IStackList<T> {
      * Decrements the count of that stack in the list.
      *
      * @param stack the stack
-     * @return whether the remove was successful for the full amount
+     * @return true if the remove was successful for the full amount, false otherwise
      */
     default boolean remove(@Nonnull T stack) {
         return remove(stack, getSizeFromStack(stack));
@@ -47,20 +47,20 @@ public interface IStackList<T> {
 
     /**
      * Decrements the count of that stack in the list.
-     * Keeps track of removed stacks and can be undone by calling {@link #undo()}
+     * Keeps track of removed stacks and can be undone by calling {@link #undo()}.
      *
      * @param stack the stack
      * @param size  the size to remove
-     * @return whether the remove was successful for the full amount
+     * @return true if the remove was successful for the full amount, false otherwise
      */
     boolean trackedRemove(@Nonnull T stack, int size);
 
     /**
      * Decrements the count of that stack in the list.
-     * Keeps track of removed stacks and can be undone by calling {@link #undo()}
+     * Keeps track of removed stacks and can be undone by calling {@link #undo()}.
      *
      * @param stack the stack
-     * @return whether the remove was successful for the full amount
+     * @return true if the remove was successful for the full amount, false otherwise
      */
     default boolean trackedRemove(@Nonnull T stack) {
         return trackedRemove(stack, getSizeFromStack(stack));
@@ -112,7 +112,7 @@ public interface IStackList<T> {
     void clear();
 
     /**
-     * Removes all stacks with size zero.
+     * Removes all empty stacks.
      */
     void clean();
 

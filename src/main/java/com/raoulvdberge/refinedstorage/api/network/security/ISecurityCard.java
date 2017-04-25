@@ -13,7 +13,7 @@ public interface ISecurityCard {
 
     /**
      * @param permission the permission to check for
-     * @return whether the bound player has the given permission
+     * @return true if the bound player has the given permission, false otherwise
      */
     boolean hasPermission(Permission permission);
 }

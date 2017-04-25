@@ -5,13 +5,15 @@ import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+import javax.annotation.Nullable;
+
 public class CraftingMonitorElementInfo implements ICraftingMonitorElement {
     public static final String ID = "info";
 
     private ICraftingMonitorElement base;
     private String tooltip;
 
-    public CraftingMonitorElementInfo(ICraftingMonitorElement base, String tooltip) {
+    public CraftingMonitorElementInfo(ICraftingMonitorElement base, @Nullable String tooltip) {
         this.base = base;
         this.tooltip = tooltip;
     }
@@ -39,6 +41,7 @@ public class CraftingMonitorElementInfo implements ICraftingMonitorElement {
     }
 
     @Override
+    @Nullable
     public String getTooltip() {
         return tooltip;
     }

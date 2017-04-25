@@ -19,7 +19,7 @@ public interface ICraftingTaskFactory {
      * Returns a crafting task for a given NBT tag and pattern.
      *
      * @param network   the network
-     * @param stack     the stack to create task for
+     * @param stack     the stack to create a task for
      * @param pattern   the pattern
      * @param quantity  the quantity
      * @param automated whether this crafting task is created in an automated way
@@ -33,7 +33,7 @@ public interface ICraftingTaskFactory {
      * Returns a crafting task for a given NBT tag and pattern.
      *
      * @param network      the network
-     * @param stack        the stack to create task for
+     * @param stack        the stack to create a task for
      * @param patternChain the pattern chain
      * @param quantity     the quantity
      * @param automated    whether this crafting task is created in an automated way

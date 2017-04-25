@@ -7,7 +7,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import java.util.List;
 
 /**
- * Represents a reader writer handler. Can be for example: items, fluids, energy, ...
+ * Represents a reader writer handler.
+ * For example: items, fluids, energy, ...
  */
 public interface IReaderWriterHandler {
     /**
@@ -27,7 +28,7 @@ public interface IReaderWriterHandler {
     /**
      * @param reader     the reader
      * @param capability the capability
-     * @return whether we have the given capability for the reader
+     * @return true if we have the given capability for the reader, false otherwise
      */
     boolean hasCapabilityReader(IReader reader, Capability<?> capability);
 
@@ -41,7 +42,7 @@ public interface IReaderWriterHandler {
     /**
      * @param writer     the writer
      * @param capability the capability
-     * @return whether we have the given capability for the writer
+     * @return true if we have the given capability for the writer, false otherwise
      */
     boolean hasCapabilityWriter(IWriter writer, Capability<?> capability);
 

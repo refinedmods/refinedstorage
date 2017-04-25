@@ -150,7 +150,7 @@ public class StackListFluid implements IStackList<FluidStack> {
 
     @Override
     public IStackList<FluidStack> getOredicted() {
-        throw new IllegalAccessError("Fluid lists have no oredicted version!");
+        throw new UnsupportedOperationException("Fluid lists have no oredicted version!");
     }
 
     @Override

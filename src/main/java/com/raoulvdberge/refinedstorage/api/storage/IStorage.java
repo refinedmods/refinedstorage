@@ -8,7 +8,7 @@ import java.util.Collection;
 
 public interface IStorage<T> {
     /**
-     * @return stacks stored in this storage
+     * @return stacks stored in this storage, empty stacks are allowed
      */
     Collection<T> getStacks();
 
@@ -38,7 +38,7 @@ public interface IStorage<T> {
     T extract(@Nonnull T stack, int size, int flags, boolean simulate);
 
     /**
-     * @return the amount of fluids stored in this storage
+     * @return the amount stored in this storage
      */
     int getStored();
 

@@ -179,7 +179,7 @@ public class CraftingManager implements ICraftingManager {
                     ICraftingTask task = craftingTaskIterator.next();
 
                     if (task.update(usedCrafters)) {
-                        AutoCraftingEvent.fire(network, task.getRequested(), task.getQuantity());
+                        EventAutocraftingComplete.fire(network, task.getRequested(), task.getQuantity());
                         craftingTaskIterator.remove();
 
                         craftingTasksChanged = true;

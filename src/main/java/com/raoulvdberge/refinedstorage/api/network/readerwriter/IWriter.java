@@ -4,16 +4,16 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import net.minecraft.util.EnumFacing;
 
 /**
- * Represents a writer block in the world.
+ * Represents a writer network node.
  */
 public interface IWriter extends INetworkNode {
     /**
-     * @return the redstone strength this writer block is emitting
+     * @return the redstone strength that this writer is emitting
      */
     int getRedstoneStrength();
 
     /**
-     * @param strength the redstone strength to set to be emitted
+     * @param strength the redstone strength to be emitted
      */
     void setRedstoneStrength(int strength);
 

@@ -8,6 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nonnull;
+
 public class ItemWirelessFluidGrid extends ItemNetworkItem {
     public ItemWirelessFluidGrid() {
         super("wireless_fluid_grid");
@@ -33,6 +35,7 @@ public class ItemWirelessFluidGrid extends ItemNetworkItem {
     }
 
     @Override
+    @Nonnull
     public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
         return new NetworkItemWirelessFluidGrid(handler, player, stack);
     }

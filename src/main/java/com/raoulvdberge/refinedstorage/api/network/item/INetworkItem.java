@@ -6,7 +6,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 /**
- * Represents a network item.
+ * Represents a network item (an item that is connected to the network somehow).
+ * You do not implement this on the item itself, use an {@link INetworkItemProvider} for that.
+ * This is an object used separately from the actual item, since this stores the player that is using it.
  */
 public interface INetworkItem {
     /**
@@ -21,7 +23,7 @@ public interface INetworkItem {
      * @param player          the player
      * @param controllerWorld the world where the controller is in
      * @param hand            the hand
-     * @return whether the network item can be opened
+     * @return true if the network item can be opened, false otherwise
      */
     boolean onOpen(INetworkMaster network, EntityPlayer player, World controllerWorld, EnumHand hand);
 }

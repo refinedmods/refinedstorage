@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 
 /**
- * This registry holds factories for crafting monitor elements (for deserialization from the network).
+ * This registry holds factories for crafting monitor elements (for serialization and deserialization over the network).
  */
 public interface ICraftingMonitorElementRegistry {
     /**

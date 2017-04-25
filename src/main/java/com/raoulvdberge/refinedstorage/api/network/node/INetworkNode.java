@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.node;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +18,10 @@ public interface INetworkNode {
     int getEnergyUsage();
 
     /**
-     * @return the item of the node
+     * Returns the stack that is displayed in the controller GUI.
+     * Can be an empty stack if no stack should be shown.
+     *
+     * @return the item stack of this node
      */
     @Nonnull
     ItemStack getItemStack();
@@ -39,12 +41,14 @@ public interface INetworkNode {
     void onDisconnected(INetworkMaster network);
 
     /**
-     * @return true if this node can be treated as updatable, typically checks the redstone configuration
+     * If a node can be updated typically depends on the redstone configuration.
+     *
+     * @return true if this node can be treated as updatable, false otherwise
      */
     boolean canUpdate();
 
     /**
-     * @return the network
+     * @return the network, or null if this node is not connected to any network
      */
     @Nullable
     INetworkMaster getNetwork();

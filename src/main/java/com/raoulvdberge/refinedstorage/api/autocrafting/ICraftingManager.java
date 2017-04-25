@@ -10,6 +10,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * The crafting manager handles the storing, updating, adding and deleting of crafting tasks in a network.
+ */
 public interface ICraftingManager {
     /**
      * @return the crafting tasks in this network, do NOT modify this list
@@ -33,10 +36,10 @@ public interface ICraftingManager {
     /**
      * Creates a crafting task.
      *
-     * @param stack    the stack to create a task for
-     * @param pattern  the pattern
-     * @param quantity the quantity
-     * @param automated    whether this crafting task is created in an automated way
+     * @param stack     the stack to create a task for
+     * @param pattern   the pattern
+     * @param quantity  the quantity
+     * @param automated whether this crafting task is created in an automated way
      * @return the crafting task
      */
     ICraftingTask create(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated);
@@ -57,7 +60,7 @@ public interface ICraftingManager {
      *
      * @param stack      the stack
      * @param toSchedule the amount of tasks to schedule
-     * @param compare    the compare value to find patterns
+     * @param compare    the compare value to find patterns, see {@link IComparer}
      * @return the crafting task created, or null if no task is created
      */
     @Nullable
@@ -198,9 +201,19 @@ public interface ICraftingManager {
      */
     boolean hasPattern(ItemStack stack, int flags);
 
+    /**
+     * Updates the tasks in this manager.
+     */
     void update();
 
+    /**
+     * @param tag the tag to read from
+     */
     void readFromNBT(NBTTagCompound tag);
 
+    /**
+     * @param tag the tag to write to
+     * @return the written tag
+     */
     NBTTagCompound writeToNBT(NBTTagCompound tag);
 }

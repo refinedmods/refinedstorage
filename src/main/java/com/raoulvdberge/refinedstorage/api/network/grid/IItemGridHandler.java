@@ -19,7 +19,7 @@ public interface IItemGridHandler {
      *
      * @param player the player that is attempting the extraction
      * @param hash   the hash of the item we're trying to extract, see {@link IRSAPI#getItemStackHashCode(ItemStack)}
-     * @param flags  how we are extracting
+     * @param flags  how we are extracting, see the flags in {@link IItemGridHandler}
      */
     void onExtract(EntityPlayerMP player, int hash, int flags);
 
@@ -46,7 +46,7 @@ public interface IItemGridHandler {
      *
      * @param hash      the item stack hash
      * @param quantity  the amount of that item that we need a preview for
-     * @param noPreview whether the preview should show
+     * @param noPreview true if the crafting preview window shouldn't be shown, false otherwise
      */
     void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity, boolean noPreview);
 
@@ -55,15 +55,15 @@ public interface IItemGridHandler {
      *
      * @param player   the player that is requesting the crafting
      * @param stack    the {@link ItemStack} to request a craft for
-     * @param quantity the amount of that item that has to be crafted
+     * @param quantity the amount of the item that has to be crafted
      */
     void onCraftingRequested(EntityPlayerMP player, ItemStack stack, int quantity);
 
     /**
      * Called when a player wants to cancel a crafting task.
      *
-     * @param player the player that requested the cance
-     * @param id     the task id, or -1 to cancel all tasks
+     * @param player the player that requested the cancel
+     * @param id     the task id, or -1 to cancel all tasks that are in the network currently
      */
     void onCraftingCancelRequested(EntityPlayerMP player, int id);
 }

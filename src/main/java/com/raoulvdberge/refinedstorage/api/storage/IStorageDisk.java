@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 /**
  * Represents a storage disk.
  *
- * @param <T>
+ * @param <T> the storage
  */
 public interface IStorageDisk<T> extends IStorage<T> {
     /**
@@ -20,7 +20,7 @@ public interface IStorageDisk<T> extends IStorage<T> {
      * Determines if it can be inserted in a disk drive.
      *
      * @param stack the disk
-     * @return whether it's valid
+     * @return true if the disk is valid, false otherwise
      */
     boolean isValid(ItemStack stack);
 

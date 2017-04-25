@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 /**
  * Makes a network node accessible from a tile entity. Implement this as a capability.
  *
- * @param <T>
+ * @param <T> the network node
  */
 public interface INetworkNodeProxy<T extends INetworkNode> {
     /**

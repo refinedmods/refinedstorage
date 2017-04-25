@@ -9,7 +9,7 @@ public interface ISecurityManager {
     /**
      * @param permission the permission to check for
      * @param player     the player to check that permission for
-     * @return whether the player has the given permission
+     * @return true if the player has the given permission, false otherwise
      */
     boolean hasPermission(Permission permission, EntityPlayer player);
 

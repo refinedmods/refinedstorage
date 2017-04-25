@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.List;
 
 /**
- * Represents a reader writer channel in the RS network.
+ * Represents a reader writer channel.
  */
 public interface IReaderWriterChannel {
     /**

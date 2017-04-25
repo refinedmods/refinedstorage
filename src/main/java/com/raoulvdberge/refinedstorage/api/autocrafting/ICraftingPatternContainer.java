@@ -7,11 +7,11 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.List;
 
 /**
- * Represents the container where a crafting pattern is in.
+ * Represents a network node that contains crafting patterns.
  */
 public interface ICraftingPatternContainer {
     /**
-     * @return the amount of speed upgrades in the container.
+     * @return the amount of speed upgrades in the container
      */
     int getSpeedUpdateCount();
 
@@ -36,12 +36,12 @@ public interface ICraftingPatternContainer {
     BlockPos getPosition();
 
     /**
-     * @return whether this container is blocked
+     * @return true if this container is blocked, false otherwise
      */
     boolean isBlocked();
 
     /**
-     * @param blocked whether the container is blocked
+     * @param blocked whether the container should be blocked
      */
     void setBlocked(boolean blocked);
 }

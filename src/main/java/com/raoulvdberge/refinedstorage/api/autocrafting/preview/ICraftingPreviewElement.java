@@ -40,7 +40,7 @@ public interface ICraftingPreviewElement<T> {
     boolean hasMissing();
 
     /**
-     * @param buf byte buf to write to
+     * @param buf buffer to write to
      */
     void writeToByteBuf(ByteBuf buf);
 

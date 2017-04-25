@@ -10,7 +10,7 @@ public interface IReaderWriterHandlerRegistry {
     /**
      * Adds a factory to the registry.
      *
-     * @param id      the id of this reader writer handler. Analog to {@link IReaderWriterHandler#getId()}
+     * @param id      the id of this reader writer handler, as specified in {@link IReaderWriterHandler#getId()}
      * @param factory the factory
      */
     void add(String id, IReaderWriterHandlerFactory factory);

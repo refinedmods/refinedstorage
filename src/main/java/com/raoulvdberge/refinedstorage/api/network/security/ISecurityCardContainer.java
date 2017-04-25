@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.api.network.security;
 import java.util.List;
 
 /**
- * A tile that contains security cards.
+ * Represents a network node that contains security cards.
  */
 public interface ISecurityCardContainer {
     /**

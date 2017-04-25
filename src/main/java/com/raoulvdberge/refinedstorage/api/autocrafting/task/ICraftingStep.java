@@ -10,7 +10,7 @@ import java.util.Deque;
 import java.util.List;
 
 /**
- * Represents a step in a crafting task that.
+ * Represents a step in a crafting task.
  */
 public interface ICraftingStep {
     /**
@@ -19,7 +19,7 @@ public interface ICraftingStep {
     ICraftingPattern getPattern();
 
     /**
-     * @return the stacks to insert, no null entries
+     * @return the stacks to insert
      */
     List<ItemStack> getToInsert();
 
@@ -82,8 +82,8 @@ public interface ICraftingStep {
     int getReceivedOutput(ItemStack stack);
 
     /**
-     * The {@link ItemStack} given to it will be changed and contain the remainder
-     * The return value will only be true if the stack size is zero
+     * The {@link ItemStack} given to it will be changed and contain the remainder.
+     * The return value will only be true if the stack size is zero.
      *
      * @param stack the stack that was inserted in the storage system
      * @return true if this item belonged to the processable item and was fully used, false otherwise
