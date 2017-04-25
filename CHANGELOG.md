@@ -2,6 +2,7 @@
 
 ### 1.4.4
 - Fixed Disk Manipulator crashing due to empty stack (raoulvdberge)
+- Fixed issue where empty stacks show up in the system (raoulvdberge)
 
 ### 1.4.3
 - Updated Forge to 2282 (raoulvdberge)
