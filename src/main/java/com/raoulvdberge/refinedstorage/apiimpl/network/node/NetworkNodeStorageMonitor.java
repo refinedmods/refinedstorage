@@ -128,7 +128,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     public void extract(EntityPlayer player, EnumFacing side) {
-        if (type != IType.ITEMS || network != null || holder.getDirection() != side) {
+        if (type != IType.ITEMS || network == null || holder.getDirection() != side) {
             return;
         }
 
