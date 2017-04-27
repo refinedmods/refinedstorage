@@ -1,6 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.4.4
+- Updated Forge to 2284 (raoulvdberge)
 - Fixed Disk Manipulator crashing due to empty stack (raoulvdberge)
 - Fixed issue where empty stacks show up in the system (raoulvdberge)
 - Fixed Storage Monitor not respecting security settings (raoulvdberge)

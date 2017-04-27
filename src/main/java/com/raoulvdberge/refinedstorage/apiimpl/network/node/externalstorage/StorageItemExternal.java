@@ -32,7 +32,7 @@ public abstract class StorageItemExternal implements IStorage<ItemStack> {
         for (int i = 0; i < newStacks.size(); ++i) {
             ItemStack actual = newStacks.get(i);
 
-            // If we exceed the cache size, than that means this items is added
+            // If we exceed the cache size, than that means this item is added
             if (i >= cache.size()) {
                 if (!actual.isEmpty()) {
                     network.getItemStorageCache().add(actual, actual.getCount(), false);
