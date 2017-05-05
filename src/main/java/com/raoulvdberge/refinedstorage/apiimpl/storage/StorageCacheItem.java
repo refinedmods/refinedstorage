@@ -11,13 +11,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StorageCacheItem implements IStorageCache<ItemStack> {
     private INetworkMaster network;
-    private List<IStorage<ItemStack>> storages = Collections.synchronizedList(new ArrayList<>());
+    private List<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<ItemStack> list = API.instance().createItemStackList();
 
     public StorageCacheItem(INetworkMaster network) {

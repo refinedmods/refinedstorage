@@ -11,13 +11,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StorageCacheFluid implements IStorageCache<FluidStack> {
     private INetworkMaster network;
-    private List<IStorage<FluidStack>> storages = Collections.synchronizedList(new ArrayList<>());
+    private List<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<FluidStack> list = API.instance().createFluidStackList();
 
     public StorageCacheFluid(INetworkMaster network) {
