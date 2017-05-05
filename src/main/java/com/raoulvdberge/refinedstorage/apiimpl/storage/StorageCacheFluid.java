@@ -27,11 +27,9 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     public synchronized void invalidate() {
         storages.clear();
 
-        network.getNodeGraph()
-            .all()
-            .stream()
+        network.getNodeGraph().all().stream()
             .filter(node -> node.canUpdate() && node instanceof IStorageProvider)
-            .forEach(node -> ((IStorageProvider) node).addFluidStorages(this));
+            .forEach(node -> ((IStorageProvider) node).addFluidStorages(storages));
 
         list.clear();
 
@@ -79,10 +77,5 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     @Override
     public List<IStorage<FluidStack>> getStorages() {
         return storages;
-    }
-
-    @Override
-    public boolean addStorage(IStorage<FluidStack> storage) {
-        return !storages.contains(storage) && storages.add(storage);
     }
 }

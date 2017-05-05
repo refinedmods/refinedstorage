@@ -11,12 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class StorageItemExternal implements IStorage<ItemStack> {
-    protected NetworkNodeExternalStorage externalStorage;
     private List<ItemStack> cache;
-
-    public StorageItemExternal(NetworkNodeExternalStorage externalStorage) {
-        this.externalStorage = externalStorage;
-    }
 
     public abstract int getCapacity();
 
@@ -93,10 +88,5 @@ public abstract class StorageItemExternal implements IStorage<ItemStack> {
     @Override
     public int getCacheDelta(int storedPreInsertion, int size, @Nullable ItemStack remainder) {
         return remainder == null ? size : (size - remainder.getCount());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof StorageItemExternal && externalStorage.getFacingTilePosition().equals(((StorageItemExternal) o).externalStorage.getFacingTilePosition());
     }
 }

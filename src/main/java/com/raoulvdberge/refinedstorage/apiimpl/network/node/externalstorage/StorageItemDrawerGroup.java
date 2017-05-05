@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class StorageItemDrawerGroup extends StorageItemExternal {
+    private NetworkNodeExternalStorage externalStorage;
     private Supplier<IDrawerGroup> groupSupplier;
 
     public StorageItemDrawerGroup(NetworkNodeExternalStorage externalStorage, Supplier<IDrawerGroup> groupSupplier) {
-        super(externalStorage);
-
+        this.externalStorage = externalStorage;
         this.groupSupplier = groupSupplier;
     }
 

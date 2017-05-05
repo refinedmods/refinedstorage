@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class StorageItemItemHandler extends StorageItemExternal {
+    private NetworkNodeExternalStorage externalStorage;
     private Supplier<IItemHandler> handlerSupplier;
     private AccessType lockedAccessType = AccessType.INSERT_EXTRACT;
 
     public StorageItemItemHandler(NetworkNodeExternalStorage externalStorage, Supplier<IItemHandler> handlerSupplier) {
-        super(externalStorage);
-
+        this.externalStorage = externalStorage;
         this.handlerSupplier = handlerSupplier;
 
         if (externalStorage.getFacingTile().getBlockType().getUnlocalizedName().equals("tile.ExtraUtils2:TrashCan")) {

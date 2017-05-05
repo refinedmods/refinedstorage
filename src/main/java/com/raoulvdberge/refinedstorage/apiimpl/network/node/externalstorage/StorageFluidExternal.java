@@ -120,9 +120,4 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
     public void updateCacheForcefully() {
         cache = RSUtils.copyStack(getContents());
     }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof StorageFluidExternal && externalStorage.getFacingTilePosition().equals(((StorageFluidExternal) o).externalStorage.getFacingTilePosition());
-    }
 }

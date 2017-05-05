@@ -22,13 +22,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class StorageItemCyclops extends StorageItemExternal {
+    private NetworkNodeExternalStorage externalStorage;
     private EnumFacing opposite;
     private Supplier<InventoryTileEntityBase> cyclopsInv;
     private int oldInventoryHash = -1;
 
     public StorageItemCyclops(NetworkNodeExternalStorage externalStorage) {
-        super(externalStorage);
-
+        this.externalStorage = externalStorage;
         this.opposite = externalStorage.getHolder().getDirection().getOpposite();
         this.cyclopsInv = () -> {
             TileEntity f = externalStorage.getFacingTile();
@@ -40,7 +40,6 @@ public class StorageItemCyclops extends StorageItemExternal {
     @Override
     public void detectChanges(INetworkMaster network) {
         InventoryTileEntityBase inv = cyclopsInv.get();
-
         if (inv != null) {
             int inventoryHash = inv.getInventoryHash();
 
@@ -119,9 +118,9 @@ public class StorageItemCyclops extends StorageItemExternal {
         }
     }
 
-    public static boolean isValid(TileEntity facingTile, EnumFacing facing) {
-        return facingTile instanceof InventoryTileEntityBase
-            && (SlotlessItemHandlerHelper.isSlotless(facingTile, facing)
-            || ((InventoryTileEntityBase) facingTile).getInventory() instanceof SimpleInventory);
+    public static boolean isValid(TileEntity facingTE, EnumFacing facing) {
+        return facingTE instanceof InventoryTileEntityBase
+            && (SlotlessItemHandlerHelper.isSlotless(facingTE, facing)
+            || ((InventoryTileEntityBase) facingTE).getInventory() instanceof SimpleInventory);
     }
 }

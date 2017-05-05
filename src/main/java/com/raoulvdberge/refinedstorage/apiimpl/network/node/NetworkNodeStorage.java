@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
@@ -22,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
     public static final String ID = "storage";
@@ -114,14 +115,12 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public void addItemStorages(IStorageCache<ItemStack> cache) {
-        if (storage != null) {
-            cache.addStorage(storage);
-        }
+    public void addItemStorages(List<IStorage<ItemStack>> storages) {
+        storages.add(storage);
     }
 
     @Override
-    public void addFluidStorages(IStorageCache<FluidStack> cache) {
+    public void addFluidStorages(List<IStorage<FluidStack>> storages) {
         // NO OP
     }
 

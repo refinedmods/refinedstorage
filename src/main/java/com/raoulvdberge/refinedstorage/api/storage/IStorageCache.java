@@ -23,6 +23,10 @@ public interface IStorageCache<T> {
 
     /**
      * Adds a stack to the cache.
+     * <p>
+     * Note that this doesn't modify any of the connected storages, but just modifies the cache.
+     * Use {@link IStorage#insert(T, int, boolean)} to add a stack to an actual storage.
+     * <p>
      * Will merge it with another stack if it already exists.
      *
      * @param stack      the stack to add, do NOT modify
@@ -33,6 +37,9 @@ public interface IStorageCache<T> {
 
     /**
      * Removes a stack from the cache.
+     * <p>
+     * Note that this doesn't modify any of the connected storages, but just modifies the cache.
+     * Use {@link IStorage#extract(T, int, int, boolean)} to remove a stack from an actual storage.
      *
      * @param stack the stack to remove, do NOT modify
      * @param size  the size to remove
@@ -51,16 +58,7 @@ public interface IStorageCache<T> {
     IStackList<T> getList();
 
     /**
-     * @return the storages in this cache, do NOT modify
+     * @return the storages connected to this network
      */
     List<IStorage<T>> getStorages();
-
-    /**
-     * Adds a storage to the cache.
-     * Will not add duplicate storages, it checks this with Object#equals.
-     *
-     * @param storage the storage
-     * @return true if the storage was added successfully, false otherwise
-     */
-    boolean addStorage(IStorage<T> storage);
 }
