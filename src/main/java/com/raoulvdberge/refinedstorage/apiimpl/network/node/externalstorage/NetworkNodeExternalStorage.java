@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
@@ -229,13 +229,13 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public void addItemStorages(List<IStorage<ItemStack>> storages) {
-        storages.addAll(this.itemStorages);
+    public void addItemStorages(IStorageCache<ItemStack> cache) {
+        itemStorages.removeIf(storage -> !cache.addStorage(storage));
     }
 
     @Override
-    public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        storages.addAll(this.fluidStorages);
+    public void addFluidStorages(IStorageCache<FluidStack> cache) {
+        fluidStorages.removeIf(storage -> !cache.addStorage(storage));
     }
 
     @Override

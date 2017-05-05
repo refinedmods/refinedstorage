@@ -27,9 +27,11 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     public synchronized void invalidate() {
         storages.clear();
 
-        network.getNodeGraph().all().stream()
+        network.getNodeGraph()
+            .all()
+            .stream()
             .filter(node -> node.canUpdate() && node instanceof IStorageProvider)
-            .forEach(node -> ((IStorageProvider) node).addItemStorages(storages));
+            .forEach(node -> ((IStorageProvider) node).addItemStorages(this));
 
         list.clear();
 
@@ -79,5 +81,10 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     @Override
     public List<IStorage<ItemStack>> getStorages() {
         return storages;
+    }
+
+    @Override
+    public boolean addStorage(IStorage<ItemStack> storage) {
+        return !storages.contains(storage) && storages.add(storage);
     }
 }

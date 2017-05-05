@@ -21,7 +21,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.List;
 import java.util.function.Predicate;
 
 public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
@@ -76,8 +75,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
-    private IStorageDisk[] itemStorages = new IStorageDisk[8];
-    private IStorageDisk[] fluidStorages = new IStorageDisk[8];
+    private IStorageDisk<ItemStack>[] itemStorages = new IStorageDisk[8];
+    private IStorageDisk<FluidStack>[] fluidStorages = new IStorageDisk[8];
 
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
@@ -136,19 +135,19 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public void addItemStorages(List<IStorage<ItemStack>> storages) {
-        for (IStorage<ItemStack> storage : this.itemStorages) {
+    public void addItemStorages(IStorageCache<ItemStack> cache) {
+        for (IStorage<ItemStack> storage : itemStorages) {
             if (storage != null) {
-                storages.add(storage);
+                cache.addStorage(storage);
             }
         }
     }
 
     @Override
-    public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        for (IStorage<FluidStack> storage : this.fluidStorages) {
+    public void addFluidStorages(IStorageCache<FluidStack> cache) {
+        for (IStorage<FluidStack> storage : fluidStorages) {
             if (storage != null) {
-                storages.add(storage);
+                cache.addStorage(storage);
             }
         }
     }

@@ -15,11 +15,11 @@ import java.util.Collections;
 import java.util.function.Supplier;
 
 public class StorageItemDrawer extends StorageItemExternal {
-    private NetworkNodeExternalStorage externalStorage;
     private Supplier<IDrawer> drawerSupplier;
 
     public StorageItemDrawer(NetworkNodeExternalStorage externalStorage, Supplier<IDrawer> drawerSupplier) {
-        this.externalStorage = externalStorage;
+        super(externalStorage);
+        
         this.drawerSupplier = drawerSupplier;
     }
 

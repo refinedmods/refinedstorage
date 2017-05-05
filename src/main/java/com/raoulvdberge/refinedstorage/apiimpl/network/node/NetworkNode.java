@@ -162,8 +162,12 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         }
     }
 
+    public BlockPos getFacingTilePosition() {
+        return holder.pos().offset(holder.getDirection());
+    }
+
     public TileEntity getFacingTile() {
-        return holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
+        return holder.world().getTileEntity(getFacingTilePosition());
     }
 
     public IItemHandler getDrops() {

@@ -3,19 +3,17 @@ package com.raoulvdberge.refinedstorage.api.storage;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.List;
-
 /**
  * Represents a node that provides the network with storage.
  */
 public interface IStorageProvider {
     /**
-     * @param storages the item storages
+     * @param cache the storage cache
      */
-    void addItemStorages(List<IStorage<ItemStack>> storages);
+    void addItemStorages(IStorageCache<ItemStack> cache);
 
     /**
-     * @param storages the fluid storages
+     * @param cache the storage cache
      */
-    void addFluidStorages(List<IStorage<FluidStack>> storages);
+    void addFluidStorages(IStorageCache<FluidStack> cache);
 }
