@@ -591,6 +591,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             updateJEI();
 
             sortItems();
+            keyHandled = true;
         } else if (searchField.isFocused() && (keyCode == Keyboard.KEY_UP || keyCode == Keyboard.KEY_DOWN || keyCode == Keyboard.KEY_RETURN)) {
             if (keyCode == Keyboard.KEY_UP) {
                 updateSearchHistory(-1);
@@ -603,10 +604,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                     searchField.setFocused(false);
                 }
             }
+            keyHandled = true;
         } else if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
             searchField.setFocused(!searchField.isFocused());
 
             saveHistory();
+            keyHandled = true;
         } else {
             super.keyTyped(character, keyCode);
         }
