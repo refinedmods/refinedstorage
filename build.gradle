@@ -28,7 +28,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.11.2-13.20.0.2284"
+    version = "1.11.2-13.20.0.2296"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20170401"
@@ -39,7 +39,7 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
     maven {
-        url "http://maven.epoxide.xyz"
+        url "http://maven.epoxide.org"
     }
     maven {
         url "http://maven.amadornes.com"
@@ -48,15 +48,20 @@ repositories {
         name "Cyclops Repo"
         url "https://dl.bintray.com/cyclopsmc/dev/"
     }
+	maven {
+        name = "oc"
+        url = "http://maven.cil.li/"
+    }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.11.2:4.3.3.269:api"
-    runtime "mezz.jei:jei_1.11.2:4.3.3.269"
-    deobfCompile "net.darkhax.tesla:Tesla:1.11-1.3.0.51"
-    deobfCompile "org.cyclops.cyclopscore:CyclopsCore:1.11.2-0.10.0-516"
-    deobfCompile "org.cyclops.commoncapabilities:CommonCapabilities:1.11.2-1.3.1-95"
-    deobfCompile "MCMultiPart2:MCMultiPart-exp:2.0.0_18"
+    deobfCompile "mezz.jei:jei_1.11.2:4.3.4.273:api"
+    runtime "mezz.jei:jei_1.11.2:4.3.4.273"
+    deobfCompile "net.darkhax.tesla:Tesla:1.11-1.3.0.52"
+    deobfCompile "org.cyclops.cyclopscore:CyclopsCore:1.11.2-0.10.2-542"
+    deobfCompile "org.cyclops.commoncapabilities:CommonCapabilities:1.11.2-1.3.2-107"
+    deobfCompile "MCMultiPart2:MCMultiPart-exp:2.0.0_19"
+	deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.0.14:api"
 }
 
 processResources {
