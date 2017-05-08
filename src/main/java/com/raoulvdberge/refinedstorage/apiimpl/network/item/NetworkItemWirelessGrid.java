@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.item.ItemNetworkItem;
+import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -36,7 +36,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
 
     @Override
     public boolean onOpen(INetworkMaster network, EntityPlayer player, World controllerWorld, EnumHand hand) {
-        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemNetworkItem.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessGridOpenUsage) {
+        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessGridOpenUsage) {
             return false;
         }
 
@@ -56,7 +56,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
     }
 
     public void drainEnergy(int energy) {
-        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemNetworkItem.TYPE_CREATIVE) {
+        if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {
             IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
             energyStorage.extractEnergy(energy, false);

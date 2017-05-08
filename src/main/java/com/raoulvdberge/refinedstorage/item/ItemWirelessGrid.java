@@ -16,8 +16,8 @@ public class ItemWirelessGrid extends ItemNetworkItem {
     }
 
     @Override
-    public void initializeDefaults(NBTTagCompound tag) {
-        super.initializeDefaults(tag);
+    public void initDefaults(NBTTagCompound tag) {
+        super.initDefaults(tag);
 
         tag.setInteger(NetworkNodeGrid.NBT_VIEW_TYPE, NetworkNodeGrid.VIEW_TYPE_NORMAL);
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, NetworkNodeGrid.SORTING_DIRECTION_DESCENDING);

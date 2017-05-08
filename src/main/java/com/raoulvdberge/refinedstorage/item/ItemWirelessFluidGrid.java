@@ -16,8 +16,8 @@ public class ItemWirelessFluidGrid extends ItemNetworkItem {
     }
 
     @Override
-    public void initializeDefaults(NBTTagCompound tag) {
-        super.initializeDefaults(tag);
+    public void initDefaults(NBTTagCompound tag) {
+        super.initDefaults(tag);
 
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, NetworkNodeGrid.SORTING_DIRECTION_DESCENDING);
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, NetworkNodeGrid.SORTING_TYPE_QUANTITY);

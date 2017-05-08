@@ -17,8 +17,8 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     }
 
     @Override
-    public void initializeDefaults(NBTTagCompound tag) {
-        super.initializeDefaults(tag);
+    public void initDefaults(NBTTagCompound tag) {
+        super.initDefaults(tag);
 
         tag.setBoolean(NBT_VIEW_AUTOMATED, true);
     }
