@@ -23,29 +23,12 @@ import javax.annotation.Nullable;
 public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, INetworkNodeHolder, IRedstoneConfigurable, IWrenchable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
-    private NBTTagCompound legacyTagToRead;
+    private NBTTagCompound legacyTag;
+
     protected static final String NBT_ACTIVE = "Active";
 
     public TileNode() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
-    }
-
-    @Override
-    public void update() {
-        if (!getWorld().isRemote) {
-            if (legacyTagToRead != null) {
-                getNode().read(legacyTagToRead);
-                getNode().markDirty();
-
-                legacyTagToRead = null;
-
-                markDirty();
-            }
-
-            getNode().update();
-        }
-
-        super.update();
     }
 
     @Override
@@ -82,21 +65,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        // Ugly code for checking if this is a legacy tile. Sue me.
-        boolean hasMeta = tag.hasKey("x") && tag.hasKey("y") && tag.hasKey("z") && tag.hasKey("id");
-        boolean hasForgeData = tag.hasKey("ForgeData");
-        boolean hasForgeCaps = tag.hasKey("ForgeCaps");
-
-        // + 1 because of "Direction".
-        if (tag.getSize() == 4 + 1 && hasMeta) {
-            // NO OP
-        } else if (tag.getSize() == 5 + 1 && hasMeta && (hasForgeData || hasForgeCaps)) {
-            // NO OP
-        } else if (tag.getSize() == 6 + 1 && hasMeta && hasForgeData && hasForgeCaps) {
-            // NO OP
-        } else {
-            legacyTagToRead = tag;
-        }
+        this.legacyTag = tag;
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
@@ -135,7 +104,34 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             node.setHolder(this);
         }
 
+        if (legacyTag != null) {
+            doLegacyCheck(node);
+        }
+
         return (N) node;
+    }
+
+    private void doLegacyCheck(NetworkNode node) {
+        // Ugly code for checking if this is a legacy tile. Sue me.
+        boolean hasMeta = legacyTag.hasKey("x") && legacyTag.hasKey("y") && legacyTag.hasKey("z") && legacyTag.hasKey("id");
+        boolean hasForgeData = legacyTag.hasKey("ForgeData");
+        boolean hasForgeCaps = legacyTag.hasKey("ForgeCaps");
+
+        // + 1 because of "Direction".
+        if (legacyTag.getSize() == 4 + 1 && hasMeta) {
+            // NO OP
+        } else if (legacyTag.getSize() == 5 + 1 && hasMeta && (hasForgeData || hasForgeCaps)) {
+            // NO OP
+        } else if (legacyTag.getSize() == 6 + 1 && hasMeta && hasForgeData && hasForgeCaps) {
+            // NO OP
+        } else {
+            node.read(legacyTag);
+            node.markDirty();
+
+            markDirty();
+        }
+
+        this.legacyTag = null;
     }
 
     public abstract N createNode();

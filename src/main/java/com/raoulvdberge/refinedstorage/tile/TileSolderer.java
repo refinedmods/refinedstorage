@@ -79,7 +79,7 @@ public class TileSolderer extends TileNode<NetworkNodeSolderer> {
     }
 
     @Override
-    protected boolean canUpdateCauseRerender(NBTTagCompound tag) {
+    protected boolean canCauseRenderUpdate(NBTTagCompound tag) {
         EnumFacing receivedDirection = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
 
         return receivedDirection != getDirection();

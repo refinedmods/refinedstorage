@@ -8,29 +8,18 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public abstract class TileBase extends TileEntity implements ITickable {
+public abstract class TileBase extends TileEntity {
     protected static final String NBT_DIRECTION = "Direction";
 
     private EnumFacing direction = EnumFacing.NORTH;
 
     protected TileDataManager dataManager = new TileDataManager(this);
-    protected int ticks = 0;
-
-    @Override
-    public void update() {
-        if (!getWorld().isRemote) {
-            ++ticks;
-
-            dataManager.detectAndSendChanges();
-        }
-    }
 
     public void setDirection(EnumFacing direction) {
         this.direction = direction;
@@ -65,16 +54,16 @@ public abstract class TileBase extends TileEntity implements ITickable {
     }
 
     public void readUpdate(NBTTagCompound tag) {
-        boolean doRerender = canUpdateCauseRerender(tag);
+        boolean doRender = canCauseRenderUpdate(tag);
 
         direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
 
-        if (doRerender) {
+        if (doRender) {
             RSUtils.updateBlock(getWorld(), pos);
         }
     }
 
-    protected boolean canUpdateCauseRerender(NBTTagCompound tag) {
+    protected boolean canCauseRenderUpdate(NBTTagCompound tag) {
         return true;
     }
 

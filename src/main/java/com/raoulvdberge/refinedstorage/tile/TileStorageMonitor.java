@@ -60,7 +60,7 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
     }
 
     @Override
-    protected boolean canUpdateCauseRerender(NBTTagCompound tag) {
+    protected boolean canCauseRenderUpdate(NBTTagCompound tag) {
         EnumFacing receivedDirection = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
         boolean receivedActive = tag.getBoolean(NBT_ACTIVE);
 

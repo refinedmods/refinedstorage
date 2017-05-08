@@ -5,6 +5,7 @@
 - Fixed Crafting Tweaks buttons positioned wrongly (blay09)
 - Fixed Crafting Tweaks keybindings interfering with RS keybindings (blay09)
 - Fixed crash when updating storages (raoulvdberge)
+- Removed ticking tile entities, every tile entity in RS is non-ticking now (raoulvdberge)
 
 ### 1.4.4
 - Updated Forge to 2284 (raoulvdberge)

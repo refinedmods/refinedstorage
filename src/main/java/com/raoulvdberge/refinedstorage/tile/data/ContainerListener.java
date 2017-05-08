@@ -16,7 +16,36 @@ public class ContainerListener {
             TileBase tile = ((ContainerBase) container).getTile();
 
             if (tile != null && !tile.getWorld().isRemote) {
-                tile.getDataManager().sendParametersTo((EntityPlayerMP) e.getEntityPlayer());
+                TileDataManager manager = tile.getDataManager();
+
+                manager.sendParametersTo((EntityPlayerMP) e.getEntityPlayer());
+
+                int watchers = manager.getWatchers();
+
+                manager.setWatchers(watchers + 1);
+
+                if (watchers == 0) {
+                    Thread listenerThread = new Thread(() -> {
+                        while (manager.getWatchers() > 0) {
+                            manager.detectAndSendChanges();
+                        }
+                    }, "RS tile listener " + tile.getPos().getX() + ", " + tile.getPos().getY() + ", " + tile.getPos().getZ());
+
+                    listenerThread.start();
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onContainerClose(PlayerContainerEvent.Close e) {
+        Container container = e.getContainer();
+
+        if (container instanceof ContainerBase) {
+            TileBase tile = ((ContainerBase) container).getTile();
+
+            if (tile != null && !tile.getWorld().isRemote) {
+                tile.getDataManager().setWatchers(tile.getDataManager().getWatchers() - 1);
             }
         }
     }

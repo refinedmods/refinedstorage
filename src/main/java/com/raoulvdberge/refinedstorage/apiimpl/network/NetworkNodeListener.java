@@ -12,8 +12,24 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class NetworkNodeListener {
+    @SubscribeEvent
+    public void onWorldTick(TickEvent.WorldTickEvent e) {
+        e.world.profiler.startSection("network node ticking");
+
+        if (e.phase == TickEvent.Phase.END) {
+            for (INetworkNode node : API.instance().getNetworkNodeManager(e.world.provider.getDimension()).all()) {
+                if (e.world.isBlockLoaded(node.getPos())) {
+                    node.update();
+                }
+            }
+        }
+
+        e.world.profiler.endSection();
+    }
+
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.PlaceEvent e) {
         if (!e.getWorld().isRemote) {

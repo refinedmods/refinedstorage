@@ -24,6 +24,8 @@ public class TileDataManager {
     private List<TileDataParameter> watchedParameters = new ArrayList<>();
     private List<Object> watchedParametersCache = new ArrayList<>();
 
+    private int watchers = 0;
+
     public static void registerParameter(TileDataParameter<?> parameter) {
         parameter.setId(LAST_ID);
 
@@ -42,6 +44,14 @@ public class TileDataManager {
 
     public TileDataManager(TileEntity tile) {
         this.tile = tile;
+    }
+
+    public int getWatchers() {
+        return watchers;
+    }
+
+    public void setWatchers(int watchers) {
+        this.watchers = Math.max(0, watchers);
     }
 
     public void addParameter(TileDataParameter<?> parameter) {

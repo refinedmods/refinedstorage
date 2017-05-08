@@ -57,6 +57,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -69,7 +70,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class TileController extends TileBase implements INetworkMaster, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
+public class TileController extends TileBase implements ITickable, INetworkMaster, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     public static final TileDataParameter<Integer> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
@@ -262,8 +263,6 @@ public class TileController extends TileBase implements INetworkMaster, IRedston
                 RSUtils.updateBlock(world, pos);
             }
         }
-
-        super.update();
     }
 
     @Override
