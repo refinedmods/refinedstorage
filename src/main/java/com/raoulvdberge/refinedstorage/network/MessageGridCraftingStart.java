@@ -40,8 +40,8 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
         if (container instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getNetwork() != null) {
-                grid.getNetwork().getItemGridHandler().onCraftingRequested(player, message.stack, message.quantity);
+            if (grid.getItemHandler() != null) {
+                grid.getItemHandler().onCraftingRequested(player, message.stack, message.quantity);
             }
         }
     }

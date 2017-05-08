@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
@@ -44,7 +43,7 @@ public class ContainerGrid extends ContainerBase {
         this.inventoryItemStacks.clear();
 
         int headerAndSlots = getTabDelta() + display.getHeader() + (display.getVisibleRows() * 18);
-        
+
         if (grid.getType() != GridType.FLUID) {
             for (int i = 0; i < 4; ++i) {
                 addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i) + getTabDelta()));
@@ -182,18 +181,21 @@ public class ContainerGrid extends ContainerBase {
                         }
                     }
 
-                    if (grid.getNetwork() != null) {
-                        IItemGridHandler itemHandler = grid.getNetwork().getItemGridHandler();
-                        IFluidGridHandler fluidHandler = grid.getNetwork().getFluidGridHandler();
+                    if (grid.getType() == GridType.FLUID) {
+                        IFluidGridHandler fluidHandler = grid.getFluidHandler();
 
-                        if (grid.getType() != GridType.FLUID && itemHandler != null) {
-                            slot.putStack(RSUtils.transformNullToEmpty(itemHandler.onInsert((EntityPlayerMP) player, stack)));
-                        } else if (grid.getType() == GridType.FLUID && fluidHandler != null) {
-                            slot.putStack(RSUtils.transformNullToEmpty(fluidHandler.onInsert((EntityPlayerMP) player, stack)));
+                        if (fluidHandler != null) {
+                            slot.putStack(fluidHandler.onShiftClick((EntityPlayerMP) player, stack));
                         }
+                    } else {
+                        IItemGridHandler itemHandler = grid.getItemHandler();
 
-                        detectAndSendChanges();
+                        if (itemHandler != null) {
+                            slot.putStack(itemHandler.onShiftClick((EntityPlayerMP) player, stack));
+                        }
                     }
+
+                    detectAndSendChanges();
                 }
             }
         }

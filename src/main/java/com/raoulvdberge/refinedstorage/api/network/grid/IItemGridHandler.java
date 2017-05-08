@@ -42,6 +42,15 @@ public interface IItemGridHandler {
     void onInsertHeldItem(EntityPlayerMP player, boolean single);
 
     /**
+     * Called when the player shift clicks an item into the grid.
+     *
+     * @param player the player
+     * @param stack  the stack
+     * @return the remainder stack
+     */
+    ItemStack onShiftClick(EntityPlayerMP player, ItemStack stack);
+
+    /**
      * Called when a player requests the crafting preview window to be opened.
      *
      * @param hash      the item stack hash

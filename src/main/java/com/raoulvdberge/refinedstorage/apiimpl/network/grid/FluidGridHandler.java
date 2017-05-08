@@ -92,4 +92,9 @@ public class FluidGridHandler implements IFluidGridHandler {
         player.inventory.setItemStack(RSUtils.transformNullToEmpty(onInsert(player, player.inventory.getItemStack())));
         player.updateHeldItem();
     }
+
+    @Override
+    public ItemStack onShiftClick(EntityPlayerMP player, ItemStack container) {
+        return RSUtils.transformNullToEmpty(onInsert(player, container));
+    }
 }

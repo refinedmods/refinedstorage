@@ -26,8 +26,8 @@ public class MessageGridFluidInsertHeld extends MessageHandlerPlayerToServer<Mes
         if (container instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getNetwork() != null) {
-                grid.getNetwork().getFluidGridHandler().onInsertHeldContainer(player);
+            if (grid.getFluidHandler() != null) {
+                grid.getFluidHandler().onInsertHeldContainer(player);
             }
         }
     }

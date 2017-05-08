@@ -34,8 +34,8 @@ public class MessageGridItemInsertHeld extends MessageHandlerPlayerToServer<Mess
         if (container instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getNetwork() != null) {
-                grid.getNetwork().getItemGridHandler().onInsertHeldItem(player, message.single);
+            if (grid.getItemHandler() != null) {
+                grid.getItemHandler().onInsertHeldItem(player, message.single);
             }
         }
     }

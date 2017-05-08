@@ -150,6 +150,11 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
+    public ItemStack onShiftClick(EntityPlayerMP player, ItemStack stack) {
+        return RSUtils.transformNullToEmpty(onInsert(player, stack));
+    }
+
+    @Override
     public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;

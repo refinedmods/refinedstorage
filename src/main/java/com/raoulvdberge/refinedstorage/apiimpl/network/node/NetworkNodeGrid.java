@@ -52,7 +52,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     public static final int SORTING_TYPE_QUANTITY = 0;
     public static final int SORTING_TYPE_NAME = 1;
-    public static final int SORTING_TYPE_ID= 2;
+    public static final int SORTING_TYPE_ID = 2;
 
     public static final int SEARCH_BOX_MODE_NORMAL = 0;
     public static final int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;

@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
@@ -19,6 +21,16 @@ public interface IGrid {
 
     @Nullable
     INetworkMaster getNetwork();
+
+    @Nullable
+    default IItemGridHandler getItemHandler() {
+        return getNetwork() != null ? getNetwork().getItemGridHandler() : null;
+    }
+
+    @Nullable
+    default IFluidGridHandler getFluidHandler() {
+        return getNetwork() != null ? getNetwork().getFluidGridHandler() : null;
+    }
 
     String getGuiTitle();
 

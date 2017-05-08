@@ -38,8 +38,8 @@ public class MessageGridFluidPull extends MessageHandlerPlayerToServer<MessageGr
         if (container instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getNetwork() != null) {
-                grid.getNetwork().getFluidGridHandler().onExtract(player, message.hash, message.shift);
+            if (grid.getFluidHandler() != null) {
+                grid.getFluidHandler().onExtract(player, message.hash, message.shift);
             }
         }
     }

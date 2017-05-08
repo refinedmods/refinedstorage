@@ -38,8 +38,8 @@ public class MessageGridItemPull extends MessageHandlerPlayerToServer<MessageGri
         if (container instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getNetwork() != null) {
-                grid.getNetwork().getItemGridHandler().onExtract(player, message.hash, message.flags);
+            if (grid.getItemHandler() != null) {
+                grid.getItemHandler().onExtract(player, message.hash, message.flags);
             }
         }
     }

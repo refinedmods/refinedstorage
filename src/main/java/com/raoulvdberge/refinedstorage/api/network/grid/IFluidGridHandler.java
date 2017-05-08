@@ -35,4 +35,13 @@ public interface IFluidGridHandler {
      * @param player the player that is attempting the insert
      */
     void onInsertHeldContainer(EntityPlayerMP player);
+
+    /**
+     * Called when the player shift clicks a container into the grid.
+     *
+     * @param player    the player
+     * @param container the container
+     * @return the remainder container
+     */
+    ItemStack onShiftClick(EntityPlayerMP player, ItemStack container);
 }

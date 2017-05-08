@@ -42,8 +42,8 @@ public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<Mes
         if (container instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getNetwork() != null) {
-                grid.getNetwork().getItemGridHandler().onCraftingPreviewRequested(player, message.hash, message.quantity, message.noPreview);
+            if (grid.getItemHandler() != null) {
+                grid.getItemHandler().onCraftingPreviewRequested(player, message.hash, message.quantity, message.noPreview);
             }
         }
     }
