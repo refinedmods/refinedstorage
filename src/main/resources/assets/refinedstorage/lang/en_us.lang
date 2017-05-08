@@ -75,6 +75,7 @@ gui.refinedstorage:security_manager.permission.4.tooltip=Adding or removing devi
 gui.refinedstorage:security_manager.permission.5=Security
 gui.refinedstorage:security_manager.permission.5.tooltip=Ability to change security options
 gui.refinedstorage:storage_monitor=Storage Monitor
+gui.refinedstorage:portable_grid=Portable Grid
 
 misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
@@ -284,3 +285,5 @@ item.refinedstorage:wrench.mode.1=Configuration
 item.refinedstorage:wrench.mode.2=Dismantling
 item.refinedstorage:security_card.name=Security Card
 item.refinedstorage:security_card.owner=Bound to: %s
+item.refinedstorage:portable_grid.0.name=Portable Grid
+item.refinedstorage:portable_grid.1.name=Creative Portable Grid

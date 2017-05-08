@@ -3,11 +3,13 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,14 +47,24 @@ public class ContainerGrid extends ContainerBase {
         int headerAndSlots = getTabDelta() + display.getHeader() + (display.getVisibleRows() * 18);
 
         if (grid.getType() != GridType.FLUID) {
+            int yStart = 6;
+
+            if (grid instanceof PortableGrid) {
+                yStart = 38;
+            }
+
             for (int i = 0; i < 4; ++i) {
-                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, 6 + (18 * i) + getTabDelta()));
+                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, yStart + (18 * i) + getTabDelta()));
             }
         }
 
         if (grid.getType() == GridType.PATTERN) {
             addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 152, headerAndSlots + 4));
             addSlotToContainer(new SlotOutput(((NetworkNodeGrid) grid).getPatterns(), 1, 152, headerAndSlots + 40));
+        }
+
+        if (grid instanceof PortableGrid) {
+            addSlotToContainer(new SlotItemHandler(((PortableGrid) grid).getDisk(), 0, 204, 6 + getTabDelta()));
         }
 
         addPlayerInventory(8, display.getYPlayerInventory());
@@ -162,7 +174,7 @@ public class ContainerGrid extends ContainerBase {
 
                             return ItemStack.EMPTY;
                         }
-                    } else if (grid.getType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) {
+                    } else if ((grid.getType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof PortableGrid && stack.getItem() instanceof IStorageDiskProvider)) {
                         int startIndex = 4;
                         int endIndex = startIndex + 1;
 
@@ -177,6 +189,16 @@ public class ContainerGrid extends ContainerBase {
 
                             detectAndSendChanges();
 
+                            // For some reason it doesn't detect when moving the disk from disk inventory to player inventory...
+                            if (grid instanceof PortableGrid && slotIndex == 4) {
+                                ((PortableGrid) grid).getDisk().setStackInSlot(0, ItemStack.EMPTY);
+                            }
+
+                            return ItemStack.EMPTY;
+                        }
+
+                        // When we shift click a storage disk in a portable grid and our inventory is full, the disk can't go in the storage!
+                        if (grid instanceof PortableGrid) {
                             return ItemStack.EMPTY;
                         }
                     }
@@ -205,6 +227,6 @@ public class ContainerGrid extends ContainerBase {
 
     @Override
     protected boolean isHeldItemDisabled() {
-        return grid instanceof WirelessGrid;
+        return grid instanceof WirelessGrid || grid instanceof PortableGrid;
     }
 }

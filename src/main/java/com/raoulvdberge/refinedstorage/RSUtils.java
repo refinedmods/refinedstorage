@@ -129,7 +129,7 @@ public final class RSUtils {
         writeItemStack(buf, stack, null, false);
     }
 
-    public static void writeItemStack(ByteBuf buf, ItemStack stack, INetworkMaster network, boolean displayCraftText) {
+    public static void writeItemStack(ByteBuf buf, ItemStack stack, @Nullable INetworkMaster network, boolean displayCraftText) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getCount());
         buf.writeInt(stack.getItemDamage());

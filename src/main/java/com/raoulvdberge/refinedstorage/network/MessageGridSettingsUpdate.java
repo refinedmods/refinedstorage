@@ -3,13 +3,15 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageWirelessGridSettingsUpdate> implements IMessage {
+public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageGridSettingsUpdate> implements IMessage {
     private int viewType;
     private int sortingDirection;
     private int sortingType;
@@ -17,10 +19,10 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
     private int size;
     private int tabSelected;
 
-    public MessageWirelessGridSettingsUpdate() {
+    public MessageGridSettingsUpdate() {
     }
 
-    public MessageWirelessGridSettingsUpdate(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected) {
+    public MessageGridSettingsUpdate(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected) {
         this.viewType = viewType;
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
@@ -50,12 +52,16 @@ public class MessageWirelessGridSettingsUpdate extends MessageHandlerPlayerToSer
     }
 
     @Override
-    public void handle(MessageWirelessGridSettingsUpdate message, EntityPlayerMP player) {
+    public void handle(MessageGridSettingsUpdate message, EntityPlayerMP player) {
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
-            if (grid instanceof WirelessGrid) {
-                ItemStack stack = ((WirelessGrid) grid).getStack();
+            if (grid instanceof WirelessGrid || grid instanceof PortableGrid) {
+                ItemStack stack = grid instanceof WirelessGrid ? ((WirelessGrid) grid).getStack() : ((PortableGrid) grid).getStack();
+
+                if (!stack.hasTagCompound()) {
+                    stack.setTagCompound(new NBTTagCompound());
+                }
 
                 if (NetworkNodeGrid.isValidViewType(message.viewType)) {
                     stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_VIEW_TYPE, message.viewType);

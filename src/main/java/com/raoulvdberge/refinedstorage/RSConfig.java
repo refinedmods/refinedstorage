@@ -72,6 +72,13 @@ public final class RSConfig {
     public int wirelessGridInsertUsage;
     //endregion
 
+    //region Portable Grid
+    public boolean portableGridUsesEnergy;
+    public int portableGridOpenUsage;
+    public int portableGridExtractUsage;
+    public int portableGridInsertUsage;
+    //endregion
+
     //region Wireless Fluid Grid
     public boolean wirelessFluidGridUsesEnergy;
     public int wirelessFluidGridOpenUsage;
@@ -102,6 +109,7 @@ public final class RSConfig {
     private static final String GRID = "grid";
     private static final String WIRELESS_TRANSMITTER = "wirelessTransmitter";
     private static final String WIRELESS_GRID = "wirelessGrid";
+    private static final String PORTABLE_GRID = "portableGrid";
     private static final String WIRELESS_FLUID_GRID = "wirelessFluidGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String UPGRADES = "upgrades";
@@ -183,6 +191,13 @@ public final class RSConfig {
         wirelessGridOpenUsage = config.getInt("open", WIRELESS_GRID, 30, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to open");
         wirelessGridInsertUsage = config.getInt("insert", WIRELESS_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to insert items");
         wirelessGridExtractUsage = config.getInt("extract", WIRELESS_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to extract items");
+        //endregion
+
+        //region Portable Grid
+        portableGridUsesEnergy = config.getBoolean("usesEnergy", PORTABLE_GRID, true, "Whether the Portable Grid uses energy");
+        portableGridOpenUsage = config.getInt("open", PORTABLE_GRID, 30, 0, Integer.MAX_VALUE, "The energy used by the Portable Grid to open");
+        portableGridInsertUsage = config.getInt("insert", PORTABLE_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Portable Grid to insert items");
+        portableGridExtractUsage = config.getInt("extract", PORTABLE_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Portable Grid to extract items");
         //endregion
 
         //region Wireless Grid

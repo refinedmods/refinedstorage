@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class WirelessFluidGrid implements IGrid {
+    public static final int GRID_TYPE = 1;
+
     private ItemStack stack;
 
     private int controllerDimension;

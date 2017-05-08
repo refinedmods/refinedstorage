@@ -17,13 +17,6 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     }
 
     @Override
-    public void initDefaults(NBTTagCompound tag) {
-        super.initDefaults(tag);
-
-        tag.setBoolean(NBT_VIEW_AUTOMATED, true);
-    }
-
-    @Override
     @Nonnull
     public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
         return new NetworkItemWirelessCraftingMonitor(handler, player, stack);
@@ -38,6 +31,6 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     }
 
     public static boolean canViewAutomated(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_VIEW_AUTOMATED) && stack.getTagCompound().getBoolean(NBT_VIEW_AUTOMATED);
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_VIEW_AUTOMATED)) ? stack.getTagCompound().getBoolean(NBT_VIEW_AUTOMATED) : true;
     }
 }

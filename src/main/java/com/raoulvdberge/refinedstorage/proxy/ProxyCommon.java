@@ -100,7 +100,7 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageGridItemPull.class, MessageGridItemPull.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingClear.class, MessageGridCraftingClear.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingTransfer.class, MessageGridCraftingTransfer.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageWirelessGridSettingsUpdate.class, MessageWirelessGridSettingsUpdate.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageGridSettingsUpdate.class, MessageGridSettingsUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingStart.class, MessageGridCraftingStart.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridPatternCreate.class, MessageGridPatternCreate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageCraftingMonitorCancel.class, MessageCraftingMonitorCancel.class, id++, Side.SERVER);
@@ -372,6 +372,17 @@ public class ProxyCommon {
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'P', new ItemStack(Items.ENDER_PEARL),
             'G', new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()),
+            'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
+
+        // Portable Grid
+        GameRegistry.addRecipe(new ItemStack(RSItems.PORTABLE_GRID),
+            "EHE",
+            "ECE",
+            "EAE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'H', new ItemStack(Blocks.CHEST),
+            'C', new ItemStack(RSBlocks.CONTROLLER, 1, ControllerType.NORMAL.getId()),
             'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
         );
 

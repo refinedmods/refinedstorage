@@ -79,18 +79,12 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
             tag.setInteger(NBT_CONTROLLER_Z, pos.getZ());
             tag.setInteger(NBT_DIMENSION_ID, player.dimension);
 
-            initDefaults(tag);
-
             stack.setTagCompound(tag);
 
             return EnumActionResult.SUCCESS;
         }
 
         return EnumActionResult.PASS;
-    }
-
-    protected void initDefaults(NBTTagCompound tag) {
-        // NO OP
     }
 
     public static int getDimensionId(ItemStack stack) {

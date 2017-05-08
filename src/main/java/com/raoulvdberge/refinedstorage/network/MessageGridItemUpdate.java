@@ -15,9 +15,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageGridItemUpdate, IMessage> {
-    private INetworkMaster network;
+    private Consumer<ByteBuf> sendHandler;
     private boolean canCraft;
     private List<GridStackItem> stacks = new ArrayList<>();
 
@@ -25,7 +26,33 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
     }
 
     public MessageGridItemUpdate(INetworkMaster network, boolean canCraft) {
-        this.network = network;
+        this.sendHandler = (buf) -> {
+            int size = network.getItemStorageCache().getList().getStacks().size();
+
+            for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
+                size += pattern.getOutputs().stream().filter(Objects::nonNull).count();
+            }
+
+            buf.writeInt(size);
+
+            for (ItemStack stack : network.getItemStorageCache().getList().getStacks()) {
+                RSUtils.writeItemStack(buf, stack, network, false);
+            }
+
+            for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
+                for (ItemStack output : pattern.getOutputs()) {
+                    if (output != null) {
+                        RSUtils.writeItemStack(buf, output, network, true);
+                    }
+                }
+            }
+        };
+
+        this.canCraft = canCraft;
+    }
+
+    public MessageGridItemUpdate(Consumer<ByteBuf> sendHandler, boolean canCraft) {
+        this.sendHandler = sendHandler;
         this.canCraft = canCraft;
     }
 
@@ -44,25 +71,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(canCraft);
 
-        int size = network.getItemStorageCache().getList().getStacks().size();
-
-        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            size += pattern.getOutputs().stream().filter(Objects::nonNull).count();
-        }
-
-        buf.writeInt(size);
-
-        for (ItemStack stack : network.getItemStorageCache().getList().getStacks()) {
-            RSUtils.writeItemStack(buf, stack, network, false);
-        }
-
-        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                if (output != null) {
-                    RSUtils.writeItemStack(buf, output, network, true);
-                }
-            }
-        }
+        sendHandler.accept(buf);
     }
 
     @Override

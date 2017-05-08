@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessF
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 
@@ -16,43 +15,24 @@ public class ItemWirelessFluidGrid extends ItemNetworkItem {
     }
 
     @Override
-    public void initDefaults(NBTTagCompound tag) {
-        super.initDefaults(tag);
-
-        tag.setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, NetworkNodeGrid.SORTING_DIRECTION_DESCENDING);
-        tag.setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, NetworkNodeGrid.SORTING_TYPE_QUANTITY);
-        tag.setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL);
-        tag.setInteger(NetworkNodeGrid.NBT_SIZE, NetworkNodeGrid.SIZE_STRETCH);
-    }
-
-    @Override
-    public boolean isValid(ItemStack stack) {
-        return super.isValid(stack)
-            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_DIRECTION)
-            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_TYPE)
-            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SEARCH_BOX_MODE)
-            && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SIZE);
-    }
-
-    @Override
     @Nonnull
     public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
         return new NetworkItemWirelessFluidGrid(handler, player, stack);
     }
 
     public static int getSortingType(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SORTING_TYPE);
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_TYPE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SORTING_TYPE) : NetworkNodeGrid.SORTING_TYPE_QUANTITY;
     }
 
     public static int getSortingDirection(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION);
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SORTING_DIRECTION)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION) : NetworkNodeGrid.SORTING_DIRECTION_DESCENDING;
     }
 
     public static int getSearchBoxMode(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE);
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SEARCH_BOX_MODE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE) : NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL;
     }
 
     public static int getSize(ItemStack stack) {
-        return stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SIZE);
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SIZE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SIZE) : NetworkNodeGrid.SIZE_STRETCH;
     }
 }

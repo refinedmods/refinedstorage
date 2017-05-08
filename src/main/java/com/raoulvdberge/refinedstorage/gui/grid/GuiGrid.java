@@ -26,6 +26,7 @@ import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
@@ -146,7 +147,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             oredictPattern = addCheckBox(x + 64, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 46, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
         }
 
-        if (grid.getType() != GridType.FLUID) {
+        if (grid.getType() != GridType.FLUID && grid.getViewType() != -1) {
             addSideButton(new SideButtonGridViewType(this, grid));
         }
 
@@ -379,6 +380,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             bindTexture("gui/crafting_grid.png");
         } else if (grid.getType() == GridType.PATTERN) {
             bindTexture("gui/pattern_grid.png");
+        } else if (grid instanceof PortableGrid) {
+            bindTexture("gui/portable_grid.png");
         } else {
             bindTexture("gui/grid.png");
         }
@@ -388,7 +391,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getHeader());
 
         if (grid.getType() != GridType.FLUID) {
-            drawTexture(x + screenWidth - 34 + 4, y + getTabDelta(), 197, 0, 30, 82);
+            drawTexture(x + screenWidth - 34 + 4, y + getTabDelta(), 197, 0, 30, grid instanceof PortableGrid ? 114 : 82);
         }
 
         int rows = getVisibleRows();
@@ -676,5 +679,14 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (oredictPattern != null) {
             oredictPattern.setIsChecked(checked);
         }
+    }
+
+    @Override
+    public void onGuiClosed() {
+        super.onGuiClosed();
+
+        ITEMS.clear();
+        FLUIDS.clear();
+        STACKS.clear();
     }
 }

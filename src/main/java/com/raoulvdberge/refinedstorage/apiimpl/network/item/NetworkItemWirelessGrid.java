@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -17,8 +18,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class NetworkItemWirelessGrid implements INetworkItem {
-    public static final int GRID_TYPE = 0;
-
     private INetworkItemHandler handler;
     private EntityPlayer player;
     private ItemStack stack;
@@ -46,7 +45,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
             return false;
         }
 
-        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), controllerWorld.provider.getDimension(), GRID_TYPE);
+        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), controllerWorld.provider.getDimension(), WirelessGrid.GRID_TYPE);
 
         network.sendItemStorageToClient((EntityPlayerMP) player);
 

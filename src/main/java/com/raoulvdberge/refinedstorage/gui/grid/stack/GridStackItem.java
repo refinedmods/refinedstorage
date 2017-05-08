@@ -20,13 +20,12 @@ public class GridStackItem implements IGridStack {
     private ItemStack stack;
     private boolean craftable;
     private boolean displayCraftText;
-    private String[] oreIds;
+    private String[] oreIds = null;
 
     public GridStackItem(ByteBuf buf) {
-        stack = RSUtils.readItemStack(buf);
-        hash = buf.readInt();
-        craftable = buf.readBoolean();
-        oreIds = null;
+        this.stack = RSUtils.readItemStack(buf);
+        this.hash = buf.readInt();
+        this.craftable = buf.readBoolean();
 
         setDisplayCraftText(buf.readBoolean());
     }
