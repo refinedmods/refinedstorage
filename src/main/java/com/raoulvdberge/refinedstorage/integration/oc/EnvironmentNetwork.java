@@ -12,6 +12,17 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.Map;
 
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_DAMAGE;
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_NBT;
@@ -133,12 +144,137 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
     }
 
     @Callback
+    public Object[] extractFluid(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{null, "not connected"};
+        }
+
+        // First argument: the fluid stack to extract
+        // There is no args.checkFluidStack(), we have to deal with this ourselves
+        Map<String, Object> fluidMap = args.checkTable(0);
+        if(!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
+            throw new IllegalArgumentException("no fluid name");
+        }
+        String fluid = (String) fluidMap.get("name");
+
+        // Second argument: the amount of liquid to extract, at least 1mb
+        int amount = Math.max(1, args.checkInteger(1));
+
+        // With the amount ready, we can actually try to create a fluid stack for the given fluid
+        FluidStack stack = FluidRegistry.getFluidStack(fluid, amount);
+        if(stack == null) {
+            throw new IllegalArgumentException("invalid fluid stack, does not exist");
+        }
+
+        // Third argument: which direction to extract to
+        EnumFacing facing = EnumFacing.getFront(args.optInteger(2, 0));
+
+        // Get the tile-entity on the specified side
+        TileEntity targetEntity = node.getNetwork().getNetworkWorld().getTileEntity(node.getPos().offset(facing));
+        if(targetEntity == null || !targetEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite())) {
+            throw new IllegalArgumentException("No fluid tank on the given side");
+        }
+
+        FluidStack extractedSim = node.getNetwork().extractFluid(stack, amount, true);
+        if(extractedSim == null || extractedSim.amount <= 0) {
+            return new Object[]{null, "could not extract the specified fluid"};
+        }
+
+        // Simulate inserting the fluid and see how much we were able to insert
+        IFluidHandler handler = targetEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+        int filledAmountSim = handler.fill(extractedSim, false);
+        if(filledAmountSim <= 0) {
+            return new Object[]{0};
+        }
+
+        // Actually do it and return how much fluid we've inserted
+        FluidStack extracted = node.getNetwork().extractFluid(stack, amount, false);
+        handler.fill(extracted, true);
+
+        return new Object[] { filledAmountSim };
+    }
+
+    @Callback
+    public Object[] getFluid(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{null, "not connected"};
+        }
+
+        // There is no args.checkFluidStack(), we have to deal with this ourselves
+        Map<String, Object> fluidMap = args.checkTable(0);
+        if(!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
+            throw new IllegalArgumentException("no fluid name");
+        }
+
+        String fluid = (String) fluidMap.get("name");
+
+        FluidStack needle = FluidRegistry.getFluidStack(fluid, 1000);
+        if(needle == null) {
+            throw new IllegalArgumentException("invalid fluid stack, does not exist");
+        }
+
+        return new Object[]{ node.getNetwork().getFluidStorageCache().getList().get(needle) };
+    }
+
+    @Callback
     public Object[] getFluids(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
         }
 
         return new Object[]{node.getNetwork().getFluidStorageCache().getList().getStacks()};
+    }
+
+    @Callback
+    public Object[] extractItem(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{null, "not connected"};
+        }
+
+        // First argument: the itemstack to extract
+        ItemStack stack = args.checkItemStack(0);
+
+        // Second argument: the number of items to extract, at least 1 ...
+        int count = Math.max(1, args.optInteger(1, 1));
+
+        // ... and at most a full stack
+        count = Math.min(count, stack.getMaxStackSize());
+
+        // Third argument: which direction to extract to
+        EnumFacing facing = EnumFacing.getFront(args.optInteger(2, 0));
+
+        // Get the tile-entity on the specified side
+        TileEntity targetEntity = node.getNetwork().getNetworkWorld().getTileEntity(node.getPos().offset(facing));
+        if(targetEntity == null || !targetEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
+            throw new IllegalArgumentException("No inventory on the given side");
+        }
+
+        // Simulate extracting the item and get the amount of items that can be extracted
+        ItemStack extractedSim = node.getNetwork().extractItem(stack, count, true);
+        if (extractedSim.isEmpty() || extractedSim.getCount() == 0) {
+            return new Object[]{null, "could not extract the specified item"};
+        }
+
+        int transferableAmount = extractedSim.getCount();
+
+
+        // Simulate inserting the item and see how many we were able to insert
+        IItemHandler handler = targetEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+        ItemStack insertedSim = ItemHandlerHelper.insertItemStacked(handler, extractedSim, true);
+        if (!insertedSim.isEmpty() && insertedSim.getCount() > 0) {
+            transferableAmount -= insertedSim.getCount();
+        }
+
+        // Abort early if we can not insert items
+        if (transferableAmount <= 0) {
+            return new Object[]{0};
+        }
+
+        // Actually do it and return how many items we've inserted
+        ItemStack extracted = node.getNetwork().extractItem(stack, count, false);
+        ItemHandlerHelper.insertItemStacked(handler, extracted, false);
+
+        return new Object[] { transferableAmount };
     }
 
     @Callback
@@ -150,6 +286,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         ItemStack stack = args.checkItemStack(0);
         boolean compareMeta = args.optBoolean(1, true);
         boolean compareNBT = args.optBoolean(2, true);
+        boolean compareOreDict = args.optBoolean(3, false);
 
         int flags = 0;
 
@@ -159,6 +296,10 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         if (compareNBT) {
             flags |= IComparer.COMPARE_NBT;
+        }
+
+        if (compareOreDict) {
+            flags |= IComparer.COMPARE_OREDICT;
         }
 
         return new Object[]{node.getNetwork().getItemStorageCache().getList().get(stack, flags)};
