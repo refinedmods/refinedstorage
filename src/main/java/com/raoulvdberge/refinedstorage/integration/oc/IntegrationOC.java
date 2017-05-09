@@ -12,5 +12,8 @@ public final class IntegrationOC {
 
     public static void register() {
         Driver.add(new DriverNetwork());
+
+        Driver.add(new ConverterCraftingPattern());
+        Driver.add(new ConverterCraftingTask());
     }
 }
