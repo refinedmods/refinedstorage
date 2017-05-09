@@ -118,7 +118,7 @@ public class PortableGrid implements IGrid {
     }
 
     public void drainEnergy(int energy) {
-        if (RS.INSTANCE.config.portableGridUsesEnergy) {
+        if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemPortableGrid.TYPE_CREATIVE) {
             stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(energy, false);
         }
     }

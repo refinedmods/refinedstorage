@@ -126,26 +126,30 @@ public final class RSUtils {
     }
 
     public static void writeItemStack(ByteBuf buf, ItemStack stack) {
-        writeItemStack(buf, stack, null, false);
-    }
-
-    public static void writeItemStack(ByteBuf buf, ItemStack stack, @Nullable INetworkMaster network, boolean displayCraftText) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getCount());
         buf.writeInt(stack.getItemDamage());
         ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
-
-        if (network != null) {
-            buf.writeInt(API.instance().getItemStackHashCode(stack));
-            buf.writeBoolean(network.getCraftingManager().hasPattern(stack));
-            buf.writeBoolean(displayCraftText);
-        }
     }
 
     public static ItemStack readItemStack(ByteBuf buf) {
         ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
         stack.setTagCompound(ByteBufUtils.readTag(buf));
         return stack;
+    }
+
+    public static void writeItemStack(ByteBuf buf, ItemStack stack, @Nullable INetworkMaster network, boolean displayCraftText) {
+        writeItemStack(buf, stack);
+
+        buf.writeInt(API.instance().getItemStackHashCode(stack));
+
+        if (network != null) {
+            buf.writeBoolean(network.getCraftingManager().hasPattern(stack));
+            buf.writeBoolean(displayCraftText);
+        } else {
+            buf.writeBoolean(false);
+            buf.writeBoolean(false);
+        }
     }
 
     public static void writeFluidStack(ByteBuf buf, FluidStack stack) {

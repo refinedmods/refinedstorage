@@ -11,11 +11,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.util.function.Consumer;
+import javax.annotation.Nullable;
 
 public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGridItemDelta, IMessage> {
-    // @todo: we can remove sendHandler if we improve the network == null condition in RSUtils.writeItemStack
-    private Consumer<ByteBuf> sendHandler;
+    @Nullable
+    private INetworkMaster network;
+    private ItemStack stack;
     private int delta;
 
     private GridStackItem clientStack;
@@ -23,13 +24,9 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     public MessageGridItemDelta() {
     }
 
-    public MessageGridItemDelta(INetworkMaster network, ItemStack stack, int delta) {
-        this.sendHandler = buf -> RSUtils.writeItemStack(buf, stack, network, false);
-        this.delta = delta;
-    }
-
-    public MessageGridItemDelta(Consumer<ByteBuf> sendHandler, int delta) {
-        this.sendHandler = sendHandler;
+    public MessageGridItemDelta(@Nullable INetworkMaster network, ItemStack stack, int delta) {
+        this.network = network;
+        this.stack = stack;
         this.delta = delta;
     }
 
@@ -41,7 +38,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
     @Override
     public void toBytes(ByteBuf buf) {
-        sendHandler.accept(buf);
+        RSUtils.writeItemStack(buf, stack, network, false);
         buf.writeInt(delta);
     }
 

@@ -199,6 +199,7 @@ public class ProxyCommon {
         registerItem(RSItems.WIRELESS_GRID);
         registerItem(RSItems.WIRELESS_FLUID_GRID);
         registerItem(RSItems.WIRELESS_CRAFTING_MONITOR);
+        registerItem(RSItems.PORTABLE_GRID);
         registerItem(RSItems.PROCESSOR);
         registerItem(RSItems.CORE);
         registerItem(RSItems.SILICON);
@@ -207,7 +208,6 @@ public class ProxyCommon {
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.WRENCH);
         registerItem(RSItems.SECURITY_CARD);
-        registerItem(RSItems.PORTABLE_GRID);
 
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 

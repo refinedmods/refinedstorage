@@ -9,14 +9,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.network.MessageGridItemDelta;
 import com.raoulvdberge.refinedstorage.network.MessageGridItemUpdate;
 import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     private PortableGrid portableGrid;
@@ -34,15 +32,11 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
             portableGrid.getStorage().getStacks().forEach(list::add);
         }
 
-        RS.INSTANCE.network.sendTo(new MessageGridItemUpdate((buf) -> {
+        RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(buf -> {
             buf.writeInt(list.getStacks().size());
 
             for (ItemStack stack : list.getStacks()) {
                 RSUtils.writeItemStack(buf, stack, null, false);
-
-                buf.writeInt(API.instance().getItemStackHashCode(stack));
-                buf.writeBoolean(false);
-                buf.writeBoolean(false);
             }
         }, false), (EntityPlayerMP) portableGrid.getPlayer());
     }
@@ -52,25 +46,15 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
         list.add(stack, size);
 
         if (!rebuilding) {
-            RS.INSTANCE.network.sendTo(new MessageGridItemDelta(getSendHandler(stack), size), (EntityPlayerMP) portableGrid.getPlayer());
+            RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, size), (EntityPlayerMP) portableGrid.getPlayer());
         }
     }
 
     @Override
     public void remove(@Nonnull ItemStack stack, int size) {
         if (list.remove(stack, size)) {
-            RS.INSTANCE.network.sendTo(new MessageGridItemDelta(getSendHandler(stack), -size), (EntityPlayerMP) portableGrid.getPlayer());
+            RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, -size), (EntityPlayerMP) portableGrid.getPlayer());
         }
-    }
-
-    private Consumer<ByteBuf> getSendHandler(@Nonnull ItemStack stack) {
-        return buf -> {
-            RSUtils.writeItemStack(buf, stack, null, false);
-
-            buf.writeInt(API.instance().getItemStackHashCode(stack));
-            buf.writeBoolean(false);
-            buf.writeBoolean(false);
-        };
     }
 
     @Override
