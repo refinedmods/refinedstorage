@@ -40,7 +40,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
     }
 
     @Callback
-    public Object[] getCraftingTasks(final Context context, final Arguments args) {
+    public Object[] getTasks(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
         }
@@ -77,7 +77,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         ItemStack stack = args.checkItemStack(0);
 
         if (!node.getNetwork().getCraftingManager().hasPattern(stack)) {
-            throw new IllegalArgumentException("No pattern for this item stack exists");
+            throw new IllegalArgumentException("No pattern for this item exists");
         }
 
         int count = args.optInteger(1, 1);
