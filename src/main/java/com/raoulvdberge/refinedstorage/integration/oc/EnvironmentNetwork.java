@@ -36,12 +36,12 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         setNode(Network.newNode(this, Visibility.Network).withComponent("refinedstorage", Visibility.Network).create());
     }
 
-    @Callback
+    @Callback(doc = "function():boolean -- Whether the node is connected.")
     public Object[] isConnected(final Context context, final Arguments args) {
         return new Object[]{node.getNetwork() != null};
     }
 
-    @Callback
+    @Callback(doc = "function():number -- Gets the energy usage of this network.")
     public Object[] getEnergyUsage(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -50,7 +50,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getEnergyUsage()};
     }
 
-    @Callback
+    @Callback(doc = "function():table -- Gets the crafting tasks of this network.")
     public Object[] getTasks(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -59,7 +59,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getCraftingManager().getTasks()};
     }
 
-    @Callback
+    @Callback(doc = "function():table -- Gets the patterns of this network.")
     public Object[] getPatterns(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -68,7 +68,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getCraftingManager().getPatterns()};
     }
 
-    @Callback
+    @Callback(doc = "function(stack:table):boolean -- Whether a crafting pattern exists for this item.")
     public Object[] hasPattern(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -79,7 +79,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getCraftingManager().hasPattern(stack)};
     }
 
-    @Callback
+    @Callback(doc = "function(stack:table[, count: number]):table -- Gets a list of missing items for a crafting task.")
     public Object[] getMissingItems(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -100,7 +100,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{task.getMissing().getStacks()};
     }
 
-    @Callback
+    @Callback(doc = "function(stack:table[, count: number]) -- Schedules a crafting task.")
     public Object[] scheduleTask(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{"not connected"};
@@ -123,7 +123,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{};
     }
 
-    @Callback
+    @Callback(doc = "function(stack:table):number -- Cancels a task and returns the amount of tasks cancelled.")
     public Object[] cancelTask(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -143,7 +143,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{count};
     }
 
-    @Callback
+    @Callback(doc = "function(stack:table[, amount:number[, direction:number]]):table -- Extracts a fluid from the network.")
     public Object[] extractFluid(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -194,7 +194,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[] { filledAmountSim };
     }
 
-    @Callback
+    @Callback(doc = "function(stack:table):table -- Gets a fluid from the network.")
     public Object[] getFluid(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -216,7 +216,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{ node.getNetwork().getFluidStorageCache().getList().get(needle) };
     }
 
-    @Callback
+    @Callback(doc = "function():table -- Gets a list of all fluids in this network.")
     public Object[] getFluids(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -225,7 +225,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getFluidStorageCache().getList().getStacks()};
     }
 
-    @Callback
+    @Callback(doc = "function(stack:table[, count:number[, direction:number]]):table -- Extracts an item from the network.")
     public Object[] extractItem(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -257,7 +257,6 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         int transferableAmount = extractedSim.getCount();
 
-
         // Simulate inserting the item and see how many we were able to insert
         IItemHandler handler = targetEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
         ItemStack insertedSim = ItemHandlerHelper.insertItemStacked(handler, extractedSim, true);
@@ -277,7 +276,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[] { transferableAmount };
     }
 
-    @Callback
+    @Callback(doc = "function(stack:table[, compareMeta:boolean[, compareNBT:boolean[, compareOreDict:boolean]]]):table -- Gets an item from the network.")
     public Object[] getItem(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -305,7 +304,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getItemStorageCache().getList().get(stack, flags)};
     }
 
-    @Callback
+    @Callback(doc = "function():table -- Gets a list of all items in this network.")
     public Object[] getItems(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
