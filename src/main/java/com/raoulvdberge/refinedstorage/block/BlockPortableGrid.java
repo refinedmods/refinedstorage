@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -23,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockPortableGrid extends BlockBase {
+    private static final AxisAlignedBB PORTABLE_GRID_AABB = new AxisAlignedBB(0, 0, 0, 1, 13.2F / 16F, 1);
+
     public static final PropertyEnum TYPE = PropertyEnum.create("type", PortableGridType.class);
 
     public BlockPortableGrid() {
@@ -48,6 +51,12 @@ public class BlockPortableGrid extends BlockBase {
     @Nullable
     public Direction getDirection() {
         return Direction.HORIZONTAL;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return PORTABLE_GRID_AABB;
     }
 
     @Override
