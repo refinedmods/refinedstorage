@@ -24,6 +24,8 @@ import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
+import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -47,7 +49,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
+public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, IRedstoneConfigurable {
     public static final TileDataParameter<Integer> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TilePortableGrid>() {
         @Override
         public Integer getValue(TilePortableGrid tile) {
@@ -140,10 +142,14 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         }
     });
 
+    public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
+
     private static final String NBT_ENERGY = "Energy";
 
     private EnergyForge energyStorage = new EnergyForge(3200);
     private PortableGridType type;
+
+    private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private int sortingType;
     private int sortingDirection;
@@ -197,6 +203,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(TAB_SELECTED);
+        dataManager.addWatchedParameter(REDSTONE_MODE);
     }
 
     public PortableGridType getPortableType() {
@@ -221,6 +228,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         }
 
         RSUtils.readItems(disk, 4, stack.getTagCompound());
+
+        this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
 
         markDirty();
     }
@@ -247,6 +256,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         }
 
         RSUtils.writeItems(disk, 4, stack.getTagCompound());
+
+        redstoneMode.write(stack.getTagCompound());
 
         return stack;
     }
@@ -370,7 +381,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
 
     @Override
     public TileDataParameter<Integer> getRedstoneModeConfig() {
-        return null;
+        return REDSTONE_MODE;
     }
 
     @Override
@@ -416,7 +427,9 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
             return false;
         }
 
-        return true;
+        RedstoneMode redstoneMode = !getWorld().isRemote ? this.redstoneMode : RedstoneMode.getById(REDSTONE_MODE.getValue());
+
+        return redstoneMode.isEnabled(getWorld(), pos);
     }
 
     @Override
@@ -436,7 +449,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
 
     @Override
     public void drainEnergy(int energy) {
-        if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE) {
+        if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE && redstoneMode.isEnabled(getWorld(), pos)) {
             energyStorage.extractEnergyInternal(energy);
         }
     }
@@ -464,6 +477,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         RSUtils.writeItems(filter, 1, tag);
 
         tag.setInteger(NBT_ENERGY, energyStorage.getEnergyStored());
+
+        redstoneMode.write(tag);
 
         return tag;
     }
@@ -498,6 +513,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         if (tag.hasKey(NBT_ENERGY)) {
             energyStorage.setEnergyStored(tag.getInteger(NBT_ENERGY));
         }
+
+        redstoneMode = RedstoneMode.read(tag);
     }
 
     @Override
@@ -519,5 +536,17 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         cache.sendUpdateTo(player);
 
         drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
+    }
+
+    @Override
+    public RedstoneMode getRedstoneMode() {
+        return redstoneMode;
+    }
+
+    @Override
+    public void setRedstoneMode(RedstoneMode mode) {
+        this.redstoneMode = mode;
+
+        markDirty();
     }
 }
