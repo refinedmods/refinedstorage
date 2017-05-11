@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockPortableGrid extends BlockBase {
+    public static final PropertyEnum TYPE = PropertyEnum.create("type", PortableGridType.class);
+
     public BlockPortableGrid() {
         super("portable_grid");
     }
@@ -74,6 +78,23 @@ public class BlockPortableGrid extends BlockBase {
         drops.add(((TilePortableGrid) world.getTileEntity(pos)).getAsItem());
 
         return drops;
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return createBlockStateBuilder()
+            .add(TYPE)
+            .build();
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(TYPE, meta == 0 ? PortableGridType.NORMAL : PortableGridType.CREATIVE);
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(TYPE) == PortableGridType.NORMAL ? 0 : 1;
     }
 
     @Override

@@ -4,10 +4,10 @@ import net.darkhax.tesla.api.ITeslaConsumer;
 import net.darkhax.tesla.api.ITeslaHolder;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class ControllerEnergyTesla implements ITeslaHolder, ITeslaConsumer {
+public class EnergyTesla implements ITeslaHolder, ITeslaConsumer {
     private IEnergyStorage energy;
 
-    public ControllerEnergyTesla(IEnergyStorage energy) {
+    public EnergyTesla(IEnergyStorage energy) {
         this.energy = energy;
     }
 

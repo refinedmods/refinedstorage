@@ -33,7 +33,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
             portableGrid.getStorage().getStacks().forEach(list::add);
         }
 
-        portableGrid.getWatchers().forEach(this::sendTo);
+        portableGrid.getWatchers().forEach(this::sendUpdateTo);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
         return Collections.emptyList();
     }
 
-    public void sendTo(EntityPlayer player) {
+    public void sendUpdateTo(EntityPlayer player) {
         RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(buf -> {
             buf.writeInt(list.getStacks().size());
 

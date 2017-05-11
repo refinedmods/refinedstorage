@@ -36,8 +36,8 @@ import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.ControllerEnergyForge;
-import com.raoulvdberge.refinedstorage.integration.tesla.ControllerEnergyTesla;
+import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
+import com.raoulvdberge.refinedstorage.integration.tesla.EnergyTesla;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
@@ -159,8 +159,8 @@ public class TileController extends TileBase implements ITickable, INetworkMaste
 
     private Map<String, IReaderWriterChannel> readerWriterChannels = new HashMap<>();
 
-    private ControllerEnergyForge energy = new ControllerEnergyForge();
-    private ControllerEnergyTesla energyTesla;
+    private EnergyForge energy = new EnergyForge(RS.INSTANCE.config.controllerCapacity);
+    private EnergyTesla energyTesla;
 
     private int lastEnergyDisplay;
 
@@ -180,11 +180,11 @@ public class TileController extends TileBase implements ITickable, INetworkMaste
         dataManager.addParameter(NODES);
 
         if (IntegrationTesla.isLoaded()) {
-            this.energyTesla = new ControllerEnergyTesla(energy);
+            this.energyTesla = new EnergyTesla(energy);
         }
     }
 
-    public ControllerEnergyForge getEnergy() {
+    public EnergyForge getEnergy() {
         return energy;
     }
 

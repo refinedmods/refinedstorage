@@ -11,11 +11,15 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItemPortable;
+import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
+import com.raoulvdberge.refinedstorage.block.PortableGridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
+import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
@@ -34,7 +38,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -53,14 +56,15 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
 
     private static final String NBT_ENERGY = "Energy";
 
-    // @todo: make non-extractable
-    private EnergyStorage energyStorage = new EnergyStorage(3200);
+    private EnergyForge energyStorage = new EnergyForge(3200);
 
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
     private int tabSelected;
     private int size;
+
+    private PortableGridType type;
 
     private List<Filter> filters = new ArrayList<>();
     private List<FilterTab> tabs = new ArrayList<>();
@@ -105,6 +109,14 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         dataManager.addWatchedParameter(ENERGY_STORED);
     }
 
+    public PortableGridType getPortableType() {
+        if (type == null && getWorld().getBlockState(pos).getBlock() == RSBlocks.PORTABLE_GRID) {
+            this.type = (PortableGridType) getWorld().getBlockState(pos).getValue(BlockPortableGrid.TYPE);
+        }
+
+        return type == null ? PortableGridType.NORMAL : type;
+    }
+
     public void onPassItemContext(ItemStack stack) {
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
@@ -112,7 +124,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
         this.size = ItemWirelessGrid.getSize(stack);
 
-        energyStorage.receiveEnergy(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored(), false);
+        this.energyStorage.setEnergyStored(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored());
 
         for (int i = 0; i < 4; ++i) {
             RSUtils.readItems(filter, i, stack.getTagCompound());
@@ -128,7 +140,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
             storage.writeToNBT();
         }
 
-        ItemStack stack = new ItemStack(RSBlocks.PORTABLE_GRID);
+        ItemStack stack = new ItemStack(RSBlocks.PORTABLE_GRID, 1, getPortableType() == PortableGridType.NORMAL ? ItemBlockPortableGrid.TYPE_NORMAL : ItemBlockPortableGrid.TYPE_CREATIVE);
 
         stack.setTagCompound(new NBTTagCompound());
 
@@ -328,10 +340,9 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
 
     @Override
     public boolean isActive() {
-        int stored = !world.isRemote ? energyStorage.getEnergyStored() : ENERGY_STORED.getValue();
+        int stored = !getWorld().isRemote ? energyStorage.getEnergyStored() : ENERGY_STORED.getValue();
 
-        // @todo: handle creative
-        if (RS.INSTANCE.config.portableGridUsesEnergy && stored <= RS.INSTANCE.config.portableGridOpenUsage) {
+        if (getPortableType() != PortableGridType.CREATIVE && RS.INSTANCE.config.portableGridUsesEnergy && stored <= RS.INSTANCE.config.portableGridOpenUsage) {
             return false;
         }
 
@@ -355,9 +366,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
 
     @Override
     public void drainEnergy(int energy) {
-        // @todo: handle creative
-        if (RS.INSTANCE.config.portableGridUsesEnergy) {
-            energyStorage.extractEnergy(energy, false);
+        if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE) {
+            energyStorage.extractEnergyInternal(energy);
         }
     }
 
@@ -408,12 +418,12 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
             tabSelected = tag.getInteger(NetworkNodeGrid.NBT_TAB_SELECTED);
         }
 
-        if (tag.hasKey(NBT_ENERGY)) {
-            energyStorage.receiveEnergy(tag.getInteger(NBT_ENERGY), false);
-        }
-
         RSUtils.readItems(disk, 0, tag);
         RSUtils.readItems(filter, 1, tag);
+
+        if (tag.hasKey(NBT_ENERGY)) {
+            energyStorage.setEnergyStored(tag.getInteger(NBT_ENERGY));
+        }
     }
 
     @Override
@@ -432,6 +442,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
     }
 
     public void onOpened(EntityPlayer player) {
-        cache.sendTo(player);
+        cache.sendUpdateTo(player);
+
+        drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
     }
 }

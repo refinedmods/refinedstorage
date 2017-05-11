@@ -108,11 +108,6 @@ public class PortableGrid implements IGrid, IPortableGrid {
         this.player = player;
         this.stack = stack;
 
-        // Only extract when we can
-        if (isActive()) {
-            drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
-        }
-
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
@@ -128,6 +123,8 @@ public class PortableGrid implements IGrid, IPortableGrid {
         }
 
         RSUtils.readItems(disk, 4, stack.getTagCompound());
+
+        drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
     }
 
     public ItemStack getStack() {
