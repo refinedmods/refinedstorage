@@ -314,7 +314,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
     @Override
     public void onClosed(EntityPlayer player) {
-        if (!player.world.isRemote && storage != null) {
+        if (!player.getEntityWorld().isRemote && storage != null) {
             storage.writeToNBT();
 
             RSUtils.writeItems(disk, 4, stack.getTagCompound());

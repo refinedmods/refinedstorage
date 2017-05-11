@@ -380,6 +380,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
+        if (storage != null) {
+            storage.writeToNBT();
+        }
+
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, sortingDirection);
         tag.setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, sortingType);
         tag.setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
