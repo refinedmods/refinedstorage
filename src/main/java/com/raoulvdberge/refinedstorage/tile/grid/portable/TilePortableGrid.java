@@ -23,9 +23,10 @@ import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
-import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.minecraft.client.Minecraft;
@@ -54,17 +55,101 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
         }
     });
 
+    public static final TileDataParameter<Integer> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TilePortableGrid>() {
+        @Override
+        public Integer getValue(TilePortableGrid tile) {
+            return tile.getSortingDirection();
+        }
+    }, new ITileDataConsumer<Integer, TilePortableGrid>() {
+        @Override
+        public void setValue(TilePortableGrid tile, Integer value) {
+            if (NetworkNodeGrid.isValidSortingDirection(value)) {
+                tile.setSortingDirection(value);
+                tile.markDirty();
+            }
+        }
+    }, parameter -> GuiGrid.markForSorting());
+
+    public static final TileDataParameter<Integer> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TilePortableGrid>() {
+        @Override
+        public Integer getValue(TilePortableGrid tile) {
+            return tile.getSortingType();
+        }
+    }, new ITileDataConsumer<Integer, TilePortableGrid>() {
+        @Override
+        public void setValue(TilePortableGrid tile, Integer value) {
+            if (NetworkNodeGrid.isValidSortingType(value)) {
+                tile.setSortingType(value);
+                tile.markDirty();
+            }
+        }
+    }, parameter -> GuiGrid.markForSorting());
+
+    public static final TileDataParameter<Integer> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TilePortableGrid>() {
+        @Override
+        public Integer getValue(TilePortableGrid tile) {
+            return tile.getSearchBoxMode();
+        }
+    }, new ITileDataConsumer<Integer, TilePortableGrid>() {
+        @Override
+        public void setValue(TilePortableGrid tile, Integer value) {
+            if (NetworkNodeGrid.isValidSearchBoxMode(value)) {
+                tile.setSearchBoxMode(value);
+                tile.markDirty();
+            }
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+            ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateSearchFieldFocus(parameter.getValue());
+        }
+    });
+
+    public static final TileDataParameter<Integer> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TilePortableGrid>() {
+        @Override
+        public Integer getValue(TilePortableGrid tile) {
+            return tile.getSize();
+        }
+    }, new ITileDataConsumer<Integer, TilePortableGrid>() {
+        @Override
+        public void setValue(TilePortableGrid tile, Integer value) {
+            if (NetworkNodeGrid.isValidSize(value)) {
+                tile.setSize(value);
+                tile.markDirty();
+            }
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen != null) {
+            Minecraft.getMinecraft().currentScreen.initGui();
+        }
+    });
+
+    public static final TileDataParameter<Integer> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TilePortableGrid>() {
+        @Override
+        public Integer getValue(TilePortableGrid tile) {
+            return tile.getTabSelected();
+        }
+    }, new ITileDataConsumer<Integer, TilePortableGrid>() {
+        @Override
+        public void setValue(TilePortableGrid tile, Integer value) {
+            tile.setTabSelected(value == tile.getTabSelected() ? -1 : value);
+            tile.markDirty();
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+            ((GuiGrid) Minecraft.getMinecraft().currentScreen).markForSorting();
+        }
+    });
+
     private static final String NBT_ENERGY = "Energy";
 
     private EnergyForge energyStorage = new EnergyForge(3200);
+    private PortableGridType type;
 
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
     private int tabSelected;
     private int size;
-
-    private PortableGridType type;
 
     private List<Filter> filters = new ArrayList<>();
     private List<FilterTab> tabs = new ArrayList<>();
@@ -107,6 +192,11 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
 
     public TilePortableGrid() {
         dataManager.addWatchedParameter(ENERGY_STORED);
+        dataManager.addWatchedParameter(SORTING_DIRECTION);
+        dataManager.addWatchedParameter(SORTING_TYPE);
+        dataManager.addWatchedParameter(SEARCH_BOX_MODE);
+        dataManager.addWatchedParameter(SIZE);
+        dataManager.addWatchedParameter(TAB_SELECTED);
     }
 
     public PortableGridType getPortableType() {
@@ -190,22 +280,27 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
 
     @Override
     public int getSortingType() {
-        return sortingType;
+        return getWorld().isRemote ? SORTING_TYPE.getValue() : sortingType;
     }
 
     @Override
     public int getSortingDirection() {
-        return sortingDirection;
+        return getWorld().isRemote ? SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     @Override
     public int getSearchBoxMode() {
-        return searchBoxMode;
+        return getWorld().isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override
     public int getTabSelected() {
-        return tabSelected;
+        return getWorld().isRemote ? TAB_SELECTED.getValue() : tabSelected;
+    }
+
+    @Override
+    public int getSize() {
+        return getWorld().isRemote ? SIZE.getValue() : size;
     }
 
     public void setSortingType(int sortingType) {
@@ -229,58 +324,33 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid {
     }
 
     @Override
-    public int getSize() {
-        return size;
-    }
-
-    @Override
     public void onViewTypeChanged(int type) {
         // NO OP
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected()));
-
-        this.sortingType = type;
-
-        GuiGrid.markForSorting();
+        TileDataManager.setParameter(SORTING_TYPE, type);
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected()));
-
-        this.sortingDirection = direction;
-
-        GuiGrid.markForSorting();
+        TileDataManager.setParameter(SORTING_DIRECTION, direction);
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected()));
-
-        this.searchBoxMode = searchBoxMode;
+        TileDataManager.setParameter(SEARCH_BOX_MODE, searchBoxMode);
     }
 
     @Override
     public void onSizeChanged(int size) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected()));
-
-        this.size = size;
-
-        if (Minecraft.getMinecraft().currentScreen != null) {
-            Minecraft.getMinecraft().currentScreen.initGui();
-        }
+        TileDataManager.setParameter(SIZE, size);
     }
 
     @Override
     public void onTabSelectionChanged(int tab) {
-        this.tabSelected = tab == tabSelected ? -1 : tab;
-
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected));
-
-        GuiGrid.markForSorting();
+        TileDataManager.setParameter(TAB_SELECTED, tab);
     }
 
     @Override

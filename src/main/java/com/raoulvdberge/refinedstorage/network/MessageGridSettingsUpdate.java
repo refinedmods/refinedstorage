@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -85,26 +84,6 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
                 }
 
                 stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, message.tabSelected);
-            } else if (grid instanceof TilePortableGrid) {
-                if (NetworkNodeGrid.isValidSortingDirection(message.sortingDirection)) {
-                    ((TilePortableGrid) grid).setSortingDirection(message.sortingDirection);
-                }
-
-                if (NetworkNodeGrid.isValidSortingType(message.sortingType)) {
-                    ((TilePortableGrid) grid).setSortingType(message.sortingType);
-                }
-
-                if (NetworkNodeGrid.isValidSearchBoxMode(message.searchBoxMode)) {
-                    ((TilePortableGrid) grid).setSearchBoxMode(message.searchBoxMode);
-                }
-
-                if (NetworkNodeGrid.isValidSize(message.size)) {
-                    ((TilePortableGrid) grid).setSize(message.size);
-                }
-
-                ((TilePortableGrid) grid).setTabSelected(message.tabSelected);
-
-                ((TilePortableGrid) grid).markDirty();
             }
         }
     }

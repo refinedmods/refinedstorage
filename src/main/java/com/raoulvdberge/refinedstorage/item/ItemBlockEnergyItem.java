@@ -81,8 +81,8 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
 
         if (stack.getItemDamage() != TYPE_CREATIVE) {
             IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null);

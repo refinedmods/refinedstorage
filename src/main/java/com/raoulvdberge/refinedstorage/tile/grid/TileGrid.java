@@ -134,9 +134,9 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         dataManager.addWatchedParameter(SORTING_DIRECTION);
         dataManager.addWatchedParameter(SORTING_TYPE);
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
+        dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
-        dataManager.addWatchedParameter(SIZE);
     }
 
     @Override
