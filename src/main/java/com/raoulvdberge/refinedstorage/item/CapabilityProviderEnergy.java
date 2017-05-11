@@ -28,7 +28,7 @@ public class CapabilityProviderEnergy implements ICapabilityProvider {
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(new ItemEnergyForge(stack, 3200));
+            return CapabilityEnergy.ENERGY.cast(new ItemEnergyForge(stack, ItemEnergyItem.CAPACITY));
         }
 
         if (IntegrationTesla.isLoaded()) {

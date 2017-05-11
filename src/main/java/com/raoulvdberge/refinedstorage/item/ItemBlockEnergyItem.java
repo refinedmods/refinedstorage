@@ -23,7 +23,7 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
     public ItemBlockEnergyItem(Block block, Direction direction) {
         super(block, direction, true);
 
-        setMaxDamage(3200);
+        setMaxDamage(ItemEnergyItem.CAPACITY);
         setMaxStackSize(1);
     }
 

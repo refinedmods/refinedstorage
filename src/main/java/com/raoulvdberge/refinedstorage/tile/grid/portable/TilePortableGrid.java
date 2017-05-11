@@ -20,6 +20,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
+import com.raoulvdberge.refinedstorage.item.ItemEnergyItem;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
@@ -146,7 +147,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     private static final String NBT_ENERGY = "Energy";
 
-    private EnergyForge energyStorage = new EnergyForge(3200);
+    private EnergyForge energyStorage = new EnergyForge(ItemEnergyItem.CAPACITY);
     private PortableGridType type;
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;

@@ -15,13 +15,15 @@ import net.minecraftforge.energy.IEnergyStorage;
 import java.util.List;
 
 public abstract class ItemEnergyItem extends ItemBase {
+    public static final int CAPACITY = 3200;
+
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
     public ItemEnergyItem(String name) {
         super(name);
 
-        setMaxDamage(3200);
+        setMaxDamage(CAPACITY);
         setMaxStackSize(1);
         setHasSubtypes(true);
     }
