@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
-import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -13,9 +13,9 @@ import java.util.function.Supplier;
 
 public class StorageDiskItemPortable implements IStorageDisk<ItemStack> {
     private IStorageDisk<ItemStack> parent;
-    private PortableGrid portableGrid;
+    private IPortableGrid portableGrid;
 
-    public StorageDiskItemPortable(IStorageDisk<ItemStack> parent, PortableGrid portableGrid) {
+    public StorageDiskItemPortable(IStorageDisk<ItemStack> parent, IPortableGrid portableGrid) {
         this.parent = parent;
         this.portableGrid = portableGrid;
     }

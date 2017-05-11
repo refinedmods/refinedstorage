@@ -8,10 +8,11 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
+import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
@@ -31,7 +32,7 @@ public class ContainerGrid extends ContainerBase {
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
 
-    public ContainerGrid(IGrid grid, IGridDisplay display, @Nullable TileGrid gridTile, EntityPlayer player) {
+    public ContainerGrid(IGrid grid, IGridDisplay display, @Nullable TileBase gridTile, EntityPlayer player) {
         super(gridTile, player);
 
         this.grid = grid;
@@ -49,7 +50,7 @@ public class ContainerGrid extends ContainerBase {
         if (grid.getType() != GridType.FLUID) {
             int yStart = 6;
 
-            if (grid instanceof PortableGrid) {
+            if (grid instanceof IPortableGrid) {
                 yStart = 38;
             }
 
@@ -63,8 +64,8 @@ public class ContainerGrid extends ContainerBase {
             addSlotToContainer(new SlotOutput(((NetworkNodeGrid) grid).getPatterns(), 1, 152, headerAndSlots + 40));
         }
 
-        if (grid instanceof PortableGrid) {
-            addSlotToContainer(new SlotItemHandler(((PortableGrid) grid).getDisk(), 0, 204, 6 + getTabDelta()));
+        if (grid instanceof IPortableGrid) {
+            addSlotToContainer(new SlotItemHandler(((IPortableGrid) grid).getDisk(), 0, 204, 6 + getTabDelta()));
         }
 
         addPlayerInventory(8, display.getYPlayerInventory());
@@ -174,7 +175,7 @@ public class ContainerGrid extends ContainerBase {
 
                             return ItemStack.EMPTY;
                         }
-                    } else if ((grid.getType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof PortableGrid && stack.getItem() instanceof IStorageDiskProvider)) {
+                    } else if ((grid.getType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof IPortableGrid && stack.getItem() instanceof IStorageDiskProvider)) {
                         int startIndex = 4;
                         int endIndex = startIndex + 1;
 
@@ -190,8 +191,8 @@ public class ContainerGrid extends ContainerBase {
                             detectAndSendChanges();
 
                             // For some reason it doesn't detect when moving the disk from disk inventory to player inventory...
-                            if (grid instanceof PortableGrid && slotIndex == 4) {
-                                ((PortableGrid) grid).getDisk().setStackInSlot(0, ItemStack.EMPTY);
+                            if (grid instanceof IPortableGrid && slotIndex == 4) {
+                                ((IPortableGrid) grid).getDisk().setStackInSlot(0, ItemStack.EMPTY);
                             }
 
                             return ItemStack.EMPTY;
@@ -227,6 +228,7 @@ public class ContainerGrid extends ContainerBase {
 
     @Override
     protected boolean isHeldItemDisabled() {
+        // Here we check for the concrete portable grid type, not IPortableGrid, because we can move the held item in the tile
         return grid instanceof WirelessGrid || grid instanceof PortableGrid;
     }
 }

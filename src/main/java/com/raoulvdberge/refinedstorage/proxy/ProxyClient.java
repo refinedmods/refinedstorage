@@ -211,6 +211,7 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.SECURITY_MANAGER), 0, new ModelResourceLocation("refinedstorage:security_manager", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE_MONITOR), 0, new ModelResourceLocation("refinedstorage:storage_monitor", "connected=false,direction=north"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), 0, new ModelResourceLocation("refinedstorage:portable_grid", "inventory"));
 
         ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
             @Override

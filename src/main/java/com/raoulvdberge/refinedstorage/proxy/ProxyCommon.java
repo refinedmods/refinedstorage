@@ -30,6 +30,7 @@ import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.ContainerListener;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -157,9 +158,11 @@ public class ProxyCommon {
         registerTile(TileReader.class, "reader");
         registerTile(TileWriter.class, "writer");
         registerTile(TileStorageMonitor.class, "storage_monitor");
+        registerTile(TilePortableGrid.class, "portable_grid");
 
         registerBlock(RSBlocks.CONTROLLER);
         registerBlock(RSBlocks.GRID);
+        registerBlock(RSBlocks.PORTABLE_GRID);
         registerBlock(RSBlocks.CRAFTING_MONITOR);
         registerBlock(RSBlocks.STORAGE_MONITOR);
         registerBlock(RSBlocks.SECURITY_MANAGER);
@@ -177,7 +180,6 @@ public class ProxyCommon {
         registerBlock(RSBlocks.DESTRUCTOR);
         registerBlock(RSBlocks.READER);
         registerBlock(RSBlocks.WRITER);
-
         registerBlock(RSBlocks.DETECTOR);
         registerBlock(RSBlocks.RELAY);
         registerBlock(RSBlocks.INTERFACE);
@@ -199,7 +201,6 @@ public class ProxyCommon {
         registerItem(RSItems.WIRELESS_GRID);
         registerItem(RSItems.WIRELESS_FLUID_GRID);
         registerItem(RSItems.WIRELESS_CRAFTING_MONITOR);
-        registerItem(RSItems.PORTABLE_GRID);
         registerItem(RSItems.PROCESSOR);
         registerItem(RSItems.CORE);
         registerItem(RSItems.SILICON);
@@ -376,7 +377,7 @@ public class ProxyCommon {
         );
 
         // Portable Grid
-        GameRegistry.addRecipe(new ItemStack(RSItems.PORTABLE_GRID),
+        GameRegistry.addRecipe(new ItemStack(RSBlocks.PORTABLE_GRID),
             "EHE",
             "ECE",
             "EAE",

@@ -5,7 +5,8 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -16,15 +17,17 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 
 public class ItemGridHandlerPortable implements IItemGridHandler {
-    private PortableGrid portableGrid;
+    private IPortableGrid portableGrid;
+    private IGrid grid;
 
-    public ItemGridHandlerPortable(PortableGrid portableGrid) {
+    public ItemGridHandlerPortable(IPortableGrid portableGrid, IGrid grid) {
         this.portableGrid = portableGrid;
+        this.grid = grid;
     }
 
     @Override
     public void onExtract(EntityPlayerMP player, int hash, int flags) {
-        if (portableGrid.getStorage() == null || !portableGrid.isActive()) {
+        if (portableGrid.getStorage() == null || !grid.isActive()) {
             return;
         }
 
@@ -95,7 +98,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
     @Nullable
     @Override
     public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
-        if (portableGrid.getStorage() == null || !portableGrid.isActive()) {
+        if (portableGrid.getStorage() == null || !grid.isActive()) {
             return stack;
         }
 
@@ -108,7 +111,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
 
     @Override
     public void onInsertHeldItem(EntityPlayerMP player, boolean single) {
-        if (player.inventory.getItemStack().isEmpty() || portableGrid.getStorage() == null || !portableGrid.isActive()) {
+        if (player.inventory.getItemStack().isEmpty() || portableGrid.getStorage() == null || !grid.isActive()) {
             return;
         }
 

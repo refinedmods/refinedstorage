@@ -4,12 +4,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.EnergyStorage;
 
-public class NetworkItemEnergyForge extends EnergyStorage {
+public class ItemEnergyForge extends EnergyStorage {
     private static final String NBT_ENERGY = "Energy";
 
     private ItemStack stack;
 
-    public NetworkItemEnergyForge(ItemStack stack, int capacity) {
+    public ItemEnergyForge(ItemStack stack, int capacity) {
         super(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         this.stack = stack;

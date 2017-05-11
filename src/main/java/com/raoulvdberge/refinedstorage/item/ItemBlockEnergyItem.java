@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.block.Direction;
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,16 +16,15 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public abstract class ItemEnergyItem extends ItemBase {
+public abstract class ItemBlockEnergyItem extends ItemBlockBase {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
-    public ItemEnergyItem(String name) {
-        super(name);
+    public ItemBlockEnergyItem(Block block, Direction direction) {
+        super(block, direction, true);
 
         setMaxDamage(3200);
         setMaxStackSize(1);
-        setHasSubtypes(true);
     }
 
     @Override

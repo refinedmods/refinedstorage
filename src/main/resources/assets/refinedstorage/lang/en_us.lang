@@ -226,6 +226,8 @@ block.refinedstorage:writer.name=Writer
 block.refinedstorage:security_manager.name=Security Manager
 block.refinedstorage:quartz_enriched_iron_block.name=Block of Quartz Enriched Iron
 block.refinedstorage:storage_monitor.name=Storage Monitor
+block.refinedstorage:portable_grid.0.name=Portable Grid
+block.refinedstorage:portable_grid.1.name=Creative Portable Grid
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk
@@ -285,5 +287,3 @@ item.refinedstorage:wrench.mode.1=Configuration
 item.refinedstorage:wrench.mode.2=Dismantling
 item.refinedstorage:security_card.name=Security Card
 item.refinedstorage:security_card.owner=Bound to: %s
-item.refinedstorage:portable_grid.0.name=Portable Grid
-item.refinedstorage:portable_grid.1.name=Creative Portable Grid

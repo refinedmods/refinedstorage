@@ -10,7 +10,12 @@ import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.grid.*;
+import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -27,6 +32,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerController((TileController) tile, player);
             case RSGui.GRID:
                 return new ContainerGrid(((TileGrid) tile).getNode(), new GridDisplayDummy(), (TileGrid) tile, player);
+            case RSGui.PORTABLE_GRID:
+                return new ContainerGrid((TilePortableGrid) tile, new GridDisplayDummy(), (TilePortableGrid) tile, player);
             case RSGui.DISK_DRIVE:
                 return new ContainerDiskDrive((TileDiskDrive) tile, player);
             case RSGui.IMPORTER:
@@ -97,7 +104,8 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.CONTROLLER:
                 return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
             case RSGui.GRID:
-                IGrid grid = ((TileGrid) tile).getNode();
+            case RSGui.PORTABLE_GRID:
+                IGrid grid = ID == RSGui.GRID ? ((TileGrid) tile).getNode() : (TilePortableGrid) tile;
                 GuiGrid gui = new GuiGrid(null, grid);
                 gui.inventorySlots = new ContainerGrid(grid, gui, null, player);
                 return gui;

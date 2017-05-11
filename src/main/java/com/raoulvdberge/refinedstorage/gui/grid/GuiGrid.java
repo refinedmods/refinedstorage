@@ -26,8 +26,8 @@ import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -380,7 +380,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             bindTexture("gui/crafting_grid.png");
         } else if (grid.getType() == GridType.PATTERN) {
             bindTexture("gui/pattern_grid.png");
-        } else if (grid instanceof PortableGrid) {
+        } else if (grid instanceof IPortableGrid) {
             bindTexture("gui/portable_grid.png");
         } else {
             bindTexture("gui/grid.png");
@@ -391,7 +391,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getHeader());
 
         if (grid.getType() != GridType.FLUID) {
-            drawTexture(x + screenWidth - 34 + 4, y + getTabDelta(), 197, 0, 30, grid instanceof PortableGrid ? 114 : 82);
+            drawTexture(x + screenWidth - 34 + 4, y + getTabDelta(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
         }
 
         int rows = getVisibleRows();

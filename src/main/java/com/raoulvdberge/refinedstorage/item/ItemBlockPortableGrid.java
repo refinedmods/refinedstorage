@@ -1,8 +1,9 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.tile.grid.PortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -10,9 +11,9 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
-public class ItemPortableGrid extends ItemEnergyItem {
-    public ItemPortableGrid() {
-        super("portable_grid");
+public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
+    public ItemBlockPortableGrid() {
+        super(RSBlocks.PORTABLE_GRID, RSBlocks.PORTABLE_GRID.getDirection());
     }
 
     @Override

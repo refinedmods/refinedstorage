@@ -20,13 +20,13 @@ public class ContainerListener {
 
                 manager.sendParametersTo((EntityPlayerMP) e.getEntityPlayer());
 
-                int watchers = manager.getWatchers();
+                int watchers = manager.getWatchers().size();
 
-                manager.setWatchers(watchers + 1);
+                manager.getWatchers().add(e.getEntityPlayer());
 
                 if (watchers == 0) {
                     Thread listenerThread = new Thread(() -> {
-                        while (manager.getWatchers() > 0) {
+                        while (manager.getWatchers().size() > 0) {
                             manager.detectAndSendChanges();
                         }
                     }, "RS tile listener " + tile.getPos().getX() + ", " + tile.getPos().getY() + ", " + tile.getPos().getZ());
@@ -45,7 +45,7 @@ public class ContainerListener {
             TileBase tile = ((ContainerBase) container).getTile();
 
             if (tile != null && !tile.getWorld().isRemote) {
-                tile.getDataManager().setWatchers(tile.getDataManager().getWatchers() - 1);
+                tile.getDataManager().getWatchers().remove(e.getEntityPlayer());
             }
         }
     }

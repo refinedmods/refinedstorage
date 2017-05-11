@@ -5,10 +5,10 @@ import net.darkhax.tesla.api.ITeslaHolder;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 
-public class NetworkItemEnergyTesla implements ITeslaHolder, ITeslaConsumer {
+public class ItemEnergyTesla implements ITeslaHolder, ITeslaConsumer {
     private ItemStack stack;
 
-    public NetworkItemEnergyTesla(ItemStack stack) {
+    public ItemEnergyTesla(ItemStack stack) {
         this.stack = stack;
     }
 

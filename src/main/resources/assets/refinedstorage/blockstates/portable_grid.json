@@ -1,0 +1,40 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "refinedstorage:portable_grid",
+    "textures": {
+      "texture0": "refinedstorage:blocks/portable_grid_0",
+      "texture1": "refinedstorage:blocks/portable_grid_1",
+      "texture2": "refinedstorage:blocks/portable_grid_2",
+      "texture3": "refinedstorage:blocks/portable_grid_3",
+      "texture4": "refinedstorage:blocks/portable_grid_4",
+      "texture5": "refinedstorage:blocks/portable_grid_5",
+      "texture6": "refinedstorage:blocks/portable_grid_6",
+      "texture7": "refinedstorage:blocks/portable_grid_7",
+      "particle": "refinedstorage:blocks/portable_grid_0"
+    },
+    "uvlock": false
+  },
+  "variants": {
+    "inventory": [
+      {
+        "transform": "forge:default-block",
+        "y": 180
+      }
+    ],
+    "direction": {
+      "north": {
+        "y": 0
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      }
+    }
+  }
+}

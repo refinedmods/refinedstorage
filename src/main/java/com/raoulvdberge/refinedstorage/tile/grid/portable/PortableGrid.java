@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile.grid;
+package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
@@ -16,12 +16,13 @@ import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
-import com.raoulvdberge.refinedstorage.item.ItemPortableGrid;
+import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -32,17 +33,19 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class PortableGrid implements IGrid {
+public class PortableGrid implements IGrid, IPortableGrid {
     public static final int GRID_TYPE = 2;
 
     @Nullable
     private IStorageDisk<ItemStack> storage;
     private StorageCacheItemPortable cache = new StorageCacheItemPortable(this);
-    private ItemGridHandlerPortable handler = new ItemGridHandlerPortable(this);
+    private ItemGridHandlerPortable handler = new ItemGridHandlerPortable(this, this);
 
     private EntityPlayer player;
     private ItemStack stack;
@@ -89,6 +92,16 @@ public class PortableGrid implements IGrid {
                 RSUtils.writeItems(this, 4, stack.getTagCompound());
             }
         }
+
+        @Nonnull
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (storage != null) {
+                storage.writeToNBT();
+            }
+
+            return super.extractItem(slot, amount, simulate);
+        }
     };
 
     public PortableGrid(EntityPlayer player, ItemStack stack) {
@@ -117,12 +130,6 @@ public class PortableGrid implements IGrid {
         RSUtils.readItems(disk, 4, stack.getTagCompound());
     }
 
-    public void drainEnergy(int energy) {
-        if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemPortableGrid.TYPE_CREATIVE) {
-            stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(energy, false);
-        }
-    }
-
     public ItemStack getStack() {
         return stack;
     }
@@ -134,6 +141,18 @@ public class PortableGrid implements IGrid {
     @Nullable
     public IStorageDisk<ItemStack> getStorage() {
         return storage;
+    }
+
+    @Override
+    public List<EntityPlayer> getWatchers() {
+        return Collections.singletonList(player);
+    }
+
+    @Override
+    public void drainEnergy(int energy) {
+        if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemBlockPortableGrid.TYPE_CREATIVE) {
+            stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(energy, false);
+        }
     }
 
     public ItemHandlerBase getDisk() {
@@ -307,7 +326,7 @@ public class PortableGrid implements IGrid {
 
     @Override
     public boolean isActive() {
-        if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemPortableGrid.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.portableGridOpenUsage) {
+        if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemBlockPortableGrid.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.portableGridOpenUsage) {
             return false;
         }
 

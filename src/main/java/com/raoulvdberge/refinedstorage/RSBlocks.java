@@ -32,4 +32,5 @@ public final class RSBlocks {
     public static final BlockSecurityManager SECURITY_MANAGER = new BlockSecurityManager();
     public static final BlockQuartzEnrichedIron QUARTZ_ENRICHED_IRON = new BlockQuartzEnrichedIron();
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
+    public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();
 }
