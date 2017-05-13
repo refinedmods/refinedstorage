@@ -6,9 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
-import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -18,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class NetworkNodeManager extends WorldSavedData implements INetworkNodeManager {
-    private static final String NAME = "refinedstorage_nodes";
+    public static final String NAME = "refinedstorage_nodes";
 
     private static final String NBT_NODES = "Nodes";
     private static final String NBT_NODE_ID = "Id";
@@ -37,20 +35,28 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
         clear();
 
-        NBTTagList list = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
+        if (tag.hasKey(NBT_NODES)) {
+            NBTTagList list = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
 
-        for (int i = 0; i < list.tagCount(); ++i) {
-            NBTTagCompound nodeTag = list.getCompoundTagAt(i);
+            int nodesRead = 0;
 
-            String id = nodeTag.getString(NBT_NODE_ID);
-            NBTTagCompound data = nodeTag.getCompoundTag(NBT_NODE_DATA);
-            BlockPos pos = BlockPos.fromLong(nodeTag.getLong(NBT_NODE_POS));
+            for (int i = 0; i < list.tagCount(); ++i) {
+                NBTTagCompound nodeTag = list.getCompoundTagAt(i);
 
-            Function<NBTTagCompound, INetworkNode> factory = API.instance().getNetworkNodeRegistry().get(id);
+                String id = nodeTag.getString(NBT_NODE_ID);
+                NBTTagCompound data = nodeTag.getCompoundTag(NBT_NODE_DATA);
+                BlockPos pos = BlockPos.fromLong(nodeTag.getLong(NBT_NODE_POS));
 
-            if (factory != null) {
-                setNode(pos, factory.apply(data));
+                Function<NBTTagCompound, INetworkNode> factory = API.instance().getNetworkNodeRegistry().get(id);
+
+                if (factory != null) {
+                    setNode(pos, factory.apply(data));
+
+                    ++nodesRead;
+                }
             }
+
+            System.out.println("[RS DEBUG] Read " + nodesRead + " nodes!");
         }
     }
 
@@ -73,22 +79,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
         tag.setTag(NBT_NODES, list);
 
         return tag;
-    }
-
-    public static NetworkNodeManager getManager(World world) {
-        MapStorage storage = world.getPerWorldStorage();
-        NetworkNodeManager instance = (NetworkNodeManager) storage.getOrLoadData(NetworkNodeManager.class, NAME);
-
-        if (instance == null) {
-            System.out.println("[RS DEBUG] Initializing Network Node Manager for " + world.provider.getDimension());
-            instance = new NetworkNodeManager(NAME);
-
-            storage.setData(NAME, instance);
-        } else {
-            System.out.println("[RS DEBUG] Network Node Manager for " + world.provider.getDimension() + " already exists, OK...");
-        }
-
-        return instance;
     }
 
     @Nullable

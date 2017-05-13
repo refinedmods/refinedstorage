@@ -36,13 +36,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class API implements IRSAPI {
@@ -50,7 +49,6 @@ public class API implements IRSAPI {
 
     private IComparer comparer = new Comparer();
     private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
-    private Map<Integer, INetworkNodeManager> networkNodeManagers = new HashMap<>();
     private IStorageDiskBehavior storageDiskBehavior = new StorageDiskBehavior();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
@@ -98,7 +96,18 @@ public class API implements IRSAPI {
             throw new IllegalStateException("Attempting to access network node manager on the client");
         }
 
-        return networkNodeManagers.computeIfAbsent(world.provider.getDimension(), m -> NetworkNodeManager.getManager(world));
+        MapStorage storage = world.getPerWorldStorage();
+        NetworkNodeManager instance = (NetworkNodeManager) storage.getOrLoadData(NetworkNodeManager.class, NetworkNodeManager.NAME);
+
+        if (instance == null) {
+            System.out.println("[RS DEBUG] Initializing Network Node Manager for " + world.provider.getDimension());
+
+            instance = new NetworkNodeManager(NetworkNodeManager.NAME);
+
+            storage.setData(NetworkNodeManager.NAME, instance);
+        }
+
+        return instance;
     }
 
     @Override
