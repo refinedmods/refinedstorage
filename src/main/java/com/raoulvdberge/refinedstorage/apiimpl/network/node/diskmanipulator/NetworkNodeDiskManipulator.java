@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -357,7 +358,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     @Override
     public int getType() {
-        return this.type;
+        return holder.world().isRemote ? TileDiskManipulator.TYPE.getValue() : type;
     }
 
     @Override

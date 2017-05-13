@@ -8,6 +8,7 @@
 - Fixed Crafting Tweaks keybindings interfering with RS keybindings (blay09)
 - Fixed crash when updating storages (raoulvdberge)
 - Fixed no tooltips for fluid filter slots (raoulvdberge)
+- Fixed Disk Manipulator in fluid mode not showing fluids (raoulvdberge)
 - Removed ticking tile entities, every tile entity in RS is non-ticking now (raoulvdberge)
 
 ### 1.4.4
