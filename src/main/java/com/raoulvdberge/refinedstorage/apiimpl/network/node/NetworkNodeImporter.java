@@ -52,7 +52,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
         if (network == null || !canUpdate()) {
             return;
         }
-        
+
         if (type == IType.ITEMS) {
             IImportingBehavior behavior = ImportingBehaviorItemHandler.INSTANCE;
             if (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), holder.getDirection().getOpposite())) {

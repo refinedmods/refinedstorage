@@ -152,7 +152,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         // First argument: the fluid stack to extract
         // There is no args.checkFluidStack(), we have to deal with this ourselves
         Map<String, Object> fluidMap = args.checkTable(0);
-        if(!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
+        if (!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
             throw new IllegalArgumentException("no fluid name");
         }
         String fluid = (String) fluidMap.get("name");
@@ -162,7 +162,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         // With the amount ready, we can actually try to create a fluid stack for the given fluid
         FluidStack stack = FluidRegistry.getFluidStack(fluid, amount);
-        if(stack == null) {
+        if (stack == null) {
             throw new IllegalArgumentException("invalid fluid stack, does not exist");
         }
 
@@ -171,19 +171,19 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         // Get the tile-entity on the specified side
         TileEntity targetEntity = node.getNetwork().getNetworkWorld().getTileEntity(node.getPos().offset(facing));
-        if(targetEntity == null || !targetEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite())) {
+        if (targetEntity == null || !targetEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite())) {
             throw new IllegalArgumentException("No fluid tank on the given side");
         }
 
         FluidStack extractedSim = node.getNetwork().extractFluid(stack, amount, true);
-        if(extractedSim == null || extractedSim.amount <= 0) {
+        if (extractedSim == null || extractedSim.amount <= 0) {
             return new Object[]{null, "could not extract the specified fluid"};
         }
 
         // Simulate inserting the fluid and see how much we were able to insert
         IFluidHandler handler = targetEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
         int filledAmountSim = handler.fill(extractedSim, false);
-        if(filledAmountSim <= 0) {
+        if (filledAmountSim <= 0) {
             return new Object[]{0};
         }
 
@@ -191,7 +191,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         FluidStack extracted = node.getNetwork().extractFluid(stack, amount, false);
         handler.fill(extracted, true);
 
-        return new Object[] { filledAmountSim };
+        return new Object[]{filledAmountSim};
     }
 
     @Callback(doc = "function(stack:table):table -- Gets a fluid from the network.")
@@ -202,18 +202,18 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         // There is no args.checkFluidStack(), we have to deal with this ourselves
         Map<String, Object> fluidMap = args.checkTable(0);
-        if(!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
+        if (!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
             throw new IllegalArgumentException("no fluid name");
         }
 
         String fluid = (String) fluidMap.get("name");
 
         FluidStack needle = FluidRegistry.getFluidStack(fluid, 1000);
-        if(needle == null) {
+        if (needle == null) {
             throw new IllegalArgumentException("invalid fluid stack, does not exist");
         }
 
-        return new Object[]{ node.getNetwork().getFluidStorageCache().getList().get(needle) };
+        return new Object[]{node.getNetwork().getFluidStorageCache().getList().get(needle)};
     }
 
     @Callback(doc = "function():table -- Gets a list of all fluids in this network.")
@@ -245,7 +245,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         // Get the tile-entity on the specified side
         TileEntity targetEntity = node.getNetwork().getNetworkWorld().getTileEntity(node.getPos().offset(facing));
-        if(targetEntity == null || !targetEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
+        if (targetEntity == null || !targetEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
             throw new IllegalArgumentException("No inventory on the given side");
         }
 
@@ -273,7 +273,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         ItemStack extracted = node.getNetwork().extractItem(stack, count, false);
         ItemHandlerHelper.insertItemStacked(handler, extracted, false);
 
-        return new Object[] { transferableAmount };
+        return new Object[]{transferableAmount};
     }
 
     @Callback(doc = "function(stack:table[, compareMeta:boolean[, compareNBT:boolean[, compareOreDict:boolean]]]):table -- Gets an item from the network.")

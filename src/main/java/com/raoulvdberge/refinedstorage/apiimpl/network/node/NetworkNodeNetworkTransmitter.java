@@ -86,8 +86,8 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     @Override
     public int getEnergyUsage() {
         return Math.min(
-                RS.INSTANCE.config.interdimensionalUpgradeUsage,
-                RS.INSTANCE.config.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RS.INSTANCE.config.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage()
+            RS.INSTANCE.config.interdimensionalUpgradeUsage,
+            RS.INSTANCE.config.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RS.INSTANCE.config.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage()
         );
     }
 

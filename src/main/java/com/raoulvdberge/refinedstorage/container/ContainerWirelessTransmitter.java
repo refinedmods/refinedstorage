@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;

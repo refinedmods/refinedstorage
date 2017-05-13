@@ -166,6 +166,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         return holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
     }
 
+    @Nullable
     public IItemHandler getDrops() {
         return null;
     }

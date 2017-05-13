@@ -1,4 +1,3 @@
-
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.proxy.ProxyClient;

@@ -84,6 +84,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         getNode().setActive(tag.getBoolean(NBT_ACTIVE));
     }
 
+    @Override
+    @Nullable
     public IItemHandler getDrops() {
         return getNode().getDrops();
     }
@@ -148,7 +150,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public abstract N createNode();
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing side) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side) {
         if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
             return true;
         }
@@ -157,7 +159,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing side) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing side) {
         if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
             return CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(this);
         }

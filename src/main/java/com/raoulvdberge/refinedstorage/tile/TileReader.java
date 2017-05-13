@@ -61,7 +61,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         if (super.hasCapability(capability, facing)) {
             return true;
         }
@@ -96,7 +96,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
         T foundCapability = super.getCapability(capability, facing);
 
         if (foundCapability == null) {

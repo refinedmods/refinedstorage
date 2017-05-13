@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.item.ItemStack;

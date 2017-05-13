@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDestructor;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import net.minecraft.entity.player.EntityPlayer;

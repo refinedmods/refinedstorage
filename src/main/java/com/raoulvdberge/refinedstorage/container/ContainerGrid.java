@@ -85,7 +85,7 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), (NetworkNodeGrid) grid, 0, 130 + 4, headerAndSlots + 22));
+            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
         } else if (grid.getType() == GridType.PATTERN) {
             int x = 8;
             int y = headerAndSlots + 4;

@@ -162,15 +162,15 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
                 if (item.getItem() instanceof ItemBlock) {
                     ((ItemBlock) item.getItem()).placeBlockAt(
-                            took,
-                            FakePlayerFactory.getMinecraft((WorldServer) holder.world()),
-                            holder.world(),
-                            front,
-                            holder.getDirection(),
-                            0,
-                            0,
-                            0,
-                            state
+                        took,
+                        FakePlayerFactory.getMinecraft((WorldServer) holder.world()),
+                        holder.world(),
+                        front,
+                        holder.getDirection(),
+                        0,
+                        0,
+                        0,
+                        state
                     );
                 } else {
                     holder.world().setBlockState(front, state, 1 | 2);

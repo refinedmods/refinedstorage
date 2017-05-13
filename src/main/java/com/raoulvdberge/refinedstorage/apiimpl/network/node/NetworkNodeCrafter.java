@@ -112,8 +112,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         if (!state) {
             network.getCraftingManager().getTasks().stream()
-                    .filter(task -> task.getPattern().getContainer().getPosition().equals(holder.pos()))
-                    .forEach(task -> network.getCraftingManager().cancel(task));
+                .filter(task -> task.getPattern().getContainer().getPosition().equals(holder.pos()))
+                .forEach(task -> network.getCraftingManager().cancel(task));
         }
 
         network.getCraftingManager().rebuild();

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeInterface;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;

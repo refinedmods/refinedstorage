@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import net.minecraft.entity.player.EntityPlayer;

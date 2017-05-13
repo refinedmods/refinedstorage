@@ -189,10 +189,10 @@ public class CraftingManager implements ICraftingManager {
                 }
 
                 runningSteps = craftingTasks.stream()
-                        .map(ICraftingTask::getSteps)
-                        .flatMap(List::stream)
-                        .filter(ICraftingStep::hasStartedProcessing)
-                        .collect(Collectors.toList());
+                    .map(ICraftingTask::getSteps)
+                    .flatMap(List::stream)
+                    .filter(ICraftingStep::hasStartedProcessing)
+                    .collect(Collectors.toList());
 
                 if (craftingTasksChanged) {
                     network.getNetwork().markCraftingMonitorForUpdate();

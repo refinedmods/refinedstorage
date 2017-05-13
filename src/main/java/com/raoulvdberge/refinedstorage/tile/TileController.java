@@ -741,7 +741,7 @@ public class TileController extends TileBase implements ITickable, INetworkMaste
     }
 
     @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.cast(energy);
         }
@@ -763,7 +763,7 @@ public class TileController extends TileBase implements ITickable, INetworkMaste
     }
 
     @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY
             || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
             || capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY

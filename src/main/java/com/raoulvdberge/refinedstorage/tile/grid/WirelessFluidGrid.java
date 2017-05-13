@@ -1,4 +1,3 @@
-
 package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.RS;

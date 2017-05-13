@@ -111,16 +111,16 @@ public class CraftingPattern implements ICraftingPattern {
                         oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                     } else if (isOredict()) {
                         List<ItemStack> oredict = Arrays.stream(ids)
-                                .mapToObj(OreDictionary::getOreName)
-                                .map(OreDictionary::getOres)
-                                .flatMap(List::stream)
-                                .map(ItemStack::copy)
-                                .map(Comparer::stripTags)
-                                .map(s -> {
-                                    s.setCount(input.getCount());
-                                    return s;
-                                })
-                                .collect(Collectors.toList());
+                            .mapToObj(OreDictionary::getOreName)
+                            .map(OreDictionary::getOres)
+                            .flatMap(List::stream)
+                            .map(ItemStack::copy)
+                            .map(Comparer::stripTags)
+                            .map(s -> {
+                                s.setCount(input.getCount());
+                                return s;
+                            })
+                            .collect(Collectors.toList());
                         // Add original stack as first, should prevent some issues
                         oredict.add(0, Comparer.stripTags(input.copy()));
                         oreInputs.add(oredict);
@@ -286,13 +286,13 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         if (other.getId().equals(this.getId())
-                && other.isOredict() == this.isOredict()
-                && other.isBlocking() == this.isBlocking()
-                && other.isProcessing() == this.isProcessing()
-                && other.getOreInputs().size() == this.getOreInputs().size()
-                && other.getOutputs().size() == this.getOutputs().size()) {
+            && other.isOredict() == this.isOredict()
+            && other.isBlocking() == this.isBlocking()
+            && other.isProcessing() == this.isProcessing()
+            && other.getOreInputs().size() == this.getOreInputs().size()
+            && other.getOutputs().size() == this.getOutputs().size()) {
             boolean same = true;
-            for (int i = 0; i < other.getOreInputs().size();  i++) {
+            for (int i = 0; i < other.getOreInputs().size(); i++) {
                 same &= other.getOreInputs().get(i).size() == this.getOreInputs().get(i).size();
             }
             int j = 0;

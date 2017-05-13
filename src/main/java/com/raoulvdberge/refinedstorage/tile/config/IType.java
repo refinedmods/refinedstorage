@@ -26,8 +26,8 @@ public interface IType {
                     ((IType) tile.getNode()).setType(value);
 
                     tile.getWorld().playerEntities.stream()
-                            .filter(p -> p.openContainer instanceof ContainerBase && ((ContainerBase) p.openContainer).getTile().getPos().equals(tile.getPos()))
-                            .forEach(p -> p.openContainer.detectAndSendChanges());
+                        .filter(p -> p.openContainer instanceof ContainerBase && ((ContainerBase) p.openContainer).getTile().getPos().equals(tile.getPos()))
+                        .forEach(p -> p.openContainer.detectAndSendChanges());
                 }
             }
         });

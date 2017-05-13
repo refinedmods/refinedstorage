@@ -107,6 +107,7 @@ public abstract class TileBase extends TileEntity {
         return oldState.getBlock() != newState.getBlock();
     }
 
+    @Nullable
     public IItemHandler getDrops() {
         return null;
     }

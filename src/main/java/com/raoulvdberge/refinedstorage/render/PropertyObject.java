@@ -1,11 +1,10 @@
 package com.raoulvdberge.refinedstorage.render;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class PropertyObject<T> implements IUnlistedProperty<T> {
     private final String name;
@@ -21,7 +20,7 @@ public class PropertyObject<T> implements IUnlistedProperty<T> {
     }
 
     public PropertyObject(String name, Class<T> clazz) {
-        this(name, clazz, Predicates.alwaysTrue(), input -> Objects.toString(input));
+        this(name, clazz, v -> true, Objects::toString);
     }
 
     @Override
@@ -31,7 +30,7 @@ public class PropertyObject<T> implements IUnlistedProperty<T> {
 
     @Override
     public boolean isValid(T value) {
-        return validator.apply(value);
+        return validator.test(value);
     }
 
     @Override

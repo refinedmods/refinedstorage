@@ -58,7 +58,7 @@ public class StorageItemCyclops extends StorageItemExternal {
 
     @Override
     public int getStored() {
-        return getStacks(cyclopsInv.get()).stream().mapToInt(s -> s.getCount()).sum();
+        return getStacks(cyclopsInv.get()).stream().mapToInt(ItemStack::getCount).sum();
     }
 
     @Override
