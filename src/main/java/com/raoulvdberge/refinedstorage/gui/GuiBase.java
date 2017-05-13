@@ -54,6 +54,8 @@ public abstract class GuiBase extends GuiContainer {
     private int lastButtonId;
     private int lastSideButtonY;
 
+    private String hoveringFluid = null;
+
     protected int screenWidth;
     protected int screenHeight;
 
@@ -115,6 +117,8 @@ public abstract class GuiBase extends GuiContainer {
 
         drawBackground(guiLeft, guiTop, mouseX, mouseY);
 
+        this.hoveringFluid = null;
+
         for (int i = 0; i < inventorySlots.inventorySlots.size(); ++i) {
             Slot slot = inventorySlots.inventorySlots.get(i);
 
@@ -123,6 +127,10 @@ public abstract class GuiBase extends GuiContainer {
 
                 if (stack != null) {
                     FLUID_RENDERER.draw(mc, guiLeft + slot.xPos, guiTop + slot.yPos, stack);
+
+                    if (inBounds(guiLeft + slot.xPos, guiTop + slot.yPos, 18, 18, mouseX, mouseY)) {
+                        this.hoveringFluid = stack.getLocalizedName();
+                    }
                 }
             }
         }
@@ -151,8 +159,8 @@ public abstract class GuiBase extends GuiContainer {
 
         drawForeground(mouseX, mouseY);
 
-        if (sideButtonTooltip != null) {
-            drawTooltip(mouseX, mouseY, sideButtonTooltip);
+        if (sideButtonTooltip != null || hoveringFluid != null) {
+            drawTooltip(mouseX, mouseY, sideButtonTooltip != null ? sideButtonTooltip : hoveringFluid);
         }
     }
 
