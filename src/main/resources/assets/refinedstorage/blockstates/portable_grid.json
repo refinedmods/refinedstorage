@@ -18,8 +18,7 @@
   "variants": {
     "inventory": [
       {
-        "transform": "forge:default-block",
-        "y": 180
+        "transform": "forge:default-block"
       }
     ],
     "direction": {

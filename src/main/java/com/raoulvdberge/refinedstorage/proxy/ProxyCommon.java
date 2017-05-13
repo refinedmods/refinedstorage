@@ -378,13 +378,12 @@ public class ProxyCommon {
 
         // Portable Grid
         GameRegistry.addRecipe(new ItemStack(RSBlocks.PORTABLE_GRID),
-            "EHE",
+            "EGE",
             "ECE",
-            "EAE",
+            "EEE",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
-            'H', new ItemStack(Blocks.CHEST),
-            'C', new ItemStack(RSBlocks.CONTROLLER, 1, ControllerType.NORMAL.getId()),
-            'A', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+            'G', new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()),
+            'C', new ItemStack(RSBlocks.CONTROLLER, 1, ControllerType.NORMAL.getId())
         );
 
         // Wireless Fluid Grid
