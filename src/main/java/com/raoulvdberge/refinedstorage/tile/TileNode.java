@@ -61,6 +61,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     @Override
     public void readConfiguration(NBTTagCompound tag) {
         getNode().readConfiguration(tag);
+        getNode().markDirty();
     }
 
     @Override
