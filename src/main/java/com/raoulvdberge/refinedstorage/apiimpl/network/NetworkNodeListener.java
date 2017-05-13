@@ -5,29 +5,29 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.WorldSavedDataNetworkNode;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class NetworkNodeListener {
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent e) {
-        e.world.profiler.startSection("network node ticking");
+        if (!e.world.isRemote) {
+            e.world.profiler.startSection("network node ticking");
 
-        if (e.phase == TickEvent.Phase.END) {
-            for (INetworkNode node : API.instance().getNetworkNodeManager(e.world.provider.getDimension()).all()) {
-                if (e.world.isBlockLoaded(node.getPos())) {
-                    node.update();
+            if (e.phase == TickEvent.Phase.END) {
+                for (INetworkNode node : API.instance().getNetworkNodeManager(e.world).all()) {
+                    if (e.world.isBlockLoaded(node.getPos())) {
+                        node.update();
+                    }
                 }
             }
-        }
 
-        e.world.profiler.endSection();
+            e.world.profiler.endSection();
+        }
     }
 
     @SubscribeEvent
@@ -68,13 +68,5 @@ public class NetworkNodeListener {
                 }
             }
         }
-    }
-
-    @SubscribeEvent
-    public void onWorldLoad(WorldEvent.Load e) {
-        // Clear all data from a possible previous load, so we start with a clean slate
-        API.instance().getNetworkNodeManager(e.getWorld().provider.getDimension()).clear();
-
-        WorldSavedDataNetworkNode.getOrLoadData(e.getWorld());
     }
 }

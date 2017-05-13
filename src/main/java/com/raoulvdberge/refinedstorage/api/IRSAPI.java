@@ -37,17 +37,14 @@ public interface IRSAPI {
     INetworkNodeRegistry getNetworkNodeRegistry();
 
     /**
-     * @param dimension the dimension
-     * @return the network node manager for the given dimension
-     */
-    INetworkNodeManager getNetworkNodeManager(int dimension);
-
-    /**
-     * Marks the network node saved data dirty for a given world.
+     * Gets a network node manager for a given world.
+     * This can only be called on the server side!
+     * There is no such concept of a network node manager on the client.
      *
      * @param world the world
+     * @return the network node manager for the given world
      */
-    void markNetworkNodesDirty(World world);
+    INetworkNodeManager getNetworkNodeManager(World world);
 
     /**
      * @return the default storage disk behavior

@@ -23,7 +23,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.WorldSavedDataNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
@@ -38,9 +37,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -53,8 +50,7 @@ public class API implements IRSAPI {
 
     private IComparer comparer = new Comparer();
     private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
-    private Map<Integer, INetworkNodeManager> networkNodeProviderServer = new HashMap<>();
-    private Map<Integer, INetworkNodeManager> networkNodeProviderClient = new HashMap<>();
+    private Map<Integer, INetworkNodeManager> networkNodeManagers = new HashMap<>();
     private IStorageDiskBehavior storageDiskBehavior = new StorageDiskBehavior();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
@@ -97,15 +93,12 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public INetworkNodeManager getNetworkNodeManager(final int dimension) {
-        Map<Integer, INetworkNodeManager> provider = FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? networkNodeProviderClient : networkNodeProviderServer;
+    public INetworkNodeManager getNetworkNodeManager(World world) {
+        if (world.isRemote) {
+            throw new IllegalStateException("Attempting to access network node manager on the client");
+        }
 
-        return provider.computeIfAbsent(dimension, r -> new NetworkNodeManager(dimension));
-    }
-
-    @Override
-    public void markNetworkNodesDirty(World world) {
-        WorldSavedDataNetworkNode.getOrLoadData(world).markDirty();
+        return networkNodeManagers.computeIfAbsent(world.provider.getDimension(), m -> NetworkNodeManager.getManager(world));
     }
 
     @Override

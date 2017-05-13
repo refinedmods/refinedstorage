@@ -25,6 +25,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
     private NBTTagCompound legacyTag;
 
+    private N clientNode;
+
     protected static final String NBT_ACTIVE = "Active";
 
     public TileNode() {
@@ -90,14 +92,21 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     @Nonnull
     @SuppressWarnings("unchecked")
     public N getNode() {
-        INetworkNodeManager manager = API.instance().getNetworkNodeManager(getWorld().provider.getDimension());
+        if (getWorld().isRemote) {
+            if (clientNode == null) {
+                clientNode = createNode();
+            }
+
+            return clientNode;
+        }
+
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager(getWorld());
 
         NetworkNode node = (NetworkNode) manager.getNode(pos);
 
         if (node == null) {
             manager.setNode(pos, node = createNode());
-
-            API.instance().markNetworkNodesDirty(getWorld());
+            manager.markForSaving();
         }
 
         if (node.getHolder().world() == null) {
@@ -125,6 +134,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         } else if (legacyTag.getSize() == 6 + 1 && hasMeta && hasForgeData && hasForgeCaps) {
             // NO OP
         } else {
+            System.out.println("[RS DEBUG] Reading legacy tag for node at " + pos + "!");
+
             node.read(legacyTag);
             node.markDirty();
 

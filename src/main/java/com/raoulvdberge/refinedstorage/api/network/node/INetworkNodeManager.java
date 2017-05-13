@@ -21,10 +21,9 @@ public interface INetworkNodeManager {
     /**
      * Removes a node from the registry at a given position.
      *
-     * @param pos          the position of the node
-     * @param notifyClient true to notify the client of the removal, false otherwise
+     * @param pos the position of the node
      */
-    void removeNode(BlockPos pos, boolean notifyClient);
+    void removeNode(BlockPos pos);
 
     /**
      * Sets a node in the registry at a given position.
@@ -43,4 +42,9 @@ public interface INetworkNodeManager {
      * Clears all the nodes.
      */
     void clear();
+
+    /**
+     * Marks the network node manager for saving.
+     */
+    void markForSaving();
 }

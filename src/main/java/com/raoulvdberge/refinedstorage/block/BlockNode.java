@@ -50,7 +50,7 @@ public abstract class BlockNode extends BlockBase {
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world.provider.getDimension());
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
 
         INetworkNode node = manager.getNode(pos);
 
@@ -58,9 +58,8 @@ public abstract class BlockNode extends BlockBase {
 
         removeTile(world, pos, state);
 
-        manager.removeNode(pos, true);
-
-        API.instance().markNetworkNodesDirty(world);
+        manager.removeNode(pos);
+        manager.markForSaving();
 
         if (node.getNetwork() != null) {
             node.getNetwork().getNodeGraph().rebuild();
