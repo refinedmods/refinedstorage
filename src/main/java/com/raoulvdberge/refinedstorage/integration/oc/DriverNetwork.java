@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.integration.oc;
 
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
+import li.cil.oc.api.Driver;
 import li.cil.oc.api.driver.DriverBlock;
 import li.cil.oc.api.network.ManagedEnvironment;
 import net.minecraft.tileentity.TileEntity;
@@ -19,5 +20,12 @@ public class DriverNetwork implements DriverBlock {
     @Override
     public ManagedEnvironment createEnvironment(World world, BlockPos pos, EnumFacing facing) {
         return new EnvironmentNetwork(world.getTileEntity(pos).getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing).getNode());
+    }
+
+    public static void register() {
+        Driver.add(new DriverNetwork());
+
+        Driver.add(new ConverterCraftingPattern());
+        Driver.add(new ConverterCraftingTask());
     }
 }

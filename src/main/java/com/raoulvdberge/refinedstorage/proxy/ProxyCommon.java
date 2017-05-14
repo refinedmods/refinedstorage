@@ -21,6 +21,7 @@ import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
+import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.item.*;
@@ -831,7 +832,7 @@ public class ProxyCommon {
 
     public void init(FMLInitializationEvent e) {
         if (IntegrationOC.isLoaded()) {
-            IntegrationOC.register();
+            DriverNetwork.register();
         }
     }
 

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.oc;
 
-import li.cil.oc.api.Driver;
 import net.minecraftforge.fml.common.Loader;
 
 public final class IntegrationOC {
@@ -8,12 +7,5 @@ public final class IntegrationOC {
 
     public static boolean isLoaded() {
         return Loader.isModLoaded(ID);
-    }
-
-    public static void register() {
-        Driver.add(new DriverNetwork());
-
-        Driver.add(new ConverterCraftingPattern());
-        Driver.add(new ConverterCraftingTask());
     }
 }
