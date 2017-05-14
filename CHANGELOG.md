@@ -4,6 +4,7 @@
 - Updated Forge to 2296 (raoulvdberge)
 - Added Portable Grid (raoulvdberge)
 - Added OpenComputers integration (thraaawn)
+- Fixed bug where machines would reset (clear all configurations, remove inventory) sometimes (raoulvdberge)
 - Fixed Crafting Tweaks buttons positioned wrongly (blay09)
 - Fixed Crafting Tweaks keybindings interfering with RS keybindings (blay09)
 - Fixed crash when updating storages (raoulvdberge)
