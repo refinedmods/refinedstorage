@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.6
+- Performance improvement to network scanning (raoulvdberge)
+
 ### 1.4.5
 - Updated Forge to 2296 (raoulvdberge)
 - Added Portable Grid (raoulvdberge)

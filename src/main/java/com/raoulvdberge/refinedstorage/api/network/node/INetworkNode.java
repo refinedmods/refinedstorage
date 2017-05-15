@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,6 +71,11 @@ public interface INetworkNode {
      * @return the position of this network node
      */
     BlockPos getPos();
+
+    /**
+     * @return the world of this network node
+     */
+    World getWorld();
 
     /**
      * Marks this node as dirty for saving.

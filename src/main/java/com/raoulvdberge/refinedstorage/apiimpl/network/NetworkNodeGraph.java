@@ -23,6 +23,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
 
     private List<INetworkNode> nodes = new ArrayList<>();
+    private Set<Integer> nodePositions = new HashSet<>();
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
@@ -39,6 +40,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         Set<INetworkNode> newNodes = new HashSet<>();
+        Set<Integer> newNodePositions = new HashSet<>();
         Queue<NodeToCheck> toCheck = new ArrayDeque<>();
 
         INetworkNeighborhoodAware.Operator operator = (world, pos, side) -> {
@@ -51,7 +53,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                     INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
                     INetworkNode otherNode = otherNodeProxy.getNode();
 
-                    if (newNodes.add(otherNode)) {
+                    if (newNodes.add(otherNode) && newNodePositions.add(getNodeHash(otherNode))) {
                         toCheck.add(new NodeToCheck(otherNode, world, pos, side, tile));
                     }
                 }
@@ -72,12 +74,17 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         List<INetworkNode> oldNodes = nodes;
+        Set<Integer> oldNodePositions = nodePositions;
+
         nodes = new ArrayList<>(newNodes);
+        nodePositions = new HashSet<>(newNodePositions);
 
         boolean changed = false;
 
         for (INetworkNode node : nodes) {
-            if (!oldNodes.contains(node)) {
+            if (!oldNodePositions.contains(getNodeHash(node))) {
+                System.out.println("New node: " + node);
+
                 node.onConnected(controller);
 
                 changed = true;
@@ -85,7 +92,9 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         for (INetworkNode oldNode : oldNodes) {
-            if (!nodes.contains(oldNode)) {
+            if (!nodePositions.contains(getNodeHash(oldNode))) {
+                System.out.println("Removed node: " + oldNode);
+
                 oldNode.onDisconnected(controller);
 
                 changed = true;
@@ -95,6 +104,12 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         if (changed) {
             controller.getDataManager().sendParameterToWatchers(TileController.NODES);
         }
+    }
+
+    private static int getNodeHash(INetworkNode node) {
+        int result = node.getWorld().provider.getDimension();
+        result = 31 * result + node.getPos().hashCode();
+        return result;
     }
 
     @Override

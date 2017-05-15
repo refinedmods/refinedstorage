@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -149,6 +150,11 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         return holder.pos();
     }
 
+    @Override
+    public World getWorld() {
+        return holder.world();
+    }
+
     public boolean canConduct(@Nullable EnumFacing direction) {
         return true;
     }
@@ -185,19 +191,5 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof NetworkNode
-            && holder.pos().equals(((NetworkNode) o).holder.pos())
-            && holder.world().provider.getDimension() == ((NetworkNode) o).holder.world().provider.getDimension();
-    }
-
-    @Override
-    public int hashCode() {
-        int result = holder.pos().hashCode();
-        result = 31 * result + holder.world().provider.getDimension();
-        return result;
     }
 }
