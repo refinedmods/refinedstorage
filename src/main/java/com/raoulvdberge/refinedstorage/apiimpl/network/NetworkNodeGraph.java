@@ -83,8 +83,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         for (INetworkNode node : nodes) {
             if (!oldNodePositions.contains(getNodeHash(node))) {
-                System.out.println("New node: " + node);
-
                 node.onConnected(controller);
 
                 changed = true;
@@ -93,8 +91,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         for (INetworkNode oldNode : oldNodes) {
             if (!nodePositions.contains(getNodeHash(oldNode))) {
-                System.out.println("Removed node: " + oldNode);
-
                 oldNode.onDisconnected(controller);
 
                 changed = true;

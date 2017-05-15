@@ -137,8 +137,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         } else if (legacyTag.getSize() == 6 + 1 && hasMeta && hasForgeData && hasForgeCaps) {
             // NO OP
         } else {
-            System.out.println("[RS DEBUG] Reading legacy tag for node at " + pos + "!");
-
             node.read(legacyTag);
             node.markDirty();
 

@@ -100,8 +100,6 @@ public class API implements IRSAPI {
         NetworkNodeManager instance = (NetworkNodeManager) storage.getOrLoadData(NetworkNodeManager.class, NetworkNodeManager.NAME);
 
         if (instance == null) {
-            System.out.println("[RS DEBUG] Initializing Network Node Manager for " + world.provider.getDimension());
-
             instance = new NetworkNodeManager(NetworkNodeManager.NAME);
 
             storage.setData(NetworkNodeManager.NAME, instance);

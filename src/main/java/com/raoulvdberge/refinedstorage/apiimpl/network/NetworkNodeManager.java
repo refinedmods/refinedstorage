@@ -31,8 +31,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        System.out.println("[RS DEBUG] Reading network nodes, first clearing data...");
-
         clear();
 
         if (tag.hasKey(NBT_NODES)) {
@@ -55,15 +53,11 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                     ++nodesRead;
                 }
             }
-
-            System.out.println("[RS DEBUG] Read " + nodesRead + " nodes!");
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        System.out.println("[RS DEBUG] Writing network nodes");
-
         NBTTagList list = new NBTTagList();
 
         for (INetworkNode node : all()) {
@@ -89,8 +83,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     @Override
     public void removeNode(BlockPos pos) {
-        System.out.println("[RS DEBUG] Removing node at " + pos);
-
         nodes.remove(pos);
     }
 
@@ -106,7 +98,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     @Override
     public void clear() {
-        System.out.println("[RS DEBUG] Clearing data!");
         nodes.clear();
     }
 
