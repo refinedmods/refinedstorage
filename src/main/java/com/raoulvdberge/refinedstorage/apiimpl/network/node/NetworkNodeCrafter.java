@@ -5,12 +5,13 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -29,8 +30,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> {
         // We can only validate the crafting pattern if the world exists.
         // If the world doesn't exist, this is probably called while reading and in that case it doesn't matter.
-        if (holder.world() != null) {
-            return s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(holder.world(), s, this).isValid();
+        if (container.world() != null) {
+            return s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(container.world(), s, this).isValid();
         }
 
         return true;
@@ -39,7 +40,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (holder.world() != null && !holder.world().isRemote) {
+            if (container.world() != null && !container.world().isRemote) {
                 rebuildPatterns();
             }
 
@@ -56,8 +57,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private boolean triggeredAutocrafting = false;
     private boolean blocked = false;
 
-    public NetworkNodeCrafter(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeCrafter(INetworkNodeContainer container) {
+        super(container);
     }
 
     private void rebuildPatterns() {
@@ -67,7 +68,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             ItemStack patternStack = patterns.getStackInSlot(i);
 
             if (!patternStack.isEmpty()) {
-                ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(holder.world(), patternStack, this);
+                ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(container.world(), patternStack, this);
 
                 if (pattern.isValid()) {
                     actualPatterns.add(pattern);
@@ -97,7 +98,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             rebuildPatterns();
         }
 
-        if (network != null && triggeredAutocrafting && holder.world().isBlockPowered(holder.pos())) {
+        if (network != null && triggeredAutocrafting && container.world().isBlockPowered(container.pos())) {
             for (ICraftingPattern pattern : actualPatterns) {
                 for (ItemStack output : pattern.getOutputs()) {
                     network.getCraftingManager().schedule(output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
@@ -107,12 +108,12 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    protected void onConnectedStateChange(INetworkMaster network, boolean state) {
+    protected void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
         if (!state) {
             network.getCraftingManager().getTasks().stream()
-                .filter(task -> task.getPattern().getContainer().getPosition().equals(holder.pos()))
+                .filter(task -> task.getPattern().getContainer().getPosition().equals(container.pos()))
                 .forEach(task -> network.getCraftingManager().cancel(task));
         }
 
@@ -173,7 +174,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public IItemHandler getFacingInventory() {
-        return RSUtils.getItemHandler(getFacingTile(), holder.getDirection().getOpposite());
+        return RSUtils.getItemHandler(getFacingTile(), container.getDirection().getOpposite());
     }
 
     @Override
@@ -183,7 +184,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public BlockPos getPosition() {
-        return holder.pos();
+        return container.pos();
     }
 
     public IItemHandler getPatternItems() {

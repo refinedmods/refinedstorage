@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -280,16 +280,16 @@ public class CraftingManager implements ICraftingManager {
         craftingTasks.forEach(t -> t.getMissing().clear());
     }
 
-    private static ICraftingTask readCraftingTask(INetworkMaster network, NBTTagCompound tag) {
+    private static ICraftingTask readCraftingTask(INetwork network, NBTTagCompound tag) {
         ItemStack stack = new ItemStack(tag.getCompoundTag(ICraftingTask.NBT_PATTERN_STACK));
 
         if (!stack.isEmpty() && stack.getItem() instanceof ICraftingPatternProvider) {
-            TileEntity container = network.getNetworkWorld().getTileEntity(BlockPos.fromLong(tag.getLong(ICraftingTask.NBT_PATTERN_CONTAINER)));
+            TileEntity container = network.world().getTileEntity(BlockPos.fromLong(tag.getLong(ICraftingTask.NBT_PATTERN_CONTAINER)));
 
             if (container instanceof INetworkNodeProxy) {
                 INetworkNodeProxy proxy = (INetworkNodeProxy) container;
                 if (proxy.getNode() instanceof ICraftingPatternContainer) {
-                    ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(network.getNetworkWorld(), stack, (ICraftingPatternContainer) proxy.getNode());
+                    ICraftingPattern pattern = ((ICraftingPatternProvider) stack.getItem()).create(network.world(), stack, (ICraftingPatternContainer) proxy.getNode());
 
                     ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(tag.getString(ICraftingTask.NBT_PATTERN_ID));
                     if (factory != null) {

@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -29,7 +29,7 @@ public class StorageItemCyclops extends StorageItemExternal {
 
     public StorageItemCyclops(NetworkNodeExternalStorage externalStorage) {
         this.externalStorage = externalStorage;
-        this.opposite = externalStorage.getHolder().getDirection().getOpposite();
+        this.opposite = externalStorage.getContainer().getDirection().getOpposite();
         this.cyclopsInv = () -> {
             TileEntity f = externalStorage.getFacingTile();
 
@@ -38,7 +38,7 @@ public class StorageItemCyclops extends StorageItemExternal {
     }
 
     @Override
-    public void detectChanges(INetworkMaster network) {
+    public void detectChanges(INetwork network) {
         InventoryTileEntityBase inv = cyclopsInv.get();
         if (inv != null) {
             int inventoryHash = inv.getInventoryHash();

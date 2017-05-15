@@ -4,12 +4,13 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -45,8 +46,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     private boolean powered = false;
     private boolean wasPowered;
 
-    public NetworkNodeDetector(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeDetector(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -61,9 +62,9 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
         if (powered != wasPowered) {
             wasPowered = powered;
 
-            holder.world().notifyNeighborsOfStateChange(holder.pos(), RSBlocks.DETECTOR, true);
+            container.world().notifyNeighborsOfStateChange(container.pos(), RSBlocks.DETECTOR, true);
 
-            RSUtils.updateBlock(holder.world(), holder.pos());
+            RSUtils.updateBlock(container.world(), container.pos());
         }
 
         if (network != null && canUpdate() && ticks % SPEED == 0) {
@@ -117,7 +118,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public void onConnectedStateChange(INetworkMaster network, boolean state) {
+    public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
         if (!state) {
@@ -234,7 +235,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return holder.world().isRemote ? TileDetector.TYPE.getValue() : type;
+        return container.world().isRemote ? TileDetector.TYPE.getValue() : type;
     }
 
     @Override

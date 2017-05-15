@@ -1,11 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -22,16 +23,16 @@ import javax.annotation.Nullable;
 
 public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodAware, IWrenchable {
     @Nullable
-    protected INetworkMaster network;
-    protected INetworkNodeHolder holder;
+    protected INetwork network;
+    protected INetworkNodeContainer container;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private boolean couldUpdate;
     private boolean active;
 
-    public NetworkNode(INetworkNodeHolder holder) {
-        this.holder = holder;
+    public NetworkNode(INetworkNodeContainer container) {
+        this.container = container;
     }
 
     public RedstoneMode getRedstoneMode() {
@@ -45,52 +46,50 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     }
 
     @Nullable
-    public INetworkNodeHolder getHolder() {
-        return holder;
+    public INetworkNodeContainer getContainer() {
+        return container;
     }
 
-    public void setHolder(INetworkNodeHolder holder) {
-        this.holder = holder;
+    public void setContainer(INetworkNodeContainer container) {
+        this.container = container;
     }
 
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        IBlockState state = holder.world().getBlockState(holder.pos());
+        IBlockState state = container.world().getBlockState(container.pos());
 
-        Item item = Item.getItemFromBlock(state.getBlock());
-
-        return new ItemStack(item, 1, state.getBlock().getMetaFromState(state));
+        return new ItemStack(Item.getItemFromBlock(state.getBlock()), 1, state.getBlock().getMetaFromState(state));
     }
 
     @Override
-    public void onConnected(INetworkMaster network) {
+    public void onConnected(INetwork network) {
         onConnectedStateChange(network, true);
 
         this.network = network;
     }
 
     @Override
-    public void onDisconnected(INetworkMaster network) {
+    public void onDisconnected(INetwork network) {
         this.network = null;
 
         onConnectedStateChange(network, false);
     }
 
-    protected void onConnectedStateChange(INetworkMaster network, boolean state) {
+    protected void onConnectedStateChange(INetwork network, boolean state) {
         // NO OP
     }
 
     @Override
     public void markDirty() {
-        if (holder.world() != null && !holder.world().isRemote) {
-            API.instance().getNetworkNodeManager(holder.world()).markForSaving();
+        if (container.world() != null && !container.world().isRemote) {
+            API.instance().getNetworkNodeManager(container.world()).markForSaving();
         }
     }
 
     @Override
     public boolean canUpdate() {
-        return redstoneMode.isEnabled(holder.world(), holder.pos());
+        return redstoneMode.isEnabled(container.world(), container.pos());
     }
 
     @Override
@@ -103,7 +102,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
             couldUpdate = canUpdate;
 
             if (hasConnectivityState()) {
-                RSUtils.updateBlock(holder.world(), holder.pos());
+                RSUtils.updateBlock(container.world(), container.pos());
             }
 
             if (network != null) {
@@ -141,18 +140,18 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     @Nullable
     @Override
-    public INetworkMaster getNetwork() {
+    public INetwork getNetwork() {
         return network;
     }
 
     @Override
     public BlockPos getPos() {
-        return holder.pos();
+        return container.pos();
     }
 
     @Override
     public World getWorld() {
-        return holder.world();
+        return container.world();
     }
 
     public boolean canConduct(@Nullable EnumFacing direction) {
@@ -163,13 +162,13 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     public void walkNeighborhood(Operator operator) {
         for (EnumFacing facing : EnumFacing.VALUES) {
             if (canConduct(facing)) {
-                operator.apply(holder.world(), holder.pos().offset(facing), facing.getOpposite());
+                operator.apply(container.world(), container.pos().offset(facing), facing.getOpposite());
             }
         }
     }
 
     public TileEntity getFacingTile() {
-        return holder.world().getTileEntity(holder.pos().offset(holder.getDirection()));
+        return container.world().getTileEntity(container.pos().offset(container.getDirection()));
     }
 
     @Nullable

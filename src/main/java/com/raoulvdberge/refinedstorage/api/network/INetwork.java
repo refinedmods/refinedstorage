@@ -18,9 +18,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Represents a network master, usually is a controller.
+ * Represents a network, usually is a controller.
  */
-public interface INetworkMaster {
+public interface INetwork {
     /**
      * @return the energy usage per tick of this network
      */
@@ -120,7 +120,7 @@ public interface INetworkMaster {
     /**
      * Sends a crafting monitor update to all players that are watching a crafting monitor.
      * <p>
-     * WARNING: In most cases, you should just use {@link INetworkMaster#markCraftingMonitorForUpdate()}, if not,
+     * WARNING: In most cases, you should just use {@link INetwork#markCraftingMonitorForUpdate()}, if not,
      * you can get high bandwidth usage.
      */
     void sendCraftingMonitorUpdate();
@@ -255,5 +255,5 @@ public interface INetworkMaster {
     /**
      * @return the world where this network is in
      */
-    World getNetworkWorld();
+    World world();
 }

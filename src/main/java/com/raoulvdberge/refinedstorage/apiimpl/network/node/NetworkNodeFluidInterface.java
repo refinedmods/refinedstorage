@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import net.minecraft.item.ItemStack;
@@ -32,8 +33,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (holder.world() != null && !holder.world().isRemote) {
-                ((TileFluidInterface) holder.world().getTileEntity(holder.pos())).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_IN);
+            if (container.world() != null && !container.world().isRemote) {
+                ((TileFluidInterface) container.world().getTileEntity(container.pos())).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_IN);
             }
 
             markDirty();
@@ -45,8 +46,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (holder.world() != null && !holder.world().isRemote) {
-                ((TileFluidInterface) holder.world().getTileEntity(holder.pos())).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
+            if (container.world() != null && !container.world().isRemote) {
+                ((TileFluidInterface) container.world().getTileEntity(container.pos())).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
             }
 
             markDirty();
@@ -60,8 +61,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
-    public NetworkNodeFluidInterface(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeFluidInterface(INetworkNodeContainer container) {
+        super(container);
 
         tankIn.setCanDrain(false);
         tankIn.setCanFill(true);

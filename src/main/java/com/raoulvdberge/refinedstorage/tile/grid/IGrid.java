@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.block.GridType;
@@ -20,7 +20,7 @@ public interface IGrid {
     GridType getType();
 
     @Nullable
-    INetworkMaster getNetwork();
+    INetwork getNetwork();
 
     @Nullable
     default IItemGridHandler getItemHandler() {

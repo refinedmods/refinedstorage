@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
@@ -25,7 +25,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
     public MessageGridItemUpdate() {
     }
 
-    public MessageGridItemUpdate(INetworkMaster network, boolean canCraft) {
+    public MessageGridItemUpdate(INetwork network, boolean canCraft) {
         this.sendHandler = (buf) -> {
             int size = network.getItemStorageCache().getList().getStacks().size();
 

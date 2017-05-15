@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -19,8 +20,8 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_RANGE);
 
-    public NetworkNodeWirelessTransmitter(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeWirelessTransmitter(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -56,12 +57,12 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
 
     @Override
     public BlockPos getOrigin() {
-        return holder.pos();
+        return container.pos();
     }
 
     @Override
     public int getDimension() {
-        return holder.world().provider.getDimension();
+        return container.world().provider.getDimension();
     }
 
     public ItemHandlerBase getUpgrades() {
@@ -85,6 +86,6 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
 
     @Override
     public void walkNeighborhood(Operator operator) {
-        operator.apply(holder.world(), holder.pos().offset(EnumFacing.DOWN), EnumFacing.UP);
+        operator.apply(container.world(), container.pos().offset(EnumFacing.DOWN), EnumFacing.UP);
     }
 }

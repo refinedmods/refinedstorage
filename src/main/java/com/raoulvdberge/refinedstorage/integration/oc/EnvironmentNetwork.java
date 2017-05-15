@@ -170,7 +170,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         EnumFacing facing = EnumFacing.getFront(args.optInteger(2, 0));
 
         // Get the tile-entity on the specified side
-        TileEntity targetEntity = node.getNetwork().getNetworkWorld().getTileEntity(node.getPos().offset(facing));
+        TileEntity targetEntity = node.getNetwork().world().getTileEntity(node.getPos().offset(facing));
         if (targetEntity == null || !targetEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite())) {
             throw new IllegalArgumentException("No fluid tank on the given side");
         }
@@ -244,7 +244,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         EnumFacing facing = EnumFacing.getFront(args.optInteger(2, 0));
 
         // Get the tile-entity on the specified side
-        TileEntity targetEntity = node.getNetwork().getNetworkWorld().getTileEntity(node.getPos().offset(facing));
+        TileEntity targetEntity = node.getNetwork().world().getTileEntity(node.getPos().offset(facing));
         if (targetEntity == null || !targetEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
             throw new IllegalArgumentException("No inventory on the given side");
         }

@@ -38,7 +38,7 @@ public class SlotFilterType extends SlotFilter {
     @Override
     @Nonnull
     public ItemStack getStack() {
-        return (type.getType() == IType.ITEMS || !((NetworkNode) type).getHolder().world().isRemote) ? super.getStack() : ItemStack.EMPTY;
+        return (type.getType() == IType.ITEMS || !((NetworkNode) type).getContainer().world().isRemote) ? super.getStack() : ItemStack.EMPTY;
     }
 
     public ItemStack getRealStack() {

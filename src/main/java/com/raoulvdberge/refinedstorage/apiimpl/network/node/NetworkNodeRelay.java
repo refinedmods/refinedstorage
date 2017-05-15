@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.util.EnumFacing;
 
@@ -9,8 +10,8 @@ import javax.annotation.Nullable;
 public class NetworkNodeRelay extends NetworkNode {
     public static final String ID = "relay";
 
-    public NetworkNodeRelay(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeRelay(INetworkNodeContainer container) {
+        super(container);
 
         this.redstoneMode = RedstoneMode.LOW;
     }

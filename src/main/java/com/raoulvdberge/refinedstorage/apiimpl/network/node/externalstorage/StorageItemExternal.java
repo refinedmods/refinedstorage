@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -15,7 +15,7 @@ public abstract class StorageItemExternal implements IStorage<ItemStack> {
 
     public abstract int getCapacity();
 
-    public void detectChanges(INetworkMaster network) {
+    public void detectChanges(INetwork network) {
         // If we are insert only, we don't care about sending changes
         if (getAccessType() == AccessType.INSERT) {
             return;

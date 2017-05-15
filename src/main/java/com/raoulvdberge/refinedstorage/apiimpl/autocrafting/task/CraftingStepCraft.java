@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -22,13 +22,13 @@ public class CraftingStepCraft extends CraftingStep {
 
     private List<ItemStack> toInsert;
 
-    public CraftingStepCraft(INetworkMaster network, ICraftingPattern pattern, List<ItemStack> toInsert, List<ICraftingStep> preliminarySteps) {
+    public CraftingStepCraft(INetwork network, ICraftingPattern pattern, List<ItemStack> toInsert, List<ICraftingStep> preliminarySteps) {
         super(network, pattern, preliminarySteps);
         this.toInsert = new LinkedList<>();
         toInsert.forEach(stack -> this.toInsert.add(stack == null ? null : stack.copy()));
     }
 
-    public CraftingStepCraft(INetworkMaster network) {
+    public CraftingStepCraft(INetwork network) {
         super(network);
     }
 

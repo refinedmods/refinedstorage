@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
@@ -56,8 +57,8 @@ public class NetworkNodeSolderer extends NetworkNode {
     private boolean wasWorking = false;
     private int progress = 0;
 
-    public NetworkNodeSolderer(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeSolderer(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class NetworkNodeSolderer extends NetworkNode {
 
             markDirty();
 
-            RSUtils.updateBlock(holder.world(), holder.pos());
+            RSUtils.updateBlock(container.world(), container.pos());
         }
 
         if (network == null || !canUpdate()) {
@@ -125,7 +126,7 @@ public class NetworkNodeSolderer extends NetworkNode {
     }
 
     @Override
-    public void onConnectedStateChange(INetworkMaster network, boolean state) {
+    public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
         if (!state) {

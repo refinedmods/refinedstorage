@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -16,12 +16,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class NetworkItemHandler implements INetworkItemHandler {
-    private INetworkMaster network;
+    private INetwork network;
 
     private List<INetworkItem> items = new ArrayList<>();
     private List<INetworkItem> itemsToRemove = new ArrayList<>();
 
-    public NetworkItemHandler(INetworkMaster network) {
+    public NetworkItemHandler(INetwork network) {
         this.network = network;
     }
 

@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
@@ -70,7 +70,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class TileController extends TileBase implements ITickable, INetworkMaster, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
+public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     public static final TileDataParameter<Integer> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
@@ -593,7 +593,7 @@ public class TileController extends TileBase implements ITickable, INetworkMaste
     }
 
     @Override
-    public World getNetworkWorld() {
+    public World world() {
         return getWorld();
     }
 
@@ -713,12 +713,12 @@ public class TileController extends TileBase implements ITickable, INetworkMaste
     }
 
     @Override
-    public void onConnected(INetworkMaster network) {
+    public void onConnected(INetwork network) {
         Preconditions.checkArgument(this == network, "Should not be connected to another controller");
     }
 
     @Override
-    public void onDisconnected(INetworkMaster network) {
+    public void onDisconnected(INetwork network) {
         Preconditions.checkArgument(this == network, "Should not be connected to another controller");
     }
 
@@ -728,7 +728,7 @@ public class TileController extends TileBase implements ITickable, INetworkMaste
     }
 
     @Override
-    public INetworkMaster getNetwork() {
+    public INetwork getNetwork() {
         return this;
     }
 

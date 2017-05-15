@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
@@ -167,7 +167,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
     @Nullable
     @Override
-    public INetworkMaster getNetwork() {
+    public INetwork getNetwork() {
         return null;
     }
 

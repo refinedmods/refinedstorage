@@ -31,7 +31,7 @@ public class StorageFluidDiskDrive implements IStorageDisk<FluidStack> {
                 if (lastState != currentState) {
                     lastState = currentState;
 
-                    RSUtils.updateBlock(diskDrive.getHolder().world(), diskDrive.getHolder().pos());
+                    RSUtils.updateBlock(diskDrive.getContainer().world(), diskDrive.getContainer().pos());
                 }
             },
             diskDrive::getVoidExcess,

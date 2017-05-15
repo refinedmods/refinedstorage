@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -17,9 +17,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 
 public class FluidGridHandler implements IFluidGridHandler {
-    private INetworkMaster network;
+    private INetwork network;
 
-    public FluidGridHandler(INetworkMaster network) {
+    public FluidGridHandler(INetwork network) {
         this.network = network;
     }
 

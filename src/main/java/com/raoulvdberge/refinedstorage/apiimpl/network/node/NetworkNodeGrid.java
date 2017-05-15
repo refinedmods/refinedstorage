@@ -16,6 +16,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
@@ -99,8 +100,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     private boolean oredictPattern = false;
 
-    public NetworkNodeGrid(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeGrid(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -152,8 +153,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     public GridType getType() {
-        if (type == null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.GRID) {
-            type = (GridType) holder.world().getBlockState(holder.pos()).getValue(BlockGrid.TYPE);
+        if (type == null && container.world().getBlockState(container.pos()).getBlock() == RSBlocks.GRID) {
+            type = (GridType) container.world().getBlockState(container.pos()).getValue(BlockGrid.TYPE);
         }
 
         return type == null ? GridType.NORMAL : type;
@@ -205,7 +206,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCraftingMatrixChanged() {
-        result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, holder.world()));
+        result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, container.world()));
 
         markDirty();
     }
@@ -301,7 +302,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCrafted(EntityPlayer player) {
-        NonNullList<ItemStack> remainder = CraftingManager.getInstance().getRemainingItems(matrix, holder.world());
+        NonNullList<ItemStack> remainder = CraftingManager.getInstance().getRemainingItems(matrix, container.world());
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);
@@ -390,32 +391,32 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public int getViewType() {
-        return holder.world().isRemote ? TileGrid.VIEW_TYPE.getValue() : viewType;
+        return container.world().isRemote ? TileGrid.VIEW_TYPE.getValue() : viewType;
     }
 
     @Override
     public int getSortingDirection() {
-        return holder.world().isRemote ? TileGrid.SORTING_DIRECTION.getValue() : sortingDirection;
+        return container.world().isRemote ? TileGrid.SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     @Override
     public int getSortingType() {
-        return holder.world().isRemote ? TileGrid.SORTING_TYPE.getValue() : sortingType;
+        return container.world().isRemote ? TileGrid.SORTING_TYPE.getValue() : sortingType;
     }
 
     @Override
     public int getSearchBoxMode() {
-        return holder.world().isRemote ? TileGrid.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return container.world().isRemote ? TileGrid.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override
     public int getSize() {
-        return holder.world().isRemote ? TileGrid.SIZE.getValue() : size;
+        return container.world().isRemote ? TileGrid.SIZE.getValue() : size;
     }
 
     @Override
     public int getTabSelected() {
-        return holder.world().isRemote ? TileGrid.TAB_SELECTED.getValue() : tabSelected;
+        return container.world().isRemote ? TileGrid.TAB_SELECTED.getValue() : tabSelected;
     }
 
     @Override

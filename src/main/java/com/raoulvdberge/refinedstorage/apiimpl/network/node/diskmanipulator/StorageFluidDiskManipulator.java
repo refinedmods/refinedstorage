@@ -31,7 +31,7 @@ public class StorageFluidDiskManipulator implements IStorageDisk<FluidStack> {
                 if (lastState != currentState) {
                     lastState = currentState;
 
-                    RSUtils.updateBlock(diskManipulator.getHolder().world(), diskManipulator.getHolder().pos());
+                    RSUtils.updateBlock(diskManipulator.getContainer().world(), diskManipulator.getContainer().pos());
                 }
             },
             () -> false,

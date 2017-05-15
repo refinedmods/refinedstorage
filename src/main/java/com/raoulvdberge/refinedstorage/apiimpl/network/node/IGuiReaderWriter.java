@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 
 public interface IGuiReaderWriter {
@@ -14,12 +14,12 @@ public interface IGuiReaderWriter {
 
     TileDataParameter<Integer> getRedstoneModeParameter();
 
-    INetworkMaster getNetwork();
+    INetwork getNetwork();
 
     boolean canUpdate();
 
     default void onAdd(String name) {
-        INetworkMaster network = getNetwork();
+        INetwork network = getNetwork();
 
         if (network != null && !name.isEmpty()) {
             network.addReaderWriterChannel(name);
@@ -27,7 +27,7 @@ public interface IGuiReaderWriter {
     }
 
     default void onRemove(String name) {
-        INetworkMaster network = getNetwork();
+        INetwork network = getNetwork();
 
         if (network != null && !name.isEmpty()) {
             network.removeReaderWriterChannel(name);

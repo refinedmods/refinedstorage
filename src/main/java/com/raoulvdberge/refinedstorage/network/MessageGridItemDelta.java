@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import io.netty.buffer.ByteBuf;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 
 public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGridItemDelta, IMessage> {
     @Nullable
-    private INetworkMaster network;
+    private INetwork network;
     private ItemStack stack;
     private int delta;
 
@@ -24,7 +24,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     public MessageGridItemDelta() {
     }
 
-    public MessageGridItemDelta(@Nullable INetworkMaster network, ItemStack stack, int delta) {
+    public MessageGridItemDelta(@Nullable INetwork network, ItemStack stack, int delta) {
         this.network = network;
         this.stack = stack;
         this.delta = delta;

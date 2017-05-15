@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
@@ -21,11 +21,11 @@ import java.util.stream.IntStream;
 public class CraftingStepProcess extends CraftingStep {
     public static final String ID = "process";
 
-    public CraftingStepProcess(INetworkMaster network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
+    public CraftingStepProcess(INetwork network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
         super(network, pattern, preliminarySteps);
     }
 
-    public CraftingStepProcess(INetworkMaster network) {
+    public CraftingStepProcess(INetwork network) {
         super(network);
     }
 

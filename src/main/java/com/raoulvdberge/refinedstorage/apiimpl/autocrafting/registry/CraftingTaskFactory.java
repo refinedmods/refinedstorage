@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStep;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
@@ -28,7 +28,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
 
     @Override
     @Nonnull
-    public ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated, @Nullable NBTTagCompound tag) {
+    public ICraftingTask create(INetwork network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated, @Nullable NBTTagCompound tag) {
         if (tag != null) {
             NBTTagList stepsList = tag.getTagList(CraftingTask.NBT_STEPS, Constants.NBT.TAG_COMPOUND);
 
@@ -78,7 +78,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
 
     @Nonnull
     @Override
-    public ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity, boolean automated) {
+    public ICraftingTask create(INetwork network, @Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity, boolean automated) {
         return new CraftingTask(network, stack, patternChain, quantity, automated);
     }
 }

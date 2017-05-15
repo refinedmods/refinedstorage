@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.security;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SecurityManager implements ISecurityManager {
-    private INetworkMaster network;
+    private INetwork network;
     private Map<UUID, ISecurityCard> cards = new HashMap<>();
 
-    public SecurityManager(INetworkMaster network) {
+    public SecurityManager(INetwork network) {
         this.network = network;
     }
 

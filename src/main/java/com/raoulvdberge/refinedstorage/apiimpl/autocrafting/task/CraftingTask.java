@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -39,7 +39,7 @@ public class CraftingTask implements ICraftingTask {
     public static final String NBT_TO_INSERT_ITEMS = "ToInsertItems";
     public static final String NBT_TO_INSERT_FLUIDS = "ToInsertFluids";
 
-    private INetworkMaster network;
+    private INetwork network;
     @Nullable
     private ItemStack requested;
     private ICraftingPattern pattern;
@@ -56,7 +56,7 @@ public class CraftingTask implements ICraftingTask {
     private Deque<FluidStack> toInsertFluids = new ArrayDeque<>();
     private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, boolean automated) {
+    public CraftingTask(INetwork network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, boolean automated) {
         this.network = network;
         this.requested = requested;
         this.pattern = pattern;
@@ -64,13 +64,13 @@ public class CraftingTask implements ICraftingTask {
         this.automated = automated;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPatternChain chain, int quantity, boolean automated) {
+    public CraftingTask(INetwork network, @Nullable ItemStack requested, ICraftingPatternChain chain, int quantity, boolean automated) {
         this(network, requested, chain.getPrototype(), quantity, automated);
 
         this.chain = chain;
     }
 
-    public CraftingTask(INetworkMaster network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> mainSteps, Deque<ItemStack> toInsertItems, IStackList<FluidStack> toTakeFluids, Deque<FluidStack> toInsertFluids, boolean automated) {
+    public CraftingTask(INetwork network, @Nullable ItemStack requested, ICraftingPattern pattern, int quantity, List<ICraftingStep> mainSteps, Deque<ItemStack> toInsertItems, IStackList<FluidStack> toTakeFluids, Deque<FluidStack> toInsertFluids, boolean automated) {
         this(network, requested, pattern, quantity, automated);
 
         this.mainSteps = mainSteps;

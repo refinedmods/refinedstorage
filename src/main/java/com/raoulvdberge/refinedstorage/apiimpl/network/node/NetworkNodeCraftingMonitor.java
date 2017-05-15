@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -37,8 +38,8 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         }
     });
 
-    public NetworkNodeCraftingMonitor(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeCraftingMonitor(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
     @Override
     public boolean canViewAutomated() {
-        return holder.world().isRemote ? TileCraftingMonitor.VIEW_AUTOMATED.getValue() : viewAutomated;
+        return container.world().isRemote ? TileCraftingMonitor.VIEW_AUTOMATED.getValue() : viewAutomated;
     }
 
     @Override

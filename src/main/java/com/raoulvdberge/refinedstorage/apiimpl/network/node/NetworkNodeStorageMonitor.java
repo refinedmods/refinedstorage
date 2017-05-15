@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -37,7 +38,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         public void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            RSUtils.updateBlock(holder.world(), holder.pos());
+            RSUtils.updateBlock(container.world(), container.pos());
         }
     };
 
@@ -46,7 +47,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         public void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            RSUtils.updateBlock(holder.world(), holder.pos());
+            RSUtils.updateBlock(container.world(), container.pos());
         }
     };
 
@@ -57,8 +58,8 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
 
     private int oldAmount = -1;
 
-    public NetworkNodeStorageMonitor(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeStorageMonitor(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -72,7 +73,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         } else if (oldAmount != newAmount) {
             oldAmount = newAmount;
 
-            RSUtils.updateBlock(holder.world(), holder.pos());
+            RSUtils.updateBlock(container.world(), container.pos());
         }
     }
 
@@ -128,7 +129,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     public void extract(EntityPlayer player, EnumFacing side) {
-        if (type != IType.ITEMS || network == null || holder.getDirection() != side) {
+        if (type != IType.ITEMS || network == null || container.getDirection() != side) {
             return;
         }
 
@@ -145,7 +146,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
 
             if (result != null) {
                 if (!player.inventory.addItemStackToInventory(result.copy())) {
-                    InventoryHelper.spawnItemStack(holder.world(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), result);
+                    InventoryHelper.spawnItemStack(container.world(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), result);
                 }
             }
         }
@@ -170,21 +171,21 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     public void setCompare(int compare) {
         this.compare = compare;
 
-        RSUtils.updateBlock(holder.world(), holder.pos());
+        RSUtils.updateBlock(container.world(), container.pos());
 
         markDirty();
     }
 
     @Override
     public int getType() {
-        return holder.world().isRemote ? TileStorageMonitor.TYPE.getValue() : type;
+        return container.world().isRemote ? TileStorageMonitor.TYPE.getValue() : type;
     }
 
     @Override
     public void setType(int type) {
         this.type = type;
 
-        RSUtils.updateBlock(holder.world(), holder.pos());
+        RSUtils.updateBlock(container.world(), container.pos());
 
         markDirty();
     }

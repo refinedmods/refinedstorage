@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -30,20 +30,20 @@ public abstract class CraftingStep implements ICraftingStep {
     private static final String NBT_STARTED_PROCESSING = "StartedProcessing";
     private static final String NBT_PRELIMINARY_STEPS = "PreliminarySteps";
 
-    protected INetworkMaster network;
+    protected INetwork network;
     protected ICraftingPattern pattern;
     protected Map<Integer, Integer> satisfied;
     protected boolean startedProcessing;
     protected List<ICraftingStep> preliminarySteps;
 
-    public CraftingStep(INetworkMaster network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
+    public CraftingStep(INetwork network, ICraftingPattern pattern, List<ICraftingStep> preliminarySteps) {
         this.network = network;
         this.pattern = pattern;
         this.satisfied = new HashMap<>(getPattern().getOutputs().size());
         this.preliminarySteps = new ArrayList<>(preliminarySteps);
     }
 
-    public CraftingStep(INetworkMaster network) {
+    public CraftingStep(INetwork network) {
         this.network = network;
     }
 
@@ -51,12 +51,12 @@ public abstract class CraftingStep implements ICraftingStep {
         ItemStack patternStack = new ItemStack(tag.getCompoundTag(NBT_PATTERN));
 
         if (!patternStack.isEmpty()) {
-            TileEntity container = network.getNetworkWorld().getTileEntity(BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER)));
+            TileEntity container = network.world().getTileEntity(BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER)));
 
             if (container instanceof INetworkNodeProxy) {
                 INetworkNodeProxy proxy = (INetworkNodeProxy) container;
                 if (proxy.getNode() instanceof ICraftingPatternContainer) {
-                    this.pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(network.getNetworkWorld(), patternStack, (ICraftingPatternContainer) proxy.getNode());
+                    this.pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(network.world(), patternStack, (ICraftingPatternContainer) proxy.getNode());
                     this.satisfied = new HashMap<>(pattern.getOutputs().size());
 
                     for (ItemStack stack : pattern.getOutputs()) {
@@ -257,7 +257,7 @@ public abstract class CraftingStep implements ICraftingStep {
         return true;
     }
 
-    public static ICraftingStep toCraftingStep(NBTTagCompound compound, INetworkMaster network) {
+    public static ICraftingStep toCraftingStep(NBTTagCompound compound, INetwork network) {
         CraftingStep step = null;
 
         switch (compound.getString(CraftingStep.NBT_CRAFTING_STEP_TYPE)) {

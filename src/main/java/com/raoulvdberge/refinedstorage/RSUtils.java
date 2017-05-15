@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
@@ -138,7 +138,7 @@ public final class RSUtils {
         return stack;
     }
 
-    public static void writeItemStack(ByteBuf buf, ItemStack stack, @Nullable INetworkMaster network, boolean displayCraftText) {
+    public static void writeItemStack(ByteBuf buf, ItemStack stack, @Nullable INetwork network, boolean displayCraftText) {
         writeItemStack(buf, stack);
 
         buf.writeInt(API.instance().getItemStackHashCode(stack));

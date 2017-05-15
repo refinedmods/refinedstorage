@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StorageCacheItem implements IStorageCache<ItemStack> {
-    private INetworkMaster network;
+    private INetwork network;
     private List<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<ItemStack> list = API.instance().createItemStackList();
 
-    public StorageCacheItem(INetworkMaster network) {
+    public StorageCacheItem(INetwork network) {
         this.network = network;
     }
 

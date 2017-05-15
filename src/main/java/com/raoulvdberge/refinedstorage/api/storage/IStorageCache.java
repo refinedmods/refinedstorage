@@ -1,13 +1,13 @@
 package com.raoulvdberge.refinedstorage.api.storage;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * This holds all stacks from all the connected storages from a {@link INetworkMaster}.
+ * This holds all stacks from all the connected storages from a {@link INetwork}.
  * <p>
  * Refined Storage uses this class mainly for use in Grids and Detectors to avoid querying
  * individual {@link IStorage}s constantly (performance impact) and to send and detect storage changes

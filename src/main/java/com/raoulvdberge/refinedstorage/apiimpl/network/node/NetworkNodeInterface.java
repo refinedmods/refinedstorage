@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,8 +34,8 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private int currentSlot = 0;
 
-    public NetworkNodeInterface(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeInterface(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override

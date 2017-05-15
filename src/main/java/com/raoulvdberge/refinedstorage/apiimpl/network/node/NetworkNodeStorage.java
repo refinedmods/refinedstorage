@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -73,8 +74,8 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private int mode = IFilterable.WHITELIST;
     private boolean voidExcess = false;
 
-    public NetworkNodeStorage(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeStorage(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -108,7 +109,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public void onConnectedStateChange(INetworkMaster network, boolean state) {
+    public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
         network.getItemStorageCache().invalidate();
@@ -191,8 +192,8 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     public ItemStorageType getType() {
-        if (type == null && holder.world() != null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.STORAGE) {
-            type = (ItemStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockStorage.TYPE);
+        if (type == null && container.world() != null && container.world().getBlockState(container.pos()).getBlock() == RSBlocks.STORAGE) {
+            type = (ItemStorageType) container.world().getBlockState(container.pos()).getValue(BlockStorage.TYPE);
         }
 
         return type == null ? ItemStorageType.TYPE_1K : type;

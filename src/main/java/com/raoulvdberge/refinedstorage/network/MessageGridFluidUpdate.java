@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import io.netty.buffer.ByteBuf;
@@ -14,14 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageGridFluidUpdate implements IMessage, IMessageHandler<MessageGridFluidUpdate, IMessage> {
-    private INetworkMaster network;
+    private INetwork network;
     private boolean canCraft;
     private List<GridStackFluid> stacks = new ArrayList<>();
 
     public MessageGridFluidUpdate() {
     }
 
-    public MessageGridFluidUpdate(INetworkMaster network, boolean canCraft) {
+    public MessageGridFluidUpdate(INetwork network, boolean canCraft) {
         this.network = network;
         this.canCraft = canCraft;
     }

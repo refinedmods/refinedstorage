@@ -2,15 +2,15 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -55,7 +55,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
                     network.getFluidStorageCache().invalidate();
                 }
 
-                RSUtils.updateBlock(holder.world(), holder.pos());
+                RSUtils.updateBlock(container.world(), container.pos());
             }
         }
 
@@ -86,8 +86,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private int type = IType.ITEMS;
     private boolean voidExcess = false;
 
-    public NetworkNodeDiskDrive(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeDiskDrive(INetworkNodeContainer container) {
+        super(container);
     }
 
     public IStorageDisk[] getItemStorages() {
@@ -126,13 +126,13 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public void onConnectedStateChange(INetworkMaster network, boolean state) {
+    public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
         network.getItemStorageCache().invalidate();
         network.getFluidStorageCache().invalidate();
 
-        RSUtils.updateBlock(holder.world(), holder.pos());
+        RSUtils.updateBlock(container.world(), container.pos());
     }
 
     @Override
@@ -363,7 +363,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     @Override
     public int getType() {
-        return holder.world().isRemote ? TileDiskDrive.TYPE.getValue() : type;
+        return container.world().isRemote ? TileDiskDrive.TYPE.getValue() : type;
     }
 
     @Override

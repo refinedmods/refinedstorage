@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.INetworkNodeHolder;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -12,6 +11,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -64,7 +64,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                     s -> new StorageFluidDiskManipulator(NetworkNodeDiskManipulator.this, s)
                 );
 
-                RSUtils.updateBlock(holder.world(), holder.pos());
+                RSUtils.updateBlock(container.world(), container.pos());
             }
         }
 
@@ -98,13 +98,13 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                     s -> new StorageFluidDiskManipulator(NetworkNodeDiskManipulator.this, s)
                 );
 
-                RSUtils.updateBlock(holder.world(), holder.pos());
+                RSUtils.updateBlock(container.world(), container.pos());
             }
         }
     };
 
-    public NetworkNodeDiskManipulator(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeDiskManipulator(INetworkNodeContainer container) {
+        super(container);
     }
 
     private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
@@ -358,7 +358,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     @Override
     public int getType() {
-        return holder.world().isRemote ? TileDiskManipulator.TYPE.getValue() : type;
+        return container.world().isRemote ? TileDiskManipulator.TYPE.getValue() : type;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.cyclopscore;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.inventory.IImportingBehavior;
 import com.raoulvdberge.refinedstorage.inventory.ImportingBehaviorItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -14,7 +14,7 @@ public class ImportingBehaviorCyclops implements IImportingBehavior {
     public static final IImportingBehavior INSTANCE = new ImportingBehaviorCyclops();
 
     @Override
-    public int doImport(TileEntity entity, EnumFacing facing, int currentSlot, IItemHandler itemFilters, int mode, int compare, int ticks, ItemHandlerUpgrade upgrades, INetworkMaster network) {
+    public int doImport(TileEntity entity, EnumFacing facing, int currentSlot, IItemHandler itemFilters, int mode, int compare, int ticks, ItemHandlerUpgrade upgrades, INetwork network) {
         if (IFilterable.isEmpty(itemFilters)) {
             if (ticks % upgrades.getSpeed() == 0) {
                 ItemStack result = SlotlessItemHandlerHelper.extractItem(entity, facing, upgrades.getItemInteractCount(), true);

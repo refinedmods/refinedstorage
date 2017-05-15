@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandler;
@@ -34,7 +35,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (holder.world() != null && !holder.world().isRemote) {
+            if (container.world() != null && !container.world().isRemote) {
                 rebuildCards();
             }
 
@@ -48,8 +49,8 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     @Nullable
     private UUID owner;
 
-    public NetworkNodeSecurityManager(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeSecurityManager(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -141,7 +142,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     }
 
     @Override
-    public void onConnectedStateChange(INetworkMaster network, boolean state) {
+    public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
         network.getSecurityManager().rebuild();

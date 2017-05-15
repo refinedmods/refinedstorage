@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -60,13 +60,13 @@ public class WirelessFluidGrid implements IGrid {
 
     @Override
     @Nullable
-    public INetworkMaster getNetwork() {
+    public INetwork getNetwork() {
         World world = DimensionManager.getWorld(controllerDimension);
 
         if (world != null) {
             TileEntity tile = world.getTileEntity(controller);
 
-            return tile instanceof INetworkMaster ? (INetworkMaster) tile : null;
+            return tile instanceof INetwork ? (INetwork) tile : null;
         }
 
         return null;
@@ -210,7 +210,7 @@ public class WirelessFluidGrid implements IGrid {
 
     @Override
     public void onClosed(EntityPlayer player) {
-        INetworkMaster network = getNetwork();
+        INetwork network = getNetwork();
 
         if (network != null) {
             network.getNetworkItemHandler().onClose(player);

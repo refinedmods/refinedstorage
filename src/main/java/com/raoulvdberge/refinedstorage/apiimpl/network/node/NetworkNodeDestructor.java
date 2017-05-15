@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -59,8 +60,8 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
 
-    public NetworkNodeDestructor(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeDestructor(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -73,12 +74,12 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
         super.update();
 
         if (network != null && canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
-            BlockPos front = holder.pos().offset(holder.getDirection());
+            BlockPos front = container.pos().offset(container.getDirection());
 
             if (pickupItem && type == IType.ITEMS) {
                 List<Entity> droppedItems = new ArrayList<>();
 
-                Chunk chunk = holder.world().getChunkFromBlockCoords(front);
+                Chunk chunk = container.world().getChunkFromBlockCoords(front);
                 chunk.getEntitiesWithinAABBForEntity(null, new AxisAlignedBB(front), droppedItems, null);
 
                 for (Entity entity : droppedItems) {
@@ -88,25 +89,25 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                         if (IFilterable.canTake(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), true) == null) {
                             network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
 
-                            holder.world().removeEntity(entity);
+                            container.world().removeEntity(entity);
 
                             break;
                         }
                     }
                 }
             } else if (type == IType.ITEMS) {
-                IBlockState frontBlockState = holder.world().getBlockState(front);
+                IBlockState frontBlockState = container.world().getBlockState(front);
                 Block frontBlock = frontBlockState.getBlock();
 
-                ItemStack frontStack = frontBlock.getPickBlock(frontBlockState, null, holder.world(), front, null);
+                ItemStack frontStack = frontBlock.getPickBlock(frontBlockState, null, container.world(), front, null);
 
                 if (!frontStack.isEmpty()) {
-                    if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(holder.world(), front) != -1.0) {
+                    if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(container.world(), front) != -1.0) {
                         List<ItemStack> drops;
-                        if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(holder.world(), front, frontBlockState, null)) {
+                        if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(container.world(), front, frontBlockState, null)) {
                             drops = Collections.singletonList(frontStack);
                         } else {
-                            drops = frontBlock.getDrops(holder.world(), front, frontBlockState, upgrades.getFortuneLevel());
+                            drops = frontBlock.getDrops(container.world(), front, frontBlockState, upgrades.getFortuneLevel());
                         }
 
                         for (ItemStack drop : drops) {
@@ -115,17 +116,17 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                             }
                         }
 
-                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(holder.world(), front, frontBlockState, FakePlayerFactory.getMinecraft((WorldServer) holder.world()));
+                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(container.world(), front, frontBlockState, FakePlayerFactory.getMinecraft((WorldServer) container.world()));
 
                         if (!MinecraftForge.EVENT_BUS.post(e)) {
-                            holder.world().playEvent(null, 2001, front, Block.getStateId(frontBlockState));
-                            holder.world().setBlockToAir(front);
+                            container.world().playEvent(null, 2001, front, Block.getStateId(frontBlockState));
+                            container.world().setBlockToAir(front);
 
                             for (ItemStack drop : drops) {
                                 // We check if the controller isn't null here because when a destructor faces a node and removes it
                                 // it will essentially remove this block itself from the network without knowing
                                 if (network == null) {
-                                    InventoryHelper.spawnItemStack(holder.world(), front.getX(), front.getY(), front.getZ(), drop);
+                                    InventoryHelper.spawnItemStack(container.world(), front.getX(), front.getY(), front.getZ(), drop);
                                 } else {
                                     network.insertItemTracked(drop, drop.getCount());
                                 }
@@ -134,14 +135,14 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                     }
                 }
             } else if (type == IType.FLUIDS) {
-                Block frontBlock = holder.world().getBlockState(front).getBlock();
+                Block frontBlock = container.world().getBlockState(front).getBlock();
 
                 IFluidHandler handler = null;
 
                 if (frontBlock instanceof BlockLiquid) {
-                    handler = new BlockLiquidWrapper((BlockLiquid) frontBlock, holder.world(), front);
+                    handler = new BlockLiquidWrapper((BlockLiquid) frontBlock, container.world(), front);
                 } else if (frontBlock instanceof IFluidBlock) {
-                    handler = new FluidBlockWrapper((IFluidBlock) frontBlock, holder.world(), front);
+                    handler = new FluidBlockWrapper((IFluidBlock) frontBlock, container.world(), front);
                 }
 
                 if (handler != null) {
@@ -261,7 +262,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
     @Override
     public int getType() {
-        return holder.world().isRemote ? TileDestructor.TYPE.getValue() : type;
+        return container.world().isRemote ? TileDestructor.TYPE.getValue() : type;
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemNetworkCard;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -56,8 +57,8 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     private BlockPos receiver;
     private int receiverDimension;
 
-    public NetworkNodeNetworkTransmitter(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeNetworkTransmitter(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -118,11 +119,11 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
             return 0;
         }
 
-        return (int) Math.sqrt(Math.pow(holder.pos().getX() - receiver.getX(), 2) + Math.pow(holder.pos().getY() - receiver.getY(), 2) + Math.pow(holder.pos().getZ() - receiver.getZ(), 2));
+        return (int) Math.sqrt(Math.pow(container.pos().getX() - receiver.getX(), 2) + Math.pow(container.pos().getY() - receiver.getY(), 2) + Math.pow(container.pos().getZ() - receiver.getZ(), 2));
     }
 
     public boolean isSameDimension() {
-        return holder.world().provider.getDimension() == receiverDimension;
+        return container.world().provider.getDimension() == receiverDimension;
     }
 
     public boolean isDimensionSupported() {
@@ -154,7 +155,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
                     operator.apply(dimensionWorld, receiver, null);
                 }
             } else {
-                operator.apply(holder.world(), receiver, null);
+                operator.apply(container.world(), receiver, null);
             }
         }
     }

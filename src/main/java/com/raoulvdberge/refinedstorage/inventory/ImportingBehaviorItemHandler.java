@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
@@ -13,7 +13,7 @@ public class ImportingBehaviorItemHandler implements IImportingBehavior {
     public static final IImportingBehavior INSTANCE = new ImportingBehaviorItemHandler();
 
     @Override
-    public int doImport(TileEntity entity, EnumFacing facing, int currentSlot, IItemHandler itemFilters, int mode, int compare, int ticks, ItemHandlerUpgrade upgrades, INetworkMaster network) {
+    public int doImport(TileEntity entity, EnumFacing facing, int currentSlot, IItemHandler itemFilters, int mode, int compare, int ticks, ItemHandlerUpgrade upgrades, INetwork network) {
         IItemHandler handler = RSUtils.getItemHandler(entity, facing);
 
         if (entity instanceof TileDiskDrive || handler == null) {

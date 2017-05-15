@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -74,8 +75,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     private int mode = IFilterable.WHITELIST;
     private boolean voidExcess = false;
 
-    public NetworkNodeFluidStorage(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeFluidStorage(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     @Override
-    public void onConnectedStateChange(INetworkMaster network, boolean state) {
+    public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
         network.getFluidStorageCache().invalidate();
@@ -196,8 +197,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     public FluidStorageType getType() {
-        if (type == null && holder.world() != null && holder.world().getBlockState(holder.pos()).getBlock() == RSBlocks.FLUID_STORAGE) {
-            type = (FluidStorageType) holder.world().getBlockState(holder.pos()).getValue(BlockFluidStorage.TYPE);
+        if (type == null && container.world() != null && container.world().getBlockState(container.pos()).getBlock() == RSBlocks.FLUID_STORAGE) {
+            type = (FluidStorageType) container.world().getBlockState(container.pos()).getValue(BlockFluidStorage.TYPE);
         }
 
         return type == null ? FluidStorageType.TYPE_64K : type;

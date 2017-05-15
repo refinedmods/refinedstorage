@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StorageCacheFluid implements IStorageCache<FluidStack> {
-    private INetworkMaster network;
+    private INetwork network;
     private List<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<FluidStack> list = API.instance().createFluidStackList();
 
-    public StorageCacheFluid(INetworkMaster network) {
+    public StorageCacheFluid(INetwork network) {
         this.network = network;
     }
 

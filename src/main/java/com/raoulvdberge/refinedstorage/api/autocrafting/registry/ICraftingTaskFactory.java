@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting.registry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -27,7 +27,7 @@ public interface ICraftingTaskFactory {
      * @return the crafting task
      */
     @Nonnull
-    ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated, @Nullable NBTTagCompound tag);
+    ICraftingTask create(INetwork network, @Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated, @Nullable NBTTagCompound tag);
 
     /**
      * Returns a crafting task for a given NBT tag and pattern.
@@ -40,5 +40,5 @@ public interface ICraftingTaskFactory {
      * @return the crafting task
      */
     @Nonnull
-    ICraftingTask create(INetworkMaster network, @Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity, boolean automated);
+    ICraftingTask create(INetwork network, @Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity, boolean automated);
 }

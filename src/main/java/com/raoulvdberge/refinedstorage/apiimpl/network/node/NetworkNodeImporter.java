@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclop
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -36,8 +37,8 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
     private int currentSlot;
 
-    public NetworkNodeImporter(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeImporter(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -55,12 +56,12 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
         if (type == IType.ITEMS) {
             IImportingBehavior behavior = ImportingBehaviorItemHandler.INSTANCE;
-            if (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), holder.getDirection().getOpposite())) {
+            if (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), container.getDirection().getOpposite())) {
                 behavior = ImportingBehaviorCyclops.INSTANCE;
             }
-            currentSlot = behavior.doImport(getFacingTile(), holder.getDirection().getOpposite(), currentSlot, itemFilters, mode, compare, ticks, upgrades, network);
+            currentSlot = behavior.doImport(getFacingTile(), container.getDirection().getOpposite(), currentSlot, itemFilters, mode, compare, ticks, upgrades, network);
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
-            IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), holder.getDirection().getOpposite());
+            IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), container.getDirection().getOpposite());
 
             if (handler != null) {
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
@@ -170,7 +171,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
     @Override
     public int getType() {
-        return holder.world().isRemote ? TileImporter.TYPE.getValue() : type;
+        return container.world().isRemote ? TileImporter.TYPE.getValue() : type;
     }
 
     @Override

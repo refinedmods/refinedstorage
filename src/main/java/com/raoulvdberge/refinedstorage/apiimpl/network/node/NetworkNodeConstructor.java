@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileConstructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -56,7 +57,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             super.onContentsChanged(slot);
 
             item = getStackInSlot(slot).isEmpty() ? null : getStackInSlot(slot).copy();
-            block = SlotFilter.getBlockState(holder.world(), holder.pos().offset(holder.getDirection()), getStackInSlot(slot));
+            block = SlotFilter.getBlockState(container.world(), container.pos().offset(container.getDirection()), getStackInSlot(slot));
         }
     };
 
@@ -71,8 +72,8 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     private IBlockState block;
     private ItemStack item;
 
-    public NetworkNodeConstructor(INetworkNodeHolder holder) {
-        super(holder);
+    public NetworkNodeConstructor(INetworkNodeContainer container) {
+        super(container);
     }
 
     @Override
@@ -97,7 +98,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                         ItemStack took = network.extractItem(item, 1, false);
 
                         if (took != null) {
-                            holder.world().spawnEntity(new EntityFireworkRocket(holder.world(), getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
+                            container.world().spawnEntity(new EntityFireworkRocket(container.world(), getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
                         }
                     } else {
                         dropItem();
@@ -107,11 +108,11 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                 FluidStack stack = fluidFilters.getFluidStackInSlot(0);
 
                 if (stack != null && stack.getFluid().canBePlacedInWorld()) {
-                    BlockPos front = holder.pos().offset(holder.getDirection());
+                    BlockPos front = container.pos().offset(container.getDirection());
 
                     Block block = stack.getFluid().getBlock();
 
-                    if (holder.world().isAirBlock(front) && block.canPlaceBlockAt(holder.world(), front)) {
+                    if (container.world().isAirBlock(front) && block.canPlaceBlockAt(container.world(), front)) {
                         FluidStack stored = network.getFluidStorageCache().getList().get(stack, compare);
 
                         if (stored != null && stored.amount >= Fluid.BUCKET_VOLUME) {
@@ -130,7 +131,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                                     return;
                                 }
 
-                                holder.world().setBlockState(front, state, 1 | 2);
+                                container.world().setBlockState(front, state, 1 | 2);
                             }
                         }
                     }
@@ -140,19 +141,19 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     private boolean canPlace(BlockPos pos, IBlockState state) {
-        BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(holder.world(), pos, state), holder.world().getBlockState(holder.pos()), FakePlayerFactory.getMinecraft((WorldServer) holder.world()), EnumHand.MAIN_HAND);
+        BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(container.world(), pos, state), container.world().getBlockState(container.pos()), FakePlayerFactory.getMinecraft((WorldServer) container.world()), EnumHand.MAIN_HAND);
 
         return !MinecraftForge.EVENT_BUS.post(e);
     }
 
     private void placeBlock() {
-        BlockPos front = holder.pos().offset(holder.getDirection());
+        BlockPos front = container.pos().offset(container.getDirection());
 
-        if (holder.world().isAirBlock(front) && block.getBlock().canPlaceBlockAt(holder.world(), front)) {
+        if (container.world().isAirBlock(front) && block.getBlock().canPlaceBlockAt(container.world(), front)) {
             ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, true);
 
             if (took != null) {
-                IBlockState state = block.getBlock().getStateForPlacement(holder.world(), front, holder.getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) holder.world()), EnumHand.MAIN_HAND);
+                IBlockState state = block.getBlock().getStateForPlacement(container.world(), front, container.getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) container.world()), EnumHand.MAIN_HAND);
 
                 if (!canPlace(front, state)) {
                     return;
@@ -163,29 +164,29 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                 if (item.getItem() instanceof ItemBlock) {
                     ((ItemBlock) item.getItem()).placeBlockAt(
                         took,
-                        FakePlayerFactory.getMinecraft((WorldServer) holder.world()),
-                        holder.world(),
+                        FakePlayerFactory.getMinecraft((WorldServer) container.world()),
+                        container.world(),
                         front,
-                        holder.getDirection(),
+                        container.getDirection(),
                         0,
                         0,
                         0,
                         state
                     );
                 } else {
-                    holder.world().setBlockState(front, state, 1 | 2);
+                    container.world().setBlockState(front, state, 1 | 2);
 
-                    state.getBlock().onBlockPlacedBy(holder.world(), front, state, FakePlayerFactory.getMinecraft((WorldServer) holder.world()), took);
+                    state.getBlock().onBlockPlacedBy(container.world(), front, state, FakePlayerFactory.getMinecraft((WorldServer) container.world()), took);
                 }
 
                 // From ItemBlock#onItemUse
-                SoundType blockSound = block.getBlock().getSoundType(state, holder.world(), holder.pos(), null);
-                holder.world().playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
+                SoundType blockSound = block.getBlock().getSoundType(state, container.world(), container.pos(), null);
+                container.world().playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
 
                 if (block.getBlock() == Blocks.SKULL) {
-                    holder.world().setBlockState(front, holder.world().getBlockState(front).withProperty(BlockSkull.FACING, holder.getDirection()));
+                    container.world().setBlockState(front, container.world().getBlockState(front).withProperty(BlockSkull.FACING, container.getDirection()));
 
-                    TileEntity tile = holder.world().getTileEntity(front);
+                    TileEntity tile = container.world().getTileEntity(front);
 
                     if (tile instanceof TileEntitySkull) {
                         TileEntitySkull skullTile = (TileEntitySkull) tile;
@@ -208,7 +209,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                             skullTile.setType(item.getMetadata());
                         }
 
-                        Blocks.SKULL.checkWitherSpawn(holder.world(), front, skullTile);
+                        Blocks.SKULL.checkWitherSpawn(container.world(), front, skullTile);
                     }
 
                 }
@@ -224,7 +225,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(item, upgrades.getItemInteractCount(), false);
 
         if (took != null) {
-            BehaviorDefaultDispenseItem.doDispense(holder.world(), took, 6, holder.getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
+            BehaviorDefaultDispenseItem.doDispense(container.world(), took, 6, container.getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
         } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
 
@@ -234,17 +235,17 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     // From BlockDispenser#getDispensePosition
     private double getDispensePositionX() {
-        return (double) holder.pos().getX() + 0.5D + 0.8D * (double) holder.getDirection().getFrontOffsetX();
+        return (double) container.pos().getX() + 0.5D + 0.8D * (double) container.getDirection().getFrontOffsetX();
     }
 
     // From BlockDispenser#getDispensePosition
     private double getDispensePositionY() {
-        return (double) holder.pos().getY() + (holder.getDirection() == EnumFacing.DOWN ? 0.45D : 0.5D) + 0.8D * (double) holder.getDirection().getFrontOffsetY();
+        return (double) container.pos().getY() + (container.getDirection() == EnumFacing.DOWN ? 0.45D : 0.5D) + 0.8D * (double) container.getDirection().getFrontOffsetY();
     }
 
     // From BlockDispenser#getDispensePosition
     private double getDispensePositionZ() {
-        return (double) holder.pos().getZ() + 0.5D + 0.8D * (double) holder.getDirection().getFrontOffsetZ();
+        return (double) container.pos().getZ() + 0.5D + 0.8D * (double) container.getDirection().getFrontOffsetZ();
     }
 
     @Override
@@ -338,7 +339,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     @Override
     public int getType() {
-        return holder.world().isRemote ? TileConstructor.TYPE.getValue() : type;
+        return container.world().isRemote ? TileConstructor.TYPE.getValue() : type;
     }
 
     @Override

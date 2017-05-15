@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.node;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -32,14 +32,14 @@ public interface INetworkNode {
      *
      * @param network the network
      */
-    void onConnected(INetworkMaster network);
+    void onConnected(INetwork network);
 
     /**
      * Called when this node is disconnected from a network.
      *
      * @param network the network
      */
-    void onDisconnected(INetworkMaster network);
+    void onDisconnected(INetwork network);
 
     /**
      * If a node can be updated typically depends on the redstone configuration.
@@ -52,7 +52,7 @@ public interface INetworkNode {
      * @return the network, or null if this node is not connected to any network
      */
     @Nullable
-    INetworkMaster getNetwork();
+    INetwork getNetwork();
 
     /**
      * Updates a network node.

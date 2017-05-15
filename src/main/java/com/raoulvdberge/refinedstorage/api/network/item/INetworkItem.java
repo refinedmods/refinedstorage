@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.item;
 
-import com.raoulvdberge.refinedstorage.api.network.INetworkMaster;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
@@ -25,5 +25,5 @@ public interface INetworkItem {
      * @param hand            the hand
      * @return true if the network item can be opened, false otherwise
      */
-    boolean onOpen(INetworkMaster network, EntityPlayer player, World controllerWorld, EnumHand hand);
+    boolean onOpen(INetwork network, EntityPlayer player, World controllerWorld, EnumHand hand);
 }
