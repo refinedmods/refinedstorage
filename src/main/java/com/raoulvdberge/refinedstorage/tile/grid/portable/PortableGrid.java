@@ -126,7 +126,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
         drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
 
-        // If there is no disk onContentsChanged isn't called and the update isn't sent
+        // If there is no disk onContentsChanged isn't called and the update isn't sent, thus items from the previous grid view would remain clientside
         if (!player.getEntityWorld().isRemote && disk.getStackInSlot(0).isEmpty()) {
             cache.invalidate();
         }
