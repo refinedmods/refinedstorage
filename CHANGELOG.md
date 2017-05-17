@@ -4,6 +4,7 @@
 - Performance improvement to network scanning (raoulvdberge)
 - Removed debug output from 1.4.5 (raoulvdberge)
 - Fixed Wrench opening GUIs while performing action (raoulvdberge)
+- Fixed client Grid GUI clearing and causing crashes after starting an autocrafting request (raoulvdberge)
 
 ### 1.4.5
 - Updated Forge to 2296 (raoulvdberge)

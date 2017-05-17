@@ -680,13 +680,4 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             oredictPattern.setIsChecked(checked);
         }
     }
-
-    @Override
-    public void onGuiClosed() {
-        super.onGuiClosed();
-
-        ITEMS.clear();
-        FLUIDS.clear();
-        STACKS.clear();
-    }
 }

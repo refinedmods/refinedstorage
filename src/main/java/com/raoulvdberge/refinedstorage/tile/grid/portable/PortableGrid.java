@@ -125,6 +125,11 @@ public class PortableGrid implements IGrid, IPortableGrid {
         RSUtils.readItems(disk, 4, stack.getTagCompound());
 
         drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
+
+        // If there is no disk onContentsChanged isn't called and the update isn't sent
+        if (!player.getEntityWorld().isRemote && disk.getStackInSlot(0).isEmpty()) {
+            cache.invalidate();
+        }
     }
 
     public ItemStack getStack() {
