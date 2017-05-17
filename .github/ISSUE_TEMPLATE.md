@@ -10,9 +10,9 @@
 3.
 ...
 
-#### Version (Make sure you are on the latest version before reporting):
+#### Version (make sure you are on the latest version before reporting):
 
-- Minecraft: 1.10.2
+- Minecraft:
 - Forge:
 - Refined Storage:
 
