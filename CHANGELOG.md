@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.7
+- Fixed bug where Portable Grid would dupe in inventory (raoulvdberge)
+
 ### 1.4.6
 - Performance improvement to network scanning (raoulvdberge)
 - Removed debug output from 1.4.5 (raoulvdberge)

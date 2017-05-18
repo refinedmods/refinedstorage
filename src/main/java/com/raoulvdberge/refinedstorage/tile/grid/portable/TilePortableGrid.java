@@ -224,13 +224,15 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         this.energyStorage.setEnergyStored(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored());
 
-        for (int i = 0; i < 4; ++i) {
-            RSUtils.readItems(filter, i, stack.getTagCompound());
+        if (stack.hasTagCompound()) {
+            for (int i = 0; i < 4; ++i) {
+                RSUtils.readItems(filter, i, stack.getTagCompound());
+            }
+
+            RSUtils.readItems(disk, 4, stack.getTagCompound());
+
+            this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
         }
-
-        RSUtils.readItems(disk, 4, stack.getTagCompound());
-
-        this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
 
         markDirty();
     }
