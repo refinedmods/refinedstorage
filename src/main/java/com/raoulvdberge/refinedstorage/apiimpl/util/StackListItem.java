@@ -198,9 +198,11 @@ public class StackListItem implements IStackList<ItemStack> {
                     compare |= IComparer.COMPARE_DAMAGE;
                 }
                 ItemStack actualInput = list.get(input, compare);
-                ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.getCount());
-                took[i] = taken;
-                list.remove(taken, taken.getCount());
+                if (actualInput != null) {
+                    ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.getCount());
+                    took[i] = taken;
+                    list.remove(taken, taken.getCount());
+                }
             }
         }
         return took;
