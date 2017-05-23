@@ -58,8 +58,13 @@ import javax.annotation.Nullable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 public final class RSUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
@@ -587,5 +592,34 @@ public final class RSUtils {
         vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
         vertexBuffer.pos(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
         tessellator.draw();
+    }
+
+    private static Logger debugLog = Logger.getLogger("Refined Storage");
+    private static FileHandler debugLogFileHandler;
+
+    public static void debugLog(String message) {
+        if (RS.INSTANCE.config.debugLog) {
+            if (debugLogFileHandler == null) {
+                try {
+                    debugLogFileHandler = new FileHandler("refinedstorage_debuglog_" + new SimpleDateFormat("Y-m-d_HH_mm_ss").format(Calendar.getInstance().getTime()) + ".log");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                debugLogFileHandler.setFormatter(new Formatter() {
+                    private SimpleDateFormat logFormatter = new SimpleDateFormat("Y-m-d HH:mm:ss");
+
+                    @Override
+                    public String format(LogRecord record) {
+                        return "[" + logFormatter.format(new Date(record.getMillis())) + "] " + record.getMessage() + "\r\n";
+                    }
+                });
+
+                debugLog.setUseParentHandlers(false);
+                debugLog.addHandler(debugLogFileHandler);
+            }
+
+            debugLog.info(message);
+        }
     }
 }

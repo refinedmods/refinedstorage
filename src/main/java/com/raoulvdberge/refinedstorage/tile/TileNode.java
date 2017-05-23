@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -102,13 +102,10 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             return clientNode;
         }
 
-        INetworkNodeManager manager = API.instance().getNetworkNodeManager(getWorld());
-
-        NetworkNode node = (NetworkNode) manager.getNode(pos);
+        NetworkNode node = (NetworkNode) API.instance().getNetworkNodeManager(getWorld()).getNode(pos);
 
         if (node == null) {
-            manager.setNode(pos, node = createNode());
-            manager.markForSaving();
+            throw new IllegalStateException("Node cannot be null!");
         }
 
         if (node.getContainer().world() == null) {
@@ -136,6 +133,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         } else if (legacyTag.getSize() == 6 + 1 && hasMeta && hasForgeData && hasForgeCaps) {
             // NO OP
         } else {
+            RSUtils.debugLog("Reading legacy tag data at " + pos + "!");
+
             node.read(legacyTag);
             node.markDirty();
 

@@ -14,6 +14,8 @@ import java.util.List;
 public final class RSConfig {
     private Configuration config;
 
+    public boolean debugLog;
+
     //region Energy
     public int controllerBaseUsage;
     public int cableUsage;
@@ -135,6 +137,8 @@ public final class RSConfig {
     }
 
     private void loadConfig() {
+        debugLog = config.getBoolean("debugLog", "misc", false, "Whether to debug log diagnostic info to a file");
+
         //region Energy
         controllerBaseUsage = config.getInt("controllerBase", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
         cableUsage = config.getInt("cable", ENERGY, 0, 0, Integer.MAX_VALUE, "The energy used by Cables");
