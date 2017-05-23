@@ -601,13 +601,13 @@ public final class RSUtils {
         if (RS.INSTANCE.config.debugLog) {
             if (debugLogFileHandler == null) {
                 try {
-                    debugLogFileHandler = new FileHandler("refinedstorage_debuglog_" + new SimpleDateFormat("Y-m-d_HH_mm_ss").format(Calendar.getInstance().getTime()) + ".log");
+                    debugLogFileHandler = new FileHandler("refinedstorage_debuglog_" + new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss").format(Calendar.getInstance().getTime()) + ".log");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
                 debugLogFileHandler.setFormatter(new Formatter() {
-                    private SimpleDateFormat logFormatter = new SimpleDateFormat("Y-m-d HH:mm:ss");
+                    private SimpleDateFormat logFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                     @Override
                     public String format(LogRecord record) {
