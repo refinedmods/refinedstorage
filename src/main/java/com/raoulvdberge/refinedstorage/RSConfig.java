@@ -241,8 +241,11 @@ public final class RSConfig {
         list.addAll(new ConfigElement(config.getCategory(CONTROLLER)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(UPGRADES)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(WIRELESS_TRANSMITTER)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(WIRELESS_GRID)).getChildElements());
         list.addAll(new ConfigElement(config.getCategory(GRID)).getChildElements());
+        list.addAll(new ConfigElement(config.getCategory(WIRELESS_GRID)).getChildElements());
+        list.addAll(new ConfigElement(config.getCategory(WIRELESS_FLUID_GRID)).getChildElements());
+        list.addAll(new ConfigElement(config.getCategory(WIRELESS_CRAFTING_MONITOR)).getChildElements());
+        list.addAll(new ConfigElement(config.getCategory(PORTABLE_GRID)).getChildElements());
 
         return list;
     }

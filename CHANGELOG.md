@@ -1,8 +1,11 @@
 # Refined Storage Changelog
 
+### 1.4.8
+- Fixed missing config categories in ingame config (raoulvdberge)
+
 ### 1.4.7
 - Fixed bug where Portable Grid would dupe in inventory (raoulvdberge)
-- Worked around autocrafting bug to prevent crashes (raoulvdberge)
+- Worked around an autocrafting bug to prevent crashes (raoulvdberge)
 - Added config option "debugLog" that logs diagnostic info to help developers to fix the inventory loss bug, please enable it if you are experiencing this issue (raoulvdberge)
 
 ### 1.4.6
