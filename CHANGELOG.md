@@ -2,6 +2,7 @@
 
 ### 1.4.8
 - Fixed missing config categories in ingame config (raoulvdberge)
+- Fixed Controller not working anymore after changing redstone setting (raoulvdberge)
 
 ### 1.4.7
 - Fixed bug where Portable Grid would dupe in inventory (raoulvdberge)

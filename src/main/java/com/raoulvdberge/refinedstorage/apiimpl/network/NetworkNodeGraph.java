@@ -118,6 +118,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         List<INetworkNode> oldNodes = new ArrayList<>(nodes);
 
         nodes.clear();
+        nodePositions.clear();
 
         for (INetworkNode node : oldNodes) {
             if (node.getNetwork() == controller) {

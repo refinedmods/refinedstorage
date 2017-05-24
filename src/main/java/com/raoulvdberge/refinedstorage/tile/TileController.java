@@ -107,11 +107,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                         continue;
                     }
 
-                    ClientNode clientNode = new ClientNode(
-                        stack,
-                        1,
-                        node.getEnergyUsage()
-                    );
+                    ClientNode clientNode = new ClientNode(stack, 1, node.getEnergyUsage());
 
                     if (nodes.contains(clientNode)) {
                         ClientNode other = nodes.get(nodes.indexOf(clientNode));
