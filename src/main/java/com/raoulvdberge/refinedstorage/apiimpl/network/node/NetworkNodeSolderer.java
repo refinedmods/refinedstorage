@@ -11,9 +11,10 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -57,8 +58,8 @@ public class NetworkNodeSolderer extends NetworkNode {
     private boolean wasWorking = false;
     private int progress = 0;
 
-    public NetworkNodeSolderer(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeSolderer(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class NetworkNodeSolderer extends NetworkNode {
 
             markDirty();
 
-            RSUtils.updateBlock(container.world(), container.pos());
+            RSUtils.updateBlock(world, pos);
         }
 
         if (network == null || !canUpdate()) {

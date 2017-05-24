@@ -10,13 +10,14 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -46,8 +47,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     private boolean powered = false;
     private boolean wasPowered;
 
-    public NetworkNodeDetector(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeDetector(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -62,9 +63,9 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
         if (powered != wasPowered) {
             wasPowered = powered;
 
-            container.world().notifyNeighborsOfStateChange(container.pos(), RSBlocks.DETECTOR, true);
+            world.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR, true);
 
-            RSUtils.updateBlock(container.world(), container.pos());
+            RSUtils.updateBlock(world, pos);
         }
 
         if (network != null && canUpdate() && ticks % SPEED == 0) {
@@ -235,7 +236,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return container.world().isRemote ? TileDetector.TYPE.getValue() : type;
+        return world.isRemote ? TileDetector.TYPE.getValue() : type;
     }
 
     @Override

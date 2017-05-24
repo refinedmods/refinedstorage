@@ -8,6 +8,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -108,7 +110,7 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
 
     @Override
     @Nonnull
-    public NetworkNodeWriter createNode() {
-        return new NetworkNodeWriter(this);
+    public NetworkNodeWriter createNode(World world, BlockPos pos) {
+        return new NetworkNodeWriter(world, pos);
     }
 }

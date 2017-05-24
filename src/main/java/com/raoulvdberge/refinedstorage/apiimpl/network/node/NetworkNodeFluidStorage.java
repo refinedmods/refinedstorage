@@ -13,12 +13,13 @@ import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -75,8 +76,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     private int mode = IFilterable.WHITELIST;
     private boolean voidExcess = false;
 
-    public NetworkNodeFluidStorage(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeFluidStorage(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -197,8 +198,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     public FluidStorageType getType() {
-        if (type == null && container.world() != null && container.world().getBlockState(container.pos()).getBlock() == RSBlocks.FLUID_STORAGE) {
-            type = (FluidStorageType) container.world().getBlockState(container.pos()).getValue(BlockFluidStorage.TYPE);
+        if (type == null && world != null && world.getBlockState(pos).getBlock() == RSBlocks.FLUID_STORAGE) {
+            type = (FluidStorageType) world.getBlockState(pos).getValue(BlockFluidStorage.TYPE);
         }
 
         return type == null ? FluidStorageType.TYPE_64K : type;

@@ -6,6 +6,8 @@ import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -33,8 +35,8 @@ public class TileFluidStorage extends TileNode<NetworkNodeFluidStorage> {
 
     @Override
     @Nonnull
-    public NetworkNodeFluidStorage createNode() {
-        return new NetworkNodeFluidStorage(this);
+    public NetworkNodeFluidStorage createNode(World world, BlockPos pos) {
+        return new NetworkNodeFluidStorage(world, pos);
     }
 }
 

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -19,7 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, INetworkNodeContainer, IRedstoneConfigurable, IWrenchable {
+public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, IRedstoneConfigurable, IWrenchable {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private NBTTagCompound legacyTag;
@@ -30,16 +31,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
     public TileNode() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
-    }
-
-    @Override
-    public World world() {
-        return getWorld();
-    }
-
-    @Override
-    public BlockPos pos() {
-        return pos;
     }
 
     @Override
@@ -94,22 +85,25 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     @Nonnull
     @SuppressWarnings("unchecked")
     public N getNode() {
-        if (getWorld().isRemote) {
+        if (world.isRemote) {
             if (clientNode == null) {
-                clientNode = createNode();
+                clientNode = createNode(world, pos);
             }
 
             return clientNode;
         }
 
-        NetworkNode node = (NetworkNode) API.instance().getNetworkNodeManager(getWorld()).getNode(pos);
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
 
+        NetworkNode node = (NetworkNode) manager.getNode(pos);
+
+        // @TODO: This is a hack to support previous broken versions that have no nodes for some tiles due to a bug.
+        // This should actually be called in Block#onBlockAdded.
         if (node == null) {
-            throw new IllegalStateException("Node cannot be null at " + pos + "!");
-        }
+            RSUtils.debugLog("Creating node at " + pos);
 
-        if (node.getContainer().world() == null) {
-            node.setContainer(this);
+            manager.setNode(pos, node = createNode(world, pos));
+            manager.markForSaving();
         }
 
         if (legacyTag != null) {
@@ -144,7 +138,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         this.legacyTag = null;
     }
 
-    public abstract N createNode();
+    // @TODO: This needs to be redone. Perhaps we need to reuse the node registry for this.
+    public abstract N createNode(World world, BlockPos pos);
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side) {

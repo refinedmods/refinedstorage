@@ -7,6 +7,8 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +36,7 @@ public class TileConstructor extends TileNode<NetworkNodeConstructor> {
 
     @Override
     @Nonnull
-    public NetworkNodeConstructor createNode() {
-        return new NetworkNodeConstructor(this);
+    public NetworkNodeConstructor createNode(World world, BlockPos pos) {
+        return new NetworkNodeConstructor(world, pos);
     }
 }

@@ -25,7 +25,7 @@ public interface IType {
                 if (value == 0 || value == 1) {
                     ((IType) tile.getNode()).setType(value);
 
-                    tile.getWorld().playerEntities.stream()
+                    tile.world.playerEntities.stream()
                         .filter(p -> p.openContainer instanceof ContainerBase && ((ContainerBase) p.openContainer).getTile().getPos().equals(tile.getPos()))
                         .forEach(p -> p.openContainer.detectAndSendChanges());
                 }

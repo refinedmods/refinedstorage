@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWirelessT
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +23,7 @@ public class TileWirelessTransmitter extends TileNode<NetworkNodeWirelessTransmi
 
     @Override
     @Nonnull
-    public NetworkNodeWirelessTransmitter createNode() {
-        return new NetworkNodeWirelessTransmitter(this);
+    public NetworkNodeWirelessTransmitter createNode(World world, BlockPos pos) {
+        return new NetworkNodeWirelessTransmitter(world, pos);
     }
 }

@@ -8,12 +8,13 @@ import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclop
 import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -37,8 +38,8 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
     private int currentSlot;
 
-    public NetworkNodeImporter(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeImporter(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -56,12 +57,12 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
         if (type == IType.ITEMS) {
             IImportingBehavior behavior = ImportingBehaviorItemHandler.INSTANCE;
-            if (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), container.getDirection().getOpposite())) {
+            if (IntegrationCyclopsCore.isLoaded() && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), getDirection().getOpposite())) {
                 behavior = ImportingBehaviorCyclops.INSTANCE;
             }
-            currentSlot = behavior.doImport(getFacingTile(), container.getDirection().getOpposite(), currentSlot, itemFilters, mode, compare, ticks, upgrades, network);
+            currentSlot = behavior.doImport(getFacingTile(), getDirection().getOpposite(), currentSlot, itemFilters, mode, compare, ticks, upgrades, network);
         } else if (type == IType.FLUIDS && ticks % upgrades.getSpeed() == 0) {
-            IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), container.getDirection().getOpposite());
+            IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
 
             if (handler != null) {
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
@@ -171,7 +172,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
     @Override
     public int getType() {
-        return container.world().isRemote ? TileImporter.TYPE.getValue() : type;
+        return world.isRemote ? TileImporter.TYPE.getValue() : type;
     }
 
     @Override

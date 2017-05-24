@@ -5,6 +5,8 @@ import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +23,7 @@ public class TileImporter extends TileNode<NetworkNodeImporter> {
 
     @Override
     @Nonnull
-    public NetworkNodeImporter createNode() {
-        return new NetworkNodeImporter(this);
+    public NetworkNodeImporter createNode(World world, BlockPos pos) {
+        return new NetworkNodeImporter(world, pos);
     }
 }

@@ -11,6 +11,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -83,7 +85,7 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
 
     @Override
     @Nonnull
-    public NetworkNodeDetector createNode() {
-        return new NetworkNodeDetector(this);
+    public NetworkNodeDetector createNode(World world, BlockPos pos) {
+        return new NetworkNodeDetector(world, pos);
     }
 }

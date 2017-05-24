@@ -191,7 +191,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public boolean canRun() {
-        return energy.getEnergyStored() > 0 && redstoneMode.isEnabled(getWorld(), pos);
+        return energy.getEnergyStored() > 0 && redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -211,7 +211,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void update() {
-        if (!getWorld().isRemote) {
+        if (!world.isRemote) {
             if (canRun()) {
                 craftingManager.update();
 
@@ -285,7 +285,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public void invalidate() {
         super.invalidate();
 
-        if (getWorld() != null && !getWorld().isRemote) {
+        if (world != null && !world.isRemote) {
             nodeGraph.disconnectAll();
         }
     }
@@ -302,7 +302,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void sendItemStorageToClient() {
-        getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+        world.getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
             .forEach(this::sendItemStorageToClient);
     }
@@ -314,14 +314,14 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
-        getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+        world.getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
             .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
     }
 
     @Override
     public void sendFluidStorageToClient() {
-        getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+        world.getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> isWatchingGrid(player, GridType.FLUID))
             .forEach(this::sendFluidStorageToClient);
     }
@@ -333,7 +333,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
-        getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+        world.getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> isWatchingGrid(player, GridType.FLUID))
             .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
     }
@@ -357,7 +357,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void sendCraftingMonitorUpdate() {
-        getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+        world.getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
             .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player));
     }
@@ -396,7 +396,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void sendReaderWriterChannelUpdate() {
-        getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+        world.getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> player.openContainer instanceof ContainerReaderWriter &&
                 ((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork() != null &&
                 pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork().getPosition()))
@@ -590,7 +590,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public World world() {
-        return getWorld();
+        return world;
     }
 
     @Override
@@ -701,7 +701,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        IBlockState state = getWorld().getBlockState(pos);
+        IBlockState state = world.getBlockState(pos);
 
         Item item = Item.getItemFromBlock(state.getBlock());
 
@@ -729,8 +729,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     public ControllerType getType() {
-        if (type == null && getWorld().getBlockState(pos).getBlock() == RSBlocks.CONTROLLER) {
-            this.type = (ControllerType) getWorld().getBlockState(pos).getValue(BlockController.TYPE);
+        if (type == null && world.getBlockState(pos).getBlock() == RSBlocks.CONTROLLER) {
+            this.type = (ControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
         }
 
         return type == null ? ControllerType.NORMAL : type;

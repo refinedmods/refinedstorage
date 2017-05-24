@@ -24,7 +24,7 @@ public abstract class TileBase extends TileEntity {
     public void setDirection(EnumFacing direction) {
         this.direction = direction;
 
-        world.notifyNeighborsOfStateChange(pos, getWorld().getBlockState(pos).getBlock(), true);
+        world.notifyNeighborsOfStateChange(pos, world.getBlockState(pos).getBlock(), true);
 
         markDirty();
     }
@@ -59,7 +59,7 @@ public abstract class TileBase extends TileEntity {
         direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
 
         if (doRender) {
-            RSUtils.updateBlock(getWorld(), pos);
+            RSUtils.updateBlock(world, pos);
         }
     }
 
@@ -114,13 +114,13 @@ public abstract class TileBase extends TileEntity {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof TileBase && ((TileBase) o).getPos().equals(pos) && ((TileBase) o).getWorld().provider.getDimension() == getWorld().provider.getDimension();
+        return o instanceof TileBase && ((TileBase) o).getPos().equals(pos) && ((TileBase) o).world.provider.getDimension() == world.provider.getDimension();
     }
 
     @Override
     public int hashCode() {
         int result = pos.hashCode();
-        result = 31 * result + getWorld().provider.getDimension();
+        result = 31 * result + world.provider.getDimension();
         return result;
     }
 }

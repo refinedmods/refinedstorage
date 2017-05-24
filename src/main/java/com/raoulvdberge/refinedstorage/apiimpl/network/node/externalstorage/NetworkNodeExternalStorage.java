@@ -15,7 +15,6 @@ import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclop
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
@@ -23,6 +22,8 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -51,8 +52,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private List<StorageItemExternal> itemStorages = new ArrayList<>();
     private List<StorageFluidExternal> fluidStorages = new ArrayList<>();
 
-    public NetworkNodeExternalStorage(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeExternalStorage(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -207,20 +208,20 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
                     return f instanceof IDrawer ? (IDrawer) f : null;
                 }));
-            } else if (IntegrationCyclopsCore.isLoaded() && StorageItemCyclops.isValid(facing, container.getDirection().getOpposite())) {
+            } else if (IntegrationCyclopsCore.isLoaded() && StorageItemCyclops.isValid(facing, getDirection().getOpposite())) {
                 itemStorages.add(new StorageItemCyclops(this));
             } else if (!(facing instanceof TileNode)) {
-                IItemHandler itemHandler = RSUtils.getItemHandler(facing, container.getDirection().getOpposite());
+                IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
                 if (itemHandler != null) {
-                    itemStorages.add(new StorageItemItemHandler(this, () -> RSUtils.getItemHandler(getFacingTile(), container.getDirection().getOpposite())));
+                    itemStorages.add(new StorageItemItemHandler(this, () -> RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite())));
                 }
             }
         } else if (type == IType.FLUIDS) {
-            IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, container.getDirection().getOpposite());
+            IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, getDirection().getOpposite());
 
             if (fluidHandler != null) {
-                fluidStorages.add(new StorageFluidExternal(this, () -> RSUtils.getFluidHandler(getFacingTile(), container.getDirection().getOpposite())));
+                fluidStorages.add(new StorageFluidExternal(this, () -> RSUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite())));
             }
         }
 
@@ -312,7 +313,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     @Override
     public int getType() {
-        return container.world().isRemote ? TileExternalStorage.TYPE.getValue() : type;
+        return world.isRemote ? TileExternalStorage.TYPE.getValue() : type;
     }
 
     @Override

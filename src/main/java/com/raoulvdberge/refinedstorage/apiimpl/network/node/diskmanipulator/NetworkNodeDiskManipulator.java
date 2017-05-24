@@ -11,13 +11,14 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -64,7 +65,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                     s -> new StorageFluidDiskManipulator(NetworkNodeDiskManipulator.this, s)
                 );
 
-                RSUtils.updateBlock(container.world(), container.pos());
+                RSUtils.updateBlock(world, pos);
             }
         }
 
@@ -98,13 +99,13 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                     s -> new StorageFluidDiskManipulator(NetworkNodeDiskManipulator.this, s)
                 );
 
-                RSUtils.updateBlock(container.world(), container.pos());
+                RSUtils.updateBlock(world, pos);
             }
         }
     };
 
-    public NetworkNodeDiskManipulator(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeDiskManipulator(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
@@ -358,7 +359,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     @Override
     public int getType() {
-        return container.world().isRemote ? TileDiskManipulator.TYPE.getValue() : type;
+        return world.isRemote ? TileDiskManipulator.TYPE.getValue() : type;
     }
 
     @Override

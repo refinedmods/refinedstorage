@@ -16,7 +16,6 @@ import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
@@ -28,6 +27,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -100,8 +101,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     private boolean oredictPattern = false;
 
-    public NetworkNodeGrid(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeGrid(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -153,8 +154,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     public GridType getType() {
-        if (type == null && container.world().getBlockState(container.pos()).getBlock() == RSBlocks.GRID) {
-            type = (GridType) container.world().getBlockState(container.pos()).getValue(BlockGrid.TYPE);
+        if (type == null && world.getBlockState(pos).getBlock() == RSBlocks.GRID) {
+            type = (GridType) world.getBlockState(pos).getValue(BlockGrid.TYPE);
         }
 
         return type == null ? GridType.NORMAL : type;
@@ -206,7 +207,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCraftingMatrixChanged() {
-        result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, container.world()));
+        result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, world));
 
         markDirty();
     }
@@ -302,7 +303,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCrafted(EntityPlayer player) {
-        NonNullList<ItemStack> remainder = CraftingManager.getInstance().getRemainingItems(matrix, container.world());
+        NonNullList<ItemStack> remainder = CraftingManager.getInstance().getRemainingItems(matrix, world);
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);
@@ -391,32 +392,32 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public int getViewType() {
-        return container.world().isRemote ? TileGrid.VIEW_TYPE.getValue() : viewType;
+        return world.isRemote ? TileGrid.VIEW_TYPE.getValue() : viewType;
     }
 
     @Override
     public int getSortingDirection() {
-        return container.world().isRemote ? TileGrid.SORTING_DIRECTION.getValue() : sortingDirection;
+        return world.isRemote ? TileGrid.SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     @Override
     public int getSortingType() {
-        return container.world().isRemote ? TileGrid.SORTING_TYPE.getValue() : sortingType;
+        return world.isRemote ? TileGrid.SORTING_TYPE.getValue() : sortingType;
     }
 
     @Override
     public int getSearchBoxMode() {
-        return container.world().isRemote ? TileGrid.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return world.isRemote ? TileGrid.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override
     public int getSize() {
-        return container.world().isRemote ? TileGrid.SIZE.getValue() : size;
+        return world.isRemote ? TileGrid.SIZE.getValue() : size;
     }
 
     @Override
     public int getTabSelected() {
-        return container.world().isRemote ? TileGrid.TAB_SELECTED.getValue() : tabSelected;
+        return world.isRemote ? TileGrid.TAB_SELECTED.getValue() : tabSelected;
     }
 
     @Override

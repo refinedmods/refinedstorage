@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.9
+- Fixed bug where inventory data was lost sometimes upon opening the world (raoulvdberge)
+
 ### 1.4.8
 - Fixed missing config categories in ingame config (raoulvdberge)
 - Fixed Controller not working anymore after changing redstone setting (raoulvdberge)

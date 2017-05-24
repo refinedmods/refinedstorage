@@ -2,12 +2,13 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReaderWriter {
     public static final String ID = "reader";
@@ -16,8 +17,8 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
 
     private String channel = "";
 
-    public NetworkNodeReader(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeReader(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -27,7 +28,7 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
 
     @Override
     public int getRedstoneStrength() {
-        return container.world().getRedstonePower(container.pos().offset(container.getDirection()), container.getDirection());
+        return world.getRedstonePower(pos.offset(getDirection()), getDirection());
     }
 
     @Override

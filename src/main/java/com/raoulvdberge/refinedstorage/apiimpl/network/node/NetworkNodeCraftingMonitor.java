@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -15,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -38,8 +38,8 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         }
     });
 
-    public NetworkNodeCraftingMonitor(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeCraftingMonitor(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
     @Override
     public boolean canViewAutomated() {
-        return container.world().isRemote ? TileCraftingMonitor.VIEW_AUTOMATED.getValue() : viewAutomated;
+        return world.isRemote ? TileCraftingMonitor.VIEW_AUTOMATED.getValue() : viewAutomated;
     }
 
     @Override

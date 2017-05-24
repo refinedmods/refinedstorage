@@ -13,12 +13,13 @@ import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -74,8 +75,8 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private int mode = IFilterable.WHITELIST;
     private boolean voidExcess = false;
 
-    public NetworkNodeStorage(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeStorage(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -192,8 +193,8 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     public ItemStorageType getType() {
-        if (type == null && container.world() != null && container.world().getBlockState(container.pos()).getBlock() == RSBlocks.STORAGE) {
-            type = (ItemStorageType) container.world().getBlockState(container.pos()).getValue(BlockStorage.TYPE);
+        if (type == null && world != null && world.getBlockState(pos).getBlock() == RSBlocks.STORAGE) {
+            type = (ItemStorageType) world.getBlockState(pos).getValue(BlockStorage.TYPE);
         }
 
         return type == null ? ItemStorageType.TYPE_1K : type;

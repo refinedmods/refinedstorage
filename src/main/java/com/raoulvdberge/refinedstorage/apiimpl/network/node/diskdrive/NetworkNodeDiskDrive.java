@@ -10,12 +10,13 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -55,7 +56,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
                     network.getFluidStorageCache().invalidate();
                 }
 
-                RSUtils.updateBlock(container.world(), container.pos());
+                RSUtils.updateBlock(world, pos);
             }
         }
 
@@ -86,8 +87,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private int type = IType.ITEMS;
     private boolean voidExcess = false;
 
-    public NetworkNodeDiskDrive(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeDiskDrive(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     public IStorageDisk[] getItemStorages() {
@@ -132,7 +133,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         network.getItemStorageCache().invalidate();
         network.getFluidStorageCache().invalidate();
 
-        RSUtils.updateBlock(container.world(), container.pos());
+        RSUtils.updateBlock(world, pos);
     }
 
     @Override
@@ -363,7 +364,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     @Override
     public int getType() {
-        return container.world().isRemote ? TileDiskDrive.TYPE.getValue() : type;
+        return world.isRemote ? TileDiskDrive.TYPE.getValue() : type;
     }
 
     @Override

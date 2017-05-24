@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeInterface
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -33,7 +35,7 @@ public class TileInterface extends TileNode<NetworkNodeInterface> {
 
     @Override
     @Nonnull
-    public NetworkNodeInterface createNode() {
-        return new NetworkNodeInterface(this);
+    public NetworkNodeInterface createNode(World world, BlockPos pos) {
+        return new NetworkNodeInterface(world, pos);
     }
 }

@@ -867,10 +867,10 @@ public class ProxyCommon {
             TileBase tileInstance = tile.newInstance();
 
             if (tileInstance instanceof TileNode) {
-                String nodeId = ((TileNode) tileInstance).createNode().getId();
+                String nodeId = ((TileNode) tileInstance).createNode(null, null).getId();
 
-                API.instance().getNetworkNodeRegistry().add(nodeId, tag -> {
-                    NetworkNode node = ((TileNode) tileInstance).createNode();
+                API.instance().getNetworkNodeRegistry().add(nodeId, (tag, world, pos) -> {
+                    NetworkNode node = ((TileNode) tileInstance).createNode(world, pos);
 
                     node.read(tag);
 

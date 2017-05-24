@@ -29,7 +29,7 @@ public class StorageItemCyclops extends StorageItemExternal {
 
     public StorageItemCyclops(NetworkNodeExternalStorage externalStorage) {
         this.externalStorage = externalStorage;
-        this.opposite = externalStorage.getContainer().getDirection().getOpposite();
+        this.opposite = externalStorage.getDirection().getOpposite();
         this.cyclopsInv = () -> {
             TileEntity f = externalStorage.getFacingTile();
 

@@ -208,8 +208,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     public PortableGridType getPortableType() {
-        if (type == null && getWorld().getBlockState(pos).getBlock() == RSBlocks.PORTABLE_GRID) {
-            this.type = (PortableGridType) getWorld().getBlockState(pos).getValue(BlockPortableGrid.TYPE);
+        if (type == null && world.getBlockState(pos).getBlock() == RSBlocks.PORTABLE_GRID) {
+            this.type = (PortableGridType) world.getBlockState(pos).getValue(BlockPortableGrid.TYPE);
         }
 
         return type == null ? PortableGridType.NORMAL : type;
@@ -294,27 +294,27 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public int getSortingType() {
-        return getWorld().isRemote ? SORTING_TYPE.getValue() : sortingType;
+        return world.isRemote ? SORTING_TYPE.getValue() : sortingType;
     }
 
     @Override
     public int getSortingDirection() {
-        return getWorld().isRemote ? SORTING_DIRECTION.getValue() : sortingDirection;
+        return world.isRemote ? SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     @Override
     public int getSearchBoxMode() {
-        return getWorld().isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return world.isRemote ? SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override
     public int getTabSelected() {
-        return getWorld().isRemote ? TAB_SELECTED.getValue() : tabSelected;
+        return world.isRemote ? TAB_SELECTED.getValue() : tabSelected;
     }
 
     @Override
     public int getSize() {
-        return getWorld().isRemote ? SIZE.getValue() : size;
+        return world.isRemote ? SIZE.getValue() : size;
     }
 
     public void setSortingType(int sortingType) {
@@ -424,15 +424,15 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public boolean isActive() {
-        int stored = !getWorld().isRemote ? energyStorage.getEnergyStored() : ENERGY_STORED.getValue();
+        int stored = !world.isRemote ? energyStorage.getEnergyStored() : ENERGY_STORED.getValue();
 
         if (getPortableType() != PortableGridType.CREATIVE && RS.INSTANCE.config.portableGridUsesEnergy && stored <= RS.INSTANCE.config.portableGridOpenUsage) {
             return false;
         }
 
-        RedstoneMode redstoneMode = !getWorld().isRemote ? this.redstoneMode : RedstoneMode.getById(REDSTONE_MODE.getValue());
+        RedstoneMode redstoneMode = !world.isRemote ? this.redstoneMode : RedstoneMode.getById(REDSTONE_MODE.getValue());
 
-        return redstoneMode.isEnabled(getWorld(), pos);
+        return redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -452,7 +452,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public void drainEnergy(int energy) {
-        if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE && redstoneMode.isEnabled(getWorld(), pos)) {
+        if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE && redstoneMode.isEnabled(world, pos)) {
             energyStorage.extractEnergyInternal(energy);
         }
     }

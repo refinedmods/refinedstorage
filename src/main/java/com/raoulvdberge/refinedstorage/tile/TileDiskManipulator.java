@@ -10,6 +10,8 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -81,7 +83,7 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
 
     @Override
     @Nonnull
-    public NetworkNodeDiskManipulator createNode() {
-        return new NetworkNodeDiskManipulator(this);
+    public NetworkNodeDiskManipulator createNode(World world, BlockPos pos) {
+        return new NetworkNodeDiskManipulator(world, pos);
     }
 }

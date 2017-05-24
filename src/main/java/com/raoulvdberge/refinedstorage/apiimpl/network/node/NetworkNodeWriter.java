@@ -5,13 +5,13 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReaderWriter {
     public static final String ID = "writer";
@@ -23,8 +23,8 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     private int redstoneStrength;
     private int lastRedstoneStrength;
 
-    public NetworkNodeWriter(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeWriter(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
         if (getRedstoneStrength() != lastRedstoneStrength) {
             lastRedstoneStrength = getRedstoneStrength();
 
-            container.world().notifyNeighborsOfStateChange(container.pos(), RSBlocks.WRITER, true);
+            world.notifyNeighborsOfStateChange(pos, RSBlocks.WRITER, true);
         }
     }
 
@@ -51,11 +51,6 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     @Override
     public void setRedstoneStrength(int strength) {
         redstoneStrength = strength;
-    }
-
-    @Override
-    public EnumFacing getDirection() {
-        return container.getDirection();
     }
 
     @Override

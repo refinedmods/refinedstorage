@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
+import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -24,15 +24,17 @@ import javax.annotation.Nullable;
 public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodAware, IWrenchable {
     @Nullable
     protected INetwork network;
-    protected INetworkNodeContainer container;
+    protected World world;
+    protected BlockPos pos;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private boolean couldUpdate;
     private boolean active;
 
-    public NetworkNode(INetworkNodeContainer container) {
-        this.container = container;
+    public NetworkNode(World world, BlockPos pos) {
+        this.world = world;
+        this.pos = pos;
     }
 
     public RedstoneMode getRedstoneMode() {
@@ -45,19 +47,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         markDirty();
     }
 
-    @Nullable
-    public INetworkNodeContainer getContainer() {
-        return container;
-    }
-
-    public void setContainer(INetworkNodeContainer container) {
-        this.container = container;
-    }
-
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        IBlockState state = container.world().getBlockState(container.pos());
+        IBlockState state = world.getBlockState(pos);
 
         return new ItemStack(Item.getItemFromBlock(state.getBlock()), 1, state.getBlock().getMetaFromState(state));
     }
@@ -82,14 +75,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     @Override
     public void markDirty() {
-        if (container.world() != null && !container.world().isRemote) {
-            API.instance().getNetworkNodeManager(container.world()).markForSaving();
+        if (world != null && !world.isRemote) {
+            API.instance().getNetworkNodeManager(world).markForSaving();
         }
     }
 
     @Override
     public boolean canUpdate() {
-        return redstoneMode.isEnabled(container.world(), container.pos());
+        return redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -102,7 +95,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
             couldUpdate = canUpdate;
 
             if (hasConnectivityState()) {
-                RSUtils.updateBlock(container.world(), container.pos());
+                RSUtils.updateBlock(world, pos);
             }
 
             if (network != null) {
@@ -146,12 +139,12 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     @Override
     public BlockPos getPos() {
-        return container.pos();
+        return pos;
     }
 
     @Override
     public World getWorld() {
-        return container.world();
+        return world;
     }
 
     public boolean canConduct(@Nullable EnumFacing direction) {
@@ -162,13 +155,18 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     public void walkNeighborhood(Operator operator) {
         for (EnumFacing facing : EnumFacing.VALUES) {
             if (canConduct(facing)) {
-                operator.apply(container.world(), container.pos().offset(facing), facing.getOpposite());
+                operator.apply(world, pos.offset(facing), facing.getOpposite());
             }
         }
     }
 
     public TileEntity getFacingTile() {
-        return container.world().getTileEntity(container.pos().offset(container.getDirection()));
+        return world.getTileEntity(pos.offset(getDirection()));
+    }
+
+    // @TODO: Caching
+    public EnumFacing getDirection() {
+        return ((TileBase) world.getTileEntity(pos)).getDirection();
     }
 
     @Nullable

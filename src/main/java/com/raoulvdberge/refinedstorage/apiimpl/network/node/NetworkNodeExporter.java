@@ -14,12 +14,13 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -47,8 +48,8 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private ICraftingTask[] craftOnlyTask = new ICraftingTask[9];
     private Integer[] craftOnlyToExtract = new Integer[9];
 
-    public NetworkNodeExporter(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeExporter(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
         if (network != null && canUpdate() && ticks % upgrades.getSpeed() == 0) {
             if (type == IType.ITEMS) {
-                IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), container.getDirection().getOpposite());
+                IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
                 if (handler != null) {
                     for (int i = 0; i < itemFilters.getSlots(); ++i) {
@@ -82,7 +83,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     }
                 }
             } else if (type == IType.FLUIDS) {
-                IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), container.getDirection().getOpposite());
+                IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
 
                 if (handler != null) {
                     for (FluidStack stack : fluidFilters.getFluids()) {
@@ -187,11 +188,11 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                 }
             } else {
                 if (IntegrationCyclopsCore.isLoaded()
-                    && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), container.getDirection().getOpposite())
-                    && SlotlessItemHandlerHelper.insertItem(getFacingTile(), container.getDirection().getOpposite(), took, true).isEmpty()) {
+                    && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), getDirection().getOpposite())
+                    && SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, true).isEmpty()) {
                     took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
-                    SlotlessItemHandlerHelper.insertItem(getFacingTile(), container.getDirection().getOpposite(), took, false);
+                    SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, false);
                 } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                     took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
@@ -284,7 +285,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return container.world().isRemote ? TileExporter.TYPE.getValue() : type;
+        return world.isRemote ? TileExporter.TYPE.getValue() : type;
     }
 
     @Override
@@ -299,7 +300,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     }
 
     public boolean isRegulator() {
-        return container.world().isRemote ? TileExporter.REGULATOR.getValue() : regulator;
+        return world.isRemote ? TileExporter.REGULATOR.getValue() : regulator;
     }
 
     public ItemHandlerBase getItemFilters() {

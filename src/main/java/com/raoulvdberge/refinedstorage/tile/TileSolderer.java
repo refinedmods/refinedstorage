@@ -6,6 +6,8 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -87,7 +89,7 @@ public class TileSolderer extends TileNode<NetworkNodeSolderer> {
 
     @Override
     @Nonnull
-    public NetworkNodeSolderer createNode() {
-        return new NetworkNodeSolderer(this);
+    public NetworkNodeSolderer createNode(World world, BlockPos pos) {
+        return new NetworkNodeSolderer(world, pos);
     }
 }

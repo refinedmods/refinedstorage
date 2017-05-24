@@ -2,18 +2,19 @@ package com.raoulvdberge.refinedstorage.apiimpl.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeFactory;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 public class NetworkNodeManager extends WorldSavedData implements INetworkNodeManager {
     public static final String NAME = "refinedstorage_nodes";
@@ -22,6 +23,10 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_ID = "Id";
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
+
+    // @TODO: Actually store dimension ID instead of using this ugly hack
+    private boolean canReadNodes;
+    private NBTTagList nodesTag;
 
     private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
@@ -34,25 +39,40 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
         ConcurrentHashMap<BlockPos, INetworkNode> newNodes = new ConcurrentHashMap<>();
 
         if (tag.hasKey(NBT_NODES)) {
-            NBTTagList list = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
+            this.nodesTag = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
+            this.canReadNodes = true;
 
-            int toRead = list.tagCount();
+            RSUtils.debugLog("Stored nodes, waiting for actual read call...");
+        } else {
+            RSUtils.debugLog("Cannot read nodes, as there is no 'nodes' tag on this WorldSavedData");
+        }
 
-            RSUtils.debugLog("Reading " + toRead + " nodes...");
+        this.nodes = newNodes;
+    }
+
+    public void tryReadNodes(World world) {
+        if (canReadNodes) {
+            canReadNodes = false;
+
+            nodes.clear();
+
+            int toRead = nodesTag.tagCount();
+
+            RSUtils.debugLog("Reading " + toRead + " nodes for dimension " + world.provider.getDimension() + "...");
 
             int read = 0;
 
-            for (int i = 0; i < list.tagCount(); ++i) {
-                NBTTagCompound nodeTag = list.getCompoundTagAt(i);
+            for (int i = 0; i < nodesTag.tagCount(); ++i) {
+                NBTTagCompound nodeTag = nodesTag.getCompoundTagAt(i);
 
                 String id = nodeTag.getString(NBT_NODE_ID);
                 NBTTagCompound data = nodeTag.getCompoundTag(NBT_NODE_DATA);
                 BlockPos pos = BlockPos.fromLong(nodeTag.getLong(NBT_NODE_POS));
 
-                Function<NBTTagCompound, INetworkNode> factory = API.instance().getNetworkNodeRegistry().get(id);
+                INetworkNodeFactory factory = API.instance().getNetworkNodeRegistry().get(id);
 
                 if (factory != null) {
-                    newNodes.put(pos, factory.apply(data));
+                    nodes.put(pos, factory.create(data, world, pos));
 
                     RSUtils.debugLog("Node at " + pos + " read... (" + (++read) + "/" + toRead + ")");
                 } else {
@@ -60,12 +80,8 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                 }
             }
 
-            RSUtils.debugLog("Read " + read + " nodes out of " + toRead + " to read");
-        } else {
-            RSUtils.debugLog("Cannot read nodes, as there is no 'nodes' tag on this WorldSavedData");
+            RSUtils.debugLog("Read " + read + " nodes out of " + toRead + " to read for dimension " + world.provider.getDimension());
         }
-
-        this.nodes = newNodes;
     }
 
     @Override

@@ -103,6 +103,8 @@ public class API implements IRSAPI {
             instance = new NetworkNodeManager(NetworkNodeManager.NAME);
 
             storage.setData(NetworkNodeManager.NAME, instance);
+        } else {
+            instance.tryReadNodes(world);
         }
 
         return instance;

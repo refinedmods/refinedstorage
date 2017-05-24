@@ -32,18 +32,6 @@ public abstract class BlockNode extends BlockBase {
     }
 
     @Override
-    public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
-        super.onBlockAdded(world, pos, state);
-
-        RSUtils.debugLog("Node block placed at " + pos + "!");
-
-        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
-
-        manager.setNode(pos, ((TileNode) createTileEntity(world, state)).createNode());
-        manager.markForSaving();
-    }
-
-    @Override
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, placer, stack);
 

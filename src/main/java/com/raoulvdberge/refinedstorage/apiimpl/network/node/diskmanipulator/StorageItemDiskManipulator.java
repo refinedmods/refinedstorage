@@ -31,7 +31,7 @@ public class StorageItemDiskManipulator implements IStorageDisk<ItemStack> {
                 if (lastState != currentState) {
                     lastState = currentState;
 
-                    RSUtils.updateBlock(diskManipulator.getContainer().world(), diskManipulator.getContainer().pos());
+                    RSUtils.updateBlock(diskManipulator.getWorld(), diskManipulator.getPos());
                 }
             },
             () -> false,

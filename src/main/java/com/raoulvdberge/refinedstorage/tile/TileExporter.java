@@ -12,6 +12,8 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
@@ -39,7 +41,7 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
             exporter.setRegulator(value);
             exporter.markDirty();
 
-            tile.getWorld().getMinecraftServer().getPlayerList().getPlayers().stream()
+            tile.world.getMinecraftServer().getPlayerList().getPlayers().stream()
                 .filter(player -> player.openContainer instanceof ContainerExporter && ((ContainerExporter) player.openContainer).getTile().getPos().equals(tile.getPos()))
                 .forEach(player -> {
                     ((ContainerExporter) player.openContainer).initSlots();
@@ -78,7 +80,7 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
 
     @Override
     @Nonnull
-    public NetworkNodeExporter createNode() {
-        return new NetworkNodeExporter(this);
+    public NetworkNodeExporter createNode(World world, BlockPos pos) {
+        return new NetworkNodeExporter(world, pos);
     }
 }

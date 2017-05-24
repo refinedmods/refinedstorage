@@ -5,11 +5,12 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -33,8 +34,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (container.world() != null && !container.world().isRemote) {
-                ((TileFluidInterface) container.world().getTileEntity(container.pos())).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_IN);
+            if (world != null && !world.isRemote) {
+                ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_IN);
             }
 
             markDirty();
@@ -46,8 +47,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (container.world() != null && !container.world().isRemote) {
-                ((TileFluidInterface) container.world().getTileEntity(container.pos())).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
+            if (world != null && !world.isRemote) {
+                ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
             }
 
             markDirty();
@@ -61,8 +62,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
-    public NetworkNodeFluidInterface(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeFluidInterface(World world, BlockPos pos) {
+        super(world, pos);
 
         tankIn.setCanDrain(false);
         tankIn.setCanFill(true);

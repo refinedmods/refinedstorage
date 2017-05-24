@@ -31,7 +31,7 @@ public class StorageItemDiskDrive implements IStorageDisk<ItemStack> {
                 if (lastState != currentState) {
                     lastState = currentState;
 
-                    RSUtils.updateBlock(diskDrive.getContainer().world(), diskDrive.getContainer().pos());
+                    RSUtils.updateBlock(diskDrive.getWorld(), diskDrive.getPos());
                 }
             },
             diskDrive::getVoidExcess,

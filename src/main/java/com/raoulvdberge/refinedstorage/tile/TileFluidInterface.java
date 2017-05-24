@@ -6,6 +6,8 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -52,7 +54,7 @@ public class TileFluidInterface extends TileNode<NetworkNodeFluidInterface> {
 
     @Override
     @Nonnull
-    public NetworkNodeFluidInterface createNode() {
-        return new NetworkNodeFluidInterface(this);
+    public NetworkNodeFluidInterface createNode(World world, BlockPos pos) {
+        return new NetworkNodeFluidInterface(world, pos);
     }
 }

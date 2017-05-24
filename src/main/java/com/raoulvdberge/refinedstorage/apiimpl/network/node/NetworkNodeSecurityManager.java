@@ -12,9 +12,10 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
-import com.raoulvdberge.refinedstorage.tile.INetworkNodeContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -35,7 +36,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (container.world() != null && !container.world().isRemote) {
+            if (world != null && !world.isRemote) {
                 rebuildCards();
             }
 
@@ -49,8 +50,8 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     @Nullable
     private UUID owner;
 
-    public NetworkNodeSecurityManager(INetworkNodeContainer container) {
-        super(container);
+    public NetworkNodeSecurityManager(World world, BlockPos pos) {
+        super(world, pos);
     }
 
     @Override
