@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StorageCacheFluid implements IStorageCache<FluidStack> {
     private INetwork network;
-    private List<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<FluidStack> list = API.instance().createFluidStackList();
 
     public StorageCacheFluid(INetwork network) {

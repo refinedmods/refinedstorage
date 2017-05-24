@@ -16,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StorageCacheItem implements IStorageCache<ItemStack> {
     private INetwork network;
-    private List<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<ItemStack> list = API.instance().createItemStackList();
 
     public StorageCacheItem(INetwork network) {

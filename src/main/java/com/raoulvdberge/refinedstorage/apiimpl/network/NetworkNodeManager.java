@@ -12,7 +12,6 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -24,7 +23,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    private Map<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
     public NetworkNodeManager(String s) {
         super(s);
@@ -32,7 +31,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        Map<BlockPos, INetworkNode> newNodes = new ConcurrentHashMap<>();
+        ConcurrentHashMap<BlockPos, INetworkNode> newNodes = new ConcurrentHashMap<>();
 
         if (tag.hasKey(NBT_NODES)) {
             NBTTagList list = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
