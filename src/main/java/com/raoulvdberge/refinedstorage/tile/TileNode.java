@@ -105,7 +105,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         NetworkNode node = (NetworkNode) API.instance().getNetworkNodeManager(getWorld()).getNode(pos);
 
         if (node == null) {
-            throw new IllegalStateException("Node cannot be null!");
+            throw new IllegalStateException("Node cannot be null at " + pos + "!");
         }
 
         if (node.getContainer().world() == null) {

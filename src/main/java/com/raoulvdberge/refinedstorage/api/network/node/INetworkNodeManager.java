@@ -39,11 +39,6 @@ public interface INetworkNodeManager {
     Collection<INetworkNode> all();
 
     /**
-     * Clears all the nodes.
-     */
-    void clear();
-
-    /**
      * Marks the network node manager for saving.
      */
     void markForSaving();

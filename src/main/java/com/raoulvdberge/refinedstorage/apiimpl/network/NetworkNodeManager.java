@@ -12,8 +12,8 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class NetworkNodeManager extends WorldSavedData implements INetworkNodeManager {
@@ -24,7 +24,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    private Map<BlockPos, INetworkNode> nodes = new HashMap<>();
+    private Map<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
     public NetworkNodeManager(String s) {
         super(s);
@@ -32,7 +32,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        clear();
+        Map<BlockPos, INetworkNode> newNodes = new ConcurrentHashMap<>();
 
         if (tag.hasKey(NBT_NODES)) {
             NBTTagList list = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
@@ -53,7 +53,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                 Function<NBTTagCompound, INetworkNode> factory = API.instance().getNetworkNodeRegistry().get(id);
 
                 if (factory != null) {
-                    setNode(pos, factory.apply(data));
+                    newNodes.put(pos, factory.apply(data));
 
                     RSUtils.debugLog("Node at " + pos + " read... (" + (++read) + "/" + toRead + ")");
                 } else {
@@ -65,6 +65,8 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
         } else {
             RSUtils.debugLog("Cannot read nodes, as there is no 'nodes' tag on this WorldSavedData");
         }
+
+        this.nodes = newNodes;
     }
 
     @Override
@@ -115,13 +117,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     @Override
     public Collection<INetworkNode> all() {
         return nodes.values();
-    }
-
-    @Override
-    public void clear() {
-        RSUtils.debugLog("Clearing all nodes!");
-
-        nodes.clear();
     }
 
     @Override
