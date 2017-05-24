@@ -15,7 +15,7 @@ public class ContainerListener {
         if (container instanceof ContainerBase) {
             TileBase tile = ((ContainerBase) container).getTile();
 
-            if (tile != null && !tile.world.isRemote) {
+            if (tile != null && !tile.getWorld().isRemote) {
                 TileDataManager manager = tile.getDataManager();
 
                 manager.sendParametersTo((EntityPlayerMP) e.getEntityPlayer());
@@ -44,7 +44,7 @@ public class ContainerListener {
         if (container instanceof ContainerBase) {
             TileBase tile = ((ContainerBase) container).getTile();
 
-            if (tile != null && !tile.world.isRemote) {
+            if (tile != null && !tile.getWorld().isRemote) {
                 tile.getDataManager().getWatchers().remove(e.getEntityPlayer());
             }
         }
