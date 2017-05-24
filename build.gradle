@@ -20,7 +20,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.4.8"
+version = "1.4.9"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
