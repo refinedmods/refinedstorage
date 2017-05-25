@@ -49,6 +49,13 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     }
 
     @Override
+    public void setDirection(EnumFacing direction) {
+        super.setDirection(direction);
+
+        getNode().resetDirection();
+    }
+
+    @Override
     public void readConfiguration(NBTTagCompound tag) {
         getNode().readConfiguration(tag);
         getNode().markDirty();
@@ -138,7 +145,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         this.legacyTag = null;
     }
 
-    // @TODO: This needs to be redone. Perhaps we need to reuse the node registry for this.
     public abstract N createNode(World world, BlockPos pos);
 
     @Override

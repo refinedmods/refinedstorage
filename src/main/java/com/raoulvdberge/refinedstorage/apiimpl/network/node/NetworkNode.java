@@ -29,6 +29,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
+    private EnumFacing direction;
+
     private boolean couldUpdate;
     private boolean active;
 
@@ -164,9 +166,16 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         return world.getTileEntity(pos.offset(getDirection()));
     }
 
-    // @TODO: Caching
     public EnumFacing getDirection() {
-        return ((TileBase) world.getTileEntity(pos)).getDirection();
+        if (direction == null) {
+            resetDirection();
+        }
+
+        return direction;
+    }
+
+    public void resetDirection() {
+        this.direction = ((TileBase) world.getTileEntity(pos)).getDirection();
     }
 
     @Nullable
