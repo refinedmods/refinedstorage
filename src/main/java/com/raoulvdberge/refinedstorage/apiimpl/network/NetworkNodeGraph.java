@@ -23,7 +23,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
 
     private Set<INetworkNode> nodes = new HashSet<>();
-    private Set<Integer> nodeHashes = new HashSet<>();
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
@@ -54,26 +53,17 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             currentNodeToCheck.walkNeighborhood(operator);
         }
 
-        for (INetworkNode node : nodes) {
-            if (operator.uncheckedHashesFromPrevious.contains(getNodeHash(node))) {
-                node.onDisconnected(controller);
+        for (INetworkNode node : operator.previousNodes) {
+            node.onDisconnected(controller);
 
-                operator.changed = true;
-            }
+            operator.changed = true;
         }
 
         this.nodes = operator.newNodes;
-        this.nodeHashes = operator.newNodeHashes;
 
         if (operator.changed) {
             controller.getDataManager().sendParameterToWatchers(TileController.NODES);
         }
-    }
-
-    private static int getNodeHash(INetworkNode node) {
-        int result = node.getWorld().provider.getDimension();
-        result = 31 * result + node.getPos().hashCode();
-        return result;
     }
 
     @Override
@@ -83,16 +73,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     @Override
     public void disconnectAll() {
-        List<INetworkNode> oldNodes = new ArrayList<>(nodes);
-
+        nodes.forEach(n -> n.onDisconnected(controller));
         nodes.clear();
-        nodeHashes.clear();
-
-        for (INetworkNode node : oldNodes) {
-            if (node.getNetwork() == controller) {
-                node.onDisconnected(controller);
-            }
-        }
 
         controller.getDataManager().sendParameterToWatchers(TileController.NODES);
     }
@@ -121,8 +103,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     private class Operator implements INetworkNeighborhoodAware.Operator {
         private Set<INetworkNode> newNodes = new HashSet<>();
-        private Set<Integer> newNodeHashes = new HashSet<>();
-        private Set<Integer> uncheckedHashesFromPrevious = new HashSet<>(nodeHashes);
+        private Set<INetworkNode> previousNodes = new HashSet<>(nodes);
 
         private boolean changed;
 
@@ -138,16 +119,15 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 } else if (tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, side)) {
                     INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
                     INetworkNode otherNode = otherNodeProxy.getNode();
-                    int otherNodeHash = getNodeHash(otherNode);
 
-                    if (newNodes.add(otherNode) && newNodeHashes.add(otherNodeHash)) {
-                        if (!nodeHashes.contains(otherNodeHash)) {
+                    if (newNodes.add(otherNode)) {
+                        if (!nodes.contains(otherNode)) {
                             otherNode.onConnected(controller);
 
                             changed = true;
                         }
 
-                        uncheckedHashesFromPrevious.remove(otherNodeHash);
+                        previousNodes.remove(otherNode);
 
                         toCheck.add(new NodeToCheck(otherNode, world, pos, side, tile));
                     }

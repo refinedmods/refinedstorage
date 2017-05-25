@@ -104,8 +104,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
         NetworkNode node = (NetworkNode) manager.getNode(pos);
 
-        // @TODO: This is a hack to support previous broken versions that have no nodes for some tiles due to a bug.
-        // This should actually be called in Block#onBlockAdded.
+        // @TODO: This is a hack to support previous broken versions that have no nodes for some tiles due to a bug
+        // This should actually be called in Block#onBlockAdded
         if (node == null) {
             RSUtils.debugLog("Creating node at " + pos);
 

@@ -23,6 +23,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
@@ -195,5 +196,31 @@ public class API implements IRSAPI {
     @Override
     public int getFluidStackHashCode(FluidStack stack) {
         return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
+    }
+
+    @Override
+    public int getNetworkNodeHashCode(INetworkNode node) {
+        int result = node.getPos().hashCode();
+        result = 31 * result + node.getWorld().provider.getDimension();
+        return result;
+    }
+
+    @Override
+    public boolean isNetworkNodeEqual(INetworkNode left, Object right) {
+        if (!(right instanceof INetworkNode)) {
+            return false;
+        }
+
+        if (left == right) {
+            return true;
+        }
+
+        NetworkNode rightNode = (NetworkNode) right;
+
+        if (left.getWorld().provider.getDimension() != rightNode.getWorld().provider.getDimension()) {
+            return false;
+        }
+
+        return left.getPos().equals(rightNode.getPos());
     }
 }

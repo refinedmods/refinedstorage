@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
@@ -134,4 +135,17 @@ public interface IRSAPI {
      * @return a hashcode for the given stack
      */
     int getFluidStackHashCode(FluidStack stack);
+
+    /**
+     * @param node the node
+     * @return the hashcode
+     */
+    int getNetworkNodeHashCode(INetworkNode node);
+
+    /**
+     * @param left  the first network node
+     * @param right the second network node
+     * @return true if the two network nodes are equal, false otherwise
+     */
+    boolean isNetworkNodeEqual(INetworkNode left, Object right);
 }

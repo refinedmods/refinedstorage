@@ -198,4 +198,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return API.instance().isNetworkNodeEqual(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return API.instance().getNetworkNodeHashCode(this);
+    }
 }

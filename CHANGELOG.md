@@ -3,6 +3,7 @@
 ### 1.4.10
 - Improved performance of network scanning (raoulvdberge)
 - Fixed crash when attempting to get direction of a node (raoulvdberge)
+- Fixed bug where some network parts don't want to connect to the storage system (raoulvdberge)
 
 ### 1.4.9
 - Fixed bug where inventory data was lost sometimes upon opening the world (raoulvdberge)
