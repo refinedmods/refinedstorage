@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.10
+- Improved performance of network scanning (raoulvdberge)
+
 ### 1.4.9
 - Fixed bug where inventory data was lost sometimes upon opening the world (raoulvdberge)
 

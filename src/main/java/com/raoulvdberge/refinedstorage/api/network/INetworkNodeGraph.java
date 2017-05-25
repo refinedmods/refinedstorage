@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.api.network;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Represents a graph of all the nodes connected to a network.
@@ -14,9 +14,9 @@ public interface INetworkNodeGraph {
     void rebuild();
 
     /**
-     * @return a list of all connected nodes
+     * @return a collection of all connected nodes
      */
-    List<INetworkNode> all();
+    Collection<INetworkNode> all();
 
     /**
      * Disconnects and notifies all connected nodes.

@@ -22,8 +22,8 @@ import static com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy.N
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
 
-    private List<INetworkNode> nodes = new ArrayList<>();
-    private Set<Integer> nodePositions = new HashSet<>();
+    private Set<INetworkNode> nodes = new HashSet<>();
+    private Set<Integer> nodeHashes = new HashSet<>();
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
@@ -39,26 +39,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             return;
         }
 
-        Set<INetworkNode> newNodes = new HashSet<>();
-        Set<Integer> newNodePositions = new HashSet<>();
-        Queue<NodeToCheck> toCheck = new ArrayDeque<>();
-
-        INetworkNeighborhoodAware.Operator operator = (world, pos, side) -> {
-            TileEntity tile = world.getTileEntity(pos);
-
-            if (tile != null && !tile.isInvalid()) {
-                if (tile instanceof TileController) {
-                    removeOtherController(world, pos);
-                } else if (tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, side)) {
-                    INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
-                    INetworkNode otherNode = otherNodeProxy.getNode();
-
-                    if (newNodes.add(otherNode) && newNodePositions.add(getNodeHash(otherNode))) {
-                        toCheck.add(new NodeToCheck(otherNode, world, pos, side, tile));
-                    }
-                }
-            }
-        };
+        Operator operator = new Operator();
 
         BlockPos controllerPos = controller.getPos();
         World controllerWorld = controller.getWorld();
@@ -69,35 +50,22 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         NodeToCheck currentNodeToCheck;
-        while ((currentNodeToCheck = toCheck.poll()) != null) {
+        while ((currentNodeToCheck = operator.toCheck.poll()) != null) {
             currentNodeToCheck.walkNeighborhood(operator);
         }
 
-        List<INetworkNode> oldNodes = nodes;
-        Set<Integer> oldNodePositions = nodePositions;
-
-        nodes = new ArrayList<>(newNodes);
-        nodePositions = new HashSet<>(newNodePositions);
-
-        boolean changed = false;
-
         for (INetworkNode node : nodes) {
-            if (!oldNodePositions.contains(getNodeHash(node))) {
-                node.onConnected(controller);
+            if (operator.uncheckedHashesFromPrevious.contains(getNodeHash(node))) {
+                node.onDisconnected(controller);
 
-                changed = true;
+                operator.changed = true;
             }
         }
 
-        for (INetworkNode oldNode : oldNodes) {
-            if (!nodePositions.contains(getNodeHash(oldNode))) {
-                oldNode.onDisconnected(controller);
+        this.nodes = operator.newNodes;
+        this.nodeHashes = operator.newNodeHashes;
 
-                changed = true;
-            }
-        }
-
-        if (changed) {
+        if (operator.changed) {
             controller.getDataManager().sendParameterToWatchers(TileController.NODES);
         }
     }
@@ -109,7 +77,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     @Override
-    public List<INetworkNode> all() {
+    public Collection<INetworkNode> all() {
         return nodes;
     }
 
@@ -118,7 +86,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         List<INetworkNode> oldNodes = new ArrayList<>(nodes);
 
         nodes.clear();
-        nodePositions.clear();
+        nodeHashes.clear();
 
         for (INetworkNode node : oldNodes) {
             if (node.getNetwork() == controller) {
@@ -148,6 +116,43 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 otherControllerPos.getZ(),
                 stackToSpawn
             );
+        }
+    }
+
+    private class Operator implements INetworkNeighborhoodAware.Operator {
+        private Set<INetworkNode> newNodes = new HashSet<>();
+        private Set<Integer> newNodeHashes = new HashSet<>();
+        private Set<Integer> uncheckedHashesFromPrevious = new HashSet<>(nodeHashes);
+
+        private boolean changed;
+
+        private Queue<NodeToCheck> toCheck = new ArrayDeque<>();
+
+        @Override
+        public void apply(World world, BlockPos pos, EnumFacing side) {
+            TileEntity tile = world.getTileEntity(pos);
+
+            if (tile != null) {
+                if (tile instanceof TileController) {
+                    removeOtherController(world, pos);
+                } else if (tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, side)) {
+                    INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
+                    INetworkNode otherNode = otherNodeProxy.getNode();
+                    int otherNodeHash = getNodeHash(otherNode);
+
+                    if (newNodes.add(otherNode) && newNodeHashes.add(otherNodeHash)) {
+                        if (!nodeHashes.contains(otherNodeHash)) {
+                            otherNode.onConnected(controller);
+
+                            changed = true;
+                        }
+
+                        uncheckedHashesFromPrevious.remove(otherNodeHash);
+
+                        toCheck.add(new NodeToCheck(otherNode, world, pos, side, tile));
+                    }
+                }
+            }
         }
     }
 
