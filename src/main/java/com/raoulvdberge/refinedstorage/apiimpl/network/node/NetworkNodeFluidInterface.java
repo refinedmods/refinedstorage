@@ -34,7 +34,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (world != null && !world.isRemote) {
+            if (!world.isRemote) {
                 ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_IN);
             }
 
@@ -47,7 +47,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         protected void onContentsChanged() {
             super.onContentsChanged();
 
-            if (world != null && !world.isRemote) {
+            if (!world.isRemote) {
                 ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
             }
 

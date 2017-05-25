@@ -27,20 +27,12 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
     private static final String NBT_BLOCKED = "Blocked";
 
-    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> {
-        // We can only validate the crafting pattern if the world exists.
-        // If the world doesn't exist, this is probably called while reading and in that case it doesn't matter.
-        if (world != null) {
-            return s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(world, s, this).isValid();
-        }
-
-        return true;
-    }) {
+    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(world, s, this).isValid()) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (world != null && !world.isRemote) {
+            if (!world.isRemote) {
                 rebuildPatterns();
             }
 

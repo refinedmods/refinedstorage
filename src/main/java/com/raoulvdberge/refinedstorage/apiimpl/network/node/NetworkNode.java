@@ -75,7 +75,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
 
     @Override
     public void markDirty() {
-        if (world != null && !world.isRemote) {
+        if (!world.isRemote) {
             API.instance().getNetworkNodeManager(world).markForSaving();
         }
     }

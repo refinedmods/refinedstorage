@@ -20,7 +20,7 @@ public class NetworkNodeListener {
 
             if (e.phase == TickEvent.Phase.END) {
                 for (INetworkNode node : API.instance().getNetworkNodeManager(e.world).all()) {
-                    if (node.getWorld() != null && e.world.isBlockLoaded(node.getPos())) {
+                    if (e.world.isBlockLoaded(node.getPos())) {
                         node.update();
                     }
                 }

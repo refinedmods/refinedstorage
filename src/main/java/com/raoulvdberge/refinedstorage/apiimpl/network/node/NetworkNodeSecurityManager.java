@@ -36,7 +36,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (world != null && !world.isRemote) {
+            if (!world.isRemote) {
                 rebuildCards();
             }
 
