@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.11
+- Removed debug log configuration option, as it's no longer needed (raoulvdberge)
+
 ### 1.4.10
 - Improved performance of network scanning (raoulvdberge)
 - Fixed crash when attempting to get direction of a node (raoulvdberge)

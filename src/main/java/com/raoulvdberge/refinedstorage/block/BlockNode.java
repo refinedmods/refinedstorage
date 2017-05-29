@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -40,8 +39,6 @@ public abstract class BlockNode extends BlockBase {
                 TileEntity tile = world.getTileEntity(pos);
 
                 if (tile instanceof TileNode) {
-                    RSUtils.debugLog("Reading configuration from wrench at " + pos + "!");
-
                     ((TileNode) tile).getNode().readConfiguration(stack.getTagCompound().getCompoundTag(NBT_REFINED_STORAGE_DATA));
                     ((TileNode) tile).getNode().markDirty();
                 }
@@ -60,8 +57,6 @@ public abstract class BlockNode extends BlockBase {
         dropContents(world, pos);
 
         removeTile(world, pos, state);
-
-        RSUtils.debugLog("Node block broken at " + pos + "!");
 
         manager.removeNode(pos);
         manager.markForSaving();

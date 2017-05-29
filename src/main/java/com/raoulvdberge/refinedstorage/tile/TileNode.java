@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
@@ -107,8 +106,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         // @TODO: This is a hack to support previous broken versions that have no nodes for some tiles due to a bug
         // This should actually be called in Block#onBlockAdded
         if (node == null) {
-            RSUtils.debugLog("Creating node at " + pos);
-
             manager.setNode(pos, node = createNode(world, pos));
             manager.markForSaving();
         }
@@ -134,8 +131,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         } else if (legacyTag.getSize() == 6 + 1 && hasMeta && hasForgeData && hasForgeCaps) {
             // NO OP
         } else {
-            RSUtils.debugLog("Reading legacy tag data at " + pos + "!");
-
             node.read(legacyTag);
             node.markDirty();
 

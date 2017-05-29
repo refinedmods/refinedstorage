@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeFactory;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
@@ -41,10 +40,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
         if (tag.hasKey(NBT_NODES)) {
             this.nodesTag = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
             this.canReadNodes = true;
-
-            RSUtils.debugLog("Stored nodes, waiting for actual read call...");
-        } else {
-            RSUtils.debugLog("Cannot read nodes, as there is no 'nodes' tag on this WorldSavedData");
         }
 
         this.nodes = newNodes;
@@ -55,12 +50,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
             canReadNodes = false;
 
             nodes.clear();
-
-            int toRead = nodesTag.tagCount();
-
-            RSUtils.debugLog("Reading " + toRead + " nodes for dimension " + world.provider.getDimension() + "...");
-
-            int read = 0;
 
             for (int i = 0; i < nodesTag.tagCount(); ++i) {
                 NBTTagCompound nodeTag = nodesTag.getCompoundTagAt(i);
@@ -73,26 +62,14 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
                 if (factory != null) {
                     nodes.put(pos, factory.create(data, world, pos));
-
-                    RSUtils.debugLog("Node at " + pos + " read... (" + (++read) + "/" + toRead + ")");
-                } else {
-                    RSUtils.debugLog("Factory for node at " + pos + " is null (id: " + id + ")");
                 }
             }
-
-            RSUtils.debugLog("Read " + read + " nodes out of " + toRead + " to read for dimension " + world.provider.getDimension());
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        int toWrite = all().size();
-
-        RSUtils.debugLog("Writing " + toWrite + " nodes...");
-
         NBTTagList list = new NBTTagList();
-
-        int written = 0;
 
         for (INetworkNode node : all()) {
             NBTTagCompound nodeTag = new NBTTagCompound();
@@ -101,14 +78,10 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
             nodeTag.setLong(NBT_NODE_POS, node.getPos().toLong());
             nodeTag.setTag(NBT_NODE_DATA, node.write(new NBTTagCompound()));
 
-            RSUtils.debugLog("Node at " + node.getPos() + " written... (" + (++written) + "/" + toWrite + ")");
-
             list.appendTag(nodeTag);
         }
 
         tag.setTag(NBT_NODES, list);
-
-        RSUtils.debugLog("Wrote " + written + " nodes out of " + toWrite + " to write");
 
         return tag;
     }
