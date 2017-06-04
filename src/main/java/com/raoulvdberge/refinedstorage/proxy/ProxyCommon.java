@@ -250,12 +250,13 @@ public class ProxyCommon {
         );
 
         // Machine Casing
-        GameRegistry.addRecipe(new ItemStack(RSBlocks.MACHINE_CASING),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.MACHINE_CASING),
             "EEE",
-            "E E",
+            "ESE",
             "EEE",
-            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)
-        );
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'S', "stone"
+        ));
 
         // Construction Core
         GameRegistry.addShapelessRecipe(new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),

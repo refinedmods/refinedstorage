@@ -7,6 +7,7 @@
 - Fixed bug where the GUI didn't close when a block is broken, causing a dupe bug with the Portable Grid (raoulvdberge)
 - Added support for External Storage on Interfaces and other Refined Storage blocks, so you can keep items in stock easier (raoulvdberge)
 - You now have to sneak to place the Portable Grid in the world (raoulvdberge)
+- The Machine Casing now requires 1 piece of stone in the middle (raoulvdberge)
 
 ### 1.4.10
 - Improved performance of network scanning (raoulvdberge)
