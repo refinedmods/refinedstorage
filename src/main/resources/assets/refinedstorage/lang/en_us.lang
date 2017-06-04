@@ -228,6 +228,7 @@ block.refinedstorage:quartz_enriched_iron_block.name=Block of Quartz Enriched Ir
 block.refinedstorage:storage_monitor.name=Storage Monitor
 block.refinedstorage:portable_grid.0.name=Portable Grid
 block.refinedstorage:portable_grid.1.name=Creative Portable Grid
+block.refinedstorage:portable_grid.tooltip=Sneak to place in the world.
 
 item.refinedstorage:storage_disk.0.name=1k Storage Disk
 item.refinedstorage:storage_disk.1.name=4k Storage Disk
