@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
@@ -114,6 +115,12 @@ public abstract class BlockBase extends Block {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         dropContents(world, pos);
         removeTile(world, pos, state);
+
+        for (EntityPlayer player : world.playerEntities) {
+            if (player.openContainer instanceof ContainerBase && ((ContainerBase) player.openContainer).getTile() != null && ((ContainerBase) player.openContainer).getTile().getPos().equals(pos)) {
+                player.closeScreen();
+            }
+        }
     }
 
     protected void removeTile(World world, BlockPos pos, IBlockState state) {
