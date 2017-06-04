@@ -2,6 +2,7 @@
 
 ### 1.4.11
 - Removed debug log configuration option, as it's no longer needed (raoulvdberge)
+- Fixed bug where storages that are removed remain visible (raoulvdberge)
 
 ### 1.4.10
 - Improved performance of network scanning (raoulvdberge)

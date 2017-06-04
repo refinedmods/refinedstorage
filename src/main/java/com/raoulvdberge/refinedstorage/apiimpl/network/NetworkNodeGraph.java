@@ -53,13 +53,13 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             currentNodeToCheck.walkNeighborhood(operator);
         }
 
+        this.nodes = operator.newNodes;
+
         for (INetworkNode node : operator.previousNodes) {
             node.onDisconnected(controller);
 
             operator.changed = true;
         }
-
-        this.nodes = operator.newNodes;
 
         if (operator.changed) {
             controller.getDataManager().sendParameterToWatchers(TileController.NODES);
