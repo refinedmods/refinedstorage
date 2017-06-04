@@ -42,7 +42,7 @@ public class CraftingStepCraft extends CraftingStep {
         if (!super.canStartProcessing()) {
             return false;
         }
-        int compare = CraftingTask.DEFAULT_COMPARE;
+        int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
         for (ItemStack stack : getToInsert()) {
             // This will be a tool, like a hammer
             if (stack.isItemStackDamageable()) {
@@ -66,7 +66,7 @@ public class CraftingStepCraft extends CraftingStep {
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
         List<ItemStack> actualInputs = new LinkedList<>();
-        if (extractItems(actualInputs, CraftingTask.DEFAULT_COMPARE, toInsertItems)) {
+        if (extractItems(actualInputs, CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0), toInsertItems)) {
             IStackList<ItemStack> stackList = API.instance().createItemStackList();
             actualInputs.forEach(stackList::add);
 
