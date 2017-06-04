@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -24,7 +23,6 @@ import java.util.List;
 public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternContainer {
     public static final String ID = "crafter";
 
-    private static final String NBT_TRIGGERED_AUTOCRAFTING = "TriggeredAutocrafting";
     private static final String NBT_BLOCKED = "Blocked";
 
     private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(world, s, this).isValid()) {
@@ -46,7 +44,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
-    private boolean triggeredAutocrafting = false;
     private boolean blocked = false;
 
     public NetworkNodeCrafter(World world, BlockPos pos) {
@@ -88,14 +85,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         if (ticks == 1) {
             rebuildPatterns();
-        }
-
-        if (network != null && triggeredAutocrafting && world.isBlockPowered(pos)) {
-            for (ICraftingPattern pattern : actualPatterns) {
-                for (ItemStack output : pattern.getOutputs()) {
-                    network.getCraftingManager().schedule(output, 1, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
-                }
-            }
         }
     }
 
@@ -142,24 +131,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
-        super.writeConfiguration(tag);
-
-        tag.setBoolean(NBT_TRIGGERED_AUTOCRAFTING, triggeredAutocrafting);
-
-        return tag;
-    }
-
-    @Override
-    public void readConfiguration(NBTTagCompound tag) {
-        super.readConfiguration(tag);
-
-        if (tag.hasKey(NBT_TRIGGERED_AUTOCRAFTING)) {
-            triggeredAutocrafting = tag.getBoolean(NBT_TRIGGERED_AUTOCRAFTING);
-        }
-    }
-
-    @Override
     public int getSpeedUpdateCount() {
         return upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED);
     }
@@ -185,14 +156,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     public IItemHandler getUpgrades() {
         return upgrades;
-    }
-
-    public boolean isTriggeredAutocrafting() {
-        return triggeredAutocrafting;
-    }
-
-    public void setTriggeredAutocrafting(boolean triggeredAutocrafting) {
-        this.triggeredAutocrafting = triggeredAutocrafting;
     }
 
     @Override
