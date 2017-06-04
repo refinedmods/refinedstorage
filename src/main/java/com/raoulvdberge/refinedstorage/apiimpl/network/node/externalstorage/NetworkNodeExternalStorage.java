@@ -16,7 +16,6 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
@@ -66,9 +65,6 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         super.onConnectedStateChange(network, state);
 
         updateStorage(network);
-
-        network.getItemStorageCache().invalidate();
-        network.getFluidStorageCache().invalidate();
     }
 
     @Override
@@ -210,7 +206,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
                 }));
             } else if (IntegrationCyclopsCore.isLoaded() && StorageItemCyclops.isValid(facing, getDirection().getOpposite())) {
                 itemStorages.add(new StorageItemCyclops(this));
-            } else if (!(facing instanceof TileNode)) {
+            } else if (facing != null) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
                 if (itemHandler != null) {

@@ -78,14 +78,16 @@ public class ItemGridHandler implements IItemGridHandler {
                 if (ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
                     took = network.extractItem(item, size, false);
 
-                    ItemHandlerHelper.insertItem(playerInventory, took, false);
+                    if (took != null) { // Safe guard: we never know if the extracted item will suddenly be null (can happen with weird external storage setups)
+                        ItemHandlerHelper.insertItem(playerInventory, took, false);
+                    }
                 }
             } else {
                 took = network.extractItem(item, size, false);
 
                 if (single && !held.isEmpty()) {
                     held.grow(1);
-                } else {
+                } else if (took != null) { // Safe guard: we never know if the extracted item will suddenly be null (can happen with weird external storage setups)
                     player.inventory.setItemStack(took);
                 }
 

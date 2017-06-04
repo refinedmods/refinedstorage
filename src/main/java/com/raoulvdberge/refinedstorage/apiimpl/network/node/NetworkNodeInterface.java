@@ -96,7 +96,13 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                         } else {
                             exportItems.getStackInSlot(i).grow(result.getCount());
                         }
-                    } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                    }
+
+                    // Example: our delta is 5, we extracted 3 items.
+                    // That means we still have to autocraft 2 items.
+                    delta -= result == null ? 0 : result.getCount();
+
+                    if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                         network.getCraftingManager().schedule(wanted, delta, compare);
                     }
                 } else if (delta < 0) {
