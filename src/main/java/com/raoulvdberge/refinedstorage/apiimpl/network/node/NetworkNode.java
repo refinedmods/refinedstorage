@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -21,7 +21,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodAware, IWrenchable {
+public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, IWrenchable {
     @Nullable
     protected INetwork network;
     protected World world;
@@ -154,7 +154,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     }
 
     @Override
-    public void walkNeighborhood(Operator operator) {
+    public void visit(Operator operator) {
         for (EnumFacing facing : EnumFacing.VALUES) {
             if (canConduct(facing)) {
                 operator.apply(world, pos.offset(facing), facing.getOpposite());

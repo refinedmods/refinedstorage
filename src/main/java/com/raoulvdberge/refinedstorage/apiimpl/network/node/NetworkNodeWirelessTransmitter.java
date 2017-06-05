@@ -85,7 +85,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
     }
 
     @Override
-    public void walkNeighborhood(Operator operator) {
+    public void visit(Operator operator) {
         operator.apply(world, pos.offset(EnumFacing.DOWN), EnumFacing.UP);
     }
 }

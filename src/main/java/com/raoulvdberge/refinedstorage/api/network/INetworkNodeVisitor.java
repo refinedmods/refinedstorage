@@ -7,8 +7,8 @@ import net.minecraft.world.World;
 /**
  * Allows the network nodes to implement more optimal or non-regular discovery of neighbor nodes.
  */
-public interface INetworkNeighborhoodAware {
-    void walkNeighborhood(Operator operator);
+public interface INetworkNodeVisitor {
+    void visit(Operator operator);
 
     @FunctionalInterface
     interface Operator {

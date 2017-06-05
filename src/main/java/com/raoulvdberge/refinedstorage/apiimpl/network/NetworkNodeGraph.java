@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
@@ -21,7 +21,6 @@ import static com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy.N
 
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
-
     private Set<INetworkNode> nodes = new HashSet<>();
 
     public NetworkNodeGraph(TileController controller) {
@@ -48,9 +47,9 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             operator.apply(controllerWorld, pos, facing.getOpposite());
         }
 
-        NodeToCheck currentNodeToCheck;
-        while ((currentNodeToCheck = operator.toCheck.poll()) != null) {
-            currentNodeToCheck.walkNeighborhood(operator);
+        Visitor currentVisitor;
+        while ((currentVisitor = operator.toCheck.poll()) != null) {
+            currentVisitor.visit(operator);
         }
 
         this.nodes = operator.newNodes;
@@ -101,13 +100,13 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
     }
 
-    private class Operator implements INetworkNeighborhoodAware.Operator {
+    private class Operator implements INetworkNodeVisitor.Operator {
         private Set<INetworkNode> newNodes = new HashSet<>();
         private Set<INetworkNode> previousNodes = new HashSet<>(nodes);
 
         private boolean changed;
 
-        private Queue<NodeToCheck> toCheck = new ArrayDeque<>();
+        private Queue<Visitor> toCheck = new ArrayDeque<>();
 
         @Override
         public void apply(World world, BlockPos pos, EnumFacing side) {
@@ -129,21 +128,21 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
                         previousNodes.remove(otherNode);
 
-                        toCheck.add(new NodeToCheck(otherNode, world, pos, side, tile));
+                        toCheck.add(new Visitor(otherNode, world, pos, side, tile));
                     }
                 }
             }
         }
     }
 
-    private class NodeToCheck implements INetworkNeighborhoodAware {
+    private class Visitor implements INetworkNodeVisitor {
         private final INetworkNode node;
         private final World world;
         private final BlockPos pos;
         private final EnumFacing side;
         private final TileEntity tile;
 
-        NodeToCheck(INetworkNode node, World world, BlockPos pos, EnumFacing side, TileEntity tile) {
+        Visitor(INetworkNode node, World world, BlockPos pos, EnumFacing side, TileEntity tile) {
             this.node = node;
             this.world = world;
             this.pos = pos;
@@ -152,9 +151,9 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         }
 
         @Override
-        public void walkNeighborhood(Operator operator) {
-            if (node instanceof INetworkNeighborhoodAware) {
-                ((INetworkNeighborhoodAware) node).walkNeighborhood(operator);
+        public void visit(Operator operator) {
+            if (node instanceof INetworkNodeVisitor) {
+                ((INetworkNodeVisitor) node).visit(operator);
             } else {
                 for (EnumFacing checkSide : EnumFacing.VALUES) {
                     if (checkSide != side) { // Avoid going backward
