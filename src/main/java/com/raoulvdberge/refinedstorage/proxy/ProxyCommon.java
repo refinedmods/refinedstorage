@@ -298,13 +298,15 @@ public class ProxyCommon {
         );
 
         // Disk Drive
-        API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.DISK_DRIVE),
-            500,
-            new ItemStack(Blocks.CHEST),
-            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.MACHINE_CASING)
-        ));
+        GameRegistry.addRecipe(new ItemStack(RSBlocks.DISK_DRIVE),
+            "ECE",
+            "EME",
+            "EPE",
+            'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
+            'M', new ItemStack(RSBlocks.MACHINE_CASING),
+            'C', new ItemStack(Blocks.CHEST),
+            'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
+        );
 
         // Cable
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.CABLE, 12),
@@ -716,9 +718,9 @@ public class ProxyCommon {
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.INTERFACE),
             200,
-            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC),
             new ItemStack(RSBlocks.IMPORTER),
-            new ItemStack(RSBlocks.EXPORTER)
+            new ItemStack(RSBlocks.EXPORTER),
+            new ItemStack(RSBlocks.MACHINE_CASING)
         ));
 
         // Fluid Interface

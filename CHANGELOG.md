@@ -8,6 +8,8 @@
 - Added support for External Storage on Interfaces and other Refined Storage blocks, so you can keep items in stock easier (raoulvdberge)
 - You now have to sneak to place the Portable Grid in the world (raoulvdberge)
 - The Machine Casing now requires 1 piece of stone in the middle (raoulvdberge)
+- Changed recipe of Disk Drive to no longer require a Solderer (raoulvdberge)
+- Changed recipe of Interface to no longer require a Basic Processor, but a Machine Casing instead (raoulvdberge)
 
 ### 1.4.10
 - Improved performance of network scanning (raoulvdberge)
