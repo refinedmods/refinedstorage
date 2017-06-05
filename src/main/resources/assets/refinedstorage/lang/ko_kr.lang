@@ -81,95 +81,95 @@ misc.refinedstorage:energy_stored=%d / %d RS
 misc.refinedstorage:energy_usage=Usage: %d RS/t
 misc.refinedstorage:energy_usage_minimal=%d RS/t
 
-misc.refinedstorage:storage.stored=Stored: %s
-misc.refinedstorage:storage.stored_capacity=Stored: %s / %s
+misc.refinedstorage:storage.stored=저장량: %s
+misc.refinedstorage:storage.stored_capacity=저쟝량: %s / %s
 misc.refinedstorage:storage.stored_minimal=%s
 misc.refinedstorage:storage.stored_capacity_minimal=%s / %s
-misc.refinedstorage:storage.full=%d%% full
+misc.refinedstorage:storage.full=%d%% 가득 참
 
-misc.refinedstorage:network_item.tooltip=Linked to %d, %d, %d.
-misc.refinedstorage:network_item.out_of_range=There is no Wireless Transmitter in range.
-misc.refinedstorage:network_item.not_found=Controller not found.
+misc.refinedstorage:network_item.tooltip=%d, %d, %d로 연결됨
+misc.refinedstorage:network_item.out_of_range=근방에 무선 송신기가 없습니다.
+misc.refinedstorage:network_item.not_found=컨트롤러를 찾을 수 없습니다.
 
-misc.refinedstorage:network_card.tooltip=Linked to %d, %d, %d.
+misc.refinedstorage:network_card.tooltip=%d, %d, %d로 연결됨
 
-misc.refinedstorage:pattern.inputs=Inputs
-misc.refinedstorage:pattern.outputs=Outputs
-misc.refinedstorage:pattern.invalid=Invalid pattern
-misc.refinedstorage:pattern.oredict=Uses ore dictionary
+misc.refinedstorage:pattern.inputs=입력
+misc.refinedstorage:pattern.outputs=출력
+misc.refinedstorage:pattern.invalid=잘못된 패턴
+misc.refinedstorage:pattern.oredict=Ore Dictionary 사용
 
-misc.refinedstorage:security.no_permission=You have no permission to perform that action.
+misc.refinedstorage:security.no_permission=권한이 없습니다.
 
-misc.refinedstorage:start=Start
-misc.refinedstorage:clear=Clear
-misc.refinedstorage:set=Set
-misc.refinedstorage:cancel_all=Cancel All
-misc.refinedstorage:priority=Priority
+misc.refinedstorage:start=시작
+misc.refinedstorage:clear=초기화
+misc.refinedstorage:set=설정
+misc.refinedstorage:cancel_all=모두 취소
+misc.refinedstorage:priority=우선 순위
 misc.refinedstorage:oredict=Oredict
 misc.refinedstorage:blocking=Blocking
 
-misc.refinedstorage:reader_writer.redstone=Redstone strength: %d
+misc.refinedstorage:reader_writer.redstone=레드스톤 강도: %d
 
-sidebutton.refinedstorage:compare.1=Compare damage
-sidebutton.refinedstorage:compare.2=Compare NBT
-sidebutton.refinedstorage:compare.8=Compare ore dictionary
+sidebutton.refinedstorage:compare.1=데미지 비교
+sidebutton.refinedstorage:compare.2=NBT 데이터 비교
+sidebutton.refinedstorage:compare.8=Ore Dictionary 비교
 
-sidebutton.refinedstorage:redstone_mode=Redstone Mode
-sidebutton.refinedstorage:redstone_mode.0=Ignore redstone signal
-sidebutton.refinedstorage:redstone_mode.1=Only work with redstone signal
-sidebutton.refinedstorage:redstone_mode.2=Only work without redstone signal
+sidebutton.refinedstorage:redstone_mode=레드스톤 모드
+sidebutton.refinedstorage:redstone_mode.0=신호와 상관 없이 작동
+sidebutton.refinedstorage:redstone_mode.1=신호를 받을 때 작동
+sidebutton.refinedstorage:redstone_mode.2=신호를 받지 않을 때 작동
 
-sidebutton.refinedstorage:grid.view_type=Display
-sidebutton.refinedstorage:grid.view_type.0=Normal
-sidebutton.refinedstorage:grid.view_type.1=No craftables
-sidebutton.refinedstorage:grid.view_type.2=Only craftables
-sidebutton.refinedstorage:grid.sorting.direction=Sorting Direction
-sidebutton.refinedstorage:grid.sorting.direction.0=Ascending
-sidebutton.refinedstorage:grid.sorting.direction.1=Descending
-sidebutton.refinedstorage:grid.sorting.type=Sorting Type
-sidebutton.refinedstorage:grid.sorting.type.0=Quantity
-sidebutton.refinedstorage:grid.sorting.type.1=Name
+sidebutton.refinedstorage:grid.view_type=표시
+sidebutton.refinedstorage:grid.view_type.0=일반
+sidebutton.refinedstorage:grid.view_type.1=제작 가능 아이템만 숨김
+sidebutton.refinedstorage:grid.view_type.2=제작 가능 아이템만 표시
+sidebutton.refinedstorage:grid.sorting.direction=정렬
+sidebutton.refinedstorage:grid.sorting.direction.0=오름차순
+sidebutton.refinedstorage:grid.sorting.direction.1=내림차순
+sidebutton.refinedstorage:grid.sorting.type=정렬 기준
+sidebutton.refinedstorage:grid.sorting.type.0=수량
+sidebutton.refinedstorage:grid.sorting.type.1=이름
 sidebutton.refinedstorage:grid.sorting.type.2=ID
-sidebutton.refinedstorage:grid.search_box_mode=Search Box Mode
-sidebutton.refinedstorage:grid.search_box_mode.0=Normal
-sidebutton.refinedstorage:grid.search_box_mode.1=Normal (autoselected)
-sidebutton.refinedstorage:grid.search_box_mode.2=JEI synchronized
-sidebutton.refinedstorage:grid.search_box_mode.3=JEI synchronized (autoselected)
-sidebutton.refinedstorage:grid.size=Size
-sidebutton.refinedstorage:grid.size.0=Stretch
-sidebutton.refinedstorage:grid.size.1=Small
-sidebutton.refinedstorage:grid.size.2=Medium
-sidebutton.refinedstorage:grid.size.3=Large
+sidebutton.refinedstorage:grid.search_box_mode=검색 모드
+sidebutton.refinedstorage:grid.search_box_mode.0=일반
+sidebutton.refinedstorage:grid.search_box_mode.1=일반 (자동 선택됨)
+sidebutton.refinedstorage:grid.search_box_mode.2=JEI 통합
+sidebutton.refinedstorage:grid.search_box_mode.3=JEI 통합 (자동 선택됨)
+sidebutton.refinedstorage:grid.size=크기
+sidebutton.refinedstorage:grid.size.0=맞춤
+sidebutton.refinedstorage:grid.size.1=작음
+sidebutton.refinedstorage:grid.size.2=중간
+sidebutton.refinedstorage:grid.size.3=큼
 
 sidebutton.refinedstorage:crafting_monitor.view_automated=View tasks started in an automated way
 
-sidebutton.refinedstorage:mode=Mode
-sidebutton.refinedstorage:mode.whitelist=Whitelist
-sidebutton.refinedstorage:mode.blacklist=Blacklist
+sidebutton.refinedstorage:mode=모드
+sidebutton.refinedstorage:mode.whitelist=화이트리스트
+sidebutton.refinedstorage:mode.blacklist=블랙리스트
 
-sidebutton.refinedstorage:iomode=IO Mode
-sidebutton.refinedstorage:iomode.insert=Insert into network
-sidebutton.refinedstorage:iomode.extract=Extract from network
+sidebutton.refinedstorage:iomode=입출력 모드
+sidebutton.refinedstorage:iomode.insert=네트워크로 입력
+sidebutton.refinedstorage:iomode.extract=네트워크에서 출력
 
-sidebutton.refinedstorage:type=Type
-sidebutton.refinedstorage:type.0=Items
-sidebutton.refinedstorage:type.1=Fluids
+sidebutton.refinedstorage:type=종류
+sidebutton.refinedstorage:type.0=아이템
+sidebutton.refinedstorage:type.1=액체
 
-sidebutton.refinedstorage:detector.mode=Mode
-sidebutton.refinedstorage:detector.mode.0=Emit signal when under the amount
-sidebutton.refinedstorage:detector.mode.1=Emit signal when on the amount
-sidebutton.refinedstorage:detector.mode.2=Emit signal when above the amount
-sidebutton.refinedstorage:detector.mode.3=Emit signal when item is being autocrafted
+sidebutton.refinedstorage:detector.mode=모드
+sidebutton.refinedstorage:detector.mode.0=수량 이하일 때 신호 출력
+sidebutton.refinedstorage:detector.mode.1=수량과 일치할 때 신호 출력
+sidebutton.refinedstorage:detector.mode.2=수량 이상일 때 신호 출력
+sidebutton.refinedstorage:detector.mode.3=자동 조합 시 신호 출력
 
-sidebutton.refinedstorage:crafter.triggered_autocrafting=Trigger autocrafting with redstone signal
+sidebutton.refinedstorage:crafter.triggered_autocrafting=신호 입력 시 자동 조합
 
-sidebutton.refinedstorage:void_excess.items=Void excess items
-sidebutton.refinedstorage:void_excess.fluids=Void excess fluids
-sidebutton.refinedstorage:void_excess.items_fluids=Void excess items and fluids
+sidebutton.refinedstorage:void_excess.items=수량 초과 아이템 자동 제거
+sidebutton.refinedstorage:void_excess.fluids=용량 초과 액체 자동 제거
+sidebutton.refinedstorage:void_excess.items_fluids=용량 초과 아이템/액체 자동 제거
 
-sidebutton.refinedstorage:constructor.drop=Drop blocks instead of placing
+sidebutton.refinedstorage:constructor.drop=블럭을 설치하지 않고 떨어트림
 
-sidebutton.refinedstorage:destructor.pickup=Pickup items instead of breaking
+sidebutton.refinedstorage:destructor.pickup=블럭을 파괴하지 않고 주움
 
 sidebutton.refinedstorage:access_type=Access Type
 sidebutton.refinedstorage:access_type.0=Insert and extract
