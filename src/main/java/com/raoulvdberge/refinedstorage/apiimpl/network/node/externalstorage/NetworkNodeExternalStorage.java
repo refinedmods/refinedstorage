@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclop
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -206,7 +207,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
                 }));
             } else if (IntegrationCyclopsCore.isLoaded() && StorageItemCyclops.isValid(facing, getDirection().getOpposite())) {
                 itemStorages.add(new StorageItemCyclops(this));
-            } else if (facing != null) {
+            } else if (facing != null && !(facing.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()) && facing.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()).getNode() instanceof IStorageProvider)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
 
                 if (itemHandler != null) {
