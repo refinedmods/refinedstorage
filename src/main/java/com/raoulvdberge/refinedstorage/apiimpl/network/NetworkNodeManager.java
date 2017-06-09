@@ -23,7 +23,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    // @TODO: Actually store dimension ID instead of using this ugly hack
     private boolean canReadNodes;
     private NBTTagList nodesTag;
 

@@ -102,9 +102,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
 
         NetworkNode node = (NetworkNode) manager.getNode(pos);
-
-        // @TODO: This is a hack to support previous broken versions that have no nodes for some tiles due to a bug
-        // This should actually be called in Block#onBlockAdded
+        
         if (node == null) {
             manager.setNode(pos, node = createNode(world, pos));
             manager.markForSaving();
