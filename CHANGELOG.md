@@ -4,6 +4,7 @@
 - Updated Forge to 2315 (raoulvdberge)
 - Updated JEI to 4.5.0 (raoulvdberge)
 - Removed Collosal Chests integration (raoulvdberge)
+- You can now shift click items from the Grid crafting slots to the player inventory when the Grid is disconnected (raoulvdberge)
 
 ### 1.4.11
 - Removed debug log configuration option, as it's no longer needed (raoulvdberge)

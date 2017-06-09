@@ -215,6 +215,8 @@ public class ContainerGrid extends ContainerBase {
 
                         if (itemHandler != null) {
                             slot.putStack(itemHandler.onShiftClick((EntityPlayerMP) player, stack));
+                        } else if (slot instanceof SlotGridCrafting && mergeItemStack(stack, 4, 4 + (9 * 4), false)) {
+                            slot.onSlotChanged();
                         }
                     }
 
@@ -228,7 +230,7 @@ public class ContainerGrid extends ContainerBase {
 
     @Override
     protected boolean isHeldItemDisabled() {
-        // Here we check for the concrete portable grid type, not IPortableGrid, because we can move the held item in the tile
+        // Here we check for the concrete portable grid type, not IPortableGrid, because we *CAN* move the held item in the portable grid tile
         return grid instanceof WirelessGrid || grid instanceof PortableGrid;
     }
 }
