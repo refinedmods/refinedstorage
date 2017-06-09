@@ -32,6 +32,11 @@ public class RecipeCategorySolderer extends BlankRecipeCategory<RecipeWrapperSol
     }
 
     @Override
+    public String getModName() {
+        return I18n.format("itemGroup.refinedstorage");
+    }
+
+    @Override
     public IDrawable getBackground() {
         return background;
     }

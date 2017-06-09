@@ -139,8 +139,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             updateSearchFieldFocus(grid.getSearchBoxMode());
         } else {
-            searchField.xPosition = sx;
-            searchField.yPosition = sy;
+            searchField.x = sx;
+            searchField.y = sy;
         }
 
         if (grid.getType() == GridType.PATTERN) {
@@ -176,7 +176,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
                 grid,
-                searchField.getText(),
+                searchField != null ? searchField.getText() : "",
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
             );
 
@@ -660,7 +660,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     private void updateJEI() {
         if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-            RSJEIPlugin.INSTANCE.getRuntime().getItemListOverlay().setFilterText(searchField.getText());
+            RSJEIPlugin.INSTANCE.getRuntime().getIngredientFilter().setFilterText(searchField.getText());
         }
     }
 

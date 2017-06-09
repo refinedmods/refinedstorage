@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 1.4.12
+- Updated Forge to 2315 (raoulvdberge)
+- Updated JEI to 4.5.0 (raoulvdberge)
+- Removed Collosal Chests integration (raoulvdberge)
+
 ### 1.4.11
 - Removed debug log configuration option, as it's no longer needed (raoulvdberge)
 - Removed "autocraft on redstone signal" option in the Crafter, use an External Storage in combination with an Interface with the Crafting Upgrade instead (raoulvdberge)

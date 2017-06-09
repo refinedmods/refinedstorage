@@ -207,8 +207,8 @@ public abstract class GuiBase extends GuiContainer {
 
     public SideButton addSideButton(SideButton button) {
         button.id = lastButtonId++;
-        button.xPosition = guiLeft + -SideButton.WIDTH - 2;
-        button.yPosition = guiTop + lastSideButtonY;
+        button.x = guiLeft + -SideButton.WIDTH - 2;
+        button.y = guiTop + lastSideButtonY;
 
         lastSideButtonY += SideButton.HEIGHT + 2;
 

@@ -84,7 +84,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
                 for (Entity entity : droppedItems) {
                     if (entity instanceof EntityItem) {
-                        ItemStack droppedItem = ((EntityItem) entity).getEntityItem();
+                        ItemStack droppedItem = ((EntityItem) entity).getItem();
 
                         if (IFilterable.canTake(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), true) == null) {
                             network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());

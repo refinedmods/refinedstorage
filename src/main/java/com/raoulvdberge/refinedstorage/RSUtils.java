@@ -324,7 +324,7 @@ public final class RSUtils {
         }
     }
 
-    public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {
+    public static IItemHandler getItemHandler(@Nullable TileEntity tile, EnumFacing side) {
         if (tile == null) {
             return null;
         }
@@ -429,7 +429,7 @@ public final class RSUtils {
         Vec3d lookVec = player.getLookVec();
         Vec3d start = getStart(player);
 
-        return start.addVector(lookVec.xCoord * reachDistance, lookVec.yCoord * reachDistance, lookVec.zCoord * reachDistance);
+        return start.addVector(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
     }
 
     public static AdvancedRayTraceResult collisionRayTrace(BlockPos pos, Vec3d start, Vec3d end, Collection<AxisAlignedBB> boxes) {

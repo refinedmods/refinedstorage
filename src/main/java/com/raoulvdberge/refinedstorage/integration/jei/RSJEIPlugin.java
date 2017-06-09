@@ -7,6 +7,7 @@ import mezz.jei.api.BlankModPlugin;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 
 @JEIPlugin
@@ -23,17 +24,20 @@ public class RSJEIPlugin extends BlankModPlugin {
         registry.getRecipeTransferRegistry().addRecipeTransferHandler(new RecipeTransferHandlerGrid(), "minecraft.crafting");
         registry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerSolderer.class, RecipeCategorySolderer.ID, 0, 3, 8, 36);
 
-        registry.addRecipeCategories(new RecipeCategorySolderer(registry.getJeiHelpers().getGuiHelper()));
-
         registry.handleRecipes(RecipeWrapperSolderer.class, recipe -> recipe, RecipeCategorySolderer.ID);
 
         registry.addRecipes(RecipeMakerSolderer.getRecipes(registry.getJeiHelpers().getGuiHelper()), RecipeCategorySolderer.ID);
 
-        registry.addRecipeCategoryCraftingItem(new ItemStack(RSBlocks.SOLDERER), RecipeCategorySolderer.ID);
+        registry.addRecipeCatalyst(new ItemStack(RSBlocks.SOLDERER), RecipeCategorySolderer.ID);
 
         registry.addAdvancedGuiHandlers(new GuiHandlerGrid());
 
         registry.addRecipeClickArea(GuiSolderer.class, 80, 36, 22, 15, RecipeCategorySolderer.ID);
+    }
+
+    @Override
+    public void registerCategories(IRecipeCategoryRegistration registry) {
+        registry.addRecipeCategories(new RecipeCategorySolderer(registry.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
