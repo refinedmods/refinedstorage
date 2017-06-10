@@ -6,6 +6,7 @@
 - Removed Collosal Chests integration (raoulvdberge)
 - You can now shift click items from the Grid crafting slots to the player inventory when the Grid is disconnected (raoulvdberge)
 - Added Korean translation (01QueN10)
+- Fixed error logs when watching a Controller when a network changes (raoulvdberge)
 
 ### 1.4.11
 - Removed debug log configuration option, as it's no longer needed (raoulvdberge)

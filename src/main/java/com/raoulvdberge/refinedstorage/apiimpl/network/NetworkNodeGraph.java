@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
+import com.google.common.collect.Sets;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
@@ -15,13 +16,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Queue;
+import java.util.Set;
 
 import static com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
 
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
-    private Set<INetworkNode> nodes = new HashSet<>();
+    private Set<INetworkNode> nodes = Sets.newConcurrentHashSet();
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
@@ -101,8 +105,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     private class Operator implements INetworkNodeVisitor.Operator {
-        private Set<INetworkNode> newNodes = new HashSet<>();
-        private Set<INetworkNode> previousNodes = new HashSet<>(nodes);
+        private Set<INetworkNode> newNodes = Sets.newConcurrentHashSet();
+        private Set<INetworkNode> previousNodes = Sets.newConcurrentHashSet(nodes);
 
         private boolean changed;
 
