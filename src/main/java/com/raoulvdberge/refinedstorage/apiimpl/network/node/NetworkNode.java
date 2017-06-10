@@ -32,6 +32,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
     private EnumFacing direction;
 
     private boolean couldUpdate;
+    private int ticksSinceUpdateChanged;
+
     private boolean active;
 
     public NetworkNode(World world, BlockPos pos) {
@@ -94,19 +96,28 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         boolean canUpdate = getNetwork() != null && canUpdate();
 
         if (couldUpdate != canUpdate) {
-            couldUpdate = canUpdate;
+            ++ticksSinceUpdateChanged;
 
-            if (hasConnectivityState()) {
-                RSUtils.updateBlock(world, pos);
-            }
+            // If we go from inactive to active, throttle for 20 ticks
+            // If we go from active to inactive, throttle for 4 ticks
+            if (canUpdate ? (ticksSinceUpdateChanged > 20) : (ticksSinceUpdateChanged > 4)) {
+                ticksSinceUpdateChanged = 0;
+                couldUpdate = canUpdate;
 
-            if (network != null) {
-                onConnectedStateChange(network, couldUpdate);
+                if (hasConnectivityState()) {
+                    RSUtils.updateBlock(world, pos);
+                }
 
-                if (shouldRebuildGraphOnChange()) {
-                    network.getNodeGraph().rebuild();
+                if (network != null) {
+                    onConnectedStateChange(network, canUpdate);
+
+                    if (shouldRebuildGraphOnChange()) {
+                        network.getNodeGraph().rebuild();
+                    }
                 }
             }
+        } else {
+            ticksSinceUpdateChanged = 0;
         }
     }
 
