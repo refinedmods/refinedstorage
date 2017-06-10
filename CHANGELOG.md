@@ -208,6 +208,10 @@
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
 
+### 1.2.26
+- Fixed Interface duping items on extract-only storages (raoulvdberge)
+- Fixed calculating crafting resources for more than 9 unique items, for addon mods (ExpensiveKoala)
+
 ### 1.2.25
 - Fire event on completion of an autocrafting task (way2muchnoise)
 - Fire playerCrafting event when shift clicking in the grid (way2muchnoise)
