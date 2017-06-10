@@ -2,6 +2,7 @@
 
 ### 1.2.26
 - Fixed Interface duping items on extract-only storages (raoulvdberge)
+- Fixed calculating crafting resources for more than 9 unique items, for addon mods (ExpensiveKoala)
 
 ### 1.2.25
 - Fire event on completion of an autocrafting task (way2muchnoise)
