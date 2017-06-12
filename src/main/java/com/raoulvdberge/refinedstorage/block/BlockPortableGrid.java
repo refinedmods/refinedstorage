@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -27,6 +28,8 @@ public class BlockPortableGrid extends BlockBase {
     private static final AxisAlignedBB PORTABLE_GRID_AABB = new AxisAlignedBB(0, 0, 0, 1, 13.2F / 16F, 1);
 
     public static final PropertyEnum TYPE = PropertyEnum.create("type", PortableGridType.class);
+    public static final PropertyEnum DISK_STATE = PropertyEnum.create("disk_state", PortableGridDiskState.class);
+    public static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
     public BlockPortableGrid() {
         super("portable_grid");
@@ -90,9 +93,20 @@ public class BlockPortableGrid extends BlockBase {
     }
 
     @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TilePortableGrid portableGrid = (TilePortableGrid) world.getTileEntity(pos);
+
+        return super.getActualState(state, world, pos)
+            .withProperty(DISK_STATE, portableGrid.getDiskState())
+            .withProperty(CONNECTED, portableGrid.isConnected());
+    }
+
+    @Override
     protected BlockStateContainer createBlockState() {
         return createBlockStateBuilder()
             .add(TYPE)
+            .add(DISK_STATE)
+            .add(CONNECTED)
             .build();
     }
 

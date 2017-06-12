@@ -17,6 +17,7 @@ import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
+import com.raoulvdberge.refinedstorage.item.ItemEnergyItem;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
@@ -82,14 +83,19 @@ public class PortableGrid implements IGrid, IPortableGrid {
                     IStorageDiskProvider provider = (IStorageDiskProvider) getStackInSlot(slot).getItem();
 
                     storage = new StorageDiskItemPortable(provider.create(getStackInSlot(slot)), PortableGrid.this);
-                    storage.readFromNBT();
-                    storage.onPassContainerContext(() -> {
-                    }, () -> false, () -> AccessType.INSERT_EXTRACT);
+
+                    if (player != null) {
+                        storage.readFromNBT();
+                        storage.onPassContainerContext(() -> {
+                        }, () -> false, () -> AccessType.INSERT_EXTRACT);
+                    }
                 }
 
-                cache.invalidate();
+                if (player != null) {
+                    cache.invalidate();
 
-                RSUtils.writeItems(this, 4, stack.getTagCompound());
+                    RSUtils.writeItems(this, 4, stack.getTagCompound());
+                }
             }
         }
 
@@ -104,31 +110,37 @@ public class PortableGrid implements IGrid, IPortableGrid {
         }
     };
 
-    public PortableGrid(EntityPlayer player, ItemStack stack) {
+    public PortableGrid(@Nullable EntityPlayer player, ItemStack stack) {
         this.player = player;
         this.stack = stack;
 
-        this.sortingType = ItemWirelessGrid.getSortingType(stack);
-        this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
-        this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
-        this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
-        this.size = ItemWirelessGrid.getSize(stack);
+        if (player != null) {
+            this.sortingType = ItemWirelessGrid.getSortingType(stack);
+            this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
+            this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
+            this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
+            this.size = ItemWirelessGrid.getSize(stack);
+        }
 
         if (!stack.hasTagCompound()) {
             stack.setTagCompound(new NBTTagCompound());
         }
 
-        for (int i = 0; i < 4; ++i) {
-            RSUtils.readItems(filter, i, stack.getTagCompound());
+        if (player != null) {
+            for (int i = 0; i < 4; ++i) {
+                RSUtils.readItems(filter, i, stack.getTagCompound());
+            }
         }
 
         RSUtils.readItems(disk, 4, stack.getTagCompound());
 
-        drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
+        if (player != null) {
+            drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
 
-        // If there is no disk onContentsChanged isn't called and the update isn't sent, thus items from the previous grid view would remain clientside
-        if (!player.getEntityWorld().isRemote && disk.getStackInSlot(0).isEmpty()) {
-            cache.invalidate();
+            // If there is no disk onContentsChanged isn't called and the update isn't sent, thus items from the previous grid view would remain clientside
+            if (!player.getEntityWorld().isRemote && disk.getStackInSlot(0).isEmpty()) {
+                cache.invalidate();
+            }
         }
     }
 
@@ -136,10 +148,12 @@ public class PortableGrid implements IGrid, IPortableGrid {
         return stack;
     }
 
+    @Override
     public StorageCacheItemPortable getCache() {
         return cache;
     }
 
+    @Override
     @Nullable
     public IStorageDisk<ItemStack> getStorage() {
         return storage;
@@ -157,6 +171,16 @@ public class PortableGrid implements IGrid, IPortableGrid {
         }
     }
 
+    @Override
+    public int getEnergy() {
+        if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemBlockPortableGrid.TYPE_CREATIVE) {
+            return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
+        }
+
+        return ItemEnergyItem.CAPACITY;
+    }
+
+    @Override
     public ItemHandlerBase getDisk() {
         return disk;
     }

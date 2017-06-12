@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItemPortable;
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
+import com.raoulvdberge.refinedstorage.block.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.PortableGridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
@@ -146,6 +147,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private static final String NBT_ENERGY = "Energy";
+    private static final String NBT_DISK_STATE = "DiskState";
+    private static final String NBT_CONNECTED = "Connected";
 
     private EnergyForge energyStorage = new EnergyForge(ItemEnergyItem.CAPACITY);
     private PortableGridType type;
@@ -174,10 +177,15 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
                     storage = new StorageDiskItemPortable(provider.create(getStackInSlot(slot)), TilePortableGrid.this);
                     storage.readFromNBT();
-                    storage.onPassContainerContext(TilePortableGrid.this::markDirty, () -> false, () -> AccessType.INSERT_EXTRACT);
+                    storage.onPassContainerContext(() -> {
+                        TilePortableGrid.this.markDirty();
+                        TilePortableGrid.this.checkIfDiskStateChanged();
+                    }, () -> false, () -> AccessType.INSERT_EXTRACT);
                 }
 
                 cache.invalidate();
+
+                checkIfDiskStateChanged();
             }
         }
 
@@ -196,6 +204,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private IStorageDisk<ItemStack> storage;
     private StorageCacheItemPortable cache = new StorageCacheItemPortable(this);
     private ItemGridHandlerPortable handler = new ItemGridHandlerPortable(this, this);
+    private PortableGridDiskState diskState = PortableGridDiskState.NONE;
+    private boolean connected;
 
     public TilePortableGrid() {
         dataManager.addWatchedParameter(ENERGY_STORED);
@@ -205,6 +215,14 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(REDSTONE_MODE);
+    }
+
+    public PortableGridDiskState getDiskState() {
+        return diskState;
+    }
+
+    public boolean isConnected() {
+        return connected;
     }
 
     public PortableGridType getPortableType() {
@@ -233,6 +251,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
             this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
         }
+
+        this.diskState = getDiskState(this);
 
         markDirty();
     }
@@ -441,7 +461,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public IStorage<ItemStack> getStorage() {
+    @Nullable
+    public IStorageDisk<ItemStack> getStorage() {
         return storage;
     }
 
@@ -454,6 +475,39 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public void drainEnergy(int energy) {
         if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE && redstoneMode.isEnabled(world, pos)) {
             energyStorage.extractEnergyInternal(energy);
+
+            checkIfDiskStateChanged();
+        }
+
+        checkIfConnectivityChanged();
+    }
+
+    @Override
+    public int getEnergy() {
+        if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE) {
+            return energyStorage.getEnergyStored();
+        }
+
+        return energyStorage.getMaxEnergyStored();
+    }
+
+    private void checkIfDiskStateChanged() {
+        PortableGridDiskState newDiskState = getDiskState(this);
+
+        if (this.diskState != newDiskState) {
+            this.diskState = newDiskState;
+
+            RSUtils.updateBlock(world, pos);
+        }
+    }
+
+    private void checkIfConnectivityChanged() {
+        boolean isConnected = getEnergy() != 0;
+
+        if (this.connected != isConnected) {
+            this.connected = isConnected;
+
+            RSUtils.updateBlock(world, pos);
         }
     }
 
@@ -518,6 +572,31 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         }
 
         redstoneMode = RedstoneMode.read(tag);
+
+        diskState = getDiskState(this);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+
+        checkIfConnectivityChanged();
+    }
+
+    @Override
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        tag.setInteger(NBT_DISK_STATE, diskState.getId());
+        tag.setBoolean(NBT_CONNECTED, getEnergy() != 0);
+
+        return super.writeUpdate(tag);
+    }
+
+    @Override
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
+
+        diskState = PortableGridDiskState.getById(tag.getInteger(NBT_DISK_STATE));
+        connected = tag.getBoolean(NBT_CONNECTED);
     }
 
     @Override
@@ -551,5 +630,26 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         this.redstoneMode = mode;
 
         markDirty();
+    }
+
+    public static PortableGridDiskState getDiskState(IPortableGrid portableGrid) {
+        if (portableGrid.getStorage() == null) {
+            return PortableGridDiskState.NONE;
+        }
+
+        if (portableGrid.getEnergy() == 0) {
+            return PortableGridDiskState.DISCONNECTED;
+        }
+
+        int stored = portableGrid.getStorage().getStored();
+        int capacity = portableGrid.getStorage().getCapacity();
+
+        if (stored == capacity) {
+            return PortableGridDiskState.FULL;
+        } else if ((int) ((float) stored / (float) capacity * 100F) >= 85) {
+            return PortableGridDiskState.NEAR_CAPACITY;
+        } else {
+            return PortableGridDiskState.NORMAL;
+        }
     }
 }

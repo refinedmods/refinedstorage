@@ -3,16 +3,16 @@
   "defaults": {
     "model": "refinedstorage:portable_grid",
     "textures": {
-      "texture0": "refinedstorage:blocks/portable_grid_0",
-      "texture1": "refinedstorage:blocks/portable_grid_1",
-      "texture2": "refinedstorage:blocks/portable_grid_2",
-      "texture3": "refinedstorage:blocks/portable_grid_3",
-      "texture4": "refinedstorage:blocks/portable_grid_4",
-      "texture5": "refinedstorage:blocks/portable_grid_5",
-      "texture6": "refinedstorage:blocks/portable_grid_6",
-      "texture7": "refinedstorage:blocks/portable_grid_7",
-      "particle": "refinedstorage:blocks/portable_grid_0"
+      "particle": "refinedstorage:blocks/portable_grid_1",
+      "texture0": "refinedstorage:blocks/portable_grid_1",
+      "texture2": "refinedstorage:blocks/portable_grid_3",
+      "texture3": "refinedstorage:blocks/portable_grid_4",
+      "texture4": "refinedstorage:blocks/portable_grid_5",
+      "texture5": "refinedstorage:blocks/portable_grid_6",
+      "texture6": "refinedstorage:blocks/portable_grid_7",
+      "texture7": "refinedstorage:blocks/portable_grid_8"
     },
+    "transform": "forge:default-block",
     "uvlock": false
   },
   "variants": {
@@ -21,6 +21,50 @@
         "transform": "forge:default-block"
       }
     ],
+    "disk_state": {
+      "normal": {
+        "textures": {
+          "disk0": "refinedstorage:blocks/portable_grid_disk",
+          "disk1": "refinedstorage:blocks/portable_grid_disk"
+        },
+        "submodel": "refinedstorage:portable_grid_disk"
+      },
+      "near_capacity": {
+        "textures": {
+          "disk0": "refinedstorage:blocks/portable_grid_disk_near_capacity",
+          "disk1": "refinedstorage:blocks/portable_grid_disk_near_capacity"
+        },
+        "submodel": "refinedstorage:portable_grid_disk"
+      },
+      "full": {
+        "textures": {
+          "disk0": "refinedstorage:blocks/portable_grid_disk_full",
+          "disk1": "refinedstorage:blocks/portable_grid_disk_full"
+        },
+        "submodel": "refinedstorage:portable_grid_disk"
+      },
+      "disconnected": {
+        "textures": {
+          "disk0": "refinedstorage:blocks/portable_grid_disk_disconnected",
+          "disk1": "refinedstorage:blocks/portable_grid_disk_disconnected"
+        },
+        "submodel": "refinedstorage:portable_grid_disk"
+      },
+      "none": {
+      }
+    },
+    "connected": {
+      "true": {
+        "textures": {
+          "texture1": "refinedstorage:blocks/portable_grid_2"
+        }
+      },
+      "false": {
+        "textures": {
+          "texture1": "refinedstorage:blocks/portable_grid_2_disconnected"
+        }
+      }
+    },
     "direction": {
       "north": {
         "y": 0

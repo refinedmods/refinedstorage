@@ -15,6 +15,8 @@ import com.raoulvdberge.refinedstorage.render.ModelDiskManipulator;
 import com.raoulvdberge.refinedstorage.render.TileEntitySpecialRendererStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -211,7 +213,6 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.SECURITY_MANAGER), 0, new ModelResourceLocation("refinedstorage:security_manager", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE_MONITOR), 0, new ModelResourceLocation("refinedstorage:storage_monitor", "connected=false,direction=north"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), 0, new ModelResourceLocation("refinedstorage:portable_grid", "inventory"));
 
         ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
             @Override
@@ -252,6 +253,12 @@ public class ProxyClient extends ProxyCommon {
             int energy = stack.getItemDamage() == ControllerType.CREATIVE.getId() ? 7 : TileController.getEnergyScaled(ItemBlockController.getEnergyStored(stack), ItemBlockController.getEnergyCapacity(stack), 7);
 
             return new ModelResourceLocation("refinedstorage:controller", "direction=north,energy=" + energy);
+        });
+
+        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), stack -> {
+            PortableGrid portableGrid = new PortableGrid(null, stack);
+
+            return new ModelResourceLocation("refinedstorage:portable_grid", "connected=" + Boolean.toString(portableGrid.getEnergy() != 0) + ",direction=north,disk_state=" + TilePortableGrid.getDiskState(portableGrid));
         });
     }
 
