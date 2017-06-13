@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.14
+- Fixed Solderer not accepting books made in anvil (raoulvdberge)
+
 ### 1.4.13
 - Fixed Portable Grid model (raoulvdberge, CyanideX)
 - The Portable Grid now has an indicator whether it's connected or disconnected and shows the disk (raoulvdberge, CyanideX)

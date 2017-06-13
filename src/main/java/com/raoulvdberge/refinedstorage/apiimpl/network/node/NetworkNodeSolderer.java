@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -31,7 +32,7 @@ public class NetworkNodeSolderer extends NetworkNode {
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
                 for (ItemStack possibility : recipe.getRow(slot)) {
-                    if (API.instance().getComparer().isEqualNoQuantity(possibility, stack)) {
+                    if (API.instance().getComparer().isEqual(possibility, stack, IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE | IComparer.COMPARE_STRIP_NBT)) {
                         return super.insertItem(slot, stack, simulate);
                     }
                 }

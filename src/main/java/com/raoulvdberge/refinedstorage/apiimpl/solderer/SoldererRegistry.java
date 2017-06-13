@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.solderer;
 
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -36,7 +37,7 @@ public class SoldererRegistry implements ISoldererRegistry {
                 }
 
                 for (ItemStack possibility : possibilities) {
-                    if (API.instance().getComparer().isEqualNoQuantity(possibility, ingredients.getStackInSlot(i))) {
+                    if (API.instance().getComparer().isEqual(possibility, ingredients.getStackInSlot(i), IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE | IComparer.COMPARE_STRIP_NBT)) {
                         if (ingredients.getStackInSlot(i).getCount() >= possibility.getCount()) {
                             rowsFound++;
                         }
