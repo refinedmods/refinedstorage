@@ -1,7 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.4.13
-- Fixed Portable Grid model (raoulvdberge)
+- Fixed Portable Grid model (raoulvdberge, CyanideX)
 
 ### 1.4.12
 - Updated Forge to 2315 (raoulvdberge)

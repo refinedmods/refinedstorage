@@ -594,7 +594,7 @@ public final class RSUtils {
         tessellator.draw();
     }
 
-    public static final Matrix4f EMPTY_MATRIX = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
+    public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
 
     // From ForgeBlockStateV1
     private static final TRSRTransformation FLIP_X = new TRSRTransformation(null, null, new Vector3f(-1, 1, 1), null);

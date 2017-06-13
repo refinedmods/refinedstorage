@@ -34,7 +34,7 @@ public class BakedModelPattern implements IBakedModel, IPerspectiveAwareModel {
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
         TRSRTransformation transform = RSUtils.getDefaultItemTransforms().get(cameraTransformType);
 
-        return Pair.of(this, transform == null ? RSUtils.EMPTY_MATRIX : transform.getMatrix());
+        return Pair.of(this, transform == null ? RSUtils.EMPTY_MATRIX_TRANSFORM : transform.getMatrix());
     }
 
     @Override
