@@ -37,6 +37,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
@@ -212,9 +213,6 @@ public class ProxyCommon {
 
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
-        OreDictionary.registerOre("ingotQuartzEnrichedIron", RSItems.QUARTZ_ENRICHED_IRON);
-        OreDictionary.registerOre("blockQuartzEnrichedIron", RSBlocks.QUARTZ_ENRICHED_IRON);
-
         // Processors
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC, false));
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_IMPROVED, false));
@@ -345,27 +343,27 @@ public class ProxyCommon {
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, GridType.CRAFTING.getId()),
             500,
-            new ItemStack(Blocks.CRAFTING_TABLE),
-            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId())
+            OreDictionary.getOres("workbench"),
+            NonNullList.withSize(1, new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)),
+            NonNullList.withSize(1, new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()))
         ));
 
         // Pattern Grid
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, GridType.PATTERN.getId()),
             500,
-            new ItemStack(RSItems.PATTERN),
-            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId())
+            NonNullList.withSize(1, new ItemStack(RSItems.PATTERN)),
+            NonNullList.withSize(1, new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)),
+            NonNullList.withSize(1, new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()))
         ));
 
         // Fluid Grid
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.GRID, 1, GridType.FLUID.getId()),
             500,
-            new ItemStack(Items.BUCKET),
-            new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED),
-            new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId())
+            NonNullList.withSize(1, new ItemStack(Items.BUCKET)),
+            NonNullList.withSize(1, new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)),
+            NonNullList.withSize(1, new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()))
         ));
 
         // Wireless Grid
@@ -718,18 +716,18 @@ public class ProxyCommon {
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.INTERFACE),
             200,
-            new ItemStack(RSBlocks.IMPORTER),
-            new ItemStack(RSBlocks.EXPORTER),
-            new ItemStack(RSBlocks.MACHINE_CASING)
+            NonNullList.withSize(1, new ItemStack(RSBlocks.IMPORTER)),
+            NonNullList.withSize(1, new ItemStack(RSBlocks.EXPORTER)),
+            NonNullList.withSize(1, new ItemStack(RSBlocks.MACHINE_CASING))
         ));
 
         // Fluid Interface
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
             new ItemStack(RSBlocks.FLUID_INTERFACE),
             200,
-            new ItemStack(Items.BUCKET),
-            new ItemStack(Items.REDSTONE),
-            new ItemStack(RSBlocks.INTERFACE)
+            NonNullList.withSize(1, new ItemStack(Items.BUCKET)),
+            OreDictionary.getOres("dustRedstone"),
+            NonNullList.withSize(1, new ItemStack(RSBlocks.INTERFACE))
         ));
 
         // Grid Filter

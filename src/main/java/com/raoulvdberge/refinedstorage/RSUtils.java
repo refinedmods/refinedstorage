@@ -84,6 +84,8 @@ public final class RSUtils {
     private static final Map<Integer, List<ItemStack>> OREDICT_CACHE = new HashMap<>();
     private static final Map<Integer, Boolean> OREDICT_EQUIVALENCY_CACHE = new HashMap<>();
 
+    private static final NonNullList<Object> EMPTY_NON_NULL_LIST = NonNullList.create();
+
     static {
         QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
     }
@@ -209,6 +211,10 @@ public final class RSUtils {
         }
 
         return other;
+    }
+
+    public static <T> NonNullList<T> emptyNonNullList() {
+        return (NonNullList<T>) EMPTY_NON_NULL_LIST;
     }
 
     public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag) {

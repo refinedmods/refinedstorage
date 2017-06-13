@@ -13,10 +13,10 @@ import java.util.List;
 public class RecipeWrapperSolderer extends BlankRecipeWrapper {
     private IDrawableAnimated progress;
 
-    private List<ItemStack> inputs;
+    private List<List<ItemStack>> inputs;
     private ItemStack output;
 
-    public RecipeWrapperSolderer(IGuiHelper guiHelper, int duration, List<ItemStack> inputs, ItemStack output) {
+    public RecipeWrapperSolderer(IGuiHelper guiHelper, int duration, List<List<ItemStack>> inputs, ItemStack output) {
         this.progress = guiHelper.createAnimatedDrawable(
             guiHelper.createDrawable(
                 new ResourceLocation("refinedstorage", "textures/gui/solderer.png"),
@@ -36,25 +36,8 @@ public class RecipeWrapperSolderer extends BlankRecipeWrapper {
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        ingredients.setInputs(ItemStack.class, inputs);
+        ingredients.setInputLists(ItemStack.class, inputs);
         ingredients.setOutput(ItemStack.class, output);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof RecipeWrapperSolderer)) {
-            return false;
-        }
-
-        RecipeWrapperSolderer other = (RecipeWrapperSolderer) obj;
-
-        for (int i = 0; i < inputs.size(); i++) {
-            if (!ItemStack.areItemStacksEqual(inputs.get(i), other.inputs.get(i))) {
-                return false;
-            }
-        }
-
-        return ItemStack.areItemStacksEqual(output, other.output);
     }
 
     @Override
@@ -62,10 +45,5 @@ public class RecipeWrapperSolderer extends BlankRecipeWrapper {
         super.drawInfo(minecraft, recipeWidth, recipeHeight, mouseX, mouseY);
 
         progress.draw(minecraft, 40, 18);
-    }
-
-    @Override
-    public String toString() {
-        return inputs + " = " + output;
     }
 }

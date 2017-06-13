@@ -13,7 +13,7 @@ public final class RecipeMakerSolderer {
         List<RecipeWrapperSolderer> recipes = new ArrayList<>();
 
         for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
-            List<ItemStack> inputs = new ArrayList<>();
+            List<List<ItemStack>> inputs = new ArrayList<>();
 
             inputs.add(recipe.getRow(0));
             inputs.add(recipe.getRow(1));

@@ -2,16 +2,14 @@ package com.raoulvdberge.refinedstorage.apiimpl.solderer;
 
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SoldererRegistry implements ISoldererRegistry {
@@ -26,21 +24,27 @@ public class SoldererRegistry implements ISoldererRegistry {
     @Nullable
     public ISoldererRecipe getRecipe(@Nonnull IItemHandler ingredients) {
         for (ISoldererRecipe recipe : recipes) {
-            boolean found = true;
+            int rowsFound = 0;
 
             for (int i = 0; i < 3; ++i) {
-                if (!API.instance().getComparer().isEqual(recipe.getRow(i), ingredients.getStackInSlot(i), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | IComparer.COMPARE_OREDICT | IComparer.COMPARE_STRIP_NBT)) {
-                    found = false;
+                NonNullList<ItemStack> possibilities = recipe.getRow(i);
+
+                if (possibilities.isEmpty() && ingredients.getStackInSlot(i).isEmpty()) {
+                    rowsFound++;
+
+                    continue;
                 }
 
-                ItemStack row = recipe.getRow(i);
-
-                if (ingredients.getStackInSlot(i).getCount() < row.getCount()) {
-                    found = false;
+                for (ItemStack possibility : possibilities) {
+                    if (API.instance().getComparer().isEqualNoQuantity(possibility, ingredients.getStackInSlot(i))) {
+                        if (ingredients.getStackInSlot(i).getCount() >= possibility.getCount()) {
+                            rowsFound++;
+                        }
+                    }
                 }
             }
 
-            if (found) {
+            if (rowsFound == 3) {
                 return recipe;
             }
         }
@@ -55,21 +59,15 @@ public class SoldererRegistry implements ISoldererRegistry {
 
     @Nonnull
     @Override
-    public ISoldererRecipe createSimpleRecipe(@Nonnull ItemStack result, int duration, ItemStack... rows) {
+    public ISoldererRecipe createSimpleRecipe(@Nonnull ItemStack result, int duration, NonNullList<ItemStack>... rows) {
         if (rows.length != 3) {
             throw new IllegalArgumentException("Solderer recipe expects 3 rows, got " + rows.length + " rows");
-        }
-
-        for (ItemStack row : rows) {
-            if (row == null) {
-                throw new IllegalArgumentException("Found a null item stack in recipe creation!");
-            }
         }
 
         return new ISoldererRecipe() {
             @Nonnull
             @Override
-            public ItemStack getRow(int row) {
+            public NonNullList<ItemStack> getRow(int row) {
                 return rows[row];
             }
 
@@ -84,33 +82,5 @@ public class SoldererRegistry implements ISoldererRegistry {
                 return duration;
             }
         };
-    }
-
-    @Override
-    public List<ISoldererRecipe> removeRecipe(@Nonnull ItemStack result, ItemStack... rows) {
-        if (!(rows.length == 0 || rows.length == 3)) {
-            throw new IllegalArgumentException("Removing a recipe requires either no rows or 3 rows, got " + rows.length + " rows");
-        }
-        Iterator<ISoldererRecipe> itr = recipes.iterator();
-        List<ISoldererRecipe> removed = new LinkedList<>();
-        while (itr.hasNext()) {
-            ISoldererRecipe recipe = itr.next();
-            if (API.instance().getComparer().isEqualNoQuantity(result, recipe.getResult())) {
-                if (rows.length == 0 || compareRows(recipe, rows)) {
-                    itr.remove();
-                    removed.add(recipe);
-                }
-            }
-        }
-        return removed;
-    }
-
-    private boolean compareRows(ISoldererRecipe recipe, ItemStack[] rows) {
-        for (int i = 0; i < 3; ++i) {
-            if (!API.instance().getComparer().isEqualNoQuantity(recipe.getRow(i), rows[i])) {
-                return false;
-            }
-        }
-        return true;
     }
 }

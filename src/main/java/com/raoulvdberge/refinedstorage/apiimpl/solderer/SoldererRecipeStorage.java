@@ -25,8 +25,8 @@ public class SoldererRecipeStorage implements ISoldererRecipe {
 
     @Override
     @Nonnull
-    public ItemStack getRow(int row) {
-        return rows.get(row);
+    public NonNullList<ItemStack> getRow(int row) {
+        return NonNullList.withSize(1, rows.get(row));
     }
 
     @Override

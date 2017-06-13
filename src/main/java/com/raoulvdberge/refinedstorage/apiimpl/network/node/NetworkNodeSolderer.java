@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -31,8 +30,10 @@ public class NetworkNodeSolderer extends NetworkNode {
         @Nonnull
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
-                if (API.instance().getComparer().isEqual(recipe.getRow(slot), stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | IComparer.COMPARE_OREDICT | IComparer.COMPARE_STRIP_NBT)) {
-                    return super.insertItem(slot, stack, simulate);
+                for (ItemStack possibility : recipe.getRow(slot)) {
+                    if (API.instance().getComparer().isEqualNoQuantity(possibility, stack)) {
+                        return super.insertItem(slot, stack, simulate);
+                    }
                 }
             }
 
@@ -112,7 +113,7 @@ public class NetworkNodeSolderer extends NetworkNode {
 
                     for (int i = 0; i < 3; ++i) {
                         if (!recipe.getRow(i).isEmpty()) {
-                            ingredients.extractItem(i, recipe.getRow(i).getCount(), false);
+                            ingredients.extractItem(i, recipe.getRow(i).get(0).getCount(), false);
                         }
                     }
 

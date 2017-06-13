@@ -2,12 +2,12 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -100,22 +101,22 @@ public class ItemUpgrade extends ItemBase {
         }
     }
 
-    public static ItemStack getRequirement(ItemStack stack) {
+    public static NonNullList<ItemStack> getRequirement(ItemStack stack) {
         switch (stack.getItemDamage()) {
             case ItemUpgrade.TYPE_RANGE:
-                return new ItemStack(Items.ENDER_PEARL);
+                return OreDictionary.getOres("enderpearl");
             case ItemUpgrade.TYPE_SPEED:
-                return new ItemStack(Items.SUGAR);
+                return NonNullList.withSize(1, new ItemStack(Items.SUGAR));
             case ItemUpgrade.TYPE_CRAFTING:
-                return new ItemStack(Blocks.CRAFTING_TABLE);
+                return OreDictionary.getOres("workbench");
             case ItemUpgrade.TYPE_INTERDIMENSIONAL:
-                return new ItemStack(Items.NETHER_STAR);
+                return OreDictionary.getOres("netherStar");
             case ItemUpgrade.TYPE_SILK_TOUCH:
-                return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("silk_touch"), 1));
+                return NonNullList.withSize(1, Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("silk_touch"), 1)));
             case ItemUpgrade.TYPE_FORTUNE:
-                return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("fortune"), getFortuneLevel(stack)));
+                return NonNullList.withSize(1, Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("fortune"), getFortuneLevel(stack))));
             default:
-                return null;
+                return RSUtils.emptyNonNullList();
         }
     }
 }

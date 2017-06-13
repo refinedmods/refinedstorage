@@ -3,25 +3,27 @@ package com.raoulvdberge.refinedstorage.apiimpl.solderer;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SoldererRecipeProcessor implements ISoldererRecipe {
     private int type;
     private ItemStack result;
-    private NonNullList<ItemStack> rows = NonNullList.create();
+    private List<NonNullList<ItemStack>> rows = new ArrayList<>();
 
     public SoldererRecipeProcessor(int type) {
         this.type = type;
 
         this.result = new ItemStack(RSItems.PROCESSOR, 1, type);
 
-        this.rows.add(createPrintedProcessor());
-        this.rows.add(new ItemStack(Items.REDSTONE));
-        this.rows.add(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON));
+        this.rows.add(NonNullList.withSize(1, createPrintedProcessor()));
+        this.rows.add(OreDictionary.getOres("dustRedstone"));
+        this.rows.add(NonNullList.withSize(1, new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_PRINTED_SILICON)));
     }
 
     private ItemStack createPrintedProcessor() {
@@ -39,7 +41,7 @@ public class SoldererRecipeProcessor implements ISoldererRecipe {
 
     @Override
     @Nonnull
-    public ItemStack getRow(int row) {
+    public NonNullList<ItemStack> getRow(int row) {
         return rows.get(row);
     }
 
