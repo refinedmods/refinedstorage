@@ -132,6 +132,7 @@
 - Added blocking mode to patterns in autocrafting (InusualZ)
 - Added Grid size toggle (stretched, small, medium, large) (raoulvdberge)
 - Added dismantling mode to the Wrench (raoulvdberge)
+- Added Block of Quartz Enriched Iron (raoulvdberge) 
 - You can now bind multiple crafters with the same pattern to machines, to spread or balance out autocrafting (way2muchnoise)
 - Autocrafting bugfixes (way2muchnoise)
 - Fixed Regulator mode not working (InusualZ)
