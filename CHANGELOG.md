@@ -2,8 +2,10 @@
 
 ### 1.4.13
 - Fixed Portable Grid model (raoulvdberge, CyanideX)
+- The Portable Grid now has an indicator whether it's connected or disconnected and shows the disk (raoulvdberge, CyanideX)
 - Fixed ore dictionary causing problems with Solderer (raoulvdberge)
 - Fixed ore dictionary items not showing up in JEI for the Solderer (raoulvdberge)
+- Removed Quartz Enriched Iron ore dictionary entry (raoulvdberge)
 
 ### 1.4.12
 - Updated Forge to 2315 (raoulvdberge)
