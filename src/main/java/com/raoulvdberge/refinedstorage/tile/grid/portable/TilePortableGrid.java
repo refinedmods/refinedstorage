@@ -185,7 +185,9 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
                 cache.invalidate();
 
-                checkIfDiskStateChanged();
+                if (world != null) {
+                    checkIfDiskStateChanged();
+                }
             }
         }
 
@@ -572,15 +574,14 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         }
 
         redstoneMode = RedstoneMode.read(tag);
-
-        diskState = getDiskState(this);
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
 
-        checkIfConnectivityChanged();
+        connected = getEnergy() != 0;
+        diskState = getDiskState(this);
     }
 
     @Override

@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.13
+- Fixed Portable Grid model (raoulvdberge)
+
 ### 1.4.12
 - Updated Forge to 2315 (raoulvdberge)
 - Updated JEI to 4.5.0 (raoulvdberge)

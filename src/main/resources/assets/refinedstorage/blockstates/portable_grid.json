@@ -16,11 +16,6 @@
     "uvlock": false
   },
   "variants": {
-    "inventory": [
-      {
-        "transform": "forge:default-block"
-      }
-    ],
     "disk_state": {
       "normal": {
         "textures": {

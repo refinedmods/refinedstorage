@@ -76,7 +76,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER || (player == null && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)) {
                 if (getStackInSlot(slot).isEmpty()) {
                     storage = null;
                 } else {

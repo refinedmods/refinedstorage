@@ -1,20 +1,13 @@
 package com.raoulvdberge.refinedstorage.render;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,16 +16,16 @@ import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import java.util.List;
 
-public class BakedModelPattern implements IBakedModel, IPerspectiveAwareModel {
+public class BakedModelPortableGrid implements IPerspectiveAwareModel {
     private IBakedModel base;
 
-    public BakedModelPattern(IBakedModel base) {
+    public BakedModelPortableGrid(IBakedModel base) {
         this.base = base;
     }
 
     @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-        TRSRTransformation transform = RSUtils.getDefaultItemTransforms().get(cameraTransformType);
+        TRSRTransformation transform = RSUtils.getDefaultBlockTransforms().get(cameraTransformType);
 
         return Pair.of(this, transform == null ? RSUtils.EMPTY_MATRIX : transform.getMatrix());
     }
@@ -70,21 +63,6 @@ public class BakedModelPattern implements IBakedModel, IPerspectiveAwareModel {
 
     @Override
     public ItemOverrideList getOverrides() {
-        return new ItemOverrideList(base.getOverrides().getOverrides()) {
-            @Override
-            public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
-                CraftingPattern pattern = ItemPattern.getPatternFromCache(world, stack);
-
-                if (canDisplayPatternOutput(pattern)) {
-                    return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(pattern.getOutputs().get(0), world, entity);
-                }
-
-                return super.handleItemState(originalModel, stack, world, entity);
-            }
-        };
-    }
-
-    public static boolean canDisplayPatternOutput(CraftingPattern pattern) {
-        return GuiBase.isShiftKeyDown() && pattern.isValid() && pattern.getOutputs().size() == 1;
+        return base.getOverrides();
     }
 }

@@ -9,10 +9,7 @@ import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
-import com.raoulvdberge.refinedstorage.render.BakedModelPattern;
-import com.raoulvdberge.refinedstorage.render.ModelDiskDrive;
-import com.raoulvdberge.refinedstorage.render.ModelDiskManipulator;
-import com.raoulvdberge.refinedstorage.render.TileEntitySpecialRendererStorageMonitor;
+import com.raoulvdberge.refinedstorage.render.*;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
@@ -310,8 +307,12 @@ public class ProxyClient extends ProxyCommon {
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent e) {
         for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {
-            if (model.getResourceDomain().equals(RS.ID) && model.getResourcePath().equals("pattern")) {
-                e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
+            if (model.getResourceDomain().equals(RS.ID)) {
+                if (model.getResourcePath().equals("pattern")) {
+                    e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
+                } else if (model.getResourcePath().equals("portable_grid")) {
+                    e.getModelRegistry().putObject(model, new BakedModelPortableGrid(e.getModelRegistry().getObject(model)));
+                }
             }
         }
     }
