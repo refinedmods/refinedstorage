@@ -2,6 +2,7 @@
 
 ### 1.4.16
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
+- Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
 
 ### 1.4.15
 - Updated Storage Drawers API, fixes crashes (raoulvdberge)
