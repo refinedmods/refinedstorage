@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.15
+- Updated Storage Drawers API, fixes crashes (raoulvdberge)
+
 ### 1.4.14
 - Fixed Solderer not accepting books made in anvil (raoulvdberge)
 

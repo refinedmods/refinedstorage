@@ -8,15 +8,7 @@ public enum BlockConfiguration {
     BasicFull4(BlockType.Drawers, EnumBasicDrawer.FULL4),
     BasicHalf2(BlockType.Drawers, EnumBasicDrawer.HALF2),
     BasicHalf4(BlockType.Drawers, EnumBasicDrawer.HALF4),
-
-    SortingFull1(BlockType.DrawersSorting, EnumBasicDrawer.FULL1),
-    SortingFull2(BlockType.DrawersSorting, EnumBasicDrawer.FULL2),
-    SortingFull4(BlockType.DrawersSorting, EnumBasicDrawer.FULL4),
-    SortingHalf2(BlockType.DrawersSorting, EnumBasicDrawer.HALF2),
-    SortingHalf4(BlockType.DrawersSorting, EnumBasicDrawer.HALF4),
-
-    Trim(BlockType.Trim, null),
-    TrimSorting(BlockType.TrimSorting, null);
+    Trim(BlockType.Trim, null);
 
     private final BlockType type;
     private final EnumBasicDrawer drawer;

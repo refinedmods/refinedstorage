@@ -49,6 +49,12 @@ public interface IDrawer {
     int getMaxCapacity(@Nonnull ItemStack itemPrototype);
 
     /**
+     * Gets the maxmimum number of items that could be stored in this drawer for a standard item stack size
+     * of 64.
+     */
+    int getDefaultMaxCapacity();
+
+    /**
      * Gets the number of items that could still be added to this drawer before it is full.
      */
     int getRemainingCapacity();
