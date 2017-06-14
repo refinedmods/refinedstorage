@@ -5,6 +5,7 @@
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.12 is available) (raoulvdberge)
 - Removed OpenComputers support (will be re-added as soon as OpenComputers for MC 1.12 is available) (raoulvdberge)
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
+- Fixed bug where oredict autocrafting didn't work (way2muchnoise)
 
 ### 1.4.15
 - Updated Storage Drawers API, fixes crashes (raoulvdberge)
