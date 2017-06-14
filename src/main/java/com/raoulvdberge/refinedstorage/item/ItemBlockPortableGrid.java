@@ -49,6 +49,11 @@ public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
     }
 
     @Override
+    public int getEntityLifespan(ItemStack stack, World world) {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         if (oldStack.getItem() == newStack.getItem()) {
             if (ItemWirelessGrid.getSortingDirection(oldStack) == ItemWirelessGrid.getSortingDirection(newStack) &&

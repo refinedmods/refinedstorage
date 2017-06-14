@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.16
+- The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
+
 ### 1.4.15
 - Updated Storage Drawers API, fixes crashes (raoulvdberge)
 
