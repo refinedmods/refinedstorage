@@ -4,6 +4,7 @@
 - Port to Minecraft 1.12 (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.12 is available) (raoulvdberge)
 - Removed OpenComputers support (will be re-added as soon as OpenComputers for MC 1.12 is available) (raoulvdberge)
+- Removed crafting recipes, until Forge adds the recipe system back (raoulvdberge)
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
 - Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
 
