@@ -138,7 +138,7 @@ public class CraftingTask implements ICraftingTask {
                 extraStack = toInsert.get(input, compare);
                 networkStack = networkList.get(input, compare);
             }
-            while (extraStack == null && networkStack == null && ++i < inputs.size() && network.getCraftingManager().getPatterns(input, compare).isEmpty());
+            while (extraStack == null && networkStack == null && ++i < inputs.size() && !network.getCraftingManager().hasPattern(input, compare));
             if (i == inputs.size()) {
                 input = inputs.get(0).copy();
             }
