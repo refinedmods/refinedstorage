@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.integration.oc;
+/*package com.raoulvdberge.refinedstorage.integration.oc;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -312,5 +312,4 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         return new Object[]{node.getNetwork().getItemStorageCache().getList().getStacks()};
     }
-}
-
+}*/

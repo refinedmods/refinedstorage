@@ -44,6 +44,11 @@ public final class RSSerializers {
         public DataParameter<List<ClientNode>> createKey(int id) {
             return null;
         }
+
+        @Override
+        public List<ClientNode> func_192717_a(List<ClientNode> p_192717_1_) {
+            return p_192717_1_;
+        }
     };
 
     public static final DataSerializer<FluidStack> FLUID_STACK_SERIALIZER = new DataSerializer<FluidStack>() {
@@ -76,6 +81,11 @@ public final class RSSerializers {
         public DataParameter<FluidStack> createKey(int id) {
             return null;
         }
+
+        @Override
+        public FluidStack func_192717_a(FluidStack p_192717_1_) {
+            return p_192717_1_;
+        }
     };
 
     public static final DataSerializer<AccessType> ACCESS_TYPE_SERIALIZER = new DataSerializer<AccessType>() {
@@ -92,6 +102,11 @@ public final class RSSerializers {
         @Override
         public DataParameter<AccessType> createKey(int id) {
             return null;
+        }
+
+        @Override
+        public AccessType func_192717_a(AccessType p_192717_1_) {
+            return p_192717_1_;
         }
     };
 }

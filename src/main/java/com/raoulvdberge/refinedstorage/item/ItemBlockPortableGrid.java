@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -14,6 +15,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
@@ -33,8 +35,8 @@ public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
         tooltip.add(I18n.format("block.refinedstorage:portable_grid.tooltip"));
     }

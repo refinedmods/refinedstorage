@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
@@ -8,11 +9,11 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -25,6 +26,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvider<FluidStack> {
@@ -46,9 +48,13 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!RSUtils.canAddToCreativeTab(this, tab)) {
+            return;
+        }
+
         for (int i = 0; i < 5; ++i) {
-            subItems.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, new ItemStack(item, 1, i)));
+            items.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, new ItemStack(this, 1, i)));
         }
     }
 
@@ -101,10 +107,12 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     }
 
     @Override
-    public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        IStorageDisk storage = create(disk);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
-        if (storage.isValid(disk)) {
+        IStorageDisk storage = create(stack);
+
+        if (storage.isValid(stack)) {
             if (storage.getCapacity() == -1) {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored", storage.getStored()));
             } else {

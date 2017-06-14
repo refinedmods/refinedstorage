@@ -12,12 +12,11 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,36 +51,32 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         if (!ItemPattern.isProcessing(stack)) {
-            recipe = CraftingManager.getInstance().getRecipeList().stream().filter(r -> r.matches(inv, world)).findFirst().orElse(null);
+            for (IRecipe r : CraftingManager.REGISTRY) {
+                if (r.matches(inv, world)) {
+                    recipe = r;
+                    break;
+                }
+            }
+
             if (recipe != null) {
                 ItemStack output = recipe.getCraftingResult(inv);
 
                 if (!output.isEmpty()) {
-                    boolean shapedOre = recipe instanceof ShapedOreRecipe;
-                    // It is a dirty fix, but hey someone has to do it. ~ way2muchnoise 2016 "bite me"
-                    boolean mekanism = recipe.getClass().getName().equals("mekanism.common.recipe.ShapedMekanismRecipe");
-
                     outputs.add(Comparer.stripTags(output.copy()));
 
-                    if ((isOredict() && shapedOre) || mekanism) {
-                        Object[] inputs = new Object[0];
-                        if (shapedOre) {
-                            inputs = ((ShapedOreRecipe) recipe).getInput();
-                        } else {
-                            try {
-                                inputs = (Object[]) recipe.getClass().getMethod("getInput").invoke(recipe);
-                            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                                e.printStackTrace();
-                            }
+                    if (isOredict()) {
+                        List<List<ItemStack>> inputs = new LinkedList<>();
+
+                        for (Ingredient ingredient : recipe.getIngredients()) {
+                            inputs.add(Arrays.asList(ingredient.getMatchingStacks()));
                         }
-                        for (Object input : inputs) {
-                            if (input == null) {
+
+                        for (List<ItemStack> input : inputs) {
+                            if (input.isEmpty()) {
                                 oreInputs.add(Collections.emptyList());
-                            } else if (input instanceof ItemStack) {
-                                oreInputs.add(Collections.singletonList(Comparer.stripTags(((ItemStack) input).copy())));
                             } else {
                                 List<ItemStack> cleaned = new LinkedList<>();
-                                for (ItemStack in : (List<ItemStack>) input) {
+                                for (ItemStack in : input) {
                                     cleaned.add(Comparer.stripTags(in.copy()));
                                 }
                                 oreInputs.add(cleaned);

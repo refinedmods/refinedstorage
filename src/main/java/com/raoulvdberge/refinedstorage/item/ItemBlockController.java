@@ -5,11 +5,13 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.block.ControllerType;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemBlockController extends ItemBlockBase {
@@ -18,7 +20,9 @@ public class ItemBlockController extends ItemBlockBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
+
         if (stack.getMetadata() != ControllerType.CREATIVE.getId()) {
             tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getEnergyCapacity(stack)));
         }

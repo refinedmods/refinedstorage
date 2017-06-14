@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStor
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -16,6 +17,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemBlockFluidStorage extends ItemBlockBase {
@@ -24,7 +26,9 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
+        
         FluidStorageType type = FluidStorageType.getById(stack.getMetadata());
 
         if (type != null && isValid(stack)) {

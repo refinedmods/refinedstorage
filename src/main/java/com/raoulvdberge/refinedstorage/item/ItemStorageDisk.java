@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
@@ -8,6 +9,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +24,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,9 +47,13 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!RSUtils.canAddToCreativeTab(this, tab)) {
+            return;
+        }
+
         for (int i = 0; i < 5; ++i) {
-            subItems.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, new ItemStack(item, 1, i)));
+            items.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, new ItemStack(this, 1, i)));
         }
     }
 
@@ -77,7 +84,7 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
                 if (item != RSItems.STORAGE_DISK) {
                     NonNullList<ItemStack> stacks = NonNullList.create();
 
-                    item.getSubItems(item, CreativeTabs.INVENTORY, stacks);
+                    item.getSubItems(CreativeTabs.INVENTORY, stacks);
 
                     for (ItemStack itemStack : stacks) {
                         storage.insert(itemStack, 1000, false);
@@ -92,10 +99,12 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
     }
 
     @Override
-    public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        IStorageDisk storage = create(disk);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
-        if (storage.isValid(disk)) {
+        IStorageDisk storage = create(stack);
+
+        if (storage.isValid(stack)) {
             if (storage.getCapacity() == -1) {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored", storage.getStored()));
             } else {

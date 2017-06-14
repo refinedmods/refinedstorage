@@ -18,9 +18,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -377,7 +377,7 @@ public class ProxyClient extends ProxyCommon {
     private void drawSelectionBoundingBox(AxisAlignedBB aabb) {
         Tessellator tessellator = Tessellator.getInstance();
 
-        VertexBuffer buffer = tessellator.getBuffer();
+        BufferBuilder buffer = tessellator.getBuffer();
 
         buffer.begin(3, DefaultVertexFormats.POSITION);
         buffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();

@@ -1,42 +1,21 @@
 package com.raoulvdberge.refinedstorage.integration.mcmp;
 
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.block.BlockCable;
 import com.raoulvdberge.refinedstorage.tile.*;
-import mcmultipart.api.addon.IMCMPAddon;
-import mcmultipart.api.addon.MCMPAddon;
-import mcmultipart.api.container.IPartInfo;
-import mcmultipart.api.multipart.IMultipart;
-import mcmultipart.api.multipart.IMultipartRegistry;
-import mcmultipart.api.multipart.IMultipartTile;
-import mcmultipart.api.multipart.MultipartOcclusionHelper;
-import mcmultipart.api.ref.MCMPCapabilities;
-import mcmultipart.api.slot.EnumCenterSlot;
-import mcmultipart.block.BlockMultipartContainer;
-import mcmultipart.block.TileMultipartContainer;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 
-@MCMPAddon
-public class RSMCMPAddon implements IMCMPAddon {
-    @Override
+//@MCMPAddon
+public class RSMCMPAddon /*implements IMCMPAddon*/ {
+    /*@Override
     public void registerParts(IMultipartRegistry registry) {
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -53,7 +32,7 @@ public class RSMCMPAddon implements IMCMPAddon {
     private void register(IMultipartRegistry registry, BlockCable block) {
         registry.registerPartWrapper(block, new PartCable(block));
         registry.registerStackWrapper(Item.getItemFromBlock(block), s -> true, block);
-    }
+    }*/
 
     @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent<TileEntity> e) {
@@ -79,7 +58,7 @@ public class RSMCMPAddon implements IMCMPAddon {
     }
 
     private void register(AttachCapabilitiesEvent<TileEntity> e, String id) {
-        e.addCapability(new ResourceLocation("refinedstorage:" + id), new ICapabilityProvider() {
+        /*e.addCapability(new ResourceLocation("refinedstorage:" + id), new ICapabilityProvider() {
             private PartCableTile tile;
 
             @Override
@@ -100,11 +79,11 @@ public class RSMCMPAddon implements IMCMPAddon {
 
                 return null;
             }
-        });
+        });*/
     }
 
     public static boolean hasConnectionWith(TileEntity tile, List<AxisAlignedBB> boxes) {
-        if (tile != null && tile.hasCapability(MCMPCapabilities.MULTIPART_TILE, null)) {
+        /*if (tile != null && tile.hasCapability(MCMPCapabilities.MULTIPART_TILE, null)) {
             IMultipartTile multipartTile = tile.getCapability(MCMPCapabilities.MULTIPART_TILE, null);
 
             if (multipartTile instanceof PartCableTile && ((PartCableTile) multipartTile).getInfo() != null) {
@@ -116,7 +95,7 @@ public class RSMCMPAddon implements IMCMPAddon {
                     }
                 }
             }
-        }
+        }*/
 
         return true;
     }
@@ -125,13 +104,13 @@ public class RSMCMPAddon implements IMCMPAddon {
     public static TileEntity unwrapTile(IBlockAccess world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileMultipartContainer.Ticking) {
+        /*if (tile instanceof TileMultipartContainer.Ticking) {
             Optional<IMultipartTile> multipartTile = ((TileMultipartContainer.Ticking) tile).getPartTile(EnumCenterSlot.CENTER);
 
             if (multipartTile.isPresent()) {
                 return multipartTile.get().getTileEntity();
             }
-        }
+        }*/
 
         return tile;
     }
@@ -139,7 +118,7 @@ public class RSMCMPAddon implements IMCMPAddon {
     public static Block unwrapBlock(IBlockAccess world, BlockPos pos) {
         IBlockState state = world.getBlockState(pos);
 
-        if (state.getBlock() instanceof BlockMultipartContainer) {
+        /*if (state.getBlock() instanceof BlockMultipartContainer) {
             Optional<TileMultipartContainer> multipartContainer = BlockMultipartContainer.getTile(world, pos);
 
             if (multipartContainer.isPresent()) {
@@ -149,7 +128,7 @@ public class RSMCMPAddon implements IMCMPAddon {
                     return info.get().getPart().getBlock();
                 }
             }
-        }
+        }*/
 
         return state.getBlock();
     }

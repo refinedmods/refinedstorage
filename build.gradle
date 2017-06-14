@@ -7,7 +7,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
@@ -20,7 +20,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.4.15"
+version = "1.5"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
@@ -28,10 +28,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.11.2-13.20.0.2315"
+    version = "1.12-14.21.0.2322"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20170609"
+    mappings = "snapshot_20170614"
 }
 
 repositories {
@@ -50,11 +50,11 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.11.2:4.5.0.287:api"
-    runtime "mezz.jei:jei_1.11.2:4.5.0.287"
-    deobfCompile "net.darkhax.tesla:Tesla:1.11-1.3.0.52"
-    deobfCompile "MCMultiPart2:MCMultiPart-exp:2.0.0_19"
-    deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.0.28:api"
+    deobfCompile "mezz.jei:jei_1.12:4.6.0.61:api"
+    runtime "mezz.jei:jei_1.12:4.6.0.61"
+    deobfCompile "net.darkhax.tesla:Tesla-1.12:1.0.58"
+    // deobfCompile "MCMultiPart2:MCMultiPart-exp:2.0.0_19"
+    // deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.0.28:api"
 }
 
 processResources {

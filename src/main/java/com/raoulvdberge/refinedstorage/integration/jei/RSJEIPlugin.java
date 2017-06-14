@@ -3,15 +3,15 @@ package com.raoulvdberge.refinedstorage.integration.jei;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.container.ContainerSolderer;
 import com.raoulvdberge.refinedstorage.gui.GuiSolderer;
-import mezz.jei.api.BlankModPlugin;
 import mezz.jei.api.IJeiRuntime;
+import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import net.minecraft.item.ItemStack;
 
 @JEIPlugin
-public class RSJEIPlugin extends BlankModPlugin {
+public class RSJEIPlugin implements IModPlugin {
     public static RSJEIPlugin INSTANCE;
 
     private IJeiRuntime runtime;

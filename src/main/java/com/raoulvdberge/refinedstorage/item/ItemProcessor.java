@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.RSUtils;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
@@ -22,9 +22,13 @@ public class ItemProcessor extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!RSUtils.canAddToCreativeTab(this, tab)) {
+            return;
+        }
+
         for (int i = 0; i <= 6; ++i) {
-            subItems.add(new ItemStack(item, 1, i));
+            items.add(new ItemStack(this, 1, i));
         }
     }
 }

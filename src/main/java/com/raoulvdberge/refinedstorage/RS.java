@@ -15,15 +15,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-@Mod(modid = RS.ID, version = RS.VERSION, dependencies = RS.DEPENDENCIES, guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON)
+@Mod(modid = RS.ID, version = RS.VERSION, guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON)
 public final class RS {
     static {
         FluidRegistry.enableUniversalBucket();
     }
 
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "1.4.15";
-    public static final String DEPENDENCIES = "required-after:forge@[13.19.1.2188,);after:jei@[4.5.0,);";
+    public static final String VERSION = "1.5";
     public static final String GUI_FACTORY = "com.raoulvdberge.refinedstorage.gui.config.ModGuiFactory";
     public static final String UPDATE_JSON = "https://refinedstorage.raoulvdberge.com/update";
 

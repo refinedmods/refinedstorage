@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +16,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class ItemNetworkItem extends ItemEnergyItem implements INetworkItemProvider {
@@ -53,8 +55,8 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
             tooltip.add(I18n.format("misc.refinedstorage:network_item.tooltip", getX(stack), getY(stack), getZ(stack)));

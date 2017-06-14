@@ -23,6 +23,7 @@ public class ModGuiFactory implements IModGuiFactory {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Class<? extends GuiScreen> mainConfigGuiClass() {
         return ModGuiConfig.class;
     }

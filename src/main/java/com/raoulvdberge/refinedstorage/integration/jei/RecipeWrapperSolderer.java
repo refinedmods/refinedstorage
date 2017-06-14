@@ -3,14 +3,14 @@ package com.raoulvdberge.refinedstorage.integration.jei;
 import mezz.jei.api.IGuiHelper;
 import mezz.jei.api.gui.IDrawableAnimated;
 import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.BlankRecipeWrapper;
+import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 
-public class RecipeWrapperSolderer extends BlankRecipeWrapper {
+public class RecipeWrapperSolderer implements IRecipeWrapper {
     private IDrawableAnimated progress;
 
     private List<List<ItemStack>> inputs;
@@ -42,8 +42,6 @@ public class RecipeWrapperSolderer extends BlankRecipeWrapper {
 
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-        super.drawInfo(minecraft, recipeWidth, recipeHeight, mouseX, mouseY);
-
         progress.draw(minecraft, 40, 18);
     }
 }

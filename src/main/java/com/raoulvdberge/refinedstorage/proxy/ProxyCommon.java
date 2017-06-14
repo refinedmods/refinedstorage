@@ -14,17 +14,20 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerFluids;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
-import com.raoulvdberge.refinedstorage.apiimpl.solderer.*;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
-import com.raoulvdberge.refinedstorage.block.*;
+import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipePrintedProcessor;
+import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipeProcessor;
+import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipeUpgrade;
+import com.raoulvdberge.refinedstorage.block.BlockBase;
+import com.raoulvdberge.refinedstorage.block.BlockCable;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
-import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
-import com.raoulvdberge.refinedstorage.item.*;
+import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
+import com.raoulvdberge.refinedstorage.item.ItemProcessor;
+import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
@@ -33,7 +36,6 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -48,7 +50,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,6 +230,7 @@ public class ProxyCommon {
         // Silicon
         GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);
 
+        /*
         // Quartz Enriched Iron
         GameRegistry.addRecipe(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON, 4),
             "II",
@@ -337,7 +339,7 @@ public class ProxyCommon {
             'C', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_CONSTRUCTION),
             'D', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
             'M', new ItemStack(RSBlocks.MACHINE_CASING)
-        );
+        );*/
 
         // Crafting Grid
         API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
@@ -366,6 +368,7 @@ public class ProxyCommon {
             NonNullList.withSize(1, new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()))
         ));
 
+        /*
         // Wireless Grid
         GameRegistry.addRecipe(new ItemStack(RSItems.WIRELESS_GRID, 1, ItemWirelessGrid.TYPE_NORMAL),
             "EPE",
@@ -670,7 +673,7 @@ public class ProxyCommon {
             'G', "blockGlass",
             'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED),
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)
-        ));
+        ));*/
 
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SPEED));
@@ -681,7 +684,7 @@ public class ProxyCommon {
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.initializeForFortune(2)));
         API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.initializeForFortune(3)));
 
-        GameRegistry.addShapedRecipe(new ItemStack(RSItems.UPGRADE, 1, ItemUpgrade.TYPE_STACK),
+        /*GameRegistry.addShapedRecipe(new ItemStack(RSItems.UPGRADE, 1, ItemUpgrade.TYPE_STACK),
             "USU",
             "SUS",
             "USU",
@@ -828,12 +831,12 @@ public class ProxyCommon {
             'D', new ItemStack(RSItems.CORE, 1, ItemCore.TYPE_DESTRUCTION),
             'M', new ItemStack(RSBlocks.MACHINE_CASING),
             'G', "blockGlass"
-        ));
+        ));*/
     }
 
     public void init(FMLInitializationEvent e) {
         if (IntegrationOC.isLoaded()) {
-            DriverNetwork.register();
+            //DriverNetwork.register();
         }
     }
 
