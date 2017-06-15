@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EGE",
+    "GMG",
+    "EPE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "M": {
+      "item": "refinedstorage:machine_casing"
+    },
+    "P": {
+      "item": "refinedstorage:improved_processor"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:crafting_monitor"
+  }
+}

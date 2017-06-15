@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EDE",
+    "SMS",
+    "ESE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "itemSilicon"
+    },
+    "M": {
+      "item": "refinedstorage:machine_casing"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:controller"
+  }
+}

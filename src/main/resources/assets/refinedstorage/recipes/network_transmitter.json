@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EEE",
+    "CMD",
+    "AAA"
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "C": {
+      "item": "refinedstorage:construction_core"
+    },
+    "M": {
+      "item": "refinedstorage:machine_casing"
+    },
+    "D": {
+      "item": "refinedstorage:destruction_core"
+    },
+    "A": {
+      "item": "refinedstorage:advanced_processor"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:network_transmitter"
+  }
+}

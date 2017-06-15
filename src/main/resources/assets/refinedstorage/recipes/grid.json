@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ECE",
+    "PMP",
+    "EDE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "P": {
+      "item": "refinedstorage:improved_processor"
+    },
+    "C": {
+      "item": "refinedstorage:construction_core"
+    },
+    "D": {
+      "item": "refinedstorage:destruction_core"
+    },
+    "M": {
+      "item": "refinedstorage:machine_casing"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:grid"
+  }
+}

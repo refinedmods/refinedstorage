@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ESE",
+    "CMD",
+    "ESE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "S": {
+      "item": "refinedstorage:storage_housing"
+    },
+    "C": {
+      "item": "refinedstorage:construction_core"
+    },
+    "M": {
+      "item": "refinedstorage:machine_casing"
+    },
+    "D": {
+      "item": "refinedstorage:destruction_core"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:disk_manipulator"
+  }
+}
