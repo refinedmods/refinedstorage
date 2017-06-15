@@ -46,8 +46,8 @@ public final class RSSerializers {
         }
 
         @Override
-        public List<ClientNode> func_192717_a(List<ClientNode> p_192717_1_) {
-            return p_192717_1_;
+        public List<ClientNode> copyValue(List<ClientNode> value) {
+            return value;
         }
     };
 
@@ -83,8 +83,8 @@ public final class RSSerializers {
         }
 
         @Override
-        public FluidStack func_192717_a(FluidStack p_192717_1_) {
-            return p_192717_1_;
+        public FluidStack copyValue(FluidStack value) {
+            return value;
         }
     };
 
@@ -105,8 +105,8 @@ public final class RSSerializers {
         }
 
         @Override
-        public AccessType func_192717_a(AccessType p_192717_1_) {
-            return p_192717_1_;
+        public AccessType copyValue(AccessType value) {
+            return value;
         }
     };
 }
