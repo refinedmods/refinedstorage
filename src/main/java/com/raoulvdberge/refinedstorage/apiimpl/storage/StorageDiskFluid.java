@@ -250,10 +250,4 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
         return tag;
     }
-
-    public static ItemStack initDisk(ItemStack stack) {
-        stack.setTagCompound(getTag());
-
-        return stack;
-    }
 }
