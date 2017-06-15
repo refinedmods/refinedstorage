@@ -1,4 +1,4 @@
-/*package com.raoulvdberge.refinedstorage.integration.mcmp;
+package com.raoulvdberge.refinedstorage.integration.mcmp;
 
 import mcmultipart.api.container.IPartInfo;
 import mcmultipart.api.multipart.IMultipartTile;
@@ -25,5 +25,4 @@ public class PartCableTile implements IMultipartTile {
     public IPartInfo getInfo() {
         return info;
     }
-}*/
-
+}

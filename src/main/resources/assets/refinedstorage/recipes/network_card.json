@@ -13,7 +13,7 @@
       "item": "minecraft:paper"
     },
     "A": {
-      "item": "refinedstorage:advanced_processor"
+      "item": "#advanced_processor"
     }
   },
   "result": {

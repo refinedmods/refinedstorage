@@ -17,7 +17,7 @@
       "item": "refinedstorage:machine_casing"
     },
     "P": {
-      "item": "refinedstorage:advanced_processor"
+      "item": "#advanced_processor"
     }
   },
   "result": {

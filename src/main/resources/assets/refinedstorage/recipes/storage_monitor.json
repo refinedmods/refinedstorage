@@ -7,10 +7,10 @@
   ],
   "key": {
     "P": {
-      "item": "refinedstorage:basic_processor"
+      "item": "#basic_processor"
     },
     "C": {
-      "item": "refinedstorage:construction_core"
+      "item": "#construction_core"
     },
     "G": {
       "type": "forge:ore_dict",
@@ -23,7 +23,7 @@
       "item": "refinedstorage:machine_casing"
     },
     "D": {
-      "item": "refinedstorage:destruction_core"
+      "item": "#destruction_core"
     }
   },
   "result": {

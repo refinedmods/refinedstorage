@@ -14,10 +14,11 @@
       "ore": "blockGlass"
     },
     "P": {
-      "item": "refinedstorage:improved_processor"
+      "item": "#improved_processor"
     }
   },
   "result": {
-    "item": "refinedstorage:upgrade"
+    "item": "refinedstorage:upgrade",
+    "data": 0
   }
 }

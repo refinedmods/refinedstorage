@@ -13,13 +13,15 @@
       "item": "minecraft:ender_pearl"
     },
     "G": {
-      "item": "refinedstorage:grid"
+      "item": "refinedstorage:grid",
+      "data": 0
     },
     "A": {
-      "item": "refinedstorage:advanced_processor"
+      "item": "#advanced_processor"
     }
   },
   "result": {
-    "item": "refinedstorage:wireless_grid"
+    "item": "refinedstorage:wireless_grid",
+    "data": 0
   }
 }

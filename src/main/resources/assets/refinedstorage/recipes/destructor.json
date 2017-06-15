@@ -10,7 +10,7 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "D": {
-      "item": "refinedstorage:destruction_core"
+      "item": "#destruction_core"
     },
     "R": {
       "item": "minecraft:redstone"
@@ -19,7 +19,7 @@
       "item": "refinedstorage:cable"
     },
     "I": {
-      "item": "refinedstorage:improved_processor"
+      "item": "#improved_processor"
     }
   },
   "result": {

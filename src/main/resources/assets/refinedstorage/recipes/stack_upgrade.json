@@ -10,7 +10,7 @@
       "item": "minecraft:sugar"
     },
     "S": {
-      "item": "minecraft:upgrade",
+      "item": "refinedstorage:upgrade",
       "data": 2
     }
   },

@@ -21,6 +21,7 @@
     }
   },
   "result": {
-    "item": "refinedstorage:controller"
+    "item": "refinedstorage:controller",
+    "data": 0
   }
 }

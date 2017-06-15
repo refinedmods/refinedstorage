@@ -1,4 +1,4 @@
-/*package com.raoulvdberge.refinedstorage.integration.mcmp;
+package com.raoulvdberge.refinedstorage.integration.mcmp;
 
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockCable;
@@ -54,4 +54,4 @@ public class PartCable implements IMultipart {
     public void onPartChanged(IPartInfo part, IPartInfo otherPart) {
         API.instance().discoverNode(part.getActualWorld(), part.getContainer().getPartPos());
     }
-}*/
+}

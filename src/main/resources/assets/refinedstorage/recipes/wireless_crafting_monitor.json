@@ -16,10 +16,11 @@
       "item": "refinedstorage:crafting_monitor"
     },
     "A": {
-      "item": "refinedstorage:advanced_processor"
+      "item": "#advanced_processor"
     }
   },
   "result": {
-    "item": "refinedstorage:wireless_crafting_monitor"
+    "item": "refinedstorage:wireless_crafting_monitor",
+    "data": 0
   }
 }

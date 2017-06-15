@@ -17,10 +17,11 @@
       "data": 3
     },
     "A": {
-      "item": "refinedstorage:advanced_processor"
+      "item": "#advanced_processor"
     }
   },
   "result": {
-    "item": "refinedstorage:wireless_fluid_grid"
+    "item": "refinedstorage:wireless_fluid_grid",
+    "data": 0
   }
 }

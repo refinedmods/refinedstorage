@@ -13,7 +13,7 @@
       "item": "refinedstorage:network_card"
     },
     "A": {
-      "item": "refinedstorage:advanced_processor"
+      "item": "#advanced_processor"
     }
   },
   "result": {
