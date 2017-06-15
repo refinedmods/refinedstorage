@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRenderer<TileStorageMonitor> {
     @Override
-    public void renderTileEntityAt(TileStorageMonitor tile, double x, double y, double z, float partialTicks, int destroyStage, float colorAlpha) {
+    public void renderTileEntityAt(TileStorageMonitor tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         setLightmapDisabled(true);
 
         float disX = 0, disXText = 0;

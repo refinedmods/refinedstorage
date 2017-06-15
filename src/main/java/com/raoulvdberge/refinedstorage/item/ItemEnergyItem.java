@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -71,7 +70,7 @@ public abstract class ItemEnergyItem extends ItemBase {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!RSUtils.canAddToCreativeTab(this, tab)) {
+        if (!isInCreativeTab(tab)) {
             return;
         }
 

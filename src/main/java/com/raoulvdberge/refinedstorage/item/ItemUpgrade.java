@@ -53,7 +53,7 @@ public class ItemUpgrade extends ItemBase {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!RSUtils.canAddToCreativeTab(this, tab)) {
+        if (!isInCreativeTab(tab)) {
             return;
         }
 

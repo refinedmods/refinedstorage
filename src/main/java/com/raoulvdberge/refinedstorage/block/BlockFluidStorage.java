@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.item.ItemBlockFluidStorage;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
@@ -38,10 +37,6 @@ public class BlockFluidStorage extends BlockNode {
 
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!RSUtils.canAddToCreativeTab(this, tab)) {
-            return;
-        }
-
         for (int i = 0; i <= 4; ++i) {
             items.add(ItemBlockFluidStorage.initNBT(new ItemStack(this, 1, i)));
         }

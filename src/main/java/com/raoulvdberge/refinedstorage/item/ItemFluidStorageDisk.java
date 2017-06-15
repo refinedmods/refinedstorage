@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
@@ -49,7 +48,7 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!RSUtils.canAddToCreativeTab(this, tab)) {
+        if (!isInCreativeTab(tab)) {
             return;
         }
 

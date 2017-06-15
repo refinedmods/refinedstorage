@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.block.Direction;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -70,7 +69,7 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!RSUtils.canAddToCreativeTab(this, tab)) {
+        if (!isInCreativeTab(tab)) {
             return;
         }
 

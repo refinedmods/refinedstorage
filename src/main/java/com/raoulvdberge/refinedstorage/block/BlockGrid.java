@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.block.properties.PropertyEnum;
@@ -32,10 +31,6 @@ public class BlockGrid extends BlockNode {
 
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!RSUtils.canAddToCreativeTab(this, tab)) {
-            return;
-        }
-
         for (int i = 0; i <= 3; i++) {
             items.add(new ItemStack(this, 1, i));
         }

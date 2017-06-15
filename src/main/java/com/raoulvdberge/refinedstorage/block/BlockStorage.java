@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.item.ItemBlockStorage;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
@@ -38,10 +37,6 @@ public class BlockStorage extends BlockNode {
 
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!RSUtils.canAddToCreativeTab(this, tab)) {
-            return;
-        }
-
         for (int i = 0; i <= 4; ++i) {
             items.add(ItemBlockStorage.initNBT(new ItemStack(this, 1, i)));
         }
