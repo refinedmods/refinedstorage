@@ -105,7 +105,7 @@ misc.refinedstorage:clear=초기화
 misc.refinedstorage:set=설정
 misc.refinedstorage:cancel_all=모두 취소
 misc.refinedstorage:priority=우선 순위
-misc.refinedstorage:oredict=Oredict
+misc.refinedstorage:oredict=Ore Dictionary
 misc.refinedstorage:blocking=Blocking
 
 misc.refinedstorage:reader_writer.redstone=레드스톤 강도: %d
