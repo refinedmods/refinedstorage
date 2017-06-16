@@ -1,23 +1,26 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "EGE",
-    "GMG",
-    "EPE"
+    "PAG",
+    "EMG",
+    "PAG"
   ],
   "key": {
-    "E": {
-      "item": "refinedstorage:quartz_enriched_iron"
+    "P": {
+      "item": "#improved_processor"
+    },
+    "A": {
+      "item": "refinedstorage:pattern"
     },
     "G": {
       "type": "forge:ore_dict",
       "ore": "blockGlass"
     },
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
     "M": {
       "item": "refinedstorage:machine_casing"
-    },
-    "P": {
-      "item": "#improved_processor"
     }
   },
   "result": {

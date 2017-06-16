@@ -1,9 +1,11 @@
 # Refined Storage Changelog
 
 ### 1.5.1
-- Updated Forge to 2329 (raoulvdberge)
+- Updated Forge to 2331 (raoulvdberge)
 - Re-added MCMultiPart support (raoulvdberge)
 - Added back crafting recipes (raoulvdberge)
+- Changed Grid recipe (raoulvdberge)
+- Changed Crafting Monitor recipe (raoulvdberge)
 
 ### 1.5
 - Port to Minecraft 1.12 (raoulvdberge)
