@@ -38,7 +38,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
                 stack.setTagCompound(new NBTTagCompound());
             }
 
-            RSUtils.writeItems(this, slot, stack.getTagCompound());
+            RSUtils.writeItems(this, 0, stack.getTagCompound());
 
             TileController controller = getController();
 
@@ -55,9 +55,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         this.viewAutomated = ItemWirelessCraftingMonitor.canViewAutomated(stack);
 
         if (stack.hasTagCompound()) {
-            for (int i = 0; i < 4; ++i) {
-                RSUtils.readItems(filter, i, stack.getTagCompound());
-            }
+            RSUtils.readItems(filter, 0, stack.getTagCompound());
         }
     }
 

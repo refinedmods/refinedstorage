@@ -53,7 +53,7 @@ public class WirelessGrid implements IGrid {
                 stack.setTagCompound(new NBTTagCompound());
             }
 
-            RSUtils.writeItems(this, slot, stack.getTagCompound());
+            RSUtils.writeItems(this, 0, stack.getTagCompound());
         }
     };
 
@@ -71,9 +71,7 @@ public class WirelessGrid implements IGrid {
         this.size = ItemWirelessGrid.getSize(stack);
 
         if (stack.hasTagCompound()) {
-            for (int i = 0; i < 4; ++i) {
-                RSUtils.readItems(filter, i, stack.getTagCompound());
-            }
+            RSUtils.readItems(filter, 0, stack.getTagCompound());
         }
     }
 
