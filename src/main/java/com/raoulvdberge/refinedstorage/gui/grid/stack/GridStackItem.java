@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.gui.grid.stack;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import io.netty.buffer.ByteBuf;
-import joptsimple.internal.Strings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -88,7 +87,7 @@ public class GridStackItem implements IGridStack {
             }
         }
 
-        return Strings.join(lines, "\n");
+        return lines.stream().collect(Collectors.joining("\n"));
     }
 
     @Override
