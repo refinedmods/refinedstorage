@@ -68,7 +68,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
                 stack.setTagCompound(new NBTTagCompound());
             }
 
-            RSUtils.writeItems(this, slot, stack.getTagCompound());
+            RSUtils.writeItems(this, 0, stack.getTagCompound());
         }
     };
     private ItemHandlerBase disk = new ItemHandlerBase(1, s -> NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK.test(s) && ((IStorageDiskProvider) s.getItem()).create(s).getType() == StorageDiskType.ITEMS) {
@@ -127,9 +127,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
         }
 
         if (player != null) {
-            for (int i = 0; i < 4; ++i) {
-                RSUtils.readItems(filter, i, stack.getTagCompound());
-            }
+            RSUtils.readItems(filter, 0, stack.getTagCompound());
         }
 
         RSUtils.readItems(disk, 4, stack.getTagCompound());
