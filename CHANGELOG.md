@@ -2,6 +2,7 @@
 
 ### 1.5.2
 - Fixed a bug where loading nodes would abort when a single node has an error while reading (raoulvdberge)
+- Fixed Filters not persisting correctly in Portable Grid (raoulvdberge)
 
 ### 1.5.1
 - Updated Forge to 2340 (raoulvdberge)
