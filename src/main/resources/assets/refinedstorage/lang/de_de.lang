@@ -55,9 +55,9 @@ gui.refinedstorage:crafting_preview.force_start=Drücke STRG + SHIFT zum Überbr
 gui.refinedstorage:reader=Lesegerät
 gui.refinedstorage:writer=Schreibgerät
 
-misc.refinedstorage:energy_stored=%d / %d RS
-misc.refinedstorage:energy_usage=Verbrauch: %d RS/t
-misc.refinedstorage:energy_usage_minimal=%d RS/t
+misc.refinedstorage:energy_stored=%d / %d FE
+misc.refinedstorage:energy_usage=Verbrauch: %d FE/t
+misc.refinedstorage:energy_usage_minimal=%d FE/t
 
 misc.refinedstorage:storage.stored=gespeichert: %s
 misc.refinedstorage:storage.stored_capacity=gespeichert: %s / %s

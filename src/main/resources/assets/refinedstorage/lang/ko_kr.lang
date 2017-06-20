@@ -77,9 +77,9 @@ gui.refinedstorage:security_manager.permission.5.tooltip=보안 옵션 조정하
 gui.refinedstorage:storage_monitor=저장 모니터
 gui.refinedstorage:portable_grid=휴대용 그리드
 
-misc.refinedstorage:energy_stored=%d / %d RS
-misc.refinedstorage:energy_usage=사용: %d RS/t
-misc.refinedstorage:energy_usage_minimal=%d RS/t
+misc.refinedstorage:energy_stored=%d / %d FE
+misc.refinedstorage:energy_usage=사용: %d FE/t
+misc.refinedstorage:energy_usage_minimal=%d FE/t
 
 misc.refinedstorage:storage.stored=저장량: %s
 misc.refinedstorage:storage.stored_capacity=저쟝량: %s / %s

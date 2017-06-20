@@ -28,18 +28,15 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12-14.21.0.2331"
+    version = "1.12-14.21.0.2340"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20170615"
+    mappings = "snapshot_20170620"
 }
 
 repositories {
     maven {
         url "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        url "http://maven.epoxide.org"
     }
     maven {
         url "http://maven.amadornes.com"
@@ -50,9 +47,8 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12:4.6.0.61:api"
-    runtime "mezz.jei:jei_1.12:4.6.0.61"
-    deobfCompile "net.darkhax.tesla:Tesla-1.12:1.0.58"
+    deobfCompile "mezz.jei:jei_1.12:4.6.0.63:api"
+    runtime "mezz.jei:jei_1.12:4.6.0.63"
     deobfCompile "MCMultiPart2:MCMultiPart-exp:2.0.0_26"
     // deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.0.28:api"
 }

@@ -55,9 +55,9 @@ gui.refinedstorage:crafting_preview.force_start=Appuyez sur CTRL + SHIFT pour qu
 gui.refinedstorage:reader=Lecteur
 gui.refinedstorage:writer=Imprimeur
 
-misc.refinedstorage:energy_stored=%d / %d RS
-misc.refinedstorage:energy_usage=Utilisées: %d RS/t
-misc.refinedstorage:energy_usage_minimal=%d RS/t
+misc.refinedstorage:energy_stored=%d / %d FE
+misc.refinedstorage:energy_usage=Utilisées: %d FE/t
+misc.refinedstorage:energy_usage_minimal=%d FE/t
 
 misc.refinedstorage:storage.stored=Stockés: %s
 misc.refinedstorage:storage.stored_capacity=Stockés: %s / %s

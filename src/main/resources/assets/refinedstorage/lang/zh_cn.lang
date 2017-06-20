@@ -42,9 +42,9 @@ gui.refinedstorage:fluid_interface=流体面板
 gui.refinedstorage:fluid_interface.in=输入
 gui.refinedstorage:fluid_interface.out=输出
 
-misc.refinedstorage:energy_stored=%d / %d RS
-misc.refinedstorage:energy_usage=使用: %d RS/t
-misc.refinedstorage:energy_usage_minimal=%d RS/t
+misc.refinedstorage:energy_stored=%d / %d FE
+misc.refinedstorage:energy_usage=使用: %d FE/t
+misc.refinedstorage:energy_usage_minimal=%d FE/t
 
 misc.refinedstorage:storage.stored=Stored: %s
 misc.refinedstorage:storage.stored_capacity=已存储: %s / %s

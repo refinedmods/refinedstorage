@@ -42,9 +42,9 @@ gui.refinedstorage:fluid_interface=Vloeistof Interface
 gui.refinedstorage:fluid_interface.in=In
 gui.refinedstorage:fluid_interface.out=Uit
 
-misc.refinedstorage:energy_stored=%d / %d RS
-misc.refinedstorage:energy_usage=Vebruik: %d RS/t
-misc.refinedstorage:energy_usage_minimal=%d RS/t
+misc.refinedstorage:energy_stored=%d / %d FE
+misc.refinedstorage:energy_usage=Vebruik: %d FE/t
+misc.refinedstorage:energy_usage_minimal=%d FE/t
 
 misc.refinedstorage:storage.stored=Opgeslagen: %s
 misc.refinedstorage:storage.stored_capacity=Opgeslagen: %s / %s

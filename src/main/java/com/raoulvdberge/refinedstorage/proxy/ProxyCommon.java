@@ -23,7 +23,6 @@ import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
-import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.item.ItemFluidStoragePart;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
 import com.raoulvdberge.refinedstorage.item.ItemStoragePart;
@@ -85,10 +84,6 @@ public class ProxyCommon {
 
         if (IntegrationCraftingTweaks.isLoaded()) {
             IntegrationCraftingTweaks.register();
-        }
-
-        if (IntegrationTesla.isLoaded()) {
-            IntegrationTesla.register();
         }
 
         int id = 0;

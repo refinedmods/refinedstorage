@@ -1,12 +1,15 @@
 # Refined Storage Changelog
 
 ### 1.5.1
-- Updated Forge to 2331 (raoulvdberge)
+- Updated Forge to 2340 (raoulvdberge)
 - Re-added MCMultiPart support (raoulvdberge)
+- Removed Tesla integration (raoulvdberge)
+- Removed RS energy units, the entire mod is powered with Forge Energy now (raoulvdberge)
 - Added back crafting recipes (raoulvdberge)
 - Changed Grid recipe (raoulvdberge)
 - Changed Crafting Monitor recipe (raoulvdberge)
 - Fixed Filters not persisting correctly in Wireless Grid and Wireless Crafting Monitor (raoulvdberge)
+- Fixed some recipes not using ore dictionary (raoulvdberge)
 
 ### 1.5
 - Port to Minecraft 1.12 (raoulvdberge)

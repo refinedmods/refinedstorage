@@ -40,9 +40,9 @@ gui.refinedstorage:fluid_interface=Жидкостный интерфейс
 gui.refinedstorage:fluid_interface.in=В
 gui.refinedstorage:fluid_interface.out=Из
 
-misc.refinedstorage:energy_stored=%d / %d RS
-misc.refinedstorage:energy_usage=Usage: %d RS/t
-misc.refinedstorage:energy_usage_minimal=%d RS/t
+misc.refinedstorage:energy_stored=%d / %d FE
+misc.refinedstorage:energy_usage=Usage: %d FE/t
+misc.refinedstorage:energy_usage_minimal=%d FE/t
 
 misc.refinedstorage:storage.stored=Запасено: %s
 misc.refinedstorage:storage.stored_capacity=Запасено: %s / %s

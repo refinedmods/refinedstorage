@@ -37,8 +37,6 @@ import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
-import com.raoulvdberge.refinedstorage.integration.tesla.EnergyTesla;
-import com.raoulvdberge.refinedstorage.integration.tesla.IntegrationTesla;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
@@ -47,7 +45,6 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
-import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -156,7 +153,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private Map<String, IReaderWriterChannel> readerWriterChannels = new HashMap<>();
 
     private EnergyForge energy = new EnergyForge(RS.INSTANCE.config.controllerCapacity);
-    private EnergyTesla energyTesla;
 
     private int lastEnergyDisplay;
 
@@ -174,10 +170,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         dataManager.addWatchedParameter(ENERGY_STORED);
         dataManager.addParameter(ENERGY_CAPACITY);
         dataManager.addParameter(NODES);
-
-        if (IntegrationTesla.isLoaded()) {
-            this.energyTesla = new EnergyTesla(energy);
-        }
     }
 
     public EnergyForge getEnergy() {
@@ -742,15 +734,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             return CapabilityEnergy.ENERGY.cast(energy);
         }
 
-        if (energyTesla != null) {
-            if (capability == TeslaCapabilities.CAPABILITY_HOLDER) {
-                return TeslaCapabilities.CAPABILITY_HOLDER.cast(energyTesla);
-            }
-            if (capability == TeslaCapabilities.CAPABILITY_CONSUMER) {
-                return TeslaCapabilities.CAPABILITY_CONSUMER.cast(energyTesla);
-            }
-        }
-
         if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
             return CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(this);
         }
@@ -761,7 +744,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityEnergy.ENERGY
-            || (energyTesla != null && (capability == TeslaCapabilities.CAPABILITY_HOLDER || capability == TeslaCapabilities.CAPABILITY_CONSUMER))
             || capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY
             || super.hasCapability(capability, facing);
     }
