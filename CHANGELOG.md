@@ -24,6 +24,11 @@
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
 - Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
 
+### 1.4.17
+- Fixed Filters not persisting correctly in Wireless Grid, Wireless Crafting Monitor and Portable Grid (raoulvdberge)
+- Fixed Disk Drive recipe not using ore dictionary for chest (raoulvdberge)
+- Fixed a bug where loading nodes would abort when a single node has an error while reading (raoulvdberge)
+
 ### 1.4.16
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
 - Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
