@@ -10,6 +10,7 @@
 - Changed Crafting Monitor recipe (raoulvdberge)
 - Fixed Filters not persisting correctly in Wireless Grid and Wireless Crafting Monitor (raoulvdberge)
 - Fixed some recipes not using ore dictionary (raoulvdberge)
+- Fixed crash when getting tooltip for grid item (raoulvdberge)
 
 ### 1.5
 - Port to Minecraft 1.12 (raoulvdberge)
