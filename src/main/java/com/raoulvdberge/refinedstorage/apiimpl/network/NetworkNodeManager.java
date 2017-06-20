@@ -60,7 +60,17 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                 INetworkNodeFactory factory = API.instance().getNetworkNodeRegistry().get(id);
 
                 if (factory != null) {
-                    nodes.put(pos, factory.create(data, world, pos));
+                    INetworkNode node = null;
+
+                    try {
+                        node = factory.create(data, world, pos);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+
+                    if (node != null) {
+                        nodes.put(pos, node);
+                    }
                 }
             }
         }

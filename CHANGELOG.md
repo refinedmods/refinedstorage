@@ -2,6 +2,7 @@
 
 ### 1.4.17
 - Fixed Filters not persisting correctly in Wireless Grid and Wireless Crafting Monitor (raoulvdberge)
+- Fixed a bug where loading nodes would abort when a single node has an error while reading (raoulvdberge)
 
 ### 1.4.16
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
