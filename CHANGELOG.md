@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.2
+- Fixed a bug where loading nodes would abort when a single node has an error while reading (raoulvdberge)
+
 ### 1.5.1
 - Updated Forge to 2340 (raoulvdberge)
 - Re-added MCMultiPart support (raoulvdberge)
