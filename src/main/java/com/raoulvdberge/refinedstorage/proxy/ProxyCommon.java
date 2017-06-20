@@ -296,15 +296,15 @@ public class ProxyCommon {
         );
 
         // Disk Drive
-        GameRegistry.addRecipe(new ItemStack(RSBlocks.DISK_DRIVE),
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.DISK_DRIVE),
             "ECE",
             "EME",
             "EPE",
             'E', new ItemStack(RSItems.QUARTZ_ENRICHED_IRON),
             'M', new ItemStack(RSBlocks.MACHINE_CASING),
-            'C', new ItemStack(Blocks.CHEST),
+            'C', "chest",
             'P', new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)
-        );
+        ));
 
         // Cable
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(RSBlocks.CABLE, 12),
