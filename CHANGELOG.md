@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.17
+- Fixed Filters not persisting correctly in Wireless Grid and Wireless Crafting Monitor (raoulvdberge)
+
 ### 1.4.16
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
 - Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
