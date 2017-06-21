@@ -20,6 +20,7 @@ import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerStorage;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.item.ItemEnergyItem;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
@@ -45,6 +46,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -185,6 +187,14 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
                 cache.invalidate();
 
+                if (storage == null) {
+                    itemHandler = null;
+                } else {
+                    itemHandler = new ItemHandlerStorage(storage, cache);
+
+                    cache.addListener(itemHandler);
+                }
+
                 if (world != null) {
                     checkIfDiskStateChanged();
                 }
@@ -206,6 +216,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private IStorageDisk<ItemStack> storage;
     private StorageCacheItemPortable cache = new StorageCacheItemPortable(this);
     private ItemGridHandlerPortable handler = new ItemGridHandlerPortable(this, this);
+    private ItemHandlerStorage itemHandler = null;
     private PortableGridDiskState diskState = PortableGridDiskState.NONE;
     private boolean connected;
 
@@ -602,7 +613,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+        return capability == CapabilityEnergy.ENERGY || (itemHandler != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
     }
 
     @Nullable
@@ -610,6 +621,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.cast(energyStorage);
+        } else if (itemHandler != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemHandler);
         }
 
         return super.getCapability(capability, facing);

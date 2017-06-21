@@ -11,13 +11,16 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiConsumer;
 
 public class StorageCacheFluid implements IStorageCache<FluidStack> {
     private INetwork network;
     private CopyOnWriteArrayList<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<FluidStack> list = API.instance().createFluidStackList();
+    private List<BiConsumer<FluidStack, Integer>> listeners = new LinkedList<>();
 
     public StorageCacheFluid(INetwork network) {
         this.network = network;
@@ -54,6 +57,8 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
 
         if (!rebuilding) {
             network.sendFluidStorageDeltaToClient(stack, size);
+
+            listeners.forEach(l -> l.accept(stack, size));
         }
     }
 
@@ -61,7 +66,14 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     public synchronized void remove(@Nonnull FluidStack stack, int size) {
         if (list.remove(stack, size)) {
             network.sendFluidStorageDeltaToClient(stack, -size);
+
+            listeners.forEach(l -> l.accept(stack, -size));
         }
+    }
+
+    @Override
+    public void addListener(BiConsumer<FluidStack, Integer> listener) {
+        listeners.add(listener);
     }
 
     @Override

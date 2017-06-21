@@ -15,11 +15,14 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     private IPortableGrid portableGrid;
     private IStackList<ItemStack> list = API.instance().createItemStackList();
+    private List<BiConsumer<ItemStack, Integer>> listeners = new LinkedList<>();
 
     public StorageCacheItemPortable(IPortableGrid portableGrid) {
         this.portableGrid = portableGrid;
@@ -42,6 +45,8 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
 
         if (!rebuilding) {
             portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, size), (EntityPlayerMP) w));
+
+            listeners.forEach(l -> l.accept(stack, size));
         }
     }
 
@@ -49,7 +54,14 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     public void remove(@Nonnull ItemStack stack, int size) {
         if (list.remove(stack, size)) {
             portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, -size), (EntityPlayerMP) w));
+
+            listeners.forEach(l -> l.accept(stack, -size));
         }
+    }
+
+    @Override
+    public void addListener(BiConsumer<ItemStack, Integer> listener) {
+        listeners.add(listener);
     }
 
     @Override
