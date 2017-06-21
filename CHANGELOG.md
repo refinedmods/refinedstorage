@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.3
+- Fixed Solderer crashing (raoulvdberge)
+
 ### 1.5.2
 - Fixed a bug where loading nodes would abort when a single node has an error while reading (raoulvdberge)
 - Fixed Filters not persisting correctly in Portable Grid (raoulvdberge)
