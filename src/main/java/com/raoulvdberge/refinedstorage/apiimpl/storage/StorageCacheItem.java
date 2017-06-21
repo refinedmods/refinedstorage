@@ -11,7 +11,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.LinkedList;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
@@ -20,7 +20,8 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     private INetwork network;
     private CopyOnWriteArrayList<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<ItemStack> list = API.instance().createItemStackList();
-    private List<BiConsumer<ItemStack, Integer>> listeners = new LinkedList<>();
+    @Nullable
+    private BiConsumer<ItemStack, Integer> listener;
 
     public StorageCacheItem(INetwork network) {
         this.network = network;
@@ -60,7 +61,9 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
         if (!rebuilding) {
             network.sendItemStorageDeltaToClient(stack, size);
 
-            listeners.forEach(l -> l.accept(stack, size));
+            if (listener != null) {
+                listener.accept(stack, size);
+            }
         }
     }
 
@@ -69,13 +72,15 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
         if (list.remove(stack, size)) {
             network.sendItemStorageDeltaToClient(stack, -size);
 
-            listeners.forEach(l -> l.accept(stack, -size));
+            if (listener != null) {
+                listener.accept(stack, -size);
+            }
         }
     }
 
     @Override
-    public void addListener(BiConsumer<ItemStack, Integer> listener) {
-        listeners.add(listener);
+    public void setListener(@Nullable BiConsumer<ItemStack, Integer> listener) {
+        this.listener = listener;
     }
 
     @Override

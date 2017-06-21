@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -48,11 +49,11 @@ public interface IStorageCache<T> {
     void remove(@Nonnull T stack, int size);
 
     /**
-     * Adds a listener to be called when this storage cache changes.
+     * Sets a listener to be called when this storage cache changes.
      *
-     * @param listener the listener
+     * @param listener the listener, or null when no listener is needed
      */
-    void addListener(BiConsumer<T, Integer> listener);
+    void setListener(@Nullable BiConsumer<T, Integer> listener);
 
     /**
      * Resorts the storages in this cache according to their priority.
