@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageItemItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
@@ -88,7 +89,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                 int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
 
                 if (delta > 0) {
-                    ItemStack result = network.extractItem(wanted, delta, compare, false);
+                    ItemStack result = network.extractItem(wanted, delta, compare, false, s -> !(s instanceof StorageItemItemHandler) || !((StorageItemItemHandler) s).isConnectedToInterface());
 
                     if (result != null) {
                         if (exportItems.getStackInSlot(i).isEmpty()) {

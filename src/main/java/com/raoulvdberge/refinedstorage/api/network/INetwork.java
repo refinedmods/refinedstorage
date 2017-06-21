@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * Represents a network, usually is a controller.
@@ -200,10 +202,24 @@ public interface INetwork {
      * @param size     the amount of that prototype that has to be extracted
      * @param flags    the flags to compare on, see {@link IComparer}
      * @param simulate true if we are simulating, false otherwise
+     * @param filter   a filter for the storage
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
-    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate);
+    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate, Predicate<IStorage> filter);
+
+    /**
+     * Extracts an item from this network.
+     *
+     * @param stack    the prototype of the stack to extract, do NOT modify
+     * @param size     the amount of that prototype that has to be extracted
+     * @param flags    the flags to compare on, see {@link IComparer}
+     * @param simulate true if we are simulating, false otherwise
+     * @return null if we didn't extract anything, or a stack with the result
+     */
+    default ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+        return extractItem(stack, size, flags, simulate, s -> true);
+    }
 
     /**
      * Extracts an item from this network.

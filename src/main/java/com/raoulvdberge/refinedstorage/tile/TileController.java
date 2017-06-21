@@ -66,6 +66,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
@@ -453,7 +454,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate, Predicate<IStorage> filter) {
         int requested = size;
         int received = 0;
 
@@ -464,7 +465,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         for (IStorage<ItemStack> storage : this.itemStorage.getStorages()) {
             ItemStack took = null;
 
-            if (storage.getAccessType() != AccessType.INSERT) {
+            if (filter.test(storage) && storage.getAccessType() != AccessType.INSERT) {
                 took = storage.extract(stack, requested - received, flags, simulate);
             }
 
