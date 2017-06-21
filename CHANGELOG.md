@@ -3,6 +3,7 @@
 ### 1.5.3
 - Fixed Solderer crashing (raoulvdberge)
 - The Portable Grid now exposes an inventory for interaction with other mods or vanilla (raoulvdberge)
+- The Relay now reacts instantly to a redstone signal again, removed throttling for it (raoulvdberge)
 
 ### 1.5.2
 - Fixed a bug where loading nodes would abort when a single node has an error while reading (raoulvdberge)
