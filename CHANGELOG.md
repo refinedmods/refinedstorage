@@ -2,6 +2,7 @@
 
 ### 1.5.3
 - Fixed Solderer crashing (raoulvdberge)
+- Fixed Solderer being able to work with insufficient ingredients (raoulvdberge)
 - Fixed Interface extracting from itself when trying to keep items in stock (raoulvdberge)
 - The Portable Grid now exposes an inventory for interaction with other mods or vanilla (raoulvdberge)
 - The Relay now reacts instantly to a redstone signal again, removed throttling for it (raoulvdberge)
