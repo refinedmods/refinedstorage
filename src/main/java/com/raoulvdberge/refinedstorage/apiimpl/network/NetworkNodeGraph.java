@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.Queue;
 import java.util.Set;
 
-import static com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
+import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
 
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;

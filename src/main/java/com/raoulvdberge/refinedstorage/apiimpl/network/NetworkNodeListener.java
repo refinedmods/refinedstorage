@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent;

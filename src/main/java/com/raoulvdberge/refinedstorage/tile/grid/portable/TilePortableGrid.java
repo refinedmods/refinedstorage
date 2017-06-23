@@ -172,6 +172,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+                if (itemHandler != null) {
+                    cache.removeListener(itemHandler);
+                }
+
                 if (getStackInSlot(slot).isEmpty()) {
                     storage = null;
                 } else {
@@ -186,12 +190,11 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
                 }
 
                 cache.invalidate();
-                cache.setListener(null);
 
                 if (storage == null) {
                     itemHandler = null;
                 } else {
-                    itemHandler = new ItemHandlerStorage(storage, cache);
+                    cache.addListener(itemHandler = new ItemHandlerStorage(storage, cache));
                 }
 
                 if (world != null) {

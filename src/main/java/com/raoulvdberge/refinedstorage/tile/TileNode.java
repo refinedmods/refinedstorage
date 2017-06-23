@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;

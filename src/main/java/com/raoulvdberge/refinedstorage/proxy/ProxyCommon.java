@@ -19,6 +19,7 @@ import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
+import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;

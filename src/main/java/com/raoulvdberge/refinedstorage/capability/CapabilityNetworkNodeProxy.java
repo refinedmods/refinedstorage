@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.proxy;
+package com.raoulvdberge.refinedstorage.capability;
 
 import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;

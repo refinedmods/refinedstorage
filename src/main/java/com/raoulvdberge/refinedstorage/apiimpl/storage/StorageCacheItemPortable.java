@@ -14,16 +14,15 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
 public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     private IPortableGrid portableGrid;
     private IStackList<ItemStack> list = API.instance().createItemStackList();
-    @Nullable
-    private BiConsumer<ItemStack, Integer> listener;
+    private List<BiConsumer<ItemStack, Integer>> listeners = new LinkedList<>();
 
     public StorageCacheItemPortable(IPortableGrid portableGrid) {
         this.portableGrid = portableGrid;
@@ -47,9 +46,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
         if (!rebuilding) {
             portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, size), (EntityPlayerMP) w));
 
-            if (listener != null) {
-                listener.accept(stack, size);
-            }
+            listeners.forEach(l -> l.accept(stack, size));
         }
     }
 
@@ -58,15 +55,18 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
         if (list.remove(stack, size)) {
             portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, -size), (EntityPlayerMP) w));
 
-            if (listener != null) {
-                listener.accept(stack, -size);
-            }
+            listeners.forEach(l -> l.accept(stack, -size));
         }
     }
 
     @Override
-    public void setListener(@Nullable BiConsumer<ItemStack, Integer> listener) {
-        this.listener = listener;
+    public void addListener(BiConsumer<ItemStack, Integer> listener) {
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeListener(BiConsumer<ItemStack, Integer> listener) {
+        listeners.remove(listener);
     }
 
     @Override

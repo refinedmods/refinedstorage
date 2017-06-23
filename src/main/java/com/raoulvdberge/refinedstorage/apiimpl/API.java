@@ -31,7 +31,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;

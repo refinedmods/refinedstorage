@@ -4,7 +4,9 @@
 - Fixed Solderer crashing (raoulvdberge)
 - Fixed Solderer being able to work with insufficient ingredients (raoulvdberge)
 - Fixed Interface extracting from itself when trying to keep items in stock (raoulvdberge)
+- Fixed Quartz Enriched Iron recipe only giving 1 instead of 4 (jhjaggars)
 - The Portable Grid now exposes an inventory for interaction with other mods or vanilla (raoulvdberge)
+- The Interface now exposes the entire storage inventory (if no slots are set for exporting) for interaction with other mods or vanilla (raoulvdberge)
 - The Relay now reacts instantly to a redstone signal again, removed throttling for it (raoulvdberge)
 
 ### 1.5.2

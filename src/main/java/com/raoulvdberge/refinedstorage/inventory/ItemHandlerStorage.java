@@ -8,17 +8,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import java.util.function.BiConsumer;
 
-public class ItemHandlerStorage implements IItemHandler {
+public class ItemHandlerStorage implements IItemHandler, BiConsumer<ItemStack, Integer> {
     private IStorage<ItemStack> storage;
+    private IStorageCache<ItemStack> storageCache;
     private ItemStack[] storageCacheData;
 
     public ItemHandlerStorage(IStorage<ItemStack> storage, IStorageCache<ItemStack> storageCache) {
         this.storage = storage;
+        this.storageCache = storageCache;
 
-        storageCache.setListener((stack, size) -> invalidate(storageCache));
-
-        invalidate(storageCache);
+        invalidate();
     }
 
     @Override
@@ -50,7 +51,12 @@ public class ItemHandlerStorage implements IItemHandler {
         return 64;
     }
 
-    private void invalidate(IStorageCache<ItemStack> storageCache) {
+    @Override
+    public void accept(ItemStack stack, Integer amount) {
+        invalidate();
+    }
+
+    private void invalidate() {
         this.storageCacheData = storageCache.getList().getStacks().toArray(new ItemStack[0]);
     }
 }
