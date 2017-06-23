@@ -57,9 +57,9 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
 
         if (!rebuilding) {
             network.sendFluidStorageDeltaToClient(stack, size);
-
-            listeners.forEach(l -> l.accept(stack, size));
         }
+
+        listeners.forEach(l -> l.accept(stack, size));
     }
 
     @Override

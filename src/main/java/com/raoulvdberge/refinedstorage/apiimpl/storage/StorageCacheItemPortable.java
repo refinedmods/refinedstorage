@@ -45,9 +45,9 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
 
         if (!rebuilding) {
             portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, size), (EntityPlayerMP) w));
-
-            listeners.forEach(l -> l.accept(stack, size));
         }
+
+        listeners.forEach(l -> l.accept(stack, size));
     }
 
     @Override
