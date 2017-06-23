@@ -204,8 +204,12 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         return exportItems;
     }
 
-    public IItemHandler getItems() {
+    public IItemHandler getItemsOrNetworkItems() {
         return (itemsNetwork != null && exportSpecimenItems.isEmpty()) ? itemsNetwork : items;
+    }
+
+    public IItemHandler getItems() {
+        return items;
     }
 
     public IItemHandler getUpgrades() {

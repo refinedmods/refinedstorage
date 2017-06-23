@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -24,7 +25,14 @@ public class StorageItemItemHandler extends StorageItemExternal {
     public StorageItemItemHandler(NetworkNodeExternalStorage externalStorage, Supplier<IItemHandler> handlerSupplier) {
         this.externalStorage = externalStorage;
         this.handlerSupplier = handlerSupplier;
-        this.connectedToInterface = externalStorage.getFacingTile() instanceof TileInterface;
+
+        TileEntity tile = externalStorage.getFacingTile();
+
+        if (tile instanceof TileInterface) {
+            // Make sure we override our handler supplier so we don't get network items as well (which leads to unstable behavior)
+            this.handlerSupplier = ((TileInterface) tile).getNode()::getItems;
+            this.connectedToInterface = true;
+        }
     }
 
     public boolean isConnectedToInterface() {
