@@ -36,8 +36,6 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     public static final int TYPE_CREATIVE = 4;
     public static final int TYPE_DEBUG = 5;
 
-    private NBTTagCompound debugDiskTag;
-
     public ItemFluidStorageDisk() {
         super("fluid_storage_disk");
 
@@ -58,17 +56,15 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     }
 
     private void applyDebugDiskData(ItemStack stack) {
-        if (debugDiskTag == null) {
-            debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.FLUIDS);
+        NBTTagCompound debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.FLUIDS);
 
-            StorageDiskFluid storage = new StorageDiskFluid(debugDiskTag, -1);
+        StorageDiskFluid storage = new StorageDiskFluid(debugDiskTag, -1);
 
-            for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-                storage.insert(new FluidStack(fluid, 0), Fluid.BUCKET_VOLUME * 1000, false);
-            }
-
-            storage.writeToNBT();
+        for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
+            storage.insert(new FluidStack(fluid, 0), Fluid.BUCKET_VOLUME * 1000, false);
         }
+
+        storage.writeToNBT();
 
         stack.setTagCompound(debugDiskTag.copy());
     }
