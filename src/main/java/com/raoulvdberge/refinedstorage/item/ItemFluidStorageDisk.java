@@ -66,7 +66,7 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
 
         storage.writeToNBT();
 
-        stack.setTagCompound(debugDiskTag.copy());
+        stack.setTagCompound(debugDiskTag);
     }
 
     @Override

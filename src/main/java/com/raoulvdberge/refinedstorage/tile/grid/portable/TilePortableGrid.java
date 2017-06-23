@@ -194,7 +194,9 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
                 if (storage == null) {
                     itemHandler = null;
                 } else {
-                    cache.addListener(itemHandler = new ItemHandlerStorage(storage, cache));
+                    itemHandler = new ItemHandlerStorage(storage, cache);
+
+                    cache.addListener(itemHandler);
                 }
 
                 if (world != null) {
