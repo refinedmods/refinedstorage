@@ -112,7 +112,16 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             doLegacyCheck(node);
         }
 
-        return (N) node;
+        N castedNode;
+
+        try {
+            castedNode = (N) node;
+        } catch (ClassCastException e) {
+            manager.setNode(pos, castedNode = createNode(world, pos));
+            manager.markForSaving();
+        }
+
+        return castedNode;
     }
 
     private void doLegacyCheck(NetworkNode node) {

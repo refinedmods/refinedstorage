@@ -2,6 +2,7 @@
 
 ### 1.5.4
 - Fixed External Storage crashing (raoulvdberge)
+- Fixed crash when node data mismatches between world and dat file (raoulvdberge)
 
 ### 1.5.3
 - Updated Forge to 2359 (raoulvdberge)
