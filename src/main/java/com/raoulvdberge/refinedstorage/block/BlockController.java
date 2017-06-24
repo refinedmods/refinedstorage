@@ -22,9 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BlockController extends BlockBase {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", ControllerType.class);
 
@@ -100,9 +97,7 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        List<ItemStack> drops = new ArrayList<>();
-
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ItemStack stack = new ItemStack(RSBlocks.CONTROLLER, 1, RSBlocks.CONTROLLER.getMetaFromState(state));
 
         stack.setTagCompound(new NBTTagCompound());
@@ -110,8 +105,6 @@ public class BlockController extends BlockBase {
         stack.getTagCompound().setInteger(TileController.NBT_ENERGY_CAPACITY, ((TileController) world.getTileEntity(pos)).getEnergy().getMaxEnergyStored());
 
         drops.add(stack);
-
-        return drops;
     }
 
     @Override

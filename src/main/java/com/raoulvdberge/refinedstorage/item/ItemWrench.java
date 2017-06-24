@@ -12,10 +12,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -135,7 +132,9 @@ public class ItemWrench extends ItemBase {
 
                 ((TileNode) tile).writeConfiguration(data);
 
-                ItemStack tileStack = state.getBlock().getDrops(world, pos, state, 0).get(0);
+                NonNullList<ItemStack> drops = NonNullList.create();
+                state.getBlock().getDrops(drops, world, pos, state, 0);
+                ItemStack tileStack = drops.get(0);
 
                 if (!tileStack.hasTagCompound()) {
                     tileStack.setTagCompound(new NBTTagCompound());

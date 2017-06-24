@@ -23,8 +23,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class BlockFluidStorage extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", FluidStorageType.class);
@@ -90,10 +88,8 @@ public class BlockFluidStorage extends BlockNode {
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         TileFluidStorage storage = (TileFluidStorage) world.getTileEntity(pos);
-
-        List<ItemStack> drops = new ArrayList<>();
 
         ItemStack stack = new ItemStack(RSBlocks.FLUID_STORAGE, 1, getMetaFromState(state));
         stack.setTagCompound(new NBTTagCompound());
@@ -103,8 +99,6 @@ public class BlockFluidStorage extends BlockNode {
         stack.getTagCompound().setTag(NetworkNodeFluidStorage.NBT_STORAGE, storage.getNode().getStorage().getStorageTag());
 
         drops.add(stack);
-
-        return drops;
     }
 
     @Override

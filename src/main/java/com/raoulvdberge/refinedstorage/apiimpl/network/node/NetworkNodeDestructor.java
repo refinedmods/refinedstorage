@@ -20,6 +20,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -37,7 +38,6 @@ import net.minecraftforge.fluids.capability.wrappers.FluidBlockWrapper;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NetworkNodeDestructor extends NetworkNode implements IComparable, IFilterable, IType {
@@ -103,11 +103,11 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
                 if (!frontStack.isEmpty()) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(world, front) != -1.0) {
-                        List<ItemStack> drops;
+                        NonNullList<ItemStack> drops = NonNullList.create();
                         if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(world, front, frontBlockState, null)) {
-                            drops = Collections.singletonList(frontStack);
+                            drops.add(frontStack);
                         } else {
-                            drops = frontBlock.getDrops(world, front, frontBlockState, upgrades.getFortuneLevel());
+                            frontBlock.getDrops(drops, world, front, frontBlockState, upgrades.getFortuneLevel());
                         }
 
                         for (ItemStack drop : drops) {

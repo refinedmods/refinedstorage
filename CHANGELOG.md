@@ -1,7 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.5.3
-- Updated Forge to 2349 (raoulvdberge)
+- Updated Forge to 2359 (raoulvdberge)
 - Updated MCMultiPart to 2.2.1 (raoulvdberge)
 - Fixed Solderer crashing (raoulvdberge)
 - Fixed Solderer being able to work with insufficient ingredients (raoulvdberge)
