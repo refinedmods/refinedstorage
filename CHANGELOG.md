@@ -6,6 +6,7 @@
 - Fixed Solderer being able to work with insufficient ingredients (raoulvdberge)
 - Fixed Disk Drive giving incorrect capacity for creative and debug storage disks (raoulvdberge)
 - Fixed External Storage crashing (raoulvdberge)
+- Fixed crash when node data mismatches between world and dat file (raoulvdberge)
 - The Relay now reacts instantly to a redstone signal again, removed throttling for it (raoulvdberge)
 
 ### 1.4.17
