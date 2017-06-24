@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.INetworkNeighborhoodAware;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -21,7 +21,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodAware, IWrenchable {
+public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, IWrenchable {
     @Nullable
     protected INetwork network;
     protected World world;
@@ -32,6 +32,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     private EnumFacing direction;
 
     private boolean couldUpdate;
+    private int ticksSinceUpdateChanged;
+
     private boolean active;
 
     public NetworkNode(World world, BlockPos pos) {
@@ -87,6 +89,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         return redstoneMode.isEnabled(world, pos);
     }
 
+    protected int getUpdateThrottleInactiveToActive() {
+        return 20;
+    }
+
+    protected int getUpdateThrottleActiveToInactive() {
+        return 4;
+    }
+
     @Override
     public void update() {
         ++ticks;
@@ -94,19 +104,26 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
         boolean canUpdate = getNetwork() != null && canUpdate();
 
         if (couldUpdate != canUpdate) {
-            couldUpdate = canUpdate;
+            ++ticksSinceUpdateChanged;
 
-            if (hasConnectivityState()) {
-                RSUtils.updateBlock(world, pos);
-            }
+            if (canUpdate ? (ticksSinceUpdateChanged > getUpdateThrottleInactiveToActive()) : (ticksSinceUpdateChanged > getUpdateThrottleActiveToInactive())) {
+                ticksSinceUpdateChanged = 0;
+                couldUpdate = canUpdate;
 
-            if (network != null) {
-                onConnectedStateChange(network, couldUpdate);
+                if (hasConnectivityState()) {
+                    RSUtils.updateBlock(world, pos);
+                }
 
-                if (shouldRebuildGraphOnChange()) {
-                    network.getNodeGraph().rebuild();
+                if (network != null) {
+                    onConnectedStateChange(network, canUpdate);
+
+                    if (shouldRebuildGraphOnChange()) {
+                        network.getNodeGraph().rebuild();
+                    }
                 }
             }
+        } else {
+            ticksSinceUpdateChanged = 0;
         }
     }
 
@@ -154,7 +171,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNeighborhoodA
     }
 
     @Override
-    public void walkNeighborhood(Operator operator) {
+    public void visit(Operator operator) {
         for (EnumFacing facing : EnumFacing.VALUES) {
             if (canConduct(facing)) {
                 operator.apply(world, pos.offset(facing), facing.getOpposite());

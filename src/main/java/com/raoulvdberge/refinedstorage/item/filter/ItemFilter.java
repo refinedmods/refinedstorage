@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
 import com.raoulvdberge.refinedstorage.item.ItemBase;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,6 +19,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,8 +81,8 @@ public class ItemFilter extends ItemBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
         tooltip.add(TextFormatting.YELLOW + I18n.format("sidebutton.refinedstorage:mode." + (getMode(stack) == MODE_WHITELIST ? "whitelist" : "blacklist")) + TextFormatting.RESET);
 

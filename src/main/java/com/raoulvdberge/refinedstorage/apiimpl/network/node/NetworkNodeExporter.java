@@ -6,8 +6,6 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.integration.cyclopscore.IntegrationCyclopsCore;
-import com.raoulvdberge.refinedstorage.integration.cyclopscore.SlotlessItemHandlerHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -186,18 +184,10 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                 if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                     network.getCraftingManager().schedule(slot, 1, compare);
                 }
-            } else {
-                if (IntegrationCyclopsCore.isLoaded()
-                    && SlotlessItemHandlerHelper.isSlotless(getFacingTile(), getDirection().getOpposite())
-                    && SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, true).isEmpty()) {
-                    took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
+            } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
+                took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
-                    SlotlessItemHandlerHelper.insertItem(getFacingTile(), getDirection().getOpposite(), took, false);
-                } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-                    took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
-
-                    ItemHandlerHelper.insertItem(handler, took, false);
-                }
+                ItemHandlerHelper.insertItem(handler, took, false);
             }
         }
     }

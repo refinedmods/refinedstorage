@@ -5,7 +5,6 @@ public enum TextureType {
     Front2,
     Front4,
     Side,
-    SideSort,
     SideVSplit,
     SideHSplit,
     TrimBorder,

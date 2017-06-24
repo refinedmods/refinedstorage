@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.item;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +13,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemNetworkCard extends ItemBase {
@@ -47,8 +49,8 @@ public class ItemNetworkCard extends ItemBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
         BlockPos pos = getReceiver(stack);
 

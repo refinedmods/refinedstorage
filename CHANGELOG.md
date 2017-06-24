@@ -1,5 +1,71 @@
 # Refined Storage Changelog
 
+### 1.5.3
+- Fixed Solderer crashing (raoulvdberge)
+- Fixed Solderer being able to work with insufficient ingredients (raoulvdberge)
+- Fixed Interface extracting from itself when trying to keep items in stock (raoulvdberge)
+- Fixed Quartz Enriched Iron recipe only giving 1 instead of 4 (jhjaggars)
+- Fixed Debug Storage disks not working correctly (raoulvdberge)
+- Fixed Disk Drive giving incorrect capacity for creative and debug storage disks (raoulvdberge)
+- The Portable Grid now exposes an inventory for interaction with other mods or vanilla (raoulvdberge)
+- The Interface now exposes the entire storage inventory (if no slots are set for exporting) for interaction with other mods or vanilla (raoulvdberge)
+- The Relay now reacts instantly to a redstone signal again, removed throttling for it (raoulvdberge)
+
+### 1.5.2
+- Fixed a bug where loading nodes would abort when a single node has an error while reading (raoulvdberge)
+- Fixed Filters not persisting correctly in Portable Grid (raoulvdberge)
+
+### 1.5.1
+- Updated Forge to 2340 (raoulvdberge)
+- Re-added MCMultiPart support (raoulvdberge)
+- Removed Tesla integration (raoulvdberge)
+- Removed RS energy units, the entire mod is powered with Forge Energy now (raoulvdberge)
+- Added back crafting recipes (raoulvdberge)
+- Changed Grid recipe (raoulvdberge)
+- Changed Crafting Monitor recipe (raoulvdberge)
+- Fixed Filters not persisting correctly in Wireless Grid and Wireless Crafting Monitor (raoulvdberge)
+- Fixed Disk Drive recipe not using ore dictionary for chest (raoulvdberge)
+- Fixed crash when getting tooltip for grid item (way2muchnoise)
+
+### 1.5
+- Port to Minecraft 1.12 (raoulvdberge)
+- Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.12 is available) (raoulvdberge)
+- Removed OpenComputers support (will be re-added as soon as OpenComputers for MC 1.12 is available) (raoulvdberge)
+- Removed crafting recipes, until Forge adds the recipe system back (raoulvdberge)
+- The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
+- Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
+
+### 1.4.17
+- Fixed Filters not persisting correctly in Wireless Grid, Wireless Crafting Monitor and Portable Grid (raoulvdberge)
+- Fixed Disk Drive recipe not using ore dictionary for chest (raoulvdberge)
+- Fixed a bug where loading nodes would abort when a single node has an error while reading (raoulvdberge)
+
+### 1.4.16
+- The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
+- Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
+
+### 1.4.15
+- Updated Storage Drawers API, fixes crashes (raoulvdberge)
+
+### 1.4.14
+- Fixed Solderer not accepting books made in anvil (raoulvdberge)
+
+### 1.4.13
+- Fixed Portable Grid model (raoulvdberge, CyanideX)
+- The Portable Grid now has an indicator whether it's connected or disconnected and shows the disk (raoulvdberge, CyanideX)
+- Fixed ore dictionary causing problems with Solderer (raoulvdberge)
+- Fixed ore dictionary items not showing up in JEI for the Solderer (raoulvdberge)
+- Removed Quartz Enriched Iron ore dictionary entry (raoulvdberge)
+
+### 1.4.12
+- Updated Forge to 2315 (raoulvdberge)
+- Updated JEI to 4.5.0 (raoulvdberge)
+- Removed Collosal Chests integration (raoulvdberge)
+- You can now shift click items from the Grid crafting slots to the player inventory when the Grid is disconnected (raoulvdberge)
+- Added Korean translation (01QueN10)
+- Fixed error logs when watching a Controller when a network changes (raoulvdberge)
+- Implemented block update throttling when network turns on and off (raoulvdberge)
+
 ### 1.4.11
 - Removed debug log configuration option, as it's no longer needed (raoulvdberge)
 - Removed "autocraft on redstone signal" option in the Crafter, use an External Storage in combination with an Interface with the Crafting Upgrade instead (raoulvdberge)
@@ -8,6 +74,8 @@
 - Added support for External Storage on Interfaces and other Refined Storage blocks, so you can keep items in stock easier (raoulvdberge)
 - You now have to sneak to place the Portable Grid in the world (raoulvdberge)
 - The Machine Casing now requires 1 piece of stone in the middle (raoulvdberge)
+- Changed recipe of Disk Drive to no longer require a Solderer (raoulvdberge)
+- Changed recipe of Interface to no longer require a Basic Processor, but a Machine Casing instead (raoulvdberge)
 
 ### 1.4.10
 - Improved performance of network scanning (raoulvdberge)
@@ -114,6 +182,7 @@
 - Added blocking mode to patterns in autocrafting (InusualZ)
 - Added Grid size toggle (stretched, small, medium, large) (raoulvdberge)
 - Added dismantling mode to the Wrench (raoulvdberge)
+- Added Block of Quartz Enriched Iron (raoulvdberge) 
 - You can now bind multiple crafters with the same pattern to machines, to spread or balance out autocrafting (way2muchnoise)
 - Autocrafting bugfixes (way2muchnoise)
 - Fixed Regulator mode not working (InusualZ)
@@ -196,6 +265,10 @@
 - Removed RF support, use Forge Energy instead (raoulvdberge)
 - Removed IC2 support (raoulvdberge)
 - Removed MCMultiPart support (will be re-added as soon as MCMultiPart for MC 1.11 is available) (raoulvdberge)
+
+### 1.2.26
+- Fixed Interface duping items on extract-only storages (raoulvdberge)
+- Fixed calculating crafting resources for more than 9 unique items, for addon mods (ExpensiveKoala)
 
 ### 1.2.25
 - Fire event on completion of an autocrafting task (way2muchnoise)

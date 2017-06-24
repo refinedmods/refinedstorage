@@ -35,9 +35,9 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
         for (int i = 0; i <= 1; i++) {
-            subItems.add(ItemBlockController.createStackWithNBT(new ItemStack(item, 1, i)));
+            items.add(ItemBlockController.createStackWithNBT(new ItemStack(this, 1, i)));
         }
     }
 

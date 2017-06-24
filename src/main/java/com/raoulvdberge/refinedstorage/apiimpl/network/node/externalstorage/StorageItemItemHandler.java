@@ -3,8 +3,10 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.tile.TileInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -18,15 +20,23 @@ import java.util.function.Supplier;
 public class StorageItemItemHandler extends StorageItemExternal {
     private NetworkNodeExternalStorage externalStorage;
     private Supplier<IItemHandler> handlerSupplier;
-    private AccessType lockedAccessType = AccessType.INSERT_EXTRACT;
+    private boolean connectedToInterface;
 
     public StorageItemItemHandler(NetworkNodeExternalStorage externalStorage, Supplier<IItemHandler> handlerSupplier) {
         this.externalStorage = externalStorage;
         this.handlerSupplier = handlerSupplier;
 
-        if (externalStorage.getFacingTile().getBlockType().getUnlocalizedName().equals("tile.ExtraUtils2:TrashCan")) {
-            lockedAccessType = AccessType.INSERT;
+        TileEntity tile = externalStorage.getFacingTile();
+
+        if (tile instanceof TileInterface) {
+            // Make sure we override our handler supplier so we don't get network items as well (which leads to unstable behavior)
+            this.handlerSupplier = ((TileInterface) tile).getNode()::getItems;
+            this.connectedToInterface = true;
         }
+    }
+
+    public boolean isConnectedToInterface() {
+        return connectedToInterface;
     }
 
     @Override
@@ -127,6 +137,6 @@ public class StorageItemItemHandler extends StorageItemExternal {
 
     @Override
     public AccessType getAccessType() {
-        return ((lockedAccessType != AccessType.INSERT_EXTRACT) ? lockedAccessType : externalStorage.getAccessType());
+        return externalStorage.getAccessType();
     }
 }

@@ -23,21 +23,21 @@ public abstract class SideButton extends GuiButton {
     }
 
     @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         GlStateManager.enableAlpha();
 
-        hovered = gui.inBounds(xPosition, yPosition, width, height, mouseX, mouseY);
+        hovered = gui.inBounds(x, y, width, height, mouseX, mouseY);
 
         gui.bindTexture("icons.png");
-        gui.drawTexture(xPosition, yPosition, 238, hovered ? 35 : 16, 18, 18);
+        gui.drawTexture(x, y, 238, hovered ? 35 : 16, 18, 18);
 
-        drawButtonIcon(xPosition + 1, yPosition + 1);
+        drawButtonIcon(x + 1, y + 1);
 
         if (hovered) {
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GlStateManager.color(1.0f, 1.0f, 1.0f, 0.5f);
-            gui.drawTexture(xPosition, yPosition, 238, 54, 18, 18);
+            gui.drawTexture(x, y, 238, 54, 18, 18);
             GlStateManager.disableBlend();
         }
     }

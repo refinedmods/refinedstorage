@@ -28,9 +28,9 @@ gui.refinedstorage:crafter.processing=Processando
 gui.refinedstorage:processing_pattern_encoder=Codificador de Padrão de Processamento
 gui.refinedstorage:processing_pattern_encoder.pattern_create=Criar Padrão
 
-misc.refinedstorage:energy_stored=%d / %d RS
-misc.refinedstorage:energy_usage=Usage: %d RS/t
-misc.refinedstorage:energy_usage_minimal=%d RS/t
+misc.refinedstorage:energy_stored=%d / %d FE
+misc.refinedstorage:energy_usage=Usage: %d FE/t
+misc.refinedstorage:energy_usage_minimal=%d FE/t
 
 misc.refinedstorage:storage.stored=Stored: %s
 misc.refinedstorage:storage.stored_capacity=Stored: %s / %s

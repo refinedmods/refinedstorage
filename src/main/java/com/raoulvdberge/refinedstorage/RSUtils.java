@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage;
 
+import com.google.common.collect.ImmutableMap;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -9,9 +10,10 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -36,6 +38,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -55,6 +58,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -78,6 +83,8 @@ public final class RSUtils {
 
     private static final Map<Integer, List<ItemStack>> OREDICT_CACHE = new HashMap<>();
     private static final Map<Integer, Boolean> OREDICT_EQUIVALENCY_CACHE = new HashMap<>();
+
+    private static final NonNullList<Object> EMPTY_NON_NULL_LIST = NonNullList.create();
 
     static {
         QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
@@ -206,6 +213,10 @@ public final class RSUtils {
         return other;
     }
 
+    public static <T> NonNullList<T> emptyNonNullList() {
+        return (NonNullList<T>) EMPTY_NON_NULL_LIST;
+    }
+
     public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag) {
         NBTTagList tagList = new NBTTagList();
 
@@ -324,7 +335,7 @@ public final class RSUtils {
         }
     }
 
-    public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {
+    public static IItemHandler getItemHandler(@Nullable TileEntity tile, EnumFacing side) {
         if (tile == null) {
             return null;
         }
@@ -429,7 +440,7 @@ public final class RSUtils {
         Vec3d lookVec = player.getLookVec();
         Vec3d start = getStart(player);
 
-        return start.addVector(lookVec.xCoord * reachDistance, lookVec.yCoord * reachDistance, lookVec.zCoord * reachDistance);
+        return start.addVector(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
     }
 
     public static AdvancedRayTraceResult collisionRayTrace(BlockPos pos, Vec3d start, Vec3d end, Collection<AxisAlignedBB> boxes) {
@@ -580,12 +591,66 @@ public final class RSUtils {
 
         Tessellator tessellator = Tessellator.getInstance();
 
-        VertexBuffer vertexBuffer = tessellator.getBuffer();
+        BufferBuilder vertexBuffer = tessellator.getBuffer();
         vertexBuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
         vertexBuffer.pos(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
         vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
         vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
         vertexBuffer.pos(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
         tessellator.draw();
+    }
+
+    public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
+
+    // From ForgeBlockStateV1
+    private static final TRSRTransformation FLIP_X = new TRSRTransformation(null, null, new Vector3f(-1, 1, 1), null);
+
+    private static TRSRTransformation leftifyTransform(TRSRTransformation transform) {
+        return TRSRTransformation.blockCenterToCorner(FLIP_X.compose(TRSRTransformation.blockCornerToCenter(transform)).compose(FLIP_X));
+    }
+
+    private static TRSRTransformation getTransform(float tx, float ty, float tz, float ax, float ay, float az, float s) {
+        return new TRSRTransformation(
+            new javax.vecmath.Vector3f(tx / 16, ty / 16, tz / 16),
+            TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(ax, ay, az)),
+            new javax.vecmath.Vector3f(s, s, s),
+            null
+        );
+    }
+
+    private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_ITEM_TRANSFORM;
+    private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_BLOCK_TRANSFORM;
+
+    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getDefaultItemTransforms() {
+        if (DEFAULT_ITEM_TRANSFORM != null) {
+            return DEFAULT_ITEM_TRANSFORM;
+        }
+
+        return DEFAULT_ITEM_TRANSFORM = ImmutableMap.<ItemCameraTransforms.TransformType, TRSRTransformation>builder()
+            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, getTransform(0, 3, 1, 0, 0, 0, 0.55f))
+            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, getTransform(0, 3, 1, 0, 0, 0, 0.55f))
+            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, getTransform(1.13f, 3.2f, 1.13f, 0, -90, 25, 0.68f))
+            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, getTransform(1.13f, 3.2f, 1.13f, 0, 90, -25, 0.68f))
+            .put(ItemCameraTransforms.TransformType.GROUND, getTransform(0, 2, 0, 0, 0, 0, 0.5f))
+            .put(ItemCameraTransforms.TransformType.HEAD, getTransform(0, 13, 7, 0, 180, 0, 1))
+            .build();
+    }
+
+    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getDefaultBlockTransforms() {
+        if (DEFAULT_BLOCK_TRANSFORM != null) {
+            return DEFAULT_BLOCK_TRANSFORM;
+        }
+
+        TRSRTransformation thirdperson = getTransform(0, 2.5f, 0, 75, 45, 0, 0.375f);
+
+        return DEFAULT_BLOCK_TRANSFORM = ImmutableMap.<ItemCameraTransforms.TransformType, TRSRTransformation>builder()
+            .put(ItemCameraTransforms.TransformType.GUI, getTransform(0, 0, 0, 30, 225, 0, 0.625f))
+            .put(ItemCameraTransforms.TransformType.GROUND, getTransform(0, 3, 0, 0, 0, 0, 0.25f))
+            .put(ItemCameraTransforms.TransformType.FIXED, getTransform(0, 0, 0, 0, 0, 0, 0.5f))
+            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdperson)
+            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, leftifyTransform(thirdperson))
+            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, getTransform(0, 0, 0, 0, 45, 0, 0.4f))
+            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, getTransform(0, 0, 0, 0, 225, 0, 0.4f))
+            .build();
     }
 }

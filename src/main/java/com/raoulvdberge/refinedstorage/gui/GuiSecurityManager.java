@@ -31,11 +31,11 @@ public class GuiSecurityManager extends GuiBase {
         int padding = 15;
 
         permissions[0] = addCheckBox(x + 7, y + 93, I18n.format("gui.refinedstorage:security_manager.permission.0"), false);
-        permissions[1] = addCheckBox(permissions[0].xPosition, permissions[0].yPosition + padding, I18n.format("gui.refinedstorage:security_manager.permission.1"), false);
-        permissions[2] = addCheckBox(permissions[1].xPosition, permissions[1].yPosition + padding, I18n.format("gui.refinedstorage:security_manager.permission.2"), false);
-        permissions[3] = addCheckBox(permissions[0].xPosition + 90, permissions[0].yPosition, I18n.format("gui.refinedstorage:security_manager.permission.3"), false);
-        permissions[4] = addCheckBox(permissions[3].xPosition, permissions[3].yPosition + padding, I18n.format("gui.refinedstorage:security_manager.permission.4"), false);
-        permissions[5] = addCheckBox(permissions[4].xPosition, permissions[4].yPosition + padding, I18n.format("gui.refinedstorage:security_manager.permission.5"), false);
+        permissions[1] = addCheckBox(permissions[0].x, permissions[0].y + padding, I18n.format("gui.refinedstorage:security_manager.permission.1"), false);
+        permissions[2] = addCheckBox(permissions[1].x, permissions[1].y + padding, I18n.format("gui.refinedstorage:security_manager.permission.2"), false);
+        permissions[3] = addCheckBox(permissions[0].x + 90, permissions[0].y, I18n.format("gui.refinedstorage:security_manager.permission.3"), false);
+        permissions[4] = addCheckBox(permissions[3].x, permissions[3].y + padding, I18n.format("gui.refinedstorage:security_manager.permission.4"), false);
+        permissions[5] = addCheckBox(permissions[4].x, permissions[4].y + padding, I18n.format("gui.refinedstorage:security_manager.permission.5"), false);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class GuiSecurityManager extends GuiBase {
         for (int i = 0; i < permissions.length; ++i) {
             GuiCheckBox permission = permissions[i];
 
-            if (inBounds(permission.xPosition - guiLeft, permission.yPosition - guiTop, permission.width, permission.height, mouseX, mouseY)) {
+            if (inBounds(permission.x - guiLeft, permission.y - guiTop, permission.width, permission.height, mouseX, mouseY)) {
                 drawTooltip(mouseX, mouseY, I18n.format("gui.refinedstorage:security_manager.permission." + i + ".tooltip"));
             }
         }

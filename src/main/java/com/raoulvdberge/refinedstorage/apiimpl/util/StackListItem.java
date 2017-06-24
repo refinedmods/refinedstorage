@@ -187,7 +187,7 @@ public class StackListItem implements IStackList<ItemStack> {
     }
 
     public static ItemStack[] toCraftingGrid(IStackList<ItemStack> list, List<ItemStack> grid, int compare) {
-        ItemStack[] took = new ItemStack[9];
+        ItemStack[] took = new ItemStack[Math.max(9, grid.size())];
         for (int i = 0; i < grid.size(); i++) {
             ItemStack input = grid.get(i);
             if (input != null) {

@@ -1,11 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.solderer;
 
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 
@@ -13,7 +14,7 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
     private int type;
     private boolean fullBlock;
     private ItemStack result;
-    private ItemStack requirement;
+    private NonNullList<ItemStack> requirement;
 
     public SoldererRecipePrintedProcessor(int type, boolean fullBlock) {
         this.type = type;
@@ -22,28 +23,28 @@ public class SoldererRecipePrintedProcessor implements ISoldererRecipe {
 
         switch (type) {
             case ItemProcessor.TYPE_PRINTED_BASIC:
-                this.requirement = fullBlock ? new ItemStack(Blocks.IRON_BLOCK) : new ItemStack(Items.IRON_INGOT);
+                this.requirement = fullBlock ? OreDictionary.getOres("blockIron") : OreDictionary.getOres("ingotIron");
                 break;
             case ItemProcessor.TYPE_PRINTED_IMPROVED:
-                this.requirement = fullBlock ? new ItemStack(Blocks.GOLD_BLOCK) : new ItemStack(Items.GOLD_INGOT);
+                this.requirement = fullBlock ? OreDictionary.getOres("blockGold") : OreDictionary.getOres("ingotGold");
                 break;
             case ItemProcessor.TYPE_PRINTED_ADVANCED:
-                this.requirement = fullBlock ? new ItemStack(Blocks.DIAMOND_BLOCK) : new ItemStack(Items.DIAMOND);
+                this.requirement = fullBlock ? OreDictionary.getOres("blockDiamond") : OreDictionary.getOres("gemDiamond");
                 break;
             case ItemProcessor.TYPE_PRINTED_SILICON:
                 if (fullBlock) {
                     throw new IllegalArgumentException("Printed silicon can't be made from block form!");
                 }
 
-                this.requirement = new ItemStack(RSItems.SILICON);
+                this.requirement = OreDictionary.getOres("itemSilicon");
                 break;
         }
     }
 
     @Override
     @Nonnull
-    public ItemStack getRow(int row) {
-        return row == 1 ? requirement : ItemStack.EMPTY;
+    public NonNullList<ItemStack> getRow(int row) {
+        return row == 1 ? requirement : RSUtils.emptyNonNullList();
     }
 
     @Override

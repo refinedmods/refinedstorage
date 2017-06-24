@@ -1,0 +1,37 @@
+[
+  {
+    "name": "basic_processor",
+    "ingredient": {
+      "item": "refinedstorage:processor",
+      "data": 3
+    }
+  },
+  {
+    "name": "improved_processor",
+    "ingredient": {
+      "item": "refinedstorage:processor",
+      "data": 4
+    }
+  },
+  {
+    "name": "advanced_processor",
+    "ingredient": {
+      "item": "refinedstorage:processor",
+      "data": 5
+    }
+  },
+  {
+    "name": "construction_core",
+    "ingredient": {
+      "item": "refinedstorage:core",
+      "data": 0
+    }
+  },
+  {
+    "name": "destruction_core",
+    "ingredient": {
+      "item": "refinedstorage:core",
+      "data": 1
+    }
+  }
+]

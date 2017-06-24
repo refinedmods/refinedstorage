@@ -7,6 +7,7 @@ public interface IUserConfig {
     /**
      * Configuration options related to third party addon packs for Storage Drawers.
      */
+    @Deprecated
     IAddonConfig addonConfig();
 
     /**

@@ -1,17 +1,18 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class ItemEnergyItem extends ItemBase {
@@ -68,22 +69,26 @@ public abstract class ItemEnergyItem extends ItemBase {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
-        list.add(new ItemStack(item, 1, TYPE_NORMAL));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!isInCreativeTab(tab)) {
+            return;
+        }
 
-        ItemStack fullyCharged = new ItemStack(item, 1, TYPE_NORMAL);
+        items.add(new ItemStack(this, 1, TYPE_NORMAL));
+
+        ItemStack fullyCharged = new ItemStack(this, 1, TYPE_NORMAL);
 
         IEnergyStorage energy = fullyCharged.getCapability(CapabilityEnergy.ENERGY, null);
         energy.receiveEnergy(energy.getMaxEnergyStored(), false);
 
-        list.add(fullyCharged);
+        items.add(fullyCharged);
 
-        list.add(new ItemStack(item, 1, TYPE_CREATIVE));
+        items.add(new ItemStack(this, 1, TYPE_CREATIVE));
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
         if (stack.getItemDamage() != TYPE_CREATIVE) {
             IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null);

@@ -207,7 +207,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCraftingMatrixChanged() {
-        result.setInventorySlotContents(0, CraftingManager.getInstance().findMatchingRecipe(matrix, world));
+        result.setInventorySlotContents(0, CraftingManager.findMatchingResult(matrix, world));
 
         markDirty();
     }
@@ -303,7 +303,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCrafted(EntityPlayer player) {
-        NonNullList<ItemStack> remainder = CraftingManager.getInstance().getRemainingItems(matrix, world);
+        NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(matrix, world);
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);

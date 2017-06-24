@@ -30,9 +30,9 @@ public class BlockGrid extends BlockNode {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
         for (int i = 0; i <= 3; i++) {
-            subItems.add(new ItemStack(item, 1, i));
+            items.add(new ItemStack(this, 1, i));
         }
     }
 

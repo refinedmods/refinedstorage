@@ -8,11 +8,11 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -25,6 +25,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvider<FluidStack> {
@@ -35,8 +36,6 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     public static final int TYPE_CREATIVE = 4;
     public static final int TYPE_DEBUG = 5;
 
-    private NBTTagCompound debugDiskTag;
-
     public ItemFluidStorageDisk() {
         super("fluid_storage_disk");
 
@@ -46,26 +45,28 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!isInCreativeTab(tab)) {
+            return;
+        }
+
         for (int i = 0; i < 5; ++i) {
-            subItems.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, new ItemStack(item, 1, i)));
+            items.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, new ItemStack(this, 1, i)));
         }
     }
 
     private void applyDebugDiskData(ItemStack stack) {
-        if (debugDiskTag == null) {
-            debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.FLUIDS);
+        NBTTagCompound debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.FLUIDS);
 
-            StorageDiskFluid storage = new StorageDiskFluid(debugDiskTag, -1);
+        StorageDiskFluid storage = new StorageDiskFluid(debugDiskTag, -1);
 
-            for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-                storage.insert(new FluidStack(fluid, 0), Fluid.BUCKET_VOLUME * 1000, false);
-            }
-
-            storage.writeToNBT();
+        for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
+            storage.insert(new FluidStack(fluid, 0), Fluid.BUCKET_VOLUME * 1000, false);
         }
 
-        stack.setTagCompound(debugDiskTag.copy());
+        storage.writeToNBT();
+
+        stack.setTagCompound(debugDiskTag);
     }
 
     @Override
@@ -101,10 +102,12 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     }
 
     @Override
-    public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        IStorageDisk storage = create(disk);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
-        if (storage.isValid(disk)) {
+        IStorageDisk storage = create(stack);
+
+        if (storage.isValid(stack)) {
             if (storage.getCapacity() == -1) {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored", storage.getStored()));
             } else {

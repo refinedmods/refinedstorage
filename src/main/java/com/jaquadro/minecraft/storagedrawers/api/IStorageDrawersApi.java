@@ -15,12 +15,8 @@ public interface IStorageDrawersApi {
 
     IWailaRegistry wailaRegistry();
 
-    //IPackBlockFactory packFactory ();
-
     /**
      * User-managed configuration for the Storage Drawers mod.
      */
     IUserConfig userConfig();
-
-    //void registerStandardPackRecipes (IExtendedDataResolver resolver);
 }

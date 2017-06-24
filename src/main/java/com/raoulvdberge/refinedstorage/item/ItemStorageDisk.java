@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +23,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,8 +35,6 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
     public static final int TYPE_CREATIVE = 4;
     public static final int TYPE_DEBUG = 5;
 
-    private NBTTagCompound debugDiskTag;
-
     public ItemStorageDisk() {
         super("storage_disk");
 
@@ -44,9 +44,13 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!isInCreativeTab(tab)) {
+            return;
+        }
+
         for (int i = 0; i < 5; ++i) {
-            subItems.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, new ItemStack(item, 1, i)));
+            items.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.ITEMS, new ItemStack(this, 1, i)));
         }
     }
 
@@ -64,38 +68,38 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
     }
 
     private void applyDebugDiskData(ItemStack stack) {
-        if (debugDiskTag == null) {
-            debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.ITEMS);
+        NBTTagCompound debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.ITEMS);
 
-            StorageDiskItem storage = new StorageDiskItem(debugDiskTag, -1);
+        StorageDiskItem storage = new StorageDiskItem(debugDiskTag, -1);
 
-            Iterator<Item> it = REGISTRY.iterator();
+        Iterator<Item> it = REGISTRY.iterator();
 
-            while (it.hasNext()) {
-                Item item = it.next();
+        while (it.hasNext()) {
+            Item item = it.next();
 
-                if (item != RSItems.STORAGE_DISK) {
-                    NonNullList<ItemStack> stacks = NonNullList.create();
+            if (item != RSItems.STORAGE_DISK) {
+                NonNullList<ItemStack> stacks = NonNullList.create();
 
-                    item.getSubItems(item, CreativeTabs.INVENTORY, stacks);
+                item.getSubItems(CreativeTabs.SEARCH, stacks);
 
-                    for (ItemStack itemStack : stacks) {
-                        storage.insert(itemStack, 1000, false);
-                    }
+                for (ItemStack itemStack : stacks) {
+                    storage.insert(itemStack, 1000, false);
                 }
             }
-
-            storage.writeToNBT();
         }
 
-        stack.setTagCompound(debugDiskTag.copy());
+        storage.writeToNBT();
+
+        stack.setTagCompound(debugDiskTag);
     }
 
     @Override
-    public void addInformation(ItemStack disk, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        IStorageDisk storage = create(disk);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
-        if (storage.isValid(disk)) {
+        IStorageDisk storage = create(stack);
+
+        if (storage.isValid(stack)) {
             if (storage.getCapacity() == -1) {
                 tooltip.add(I18n.format("misc.refinedstorage:storage.stored", storage.getStored()));
             } else {

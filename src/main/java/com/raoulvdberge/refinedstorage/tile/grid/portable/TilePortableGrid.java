@@ -13,12 +13,14 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItemPortable;
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
+import com.raoulvdberge.refinedstorage.block.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.PortableGridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerStorage;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.item.ItemEnergyItem;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
@@ -44,6 +46,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -146,6 +149,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private static final String NBT_ENERGY = "Energy";
+    private static final String NBT_DISK_STATE = "DiskState";
+    private static final String NBT_CONNECTED = "Connected";
 
     private EnergyForge energyStorage = new EnergyForge(ItemEnergyItem.CAPACITY);
     private PortableGridType type;
@@ -167,6 +172,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+                if (itemHandler != null) {
+                    cache.removeListener(itemHandler);
+                }
+
                 if (getStackInSlot(slot).isEmpty()) {
                     storage = null;
                 } else {
@@ -174,10 +183,25 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
                     storage = new StorageDiskItemPortable(provider.create(getStackInSlot(slot)), TilePortableGrid.this);
                     storage.readFromNBT();
-                    storage.onPassContainerContext(TilePortableGrid.this::markDirty, () -> false, () -> AccessType.INSERT_EXTRACT);
+                    storage.onPassContainerContext(() -> {
+                        TilePortableGrid.this.markDirty();
+                        TilePortableGrid.this.checkIfDiskStateChanged();
+                    }, () -> false, () -> AccessType.INSERT_EXTRACT);
                 }
 
                 cache.invalidate();
+
+                if (storage == null) {
+                    itemHandler = null;
+                } else {
+                    itemHandler = new ItemHandlerStorage(storage, cache);
+
+                    cache.addListener(itemHandler);
+                }
+
+                if (world != null) {
+                    checkIfDiskStateChanged();
+                }
             }
         }
 
@@ -196,6 +220,9 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private IStorageDisk<ItemStack> storage;
     private StorageCacheItemPortable cache = new StorageCacheItemPortable(this);
     private ItemGridHandlerPortable handler = new ItemGridHandlerPortable(this, this);
+    private ItemHandlerStorage itemHandler = null;
+    private PortableGridDiskState diskState = PortableGridDiskState.NONE;
+    private boolean connected;
 
     public TilePortableGrid() {
         dataManager.addWatchedParameter(ENERGY_STORED);
@@ -205,6 +232,14 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(REDSTONE_MODE);
+    }
+
+    public PortableGridDiskState getDiskState() {
+        return diskState;
+    }
+
+    public boolean isConnected() {
+        return connected;
     }
 
     public PortableGridType getPortableType() {
@@ -233,6 +268,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
             this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
         }
+
+        this.diskState = getDiskState(this);
 
         markDirty();
     }
@@ -441,7 +478,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public IStorage<ItemStack> getStorage() {
+    @Nullable
+    public IStorageDisk<ItemStack> getStorage() {
         return storage;
     }
 
@@ -454,6 +492,39 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public void drainEnergy(int energy) {
         if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE && redstoneMode.isEnabled(world, pos)) {
             energyStorage.extractEnergyInternal(energy);
+
+            checkIfDiskStateChanged();
+        }
+
+        checkIfConnectivityChanged();
+    }
+
+    @Override
+    public int getEnergy() {
+        if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE) {
+            return energyStorage.getEnergyStored();
+        }
+
+        return energyStorage.getMaxEnergyStored();
+    }
+
+    private void checkIfDiskStateChanged() {
+        PortableGridDiskState newDiskState = getDiskState(this);
+
+        if (this.diskState != newDiskState) {
+            this.diskState = newDiskState;
+
+            RSUtils.updateBlock(world, pos);
+        }
+    }
+
+    private void checkIfConnectivityChanged() {
+        boolean isConnected = getEnergy() != 0;
+
+        if (this.connected != isConnected) {
+            this.connected = isConnected;
+
+            RSUtils.updateBlock(world, pos);
         }
     }
 
@@ -521,8 +592,32 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+
+        connected = getEnergy() != 0;
+        diskState = getDiskState(this);
+    }
+
+    @Override
+    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+        tag.setInteger(NBT_DISK_STATE, diskState.getId());
+        tag.setBoolean(NBT_CONNECTED, getEnergy() != 0);
+
+        return super.writeUpdate(tag);
+    }
+
+    @Override
+    public void readUpdate(NBTTagCompound tag) {
+        super.readUpdate(tag);
+
+        diskState = PortableGridDiskState.getById(tag.getInteger(NBT_DISK_STATE));
+        connected = tag.getBoolean(NBT_CONNECTED);
+    }
+
+    @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+        return capability == CapabilityEnergy.ENERGY || (itemHandler != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
     }
 
     @Nullable
@@ -530,6 +625,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.cast(energyStorage);
+        } else if (itemHandler != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemHandler);
         }
 
         return super.getCapability(capability, facing);
@@ -551,5 +648,26 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         this.redstoneMode = mode;
 
         markDirty();
+    }
+
+    public static PortableGridDiskState getDiskState(IPortableGrid portableGrid) {
+        if (portableGrid.getStorage() == null) {
+            return PortableGridDiskState.NONE;
+        }
+
+        if (portableGrid.getEnergy() == 0) {
+            return PortableGridDiskState.DISCONNECTED;
+        }
+
+        int stored = portableGrid.getStorage().getStored();
+        int capacity = portableGrid.getStorage().getCapacity();
+
+        if (stored == capacity) {
+            return PortableGridDiskState.FULL;
+        } else if ((int) ((float) stored / (float) capacity * 100F) >= 85) {
+            return PortableGridDiskState.NEAR_CAPACITY;
+        } else {
+            return PortableGridDiskState.NORMAL;
+        }
     }
 }

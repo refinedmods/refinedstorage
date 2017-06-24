@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;

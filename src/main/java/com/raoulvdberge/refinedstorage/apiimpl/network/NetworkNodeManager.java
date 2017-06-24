@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSavedData;
+import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -23,7 +23,6 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    // @TODO: Actually store dimension ID instead of using this ugly hack
     private boolean canReadNodes;
     private NBTTagList nodesTag;
 
@@ -61,7 +60,17 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                 INetworkNodeFactory factory = API.instance().getNetworkNodeRegistry().get(id);
 
                 if (factory != null) {
-                    nodes.put(pos, factory.create(data, world, pos));
+                    INetworkNode node = null;
+
+                    try {
+                        node = factory.create(data, world, pos);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+
+                    if (node != null) {
+                        nodes.put(pos, node);
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -74,8 +75,8 @@ public class ItemSecurityCard extends ItemBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER_NAME)) {
             tooltip.add(I18n.format("item.refinedstorage:security_card.owner", stack.getTagCompound().getString(NBT_OWNER_NAME)));

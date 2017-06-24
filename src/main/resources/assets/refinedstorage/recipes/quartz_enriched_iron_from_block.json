@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "refinedstorage:quartz_enriched_iron_block"
+    }
+  ],
+  "result": {
+    "item": "refinedstorage:quartz_enriched_iron",
+    "count": 9
+  }
+}

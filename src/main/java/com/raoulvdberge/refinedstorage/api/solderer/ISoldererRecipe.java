@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.solderer;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
 
@@ -10,10 +11,10 @@ import javax.annotation.Nonnull;
 public interface ISoldererRecipe {
     /**
      * @param row the row in the solderer that we want the stack for (between 0 - 2)
-     * @return a stack for the given row, or empty stack for no stack
+     * @return possible stack(s) for the given row, or empty list for no stack
      */
     @Nonnull
-    ItemStack getRow(int row);
+    NonNullList<ItemStack> getRow(int row);
 
     /**
      * @return the stack that this recipe gives back

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -145,7 +146,7 @@ public class GuiCraftingPreview extends GuiBase {
             }
 
             if (hoveringStack != null) {
-                drawTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().player, false));
+                drawTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
             } else if (hoveringFluid != null) {
                 drawTooltip(mouseX, mouseY, hoveringFluid.getLocalizedName());
             }

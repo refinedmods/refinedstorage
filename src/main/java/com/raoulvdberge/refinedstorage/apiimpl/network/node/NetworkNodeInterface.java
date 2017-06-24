@@ -2,12 +2,11 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageItemItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import net.minecraft.item.ItemStack;
@@ -27,7 +26,8 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     private ItemHandlerBase exportSpecimenItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerBase exportItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerProxy items = new ItemHandlerProxy(importItems, exportItems);
+    private IItemHandler items = new ItemHandlerProxy(importItems, exportItems);
+    private ItemHandlerInterface itemsNetwork;
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
@@ -88,7 +88,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                 int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
 
                 if (delta > 0) {
-                    ItemStack result = network.extractItem(wanted, delta, compare, false);
+                    ItemStack result = network.extractItem(wanted, delta, compare, false, s -> !(s instanceof StorageItemItemHandler) || !((StorageItemItemHandler) s).isConnectedToInterface());
 
                     if (result != null) {
                         if (exportItems.getStackInSlot(i).isEmpty()) {
@@ -115,6 +115,21 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onConnectedStateChange(INetwork network, boolean state) {
+        super.onConnectedStateChange(network, state);
+
+        if (state) {
+            itemsNetwork = new ItemHandlerInterface(network, network.getItemStorageCache(), importItems);
+
+            network.getItemStorageCache().addListener(itemsNetwork);
+        } else if (itemsNetwork != null) {
+            network.getItemStorageCache().removeListener(itemsNetwork);
+
+            itemsNetwork = null;
         }
     }
 
@@ -189,7 +204,11 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         return exportItems;
     }
 
-    public ItemHandlerProxy getItems() {
+    public IItemHandler getItemsOrNetworkItems() {
+        return (itemsNetwork != null && exportSpecimenItems.isEmpty()) ? itemsNetwork : items;
+    }
+
+    public IItemHandler getItems() {
         return items;
     }
 

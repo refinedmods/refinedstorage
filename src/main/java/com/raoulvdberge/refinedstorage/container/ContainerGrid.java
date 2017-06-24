@@ -173,6 +173,11 @@ public class ContainerGrid extends ContainerBase {
 
                             detectAndSendChanges();
 
+                            // For some reason it doesn't detect when moving the filter from filter inventory to player inventory...
+                            if (slotIndex < 4) {
+                                grid.getFilter().setStackInSlot(slotIndex, ItemStack.EMPTY);
+                            }
+
                             return ItemStack.EMPTY;
                         }
                     } else if ((grid.getType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof IPortableGrid && stack.getItem() instanceof IStorageDiskProvider)) {
@@ -215,6 +220,8 @@ public class ContainerGrid extends ContainerBase {
 
                         if (itemHandler != null) {
                             slot.putStack(itemHandler.onShiftClick((EntityPlayerMP) player, stack));
+                        } else if (slot instanceof SlotGridCrafting && mergeItemStack(stack, 4, 4 + (9 * 4), false)) {
+                            slot.onSlotChanged();
                         }
                     }
 
@@ -228,7 +235,7 @@ public class ContainerGrid extends ContainerBase {
 
     @Override
     protected boolean isHeldItemDisabled() {
-        // Here we check for the concrete portable grid type, not IPortableGrid, because we can move the held item in the tile
+        // Here we check for the concrete portable grid type, not IPortableGrid, because we *CAN* move the held item in the portable grid tile
         return grid instanceof WirelessGrid || grid instanceof PortableGrid;
     }
 }

@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -23,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
@@ -50,12 +52,14 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
+
         if (!stack.hasTagCompound()) {
             return;
         }
 
-        ICraftingPattern pattern = getPatternFromCache(player.getEntityWorld(), stack);
+        ICraftingPattern pattern = getPatternFromCache(world, stack);
 
         if (pattern.isValid()) {
             if (GuiScreen.isShiftKeyDown() || isProcessing(stack)) {

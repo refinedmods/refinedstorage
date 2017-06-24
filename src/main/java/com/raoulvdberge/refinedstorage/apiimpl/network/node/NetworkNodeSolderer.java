@@ -31,8 +31,10 @@ public class NetworkNodeSolderer extends NetworkNode {
         @Nonnull
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
-                if (API.instance().getComparer().isEqual(recipe.getRow(slot), stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT | IComparer.COMPARE_OREDICT | IComparer.COMPARE_STRIP_NBT)) {
-                    return super.insertItem(slot, stack, simulate);
+                for (ItemStack possibility : recipe.getRow(slot)) {
+                    if (API.instance().getComparer().isEqual(possibility, stack, IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE | IComparer.COMPARE_STRIP_NBT)) {
+                        return super.insertItem(slot, stack, simulate);
+                    }
                 }
             }
 
@@ -112,7 +114,7 @@ public class NetworkNodeSolderer extends NetworkNode {
 
                     for (int i = 0; i < 3; ++i) {
                         if (!recipe.getRow(i).isEmpty()) {
-                            ingredients.extractItem(i, recipe.getRow(i).getCount(), false);
+                            ingredients.extractItem(i, recipe.getRow(i).get(0).getCount(), false);
                         }
                     }
 

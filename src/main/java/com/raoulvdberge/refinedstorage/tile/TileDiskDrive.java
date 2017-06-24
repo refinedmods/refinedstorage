@@ -51,12 +51,20 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
 
             for (IStorageDisk storage : tile.getNode().getItemStorages()) {
                 if (storage != null) {
+                    if (storage.getCapacity() == -1) {
+                        return -1;
+                    }
+
                     capacity += storage.getCapacity();
                 }
             }
 
             for (IStorageDisk storage : tile.getNode().getFluidStorages()) {
                 if (storage != null) {
+                    if (storage.getCapacity() == -1) {
+                        return -1;
+                    }
+
                     capacity += storage.getCapacity();
                 }
             }

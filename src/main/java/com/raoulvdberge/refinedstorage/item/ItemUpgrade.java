@@ -2,20 +2,21 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSUtils;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemUpgrade extends ItemBase {
@@ -42,21 +43,26 @@ public class ItemUpgrade extends ItemBase {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
+
         if (stack.getItemDamage() == TYPE_FORTUNE) {
             tooltip.add(I18n.format("enchantment.lootBonusDigger") + " " + I18n.format("enchantment.level." + ItemUpgrade.getFortuneLevel(stack)));
         }
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!isInCreativeTab(tab)) {
+            return;
+        }
+
         for (int i = 0; i <= 6; ++i) {
-            subItems.add(new ItemStack(item, 1, i));
+            items.add(new ItemStack(this, 1, i));
         }
 
         for (int j = 1; j <= 3; ++j) {
-            subItems.add(initializeForFortune(j));
+            items.add(initializeForFortune(j));
         }
     }
 
@@ -100,22 +106,22 @@ public class ItemUpgrade extends ItemBase {
         }
     }
 
-    public static ItemStack getRequirement(ItemStack stack) {
+    public static NonNullList<ItemStack> getRequirement(ItemStack stack) {
         switch (stack.getItemDamage()) {
             case ItemUpgrade.TYPE_RANGE:
-                return new ItemStack(Items.ENDER_PEARL);
+                return OreDictionary.getOres("enderpearl");
             case ItemUpgrade.TYPE_SPEED:
-                return new ItemStack(Items.SUGAR);
+                return NonNullList.withSize(1, new ItemStack(Items.SUGAR));
             case ItemUpgrade.TYPE_CRAFTING:
-                return new ItemStack(Blocks.CRAFTING_TABLE);
+                return OreDictionary.getOres("workbench");
             case ItemUpgrade.TYPE_INTERDIMENSIONAL:
-                return new ItemStack(Items.NETHER_STAR);
+                return OreDictionary.getOres("netherStar");
             case ItemUpgrade.TYPE_SILK_TOUCH:
-                return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("silk_touch"), 1));
+                return NonNullList.withSize(1, ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("silk_touch"), 1)));
             case ItemUpgrade.TYPE_FORTUNE:
-                return Items.ENCHANTED_BOOK.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("fortune"), getFortuneLevel(stack)));
+                return NonNullList.withSize(1, ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation("fortune"), getFortuneLevel(stack))));
             default:
-                return null;
+                return RSUtils.emptyNonNullList();
         }
     }
 }

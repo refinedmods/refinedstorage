@@ -3,9 +3,9 @@ package com.raoulvdberge.refinedstorage.gui.grid.stack;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import io.netty.buffer.ByteBuf;
-import joptsimple.internal.Strings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -76,7 +76,7 @@ public class GridStackItem implements IGridStack {
 
     @Override
     public String getTooltip() {
-        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips);
+        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
 
         // From GuiScreen#renderToolTip
         for (int i = 0; i < lines.size(); ++i) {
@@ -87,7 +87,7 @@ public class GridStackItem implements IGridStack {
             }
         }
 
-        return Strings.join(lines, "\n");
+        return lines.stream().collect(Collectors.joining("\n"));
     }
 
     @Override

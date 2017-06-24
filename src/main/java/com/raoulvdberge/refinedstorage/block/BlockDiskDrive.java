@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.render.PropertyObject;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;

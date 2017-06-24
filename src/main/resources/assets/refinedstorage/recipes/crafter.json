@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ECE",
+    "AMA",
+    "EDE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "C": {
+      "item": "#construction_core"
+    },
+    "A": {
+      "item": "#advanced_processor"
+    },
+    "M": {
+      "item": "refinedstorage:machine_casing"
+    },
+    "D": {
+      "item": "#destruction_core"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:crafter"
+  }
+}

@@ -9,19 +9,18 @@ import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
-import com.raoulvdberge.refinedstorage.render.BakedModelPattern;
-import com.raoulvdberge.refinedstorage.render.ModelDiskDrive;
-import com.raoulvdberge.refinedstorage.render.ModelDiskManipulator;
-import com.raoulvdberge.refinedstorage.render.TileEntitySpecialRendererStorageMonitor;
+import com.raoulvdberge.refinedstorage.render.*;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
@@ -211,7 +210,6 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.SECURITY_MANAGER), 0, new ModelResourceLocation("refinedstorage:security_manager", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE_MONITOR), 0, new ModelResourceLocation("refinedstorage:storage_monitor", "connected=false,direction=north"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), 0, new ModelResourceLocation("refinedstorage:portable_grid", "inventory"));
 
         ModelLoaderRegistry.registerLoader(new ICustomModelLoader() {
             @Override
@@ -252,6 +250,12 @@ public class ProxyClient extends ProxyCommon {
             int energy = stack.getItemDamage() == ControllerType.CREATIVE.getId() ? 7 : TileController.getEnergyScaled(ItemBlockController.getEnergyStored(stack), ItemBlockController.getEnergyCapacity(stack), 7);
 
             return new ModelResourceLocation("refinedstorage:controller", "direction=north,energy=" + energy);
+        });
+
+        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), stack -> {
+            PortableGrid portableGrid = new PortableGrid(null, stack);
+
+            return new ModelResourceLocation("refinedstorage:portable_grid", "connected=" + Boolean.toString(portableGrid.getEnergy() != 0) + ",direction=north,disk_state=" + TilePortableGrid.getDiskState(portableGrid));
         });
     }
 
@@ -303,8 +307,12 @@ public class ProxyClient extends ProxyCommon {
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent e) {
         for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {
-            if (model.getResourceDomain().equals(RS.ID) && model.getResourcePath().equals("pattern")) {
-                e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
+            if (model.getResourceDomain().equals(RS.ID)) {
+                if (model.getResourcePath().equals("pattern")) {
+                    e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
+                } else if (model.getResourcePath().equals("portable_grid")) {
+                    e.getModelRegistry().putObject(model, new BakedModelPortableGrid(e.getModelRegistry().getObject(model)));
+                }
             }
         }
     }
@@ -369,7 +377,7 @@ public class ProxyClient extends ProxyCommon {
     private void drawSelectionBoundingBox(AxisAlignedBB aabb) {
         Tessellator tessellator = Tessellator.getInstance();
 
-        VertexBuffer buffer = tessellator.getBuffer();
+        BufferBuilder buffer = tessellator.getBuffer();
 
         buffer.begin(3, DefaultVertexFormats.POSITION);
         buffer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex();

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ECE",
+    "RMR",
+    "EPE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "C": {
+      "item": "minecraft:comparator"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "M": {
+      "item": "refinedstorage:machine_casing"
+    },
+    "P": {
+      "item": "#improved_processor"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:detector"
+  }
+}

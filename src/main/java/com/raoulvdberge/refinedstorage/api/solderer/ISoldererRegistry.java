@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.solderer;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -37,18 +38,9 @@ public interface ISoldererRegistry {
      *
      * @param result   the result
      * @param duration the duration in ticks
-     * @param rows     the rows of this recipe, has to be 3 rows (empty item stack for empty row)
+     * @param rows     the rows of this recipe, has to be 3 rows (empty list for empty row)
      * @return a solderer recipe
      */
     @Nonnull
-    ISoldererRecipe createSimpleRecipe(@Nonnull ItemStack result, int duration, ItemStack... rows);
-
-    /**
-     * Remove existing recipes from the solderer
-     *
-     * @param result the result
-     * @param rows   none or the three rows that give the result
-     * @return a list of removed {@link ISoldererRecipe}s
-     */
-    List<ISoldererRecipe> removeRecipe(@Nonnull ItemStack result, ItemStack... rows);
+    ISoldererRecipe createSimpleRecipe(@Nonnull ItemStack result, int duration, NonNullList<ItemStack>... rows);
 }

@@ -44,6 +44,11 @@ public final class RSSerializers {
         public DataParameter<List<ClientNode>> createKey(int id) {
             return null;
         }
+
+        @Override
+        public List<ClientNode> copyValue(List<ClientNode> value) {
+            return value;
+        }
     };
 
     public static final DataSerializer<FluidStack> FLUID_STACK_SERIALIZER = new DataSerializer<FluidStack>() {
@@ -76,6 +81,11 @@ public final class RSSerializers {
         public DataParameter<FluidStack> createKey(int id) {
             return null;
         }
+
+        @Override
+        public FluidStack copyValue(FluidStack value) {
+            return value;
+        }
     };
 
     public static final DataSerializer<AccessType> ACCESS_TYPE_SERIALIZER = new DataSerializer<AccessType>() {
@@ -92,6 +102,11 @@ public final class RSSerializers {
         @Override
         public DataParameter<AccessType> createKey(int id) {
             return null;
+        }
+
+        @Override
+        public AccessType copyValue(AccessType value) {
+            return value;
         }
     };
 }

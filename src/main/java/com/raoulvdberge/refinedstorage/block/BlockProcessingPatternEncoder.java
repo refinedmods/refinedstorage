@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.tile.TileProcessingPatternEncoder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -23,8 +24,8 @@ public class BlockProcessingPatternEncoder extends BlockBase {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
 
         tooltip.add(I18n.format("block.refinedstorage:processing_pattern_encoder.tooltip.0"));
         tooltip.add(I18n.format("block.refinedstorage:processing_pattern_encoder.tooltip.1", TextFormatting.WHITE + I18n.format("block.refinedstorage:grid.2.name") + TextFormatting.GRAY));

@@ -55,7 +55,7 @@ public class GuiFilter extends GuiBase {
 
         toggleMode.setWidth(fontRenderer.getStringWidth(text) + 12);
         toggleMode.displayString = text;
-        toggleModFilter.xPosition = toggleMode.xPosition + toggleMode.getButtonWidth() + 4;
+        toggleModFilter.x = toggleMode.x + toggleMode.getButtonWidth() + 4;
     }
 
     @Override

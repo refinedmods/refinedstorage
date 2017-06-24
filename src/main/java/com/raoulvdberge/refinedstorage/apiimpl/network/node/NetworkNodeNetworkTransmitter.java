@@ -144,8 +144,8 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     }
 
     @Override
-    public void walkNeighborhood(Operator operator) {
-        super.walkNeighborhood(operator);
+    public void visit(Operator operator) {
+        super.visit(operator);
 
         if (canTransmit()) {
             if (!isSameDimension()) {

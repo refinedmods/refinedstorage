@@ -36,9 +36,9 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public void getSubBlocks(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
         for (int i = 0; i <= 4; ++i) {
-            subItems.add(ItemBlockStorage.initNBT(new ItemStack(item, 1, i)));
+            items.add(ItemBlockStorage.initNBT(new ItemStack(this, 1, i)));
         }
     }
 

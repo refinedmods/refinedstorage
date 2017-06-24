@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EPE",
+    "EGE",
+    "EAE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "P": {
+      "item": "minecraft:ender_pearl"
+    },
+    "G": {
+      "item": "refinedstorage:grid",
+      "data": 0
+    },
+    "A": {
+      "item": "#advanced_processor"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:wireless_grid",
+    "data": 0
+  }
+}
