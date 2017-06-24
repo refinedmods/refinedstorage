@@ -139,4 +139,9 @@ public class TileReader extends TileNode<NetworkNodeReader> {
     public NetworkNodeReader createNode(World world, BlockPos pos) {
         return new NetworkNodeReader(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeReader.ID;
+    }
 }

@@ -41,4 +41,9 @@ public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
     public NetworkNodeCraftingMonitor createNode(World world, BlockPos pos) {
         return new NetworkNodeCraftingMonitor(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeCraftingMonitor.ID;
+    }
 }

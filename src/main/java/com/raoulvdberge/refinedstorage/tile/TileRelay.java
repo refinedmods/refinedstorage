@@ -12,4 +12,9 @@ public class TileRelay extends TileNode<NetworkNodeRelay> {
     public NetworkNodeRelay createNode(World world, BlockPos pos) {
         return new NetworkNodeRelay(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeRelay.ID;
+    }
 }

@@ -36,6 +36,11 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
     }
 
     @Override
+    public String getNodeId() {
+        return NetworkNodeStorageMonitor.ID;
+    }
+
+    @Override
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 

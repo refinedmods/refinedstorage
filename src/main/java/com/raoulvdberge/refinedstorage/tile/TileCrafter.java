@@ -12,4 +12,9 @@ public class TileCrafter extends TileNode<NetworkNodeCrafter> {
     public NetworkNodeCrafter createNode(World world, BlockPos pos) {
         return new NetworkNodeCrafter(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeCrafter.ID;
+    }
 }

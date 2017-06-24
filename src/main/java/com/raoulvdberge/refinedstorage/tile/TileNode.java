@@ -102,8 +102,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
 
         NetworkNode node = (NetworkNode) manager.getNode(pos);
-        
-        if (node == null) {
+
+        if (node == null || !node.getId().equals(getNodeId())) {
             manager.setNode(pos, node = createNode(world, pos));
             manager.markForSaving();
         }
@@ -112,16 +112,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             doLegacyCheck(node);
         }
 
-        N castedNode;
-
-        try {
-            castedNode = (N) node;
-        } catch (ClassCastException e) {
-            manager.setNode(pos, castedNode = createNode(world, pos));
-            manager.markForSaving();
-        }
-
-        return castedNode;
+        return (N) node;
     }
 
     private void doLegacyCheck(NetworkNode node) {
@@ -148,6 +139,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     }
 
     public abstract N createNode(World world, BlockPos pos);
+
+    public abstract String getNodeId();
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side) {

@@ -113,4 +113,9 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
     public NetworkNodeWriter createNode(World world, BlockPos pos) {
         return new NetworkNodeWriter(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeWriter.ID;
+    }
 }

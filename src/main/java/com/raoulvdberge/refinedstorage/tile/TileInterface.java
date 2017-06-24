@@ -38,4 +38,9 @@ public class TileInterface extends TileNode<NetworkNodeInterface> {
     public NetworkNodeInterface createNode(World world, BlockPos pos) {
         return new NetworkNodeInterface(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeInterface.ID;
+    }
 }

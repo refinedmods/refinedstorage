@@ -176,4 +176,9 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public NetworkNodeDiskDrive createNode(World world, BlockPos pos) {
         return new NetworkNodeDiskDrive(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeDiskDrive.ID;
+    }
 }

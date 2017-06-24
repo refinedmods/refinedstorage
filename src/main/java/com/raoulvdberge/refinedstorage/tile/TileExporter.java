@@ -83,4 +83,9 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
     public NetworkNodeExporter createNode(World world, BlockPos pos) {
         return new NetworkNodeExporter(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeExporter.ID;
+    }
 }

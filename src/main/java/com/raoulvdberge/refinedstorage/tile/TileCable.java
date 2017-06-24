@@ -12,4 +12,9 @@ public class TileCable extends TileNode<NetworkNodeCable> {
     public NetworkNodeCable createNode(World world, BlockPos pos) {
         return new NetworkNodeCable(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeCable.ID;
+    }
 }

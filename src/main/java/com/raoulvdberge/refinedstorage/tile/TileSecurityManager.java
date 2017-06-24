@@ -12,4 +12,9 @@ public class TileSecurityManager extends TileNode<NetworkNodeSecurityManager> {
     public NetworkNodeSecurityManager createNode(World world, BlockPos pos) {
         return new NetworkNodeSecurityManager(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeSecurityManager.ID;
+    }
 }

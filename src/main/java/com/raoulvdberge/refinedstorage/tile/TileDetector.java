@@ -88,4 +88,9 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
     public NetworkNodeDetector createNode(World world, BlockPos pos) {
         return new NetworkNodeDetector(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeDetector.ID;
+    }
 }
