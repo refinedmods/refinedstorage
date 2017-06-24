@@ -41,6 +41,15 @@
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
 - Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
 
+### 1.4.18
+- Fixed Solderer crashing (raoulvdberge)
+- Fixed Interface extracting from itself when trying to keep items in stock (raoulvdberge)
+- Fixed Solderer being able to work with insufficient ingredients (raoulvdberge)
+- Fixed Disk Drive giving incorrect capacity for creative and debug storage disks (raoulvdberge)
+- Fixed External Storage crashing (raoulvdberge)
+- Fixed crash when node data mismatches between world and dat file (raoulvdberge)
+- The Relay now reacts instantly to a redstone signal again, removed throttling for it (raoulvdberge)
+
 ### 1.4.17
 - Fixed Filters not persisting correctly in Wireless Grid, Wireless Crafting Monitor and Portable Grid (raoulvdberge)
 - Fixed Disk Drive recipe not using ore dictionary for chest (raoulvdberge)
