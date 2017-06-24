@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSolderer;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -18,7 +19,9 @@ public class TileSolderer extends TileNode<NetworkNodeSolderer> {
     public static final TileDataParameter<Integer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
         @Override
         public Integer getValue(TileSolderer tile) {
-            return tile.getNode().getRecipe() != null ? tile.getNode().getRecipe().getDuration() : 0;
+            ISoldererRecipe recipe = tile.getNode().getRecipe();
+
+            return recipe == null ? 0 : recipe.getDuration();
         }
     });
 

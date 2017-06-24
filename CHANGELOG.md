@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.18
+- Fixed Solderer crashing (raoulvdberge)
+
 ### 1.4.17
 - Fixed Filters not persisting correctly in Wireless Grid, Wireless Crafting Monitor and Portable Grid (raoulvdberge)
 - Fixed Disk Drive recipe not using ore dictionary for chest (raoulvdberge)
