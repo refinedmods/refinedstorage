@@ -18,6 +18,16 @@ public class NetworkNodeRelay extends NetworkNode {
     }
 
     @Override
+    protected int getUpdateThrottleInactiveToActive() {
+        return 0;
+    }
+
+    @Override
+    protected int getUpdateThrottleActiveToInactive() {
+        return 0;
+    }
+
+    @Override
     public int getEnergyUsage() {
         return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RS.INSTANCE.config.relayUsage;
     }

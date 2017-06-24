@@ -89,6 +89,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         return redstoneMode.isEnabled(world, pos);
     }
 
+    protected int getUpdateThrottleInactiveToActive() {
+        return 20;
+    }
+
+    protected int getUpdateThrottleActiveToInactive() {
+        return 4;
+    }
+
     @Override
     public void update() {
         ++ticks;
@@ -98,9 +106,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         if (couldUpdate != canUpdate) {
             ++ticksSinceUpdateChanged;
 
-            // If we go from inactive to active, throttle for 20 ticks
-            // If we go from active to inactive, throttle for 4 ticks
-            if (canUpdate ? (ticksSinceUpdateChanged > 20) : (ticksSinceUpdateChanged > 4)) {
+            if (canUpdate ? (getUpdateThrottleInactiveToActive() > 20) : (getUpdateThrottleActiveToInactive() > 4)) {
                 ticksSinceUpdateChanged = 0;
                 couldUpdate = canUpdate;
 

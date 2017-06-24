@@ -2,6 +2,7 @@
 
 ### 1.4.18
 - Fixed Solderer crashing (raoulvdberge)
+- The Relay now reacts instantly to a redstone signal again, removed throttling for it (raoulvdberge)
 
 ### 1.4.17
 - Fixed Filters not persisting correctly in Wireless Grid, Wireless Crafting Monitor and Portable Grid (raoulvdberge)
