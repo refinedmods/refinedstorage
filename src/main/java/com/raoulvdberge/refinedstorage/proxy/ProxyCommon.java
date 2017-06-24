@@ -23,7 +23,6 @@ import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
-import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.item.ItemFluidStoragePart;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
 import com.raoulvdberge.refinedstorage.item.ItemStoragePart;
@@ -41,18 +40,27 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class ProxyCommon {
+    private List<Item> itemsToRegister = new LinkedList<>();
+    private List<BlockBase> blocksToRegister = new LinkedList<>();
+
     public void preInit(FMLPreInitializationEvent e) {
+        MinecraftForge.EVENT_BUS.register(this);
+
         CapabilityNetworkNodeProxy.register();
 
         API.deliver(e.getAsmData());
@@ -82,10 +90,6 @@ public class ProxyCommon {
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerFluids.ID, ReaderWriterHandlerFluids::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerForgeEnergy.ID, ReaderWriterHandlerForgeEnergy::new);
-
-        if (IntegrationCraftingTweaks.isLoaded()) {
-            IntegrationCraftingTweaks.register();
-        }
 
         int id = 0;
 
@@ -202,7 +206,9 @@ public class ProxyCommon {
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.WRENCH);
         registerItem(RSItems.SECURITY_CARD);
+    }
 
+    public void init(FMLInitializationEvent e) {
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
         // Processors
@@ -287,11 +293,13 @@ public class ProxyCommon {
             OreDictionary.getOres("dustRedstone"),
             NonNullList.withSize(1, new ItemStack(RSBlocks.INTERFACE))
         ));
-    }
 
-    public void init(FMLInitializationEvent e) {
-        if (IntegrationOC.isLoaded()) {
-            //DriverNetwork.register();
+        /*if (IntegrationOC.isLoaded()) {
+            DriverNetwork.register();
+        }*/
+
+        if (IntegrationCraftingTweaks.isLoaded()) {
+            IntegrationCraftingTweaks.register();
         }
     }
 
@@ -299,17 +307,33 @@ public class ProxyCommon {
         // NO OP
     }
 
-    public void fixMappings(FMLMissingMappingsEvent e) {
-        for (FMLMissingMappingsEvent.MissingMapping missing : e.getAll()) {
-            if (missing.resourceLocation.getResourceDomain().equals(RS.ID) && missing.resourceLocation.getResourcePath().equals("grid_filter")) {
+    @SubscribeEvent
+    public void registerBlocks(RegistryEvent.Register<Block> e) {
+        blocksToRegister.forEach(e.getRegistry()::register);
+    }
+
+    @SubscribeEvent
+    public void registerItems(RegistryEvent.Register<Item> e) {
+        itemsToRegister.forEach(e.getRegistry()::register);
+    }
+
+    @SubscribeEvent
+    public void fixItemMappings(RegistryEvent.MissingMappings<Item> e) {
+        for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
+            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("grid_filter")) {
                 missing.remap(RSItems.FILTER);
             }
         }
     }
 
     private void registerBlock(BlockBase block) {
-        GameRegistry.<Block>register(block);
-        GameRegistry.register(block.createItem());
+        blocksToRegister.add(block);
+
+        registerItem(block.createItem());
+    }
+
+    private void registerItem(Item item) {
+        itemsToRegister.add(item);
     }
 
     private void registerTile(Class<? extends TileBase> tile, String id) {
@@ -334,9 +358,5 @@ public class ProxyCommon {
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    private void registerItem(Item item) {
-        GameRegistry.register(item);
     }
 }

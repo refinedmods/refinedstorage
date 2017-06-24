@@ -28,10 +28,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12-14.21.0.2340"
+    version = "1.12-14.21.0.2349"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20170620"
+    mappings = "snapshot_20170623"
 }
 
 repositories {
@@ -47,9 +47,9 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12:4.6.0.63:api"
-    runtime "mezz.jei:jei_1.12:4.6.0.63"
-    deobfCompile "MCMultiPart2:MCMultiPart-exp:2.0.0_26"
+    deobfCompile "mezz.jei:jei_1.12:4.7.0.67:api"
+    runtime "mezz.jei:jei_1.12:4.7.0.67"
+    deobfCompile "MCMultiPart2:MCMultiPart:2.2.1"
     // deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.0.28:api"
 }
 

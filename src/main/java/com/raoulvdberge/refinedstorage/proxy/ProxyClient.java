@@ -34,11 +34,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -53,11 +53,35 @@ public class ProxyClient extends ProxyCommon {
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
 
-        MinecraftForge.EVENT_BUS.register(this);
-
         // TESRs
         ClientRegistry.bindTileEntitySpecialRenderer(TileStorageMonitor.class, new TileEntitySpecialRendererStorageMonitor());
+    }
 
+    @Override
+    public void init(FMLInitializationEvent e) {
+        super.init(e);
+
+        RSKeyBindings.init();
+
+        ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+
+        itemColors.registerItemColorHandler((stack, tintIndex) -> {
+            CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
+
+            if (BakedModelPattern.canDisplayPatternOutput(pattern)) {
+                int color = itemColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex);
+
+                if (color != -1) {
+                    return color;
+                }
+            }
+
+            return 0xFFFFFF; // Full white, no need to apply color
+        }, RSItems.PATTERN);
+    }
+
+    @SubscribeEvent
+    public void registerModels(ModelRegistryEvent e) {
         // Item Variants
         ModelBakery.registerItemVariants(RSItems.STORAGE_DISK,
             new ResourceLocation("refinedstorage:1k_storage_disk"),
@@ -243,43 +267,21 @@ public class ProxyClient extends ProxyCommon {
             }
         });
 
+        // Controller
         ModelLoader.setCustomStateMapper(RSBlocks.CONTROLLER, new StateMap.Builder().ignore(BlockController.TYPE).build());
-        ModelLoader.setCustomStateMapper(RSBlocks.PORTABLE_GRID, new StateMap.Builder().ignore(BlockPortableGrid.TYPE).build());
-
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.CONTROLLER), stack -> {
             int energy = stack.getItemDamage() == ControllerType.CREATIVE.getId() ? 7 : TileController.getEnergyScaled(ItemBlockController.getEnergyStored(stack), ItemBlockController.getEnergyCapacity(stack), 7);
 
             return new ModelResourceLocation("refinedstorage:controller", "direction=north,energy=" + energy);
         });
 
+        // Portable Grid
+        ModelLoader.setCustomStateMapper(RSBlocks.PORTABLE_GRID, new StateMap.Builder().ignore(BlockPortableGrid.TYPE).build());
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), stack -> {
             PortableGrid portableGrid = new PortableGrid(null, stack);
 
             return new ModelResourceLocation("refinedstorage:portable_grid", "connected=" + Boolean.toString(portableGrid.getEnergy() != 0) + ",direction=north,disk_state=" + TilePortableGrid.getDiskState(portableGrid));
         });
-    }
-
-    @Override
-    public void init(FMLInitializationEvent e) {
-        super.init(e);
-
-        RSKeyBindings.init();
-
-        ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
-
-        itemColors.registerItemColorHandler((stack, tintIndex) -> {
-            CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
-
-            if (BakedModelPattern.canDisplayPatternOutput(pattern)) {
-                int color = itemColors.getColorFromItemstack(pattern.getOutputs().get(0), tintIndex);
-
-                if (color != -1) {
-                    return color;
-                }
-            }
-
-            return 0xFFFFFF; // Full white, no need to apply color
-        }, RSItems.PATTERN);
     }
 
     public static void onReceiveCraftingPreviewResponse(MessageGridCraftingPreviewResponse message) {
