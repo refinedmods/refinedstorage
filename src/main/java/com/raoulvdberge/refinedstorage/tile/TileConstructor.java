@@ -39,4 +39,9 @@ public class TileConstructor extends TileNode<NetworkNodeConstructor> {
     public NetworkNodeConstructor createNode(World world, BlockPos pos) {
         return new NetworkNodeConstructor(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeConstructor.ID;
+    }
 }

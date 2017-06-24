@@ -50,6 +50,11 @@ public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitt
     }
 
     @Override
+    public String getNodeId() {
+        return NetworkNodeNetworkTransmitter.ID;
+    }
+
+    @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }

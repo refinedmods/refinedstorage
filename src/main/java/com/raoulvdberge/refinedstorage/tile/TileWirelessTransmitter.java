@@ -26,4 +26,9 @@ public class TileWirelessTransmitter extends TileNode<NetworkNodeWirelessTransmi
     public NetworkNodeWirelessTransmitter createNode(World world, BlockPos pos) {
         return new NetworkNodeWirelessTransmitter(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeWirelessTransmitter.ID;
+    }
 }

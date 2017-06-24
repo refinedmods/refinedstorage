@@ -42,4 +42,9 @@ public class TileDestructor extends TileNode<NetworkNodeDestructor> {
     public NetworkNodeDestructor createNode(World world, BlockPos pos) {
         return new NetworkNodeDestructor(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeDestructor.ID;
+    }
 }

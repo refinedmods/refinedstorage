@@ -69,4 +69,9 @@ public class TileExternalStorage extends TileNode<NetworkNodeExternalStorage> {
     public NetworkNodeExternalStorage createNode(World world, BlockPos pos) {
         return new NetworkNodeExternalStorage(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeExternalStorage.ID;
+    }
 }

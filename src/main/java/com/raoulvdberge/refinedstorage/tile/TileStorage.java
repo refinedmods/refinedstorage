@@ -38,4 +38,9 @@ public class TileStorage extends TileNode<NetworkNodeStorage> {
     public NetworkNodeStorage createNode(World world, BlockPos pos) {
         return new NetworkNodeStorage(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeStorage.ID;
+    }
 }

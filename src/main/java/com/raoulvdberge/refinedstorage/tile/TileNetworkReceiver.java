@@ -12,4 +12,9 @@ public class TileNetworkReceiver extends TileNode<NetworkNodeNetworkReceiver> {
     public NetworkNodeNetworkReceiver createNode(World world, BlockPos pos) {
         return new NetworkNodeNetworkReceiver(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeNetworkReceiver.ID;
+    }
 }

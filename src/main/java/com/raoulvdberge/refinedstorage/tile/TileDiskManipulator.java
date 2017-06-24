@@ -86,4 +86,9 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     public NetworkNodeDiskManipulator createNode(World world, BlockPos pos) {
         return new NetworkNodeDiskManipulator(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeDiskManipulator.ID;
+    }
 }

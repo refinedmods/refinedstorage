@@ -26,4 +26,9 @@ public class TileImporter extends TileNode<NetworkNodeImporter> {
     public NetworkNodeImporter createNode(World world, BlockPos pos) {
         return new NetworkNodeImporter(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeImporter.ID;
+    }
 }

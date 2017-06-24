@@ -57,4 +57,9 @@ public class TileFluidInterface extends TileNode<NetworkNodeFluidInterface> {
     public NetworkNodeFluidInterface createNode(World world, BlockPos pos) {
         return new NetworkNodeFluidInterface(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeFluidInterface.ID;
+    }
 }

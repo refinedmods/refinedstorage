@@ -95,4 +95,9 @@ public class TileSolderer extends TileNode<NetworkNodeSolderer> {
     public NetworkNodeSolderer createNode(World world, BlockPos pos) {
         return new NetworkNodeSolderer(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeSolderer.ID;
+    }
 }

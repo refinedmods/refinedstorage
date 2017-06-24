@@ -38,5 +38,10 @@ public class TileFluidStorage extends TileNode<NetworkNodeFluidStorage> {
     public NetworkNodeFluidStorage createNode(World world, BlockPos pos) {
         return new NetworkNodeFluidStorage(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeFluidStorage.ID;
+    }
 }
 

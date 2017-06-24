@@ -146,4 +146,9 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     public NetworkNodeGrid createNode(World world, BlockPos pos) {
         return new NetworkNodeGrid(world, pos);
     }
+
+    @Override
+    public String getNodeId() {
+        return NetworkNodeGrid.ID;
+    }
 }
