@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.4
+- Fixed External Storage crashing (raoulvdberge)
+
 ### 1.5.3
 - Updated Forge to 2359 (raoulvdberge)
 - Updated MCMultiPart to 2.2.1 (raoulvdberge)

@@ -27,8 +27,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
     public static final String ID = "external_storage";
@@ -48,8 +48,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
 
-    private List<StorageItemExternal> itemStorages = new ArrayList<>();
-    private List<StorageFluidExternal> fluidStorages = new ArrayList<>();
+    private List<StorageItemExternal> itemStorages = new CopyOnWriteArrayList<>();
+    private List<StorageFluidExternal> fluidStorages = new CopyOnWriteArrayList<>();
 
     public NetworkNodeExternalStorage(World world, BlockPos pos) {
         super(world, pos);

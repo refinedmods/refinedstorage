@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
@@ -23,8 +24,10 @@ public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
             tile.getNode().setViewAutomated(value);
             tile.getNode().markDirty();
 
-            if (tile.getNode().getNetwork() != null) {
-                tile.getNode().getNetwork().sendCraftingMonitorUpdate();
+            INetwork network = tile.getNode().getNetwork();
+
+            if (network != null) {
+                network.sendCraftingMonitorUpdate();
             }
         }
     });
