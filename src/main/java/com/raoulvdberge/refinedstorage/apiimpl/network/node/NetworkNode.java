@@ -106,7 +106,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         if (couldUpdate != canUpdate) {
             ++ticksSinceUpdateChanged;
 
-            if (canUpdate ? (getUpdateThrottleInactiveToActive() > 20) : (getUpdateThrottleActiveToInactive() > 4)) {
+            if (canUpdate ? (ticksSinceUpdateChanged > getUpdateThrottleInactiveToActive()) : (ticksSinceUpdateChanged > getUpdateThrottleActiveToInactive())) {
                 ticksSinceUpdateChanged = 0;
                 couldUpdate = canUpdate;
 
