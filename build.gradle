@@ -20,7 +20,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.5.4"
+version = "1.5.5"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
@@ -28,7 +28,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12-14.21.0.2359"
+    version = "1.12-14.21.0.2363"
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20170624"

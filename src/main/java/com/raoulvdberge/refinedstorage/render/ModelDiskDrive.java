@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.render;
 
-import com.google.common.base.Function;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -8,12 +7,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
-import net.minecraftforge.common.model.TRSRTransformation;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public class ModelDiskDrive implements IModel {
     private static final ResourceLocation MODEL_BASE = new ResourceLocation("refinedstorage:block/disk_drive");
@@ -33,11 +31,6 @@ public class ModelDiskDrive implements IModel {
         dependencies.add(MODEL_DISK_DISCONNECTED);
 
         return dependencies;
-    }
-
-    @Override
-    public Collection<ResourceLocation> getTextures() {
-        return Collections.emptyList();
     }
 
     @Override
@@ -65,10 +58,5 @@ public class ModelDiskDrive implements IModel {
             diskModelFull.bake(state, format, bakedTextureGetter),
             diskModelDisconnected.bake(state, format, bakedTextureGetter)
         );
-    }
-
-    @Override
-    public IModelState getDefaultState() {
-        return TRSRTransformation.identity();
     }
 }

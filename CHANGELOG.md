@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.5
+- Updated Forge to 2363 (raoulvdberge)
+
 ### 1.5.4
 - Fixed External Storage crashing (raoulvdberge)
 - Fixed crash when node data mismatches between world and dat file (raoulvdberge)
