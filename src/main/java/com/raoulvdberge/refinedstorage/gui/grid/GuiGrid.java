@@ -66,7 +66,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     private boolean wasConnected;
 
     private GuiTextField searchField;
+
     private GuiCheckBox oredictPattern;
+    private GuiCheckBox processingPattern;
+    private GuiCheckBox blockingPattern;
 
     private IGrid grid;
 
@@ -144,7 +147,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         }
 
         if (grid.getType() == GridType.PATTERN) {
-            oredictPattern = addCheckBox(x + 64, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 46, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            processingPattern = addCheckBox(x + 7, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
+            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+
+            if (((NetworkNodeGrid) grid).isProcessingPattern()) {
+                blockingPattern = addCheckBox(oredictPattern.x + oredictPattern.width + 5, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:blocking"), TileGrid.BLOCKING_PATTERN.getValue());
+            }
         }
 
         if (grid.getType() != GridType.FLUID && grid.getViewType() != -1) {
@@ -250,7 +258,13 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public int getFooter() {
-        return (grid.getType() == GridType.CRAFTING || grid.getType() == GridType.PATTERN) ? 156 : 99;
+        if (grid.getType() == GridType.CRAFTING) {
+            return 156;
+        } else if (grid.getType() == GridType.PATTERN) {
+            return 169;
+        } else {
+            return 99;
+        }
     }
 
     @Override
@@ -259,8 +273,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         if (grid.getType() == GridType.NORMAL || grid.getType() == GridType.FLUID) {
             yp += 16;
-        } else if (grid.getType() == GridType.CRAFTING || grid.getType() == GridType.PATTERN) {
+        } else if (grid.getType() == GridType.CRAFTING) {
             yp += 73;
+        } else if (grid.getType() == GridType.PATTERN) {
+            yp += 86;
         }
 
         return yp;
@@ -308,14 +324,18 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             case CRAFTING:
                 return inBounds(82, y, 7, 7, mouseX, mouseY);
             case PATTERN:
-                return inBounds(64, y, 7, 7, mouseX, mouseY);
+                if (TileGrid.PROCESSING_PATTERN.getValue()) {
+                    return inBounds(154, y, 7, 7, mouseX, mouseY);
+                }
+
+                return inBounds(82, y, 7, 7, mouseX, mouseY);
             default:
                 return false;
         }
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == GridType.PATTERN && inBounds(152, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
+        return grid.getType() == GridType.PATTERN && inBounds(172, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
     }
 
     private int getTabDelta() {
@@ -379,7 +399,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (grid.getType() == GridType.CRAFTING) {
             bindTexture("gui/crafting_grid.png");
         } else if (grid.getType() == GridType.PATTERN) {
-            bindTexture("gui/pattern_grid.png");
+            bindTexture("gui/pattern_grid" + (((NetworkNodeGrid) grid).isProcessingPattern() ? "_processing" : "") + ".png");
         } else if (grid instanceof IPortableGrid) {
             bindTexture("gui/portable_grid.png");
         } else {
@@ -421,7 +441,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 ty = 2;
             }
 
-            drawTexture(x + 152, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
+            drawTexture(x + 172, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
         if (searchField != null) {
@@ -504,6 +524,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         if (button == oredictPattern) {
             TileDataManager.setParameter(TileGrid.OREDICT_PATTERN, oredictPattern.isChecked());
+        } else if (button == blockingPattern) {
+            TileDataManager.setParameter(TileGrid.BLOCKING_PATTERN, blockingPattern.isChecked());
+        } else if (button == processingPattern) {
+            TileDataManager.setParameter(TileGrid.PROCESSING_PATTERN, processingPattern.isChecked());
         }
     }
 
@@ -539,7 +563,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isActive()) {
             if (clickedClear) {
-                RS.INSTANCE.network.sendToServer(new MessageGridCraftingClear());
+                RS.INSTANCE.network.sendToServer(new MessageGridClear());
             }
 
             ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();
@@ -678,6 +702,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void updateOredictPattern(boolean checked) {
         if (oredictPattern != null) {
             oredictPattern.setIsChecked(checked);
+        }
+    }
+
+    public void updateBlockingPattern(boolean checked) {
+        if (blockingPattern != null) {
+            blockingPattern.setIsChecked(checked);
         }
     }
 }

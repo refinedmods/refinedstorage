@@ -20,8 +20,7 @@ public class RSJEIPlugin implements IModPlugin {
     public void register(IModRegistry registry) {
         INSTANCE = this;
 
-        registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RecipeTransferHandlerPattern());
-        registry.getRecipeTransferRegistry().addRecipeTransferHandler(new RecipeTransferHandlerGrid(), "minecraft.crafting");
+        registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RecipeTransferHandlerGrid());
         registry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerSolderer.class, RecipeCategorySolderer.ID, 0, 3, 8, 36);
 
         registry.handleRecipes(RecipeWrapperSolderer.class, recipe -> recipe, RecipeCategorySolderer.ID);

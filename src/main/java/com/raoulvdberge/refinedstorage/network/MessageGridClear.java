@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
@@ -12,8 +13,8 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<MessageGridCraftingClear> implements IMessage {
-    public MessageGridCraftingClear() {
+public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridClear> implements IMessage {
+    public MessageGridClear() {
     }
 
     @Override
@@ -27,7 +28,7 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
     }
 
     @Override
-    public void handle(MessageGridCraftingClear message, EntityPlayerMP player) {
+    public void handle(MessageGridClear message, EntityPlayerMP player) {
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {
@@ -44,9 +45,7 @@ public class MessageGridCraftingClear extends MessageHandlerPlayerToServer<Messa
                     }
                 }
             } else if (grid.getType() == GridType.PATTERN) {
-                for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-                    matrix.setInventorySlotContents(i, ItemStack.EMPTY);
-                }
+                ((NetworkNodeGrid) grid).onPatternMatrixClear();
             }
         }
     }

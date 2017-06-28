@@ -12,13 +12,13 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<MessageGridCraftingTransfer> implements IMessage {
+public class MessageGridTransfer extends MessageHandlerPlayerToServer<MessageGridTransfer> implements IMessage {
     private NBTTagCompound recipe;
 
-    public MessageGridCraftingTransfer() {
+    public MessageGridTransfer() {
     }
 
-    public MessageGridCraftingTransfer(NBTTagCompound recipe) {
+    public MessageGridTransfer(NBTTagCompound recipe) {
         this.recipe = recipe;
     }
 
@@ -33,7 +33,7 @@ public class MessageGridCraftingTransfer extends MessageHandlerPlayerToServer<Me
     }
 
     @Override
-    public void handle(MessageGridCraftingTransfer message, EntityPlayerMP player) {
+    public void handle(MessageGridTransfer message, EntityPlayerMP player) {
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 

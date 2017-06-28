@@ -21,7 +21,6 @@ public final class RSBlocks {
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
-    public static final BlockProcessingPatternEncoder PROCESSING_PATTERN_ENCODER = new BlockProcessingPatternEncoder();
     public static final BlockNetworkTransmitter NETWORK_TRANSMITTER = new BlockNetworkTransmitter();
     public static final BlockNetworkReceiver NETWORK_RECEIVER = new BlockNetworkReceiver();
     public static final BlockFluidInterface FLUID_INTERFACE = new BlockFluidInterface();

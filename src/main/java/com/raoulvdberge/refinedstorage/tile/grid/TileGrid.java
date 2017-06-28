@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
@@ -131,6 +132,50 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         }
     });
 
+    public static final TileDataParameter<Boolean> PROCESSING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileGrid>() {
+        @Override
+        public Boolean getValue(TileGrid tile) {
+            return tile.getNode().isProcessingPattern();
+        }
+    }, new ITileDataConsumer<Boolean, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Boolean value) {
+            tile.getNode().setProcessingPattern(value);
+            tile.getNode().markDirty();
+
+            tile.getNode().onPatternMatrixClear();
+
+            tile.world.getMinecraftServer().getPlayerList().getPlayers().stream()
+                .filter(player -> player.openContainer instanceof ContainerGrid && ((ContainerGrid) player.openContainer).getTile() != null && ((ContainerGrid) player.openContainer).getTile().getPos().equals(tile.getPos()))
+                .forEach(player -> {
+                    ((ContainerGrid) player.openContainer).initSlots();
+
+                    player.openContainer.detectAndSendChanges();
+                });
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen != null) {
+            Minecraft.getMinecraft().currentScreen.initGui();
+        }
+    });
+
+    public static final TileDataParameter<Boolean> BLOCKING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileGrid>() {
+        @Override
+        public Boolean getValue(TileGrid tile) {
+            return tile.getNode().isBlockingPattern();
+        }
+    }, new ITileDataConsumer<Boolean, TileGrid>() {
+        @Override
+        public void setValue(TileGrid tile, Boolean value) {
+            tile.getNode().setBlockingPattern(value);
+            tile.getNode().markDirty();
+        }
+    }, parameter -> {
+        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
+            ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateBlockingPattern(parameter.getValue());
+        }
+    });
+
     public TileGrid() {
         dataManager.addWatchedParameter(VIEW_TYPE);
         dataManager.addWatchedParameter(SORTING_DIRECTION);
@@ -139,6 +184,8 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
+        dataManager.addWatchedParameter(PROCESSING_PATTERN);
+        dataManager.addWatchedParameter(BLOCKING_PATTERN);
     }
 
     @Override

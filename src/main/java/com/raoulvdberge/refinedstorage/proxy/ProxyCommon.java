@@ -97,8 +97,8 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageTileDataParameterUpdate.class, MessageTileDataParameterUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridItemInsertHeld.class, MessageGridItemInsertHeld.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridItemPull.class, MessageGridItemPull.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridCraftingClear.class, MessageGridCraftingClear.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridCraftingTransfer.class, MessageGridCraftingTransfer.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageGridClear.class, MessageGridClear.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageGridTransfer.class, MessageGridTransfer.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridSettingsUpdate.class, MessageGridSettingsUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingStart.class, MessageGridCraftingStart.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridPatternCreate.class, MessageGridPatternCreate.class, id++, Side.SERVER);
@@ -110,12 +110,11 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageGridFluidDelta.class, MessageGridFluidDelta.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageGridFluidPull.class, MessageGridFluidPull.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridFluidInsertHeld.class, MessageGridFluidInsertHeld.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageProcessingPatternEncoderClear.class, MessageProcessingPatternEncoderClear.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageFilterUpdate.class, MessageFilterUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingPreview.class, MessageGridCraftingPreview.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingPreviewResponse.class, MessageGridCraftingPreviewResponse.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageGridCraftingStartResponse.class, MessageGridCraftingStartResponse.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageProcessingPatternEncoderTransfer.class, MessageProcessingPatternEncoderTransfer.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageGridProcessingTransfer.class, MessageGridProcessingTransfer.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageReaderWriterUpdate.class, MessageReaderWriterUpdate.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageReaderWriterChannelAdd.class, MessageReaderWriterChannelAdd.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageReaderWriterChannelRemove.class, MessageReaderWriterChannelRemove.class, id++, Side.SERVER);
@@ -144,7 +143,6 @@ public class ProxyCommon {
         registerTile(TileCraftingMonitor.class, "crafting_monitor");
         registerTile(TileWirelessTransmitter.class, "wireless_transmitter");
         registerTile(TileCrafter.class, "crafter");
-        registerTile(TileProcessingPatternEncoder.class, "processing_pattern_encoder");
         registerTile(TileCable.class, "cable");
         registerTile(TileNetworkReceiver.class, "network_receiver");
         registerTile(TileNetworkTransmitter.class, "network_transmitter");
@@ -164,7 +162,6 @@ public class ProxyCommon {
         registerBlock(RSBlocks.STORAGE_MONITOR);
         registerBlock(RSBlocks.SECURITY_MANAGER);
         registerBlock(RSBlocks.CRAFTER);
-        registerBlock(RSBlocks.PROCESSING_PATTERN_ENCODER);
         registerBlock(RSBlocks.DISK_DRIVE);
         registerBlock(RSBlocks.STORAGE);
         registerBlock(RSBlocks.FLUID_STORAGE);
@@ -320,8 +317,21 @@ public class ProxyCommon {
     @SubscribeEvent
     public void fixItemMappings(RegistryEvent.MissingMappings<Item> e) {
         for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
-            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("grid_filter")) {
-                missing.remap(RSItems.FILTER);
+            if (missing.key.getResourceDomain().equals(RS.ID)) {
+                if (missing.key.getResourcePath().equals("grid_filter")) {
+                    missing.remap(RSItems.FILTER);
+                } else if (missing.key.getResourcePath().equals("processing_pattern_encoder")) {
+                    missing.ignore();
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void fixBlockMappings(RegistryEvent.MissingMappings<Block> e) {
+        for (RegistryEvent.MissingMappings.Mapping<Block> missing : e.getMappings()) {
+            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("processing_pattern_encoder")) {
+                missing.ignore();
             }
         }
     }

@@ -17,16 +17,15 @@ public final class RSGui {
     public static final int CRAFTING_MONITOR = 13;
     public static final int WIRELESS_TRANSMITTER = 14;
     public static final int CRAFTER = 15;
-    public static final int PROCESSING_PATTERN_ENCODER = 16;
-    public static final int FILTER = 17;
-    public static final int NETWORK_TRANSMITTER = 18;
-    public static final int FLUID_INTERFACE = 19;
-    public static final int EXTERNAL_STORAGE = 20;
-    public static final int FLUID_STORAGE = 21;
-    public static final int DISK_MANIPULATOR = 22;
-    public static final int WIRELESS_CRAFTING_MONITOR = 23;
-    public static final int READER_WRITER = 24;
-    public static final int SECURITY_MANAGER = 25;
-    public static final int STORAGE_MONITOR = 26;
-    public static final int PORTABLE_GRID = 27;
+    public static final int FILTER = 16;
+    public static final int NETWORK_TRANSMITTER = 17;
+    public static final int FLUID_INTERFACE = 18;
+    public static final int EXTERNAL_STORAGE = 19;
+    public static final int FLUID_STORAGE = 20;
+    public static final int DISK_MANIPULATOR = 21;
+    public static final int WIRELESS_CRAFTING_MONITOR = 22;
+    public static final int READER_WRITER = 23;
+    public static final int SECURITY_MANAGER = 24;
+    public static final int STORAGE_MONITOR = 25;
+    public static final int PORTABLE_GRID = 26;
 }

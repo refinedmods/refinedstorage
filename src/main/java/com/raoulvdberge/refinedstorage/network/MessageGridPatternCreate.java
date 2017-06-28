@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.block.GridType;
-import com.raoulvdberge.refinedstorage.tile.TileProcessingPatternEncoder;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -43,8 +42,6 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
 
         if (tile instanceof TileGrid && ((TileGrid) tile).getNode().getType() == GridType.PATTERN) {
             ((TileGrid) tile).getNode().onCreatePattern();
-        } else if (tile instanceof TileProcessingPatternEncoder) {
-            ((TileProcessingPatternEncoder) tile).onCreatePattern();
         }
     }
 }

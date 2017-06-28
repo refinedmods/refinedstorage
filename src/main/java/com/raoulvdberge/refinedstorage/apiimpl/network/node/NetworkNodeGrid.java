@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
+import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -48,6 +49,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public static final String NBT_OREDICT_PATTERN = "OredictPattern";
     public static final String NBT_TAB_SELECTED = "TabSelected";
     public static final String NBT_SIZE = "Size";
+    public static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
+    public static final String NBT_BLOCKING_PATTERN = "BlockingPattern";
 
     public static final int SORTING_DIRECTION_ASCENDING = 0;
     public static final int SORTING_DIRECTION_DESCENDING = 1;
@@ -83,6 +86,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     };
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
+    private ItemHandlerBase matrixProcessing = new ItemHandlerBase(9 * 2, new ItemHandlerListenerNetworkNode(this));
 
     private ItemHandlerBase patterns = new ItemHandlerBase(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN));
     private List<Filter> filters = new ArrayList<>();
@@ -100,6 +104,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private int tabSelected = -1;
 
     private boolean oredictPattern = false;
+    private boolean processingPattern = false;
+    private boolean blockingPattern = false;
 
     public NetworkNodeGrid(World world, BlockPos pos) {
         super(world, pos);
@@ -153,6 +159,22 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         this.oredictPattern = oredictPattern;
     }
 
+    public boolean isProcessingPattern() {
+        return world.isRemote ? TileGrid.PROCESSING_PATTERN.getValue() : processingPattern;
+    }
+
+    public void setProcessingPattern(boolean processingPattern) {
+        this.processingPattern = processingPattern;
+    }
+
+    public boolean isBlockingPattern() {
+        return blockingPattern;
+    }
+
+    public void setBlockingPattern(boolean blockingPattern) {
+        this.blockingPattern = blockingPattern;
+    }
+
     public GridType getType() {
         if (type == null && world.getBlockState(pos).getBlock() == RSBlocks.GRID) {
             type = (GridType) world.getBlockState(pos).getValue(BlockGrid.TYPE);
@@ -203,6 +225,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     @Override
     public InventoryCraftResult getCraftingResult() {
         return result;
+    }
+
+    public ItemHandlerBase getProcessingMatrix() {
+        return matrixProcessing;
     }
 
     @Override
@@ -296,6 +322,20 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         }
     }
 
+    public void onPatternMatrixClear() {
+        for (int i = 0; i < matrixProcessing.getSlots(); ++i) {
+            matrixProcessing.setStackInSlot(i, ItemStack.EMPTY);
+        }
+
+        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+            matrix.setInventorySlotContents(i, ItemStack.EMPTY);
+        }
+
+        world.getMinecraftServer().getPlayerList().getPlayers().stream()
+            .filter(player -> player.openContainer instanceof ContainerGrid && ((ContainerGrid) player.openContainer).getTile() != null && ((ContainerGrid) player.openContainer).getTile().getPos().equals(pos))
+            .forEach(player -> player.openContainer.detectAndSendChanges());
+    }
+
     @Override
     public void onClosed(EntityPlayer player) {
         // NO OP
@@ -372,13 +412,29 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
+            if (processingPattern) {
+                ItemPattern.setBlocking(pattern, blockingPattern);
+            }
+
             ItemPattern.setOredict(pattern, oredictPattern);
 
-            for (int i = 0; i < 9; ++i) {
-                ItemStack ingredient = matrix.getStackInSlot(i);
+            if (processingPattern) {
+                for (int i = 0; i < 18; ++i) {
+                    if (!matrixProcessing.getStackInSlot(i).isEmpty()) {
+                        if (i >= 9) {
+                            ItemPattern.addOutput(pattern, matrixProcessing.getStackInSlot(i));
+                        } else {
+                            ItemPattern.setSlot(pattern, i, matrixProcessing.getStackInSlot(i));
+                        }
+                    }
+                }
+            } else {
+                for (int i = 0; i < 9; ++i) {
+                    ItemStack ingredient = matrix.getStackInSlot(i);
 
-                if (!ingredient.isEmpty()) {
-                    ItemPattern.setSlot(pattern, i, ingredient);
+                    if (!ingredient.isEmpty()) {
+                        ItemPattern.setSlot(pattern, i, ingredient);
+                    }
                 }
             }
 
@@ -387,7 +443,30 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     public boolean canCreatePattern() {
-        return !result.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty() && !patterns.getStackInSlot(0).isEmpty();
+        if (patterns.getStackInSlot(0).isEmpty() || !patterns.getStackInSlot(1).isEmpty()) {
+            return false;
+        }
+
+        if (isProcessingPattern()) {
+            int inputsFilled = 0;
+            int outputsFilled = 0;
+
+            for (int i = 0; i < 9; ++i) {
+                if (!matrixProcessing.getStackInSlot(i).isEmpty()) {
+                    inputsFilled++;
+                }
+            }
+
+            for (int i = 9; i < 18; ++i) {
+                if (!matrixProcessing.getStackInSlot(i).isEmpty()) {
+                    outputsFilled++;
+                }
+            }
+
+            return inputsFilled > 0 && outputsFilled > 0;
+        } else {
+            return !result.getStackInSlot(0).isEmpty();
+        }
     }
 
     @Override
@@ -467,6 +546,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         RSUtils.readItemsLegacy(matrix, 0, tag);
         RSUtils.readItems(patterns, 1, tag);
         RSUtils.readItems(filter, 2, tag);
+        RSUtils.readItems(matrixProcessing, 3, tag);
 
         if (tag.hasKey(NBT_TAB_SELECTED)) {
             tabSelected = tag.getInteger(NBT_TAB_SELECTED);
@@ -485,6 +565,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         RSUtils.writeItemsLegacy(matrix, 0, tag);
         RSUtils.writeItems(patterns, 1, tag);
         RSUtils.writeItems(filter, 2, tag);
+        RSUtils.writeItems(matrixProcessing, 3, tag);
 
         tag.setInteger(NBT_TAB_SELECTED, tabSelected);
 
@@ -502,6 +583,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         tag.setInteger(NBT_SIZE, size);
 
         tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
+        tag.setBoolean(NBT_PROCESSING_PATTERN, processingPattern);
+        tag.setBoolean(NBT_BLOCKING_PATTERN, blockingPattern);
 
         return tag;
     }
@@ -532,6 +615,14 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
         if (tag.hasKey(NBT_OREDICT_PATTERN)) {
             oredictPattern = tag.getBoolean(NBT_OREDICT_PATTERN);
+        }
+
+        if (tag.hasKey(NBT_PROCESSING_PATTERN)) {
+            processingPattern = tag.getBoolean(NBT_PROCESSING_PATTERN);
+        }
+
+        if (tag.hasKey(NBT_BLOCKING_PATTERN)) {
+            blockingPattern = tag.getBoolean(NBT_BLOCKING_PATTERN);
         }
     }
 

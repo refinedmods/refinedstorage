@@ -35,9 +35,6 @@ gui.refinedstorage:crafting_monitor.blocked=Blocked, waiting on other task
 gui.refinedstorage:wireless_transmitter=Wireless Transmitter
 gui.refinedstorage:wireless_transmitter.distance=%d blocks
 gui.refinedstorage:crafter=Crafter
-gui.refinedstorage:crafter.processing=Processing
-gui.refinedstorage:processing_pattern_encoder=Processing Pattern Encoder
-gui.refinedstorage:processing_pattern_encoder.pattern_create=Create Pattern
 gui.refinedstorage:filter=Filter
 gui.refinedstorage:filter.compare_damage=Damage
 gui.refinedstorage:filter.compare_nbt=NBT
@@ -107,6 +104,7 @@ misc.refinedstorage:cancel_all=Cancel All
 misc.refinedstorage:priority=Priority
 misc.refinedstorage:oredict=Oredict
 misc.refinedstorage:blocking=Blocking
+misc.refinedstorage:processing=Processing
 
 misc.refinedstorage:reader_writer.redstone=Redstone strength: %d
 
@@ -208,9 +206,6 @@ block.refinedstorage:crafting_monitor.name=Crafting Monitor
 block.refinedstorage:wireless_transmitter.name=Wireless Transmitter
 block.refinedstorage:wireless_transmitter.tooltip=Needs to be placed on %s.
 block.refinedstorage:crafter.name=Crafter
-block.refinedstorage:processing_pattern_encoder.name=Processing Pattern Encoder
-block.refinedstorage:processing_pattern_encoder.tooltip.0=Only used for creating processing patterns.
-block.refinedstorage:processing_pattern_encoder.tooltip.1=For regular crafting pattern creation, use the %s.
 block.refinedstorage:network_receiver.name=Network Receiver
 block.refinedstorage:network_transmitter.name=Network Transmitter
 block.refinedstorage:fluid_interface.name=Fluid Interface

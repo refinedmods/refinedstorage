@@ -62,8 +62,6 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerWirelessTransmitter((TileWirelessTransmitter) tile, player);
             case RSGui.CRAFTER:
                 return new ContainerCrafter((TileCrafter) tile, player);
-            case RSGui.PROCESSING_PATTERN_ENCODER:
-                return new ContainerProcessingPatternEncoder((TileProcessingPatternEncoder) tile, player);
             case RSGui.NETWORK_TRANSMITTER:
                 return new ContainerNetworkTransmitter((TileNetworkTransmitter) tile, player);
             case RSGui.FLUID_INTERFACE:
@@ -139,8 +137,6 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile));
             case RSGui.CRAFTER:
                 return new GuiCrafter((ContainerCrafter) getContainer(ID, player, tile));
-            case RSGui.PROCESSING_PATTERN_ENCODER:
-                return new GuiProcessingPatternEncoder((ContainerProcessingPatternEncoder) getContainer(ID, player, tile), (TileProcessingPatternEncoder) tile);
             case RSGui.FILTER:
                 return new GuiFilter(getFilterContainer(player, x));
             case RSGui.NETWORK_TRANSMITTER:
