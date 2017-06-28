@@ -204,6 +204,7 @@ block.refinedstorage:interface.name=인터페이스
 block.refinedstorage:crafting_monitor.name=조합 모니터
 block.refinedstorage:wireless_transmitter.name=무선 송신기
 block.refinedstorage:wireless_transmitter.tooltip=%s에 설치되어야 합니다.
+block.refinedstorage:crafter.name=조합기
 block.refinedstorage:network_receiver.name=네트워크 수신기
 block.refinedstorage:network_transmitter.name=네트워크 송신기
 block.refinedstorage:fluid_interface.name=액체 인터페이스
