@@ -324,7 +324,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             case CRAFTING:
                 return inBounds(82, y, 7, 7, mouseX, mouseY);
             case PATTERN:
-                if (TileGrid.PROCESSING_PATTERN.getValue()) {
+                if (((NetworkNodeGrid) grid).isProcessingPattern()) {
                     return inBounds(154, y, 7, 7, mouseX, mouseY);
                 }
 

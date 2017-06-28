@@ -9,7 +9,6 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -330,10 +329,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             matrix.setInventorySlotContents(i, ItemStack.EMPTY);
         }
-
-        world.getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> player.openContainer instanceof ContainerGrid && ((ContainerGrid) player.openContainer).getTile() != null && ((ContainerGrid) player.openContainer).getTile().getPos().equals(pos))
-            .forEach(player -> player.openContainer.detectAndSendChanges());
     }
 
     @Override

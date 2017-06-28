@@ -149,8 +149,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
                 .filter(player -> player.openContainer instanceof ContainerGrid && ((ContainerGrid) player.openContainer).getTile() != null && ((ContainerGrid) player.openContainer).getTile().getPos().equals(tile.getPos()))
                 .forEach(player -> {
                     ((ContainerGrid) player.openContainer).initSlots();
-
-                    player.openContainer.detectAndSendChanges();
+                    ((ContainerGrid) player.openContainer).sendAllSlots();
                 });
         }
     }, parameter -> {

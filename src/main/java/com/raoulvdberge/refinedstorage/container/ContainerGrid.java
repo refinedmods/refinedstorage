@@ -148,6 +148,16 @@ public class ContainerGrid extends ContainerBase {
         }
     }
 
+    public void sendAllSlots() {
+        for (int i = 0; i < inventorySlots.size(); ++i) {
+            Slot slot = inventorySlots.get(i);
+
+            for (IContainerListener listener : listeners) {
+                listener.sendSlotContents(this, i, slot.getStack());
+            }
+        }
+    }
+
     @Override
     public void onContainerClosed(EntityPlayer player) {
         super.onContainerClosed(player);

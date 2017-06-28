@@ -24,9 +24,6 @@ gui.refinedstorage:crafting_monitor.items_processing=Itens em processamento
 gui.refinedstorage:wireless_transmitter=Transmissor Sem Fio
 gui.refinedstorage:wireless_transmitter.distance=%d blocks
 gui.refinedstorage:crafter=Fabricador
-gui.refinedstorage:crafter.processing=Processando
-gui.refinedstorage:processing_pattern_encoder=Codificador de Padrão de Processamento
-gui.refinedstorage:processing_pattern_encoder.pattern_create=Criar Padrão
 
 misc.refinedstorage:energy_stored=%d / %d FE
 misc.refinedstorage:energy_usage=Usage: %d FE/t
@@ -103,7 +100,6 @@ block.refinedstorage:interface.name=Interface
 block.refinedstorage:crafting_monitor.name=Monitor de Fabricação
 block.refinedstorage:wireless_transmitter.name=Transmissor Sem Fio
 block.refinedstorage:crafter.name=Fabricador
-block.refinedstorage:processing_pattern_encoder.name=Codificador de Padrão de Processamento
 
 item.refinedstorage:storage_disk.0.name=Disco de Armazenamento 1k
 item.refinedstorage:storage_disk.1.name=Disco de Armazenamento 4k
