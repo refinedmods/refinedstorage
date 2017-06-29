@@ -2,6 +2,7 @@
 
 ### 1.5.6
 - Updated Forge to stable 2387 (raoulvdberge)
+- Fixed bug where players couldn't place regular blocks next to secured networks (raoulvdberge)
 - Removed Processing Pattern Encoder, that functionality is now available in the Pattern Grid (raoulvdberge)
 
 ### 1.5.5
