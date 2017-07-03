@@ -2,6 +2,7 @@
 
 ### 1.5.7
 - Exposed pattern inventory for Pattern Grid (raoulvdberge)
+- Added advancements (raoulvdberge)
 
 ### 1.5.6
 - Updated Forge to stable 2387 (raoulvdberge)

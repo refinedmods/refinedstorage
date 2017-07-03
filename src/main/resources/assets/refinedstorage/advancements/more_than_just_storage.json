@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:reader"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage:more_than_just_storage"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage:more_than_just_storage.description"
+    }
+  },
+  "parent": "refinedstorage:soldering",
+  "criteria": {
+    "grid_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:reader"
+          },
+          {
+            "item": "refinedstorage:writer"
+          }
+        ]
+      }
+    }
+  }
+}

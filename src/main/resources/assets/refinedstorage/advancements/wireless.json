@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:wireless_transmitter"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage:wireless"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage:wireless.description"
+    }
+  },
+  "parent": "refinedstorage:soldering",
+  "criteria": {
+    "disk_drive_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:wireless_transmitter"
+          }
+        ]
+      }
+    }
+  }
+}

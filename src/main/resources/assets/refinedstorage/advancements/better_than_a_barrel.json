@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:storage_monitor"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage:better_than_a_barrel"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage:better_than_a_barrel.description"
+    }
+  },
+  "parent": "refinedstorage:soldering",
+  "criteria": {
+    "grid_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:storage_monitor"
+          }
+        ]
+      }
+    }
+  }
+}

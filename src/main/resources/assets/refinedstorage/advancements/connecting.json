@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:cable"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage:connecting"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage:connecting.description"
+    }
+  },
+  "parent": "refinedstorage:root",
+  "criteria": {
+    "solderer_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:cable"
+          }
+        ]
+      }
+    }
+  }
+}

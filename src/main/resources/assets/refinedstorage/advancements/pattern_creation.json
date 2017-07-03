@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:pattern"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage:pattern_creation"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage:pattern_creation.description"
+    }
+  },
+  "parent": "refinedstorage:autocrafting",
+  "criteria": {
+    "grid_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:pattern"
+          },
+          {
+            "item": "refinedstorage:grid",
+            "data": 2
+          }
+        ]
+      }
+    }
+  }
+}
