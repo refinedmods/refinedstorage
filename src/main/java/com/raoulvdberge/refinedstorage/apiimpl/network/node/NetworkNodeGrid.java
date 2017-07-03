@@ -35,6 +35,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +88,13 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private InventoryCraftResult result = new InventoryCraftResult();
     private ItemHandlerBase matrixProcessing = new ItemHandlerBase(9 * 2, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerBase patterns = new ItemHandlerBase(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN));
+    private ItemHandlerBase patterns = new ItemHandlerBase(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN)) {
+        @Nonnull
+        @Override
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+            return slot == 0 ? super.insertItem(slot, stack, simulate) : stack;
+        }
+    };
     private List<Filter> filters = new ArrayList<>();
     private List<FilterTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ItemHandlerListenerNetworkNode(this));

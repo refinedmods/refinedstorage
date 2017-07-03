@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.7
+- Exposed pattern inventory for Pattern Grid (raoulvdberge)
+
 ### 1.5.6
 - Updated Forge to stable 2387 (raoulvdberge)
 - Fixed bug where players couldn't place regular blocks next to secured networks (raoulvdberge)

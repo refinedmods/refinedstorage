@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
@@ -9,10 +10,14 @@ import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TileGrid extends TileNode<NetworkNodeGrid> {
     public static final TileDataParameter<Integer> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileGrid>() {
@@ -196,5 +201,19 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     @Override
     public String getNodeId() {
         return NetworkNodeGrid.ID;
+    }
+
+    @Override
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side) {
+        return (getNode().getType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, side);
+    }
+
+    @Override
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing side) {
+        if (getNode().getType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getPatterns());
+        }
+
+        return super.getCapability(capability, side);
     }
 }

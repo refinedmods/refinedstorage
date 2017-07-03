@@ -66,9 +66,4 @@ public class ItemHandlerBase extends ItemStackHandler {
     public boolean isEmpty() {
         return empty;
     }
-
-    @Nonnull
-    public ItemStack extractItemInternal(int slot, int amount, boolean simulate) {
-        return super.extractItem(slot, amount, simulate);
-    }
 }
