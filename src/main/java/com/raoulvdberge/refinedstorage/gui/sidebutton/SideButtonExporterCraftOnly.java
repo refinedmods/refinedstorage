@@ -17,7 +17,7 @@ public class SideButtonExporterCraftOnly extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:exporter.craft_only") + TextFormatting.RESET + "\n" + GuiBase.t(TileExporter.CRAFT_ONLY.getValue() ? "gui.yes" : "gui.no");
+        return GuiBase.t("sidebutton.refinedstorage:exporter.craft_only") + "\n" + TextFormatting.GRAY + GuiBase.t(TileExporter.CRAFT_ONLY.getValue() ? "gui.yes" : "gui.no");
     }
 
     @Override

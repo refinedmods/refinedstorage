@@ -112,7 +112,7 @@ sidebutton.refinedstorage:compare.1=Compare damage
 sidebutton.refinedstorage:compare.2=Compare NBT
 sidebutton.refinedstorage:compare.8=Compare ore dictionary
 
-sidebutton.refinedstorage:redstone_mode=Redstone Mode
+sidebutton.refinedstorage:redstone_mode=Redstone mode
 sidebutton.refinedstorage:redstone_mode.0=Ignore redstone signal
 sidebutton.refinedstorage:redstone_mode.1=Only work with redstone signal
 sidebutton.refinedstorage:redstone_mode.2=Only work without redstone signal
@@ -121,14 +121,14 @@ sidebutton.refinedstorage:grid.view_type=Display
 sidebutton.refinedstorage:grid.view_type.0=Normal
 sidebutton.refinedstorage:grid.view_type.1=No craftables
 sidebutton.refinedstorage:grid.view_type.2=Only craftables
-sidebutton.refinedstorage:grid.sorting.direction=Sorting Direction
+sidebutton.refinedstorage:grid.sorting.direction=Sorting direction
 sidebutton.refinedstorage:grid.sorting.direction.0=Ascending
 sidebutton.refinedstorage:grid.sorting.direction.1=Descending
-sidebutton.refinedstorage:grid.sorting.type=Sorting Type
+sidebutton.refinedstorage:grid.sorting.type=Sorting type
 sidebutton.refinedstorage:grid.sorting.type.0=Quantity
 sidebutton.refinedstorage:grid.sorting.type.1=Name
 sidebutton.refinedstorage:grid.sorting.type.2=ID
-sidebutton.refinedstorage:grid.search_box_mode=Search Box Mode
+sidebutton.refinedstorage:grid.search_box_mode=Search box mode
 sidebutton.refinedstorage:grid.search_box_mode.0=Normal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normal (autoselected)
 sidebutton.refinedstorage:grid.search_box_mode.2=JEI synchronized
@@ -139,13 +139,13 @@ sidebutton.refinedstorage:grid.size.1=Small
 sidebutton.refinedstorage:grid.size.2=Medium
 sidebutton.refinedstorage:grid.size.3=Large
 
-sidebutton.refinedstorage:crafting_monitor.view_automated=View tasks started in an automated way
+sidebutton.refinedstorage:crafting_monitor.view_automated=View automated tasks
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist
 sidebutton.refinedstorage:mode.blacklist=Blacklist
 
-sidebutton.refinedstorage:iomode=IO Mode
+sidebutton.refinedstorage:iomode=IO mode
 sidebutton.refinedstorage:iomode.insert=Insert into network
 sidebutton.refinedstorage:iomode.extract=Extract from network
 
@@ -167,13 +167,13 @@ sidebutton.refinedstorage:constructor.drop=Drop blocks instead of placing
 
 sidebutton.refinedstorage:destructor.pickup=Pickup items instead of breaking
 
-sidebutton.refinedstorage:access_type=Access Type
+sidebutton.refinedstorage:access_type=Access type
 sidebutton.refinedstorage:access_type.0=Insert and extract
 sidebutton.refinedstorage:access_type.1=Insert only
 sidebutton.refinedstorage:access_type.2=Extract only
 
-sidebutton.refinedstorage:exporter.regulator=Regulator Mode
-sidebutton.refinedstorage:exporter.craft_only=Craft-only Mode
+sidebutton.refinedstorage:exporter.regulator=Regulator mode
+sidebutton.refinedstorage:exporter.craft_only=Craft-only mode
 
 block.refinedstorage:controller.0.name=Controller
 block.refinedstorage:controller.1.name=Creative Controller
@@ -190,9 +190,6 @@ block.refinedstorage:exporter.name=Exporter
 block.refinedstorage:detector.name=Detector
 block.refinedstorage:machine_casing.name=Machine Casing
 block.refinedstorage:solderer.name=Solderer
-block.refinedstorage:solderer.tooltip.0=Needs to be connected with a %s
-block.refinedstorage:solderer.tooltip.1=by placing it adjacent to it or
-block.refinedstorage:solderer.tooltip.2=by connecting it with %s.
 block.refinedstorage:destructor.name=Destructor
 block.refinedstorage:constructor.name=Constructor
 block.refinedstorage:storage.0.name=1k Storage Block
@@ -288,7 +285,7 @@ advancements.refinedstorage:connecting.description=You can place all the devices
 advancements.refinedstorage:conditional_connecting=Conditional connecting
 advancements.refinedstorage:conditional_connecting.description=Craft a Relay to control if a network signal can pass with redstone
 advancements.refinedstorage:soldering=Soldering
-advancements.refinedstorage:soldering.description=Craft a Solderer to make the various Refined Storage components
+advancements.refinedstorage:soldering.description=Craft a Solderer and connect it to a Controller to make the various Refined Storage components
 advancements.refinedstorage:drives=Drives
 advancements.refinedstorage:drives.description=Craft a Disk Drive to be able to store your disks
 advancements.refinedstorage:manipulating_disks=Manipulating disks

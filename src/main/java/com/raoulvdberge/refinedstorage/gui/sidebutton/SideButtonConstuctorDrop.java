@@ -17,7 +17,7 @@ public class SideButtonConstuctorDrop extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:constructor.drop") + TextFormatting.RESET + "\n" + GuiBase.t(TileConstructor.DROP.getValue() ? "gui.yes" : "gui.no");
+        return GuiBase.t("sidebutton.refinedstorage:constructor.drop") + "\n" + TextFormatting.GRAY + GuiBase.t(TileConstructor.DROP.getValue() ? "gui.yes" : "gui.no");
     }
 
     @Override

@@ -17,7 +17,7 @@ public class SideButtonExporterRegulator extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:exporter.regulator") + TextFormatting.RESET + "\n" + GuiBase.t(TileExporter.REGULATOR.getValue() ? "gui.yes" : "gui.no");
+        return GuiBase.t("sidebutton.refinedstorage:exporter.regulator") + "\n" + TextFormatting.GRAY + GuiBase.t(TileExporter.REGULATOR.getValue() ? "gui.yes" : "gui.no");
     }
 
     @Override

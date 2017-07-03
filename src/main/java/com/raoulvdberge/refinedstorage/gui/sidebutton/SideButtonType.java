@@ -17,7 +17,7 @@ public class SideButtonType extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:type") + TextFormatting.RESET + "\n" + GuiBase.t("sidebutton.refinedstorage:type." + type.getValue());
+        return GuiBase.t("sidebutton.refinedstorage:type") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:type." + type.getValue());
     }
 
     @Override

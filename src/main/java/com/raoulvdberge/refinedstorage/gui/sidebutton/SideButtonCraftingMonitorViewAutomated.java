@@ -15,7 +15,7 @@ public class SideButtonCraftingMonitorViewAutomated extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:crafting_monitor.view_automated") + TextFormatting.RESET + "\n" + GuiBase.t("gui." + (craftingMonitor.canViewAutomated() ? "yes" : "no"));
+        return GuiBase.t("sidebutton.refinedstorage:crafting_monitor.view_automated") + "\n" + TextFormatting.GRAY + GuiBase.t("gui." + (craftingMonitor.canViewAutomated() ? "yes" : "no"));
     }
 
     @Override

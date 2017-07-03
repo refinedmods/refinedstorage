@@ -17,7 +17,7 @@ public class SideButtonDestructorPickup extends SideButton {
 
     @Override
     public String getTooltip() {
-        return TextFormatting.GREEN + GuiBase.t("sidebutton.refinedstorage:destructor.pickup") + TextFormatting.RESET + "\n" + GuiBase.t(TileDestructor.PICKUP.getValue() ? "gui.yes" : "gui.no");
+        return GuiBase.t("sidebutton.refinedstorage:destructor.pickup") + "\n" + TextFormatting.GRAY + GuiBase.t(TileDestructor.PICKUP.getValue() ? "gui.yes" : "gui.no");
     }
 
     @Override
