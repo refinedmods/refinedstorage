@@ -28,7 +28,7 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
-        
+
         FluidStorageType type = FluidStorageType.getById(stack.getMetadata());
 
         if (type != null && isValid(stack)) {
