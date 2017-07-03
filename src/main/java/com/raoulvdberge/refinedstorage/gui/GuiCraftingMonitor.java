@@ -113,7 +113,7 @@ public class GuiCraftingMonitor extends GuiBase {
         drawString(7, 7, t(craftingMonitor.getGuiTitle()));
         drawString(7, 137, t("container.inventory"));
 
-        int item = scrollbar.getOffset();
+        int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
         RenderHelper.enableGUIStandardItemLighting();
 
@@ -176,7 +176,7 @@ public class GuiCraftingMonitor extends GuiBase {
         itemSelected = -1;
 
         if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
-            int item = scrollbar.getOffset();
+            int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
             for (int i = 0; i < VISIBLE_ROWS; ++i) {
                 int ix = 8;

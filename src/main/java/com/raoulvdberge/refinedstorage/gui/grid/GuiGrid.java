@@ -459,7 +459,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         this.slotNumber = -1;
 
-        int slot = scrollbar.getOffset() * 9;
+        int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
 
         RenderHelper.enableGUIStandardItemLighting();
 

@@ -2,6 +2,7 @@
 
 ### 1.5.7
 - Exposed pattern inventory for Pattern Grid (raoulvdberge)
+- Fixed crashes relating to scrollbar in GUIs (raoulvdberge)
 - Added advancements (raoulvdberge)
 
 ### 1.5.6

@@ -113,7 +113,7 @@ public class GuiCraftingPreview extends GuiBase {
 
             GlStateManager.popMatrix();
         } else {
-            int slot = scrollbar.getOffset() * 2;
+            int slot = scrollbar != null ? (scrollbar.getOffset() * 2) : 0;
 
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.enableDepth();
