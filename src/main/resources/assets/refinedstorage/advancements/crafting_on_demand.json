@@ -11,7 +11,7 @@
       "translate": "advancements.refinedstorage:crafting_on_demand.description"
     }
   },
-  "parent": "refinedstorage:upgrading",
+  "parent": "refinedstorage:pattern_creation",
   "criteria": {
     "disk_drive_in_inventory": {
       "trigger": "minecraft:inventory_changed",

@@ -11,7 +11,7 @@
       "translate": "advancements.refinedstorage:better_range.description"
     }
   },
-  "parent": "refinedstorage:upgrading",
+  "parent": "refinedstorage:wireless",
   "criteria": {
     "disk_drive_in_inventory": {
       "trigger": "minecraft:inventory_changed",
