@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.refinedstorage:controlling.description"
     },
-    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "background": "refinedstorage:textures/gui/advancements.png",
     "show_toast": false,
     "announce_to_chat": false
   },
