@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:upgrade",
+      "data": 6
+    },
+    "title": {
+      "translate": "advancements.refinedstorage:silky"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage:silky.description"
+    }
+  },
+  "parent": "refinedstorage:upgrading",
+  "criteria": {
+    "disk_drive_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:upgrade",
+            "data": 6
+          }
+        ]
+      }
+    }
+  }
+}
