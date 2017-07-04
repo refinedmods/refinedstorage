@@ -77,28 +77,6 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             }
         } else {
             tooltip.add(TextFormatting.RED + I18n.format("misc.refinedstorage:pattern.invalid") + TextFormatting.RESET);
-
-            // @todo: Removal in a future version
-            // Display a helpful message stating the outputs if this is a legacy pattern
-            if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Inputs") && stack.getTagCompound().hasKey("Outputs")) {
-                tooltip.add(TextFormatting.WHITE + "This pattern is a legacy pattern made before RS 1.0, please re-make!" + TextFormatting.RESET);
-
-                tooltip.add("This pattern used to output:");
-
-                NBTTagList outputsTag = stack.getTagCompound().getTagList("Outputs", Constants.NBT.TAG_COMPOUND);
-
-                NonNullList<ItemStack> outputs = NonNullList.create();
-
-                for (int i = 0; i < outputsTag.tagCount(); ++i) {
-                    outputs.add(new ItemStack(outputsTag.getCompoundTagAt(i)));
-                }
-
-                combineItems(tooltip, true, outputs);
-
-                if (stack.getTagCompound().hasKey("Processing") && stack.getTagCompound().getBoolean("Processing")) {
-                    tooltip.add(TextFormatting.GREEN + "This pattern was a processing pattern!" + TextFormatting.RESET);
-                }
-            }
         }
     }
 

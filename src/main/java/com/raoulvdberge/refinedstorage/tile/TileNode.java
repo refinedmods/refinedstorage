@@ -24,9 +24,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
     protected static final String NBT_ACTIVE = "Active";
 
-    // @todo: Remove in a later version
-    private NBTTagCompound legacyTag;
-
     private N clientNode;
 
     public TileNode() {
@@ -59,13 +56,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public void readConfiguration(NBTTagCompound tag) {
         getNode().readConfiguration(tag);
         getNode().markDirty();
-    }
-
-    @Override
-    public void read(NBTTagCompound tag) {
-        super.read(tag);
-
-        this.legacyTag = tag;
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
@@ -109,34 +99,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             manager.markForSaving();
         }
 
-        if (legacyTag != null) {
-            doLegacyCheck(node);
-        }
-
         return (N) node;
-    }
-
-    private void doLegacyCheck(NetworkNode node) {
-        // Ugly code for checking if this is a legacy tile. Sue me.
-        boolean hasMeta = legacyTag.hasKey("x") && legacyTag.hasKey("y") && legacyTag.hasKey("z") && legacyTag.hasKey("id");
-        boolean hasForgeData = legacyTag.hasKey("ForgeData");
-        boolean hasForgeCaps = legacyTag.hasKey("ForgeCaps");
-
-        // + 1 because of "Direction".
-        if (legacyTag.getSize() == 4 + 1 && hasMeta) {
-            // NO OP
-        } else if (legacyTag.getSize() == 5 + 1 && hasMeta && (hasForgeData || hasForgeCaps)) {
-            // NO OP
-        } else if (legacyTag.getSize() == 6 + 1 && hasMeta && hasForgeData && hasForgeCaps) {
-            // NO OP
-        } else {
-            node.read(legacyTag);
-            node.markDirty();
-
-            markDirty();
-        }
-
-        this.legacyTag = null;
     }
 
     public abstract N createNode(World world, BlockPos pos);
