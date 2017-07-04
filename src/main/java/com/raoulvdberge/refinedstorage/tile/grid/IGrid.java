@@ -64,7 +64,7 @@ public interface IGrid {
 
     ItemHandlerBase getFilter();
 
-    TileDataParameter<Integer> getRedstoneModeConfig();
+    TileDataParameter<Integer, ?> getRedstoneModeConfig();
 
     InventoryCrafting getCraftingMatrix();
 

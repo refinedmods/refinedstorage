@@ -263,37 +263,37 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public TileDataParameter<Integer> getTypeParameter() {
+    public TileDataParameter<Integer, ?> getTypeParameter() {
         return TileDiskDrive.TYPE;
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeParameter() {
+    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return TileDiskDrive.REDSTONE_MODE;
     }
 
     @Override
-    public TileDataParameter<Integer> getCompareParameter() {
+    public TileDataParameter<Integer, ?> getCompareParameter() {
         return TileDiskDrive.COMPARE;
     }
 
     @Override
-    public TileDataParameter<Integer> getFilterParameter() {
+    public TileDataParameter<Integer, ?> getFilterParameter() {
         return TileDiskDrive.MODE;
     }
 
     @Override
-    public TileDataParameter<Integer> getPriorityParameter() {
+    public TileDataParameter<Integer, ?> getPriorityParameter() {
         return TileDiskDrive.PRIORITY;
     }
 
     @Override
-    public TileDataParameter<Boolean> getVoidExcessParameter() {
+    public TileDataParameter<Boolean, ?> getVoidExcessParameter() {
         return TileDiskDrive.VOID_EXCESS;
     }
 
     @Override
-    public TileDataParameter<AccessType> getAccessTypeParameter() {
+    public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
         return TileDiskDrive.ACCESS_TYPE;
     }
 

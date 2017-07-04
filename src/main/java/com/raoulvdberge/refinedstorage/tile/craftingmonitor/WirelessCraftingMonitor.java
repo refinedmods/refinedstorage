@@ -74,7 +74,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeParameter() {
+    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return null;
     }
 

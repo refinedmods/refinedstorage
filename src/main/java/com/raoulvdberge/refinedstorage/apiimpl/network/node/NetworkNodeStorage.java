@@ -250,37 +250,37 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public TileDataParameter<Integer> getTypeParameter() {
+    public TileDataParameter<Integer, ?> getTypeParameter() {
         return null;
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeParameter() {
+    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return TileStorage.REDSTONE_MODE;
     }
 
     @Override
-    public TileDataParameter<Integer> getCompareParameter() {
+    public TileDataParameter<Integer, ?> getCompareParameter() {
         return TileStorage.COMPARE;
     }
 
     @Override
-    public TileDataParameter<Integer> getFilterParameter() {
+    public TileDataParameter<Integer, ?> getFilterParameter() {
         return TileStorage.MODE;
     }
 
     @Override
-    public TileDataParameter<Integer> getPriorityParameter() {
+    public TileDataParameter<Integer, ?> getPriorityParameter() {
         return TileStorage.PRIORITY;
     }
 
     @Override
-    public TileDataParameter<Boolean> getVoidExcessParameter() {
+    public TileDataParameter<Boolean, ?> getVoidExcessParameter() {
         return TileStorage.VOID_EXCESS;
     }
 
     @Override
-    public TileDataParameter<AccessType> getAccessTypeParameter() {
+    public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
         return TileStorage.ACCESS_TYPE;
     }
 

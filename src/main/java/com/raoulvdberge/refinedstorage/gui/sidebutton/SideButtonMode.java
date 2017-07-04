@@ -7,9 +7,9 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonMode extends SideButton {
-    private TileDataParameter<Integer> parameter;
+    private TileDataParameter<Integer, ?> parameter;
 
-    public SideButtonMode(GuiBase gui, TileDataParameter<Integer> parameter) {
+    public SideButtonMode(GuiBase gui, TileDataParameter<Integer, ?> parameter) {
         super(gui);
 
         this.parameter = parameter;

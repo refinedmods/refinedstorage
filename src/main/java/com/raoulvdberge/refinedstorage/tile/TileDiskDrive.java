@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.*;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
@@ -18,59 +17,53 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
-    public static final TileDataParameter<Integer> PRIORITY = IPrioritizable.createParameter();
-    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer> MODE = IFilterable.createParameter();
-    public static final TileDataParameter<Integer> TYPE = IType.createParameter();
-    public static final TileDataParameter<Boolean> VOID_EXCESS = IExcessVoidable.createParameter();
-    public static final TileDataParameter<AccessType> ACCESS_TYPE = IAccessType.createParameter();
-    public static final TileDataParameter<Integer> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDiskDrive>() {
-        @Override
-        public Integer getValue(TileDiskDrive tile) {
-            int stored = 0;
+    public static final TileDataParameter<Integer, TileDiskDrive> PRIORITY = IPrioritizable.createParameter();
+    public static final TileDataParameter<Integer, TileDiskDrive> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer, TileDiskDrive> MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer, TileDiskDrive> TYPE = IType.createParameter();
+    public static final TileDataParameter<Boolean, TileDiskDrive> VOID_EXCESS = IExcessVoidable.createParameter();
+    public static final TileDataParameter<AccessType, TileDiskDrive> ACCESS_TYPE = IAccessType.createParameter();
+    public static final TileDataParameter<Integer, TileDiskDrive> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
+        int stored = 0;
 
-            for (IStorageDisk storage : tile.getNode().getItemStorages()) {
-                if (storage != null) {
-                    stored += storage.getStored();
-                }
+        for (IStorageDisk storage : t.getNode().getItemStorages()) {
+            if (storage != null) {
+                stored += storage.getStored();
             }
-
-            for (IStorageDisk storage : tile.getNode().getFluidStorages()) {
-                if (storage != null) {
-                    stored += storage.getStored();
-                }
-            }
-
-            return stored;
         }
+
+        for (IStorageDisk storage : t.getNode().getFluidStorages()) {
+            if (storage != null) {
+                stored += storage.getStored();
+            }
+        }
+
+        return stored;
     });
-    public static final TileDataParameter<Integer> CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDiskDrive>() {
-        @Override
-        public Integer getValue(TileDiskDrive tile) {
-            int capacity = 0;
+    public static final TileDataParameter<Integer, TileDiskDrive> CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
+        int capacity = 0;
 
-            for (IStorageDisk storage : tile.getNode().getItemStorages()) {
-                if (storage != null) {
-                    if (storage.getCapacity() == -1) {
-                        return -1;
-                    }
-
-                    capacity += storage.getCapacity();
+        for (IStorageDisk storage : t.getNode().getItemStorages()) {
+            if (storage != null) {
+                if (storage.getCapacity() == -1) {
+                    return -1;
                 }
+
+                capacity += storage.getCapacity();
             }
-
-            for (IStorageDisk storage : tile.getNode().getFluidStorages()) {
-                if (storage != null) {
-                    if (storage.getCapacity() == -1) {
-                        return -1;
-                    }
-
-                    capacity += storage.getCapacity();
-                }
-            }
-
-            return capacity;
         }
+
+        for (IStorageDisk storage : t.getNode().getFluidStorages()) {
+            if (storage != null) {
+                if (storage.getCapacity() == -1) {
+                    return -1;
+                }
+
+                capacity += storage.getCapacity();
+            }
+        }
+
+        return capacity;
     });
 
     private static final String NBT_DISK_STATE = "DiskState_%d";

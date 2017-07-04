@@ -239,32 +239,32 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeParameter() {
+    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return TileExternalStorage.REDSTONE_MODE;
     }
 
     @Override
-    public TileDataParameter<Integer> getCompareParameter() {
+    public TileDataParameter<Integer, ?> getCompareParameter() {
         return TileExternalStorage.COMPARE;
     }
 
     @Override
-    public TileDataParameter<Integer> getFilterParameter() {
+    public TileDataParameter<Integer, ?> getFilterParameter() {
         return TileExternalStorage.MODE;
     }
 
     @Override
-    public TileDataParameter<Integer> getPriorityParameter() {
+    public TileDataParameter<Integer, ?> getPriorityParameter() {
         return TileExternalStorage.PRIORITY;
     }
 
     @Override
-    public TileDataParameter<Boolean> getVoidExcessParameter() {
+    public TileDataParameter<Boolean, ?> getVoidExcessParameter() {
         return null;
     }
 
     @Override
-    public TileDataParameter<AccessType> getAccessTypeParameter() {
+    public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
         return TileExternalStorage.ACCESS_TYPE;
     }
 
@@ -301,7 +301,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public TileDataParameter<Integer> getTypeParameter() {
+    public TileDataParameter<Integer, ?> getTypeParameter() {
         return TileExternalStorage.TYPE;
     }
 

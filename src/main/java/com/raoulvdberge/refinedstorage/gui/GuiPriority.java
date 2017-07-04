@@ -9,9 +9,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.util.Tuple;
 
 public class GuiPriority extends GuiCraftingStart {
-    private TileDataParameter<Integer> priority;
+    private TileDataParameter<Integer, ?> priority;
 
-    public GuiPriority(GuiBase parent, TileDataParameter<Integer> priority) {
+    public GuiPriority(GuiBase parent, TileDataParameter<Integer, ?> priority) {
         super(parent, null, new Container() {
             @Override
             public boolean canInteractWith(EntityPlayer player) {

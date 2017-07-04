@@ -47,12 +47,12 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
     }
 
     @Override
-    public TileDataParameter<String> getChannelParameter() {
+    public TileDataParameter<String, ?> getChannelParameter() {
         return TileReader.CHANNEL;
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeParameter() {
+    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return TileReader.REDSTONE_MODE;
     }
 

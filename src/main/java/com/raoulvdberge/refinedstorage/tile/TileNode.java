@@ -20,13 +20,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, IRedstoneConfigurable, IWrenchable {
-    public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
+    public static final TileDataParameter<Integer, TileNode> REDSTONE_MODE = RedstoneMode.createParameter();
 
+    protected static final String NBT_ACTIVE = "Active";
+
+    // @todo: Remove in a later version
     private NBTTagCompound legacyTag;
 
     private N clientNode;
-
-    protected static final String NBT_ACTIVE = "Active";
 
     public TileNode() {
         dataManager.addWatchedParameter(REDSTONE_MODE);

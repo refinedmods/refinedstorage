@@ -79,12 +79,12 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     }
 
     @Override
-    public TileDataParameter<String> getChannelParameter() {
+    public TileDataParameter<String, ?> getChannelParameter() {
         return TileWriter.CHANNEL;
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeParameter() {
+    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return TileWriter.REDSTONE_MODE;
     }
 

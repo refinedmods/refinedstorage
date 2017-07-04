@@ -8,8 +8,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
 import com.raoulvdberge.refinedstorage.gui.GuiReaderWriter;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
@@ -24,27 +22,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileReader extends TileNode<NetworkNodeReader> {
-    static <T extends TileNode> TileDataParameter<String> createChannelParameter() {
-        return new TileDataParameter<>(DataSerializers.STRING, "", new ITileDataProducer<String, T>() {
-            @Override
-            public String getValue(T tile) {
-                return ((IGuiReaderWriter) tile.getNode()).getChannel();
-            }
-        }, new ITileDataConsumer<String, T>() {
-            @Override
-            public void setValue(T tile, String value) {
-                ((IGuiReaderWriter) tile.getNode()).setChannel(value);
+    static <T extends TileNode> TileDataParameter<String, T> createChannelParameter() {
+        return new TileDataParameter<>(DataSerializers.STRING, "", t -> ((IGuiReaderWriter) t.getNode()).getChannel(), (t, v) -> {
+            ((IGuiReaderWriter) t.getNode()).setChannel(v);
 
-                tile.getNode().markDirty();
-            }
-        }, parameter -> {
+            t.getNode().markDirty();
+        }, p -> {
             if (Minecraft.getMinecraft().currentScreen instanceof GuiReaderWriter) {
-                ((GuiReaderWriter) Minecraft.getMinecraft().currentScreen).updateSelection(parameter.getValue());
+                ((GuiReaderWriter) Minecraft.getMinecraft().currentScreen).updateSelection(p);
             }
         });
     }
 
-    public static final TileDataParameter<String> CHANNEL = createChannelParameter();
+    public static final TileDataParameter<String, TileReader> CHANNEL = createChannelParameter();
 
     public TileReader() {
         dataManager.addWatchedParameter(CHANNEL);

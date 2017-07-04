@@ -203,7 +203,7 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeConfig() {
+    public TileDataParameter<Integer, ?> getRedstoneModeConfig() {
         return null;
     }
 

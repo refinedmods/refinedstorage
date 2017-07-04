@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeNetworkTransmitter;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
@@ -14,28 +13,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitter> {
-    public static final TileDataParameter<Integer> DISTANCE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
-        @Override
-        public Integer getValue(TileNetworkTransmitter tile) {
-            NetworkNodeNetworkTransmitter transmitter = tile.getNode();
+    public static final TileDataParameter<Integer, TileNetworkTransmitter> DISTANCE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
+        NetworkNodeNetworkTransmitter transmitter = t.getNode();
 
-            return (transmitter.getReceiver() != null && transmitter.isSameDimension()) ? transmitter.getDistance() : -1;
-        }
+        return (transmitter.getReceiver() != null && transmitter.isSameDimension()) ? transmitter.getDistance() : -1;
     });
-
-    public static final TileDataParameter<Integer> RECEIVER_DIMENSION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileNetworkTransmitter>() {
-        @Override
-        public Integer getValue(TileNetworkTransmitter tile) {
-            return tile.getNode().getReceiverDimension();
-        }
-    });
-
-    public static final TileDataParameter<Boolean> RECEIVER_DIMENSION_SUPPORTED = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileNetworkTransmitter>() {
-        @Override
-        public Boolean getValue(TileNetworkTransmitter tile) {
-            return tile.getNode().isDimensionSupported();
-        }
-    });
+    public static final TileDataParameter<Integer, TileNetworkTransmitter> RECEIVER_DIMENSION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getReceiverDimension());
+    public static final TileDataParameter<Boolean, TileNetworkTransmitter> RECEIVER_DIMENSION_SUPPORTED = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isDimensionSupported());
 
     public TileNetworkTransmitter() {
         dataManager.addWatchedParameter(DISTANCE);

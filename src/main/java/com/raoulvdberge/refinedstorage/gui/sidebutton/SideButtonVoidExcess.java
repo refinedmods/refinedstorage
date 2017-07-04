@@ -6,10 +6,10 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonVoidExcess extends SideButton {
-    private TileDataParameter<Boolean> parameter;
+    private TileDataParameter<Boolean, ?> parameter;
     private String type;
 
-    public SideButtonVoidExcess(GuiBase gui, TileDataParameter<Boolean> parameter, String type) {
+    public SideButtonVoidExcess(GuiBase gui, TileDataParameter<Boolean, ?> parameter, String type) {
         super(gui);
 
         this.parameter = parameter;

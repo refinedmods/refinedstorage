@@ -28,10 +28,6 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
-    /**
-     * A cache that maps a stack to a crafting pattern.
-     * Only used client side for rendering and tooltips, to avoid crafting pattern allocations and crafting pattern output calculation (which is expensive).
-     */
     private static Map<ItemStack, CraftingPattern> PATTERN_CACHE = new HashMap<>();
 
     private static final String NBT_SLOT = "Slot_%d";
@@ -82,6 +78,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         } else {
             tooltip.add(TextFormatting.RED + I18n.format("misc.refinedstorage:pattern.invalid") + TextFormatting.RESET);
 
+            // @todo: Removal in a future version
             // Display a helpful message stating the outputs if this is a legacy pattern
             if (stack.hasTagCompound() && stack.getTagCompound().hasKey("Inputs") && stack.getTagCompound().hasKey("Outputs")) {
                 tooltip.add(TextFormatting.WHITE + "This pattern is a legacy pattern made before RS 1.0, please re-make!" + TextFormatting.RESET);

@@ -17,25 +17,10 @@ public class TileDataManager {
     private static Map<Integer, TileDataParameter> REGISTRY = new HashMap<>();
 
     private List<TileDataParameter> parameters = new ArrayList<>();
-
     private List<TileDataParameter> watchedParameters = new ArrayList<>();
     private List<Object> watchedParametersCache = new ArrayList<>();
 
     private List<EntityPlayer> watchers = new ArrayList<>();
-
-    public static void registerParameter(TileDataParameter<?> parameter) {
-        parameter.setId(LAST_ID);
-
-        REGISTRY.put(LAST_ID++, parameter);
-    }
-
-    public static TileDataParameter<?> getParameter(int id) {
-        return REGISTRY.get(id);
-    }
-
-    public static <T> void setParameter(TileDataParameter<T> parameter, T value) {
-        RS.INSTANCE.network.sendToServer(new MessageTileDataParameterUpdate(parameter, value));
-    }
 
     private TileEntity tile;
 
@@ -47,7 +32,7 @@ public class TileDataManager {
         return watchers;
     }
 
-    public void addParameter(TileDataParameter<?> parameter) {
+    public void addParameter(TileDataParameter parameter) {
         parameters.add(parameter);
     }
 
@@ -55,7 +40,7 @@ public class TileDataManager {
         return parameters;
     }
 
-    public void addWatchedParameter(TileDataParameter<?> parameter) {
+    public void addWatchedParameter(TileDataParameter parameter) {
         addParameter(parameter);
 
         watchedParameters.add(parameter);
@@ -66,7 +51,7 @@ public class TileDataManager {
         for (int i = 0; i < watchedParameters.size(); ++i) {
             TileDataParameter parameter = watchedParameters.get(i);
 
-            Object real = parameter.getValueProducer().getValue(tile);
+            Object real = parameter.getValueProducer().apply(tile);
             Object cached = watchedParametersCache.get(i);
 
             if (!real.equals(cached)) {
@@ -81,11 +66,25 @@ public class TileDataManager {
         parameters.forEach(p -> sendParameter(player, p));
     }
 
-    public void sendParameterToWatchers(TileDataParameter<?> parameter) {
+    public void sendParameterToWatchers(TileDataParameter parameter) {
         watchers.forEach(p -> sendParameter((EntityPlayerMP) p, parameter));
     }
 
-    public void sendParameter(EntityPlayerMP player, TileDataParameter<?> parameter) {
+    public void sendParameter(EntityPlayerMP player, TileDataParameter parameter) {
         RS.INSTANCE.network.sendTo(new MessageTileDataParameter(tile, parameter), player);
+    }
+
+    public static void registerParameter(TileDataParameter parameter) {
+        parameter.setId(LAST_ID);
+
+        REGISTRY.put(LAST_ID++, parameter);
+    }
+
+    public static TileDataParameter getParameter(int id) {
+        return REGISTRY.get(id);
+    }
+
+    public static void setParameter(TileDataParameter parameter, Object value) {
+        RS.INSTANCE.network.sendToServer(new MessageTileDataParameterUpdate(parameter, value));
     }
 }

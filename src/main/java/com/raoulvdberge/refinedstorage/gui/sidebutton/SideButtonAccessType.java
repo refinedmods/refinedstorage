@@ -8,9 +8,9 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonAccessType extends SideButton {
-    private TileDataParameter<AccessType> parameter;
+    private TileDataParameter<AccessType, ?> parameter;
 
-    public SideButtonAccessType(GuiBase gui, TileDataParameter<AccessType> parameter) {
+    public SideButtonAccessType(GuiBase gui, TileDataParameter<AccessType, ?> parameter) {
         super(gui);
 
         this.parameter = parameter;

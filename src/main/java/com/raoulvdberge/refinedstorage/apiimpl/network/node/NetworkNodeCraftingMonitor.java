@@ -70,7 +70,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeParameter() {
+    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return TileCraftingMonitor.REDSTONE_MODE;
     }
 

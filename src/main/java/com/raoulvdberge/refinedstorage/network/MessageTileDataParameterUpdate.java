@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import io.netty.buffer.ByteBuf;
@@ -9,6 +8,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+
+import java.util.function.BiConsumer;
 
 public class MessageTileDataParameterUpdate extends MessageHandlerPlayerToServer<MessageTileDataParameterUpdate> implements IMessage {
     private TileDataParameter parameter;
@@ -49,10 +50,10 @@ public class MessageTileDataParameterUpdate extends MessageHandlerPlayerToServer
         Container c = player.openContainer;
 
         if (c instanceof ContainerBase) {
-            ITileDataConsumer consumer = message.parameter.getValueConsumer();
+            BiConsumer consumer = message.parameter.getValueConsumer();
 
             if (consumer != null) {
-                consumer.setValue(((ContainerBase) c).getTile(), message.value);
+                consumer.accept(((ContainerBase) c).getTile(), message.value);
             }
         }
     }

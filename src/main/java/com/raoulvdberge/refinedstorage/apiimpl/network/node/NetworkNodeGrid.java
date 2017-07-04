@@ -532,7 +532,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeConfig() {
+    public TileDataParameter<Integer, ?> getRedstoneModeConfig() {
         return TileGrid.REDSTONE_MODE;
     }
 

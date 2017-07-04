@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileInterface extends TileNode<NetworkNodeInterface> {
-    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer, TileInterface> COMPARE = IComparable.createParameter();
 
     public TileInterface() {
         dataManager.addWatchedParameter(COMPARE);

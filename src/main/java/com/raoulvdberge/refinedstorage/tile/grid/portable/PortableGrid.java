@@ -305,7 +305,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
     }
 
     @Override
-    public TileDataParameter<Integer> getRedstoneModeConfig() {
+    public TileDataParameter<Integer, ?> getRedstoneModeConfig() {
         return null;
     }
 

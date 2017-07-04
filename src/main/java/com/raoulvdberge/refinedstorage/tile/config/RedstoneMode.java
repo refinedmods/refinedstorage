@@ -1,7 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile.config;
 
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
@@ -43,17 +41,7 @@ public enum RedstoneMode {
         return id < 0 || id >= values().length ? IGNORE : values()[id];
     }
 
-    public static <T extends TileEntity> TileDataParameter<Integer> createParameter() {
-        return new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
-            @Override
-            public Integer getValue(T tile) {
-                return ((IRedstoneConfigurable) tile).getRedstoneMode().ordinal();
-            }
-        }, new ITileDataConsumer<Integer, T>() {
-            @Override
-            public void setValue(T tile, Integer value) {
-                ((IRedstoneConfigurable) tile).setRedstoneMode(RedstoneMode.getById(value));
-            }
-        });
+    public static <T extends TileEntity & IRedstoneConfigurable> TileDataParameter<Integer, T> createParameter() {
+        return new TileDataParameter<>(DataSerializers.VARINT, IGNORE.ordinal(), t -> t.getRedstoneMode().ordinal(), (t, v) -> t.setRedstoneMode(RedstoneMode.getById(v)));
     }
 }

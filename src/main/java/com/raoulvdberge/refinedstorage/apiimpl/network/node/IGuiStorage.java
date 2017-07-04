@@ -6,19 +6,19 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 public interface IGuiStorage {
     String getGuiTitle();
 
-    TileDataParameter<Integer> getTypeParameter();
+    TileDataParameter<Integer, ?> getTypeParameter();
 
-    TileDataParameter<Integer> getRedstoneModeParameter();
+    TileDataParameter<Integer, ?> getRedstoneModeParameter();
 
-    TileDataParameter<Integer> getCompareParameter();
+    TileDataParameter<Integer, ?> getCompareParameter();
 
-    TileDataParameter<Integer> getFilterParameter();
+    TileDataParameter<Integer, ?> getFilterParameter();
 
-    TileDataParameter<Integer> getPriorityParameter();
+    TileDataParameter<Integer, ?> getPriorityParameter();
 
-    TileDataParameter<AccessType> getAccessTypeParameter();
+    TileDataParameter<AccessType, ?> getAccessTypeParameter();
 
-    TileDataParameter<Boolean> getVoidExcessParameter();
+    TileDataParameter<Boolean, ?> getVoidExcessParameter();
 
     String getVoidExcessType();
 

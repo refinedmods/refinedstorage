@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileWriter extends TileNode<NetworkNodeWriter> {
-    public static final TileDataParameter<String> CHANNEL = TileReader.createChannelParameter();
+    public static final TileDataParameter<String, TileWriter> CHANNEL = TileReader.createChannelParameter();
 
     public TileWriter() {
         dataManager.addWatchedParameter(CHANNEL);

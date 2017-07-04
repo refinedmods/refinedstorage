@@ -15,7 +15,7 @@ public interface ICraftingMonitor {
 
     void onCancelled(EntityPlayerMP player, int id);
 
-    TileDataParameter<Integer> getRedstoneModeParameter();
+    TileDataParameter<Integer, ?> getRedstoneModeParameter();
 
     @Nullable
     BlockPos getNetworkPosition();

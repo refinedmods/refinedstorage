@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSolderer;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
@@ -16,28 +15,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileSolderer extends TileNode<NetworkNodeSolderer> {
-    public static final TileDataParameter<Integer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
-        @Override
-        public Integer getValue(TileSolderer tile) {
-            ISoldererRecipe recipe = tile.getNode().getRecipe();
+    public static final TileDataParameter<Integer, TileSolderer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
+        ISoldererRecipe recipe = t.getNode().getRecipe();
 
-            return recipe == null ? 0 : recipe.getDuration();
-        }
+        return recipe == null ? 0 : recipe.getDuration();
     });
-
-    public static final TileDataParameter<Integer> PROGRESS = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileSolderer>() {
-        @Override
-        public Integer getValue(TileSolderer tile) {
-            return tile.getNode().getProgress();
-        }
-    });
-
-    public static final TileDataParameter<Boolean> WORKING = new TileDataParameter<>(DataSerializers.BOOLEAN, false, new ITileDataProducer<Boolean, TileSolderer>() {
-        @Override
-        public Boolean getValue(TileSolderer tile) {
-            return tile.getNode().isWorking();
-        }
-    });
+    public static final TileDataParameter<Integer, TileSolderer> PROGRESS = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getProgress());
+    public static final TileDataParameter<Boolean, TileSolderer> WORKING = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isWorking());
 
     private boolean working;
 

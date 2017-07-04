@@ -41,7 +41,6 @@ import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
@@ -69,66 +68,6 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
-    public static final TileDataParameter<Integer> REDSTONE_MODE = RedstoneMode.createParameter();
-
-    public static final TileDataParameter<Integer> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
-        @Override
-        public Integer getValue(TileController tile) {
-            return tile.getEnergyUsage();
-        }
-    });
-
-    public static final TileDataParameter<Integer> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
-        @Override
-        public Integer getValue(TileController tile) {
-            return tile.energy.getEnergyStored();
-        }
-    });
-
-    public static final TileDataParameter<Integer> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileController>() {
-        @Override
-        public Integer getValue(TileController tile) {
-            return tile.energy.getMaxEnergyStored();
-        }
-    });
-
-    public static final TileDataParameter<List<ClientNode>> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), new ITileDataProducer<List<ClientNode>, TileController>() {
-        @Override
-        public List<ClientNode> getValue(TileController tile) {
-            List<ClientNode> nodes = new ArrayList<>();
-
-            for (INetworkNode node : tile.nodeGraph.all()) {
-                if (node.canUpdate()) {
-                    ItemStack stack = node.getItemStack();
-
-                    if (stack.isEmpty()) {
-                        continue;
-                    }
-
-                    ClientNode clientNode = new ClientNode(stack, 1, node.getEnergyUsage());
-
-                    if (nodes.contains(clientNode)) {
-                        ClientNode other = nodes.get(nodes.indexOf(clientNode));
-
-                        other.setAmount(other.getAmount() + 1);
-                    } else {
-                        nodes.add(clientNode);
-                    }
-                }
-            }
-
-            nodes.sort(CLIENT_NODE_COMPARATOR);
-
-            return nodes;
-        }
-    });
-
-    public static final String NBT_ENERGY = "Energy";
-    public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
-
-    private static final String NBT_READER_WRITER_CHANNELS = "ReaderWriterChannels";
-    private static final String NBT_READER_WRITER_NAME = "Name";
-
     private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
         if (left.getEnergyUsage() == right.getEnergyUsage()) {
             return 0;
@@ -136,6 +75,44 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         return (left.getEnergyUsage() > right.getEnergyUsage()) ? -1 : 1;
     };
+
+    public static final TileDataParameter<Integer, TileController> REDSTONE_MODE = RedstoneMode.createParameter();
+    public static final TileDataParameter<Integer, TileController> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TileController::getEnergyUsage);
+    public static final TileDataParameter<Integer, TileController> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getEnergyStored());
+    public static final TileDataParameter<Integer, TileController> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getMaxEnergyStored());
+    public static final TileDataParameter<List<ClientNode>, TileController> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), t -> {
+        List<ClientNode> nodes = new ArrayList<>();
+
+        for (INetworkNode node : t.nodeGraph.all()) {
+            if (node.canUpdate()) {
+                ItemStack stack = node.getItemStack();
+
+                if (stack.isEmpty()) {
+                    continue;
+                }
+
+                ClientNode clientNode = new ClientNode(stack, 1, node.getEnergyUsage());
+
+                if (nodes.contains(clientNode)) {
+                    ClientNode other = nodes.get(nodes.indexOf(clientNode));
+
+                    other.setAmount(other.getAmount() + 1);
+                } else {
+                    nodes.add(clientNode);
+                }
+            }
+        }
+
+        nodes.sort(CLIENT_NODE_COMPARATOR);
+
+        return nodes;
+    });
+
+    public static final String NBT_ENERGY = "Energy";
+    public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
+
+    private static final String NBT_READER_WRITER_CHANNELS = "ReaderWriterChannels";
+    private static final String NBT_READER_WRITER_NAME = "Name";
 
     private IItemGridHandler itemGridHandler = new ItemGridHandler(this);
     private IFluidGridHandler fluidGridHandler = new FluidGridHandler(this);

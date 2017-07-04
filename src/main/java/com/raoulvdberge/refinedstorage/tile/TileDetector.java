@@ -4,8 +4,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDetector;
 import com.raoulvdberge.refinedstorage.gui.GuiDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -21,41 +19,23 @@ import javax.annotation.Nonnull;
 public class TileDetector extends TileNode<NetworkNodeDetector> {
     private static final String NBT_POWERED = "Powered";
 
-    public static final TileDataParameter<Integer> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer> TYPE = IType.createParameter();
-
-    public static final TileDataParameter<Integer> MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
-        @Override
-        public Integer getValue(TileDetector tile) {
-            return tile.getNode().getMode();
-        }
-    }, new ITileDataConsumer<Integer, TileDetector>() {
-        @Override
-        public void setValue(TileDetector tile, Integer value) {
-            if (value == NetworkNodeDetector.MODE_UNDER || value == NetworkNodeDetector.MODE_EQUAL || value == NetworkNodeDetector.MODE_ABOVE || value == NetworkNodeDetector.MODE_AUTOCRAFTING) {
-                tile.getNode().setMode(value);
-                tile.getNode().markDirty();
-            }
+    public static final TileDataParameter<Integer, TileDetector> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer, TileDetector> TYPE = IType.createParameter();
+    public static final TileDataParameter<Integer, TileDetector> MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getMode(), (t, v) -> {
+        if (v == NetworkNodeDetector.MODE_UNDER || v == NetworkNodeDetector.MODE_EQUAL || v == NetworkNodeDetector.MODE_ABOVE || v == NetworkNodeDetector.MODE_AUTOCRAFTING) {
+            t.getNode().setMode(v);
+            t.getNode().markDirty();
         }
     });
-
-    public static final TileDataParameter<Integer> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, TileDetector>() {
-        @Override
-        public Integer getValue(TileDetector tile) {
-            return tile.getNode().getAmount();
-        }
-    }, new ITileDataConsumer<Integer, TileDetector>() {
-        @Override
-        public void setValue(TileDetector tile, Integer value) {
-            tile.getNode().setAmount(value);
-            tile.getNode().markDirty();
-        }
-    }, parameter -> {
+    public static final TileDataParameter<Integer, TileDetector> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getAmount(), (t, v) -> {
+        t.getNode().setAmount(v);
+        t.getNode().markDirty();
+    }, p -> {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
             GuiScreen gui = Minecraft.getMinecraft().currentScreen;
 
             if (gui instanceof GuiDetector) {
-                ((GuiDetector) gui).AMOUNT.setText(String.valueOf(parameter.getValue()));
+                GuiDetector.AMOUNT.setText(String.valueOf(p));
             }
         }
     });

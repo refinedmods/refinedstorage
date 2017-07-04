@@ -40,7 +40,7 @@ public class MessageTileDataParameter implements IMessage, IMessageHandler<Messa
     public void toBytes(ByteBuf buf) {
         buf.writeInt(parameter.getId());
 
-        parameter.getSerializer().write((PacketBuffer) buf, parameter.getValueProducer().getValue(tile));
+        parameter.getSerializer().write((PacketBuffer) buf, parameter.getValueProducer().apply(tile));
     }
 
     @Override

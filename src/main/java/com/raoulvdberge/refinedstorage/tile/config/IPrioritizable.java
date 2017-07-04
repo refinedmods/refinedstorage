@@ -1,25 +1,13 @@
 package com.raoulvdberge.refinedstorage.tile.config;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataConsumer;
-import com.raoulvdberge.refinedstorage.tile.data.ITileDataProducer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 
 public interface IPrioritizable {
-    static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Integer> createParameter() {
-        return new TileDataParameter<>(DataSerializers.VARINT, 0, new ITileDataProducer<Integer, T>() {
-            @Override
-            public Integer getValue(T tile) {
-                return ((IPrioritizable) tile.getNode()).getPriority();
-            }
-        }, new ITileDataConsumer<Integer, T>() {
-            @Override
-            public void setValue(T tile, Integer value) {
-                ((IPrioritizable) tile.getNode()).setPriority(value);
-            }
-        });
+    static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Integer, T> createParameter() {
+        return new TileDataParameter<>(DataSerializers.VARINT, 0, t -> ((IPrioritizable) t.getNode()).getPriority(), (t, v) -> ((IPrioritizable) t.getNode()).setPriority(v));
     }
 
     int getPriority();

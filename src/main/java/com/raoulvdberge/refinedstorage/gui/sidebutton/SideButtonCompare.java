@@ -7,10 +7,10 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonCompare extends SideButton {
-    private TileDataParameter<Integer> parameter;
+    private TileDataParameter<Integer, ?> parameter;
     private int mask;
 
-    public SideButtonCompare(GuiBase gui, TileDataParameter<Integer> parameter, int mask) {
+    public SideButtonCompare(GuiBase gui, TileDataParameter<Integer, ?> parameter, int mask) {
         super(gui);
 
         this.parameter = parameter;
