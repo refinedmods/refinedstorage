@@ -20,12 +20,14 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -68,6 +70,8 @@ import java.util.function.Function;
 
 public final class RSUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
+    public static final ItemStack EMPTY_BOTTLE = new ItemStack(Items.GLASS_BOTTLE);
+    public static final ItemStack WATER_BOTTLE = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
 
     public static final Comparator<IStorage> STORAGE_COMPARATOR = (left, right) -> {
         int compare = Integer.compare(right.getPriority(), left.getPriority());

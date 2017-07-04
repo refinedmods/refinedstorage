@@ -17,6 +17,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.*;
@@ -207,9 +209,15 @@ public abstract class CraftingStep implements ICraftingStep {
 
     protected AvailableType isItemAvailable(IStackList<ItemStack> items, IStackList<FluidStack> fluids, ItemStack stack, ItemStack actualStack, int compare) {
         if (actualStack == null || actualStack.isEmpty() || !items.trackedRemove(actualStack, stack.getCount())) {
-            FluidStack fluidInItem = RSUtils.getFluidFromStack(stack, true).getValue();
+            FluidStack fluidInItem;
 
-            if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
+            if (API.instance().getComparer().isEqual(stack, RSUtils.WATER_BOTTLE)) {
+                FluidStack fluidStack = fluids.get(new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), compare);
+                ItemStack emptyBottle = items.get(RSUtils.EMPTY_BOTTLE, compare);
+                if (emptyBottle != null && fluidStack != null && !emptyBottle.isEmpty() && items.trackedRemove(RSUtils.EMPTY_BOTTLE, 1)) {
+                    return AvailableType.FLUID;
+                }
+            } else if ((fluidInItem = RSUtils.getFluidFromStack(stack, true).getValue()) != null && RSUtils.hasFluidBucket(fluidInItem)) {
                 FluidStack fluidStack = fluids.get(fluidInItem, compare);
                 ItemStack bucket = items.get(RSUtils.EMPTY_BUCKET, compare);
                 if (bucket != null && fluidStack != null && !bucket.isEmpty() && fluids.trackedRemove(fluidStack, fluidInItem.amount) && items.trackedRemove(bucket, 1)) {
@@ -235,8 +243,15 @@ public abstract class CraftingStep implements ICraftingStep {
                 actualInputs.add(input);
             } else {
                 boolean abort = true;
-                FluidStack fluidInItem = RSUtils.getFluidFromStack(insertStack, true).getValue();
-                if (fluidInItem != null) {
+                FluidStack fluidInItem;
+                if (API.instance().getComparer().isEqual(insertStack, RSUtils.WATER_BOTTLE)) {
+                    FluidStack fluidStack = network.extractFluid(new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), Fluid.BUCKET_VOLUME, compare, true); // Simulate is true because we won't actually get the fluid out of the storage for bottles!
+                    ItemStack emptyBottleStack = network.extractItem(RSUtils.EMPTY_BOTTLE, 1, compare, false);
+                    if (fluidStack != null && fluidStack.amount == Fluid.BUCKET_VOLUME && emptyBottleStack != null) {
+                        abort = false;
+                        actualInputs.add(insertStack.copy());
+                    }
+                } else if ((fluidInItem = RSUtils.getFluidFromStack(insertStack, true).getValue()) != null) {
                     FluidStack fluidStack = network.extractFluid(fluidInItem, fluidInItem.amount, compare, false);
                     ItemStack bucketStack = network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare, false);
                     if (fluidStack != null && fluidStack.amount == fluidInItem.amount && bucketStack != null) {

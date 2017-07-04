@@ -23,6 +23,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.oredict.OreDictionary;
@@ -273,9 +275,46 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private boolean doFluidCalculation(IStackList<ItemStack> networkList, IStackList<FluidStack> networkFluidList, ItemStack input, IStackList<ItemStack> toInsert, List<ICraftingStep> previousSteps) {
-        FluidStack fluidInItem = RSUtils.getFluidFromStack(input, true).getValue();
+        FluidStack fluidInItem;
 
-        if (fluidInItem != null && RSUtils.hasFluidBucket(fluidInItem)) {
+        if (API.instance().getComparer().isEqual(input, RSUtils.WATER_BOTTLE)) {
+            FluidStack fluidInStorage = networkFluidList.get(new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME));
+
+            if (fluidInStorage == null || fluidInStorage.amount < Fluid.BUCKET_VOLUME) {
+                missing.add(input);
+            } else {
+                ItemStack emptyBottle = toInsert.get(RSUtils.EMPTY_BOTTLE);
+                boolean hasBottle = false;
+                if (emptyBottle != null && emptyBottle.getCount() > 0) {
+                    hasBottle = toInsert.remove(RSUtils.EMPTY_BOTTLE, 1);
+                }
+                if (!hasBottle) {
+                    emptyBottle = networkList.get(RSUtils.EMPTY_BOTTLE);
+                    if (emptyBottle != null && emptyBottle.getCount() > 0) {
+                        hasBottle = networkList.remove(RSUtils.EMPTY_BOTTLE);
+                    }
+                }
+
+                ICraftingPattern emptyBottlePattern = network.getCraftingManager().getPattern(RSUtils.EMPTY_BOTTLE);
+
+                if (!hasBottle) {
+                    if (emptyBottlePattern == null) {
+                        missing.add(RSUtils.EMPTY_BOTTLE.copy());
+                    } else {
+                        toCraft.add(RSUtils.EMPTY_BOTTLE.copy());
+                        previousSteps.add(calculate(networkList, networkFluidList, emptyBottlePattern, toInsert));
+                        toInsert.remove(RSUtils.EMPTY_BOTTLE, 1);
+                    }
+                }
+
+                if (hasBottle || emptyBottlePattern != null) {
+                    toTake.add(RSUtils.EMPTY_BOTTLE.copy());
+                    networkList.remove(RSUtils.EMPTY_BOTTLE);
+                }
+            }
+
+            return true;
+        } else if ((fluidInItem = RSUtils.getFluidFromStack(input, true).getValue()) != null && RSUtils.hasFluidBucket(fluidInItem)) {
             FluidStack fluidInStorage = networkFluidList.get(fluidInItem);
 
             if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
