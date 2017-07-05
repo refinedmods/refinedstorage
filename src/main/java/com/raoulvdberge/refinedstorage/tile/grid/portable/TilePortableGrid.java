@@ -54,19 +54,19 @@ import java.util.List;
 public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, IRedstoneConfigurable {
     public static final TileDataParameter<Integer, TilePortableGrid> REDSTONE_MODE = RedstoneMode.createParameter();
     public static final TileDataParameter<Integer, TilePortableGrid> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energyStorage.getEnergyStored());
-    public static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getSortingDirection(), (t, v) -> {
+    public static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingDirection, (t, v) -> {
         if (NetworkNodeGrid.isValidSortingDirection(v)) {
             t.setSortingDirection(v);
             t.markDirty();
         }
     }, p -> GuiGrid.markForSorting());
-    public static final TileDataParameter<Integer, TilePortableGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getSortingType(), (t, v) -> {
+    public static final TileDataParameter<Integer, TilePortableGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingType, (t, v) -> {
         if (NetworkNodeGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.markDirty();
         }
     }, p -> GuiGrid.markForSorting());
-    public static final TileDataParameter<Integer, TilePortableGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getSearchBoxMode(), (t, v) -> {
+    public static final TileDataParameter<Integer, TilePortableGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSearchBoxMode, (t, v) -> {
         if (NetworkNodeGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
             t.markDirty();
@@ -76,7 +76,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateSearchFieldFocus(p);
         }
     });
-    public static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getSize(), (t, v) -> {
+    public static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSize, (t, v) -> {
         if (NetworkNodeGrid.isValidSize(v)) {
             t.setSize(v);
             t.markDirty();
@@ -86,12 +86,12 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             Minecraft.getMinecraft().currentScreen.initGui();
         }
     });
-    public static final TileDataParameter<Integer, TilePortableGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getTabSelected(), (t, v) -> {
+    public static final TileDataParameter<Integer, TilePortableGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
         t.markDirty();
     }, p -> {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
-            ((GuiGrid) Minecraft.getMinecraft().currentScreen).markForSorting();
+            GuiGrid.markForSorting();
         }
     });
 

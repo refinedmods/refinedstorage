@@ -217,6 +217,7 @@ public final class RSUtils {
         return other;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> NonNullList<T> emptyNonNullList() {
         return (NonNullList<T>) EMPTY_NON_NULL_LIST;
     }

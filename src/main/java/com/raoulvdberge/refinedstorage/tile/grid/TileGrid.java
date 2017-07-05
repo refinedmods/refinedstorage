@@ -61,7 +61,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         t.getNode().markDirty();
     }, p -> {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
-            ((GuiGrid) Minecraft.getMinecraft().currentScreen).markForSorting();
+            GuiGrid.markForSorting();
         }
     });
     public static final TileDataParameter<Boolean, TileGrid> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isOredictPattern(), (t, v) -> {
