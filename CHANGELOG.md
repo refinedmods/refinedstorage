@@ -1,10 +1,13 @@
 # Refined Storage Changelog
 
+### 1.5.8
+- Fixed bug where disks have to be re-inserted in the Disk Drive in order to work again after rejoining a chunk (raoulvdberge)
+- Autocrafting can now fill water bottles with water from the fluid storage - regular bottles or pattern for regular bottles are required (raoulvdberge)
+
 ### 1.5.7
 - Exposed pattern inventory for Pattern Grid (raoulvdberge)
 - Fixed crashes relating to scrollbar in GUIs (raoulvdberge)
 - Added advancements (raoulvdberge)
-- Autocrafting can now fill water bottles with water from the fluid storage - regular bottles or pattern for regular bottles are required (raoulvdberge)
 
 ### 1.5.6
 - Updated Forge to stable 2387 (raoulvdberge)

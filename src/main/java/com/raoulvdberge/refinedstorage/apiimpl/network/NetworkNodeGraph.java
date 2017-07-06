@@ -56,15 +56,17 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             currentVisitor.visit(operator);
         }
 
-        this.nodes = operator.newNodes;
+        this.nodes = operator.foundNodes;
+
+        for (INetworkNode node : operator.newNodes) {
+            node.onConnected(controller);
+        }
 
         for (INetworkNode node : operator.previousNodes) {
             node.onDisconnected(controller);
-
-            operator.changed = true;
         }
 
-        if (operator.changed) {
+        if (!operator.newNodes.isEmpty() || !operator.previousNodes.isEmpty()) {
             controller.getDataManager().sendParameterToWatchers(TileController.NODES);
         }
     }
@@ -105,10 +107,10 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     private class Operator implements INetworkNodeVisitor.Operator {
-        private Set<INetworkNode> newNodes = Sets.newConcurrentHashSet();
-        private Set<INetworkNode> previousNodes = Sets.newConcurrentHashSet(nodes);
+        private Set<INetworkNode> foundNodes = Sets.newConcurrentHashSet(); // All scanned nodes
 
-        private boolean changed;
+        private Set<INetworkNode> newNodes = Sets.newConcurrentHashSet(); // All scanned new nodes, that didn't appear in the list before
+        private Set<INetworkNode> previousNodes = Sets.newConcurrentHashSet(nodes); // All unscanned nodes (nodes that were in the previous list, but not in the new list)
 
         private Queue<Visitor> toCheck = new ArrayDeque<>();
 
@@ -123,11 +125,12 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                     INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
                     INetworkNode otherNode = otherNodeProxy.getNode();
 
-                    if (newNodes.add(otherNode)) {
+                    if (foundNodes.add(otherNode)) {
                         if (!nodes.contains(otherNode)) {
-                            otherNode.onConnected(controller);
-
-                            changed = true;
+                            // We can't let the node connect immediately
+                            // We can only let the node connect AFTER the nodes list has changed in the graph
+                            // This is so that storage nodes can refresh the item/fluid cache, and the item/fluid cache will notice it then (otherwise not)
+                            newNodes.add(otherNode);
                         }
 
                         previousNodes.remove(otherNode);

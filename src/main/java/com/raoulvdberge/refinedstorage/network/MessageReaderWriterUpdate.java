@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 public class MessageReaderWriterUpdate implements IMessage, IMessageHandler<MessageReaderWriterUpdate, IMessage> {
     private Collection<String> channels;
 
