@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.attribute.IVoidable;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -72,30 +71,9 @@ public class StorageItemDrawer extends StorageItemExternal {
 
     public static ItemStack insert(NetworkNodeExternalStorage externalStorage, @Nullable IDrawer drawer, @Nonnull ItemStack stack, int size, boolean simulate) {
         if (drawer != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
-            int stored = drawer.getStoredItemCount();
-            int remainingSpace = drawer.getMaxCapacity(stack) - stored;
+            int remainder = simulate ? Math.max(size - drawer.getAcceptingRemainingCapacity(), 0) : drawer.adjustStoredItemCount(size);
 
-            int inserted = remainingSpace > size ? size : (remainingSpace <= 0) ? 0 : remainingSpace;
-
-            if (!simulate && remainingSpace > 0) {
-                if (drawer.isEmpty()) {
-                    drawer.setStoredItem(stack, inserted);
-                } else {
-                    drawer.setStoredItemCount(stored + inserted);
-                }
-            }
-
-            if (inserted == size) {
-                return null;
-            }
-
-            int remainder = size - inserted;
-
-            if (drawer instanceof IVoidable && ((IVoidable) drawer).isVoid()) {
-                return null;
-            }
-
-            return ItemHandlerHelper.copyStackWithSize(stack, remainder);
+            return remainder == 0 ? null : ItemHandlerHelper.copyStackWithSize(stack, remainder);
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);

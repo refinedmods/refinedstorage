@@ -35,7 +35,7 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
         for (int i = 0; i < group.getDrawerCount(); ++i) {
             IDrawer drawer = group.getDrawer(i);
 
-            if (group.isDrawerEnabled(i)) {
+            if (drawer.isEnabled()) {
                 stacks.add(StorageItemDrawer.getStack(drawer));
             }
         }
@@ -56,7 +56,7 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
         for (int i = 0; i < group.getDrawerCount(); ++i) {
             IDrawer drawer = group.getDrawer(i);
 
-            if (group.isDrawerEnabled(i)) {
+            if (drawer.isEnabled()) {
                 stored += drawer.getStoredItemCount();
             }
         }
@@ -80,8 +80,10 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
         }
 
         for (int i = 0; i < group.getDrawerCount(); ++i) {
-            if (group.isDrawerEnabled(i)) {
-                capacity += group.getDrawer(i).getMaxCapacity();
+            IDrawer drawer = group.getDrawer(i);
+
+            if (drawer.isEnabled()) {
+                capacity += drawer.getMaxCapacity();
             }
         }
 
@@ -100,8 +102,10 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
         }
 
         for (int i = 0; i < group.getDrawerCount(); ++i) {
-            if (group.isDrawerEnabled(i)) {
-                remainder = StorageItemDrawer.insert(externalStorage, group.getDrawer(i), stack, size, simulate);
+            IDrawer drawer = group.getDrawer(i);
+
+            if (drawer.isEnabled()) {
+                remainder = StorageItemDrawer.insert(externalStorage, drawer, stack, size, simulate);
 
                 if (remainder == null || remainder.getCount() <= 0) {
                     break;
@@ -128,8 +132,10 @@ public class StorageItemDrawerGroup extends StorageItemExternal {
         ItemStack result = null;
 
         for (int i = 0; i < group.getDrawerCount(); ++i) {
-            if (group.isDrawerEnabled(i)) {
-                ItemStack extracted = StorageItemDrawer.extract(group.getDrawer(i), stack, toExtract, flags, simulate);
+            IDrawer drawer = group.getDrawer(i);
+
+            if (drawer.isEnabled()) {
+                ItemStack extracted = StorageItemDrawer.extract(drawer, stack, toExtract, flags, simulate);
 
                 if (extracted != null) {
                     if (result == null) {
