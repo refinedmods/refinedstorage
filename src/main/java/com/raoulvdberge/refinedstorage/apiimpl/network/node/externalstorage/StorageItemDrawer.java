@@ -71,6 +71,16 @@ public class StorageItemDrawer extends StorageItemExternal {
 
     public static ItemStack insert(NetworkNodeExternalStorage externalStorage, @Nullable IDrawer drawer, @Nonnull ItemStack stack, int size, boolean simulate) {
         if (drawer != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && drawer.canItemBeStored(stack)) {
+            if (drawer.getStoredItemCount() == 0) {
+                int toInsert = size > drawer.getMaxCapacity() ? drawer.getMaxCapacity() : size;
+
+                if (!simulate) {
+                    drawer.setStoredItem(stack, toInsert);
+                }
+
+                return toInsert == size ? null : ItemHandlerHelper.copyStackWithSize(stack, size - toInsert);
+            }
+
             int remainder = simulate ? Math.max(size - drawer.getAcceptingRemainingCapacity(), 0) : drawer.adjustStoredItemCount(size);
 
             return remainder == 0 ? null : ItemHandlerHelper.copyStackWithSize(stack, remainder);
