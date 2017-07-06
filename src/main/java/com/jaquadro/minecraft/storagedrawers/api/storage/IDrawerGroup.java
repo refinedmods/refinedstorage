@@ -1,6 +1,13 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
-public interface IDrawerGroup {
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public interface IDrawerGroup extends ICapabilityProvider {
     /**
      * Gets the number of drawers contained within this group.
      */
@@ -9,17 +16,23 @@ public interface IDrawerGroup {
     /**
      * Gets the drawer at the given slot within this group.
      */
+    @Nonnull
     IDrawer getDrawer(int slot);
 
     /**
-     * Gets the drawer at the given slot within this group only if it is enabled.
+     * Gets the list of available drawer slots in priority order.
      */
-    IDrawer getDrawerIfEnabled(int slot);
+    @Nonnull
+    int[] getAccessibleDrawerSlots();
 
-    /**
-     * Gets whether the drawer in the given slot is usable.
-     */
-    boolean isDrawerEnabled(int slot);
+    @Override
+    default boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+        return false;
+    }
 
-    boolean markDirtyIfNeeded();
+    @Nullable
+    @Override
+    default <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        return null;
+    }
 }

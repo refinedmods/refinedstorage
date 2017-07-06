@@ -1,7 +1,6 @@
 package com.jaquadro.minecraft.storagedrawers.api.storage;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 
@@ -14,13 +13,27 @@ public interface IDrawer {
     ItemStack getStoredItemPrototype();
 
     /**
+     * Sets the type of the stored item and initializes it to 0.  Any existing item will be replaced.
+     *
+     * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
+     * @return The IDrawer actually set with the prototype.  Some drawer groups can redirect a set operation to another member.
+     */
+    @Nonnull
+    IDrawer setStoredItem(@Nonnull ItemStack itemPrototype);
+
+    /**
      * Sets the type of the stored item and initializes it to the given amount.  Any existing item will be replaced.
      *
      * @param itemPrototype An ItemStack representing the type, metadata, and tags of the item to store.
-     * @param amount The amount to initialize the stored item count to.
+     * @param amount The amount of items stored in this drawer.
      * @return The IDrawer actually set with the prototype.  Some drawer groups can redirect a set operation to another member.
      */
-    IDrawer setStoredItem(@Nonnull ItemStack itemPrototype, int amount);
+    @Nonnull
+    default IDrawer setStoredItem(@Nonnull ItemStack itemPrototype, int amount) {
+        IDrawer drawer = setStoredItem(itemPrototype);
+        drawer.setStoredItemCount(amount);
+        return drawer;
+    }
 
     /**
      * Gets the number of items stored in this drawer.
@@ -36,23 +49,41 @@ public interface IDrawer {
     void setStoredItemCount(int amount);
 
     /**
+     * Adds or removes a given amount from the number of items stored in this drawer.
+     *
+     * @param amount The amount to add (positive) or subtract (negative).
+     * @return 0 if the full adjustment was committed, or a positive value representing the remainder if the full
+     * amount couldn't be added or subtracted.
+     */
+    default int adjustStoredItemCount(int amount) {
+        if (amount > 0) {
+            int insert = Math.min(amount, getRemainingCapacity());
+            setStoredItemCount(getStoredItemCount() + insert);
+            return amount - insert;
+        } else if (amount < 0) {
+            int stored = getStoredItemCount();
+            int destroy = Math.min(Math.abs(amount), getStoredItemCount());
+            setStoredItemCount(stored - destroy);
+            return amount + destroy;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Gets the maximum number of items that can be stored in this drawer.
      * This value will vary depending on the max stack size of the stored item type.
      */
-    int getMaxCapacity();
+    default int getMaxCapacity() {
+        return getMaxCapacity(getStoredItemPrototype());
+    }
 
     /**
      * Gets the maximum number of items that could be stored in this drawer if it held the given item.
      *
-     * @param itemPrototype The item type to query.
+     * @param itemPrototype The item type to query.  Pass the empty stack to get the max capacity for an empty slot.
      */
     int getMaxCapacity(@Nonnull ItemStack itemPrototype);
-
-    /**
-     * Gets the maxmimum number of items that could be stored in this drawer for a standard item stack size
-     * of 64.
-     */
-    int getDefaultMaxCapacity();
 
     /**
      * Gets the number of items that could still be added to this drawer before it is full.
@@ -60,9 +91,25 @@ public interface IDrawer {
     int getRemainingCapacity();
 
     /**
-     * Gets the max stack size of the item type stored in this drawer.  Convenience method.
+     * Gets the number of additional items that would be accepted by this drawer.
+     *
+     * Because a drawer may be able to handle items in excess of its full capacity, this value may be larger than
+     * the result of getRemainingCapacity().
      */
-    int getStoredItemStackSize();
+    default int getAcceptingRemainingCapacity() {
+        return getRemainingCapacity();
+    }
+
+    /**
+     * Gets the max stack size of the item type stored in this drawer.
+     */
+    default int getStoredItemStackSize() {
+        @Nonnull ItemStack protoStack = getStoredItemPrototype();
+        if (protoStack.isEmpty())
+            return 0;
+
+        return protoStack.getItem().getItemStackLimit(protoStack);
+    }
 
     /**
      * Gets whether or not an item of the given type and data can be stored in this drawer.
@@ -92,27 +139,7 @@ public interface IDrawer {
      */
     boolean isEmpty();
 
-    /**
-     * Gets auxiliary data that has been associated with this drawer.
-     *
-     * @param key The key used to identify the data.
-     * @return An opaque object that was previously stored.
-     */
-    Object getExtendedData(String key);
-
-    /**
-     * Stores auxiliary data with this drawer, mainly for use in integration.
-     * @param key The key to identify the data with.
-     * @param data The data to store.
-     */
-    void setExtendedData(String key, Object data);
-
-    /**
-     * Called when a component attribute of a drawer (such as lock or void) changes state.
-     */
-    void attributeChanged();
-
-    void writeToNBT(NBTTagCompound tag);
-
-    void readFromNBT(NBTTagCompound tag);
+    default boolean isEnabled() {
+        return true;
+    }
 }
