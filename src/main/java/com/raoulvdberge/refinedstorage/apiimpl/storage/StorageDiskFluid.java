@@ -227,7 +227,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
         this.accessType = accessType;
     }
 
-    public static NBTTagCompound getShareTag(NBTTagCompound tag) {
+    public static NBTTagCompound getShareTag(@Nullable NBTTagCompound tag) {
         NBTTagCompound otherTag = new NBTTagCompound();
 
         otherTag.setInteger(NBT_STORED, getStored(tag));
@@ -237,8 +237,8 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
         return otherTag;
     }
 
-    public static int getStored(NBTTagCompound tag) {
-        return tag.getInteger(NBT_STORED);
+    public static int getStored(@Nullable NBTTagCompound tag) {
+        return tag == null ? 0 : tag.getInteger(NBT_STORED);
     }
 
     public static NBTTagCompound getTag() {

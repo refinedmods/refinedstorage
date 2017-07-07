@@ -281,7 +281,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
         return inserted;
     }
 
-    public static NBTTagCompound getShareTag(NBTTagCompound tag) {
+    public static NBTTagCompound getShareTag(@Nullable NBTTagCompound tag) {
         NBTTagCompound otherTag = new NBTTagCompound();
 
         otherTag.setInteger(NBT_STORED, getStored(tag));
@@ -291,8 +291,8 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
         return otherTag;
     }
 
-    public static int getStored(NBTTagCompound tag) {
-        return tag.getInteger(NBT_STORED);
+    public static int getStored(@Nullable NBTTagCompound tag) {
+        return tag == null ? 0 : tag.getInteger(NBT_STORED);
     }
 
     public static NBTTagCompound getTag() {
