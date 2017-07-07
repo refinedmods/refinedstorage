@@ -3,6 +3,7 @@
 ### 1.5.8
 - Updated Storage Drawers API (raoulvdberge)
 - Fixed bug where disks have to be re-inserted in the Disk Drive in order to work again after rejoining a chunk (raoulvdberge)
+- Fixed bug where items inserted in Storage Drawers through External Storage with a Drawer Controller wouldn't respect drawer priority rules (raoulvdberge)
 - Autocrafting can now fill water bottles with water from the fluid storage - regular bottles or pattern for regular bottles are required (raoulvdberge)
 
 ### 1.5.7

@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
+import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
@@ -12,6 +11,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.integration.storagedrawers.StorageItemItemRepository;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -33,10 +33,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
-    @CapabilityInject(IDrawerGroup.class)
-    private static final Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
-    @CapabilityInject(IDrawer.class)
-    private static final Capability<IDrawer> DRAWER_CAPABILITY = null;
+    @CapabilityInject(IItemRepository.class)
+    private static final Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
 
     public static final String ID = "external_storage";
 
@@ -203,17 +201,11 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         }
 
         if (type == IType.ITEMS) {
-            if (facing.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) {
-                itemStorages.add(new StorageItemDrawerGroup(this, () -> {
+            if (facing.hasCapability(ITEM_REPOSITORY_CAPABILITY, getDirection().getOpposite())) {
+                itemStorages.add(new StorageItemItemRepository(this, () -> {
                     TileEntity f = getFacingTile();
 
-                    return (f != null && f.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) ? f.getCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite()) : null;
-                }));
-            } else if (facing.hasCapability(DRAWER_CAPABILITY, getDirection().getOpposite())) {
-                itemStorages.add(new StorageItemDrawer(this, () -> {
-                    TileEntity f = getFacingTile();
-
-                    return (f != null && f.hasCapability(DRAWER_CAPABILITY, getDirection().getOpposite())) ? f.getCapability(DRAWER_CAPABILITY, getDirection().getOpposite()) : null;
+                    return (f != null && f.hasCapability(ITEM_REPOSITORY_CAPABILITY, getDirection().getOpposite())) ? f.getCapability(ITEM_REPOSITORY_CAPABILITY, getDirection().getOpposite()) : null;
                 }));
             } else if (!(facing.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()) && facing.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()).getNode() instanceof IStorageProvider)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
