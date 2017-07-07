@@ -6,6 +6,7 @@
 - Fixed bug where disks have to be re-inserted in the Disk Drive in order to work again after rejoining a chunk (raoulvdberge)
 - Fixed bug where items inserted in Storage Drawers through External Storage with a Drawer Controller wouldn't respect drawer priority rules (raoulvdberge)
 - Fixed crash on server when getting an advancement (raoulvdberge)
+- Removed migration support for worlds from MC 1.10.2. To migrate your world to MC 1.12 from MC 1.10.2, first open it in MC 1.11.2 (raoulvdberge)
 - Autocrafting can now fill water bottles with water from the fluid storage - regular bottles or pattern for regular bottles are required (raoulvdberge)
 
 ### 1.5.7
