@@ -44,6 +44,9 @@ repositories {
     maven {
         url "http://maven.cil.li"
     }
+    maven {
+        url "https://dl.bintray.com/jaquadro/dev"
+    }
 }
 
 dependencies {
@@ -51,6 +54,9 @@ dependencies {
     runtime "mezz.jei:jei_1.12:4.7.1.71"
     deobfCompile "MCMultiPart2:MCMultiPart:2.2.2"
     // deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.0.28:api"
+    deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.12-5.2.2:api"
+    // runtime "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.12-5.2.2"
+    // runtime "com.jaquadro.minecraft.chameleon:Chameleon:1.12-4.1.0"
 }
 
 processResources {
@@ -70,7 +76,6 @@ processResources {
 
 jar {
     include "com/raoulvdberge/refinedstorage/**"
-    include "com/jaquadro/minecraft/storagedrawers/api/**"
     include "assets/**"
     include "mcmod.info"
     include "pack.mcmeta"
