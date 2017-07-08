@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
@@ -33,8 +34,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
-    @CapabilityInject(IItemRepository.class)
-    private static final Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
+    @CapabilityInject(IDrawerGroup.class)
+    private static final Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
 
     public static final String ID = "external_storage";
 
@@ -201,11 +202,11 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         }
 
         if (type == IType.ITEMS) {
-            if (facing.hasCapability(ITEM_REPOSITORY_CAPABILITY, getDirection().getOpposite())) {
+            if (facing.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) {
                 itemStorages.add(new StorageItemItemRepository(this, () -> {
                     TileEntity f = getFacingTile();
 
-                    return (f != null && f.hasCapability(ITEM_REPOSITORY_CAPABILITY, getDirection().getOpposite())) ? f.getCapability(ITEM_REPOSITORY_CAPABILITY, getDirection().getOpposite()) : null;
+                    return (f != null && f.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) ? f.getCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite()) : null;
                 }));
             } else if (!(facing.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()) && facing.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()).getNode() instanceof IStorageProvider)) {
                 IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());

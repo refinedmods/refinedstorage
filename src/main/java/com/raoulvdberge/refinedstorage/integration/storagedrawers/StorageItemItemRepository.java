@@ -1,12 +1,16 @@
 package com.raoulvdberge.refinedstorage.integration.storagedrawers;
 
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
+import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.NetworkNodeExternalStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageItemExternal;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -17,17 +21,20 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class StorageItemItemRepository extends StorageItemExternal {
-    private NetworkNodeExternalStorage externalStorage;
-    private Supplier<IItemRepository> repositorySupplier;
+    @CapabilityInject(IItemRepository.class)
+    private static final Capability<IItemRepository> ITEM_REPOSITORY_CAPABILITY = null;
 
-    public StorageItemItemRepository(NetworkNodeExternalStorage externalStorage, Supplier<IItemRepository> repositorySupplier) {
+    private NetworkNodeExternalStorage externalStorage;
+    private Supplier<IDrawerGroup> groupSupplier;
+
+    public StorageItemItemRepository(NetworkNodeExternalStorage externalStorage, Supplier<IDrawerGroup> repositorySupplier) {
         this.externalStorage = externalStorage;
-        this.repositorySupplier = repositorySupplier;
+        this.groupSupplier = repositorySupplier;
     }
 
     @Override
     public Collection<ItemStack> getStacks() {
-        IItemRepository repository = repositorySupplier.get();
+        IItemRepository repository = getRepositoryFromSupplier();
 
         if (repository == null) {
             return Collections.emptyList();
@@ -39,7 +46,7 @@ public class StorageItemItemRepository extends StorageItemExternal {
     @Nullable
     @Override
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-        IItemRepository repository = repositorySupplier.get();
+        IItemRepository repository = getRepositoryFromSupplier();
 
         if (repository == null) {
             return stack;
@@ -51,24 +58,18 @@ public class StorageItemItemRepository extends StorageItemExternal {
     @Nullable
     @Override
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        IItemRepository repository = repositorySupplier.get();
+        IItemRepository repository = getRepositoryFromSupplier();
 
         if (repository == null) {
             return stack;
         }
 
-        int toExtract = size;
-
-        if (toExtract > repository.getStoredItemCount(stack)) {
-            toExtract = repository.getStoredItemCount(stack);
-        }
-
-        return repository.extractItem(stack, toExtract, simulate, s -> API.instance().getComparer().isEqual(stack, s, flags));
+        return repository.extractItem(stack, size, simulate, s -> API.instance().getComparer().isEqual(stack, s, flags));
     }
 
     @Override
     public int getStored() {
-        IItemRepository repository = repositorySupplier.get();
+        IItemRepository repository = getRepositoryFromSupplier();
 
         if (repository == null) {
             return 0;
@@ -89,18 +90,34 @@ public class StorageItemItemRepository extends StorageItemExternal {
 
     @Override
     public int getCapacity() {
-        IItemRepository repository = repositorySupplier.get();
+        IDrawerGroup group = groupSupplier.get();
 
-        if (repository == null) {
+        if (group == null) {
             return 0;
         }
 
-        int capacity = 0;
+        long capacity = 0;
 
-        for (IItemRepository.ItemRecord record : repository.getAllItems()) {
-            capacity += repository.getItemCapacity(record.itemPrototype);
+        for (int slot : group.getAccessibleDrawerSlots()) {
+            IDrawer drawer = group.getDrawer(slot);
+            if (drawer.isEnabled()) {
+                capacity += drawer.getMaxCapacity();
+            }
         }
 
-        return capacity;
+        if (capacity >= Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        }
+
+        return (int)capacity;
+    }
+
+    private IItemRepository getRepositoryFromSupplier() {
+        IDrawerGroup group = groupSupplier.get();
+        if (group == null) {
+            return null;
+        }
+
+        return group.getCapability(ITEM_REPOSITORY_CAPABILITY, null);
     }
 }
