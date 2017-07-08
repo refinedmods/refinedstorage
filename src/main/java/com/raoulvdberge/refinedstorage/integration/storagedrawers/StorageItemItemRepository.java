@@ -27,9 +27,9 @@ public class StorageItemItemRepository extends StorageItemExternal {
     private NetworkNodeExternalStorage externalStorage;
     private Supplier<IDrawerGroup> groupSupplier;
 
-    public StorageItemItemRepository(NetworkNodeExternalStorage externalStorage, Supplier<IDrawerGroup> repositorySupplier) {
+    public StorageItemItemRepository(NetworkNodeExternalStorage externalStorage, Supplier<IDrawerGroup> groupSupplier) {
         this.externalStorage = externalStorage;
-        this.groupSupplier = repositorySupplier;
+        this.groupSupplier = groupSupplier;
     }
 
     @Override
@@ -100,6 +100,7 @@ public class StorageItemItemRepository extends StorageItemExternal {
 
         for (int slot : group.getAccessibleDrawerSlots()) {
             IDrawer drawer = group.getDrawer(slot);
+
             if (drawer.isEnabled()) {
                 capacity += drawer.getMaxCapacity();
             }
@@ -109,11 +110,12 @@ public class StorageItemItemRepository extends StorageItemExternal {
             return Integer.MAX_VALUE;
         }
 
-        return (int)capacity;
+        return (int) capacity;
     }
 
     private IItemRepository getRepositoryFromSupplier() {
         IDrawerGroup group = groupSupplier.get();
+
         if (group == null) {
             return null;
         }
