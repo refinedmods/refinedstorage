@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.9
+- Fixed crash relating to MCMP (raoulvdberge)
+
 ### 1.5.8
 - Updated Forge to 2400 (raoulvdberge)
 - Updated Storage Drawers API (raoulvdberge, jaquadro)
