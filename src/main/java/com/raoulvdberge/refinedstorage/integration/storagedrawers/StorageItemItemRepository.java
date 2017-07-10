@@ -61,10 +61,10 @@ public class StorageItemItemRepository extends StorageItemExternal {
         IItemRepository repository = getRepositoryFromSupplier();
 
         if (repository == null) {
-            return stack;
+            return null;
         }
 
-        return repository.extractItem(stack, size, simulate, s -> API.instance().getComparer().isEqual(stack, s, flags));
+        return RSUtils.transformEmptyToNull(repository.extractItem(stack, size, simulate, s -> API.instance().getComparer().isEqual(stack, s, flags)));
     }
 
     @Override
