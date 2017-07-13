@@ -108,6 +108,9 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         return nodes;
     });
 
+    private static final int THROTTLE_INACTIVE_TO_ACTIVE = 20;
+    private static final int THROTTLE_ACTIVE_TO_INACTIVE = 4;
+
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
 
@@ -135,6 +138,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private int lastEnergyDisplay;
 
     private boolean couldRun;
+    private int ticksSinceUpdateChanged;
 
     private boolean craftingMonitorUpdateRequested;
 
@@ -216,15 +220,26 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 energy.setEnergyStored(energy.getMaxEnergyStored());
             }
 
-            if (couldRun != canRun()) {
-                couldRun = canRun();
+            boolean canRun = canRun();
 
-                nodeGraph.rebuild();
-                securityManager.rebuild();
+            if (couldRun != canRun) {
+                ++ticksSinceUpdateChanged;
+
+                if (canRun ? (ticksSinceUpdateChanged > THROTTLE_INACTIVE_TO_ACTIVE) : (ticksSinceUpdateChanged > THROTTLE_ACTIVE_TO_INACTIVE)) {
+                    ticksSinceUpdateChanged = 0;
+                    couldRun = canRun;
+
+                    nodeGraph.rebuild();
+                    securityManager.rebuild();
+                }
+            } else {
+                ticksSinceUpdateChanged = 0;
             }
 
-            if (getEnergyScaledForDisplay() != lastEnergyDisplay) {
-                lastEnergyDisplay = getEnergyScaledForDisplay();
+            int energyDisplay = getEnergyScaledForDisplay();
+
+            if (lastEnergyDisplay != energyDisplay) {
+                lastEnergyDisplay = energyDisplay;
 
                 RSUtils.updateBlock(world, pos);
             }

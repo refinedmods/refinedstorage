@@ -2,6 +2,7 @@
 
 ### 1.5.10
 - Converted Solderer recipes to JSON (raoulvdberge)
+- Implemented controller update throttling, should fix lag issues with controllers that constantly turn off and on (raoulvdberge)
 
 ### 1.5.9
 - Fixed crash relating to MCMP (raoulvdberge)
