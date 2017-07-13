@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "refinedstorage:grid",
+    "data": 3
+  },
+  "duration": 500,
+  "rows": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "refinedstorage:processor",
+      "data": 5
+    },
+    {
+      "item": "refinedstorage:grid",
+      "data": 0
+    }
+  ]
+}

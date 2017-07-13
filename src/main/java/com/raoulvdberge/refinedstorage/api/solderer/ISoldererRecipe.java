@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.api.solderer;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 
@@ -9,6 +10,11 @@ import javax.annotation.Nonnull;
  * Represents a recipe in the solderer.
  */
 public interface ISoldererRecipe {
+    /**
+     * @return the name of this solderer recipe
+     */
+    ResourceLocation getName();
+
     /**
      * @param row the row in the solderer that we want the stack for (between 0 - 2)
      * @return possible stack(s) for the given row, or empty list for no stack

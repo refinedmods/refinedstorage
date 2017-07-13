@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "refinedstorage:processor",
+    "data": 3
+  },
+  "duration": 250,
+  "rows": [
+    {
+      "item": "refinedstorage:processor",
+      "data": 0
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    {
+      "item": "refinedstorage:processor",
+      "data": 6
+    }
+  ]
+}

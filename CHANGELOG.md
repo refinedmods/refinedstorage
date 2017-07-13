@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.10
+- Converted Solderer recipes to JSON (raoulvdberge)
+
 ### 1.5.9
 - Fixed crash relating to MCMP (raoulvdberge)
 - Fixed not being able to extract anything when connecting an External Storage to Storage Drawers (raoulvdberge)

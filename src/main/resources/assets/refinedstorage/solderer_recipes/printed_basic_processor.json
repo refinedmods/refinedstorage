@@ -1,0 +1,15 @@
+{
+  "result": {
+    "item": "refinedstorage:processor",
+    "data": 0
+  },
+  "duration": 100,
+  "rows": [
+    null,
+    {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    null
+  ]
+}

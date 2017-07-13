@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "refinedstorage:processor",
+    "data": 1,
+    "count": 9
+  },
+  "duration": 900,
+  "rows": [
+    null,
+    {
+      "type": "forge:ore_dict",
+      "ore": "blockGold"
+    },
+    null
+  ]
+}

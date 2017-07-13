@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
@@ -14,19 +16,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerFluids;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
-import com.raoulvdberge.refinedstorage.apiimpl.solderer.*;
+import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipeLoader;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.block.FluidStorageType;
-import com.raoulvdberge.refinedstorage.block.GridType;
-import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
-import com.raoulvdberge.refinedstorage.item.ItemFluidStoragePart;
-import com.raoulvdberge.refinedstorage.item.ItemProcessor;
-import com.raoulvdberge.refinedstorage.item.ItemStoragePart;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
@@ -35,11 +30,17 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.item.ItemEnchantedBook;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.JsonUtils;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.common.crafting.IIngredientFactory;
+import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -51,6 +52,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -208,88 +210,24 @@ public class ProxyCommon {
     public void init(FMLInitializationEvent e) {
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
-        // Processors
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC, false));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_IMPROVED, false));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_ADVANCED, false));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_BASIC, true));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_IMPROVED, true));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_ADVANCED, true));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipePrintedProcessor(ItemProcessor.TYPE_PRINTED_SILICON, false));
+        CraftingHelper.register(new ResourceLocation(RS.ID + ":enchanted_book"), new IIngredientFactory() {
+            @Nonnull
+            @Override
+            public Ingredient parse(JsonContext context, JsonObject json) {
+                String id = JsonUtils.getString(json, "id");
+                int level = JsonUtils.getInt(json, "level", 1);
 
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeProcessor(ItemProcessor.TYPE_BASIC));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeProcessor(ItemProcessor.TYPE_IMPROVED));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeProcessor(ItemProcessor.TYPE_ADVANCED));
+                Enchantment enchantment = Enchantment.getEnchantmentByLocation(id);
 
-        // Silicon
-        GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);
+                if (enchantment == null) {
+                    throw new JsonSyntaxException("Couldn't find enchantment with id '" + id + "'");
+                }
 
-        // Crafting Grid
-        API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.GRID, 1, GridType.CRAFTING.getId()),
-            500,
-            OreDictionary.getOres("workbench"),
-            NonNullList.withSize(1, new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)),
-            NonNullList.withSize(1, new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()))
-        ));
+                return Ingredient.fromStacks(ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(enchantment, level)));
+            }
+        });
 
-        // Pattern Grid
-        API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.GRID, 1, GridType.PATTERN.getId()),
-            500,
-            NonNullList.withSize(1, new ItemStack(RSItems.PATTERN)),
-            NonNullList.withSize(1, new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)),
-            NonNullList.withSize(1, new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()))
-        ));
-
-        // Fluid Grid
-        API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.GRID, 1, GridType.FLUID.getId()),
-            500,
-            NonNullList.withSize(1, new ItemStack(Items.BUCKET)),
-            NonNullList.withSize(1, new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED)),
-            NonNullList.withSize(1, new ItemStack(RSBlocks.GRID, 1, GridType.NORMAL.getId()))
-        ));
-
-        // Upgrades
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_RANGE));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SPEED));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_SILK_TOUCH));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.TYPE_CRAFTING));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.initializeForFortune(1)));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.initializeForFortune(2)));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeUpgrade(ItemUpgrade.initializeForFortune(3)));
-
-        // Storage Blocks
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(ItemStorageType.TYPE_1K, ItemStoragePart.TYPE_1K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(ItemStorageType.TYPE_4K, ItemStoragePart.TYPE_4K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(ItemStorageType.TYPE_16K, ItemStoragePart.TYPE_16K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeStorage(ItemStorageType.TYPE_64K, ItemStoragePart.TYPE_64K));
-
-        // Fluid Storage Blocks
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(FluidStorageType.TYPE_64K, ItemFluidStoragePart.TYPE_64K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(FluidStorageType.TYPE_128K, ItemFluidStoragePart.TYPE_128K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(FluidStorageType.TYPE_256K, ItemFluidStoragePart.TYPE_256K));
-        API.instance().getSoldererRegistry().addRecipe(new SoldererRecipeFluidStorage(FluidStorageType.TYPE_512K, ItemFluidStoragePart.TYPE_512K));
-
-        // Interface
-        API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.INTERFACE),
-            200,
-            NonNullList.withSize(1, new ItemStack(RSBlocks.IMPORTER)),
-            NonNullList.withSize(1, new ItemStack(RSBlocks.EXPORTER)),
-            NonNullList.withSize(1, new ItemStack(RSBlocks.MACHINE_CASING))
-        ));
-
-        // Fluid Interface
-        API.instance().getSoldererRegistry().addRecipe(API.instance().getSoldererRegistry().createSimpleRecipe(
-            new ItemStack(RSBlocks.FLUID_INTERFACE),
-            200,
-            NonNullList.withSize(1, new ItemStack(Items.BUCKET)),
-            OreDictionary.getOres("dustRedstone"),
-            NonNullList.withSize(1, new ItemStack(RSBlocks.INTERFACE))
-        ));
+        SoldererRecipeLoader.load();
 
         /*if (IntegrationOC.isLoaded()) {
             DriverNetwork.register();

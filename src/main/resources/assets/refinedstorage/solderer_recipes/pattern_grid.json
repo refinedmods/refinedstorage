@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "refinedstorage:grid",
+    "data": 2
+  },
+  "duration": 500,
+  "rows": [
+    {
+      "item": "refinedstorage:pattern"
+    },
+    {
+      "item": "refinedstorage:processor",
+      "data": 5
+    },
+    {
+      "item": "refinedstorage:grid",
+      "data": 0
+    }
+  ]
+}

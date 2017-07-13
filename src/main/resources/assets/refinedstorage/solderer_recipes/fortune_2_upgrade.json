@@ -1,0 +1,25 @@
+{
+  "result": {
+    "nbt": {
+      "Fortune": 2
+    },
+    "item": "refinedstorage:upgrade",
+    "data": 7
+  },
+  "duration": 250,
+  "rows": [
+    {
+      "type": "refinedstorage:enchanted_book",
+      "id": "fortune",
+      "level": 2
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    {
+      "item": "refinedstorage:upgrade",
+      "data": 0
+    }
+  ]
+}

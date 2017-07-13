@@ -1,0 +1,18 @@
+{
+  "result": {
+    "item": "refinedstorage:fluid_interface"
+  },
+  "duration": 200,
+  "rows": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    {
+      "item": "refinedstorage:interface"
+    }
+  ]
+}

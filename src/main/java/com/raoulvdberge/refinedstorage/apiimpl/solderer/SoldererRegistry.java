@@ -10,11 +10,11 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SoldererRegistry implements ISoldererRegistry {
-    private List<ISoldererRecipe> recipes = new ArrayList<>();
+    private List<ISoldererRecipe> recipes = new LinkedList<>();
 
     @Override
     public void addRecipe(@Nonnull ISoldererRecipe recipe) {
@@ -58,32 +58,5 @@ public class SoldererRegistry implements ISoldererRegistry {
     @Override
     public List<ISoldererRecipe> getRecipes() {
         return recipes;
-    }
-
-    @Nonnull
-    @Override
-    public ISoldererRecipe createSimpleRecipe(@Nonnull ItemStack result, int duration, NonNullList<ItemStack>... rows) {
-        if (rows.length != 3) {
-            throw new IllegalArgumentException("Solderer recipe expects 3 rows, got " + rows.length + " rows");
-        }
-
-        return new ISoldererRecipe() {
-            @Nonnull
-            @Override
-            public NonNullList<ItemStack> getRow(int row) {
-                return rows[row];
-            }
-
-            @Nonnull
-            @Override
-            public ItemStack getResult() {
-                return result;
-            }
-
-            @Override
-            public int getDuration() {
-                return duration;
-            }
-        };
     }
 }

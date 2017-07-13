@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "refinedstorage:upgrade",
+    "data": 5
+  },
+  "duration": 250,
+  "rows": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "netherStar"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    {
+      "item": "refinedstorage:upgrade",
+      "data": 0
+    }
+  ]
+}

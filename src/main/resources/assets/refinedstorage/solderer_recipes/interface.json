@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "refinedstorage:interface"
+  },
+  "duration": 200,
+  "rows": [
+    {
+      "item": "refinedstorage:importer"
+    },
+    {
+      "item": "refinedstorage:exporter"
+    },
+    {
+      "item": "refinedstorage:machine_casing"
+    }
+  ]
+}

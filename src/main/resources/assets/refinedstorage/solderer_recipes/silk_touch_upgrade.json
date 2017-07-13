@@ -1,0 +1,21 @@
+{
+  "result": {
+    "item": "refinedstorage:upgrade",
+    "data": 6
+  },
+  "duration": 250,
+  "rows": [
+    {
+      "type": "refinedstorage:enchanted_book",
+      "id": "silk_touch"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    {
+      "item": "refinedstorage:upgrade",
+      "data": 0
+    }
+  ]
+}
