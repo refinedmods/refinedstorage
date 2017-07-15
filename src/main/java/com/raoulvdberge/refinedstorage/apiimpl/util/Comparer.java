@@ -104,7 +104,7 @@ public class Comparer implements IComparer {
                 leftTag.removeTag("GEN");
                 rightTag.removeTag("GEN");
                 return leftTag.equals(rightTag);
-			}
+	    }
 
             return false;
         }
