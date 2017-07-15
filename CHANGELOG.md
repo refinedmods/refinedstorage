@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.4.19
+- Fixed bug where players couldn't place regular blocks next to secured networks (raoulvdberge)
+
 ### 1.4.18
 - Fixed Solderer crashing (raoulvdberge)
 - Fixed Interface extracting from itself when trying to keep items in stock (raoulvdberge)
