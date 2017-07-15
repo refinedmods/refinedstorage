@@ -98,7 +98,13 @@ public class Comparer implements IComparer {
                 return true;
             } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().hasNoTags()) {
                 return true;
-            }
+            } else if (left.getTagCompound().hasKey("GEN")) {
+                NBTTagCompound leftTag = left.getTagCompound().copy();
+                NBTTagCompound rightTag = right.getTagCompound().copy();
+                leftTag.removeTag("GEN");
+                rightTag.removeTag("GEN");
+                return leftTag.equals(rightTag);
+			}
 
             return false;
         }
