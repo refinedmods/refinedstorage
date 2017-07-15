@@ -6,6 +6,8 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
+import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.block.state.IBlockState;
@@ -192,7 +194,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
     }
 
     public void resetDirection() {
-        this.direction = ((TileBase) world.getTileEntity(pos)).getDirection();
+        this.direction = ((TileBase) (IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos))).getDirection();
     }
 
     @Nullable

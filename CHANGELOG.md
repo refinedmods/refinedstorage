@@ -4,6 +4,7 @@
 - Fixed bug where players couldn't place regular blocks next to secured networks (raoulvdberge)
 - Fixed crashes relating to scrollbar in GUIs (raoulvdberge)
 - Fixed bug where disks have to be re-inserted in the Disk Drive in order to work again after rejoining a chunk (raoulvdberge)
+- Fixed crash relating to MCMP (raoulvdberge)
 
 ### 1.4.18
 - Fixed Solderer crashing (raoulvdberge)
