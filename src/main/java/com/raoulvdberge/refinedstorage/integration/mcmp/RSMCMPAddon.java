@@ -125,8 +125,8 @@ public class RSMCMPAddon implements IMCMPAddon {
     public static TileEntity unwrapTile(IBlockAccess world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
 
-        if (tile instanceof TileMultipartContainer.Ticking) {
-            Optional<IMultipartTile> multipartTile = ((TileMultipartContainer.Ticking) tile).getPartTile(EnumCenterSlot.CENTER);
+        if (tile instanceof TileMultipartContainer) {
+            Optional<IMultipartTile> multipartTile = ((TileMultipartContainer) tile).getPartTile(EnumCenterSlot.CENTER);
 
             if (multipartTile.isPresent()) {
                 return multipartTile.get().getTileEntity();
