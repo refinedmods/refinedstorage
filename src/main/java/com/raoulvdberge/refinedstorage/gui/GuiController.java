@@ -57,7 +57,7 @@ public class GuiController extends GuiBase {
         int x = 33;
         int y = 26;
 
-        int slot = scrollbar.getOffset() * 2;
+        int slot = scrollbar != null ? (scrollbar.getOffset() * 2) : 0;
 
         RenderHelper.enableGUIStandardItemLighting();
 

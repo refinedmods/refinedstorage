@@ -95,7 +95,7 @@ public class GuiReaderWriter extends GuiBase {
         int x = 8;
         int y = 39;
 
-        int item = scrollbar.getOffset();
+        int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
         for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getChannels().size()) {
@@ -128,7 +128,7 @@ public class GuiReaderWriter extends GuiBase {
 
         if (inBounds(8, 39, 144, 73, mouseX - guiLeft, mouseY - guiTop)) {
             if (mouseButton == 0) {
-                int item = scrollbar.getOffset();
+                int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
                 for (int i = 0; i < VISIBLE_ROWS; ++i) {
                     int ix = 8;

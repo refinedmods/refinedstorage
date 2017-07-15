@@ -2,6 +2,7 @@
 
 ### 1.4.19
 - Fixed bug where players couldn't place regular blocks next to secured networks (raoulvdberge)
+- Fixed crashes relating to scrollbar in GUIs (raoulvdberge)
 
 ### 1.4.18
 - Fixed Solderer crashing (raoulvdberge)
