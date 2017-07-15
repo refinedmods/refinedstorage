@@ -71,6 +71,13 @@
 - The Portable Grid now doesn't despawn anymore when dropped in the world (raoulvdberge)
 - Fixed bug where oredict autocrafting didn't work in some cases (way2muchnoise)
 
+### 1.4.19
+- Fixed bug where players couldn't place regular blocks next to secured networks (raoulvdberge)
+- Fixed crashes relating to scrollbar in GUIs (raoulvdberge)
+- Fixed bug where disks have to be re-inserted in the Disk Drive in order to work again after rejoining a chunk (raoulvdberge)
+- Fixed crash relating to MCMP (raoulvdberge)
+- Implemented controller update throttling, should fix lag issues with controllers that constantly turn off and on (raoulvdberge)
+
 ### 1.4.18
 - Fixed Solderer crashing (raoulvdberge)
 - Fixed Interface extracting from itself when trying to keep items in stock (raoulvdberge)
