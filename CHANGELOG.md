@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.12
+- The Network Transmitter now uses 1 FE/t per block instead of 4 FE/t (raoulvdberge)
+
 ### 1.5.11
 - Fixed not being able to smelt quartz into silicon (raoulvdberge)
 - Fixed Grid extracting wrong enchanted books (raoulvdberge)

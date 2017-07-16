@@ -161,9 +161,9 @@ public final class RSConfig {
         craftingGridUsage = config.getInt("craftingGrid", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafting Grids");
         patternGridUsage = config.getInt("patternGrid", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Pattern Grids");
         fluidGridUsage = config.getInt("fluidGrid", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Fluid Grids");
-        networkTransmitterUsage = config.getInt("networkTransmitter", ENERGY, 50, 0, Integer.MAX_VALUE, "The base energy used by Network Transmitters");
-        networkTransmitterPerBlockUsage = config.getFloat("networkTransmitterPerBlock", ENERGY, 4, 0, Float.MAX_VALUE, "The additional energy per block that the Network Transmitter uses, gets rounded up");
-        networkReceiverUsage = config.getInt("networkReceiver", ENERGY, 15, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");
+        networkTransmitterUsage = config.getInt("networkTransmitter", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by Network Transmitters");
+        networkTransmitterPerBlockUsage = config.getFloat("networkTransmitterPerBlock", ENERGY, 1, 0, Float.MAX_VALUE, "The additional energy per block that the Network Transmitter uses, gets rounded up");
+        networkReceiverUsage = config.getInt("networkReceiver", ENERGY, 0, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
         readerUsage = config.getInt("reader", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Readers");
         writerUsage = config.getInt("writer", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Writers");
