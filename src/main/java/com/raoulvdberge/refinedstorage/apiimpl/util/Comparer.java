@@ -100,7 +100,7 @@ public class Comparer implements IComparer {
             } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().hasNoTags()) {
                 return true;
             } else if (left.getTagCompound().hasKey("GEN")) { // Forestry Bee Support
-		 // Removes the GEN tag from NBT if present to allow for proper filtering of Forestry queen bees.
+		// Removes the GEN tag from NBT if present to allow for proper filtering of Forestry queen bees.
                 NBTTagCompound leftTag = left.getTagCompound().copy();
                 NBTTagCompound rightTag = right.getTagCompound().copy();
                 leftTag.removeTag("GEN");
