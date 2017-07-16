@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.block.BlockNode;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -98,7 +99,14 @@ public class Comparer implements IComparer {
                 return true;
             } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().hasNoTags()) {
                 return true;
-            }
+            } else if (left.getTagCompound().hasKey("GEN")) {
+		// Removes the GEN tag from NBT if present to allow for proper filtering of Forestry queen bees.
+                NBTTagCompound leftTag = left.getTagCompound().copy();
+                NBTTagCompound rightTag = right.getTagCompound().copy();
+                leftTag.removeTag("GEN");
+                rightTag.removeTag("GEN");
+                return leftTag.equals(rightTag);
+	    }
 
             return false;
         }
