@@ -193,7 +193,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         return direction;
     }
 
-    // @todo: move this data to the network node
+    // @todo: Move this data to the network node.
     public void resetDirection() {
         this.direction = ((TileBase) (IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos))).getDirection();
     }

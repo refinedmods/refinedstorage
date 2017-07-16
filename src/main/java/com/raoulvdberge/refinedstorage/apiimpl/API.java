@@ -33,6 +33,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -190,18 +193,61 @@ public class API implements IRSAPI {
 
     @Override
     public int getItemStackHashCode(ItemStack stack, boolean tag) {
-        return stack.getItem().hashCode() * (stack.getItemDamage() + 1) * ((tag && stack.hasTagCompound()) ? stack.getTagCompound().hashCode() : 1);
+        int result = stack.getItem().hashCode();
+        result = 31 * result + (stack.getItemDamage() + 1);
+
+        if (tag && stack.hasTagCompound()) {
+            result = calcHashCode(stack.getTagCompound(), result);
+        }
+
+        return result;
+    }
+
+    private int calcHashCode(NBTBase tag, int result) {
+        if (tag instanceof NBTTagCompound) {
+            result = calcHashCode((NBTTagCompound) tag, result);
+        } else if (tag instanceof NBTTagList) {
+            result = calcHashCode((NBTTagList) tag, result);
+        } else {
+            result = 31 * result + tag.hashCode();
+        }
+
+        return result;
+    }
+
+    private int calcHashCode(NBTTagCompound tag, int result) {
+        for (String key : tag.getKeySet()) {
+            result = 31 * result + key.hashCode();
+            result = calcHashCode(tag.getTag(key), result);
+        }
+
+        return result;
+    }
+
+    private int calcHashCode(NBTTagList tag, int result) {
+        for (int i = 0; i < tag.tagCount(); ++i) {
+            result = calcHashCode(tag.get(i), result);
+        }
+
+        return result;
     }
 
     @Override
     public int getFluidStackHashCode(FluidStack stack) {
-        return stack.getFluid().hashCode() * (stack.tag != null ? stack.tag.hashCode() : 1);
+        int result = stack.getFluid().hashCode();
+
+        if (stack.tag != null) {
+            result = calcHashCode(stack.tag, result);
+        }
+
+        return result;
     }
 
     @Override
     public int getNetworkNodeHashCode(INetworkNode node) {
         int result = node.getPos().hashCode();
         result = 31 * result + node.getWorld().provider.getDimension();
+
         return result;
     }
 

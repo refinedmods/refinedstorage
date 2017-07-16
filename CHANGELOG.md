@@ -2,6 +2,7 @@
 
 ### 1.5.11
 - Fixed not being able to smelt quartz into silicon (raoulvdberge)
+- Fixed Grid extracting wrong enchanted books (raoulvdberge)
 
 ### 1.5.10
 - Converted Solderer recipes to JSON (raoulvdberge)
