@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
@@ -12,6 +11,7 @@ import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -53,7 +53,7 @@ public class WirelessGrid implements IGrid {
                 stack.setTagCompound(new NBTTagCompound());
             }
 
-            RSUtils.writeItems(this, 0, stack.getTagCompound());
+            StackUtils.writeItems(this, 0, stack.getTagCompound());
         }
     };
 
@@ -71,7 +71,7 @@ public class WirelessGrid implements IGrid {
         this.size = ItemWirelessGrid.getSize(stack);
 
         if (stack.hasTagCompound()) {
-            RSUtils.readItems(filter, 0, stack.getTagCompound());
+            StackUtils.readItems(filter, 0, stack.getTagCompound());
         }
     }
 

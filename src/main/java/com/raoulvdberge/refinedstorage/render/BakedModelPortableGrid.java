@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.render;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -24,9 +24,9 @@ public class BakedModelPortableGrid implements IBakedModel {
 
     @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-        TRSRTransformation transform = RSUtils.getDefaultBlockTransforms().get(cameraTransformType);
+        TRSRTransformation transform = RenderUtils.getDefaultBlockTransforms().get(cameraTransformType);
 
-        return Pair.of(this, transform == null ? RSUtils.EMPTY_MATRIX_TRANSFORM : transform.getMatrix());
+        return Pair.of(this, transform == null ? RenderUtils.EMPTY_MATRIX_TRANSFORM : transform.getMatrix());
     }
 
     @Override

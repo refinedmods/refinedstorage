@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.render;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -31,9 +31,9 @@ public class BakedModelPattern implements IBakedModel {
 
     @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-        TRSRTransformation transform = RSUtils.getDefaultItemTransforms().get(cameraTransformType);
+        TRSRTransformation transform = RenderUtils.getDefaultItemTransforms().get(cameraTransformType);
 
-        return Pair.of(this, transform == null ? RSUtils.EMPTY_MATRIX_TRANSFORM : transform.getMatrix());
+        return Pair.of(this, transform == null ? RenderUtils.EMPTY_MATRIX_TRANSFORM : transform.getMatrix());
     }
 
     @Override

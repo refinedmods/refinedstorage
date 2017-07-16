@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
@@ -11,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -211,15 +211,15 @@ public abstract class CraftingStep implements ICraftingStep {
         if (actualStack == null || actualStack.isEmpty() || !items.trackedRemove(actualStack, stack.getCount())) {
             FluidStack fluidInItem;
 
-            if (API.instance().getComparer().isEqual(stack, RSUtils.WATER_BOTTLE)) {
+            if (API.instance().getComparer().isEqual(stack, StackUtils.WATER_BOTTLE)) {
                 FluidStack fluidStack = fluids.get(new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), compare);
-                ItemStack emptyBottle = items.get(RSUtils.EMPTY_BOTTLE, compare);
-                if (emptyBottle != null && fluidStack != null && !emptyBottle.isEmpty() && items.trackedRemove(RSUtils.EMPTY_BOTTLE, 1)) {
+                ItemStack emptyBottle = items.get(StackUtils.EMPTY_BOTTLE, compare);
+                if (emptyBottle != null && fluidStack != null && !emptyBottle.isEmpty() && items.trackedRemove(StackUtils.EMPTY_BOTTLE, 1)) {
                     return AvailableType.FLUID;
                 }
-            } else if ((fluidInItem = RSUtils.getFluidFromStack(stack, true).getValue()) != null && RSUtils.hasFluidBucket(fluidInItem)) {
+            } else if ((fluidInItem = StackUtils.getFluid(stack, true).getValue()) != null && StackUtils.hasFluidBucket(fluidInItem)) {
                 FluidStack fluidStack = fluids.get(fluidInItem, compare);
-                ItemStack bucket = items.get(RSUtils.EMPTY_BUCKET, compare);
+                ItemStack bucket = items.get(StackUtils.EMPTY_BUCKET, compare);
                 if (bucket != null && fluidStack != null && !bucket.isEmpty() && fluids.trackedRemove(fluidStack, fluidInItem.amount) && items.trackedRemove(bucket, 1)) {
                     return AvailableType.FLUID;
                 }
@@ -244,16 +244,16 @@ public abstract class CraftingStep implements ICraftingStep {
             } else {
                 boolean abort = true;
                 FluidStack fluidInItem;
-                if (API.instance().getComparer().isEqual(insertStack, RSUtils.WATER_BOTTLE)) {
+                if (API.instance().getComparer().isEqual(insertStack, StackUtils.WATER_BOTTLE)) {
                     FluidStack fluidStack = network.extractFluid(new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), Fluid.BUCKET_VOLUME, compare, true); // Simulate is true because we won't actually get the fluid out of the storage for bottles!
-                    ItemStack emptyBottleStack = network.extractItem(RSUtils.EMPTY_BOTTLE, 1, compare, false);
+                    ItemStack emptyBottleStack = network.extractItem(StackUtils.EMPTY_BOTTLE, 1, compare, false);
                     if (fluidStack != null && fluidStack.amount == Fluid.BUCKET_VOLUME && emptyBottleStack != null) {
                         abort = false;
                         actualInputs.add(insertStack.copy());
                     }
-                } else if ((fluidInItem = RSUtils.getFluidFromStack(insertStack, true).getValue()) != null) {
+                } else if ((fluidInItem = StackUtils.getFluid(insertStack, true).getValue()) != null) {
                     FluidStack fluidStack = network.extractFluid(fluidInItem, fluidInItem.amount, compare, false);
-                    ItemStack bucketStack = network.extractItem(RSUtils.EMPTY_BUCKET, 1, compare, false);
+                    ItemStack bucketStack = network.extractItem(StackUtils.EMPTY_BUCKET, 1, compare, false);
                     if (fluidStack != null && fluidStack.amount == fluidInItem.amount && bucketStack != null) {
                         abort = false;
                         actualInputs.add(insertStack.copy());

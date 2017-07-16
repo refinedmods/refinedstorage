@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -79,10 +79,10 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
         ItemStack container = in.getStackInSlot(0);
 
         if (!container.isEmpty()) {
-            Pair<ItemStack, FluidStack> result = RSUtils.getFluidFromStack(container, true);
+            Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
             if (result.getValue() != null && tankIn.fillInternal(result.getValue(), false) == result.getValue().amount) {
-                result = RSUtils.getFluidFromStack(container, false);
+                result = StackUtils.getFluid(container, false);
 
                 tankIn.fillInternal(result.getValue(), true);
 
@@ -151,8 +151,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(upgrades, 0, tag);
-        RSUtils.writeItems(in, 1, tag);
+        StackUtils.writeItems(upgrades, 0, tag);
+        StackUtils.writeItems(in, 1, tag);
 
         tag.setTag(NBT_TANK_IN, tankIn.writeToNBT(new NBTTagCompound()));
         tag.setTag(NBT_TANK_OUT, tankOut.writeToNBT(new NBTTagCompound()));
@@ -164,8 +164,8 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(upgrades, 0, tag);
-        RSUtils.readItems(in, 1, tag);
+        StackUtils.readItems(upgrades, 0, tag);
+        StackUtils.readItems(in, 1, tag);
 
         if (tag.hasKey(NBT_TANK_IN)) {
             tankIn.readFromNBT(tag.getCompoundTag(NBT_TANK_IN));
@@ -185,7 +185,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 
-        RSUtils.writeItems(out, 2, tag);
+        StackUtils.writeItems(out, 2, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
 
@@ -196,7 +196,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
     public void readConfiguration(NBTTagCompound tag) {
         super.readConfiguration(tag);
 
-        RSUtils.readItems(out, 2, tag);
+        StackUtils.readItems(out, 2, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);

@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -9,6 +8,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.Stor
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -80,10 +80,10 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
             if (wanted.isEmpty()) {
                 if (!got.isEmpty()) {
-                    exportItems.setStackInSlot(i, RSUtils.transformNullToEmpty(network.insertItemTracked(got, got.getCount())));
+                    exportItems.setStackInSlot(i, StackUtils.nullToEmpty(network.insertItemTracked(got, got.getCount())));
                 }
             } else if (!got.isEmpty() && !API.instance().getComparer().isEqualNoQuantity(wanted, got)) {
-                exportItems.setStackInSlot(i, RSUtils.transformNullToEmpty(network.insertItemTracked(got, got.getCount())));
+                exportItems.setStackInSlot(i, StackUtils.nullToEmpty(network.insertItemTracked(got, got.getCount())));
             } else {
                 int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
 
@@ -149,9 +149,9 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(importItems, 0, tag);
-        RSUtils.readItems(exportItems, 2, tag);
-        RSUtils.readItems(upgrades, 3, tag);
+        StackUtils.readItems(importItems, 0, tag);
+        StackUtils.readItems(exportItems, 2, tag);
+        StackUtils.readItems(upgrades, 3, tag);
     }
 
     @Override
@@ -163,9 +163,9 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(importItems, 0, tag);
-        RSUtils.writeItems(exportItems, 2, tag);
-        RSUtils.writeItems(upgrades, 3, tag);
+        StackUtils.writeItems(importItems, 0, tag);
+        StackUtils.writeItems(exportItems, 2, tag);
+        StackUtils.writeItems(upgrades, 3, tag);
 
         return tag;
     }
@@ -174,7 +174,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 
-        RSUtils.writeItems(exportSpecimenItems, 1, tag);
+        StackUtils.writeItems(exportSpecimenItems, 1, tag);
 
         tag.setInteger(NBT_COMPARE, compare);
 
@@ -185,7 +185,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public void readConfiguration(NBTTagCompound tag) {
         super.readConfiguration(tag);
 
-        RSUtils.readItems(exportSpecimenItems, 1, tag);
+        StackUtils.readItems(exportSpecimenItems, 1, tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);

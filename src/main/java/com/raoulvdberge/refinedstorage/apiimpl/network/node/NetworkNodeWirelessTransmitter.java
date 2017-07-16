@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +33,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(upgrades, 0, tag);
+        StackUtils.readItems(upgrades, 0, tag);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(upgrades, 0, tag);
+        StackUtils.writeItems(upgrades, 0, tag);
 
         return tag;
     }

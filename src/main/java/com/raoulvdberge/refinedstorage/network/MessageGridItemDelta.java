@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
     @Override
     public void toBytes(ByteBuf buf) {
-        RSUtils.writeItemStack(buf, stack, network, false);
+        StackUtils.writeItemStack(buf, stack, network, false);
         buf.writeInt(delta);
     }
 

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
@@ -20,6 +19,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craf
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -277,70 +277,70 @@ public class CraftingTask implements ICraftingTask {
     private boolean doFluidCalculation(IStackList<ItemStack> networkList, IStackList<FluidStack> networkFluidList, ItemStack input, IStackList<ItemStack> toInsert, List<ICraftingStep> previousSteps) {
         FluidStack fluidInItem;
 
-        if (API.instance().getComparer().isEqual(input, RSUtils.WATER_BOTTLE)) {
+        if (API.instance().getComparer().isEqual(input, StackUtils.WATER_BOTTLE)) {
             FluidStack fluidInStorage = networkFluidList.get(new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME));
 
             if (fluidInStorage == null || fluidInStorage.amount < Fluid.BUCKET_VOLUME) {
                 missing.add(input);
             } else {
-                ItemStack emptyBottle = toInsert.get(RSUtils.EMPTY_BOTTLE);
+                ItemStack emptyBottle = toInsert.get(StackUtils.EMPTY_BOTTLE);
                 boolean hasBottle = false;
                 if (emptyBottle != null && emptyBottle.getCount() > 0) {
-                    hasBottle = toInsert.remove(RSUtils.EMPTY_BOTTLE, 1);
+                    hasBottle = toInsert.remove(StackUtils.EMPTY_BOTTLE, 1);
                 }
                 if (!hasBottle) {
-                    emptyBottle = networkList.get(RSUtils.EMPTY_BOTTLE);
+                    emptyBottle = networkList.get(StackUtils.EMPTY_BOTTLE);
                     if (emptyBottle != null && emptyBottle.getCount() > 0) {
-                        hasBottle = networkList.remove(RSUtils.EMPTY_BOTTLE);
+                        hasBottle = networkList.remove(StackUtils.EMPTY_BOTTLE);
                     }
                 }
 
-                ICraftingPattern emptyBottlePattern = network.getCraftingManager().getPattern(RSUtils.EMPTY_BOTTLE);
+                ICraftingPattern emptyBottlePattern = network.getCraftingManager().getPattern(StackUtils.EMPTY_BOTTLE);
 
                 if (!hasBottle) {
                     if (emptyBottlePattern == null) {
-                        missing.add(RSUtils.EMPTY_BOTTLE.copy());
+                        missing.add(StackUtils.EMPTY_BOTTLE.copy());
                     } else {
-                        toCraft.add(RSUtils.EMPTY_BOTTLE.copy());
+                        toCraft.add(StackUtils.EMPTY_BOTTLE.copy());
                         previousSteps.add(calculate(networkList, networkFluidList, emptyBottlePattern, toInsert));
-                        toInsert.remove(RSUtils.EMPTY_BOTTLE, 1);
+                        toInsert.remove(StackUtils.EMPTY_BOTTLE, 1);
                     }
                 }
 
                 if (hasBottle || emptyBottlePattern != null) {
-                    toTake.add(RSUtils.EMPTY_BOTTLE.copy());
-                    networkList.remove(RSUtils.EMPTY_BOTTLE);
+                    toTake.add(StackUtils.EMPTY_BOTTLE.copy());
+                    networkList.remove(StackUtils.EMPTY_BOTTLE);
                 }
             }
 
             return true;
-        } else if ((fluidInItem = RSUtils.getFluidFromStack(input, true).getValue()) != null && RSUtils.hasFluidBucket(fluidInItem)) {
+        } else if ((fluidInItem = StackUtils.getFluid(input, true).getValue()) != null && StackUtils.hasFluidBucket(fluidInItem)) {
             FluidStack fluidInStorage = networkFluidList.get(fluidInItem);
 
             if (fluidInStorage == null || fluidInStorage.amount < fluidInItem.amount) {
                 missing.add(input);
             } else {
-                ItemStack bucket = toInsert.get(RSUtils.EMPTY_BUCKET);
+                ItemStack bucket = toInsert.get(StackUtils.EMPTY_BUCKET);
                 boolean hasBucket = false;
                 if (bucket != null && bucket.getCount() > 0) {
-                    hasBucket = toInsert.remove(RSUtils.EMPTY_BUCKET, 1);
+                    hasBucket = toInsert.remove(StackUtils.EMPTY_BUCKET, 1);
                 }
                 if (!hasBucket) {
-                    bucket = networkList.get(RSUtils.EMPTY_BUCKET);
+                    bucket = networkList.get(StackUtils.EMPTY_BUCKET);
                     if (bucket != null && bucket.getCount() > 0) {
-                        hasBucket = networkList.remove(RSUtils.EMPTY_BUCKET, 1);
+                        hasBucket = networkList.remove(StackUtils.EMPTY_BUCKET, 1);
                     }
                 }
 
-                ICraftingPattern bucketPattern = network.getCraftingManager().getPattern(RSUtils.EMPTY_BUCKET);
+                ICraftingPattern bucketPattern = network.getCraftingManager().getPattern(StackUtils.EMPTY_BUCKET);
 
                 if (!hasBucket) {
                     if (bucketPattern == null) {
-                        missing.add(RSUtils.EMPTY_BUCKET.copy());
+                        missing.add(StackUtils.EMPTY_BUCKET.copy());
                     } else {
-                        toCraft.add(RSUtils.EMPTY_BUCKET.copy());
+                        toCraft.add(StackUtils.EMPTY_BUCKET.copy());
                         previousSteps.add(calculate(networkList, networkFluidList, bucketPattern, toInsert));
-                        toInsert.remove(RSUtils.EMPTY_BUCKET, 1);
+                        toInsert.remove(StackUtils.EMPTY_BUCKET, 1);
                     }
                 }
 
@@ -520,7 +520,7 @@ public class CraftingTask implements ICraftingTask {
 
         tag.setTag(NBT_TO_INSERT_ITEMS, toInsertItemsList);
 
-        tag.setTag(NBT_TO_TAKE_FLUIDS, RSUtils.serializeFluidStackList(toTakeFluids));
+        tag.setTag(NBT_TO_TAKE_FLUIDS, StackUtils.serializeFluidStackList(toTakeFluids));
 
         NBTTagList toInsertFluidsList = new NBTTagList();
 

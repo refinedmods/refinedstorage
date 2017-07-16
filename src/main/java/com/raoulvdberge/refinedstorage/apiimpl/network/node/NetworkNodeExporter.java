@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -15,6 +14,8 @@ import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -61,7 +62,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
         if (network != null && canUpdate() && ticks % upgrades.getSpeed() == 0) {
             if (type == IType.ITEMS) {
-                IItemHandler handler = RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+                IItemHandler handler = WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
                 if (handler != null) {
                     for (int i = 0; i < itemFilters.getSlots(); ++i) {
@@ -81,7 +82,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     }
                 }
             } else if (type == IType.FLUIDS) {
-                IFluidHandler handler = RSUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
+                IFluidHandler handler = WorldUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
 
                 if (handler != null) {
                     for (FluidStack stack : fluidFilters.getFluids()) {
@@ -208,7 +209,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(upgrades, 1, tag);
+        StackUtils.readItems(upgrades, 1, tag);
     }
 
     @Override
@@ -220,7 +221,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(upgrades, 1, tag);
+        StackUtils.writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -234,8 +235,8 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
         tag.setBoolean(NBT_REGULATOR, regulator);
         tag.setBoolean(NBT_CRAFT_ONLY, craftOnly);
 
-        RSUtils.writeItems(itemFilters, 0, tag);
-        RSUtils.writeItems(fluidFilters, 2, tag);
+        StackUtils.writeItems(itemFilters, 0, tag);
+        StackUtils.writeItems(fluidFilters, 2, tag);
 
         return tag;
     }
@@ -260,8 +261,8 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
             craftOnly = tag.getBoolean(NBT_CRAFT_ONLY);
         }
 
-        RSUtils.readItems(itemFilters, 0, tag);
-        RSUtils.readItems(fluidFilters, 2, tag);
+        StackUtils.readItems(itemFilters, 0, tag);
+        StackUtils.readItems(fluidFilters, 2, tag);
     }
 
     public IItemHandler getUpgrades() {

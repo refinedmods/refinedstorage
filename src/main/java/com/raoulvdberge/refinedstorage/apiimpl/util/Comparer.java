@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.apiimpl.util;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.block.BlockNode;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -114,7 +114,7 @@ public class Comparer implements IComparer {
             return validity == EnumActionResult.SUCCESS;
         }
 
-        return RSUtils.areStacksEquivalent(left, right);
+        return StackUtils.areStacksEquivalent(left, right);
     }
 
     private EnumActionResult validityCheck(@Nullable ItemStack left, @Nullable ItemStack right) {

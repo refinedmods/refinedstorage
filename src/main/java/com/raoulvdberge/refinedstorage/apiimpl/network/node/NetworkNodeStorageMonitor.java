@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -11,6 +10,8 @@ import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -39,7 +40,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         public void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            RSUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(world, pos);
         }
     };
 
@@ -48,7 +49,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         public void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            RSUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(world, pos);
         }
     };
 
@@ -74,7 +75,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         } else if (oldAmount != newAmount) {
             oldAmount = newAmount;
 
-            RSUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(world, pos);
         }
     }
 
@@ -101,7 +102,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
                 ItemStack toInsert = player.inventory.getStackInSlot(i);
 
                 if (API.instance().getComparer().isEqual(inserted, toInsert, compare)) {
-                    player.inventory.setInventorySlotContents(i, RSUtils.transformNullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
+                    player.inventory.setInventorySlotContents(i, StackUtils.nullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
                 }
             }
         }
@@ -121,7 +122,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         ItemStack filter = itemFilter.getStackInSlot(0);
 
         if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, RSUtils.transformNullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, StackUtils.nullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
 
             deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, Minecraft.getSystemTime()));
         }
@@ -172,7 +173,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     public void setCompare(int compare) {
         this.compare = compare;
 
-        RSUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(world, pos);
 
         markDirty();
     }
@@ -186,7 +187,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     public void setType(int type) {
         this.type = type;
 
-        RSUtils.updateBlock(world, pos);
+        WorldUtils.updateBlock(world, pos);
 
         markDirty();
     }
@@ -203,8 +204,8 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_TYPE, type);
 
-        RSUtils.writeItems(itemFilter, 0, tag);
-        RSUtils.writeItems(fluidFilter, 1, tag);
+        StackUtils.writeItems(itemFilter, 0, tag);
+        StackUtils.writeItems(fluidFilter, 1, tag);
 
         return tag;
     }
@@ -221,8 +222,8 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
             type = tag.getInteger(NBT_TYPE);
         }
 
-        RSUtils.readItems(itemFilter, 0, tag);
-        RSUtils.readItems(fluidFilter, 1, tag);
+        StackUtils.readItems(itemFilter, 0, tag);
+        StackUtils.readItems(fluidFilter, 1, tag);
     }
 
     public ItemHandlerBase getItemFilter() {

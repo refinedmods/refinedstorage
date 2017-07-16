@@ -3,11 +3,11 @@ package com.raoulvdberge.refinedstorage.integration.storagedrawers;
 import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawer;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.NetworkNodeExternalStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageItemExternal;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -52,7 +52,7 @@ public class StorageItemItemRepository extends StorageItemExternal {
             return stack;
         }
 
-        return RSUtils.transformEmptyToNull(repository.insertItem(ItemHandlerHelper.copyStackWithSize(stack, size), simulate));
+        return StackUtils.emptyToNull(repository.insertItem(ItemHandlerHelper.copyStackWithSize(stack, size), simulate));
     }
 
     @Nullable
@@ -64,7 +64,7 @@ public class StorageItemItemRepository extends StorageItemExternal {
             return null;
         }
 
-        return RSUtils.transformEmptyToNull(repository.extractItem(stack, size, simulate, s -> API.instance().getComparer().isEqual(stack, s, flags)));
+        return StackUtils.emptyToNull(repository.extractItem(stack, size, simulate, s -> API.instance().getComparer().isEqual(stack, s, flags)));
     }
 
     @Override

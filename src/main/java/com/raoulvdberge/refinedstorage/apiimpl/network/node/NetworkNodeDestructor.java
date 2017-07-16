@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -12,6 +11,7 @@ import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -186,7 +186,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(upgrades, 1, tag);
+        StackUtils.readItems(upgrades, 1, tag);
     }
 
     @Override
@@ -198,7 +198,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(upgrades, 1, tag);
+        StackUtils.writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -212,8 +212,8 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
         tag.setInteger(NBT_TYPE, type);
         tag.setBoolean(NBT_PICKUP, pickupItem);
 
-        RSUtils.writeItems(itemFilters, 0, tag);
-        RSUtils.writeItems(fluidFilters, 2, tag);
+        StackUtils.writeItems(itemFilters, 0, tag);
+        StackUtils.writeItems(fluidFilters, 2, tag);
 
         return tag;
     }
@@ -238,8 +238,8 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
             pickupItem = tag.getBoolean(NBT_PICKUP);
         }
 
-        RSUtils.readItems(itemFilters, 0, tag);
-        RSUtils.readItems(fluidFilters, 2, tag);
+        StackUtils.readItems(itemFilters, 0, tag);
+        StackUtils.readItems(fluidFilters, 2, tag);
     }
 
     public IItemHandler getUpgrades() {

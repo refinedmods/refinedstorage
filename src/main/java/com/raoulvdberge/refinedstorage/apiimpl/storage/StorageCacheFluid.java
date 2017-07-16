@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -83,7 +82,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
 
     @Override
     public void sort() {
-        storages.sort(RSUtils.STORAGE_COMPARATOR);
+        storages.sort(IStorage.COMPARATOR);
     }
 
     @Override

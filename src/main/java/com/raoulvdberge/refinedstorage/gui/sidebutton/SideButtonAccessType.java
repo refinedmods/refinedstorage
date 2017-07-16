@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonAccessType extends SideButton {
@@ -28,6 +28,6 @@ public class SideButtonAccessType extends SideButton {
 
     @Override
     public void actionPerformed() {
-        TileDataManager.setParameter(parameter, RSUtils.getAccessType(parameter.getValue().getId() + 1));
+        TileDataManager.setParameter(parameter, AccessTypeUtils.getAccessType(parameter.getValue().getId() + 1));
     }
 }

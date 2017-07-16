@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
@@ -44,6 +43,8 @@ import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -241,7 +242,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             if (lastEnergyDisplay != energyDisplay) {
                 lastEnergyDisplay = energyDisplay;
 
-                RSUtils.updateBlock(world, pos);
+                WorldUtils.updateBlock(world, pos);
             }
         }
     }
@@ -494,7 +495,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Override
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
         if (fluidStorage.getStorages().isEmpty()) {
-            return RSUtils.copyStackWithSize(stack, size);
+            return StackUtils.copy(stack, size);
         }
 
         FluidStack remainder = stack;

@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -46,16 +46,16 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
     @Nullable
     public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
         if (getProperties() != null && IFilterable.canTakeFluids(externalStorage.getFluidFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack) && getProperties().canFillFluidType(stack)) {
-            int filled = handlerSupplier.get().fill(RSUtils.copyStackWithSize(stack, size), !simulate);
+            int filled = handlerSupplier.get().fill(StackUtils.copy(stack, size), !simulate);
 
             if (filled == size) {
                 return null;
             }
 
-            return RSUtils.copyStackWithSize(stack, size - filled);
+            return StackUtils.copy(stack, size - filled);
         }
 
-        return RSUtils.copyStackWithSize(stack, size);
+        return StackUtils.copy(stack, size);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
             return null;
         }
 
-        FluidStack toDrain = RSUtils.copyStackWithSize(stack, size);
+        FluidStack toDrain = StackUtils.copy(stack, size);
 
         if (API.instance().getComparer().isEqual(getContents(), toDrain, flags)) {
             return handler.drain(toDrain, !simulate);
@@ -107,9 +107,9 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
         FluidStack stack = getContents();
 
         if (cache == null) {
-            cache = RSUtils.copyStack(stack);
+            cache = StackUtils.copy(stack);
         } else if (!API.instance().getComparer().isEqual(stack, cache, IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
-            cache = RSUtils.copyStack(stack);
+            cache = StackUtils.copy(stack);
 
             return true;
         }
@@ -118,6 +118,6 @@ public class StorageFluidExternal implements IStorage<FluidStack> {
     }
 
     public void updateCacheForcefully() {
-        cache = RSUtils.copyStack(getContents());
+        cache = StackUtils.copy(getContents());
     }
 }

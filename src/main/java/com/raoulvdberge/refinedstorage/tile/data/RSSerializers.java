@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile.data;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.tile.ClientNode;
+import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializer;
@@ -96,7 +96,7 @@ public final class RSSerializers {
 
         @Override
         public AccessType read(PacketBuffer buf) {
-            return RSUtils.getAccessType(buf.readInt());
+            return AccessTypeUtils.getAccessType(buf.readInt());
         }
 
         @Override

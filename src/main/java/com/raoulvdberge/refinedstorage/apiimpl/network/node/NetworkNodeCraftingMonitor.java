@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -10,6 +9,7 @@ import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -100,7 +100,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(filter, 0, tag);
+        StackUtils.writeItems(filter, 0, tag);
 
         tag.setBoolean(NBT_VIEW_AUTOMATED, viewAutomated);
 
@@ -111,7 +111,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(filter, 0, tag);
+        StackUtils.readItems(filter, 0, tag);
 
         if (tag.hasKey(NBT_VIEW_AUTOMATED)) {
             viewAutomated = tag.getBoolean(NBT_VIEW_AUTOMATED);

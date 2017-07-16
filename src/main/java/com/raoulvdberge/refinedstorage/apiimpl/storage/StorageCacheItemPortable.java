@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -9,6 +8,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.network.MessageGridItemDelta;
 import com.raoulvdberge.refinedstorage.network.MessageGridItemUpdate;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -89,7 +89,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
             buf.writeInt(list.getStacks().size());
 
             for (ItemStack stack : list.getStacks()) {
-                RSUtils.writeItemStack(buf, stack, null, false);
+                StackUtils.writeItemStack(buf, stack, null, false);
             }
         }, false), (EntityPlayerMP) player);
     }

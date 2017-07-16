@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -11,6 +10,8 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -78,7 +79,7 @@ public class NetworkNodeSolderer extends NetworkNode {
 
             markDirty();
 
-            RSUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(world, pos);
         }
 
         if (network == null || !canUpdate()) {
@@ -147,9 +148,9 @@ public class NetworkNodeSolderer extends NetworkNode {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(ingredients, 0, tag);
-        RSUtils.readItems(upgrades, 1, tag);
-        RSUtils.readItems(result, 2, tag);
+        StackUtils.readItems(ingredients, 0, tag);
+        StackUtils.readItems(upgrades, 1, tag);
+        StackUtils.readItems(result, 2, tag);
 
         recipe = API.instance().getSoldererRegistry().getRecipe(ingredients);
 
@@ -172,9 +173,9 @@ public class NetworkNodeSolderer extends NetworkNode {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(ingredients, 0, tag);
-        RSUtils.writeItems(upgrades, 1, tag);
-        RSUtils.writeItems(result, 2, tag);
+        StackUtils.writeItems(ingredients, 0, tag);
+        StackUtils.writeItems(upgrades, 1, tag);
+        StackUtils.writeItems(result, 2, tag);
 
         tag.setBoolean(NBT_WORKING, working);
         tag.setInteger(NBT_PROGRESS, progress);

@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -12,7 +12,7 @@ public class ItemHandlerFluid extends ItemHandlerBase {
     private FluidStack[] fluids;
 
     public ItemHandlerFluid(int size, @Nullable Consumer<Integer> listener) {
-        super(size, listener, s -> RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(s, 1), true).getValue() != null);
+        super(size, listener, s -> StackUtils.getFluid(ItemHandlerHelper.copyStackWithSize(s, 1), true).getValue() != null);
 
         this.fluids = new FluidStack[size];
     }
@@ -26,7 +26,7 @@ public class ItemHandlerFluid extends ItemHandlerBase {
         if (stack.isEmpty()) {
             fluids[slot] = null;
         } else {
-            fluids[slot] = RSUtils.getFluidFromStack(ItemHandlerHelper.copyStackWithSize(stack, 1), true).getValue();
+            fluids[slot] = StackUtils.getFluid(ItemHandlerHelper.copyStackWithSize(stack, 1), true).getValue();
         }
     }
 

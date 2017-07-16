@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
@@ -24,6 +23,7 @@ import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -68,7 +68,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
                 stack.setTagCompound(new NBTTagCompound());
             }
 
-            RSUtils.writeItems(this, 0, stack.getTagCompound());
+            StackUtils.writeItems(this, 0, stack.getTagCompound());
         }
     };
     private ItemHandlerBase disk = new ItemHandlerBase(1, s -> NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK.test(s) && ((IStorageDiskProvider) s.getItem()).create(s).getType() == StorageDiskType.ITEMS) {
@@ -94,7 +94,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
                 if (player != null) {
                     cache.invalidate();
 
-                    RSUtils.writeItems(this, 4, stack.getTagCompound());
+                    StackUtils.writeItems(this, 4, stack.getTagCompound());
                 }
             }
         }
@@ -127,10 +127,10 @@ public class PortableGrid implements IGrid, IPortableGrid {
         }
 
         if (player != null) {
-            RSUtils.readItems(filter, 0, stack.getTagCompound());
+            StackUtils.readItems(filter, 0, stack.getTagCompound());
         }
 
-        RSUtils.readItems(disk, 4, stack.getTagCompound());
+        StackUtils.readItems(disk, 4, stack.getTagCompound());
 
         if (player != null) {
             drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
@@ -344,7 +344,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
         if (!player.getEntityWorld().isRemote && storage != null) {
             storage.writeToNBT();
 
-            RSUtils.writeItems(disk, 4, stack.getTagCompound());
+            StackUtils.writeItems(disk, 4, stack.getTagCompound());
         }
     }
 

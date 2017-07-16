@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -32,7 +32,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
         this.itemsReader = new ItemHandlerReaderWriter(items, true, false);
 
         if (tag != null) {
-            RSUtils.readItems(items, 0, tag);
+            StackUtils.readItems(items, 0, tag);
         }
     }
 
@@ -76,7 +76,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        RSUtils.writeItems(items, 0, tag);
+        StackUtils.writeItems(items, 0, tag);
 
         return tag;
     }

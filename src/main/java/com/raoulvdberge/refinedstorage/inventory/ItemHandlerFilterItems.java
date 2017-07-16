@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
@@ -15,7 +15,7 @@ public class ItemHandlerFilterItems extends ItemStackHandler {
         this.stack = stack;
 
         if (stack.hasTagCompound()) {
-            RSUtils.readItems(this, 0, stack.getTagCompound());
+            StackUtils.readItems(this, 0, stack.getTagCompound());
         }
     }
 
@@ -27,7 +27,7 @@ public class ItemHandlerFilterItems extends ItemStackHandler {
             stack.setTagCompound(new NBTTagCompound());
         }
 
-        RSUtils.writeItems(this, 0, stack.getTagCompound());
+        StackUtils.writeItems(this, 0, stack.getTagCompound());
     }
 
     public NonNullList<ItemStack> getFilteredItems() {

@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -36,13 +36,13 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
             buf.writeInt(size);
 
             for (ItemStack stack : network.getItemStorageCache().getList().getStacks()) {
-                RSUtils.writeItemStack(buf, stack, network, false);
+                StackUtils.writeItemStack(buf, stack, network, false);
             }
 
             for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
                 for (ItemStack output : pattern.getOutputs()) {
                     if (output != null) {
-                        RSUtils.writeItemStack(buf, output, network, true);
+                        StackUtils.writeItemStack(buf, output, network, true);
                     }
                 }
             }

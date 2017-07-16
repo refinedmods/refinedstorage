@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
@@ -10,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStep;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -56,7 +56,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
                 }
             }
 
-            IStackList<FluidStack> toTakeFluids = RSUtils.readFluidStackList(tag.getTagList(CraftingTask.NBT_TO_TAKE_FLUIDS, Constants.NBT.TAG_COMPOUND));
+            IStackList<FluidStack> toTakeFluids = StackUtils.readFluidStackList(tag.getTagList(CraftingTask.NBT_TO_TAKE_FLUIDS, Constants.NBT.TAG_COMPOUND));
 
             NBTTagList toInsertFluidsList = tag.getTagList(CraftingTask.NBT_TO_INSERT_FLUIDS, Constants.NBT.TAG_COMPOUND);
 

@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -31,14 +31,14 @@ public class FluidGridHandler implements IFluidGridHandler {
             return;
         }
 
-        if (RSUtils.hasFluidBucket(stack)) {
+        if (StackUtils.hasFluidBucket(stack)) {
             ItemStack bucket = null;
 
             for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
                 ItemStack slot = player.inventory.getStackInSlot(i);
 
-                if (API.instance().getComparer().isEqualNoQuantity(RSUtils.EMPTY_BUCKET, slot)) {
-                    bucket = RSUtils.EMPTY_BUCKET.copy();
+                if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
+                    bucket = StackUtils.EMPTY_BUCKET.copy();
 
                     player.inventory.decrStackSize(i, 1);
 
@@ -47,7 +47,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             if (bucket == null) {
-                bucket = network.extractItem(RSUtils.EMPTY_BUCKET, 1, false);
+                bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, false);
             }
 
             if (bucket != null) {
@@ -74,10 +74,10 @@ public class FluidGridHandler implements IFluidGridHandler {
             return container;
         }
 
-        Pair<ItemStack, FluidStack> result = RSUtils.getFluidFromStack(container, true);
+        Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
         if (result.getValue() != null && network.insertFluid(result.getValue(), result.getValue().amount, true) == null) {
-            result = RSUtils.getFluidFromStack(container, false);
+            result = StackUtils.getFluid(container, false);
 
             network.insertFluid(result.getValue(), result.getValue().amount, false);
 
@@ -89,12 +89,12 @@ public class FluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onInsertHeldContainer(EntityPlayerMP player) {
-        player.inventory.setItemStack(RSUtils.transformNullToEmpty(onInsert(player, player.inventory.getItemStack())));
+        player.inventory.setItemStack(StackUtils.nullToEmpty(onInsert(player, player.inventory.getItemStack())));
         player.updateHeldItem();
     }
 
     @Override
     public ItemStack onShiftClick(EntityPlayerMP player, ItemStack container) {
-        return RSUtils.transformNullToEmpty(onInsert(player, container));
+        return StackUtils.nullToEmpty(onInsert(player, container));
     }
 }

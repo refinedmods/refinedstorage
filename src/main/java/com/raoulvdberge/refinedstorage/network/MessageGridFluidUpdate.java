@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -33,7 +33,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.stacks.add(new GridStackFluid(RSUtils.readFluidStack(buf)));
+            this.stacks.add(new GridStackFluid(StackUtils.readFluidStack(buf)));
         }
     }
 
@@ -44,7 +44,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         buf.writeInt(network.getFluidStorageCache().getList().getStacks().size());
 
         for (FluidStack stack : network.getFluidStorageCache().getList().getStacks()) {
-            RSUtils.writeFluidStack(buf, stack);
+            StackUtils.writeFluidStack(buf, stack);
         }
     }
 

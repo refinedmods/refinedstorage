@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,13 +26,13 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        clientStack = new GridStackFluid(RSUtils.readFluidStack(buf));
+        clientStack = new GridStackFluid(StackUtils.readFluidStack(buf));
         delta = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        RSUtils.writeFluidStack(buf, stack);
+        StackUtils.writeFluidStack(buf, stack);
         buf.writeInt(delta);
     }
 

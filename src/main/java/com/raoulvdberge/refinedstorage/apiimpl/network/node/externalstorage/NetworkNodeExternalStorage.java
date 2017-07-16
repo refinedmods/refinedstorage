@@ -1,9 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
-import com.jaquadro.minecraft.storagedrawers.api.capabilities.IItemRepository;
 import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -19,6 +17,9 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -111,15 +112,15 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 
-        RSUtils.writeItems(itemFilters, 0, tag);
-        RSUtils.writeItems(fluidFilters, 1, tag);
+        StackUtils.writeItems(itemFilters, 0, tag);
+        StackUtils.writeItems(fluidFilters, 1, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
 
-        RSUtils.writeAccessType(tag, accessType);
+        AccessTypeUtils.writeAccessType(tag, accessType);
 
         return tag;
     }
@@ -128,8 +129,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public void readConfiguration(NBTTagCompound tag) {
         super.readConfiguration(tag);
 
-        RSUtils.readItems(itemFilters, 0, tag);
-        RSUtils.readItems(fluidFilters, 1, tag);
+        StackUtils.readItems(itemFilters, 0, tag);
+        StackUtils.readItems(fluidFilters, 1, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -147,7 +148,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
             type = tag.getInteger(NBT_TYPE);
         }
 
-        accessType = RSUtils.readAccessType(tag);
+        accessType = AccessTypeUtils.readAccessType(tag);
     }
 
     @Override
@@ -209,17 +210,17 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
                     return (f != null && f.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) ? f.getCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite()) : null;
                 }));
             } else if (!(facing.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()) && facing.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()).getNode() instanceof IStorageProvider)) {
-                IItemHandler itemHandler = RSUtils.getItemHandler(facing, getDirection().getOpposite());
+                IItemHandler itemHandler = WorldUtils.getItemHandler(facing, getDirection().getOpposite());
 
                 if (itemHandler != null) {
-                    itemStorages.add(new StorageItemItemHandler(this, () -> RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite())));
+                    itemStorages.add(new StorageItemItemHandler(this, () -> WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite())));
                 }
             }
         } else if (type == IType.FLUIDS) {
-            IFluidHandler fluidHandler = RSUtils.getFluidHandler(facing, getDirection().getOpposite());
+            IFluidHandler fluidHandler = WorldUtils.getFluidHandler(facing, getDirection().getOpposite());
 
             if (fluidHandler != null) {
-                fluidStorages.add(new StorageFluidExternal(this, () -> RSUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite())));
+                fluidStorages.add(new StorageFluidExternal(this, () -> WorldUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite())));
             }
         }
 

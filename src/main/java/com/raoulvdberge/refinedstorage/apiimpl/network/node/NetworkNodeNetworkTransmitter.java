@@ -2,13 +2,13 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemNetworkCard;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -64,8 +64,8 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(networkCard, 0, tag);
-        RSUtils.writeItems(upgrades, 1, tag);
+        StackUtils.writeItems(networkCard, 0, tag);
+        StackUtils.writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -74,8 +74,8 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(networkCard, 0, tag);
-        RSUtils.readItems(upgrades, 1, tag);
+        StackUtils.readItems(networkCard, 0, tag);
+        StackUtils.readItems(upgrades, 1, tag);
     }
 
     @Override

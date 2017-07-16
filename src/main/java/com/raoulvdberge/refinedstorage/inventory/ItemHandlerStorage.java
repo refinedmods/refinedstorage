@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -37,13 +37,13 @@ public class ItemHandlerStorage implements IItemHandler, BiConsumer<ItemStack, I
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        return RSUtils.transformNullToEmpty(storage.insert(stack, stack.getCount(), simulate));
+        return StackUtils.nullToEmpty(storage.insert(stack, stack.getCount(), simulate));
     }
 
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return slot >= storageCacheData.length ? ItemStack.EMPTY : RSUtils.transformNullToEmpty(storage.extract(storageCacheData[slot], amount, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, simulate));
+        return slot >= storageCacheData.length ? ItemStack.EMPTY : StackUtils.nullToEmpty(storage.extract(storageCacheData[slot], amount, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, simulate));
     }
 
     @Override

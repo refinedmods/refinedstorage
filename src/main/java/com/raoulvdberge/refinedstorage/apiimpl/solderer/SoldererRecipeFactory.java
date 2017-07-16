@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.NonNullList;
@@ -37,7 +37,7 @@ public class SoldererRecipeFactory {
 
         for (JsonElement element : rowsArray) {
             if (element.isJsonNull()) {
-                rows.add(RSUtils.emptyNonNullList());
+                rows.add(StackUtils.emptyNonNullList());
             } else {
                 rows.add(NonNullList.from(ItemStack.EMPTY, CraftingHelper.getIngredient(element, context).getMatchingStacks()));
             }

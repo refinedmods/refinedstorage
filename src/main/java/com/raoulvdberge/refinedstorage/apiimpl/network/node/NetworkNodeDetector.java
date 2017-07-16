@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -14,6 +13,8 @@ import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -65,7 +66,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
 
             world.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR, true);
 
-            RSUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(world, pos);
         }
 
         if (network != null && canUpdate() && ticks % SPEED == 0) {
@@ -195,8 +196,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
         tag.setInteger(NBT_AMOUNT, amount);
         tag.setInteger(NBT_TYPE, type);
 
-        RSUtils.writeItems(itemFilters, 0, tag);
-        RSUtils.writeItems(fluidFilters, 1, tag);
+        StackUtils.writeItems(itemFilters, 0, tag);
+        StackUtils.writeItems(fluidFilters, 1, tag);
 
         return tag;
     }
@@ -221,8 +222,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
             type = tag.getInteger(NBT_TYPE);
         }
 
-        RSUtils.readItems(itemFilters, 0, tag);
-        RSUtils.readItems(fluidFilters, 1, tag);
+        StackUtils.readItems(itemFilters, 0, tag);
+        StackUtils.readItems(fluidFilters, 1, tag);
     }
 
     public IItemHandler getInventory() {

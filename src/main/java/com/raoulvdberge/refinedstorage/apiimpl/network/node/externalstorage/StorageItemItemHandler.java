@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;
@@ -68,7 +68,7 @@ public class StorageItemItemHandler extends StorageItemExternal {
         IItemHandler handler = handlerSupplier.get();
 
         if (handler != null && IFilterable.canTake(externalStorage.getItemFilters(), externalStorage.getMode(), externalStorage.getCompare(), stack)) {
-            return RSUtils.transformEmptyToNull(ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate));
+            return StackUtils.emptyToNull(ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate));
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);

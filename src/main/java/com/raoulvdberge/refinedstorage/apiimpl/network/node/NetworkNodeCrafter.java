@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
@@ -10,6 +9,8 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -105,8 +106,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItems(patterns, 0, tag);
-        RSUtils.readItems(upgrades, 1, tag);
+        StackUtils.readItems(patterns, 0, tag);
+        StackUtils.readItems(upgrades, 1, tag);
 
         if (tag.hasKey(NBT_BLOCKED)) {
             blocked = tag.getBoolean(NBT_BLOCKED);
@@ -122,8 +123,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItems(patterns, 0, tag);
-        RSUtils.writeItems(upgrades, 1, tag);
+        StackUtils.writeItems(patterns, 0, tag);
+        StackUtils.writeItems(upgrades, 1, tag);
 
         tag.setBoolean(NBT_BLOCKED, blocked);
 
@@ -137,7 +138,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public IItemHandler getFacingInventory() {
-        return RSUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        return WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
     }
 
     @Override

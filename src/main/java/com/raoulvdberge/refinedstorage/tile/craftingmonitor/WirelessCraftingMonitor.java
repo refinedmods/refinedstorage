@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
@@ -10,6 +9,7 @@ import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorViewAutomated;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -38,7 +38,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
                 stack.setTagCompound(new NBTTagCompound());
             }
 
-            RSUtils.writeItems(this, 0, stack.getTagCompound());
+            StackUtils.writeItems(this, 0, stack.getTagCompound());
 
             TileController controller = getController();
 
@@ -55,7 +55,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         this.viewAutomated = ItemWirelessCraftingMonitor.canViewAutomated(stack);
 
         if (stack.hasTagCompound()) {
-            RSUtils.readItems(filter, 0, stack.getTagCompound());
+            StackUtils.readItems(filter, 0, stack.getTagCompound());
         }
     }
 

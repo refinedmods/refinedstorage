@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -41,7 +41,7 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
                     ItemStack slot = matrix.getStackInSlot(i);
 
                     if (!slot.isEmpty()) {
-                        matrix.setInventorySlotContents(i, RSUtils.transformNullToEmpty(grid.getNetwork().insertItem(slot, slot.getCount(), false)));
+                        matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(grid.getNetwork().insertItem(slot, slot.getCount(), false)));
                     }
                 }
             } else if (grid.getType() == GridType.PATTERN) {

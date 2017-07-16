@@ -1,15 +1,15 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
 import com.raoulvdberge.refinedstorage.container.ContainerFluidInterface;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 
 public class GuiFluidInterface extends GuiBase {
-    private static final RSUtils.FluidRenderer TANK_RENDERER = new RSUtils.FluidRenderer(NetworkNodeFluidInterface.TANK_CAPACITY, 12, 47);
+    private static final RenderUtils.FluidRenderer TANK_RENDERER = new RenderUtils.FluidRenderer(NetworkNodeFluidInterface.TANK_CAPACITY, 12, 47);
 
     public GuiFluidInterface(ContainerFluidInterface container) {
         super(container, 211, 204);

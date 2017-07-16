@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -102,7 +102,7 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
             return Collections.emptyList();
         }
 
-        return Collections.singletonList(new TextComponentString(RSUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F) + "x ").appendSibling(new TextComponentTranslation(stack.getUnlocalizedName())));
+        return Collections.singletonList(new TextComponentString(RenderUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F) + "x ").appendSibling(new TextComponentTranslation(stack.getUnlocalizedName())));
     }
 
     private class FluidTankReaderWriter implements IFluidTank, IFluidHandler {

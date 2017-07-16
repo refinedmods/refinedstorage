@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -20,6 +19,7 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
@@ -291,7 +291,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                             ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), false);
 
                             if (took != null) {
-                                matrix.setInventorySlotContents(i, RSUtils.transformNullToEmpty(took));
+                                matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(took));
 
                                 found = true;
 
@@ -367,7 +367,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                 }
             } else if (!slot.isEmpty()) {
                 if (slot.getCount() == 1 && network != null) {
-                    matrix.setInventorySlotContents(i, RSUtils.transformNullToEmpty(network.extractItem(slot, 1, false)));
+                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(network.extractItem(slot, 1, false)));
                 } else {
                     matrix.decrStackSize(i, 1);
                 }
@@ -545,10 +545,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        RSUtils.readItemsLegacy(matrix, 0, tag);
-        RSUtils.readItems(patterns, 1, tag);
-        RSUtils.readItems(filter, 2, tag);
-        RSUtils.readItems(matrixProcessing, 3, tag);
+        StackUtils.readItems(matrix, 0, tag);
+        StackUtils.readItems(patterns, 1, tag);
+        StackUtils.readItems(filter, 2, tag);
+        StackUtils.readItems(matrixProcessing, 3, tag);
 
         if (tag.hasKey(NBT_TAB_SELECTED)) {
             tabSelected = tag.getInteger(NBT_TAB_SELECTED);
@@ -564,10 +564,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        RSUtils.writeItemsLegacy(matrix, 0, tag);
-        RSUtils.writeItems(patterns, 1, tag);
-        RSUtils.writeItems(filter, 2, tag);
-        RSUtils.writeItems(matrixProcessing, 3, tag);
+        StackUtils.writeItems(matrix, 0, tag);
+        StackUtils.writeItems(patterns, 1, tag);
+        StackUtils.writeItems(filter, 2, tag);
+        StackUtils.writeItems(matrixProcessing, 3, tag);
 
         tag.setInteger(NBT_TAB_SELECTED, tabSelected);
 

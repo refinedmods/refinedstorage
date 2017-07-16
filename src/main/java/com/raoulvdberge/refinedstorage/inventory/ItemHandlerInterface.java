@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -57,7 +57,7 @@ public class ItemHandlerInterface implements IItemHandler, BiConsumer<ItemStack,
         if (slot < importItems.getSlots()) {
             return ItemStack.EMPTY;
         } else if (slot < importItems.getSlots() + storageCacheData.length) {
-            return RSUtils.transformNullToEmpty(network.extractItem(storageCacheData[slot - importItems.getSlots()], amount, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, simulate));
+            return StackUtils.nullToEmpty(network.extractItem(storageCacheData[slot - importItems.getSlots()], amount, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, simulate));
         }
 
         return ItemStack.EMPTY;

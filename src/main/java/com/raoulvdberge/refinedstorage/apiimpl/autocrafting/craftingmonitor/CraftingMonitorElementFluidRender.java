@@ -1,10 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,7 +35,7 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);
 
-        drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 21 + offset, scale), GuiBase.calculateOffsetOnScale(y + 7, scale), RSUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F) + "x " + stack.getLocalizedName());
+        drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 21 + offset, scale), GuiBase.calculateOffsetOnScale(y + 7, scale), RenderUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F) + "x " + stack.getLocalizedName());
 
         GlStateManager.popMatrix();
     }
@@ -57,7 +58,7 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
     @Override
     public void write(ByteBuf buf) {
         buf.writeInt(taskId);
-        RSUtils.writeFluidStack(buf, stack);
+        StackUtils.writeFluidStack(buf, stack);
         buf.writeInt(offset);
     }
 

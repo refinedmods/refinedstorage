@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
@@ -12,6 +11,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -119,8 +119,8 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
             owner = UUID.fromString(tag.getString(NBT_OWNER));
         }
 
-        RSUtils.readItems(cards, 0, tag);
-        RSUtils.readItems(editCard, 1, tag);
+        StackUtils.readItems(cards, 0, tag);
+        StackUtils.readItems(editCard, 1, tag);
     }
 
     @Override
@@ -136,8 +136,8 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
             tag.setString(NBT_OWNER, owner.toString());
         }
 
-        RSUtils.writeItems(cards, 0, tag);
-        RSUtils.writeItems(editCard, 1, tag);
+        StackUtils.writeItems(cards, 0, tag);
+        StackUtils.writeItems(editCard, 1, tag);
 
         return tag;
     }

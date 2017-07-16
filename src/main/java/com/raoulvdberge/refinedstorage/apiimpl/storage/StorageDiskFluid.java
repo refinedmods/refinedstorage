@@ -2,11 +2,11 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -93,7 +93,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                             return null;
                         }
 
-                        return RSUtils.copyStackWithSize(stack, size);
+                        return StackUtils.copy(stack, size);
                     }
 
                     if (!simulate) {
@@ -104,7 +104,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                         listener.run();
                     }
 
-                    return voidExcess.get() ? null : RSUtils.copyStackWithSize(otherStack, size - remainingSpace);
+                    return voidExcess.get() ? null : StackUtils.copy(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         tag.setInteger(NBT_STORED, getStored() + size);
@@ -127,23 +127,23 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                     return null;
                 }
 
-                return RSUtils.copyStackWithSize(stack, size);
+                return StackUtils.copy(stack, size);
             }
 
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + remainingSpace);
 
-                stacks.put(stack.getFluid(), RSUtils.copyStackWithSize(stack, remainingSpace));
+                stacks.put(stack.getFluid(), StackUtils.copy(stack, remainingSpace));
 
                 listener.run();
             }
 
-            return voidExcess.get() ? null : RSUtils.copyStackWithSize(stack, size - remainingSpace);
+            return voidExcess.get() ? null : StackUtils.copy(stack, size - remainingSpace);
         } else {
             if (!simulate) {
                 tag.setInteger(NBT_STORED, getStored() + size);
 
-                stacks.put(stack.getFluid(), RSUtils.copyStackWithSize(stack, size));
+                stacks.put(stack.getFluid(), StackUtils.copy(stack, size));
 
                 listener.run();
             }
@@ -173,7 +173,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                     listener.run();
                 }
 
-                return RSUtils.copyStackWithSize(otherStack, size);
+                return StackUtils.copy(otherStack, size);
             }
         }
 

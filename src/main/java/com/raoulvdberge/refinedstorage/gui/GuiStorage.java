@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -84,8 +84,8 @@ public class GuiStorage extends GuiBase {
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t(gui.getGuiTitle()));
         drawString(7, 42, gui.getCapacity() == -1 ?
-            t("misc.refinedstorage:storage.stored_minimal", RSUtils.formatQuantity(gui.getStored())) :
-            t("misc.refinedstorage:storage.stored_capacity_minimal", RSUtils.formatQuantity(gui.getStored()), RSUtils.formatQuantity(gui.getCapacity()))
+            t("misc.refinedstorage:storage.stored_minimal", RenderUtils.formatQuantity(gui.getStored())) :
+            t("misc.refinedstorage:storage.stored_capacity_minimal", RenderUtils.formatQuantity(gui.getStored()), RenderUtils.formatQuantity(gui.getCapacity()))
         );
 
         if (texture.contains("disk_drive")) { // HACK!

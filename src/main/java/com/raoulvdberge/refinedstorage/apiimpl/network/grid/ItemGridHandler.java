@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -16,6 +15,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessC
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStartResponse;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -137,7 +137,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 }
             }
         } else {
-            player.inventory.setItemStack(RSUtils.transformNullToEmpty(network.insertItem(stack, size, false)));
+            player.inventory.setItemStack(StackUtils.nullToEmpty(network.insertItem(stack, size, false)));
         }
 
         player.updateHeldItem();
@@ -151,7 +151,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     public ItemStack onShiftClick(EntityPlayerMP player, ItemStack stack) {
-        return RSUtils.transformNullToEmpty(onInsert(player, stack));
+        return StackUtils.nullToEmpty(onInsert(player, stack));
     }
 
     @Override

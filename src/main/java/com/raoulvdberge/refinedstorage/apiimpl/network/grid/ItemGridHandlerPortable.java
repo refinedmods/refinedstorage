@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -129,7 +129,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
                 }
             }
         } else {
-            player.inventory.setItemStack(RSUtils.transformNullToEmpty(portableGrid.getStorage().insert(stack, size, false)));
+            player.inventory.setItemStack(StackUtils.nullToEmpty(portableGrid.getStorage().insert(stack, size, false)));
         }
 
         player.updateHeldItem();
@@ -139,7 +139,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
 
     @Override
     public ItemStack onShiftClick(EntityPlayerMP player, ItemStack stack) {
-        return RSUtils.transformNullToEmpty(onInsert(player, stack));
+        return StackUtils.nullToEmpty(onInsert(player, stack));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -59,7 +59,7 @@ public abstract class TileBase extends TileEntity {
         direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
 
         if (doRender) {
-            RSUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(world, pos);
         }
     }
 

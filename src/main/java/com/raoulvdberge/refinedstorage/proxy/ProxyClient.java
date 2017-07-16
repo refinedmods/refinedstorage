@@ -1,6 +1,9 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
-import com.raoulvdberge.refinedstorage.*;
+import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSBlocks;
+import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
@@ -14,6 +17,7 @@ import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -340,7 +344,7 @@ public class ProxyClient extends ProxyCommon {
 
         IBlockState state = cable.getActualStateForRendering(player.getEntityWorld(), pos);
 
-        if (cable.collisionRayTrace(state, player.getEntityWorld(), pos, RSUtils.getStart(player), RSUtils.getEnd(player)) == null) {
+        if (cable.collisionRayTrace(state, player.getEntityWorld(), pos, RenderUtils.getStart(player), RenderUtils.getEnd(player)) == null) {
             return;
         }
 

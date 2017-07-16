@@ -1,13 +1,13 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -61,12 +61,12 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             if (GuiScreen.isShiftKeyDown() || isProcessing(stack)) {
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
-                combineItems(tooltip, true, RSUtils.toNonNullList(pattern.getInputs()));
+                combineItems(tooltip, true, StackUtils.toNonNullList(pattern.getInputs()));
 
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
 
-            combineItems(tooltip, true, RSUtils.toNonNullList(pattern.getOutputs()));
+            combineItems(tooltip, true, StackUtils.toNonNullList(pattern.getOutputs()));
 
             if (isOredict(stack)) {
                 tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.oredict") + TextFormatting.RESET);

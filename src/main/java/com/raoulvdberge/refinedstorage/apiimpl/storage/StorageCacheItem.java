@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -85,7 +84,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
 
     @Override
     public void sort() {
-        storages.sort(RSUtils.STORAGE_COMPARATOR);
+        storages.sort(IStorage.COMPARATOR);
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -33,7 +33,7 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
         this.inputs = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            this.inputs.add(RSUtils.readItemStack(buf));
+            this.inputs.add(StackUtils.readItemStack(buf));
         }
 
         size = buf.readInt();
@@ -41,7 +41,7 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
         this.outputs = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            this.outputs.add(RSUtils.readItemStack(buf));
+            this.outputs.add(StackUtils.readItemStack(buf));
         }
     }
 
@@ -50,13 +50,13 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
         buf.writeInt(inputs.size());
 
         for (ItemStack stack : inputs) {
-            RSUtils.writeItemStack(buf, stack);
+            StackUtils.writeItemStack(buf, stack);
         }
 
         buf.writeInt(outputs.size());
 
         for (ItemStack stack : outputs) {
-            RSUtils.writeItemStack(buf, stack);
+            StackUtils.writeItemStack(buf, stack);
         }
     }
 

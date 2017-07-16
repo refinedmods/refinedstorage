@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
@@ -10,6 +9,7 @@ import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -113,7 +113,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
                 couldUpdate = canUpdate;
 
                 if (hasConnectivityState()) {
-                    RSUtils.updateBlock(world, pos);
+                    WorldUtils.updateBlock(world, pos);
                 }
 
                 if (network != null) {

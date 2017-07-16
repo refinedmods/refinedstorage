@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -16,6 +15,8 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -155,14 +156,14 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 
-        RSUtils.writeItems(filters, 0, tag);
+        StackUtils.writeItems(filters, 0, tag);
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
 
-        RSUtils.writeAccessType(tag, accessType);
+        AccessTypeUtils.writeAccessType(tag, accessType);
 
         return tag;
     }
@@ -171,7 +172,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public void readConfiguration(NBTTagCompound tag) {
         super.readConfiguration(tag);
 
-        RSUtils.readItems(filters, 0, tag);
+        StackUtils.readItems(filters, 0, tag);
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -189,7 +190,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
             voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
 
-        accessType = RSUtils.readAccessType(tag);
+        accessType = AccessTypeUtils.readAccessType(tag);
     }
 
     public ItemStorageType getType() {

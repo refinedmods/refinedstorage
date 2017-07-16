@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -31,7 +31,7 @@ public class StorageItemDiskDrive implements IStorageDisk<ItemStack> {
                 if (lastState != currentState) {
                     lastState = currentState;
 
-                    RSUtils.updateBlock(diskDrive.getWorld(), diskDrive.getPos());
+                    WorldUtils.updateBlock(diskDrive.getWorld(), diskDrive.getPos());
                 }
             },
             diskDrive::getVoidExcess,

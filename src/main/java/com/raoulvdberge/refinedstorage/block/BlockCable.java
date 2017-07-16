@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -27,13 +27,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class BlockCable extends BlockNode {
-    public static final AxisAlignedBB CORE_AABB = RSUtils.getAABB(6, 6, 6, 10, 10, 10);
-    private static final AxisAlignedBB NORTH_AABB = RSUtils.getAABB(6, 6, 0, 10, 10, 6);
-    private static final AxisAlignedBB EAST_AABB = RSUtils.getAABB(10, 6, 6, 16, 10, 10);
-    private static final AxisAlignedBB SOUTH_AABB = RSUtils.getAABB(6, 6, 10, 10, 10, 16);
-    private static final AxisAlignedBB WEST_AABB = RSUtils.getAABB(0, 6, 6, 6, 10, 10);
-    private static final AxisAlignedBB UP_AABB = RSUtils.getAABB(6, 10, 6, 10, 16, 10);
-    private static final AxisAlignedBB DOWN_AABB = RSUtils.getAABB(6, 0, 6, 10, 6, 10);
+    public static final AxisAlignedBB CORE_AABB = RenderUtils.getBounds(6, 6, 6, 10, 10, 10);
+    private static final AxisAlignedBB NORTH_AABB = RenderUtils.getBounds(6, 6, 0, 10, 10, 6);
+    private static final AxisAlignedBB EAST_AABB = RenderUtils.getBounds(10, 6, 6, 16, 10, 10);
+    private static final AxisAlignedBB SOUTH_AABB = RenderUtils.getBounds(6, 6, 10, 10, 10, 16);
+    private static final AxisAlignedBB WEST_AABB = RenderUtils.getBounds(0, 6, 6, 6, 10, 10);
+    private static final AxisAlignedBB UP_AABB = RenderUtils.getBounds(6, 10, 6, 10, 16, 10);
+    private static final AxisAlignedBB DOWN_AABB = RenderUtils.getBounds(6, 0, 6, 10, 6, 10);
 
     protected static final PropertyBool NORTH = PropertyBool.create("north");
     protected static final PropertyBool EAST = PropertyBool.create("east");
@@ -127,13 +127,13 @@ public class BlockCable extends BlockNode {
     protected boolean hitCablePart(IBlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
         state = getActualState(state, world, pos);
 
-        return RSUtils.isInAABB(CORE_AABB, hitX, hitY, hitZ) ||
-            (state.getValue(NORTH) && RSUtils.isInAABB(NORTH_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(EAST) && RSUtils.isInAABB(EAST_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(SOUTH) && RSUtils.isInAABB(SOUTH_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(WEST) && RSUtils.isInAABB(WEST_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(UP) && RSUtils.isInAABB(UP_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(DOWN) && RSUtils.isInAABB(DOWN_AABB, hitX, hitY, hitZ));
+        return RenderUtils.isInBounds(CORE_AABB, hitX, hitY, hitZ) ||
+            (state.getValue(NORTH) && RenderUtils.isInBounds(NORTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(EAST) && RenderUtils.isInBounds(EAST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(SOUTH) && RenderUtils.isInBounds(SOUTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(WEST) && RenderUtils.isInBounds(WEST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(UP) && RenderUtils.isInBounds(UP_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(DOWN) && RenderUtils.isInBounds(DOWN_AABB, hitX, hitY, hitZ));
     }
 
     public List<AxisAlignedBB> getUnionizedCollisionBoxes(IBlockState state) {
@@ -192,7 +192,7 @@ public class BlockCable extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        RSUtils.AdvancedRayTraceResult result = RSUtils.collisionRayTrace(pos, start, end, getCollisionBoxes(this.getActualState(state, world, pos)));
+        RenderUtils.AdvancedRayTraceResult result = RenderUtils.collisionRayTrace(pos, start, end, getCollisionBoxes(this.getActualState(state, world, pos)));
 
         return result != null ? result.hit : null;
     }

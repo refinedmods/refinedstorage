@@ -1,7 +1,8 @@
 package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -23,7 +24,7 @@ public class GridStackItem implements IGridStack {
     private String[] oreIds = null;
 
     public GridStackItem(ByteBuf buf) {
-        this.stack = RSUtils.readItemStack(buf);
+        this.stack = StackUtils.readItemStack(buf);
         this.hash = buf.readInt();
         this.craftable = buf.readBoolean();
 
@@ -106,7 +107,7 @@ public class GridStackItem implements IGridStack {
             return null;
         }
 
-        return RSUtils.formatQuantity(qty);
+        return RenderUtils.formatQuantity(qty);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSUtils;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.*;
@@ -32,6 +31,8 @@ import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -208,10 +209,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         if (stack.hasTagCompound()) {
             for (int i = 0; i < 4; ++i) {
-                RSUtils.readItems(filter, i, stack.getTagCompound());
+                StackUtils.readItems(filter, i, stack.getTagCompound());
             }
 
-            RSUtils.readItems(disk, 4, stack.getTagCompound());
+            StackUtils.readItems(disk, 4, stack.getTagCompound());
 
             this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
         }
@@ -239,10 +240,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(energyStorage.getEnergyStored(), false);
 
         for (int i = 0; i < 4; ++i) {
-            RSUtils.writeItems(filter, i, stack.getTagCompound());
+            StackUtils.writeItems(filter, i, stack.getTagCompound());
         }
 
-        RSUtils.writeItems(disk, 4, stack.getTagCompound());
+        StackUtils.writeItems(disk, 4, stack.getTagCompound());
 
         redstoneMode.write(stack.getTagCompound());
 
@@ -461,7 +462,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         if (this.diskState != newDiskState) {
             this.diskState = newDiskState;
 
-            RSUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(world, pos);
         }
     }
 
@@ -471,7 +472,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         if (this.connected != isConnected) {
             this.connected = isConnected;
 
-            RSUtils.updateBlock(world, pos);
+            WorldUtils.updateBlock(world, pos);
         }
     }
 
@@ -494,8 +495,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         tag.setInteger(NetworkNodeGrid.NBT_SIZE, size);
         tag.setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
 
-        RSUtils.writeItems(disk, 0, tag);
-        RSUtils.writeItems(filter, 1, tag);
+        StackUtils.writeItems(disk, 0, tag);
+        StackUtils.writeItems(filter, 1, tag);
 
         tag.setInteger(NBT_ENERGY, energyStorage.getEnergyStored());
 
@@ -528,8 +529,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             tabSelected = tag.getInteger(NetworkNodeGrid.NBT_TAB_SELECTED);
         }
 
-        RSUtils.readItems(disk, 0, tag);
-        RSUtils.readItems(filter, 1, tag);
+        StackUtils.readItems(disk, 0, tag);
+        StackUtils.readItems(filter, 1, tag);
 
         if (tag.hasKey(NBT_ENERGY)) {
             energyStorage.setEnergyStored(tag.getInteger(NBT_ENERGY));
