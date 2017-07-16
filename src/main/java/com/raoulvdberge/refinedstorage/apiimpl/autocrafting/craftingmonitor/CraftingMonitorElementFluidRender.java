@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
@@ -35,7 +34,7 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);
 
-        drawers.getStringDrawer().draw(GuiBase.calculateOffsetOnScale(x + 21 + offset, scale), GuiBase.calculateOffsetOnScale(y + 7, scale), RenderUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F) + "x " + stack.getLocalizedName());
+        drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 21 + offset, scale), RenderUtils.getOffsetOnScale(y + 7, scale), RenderUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F) + "x " + stack.getLocalizedName());
 
         GlStateManager.popMatrix();
     }

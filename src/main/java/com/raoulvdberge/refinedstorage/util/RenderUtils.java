@@ -183,6 +183,12 @@ public final class RenderUtils {
             .build();
     }
 
+    public static int getOffsetOnScale(int pos, float scale) {
+        float multiplier = (pos / scale);
+
+        return (int) multiplier;
+    }
+
     private static class AdvancedRayTraceResultBase<T extends RayTraceResult> {
         public final AxisAlignedBB bounds;
         public final T hit;

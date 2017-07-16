@@ -347,10 +347,4 @@ public abstract class GuiBase extends GuiContainer {
     public int getGuiTop() {
         return guiTop;
     }
-
-    public static int calculateOffsetOnScale(int pos, float scale) {
-        float multiplier = (pos / scale);
-
-        return (int) multiplier;
-    }
 }

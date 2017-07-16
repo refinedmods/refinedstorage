@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStart;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -108,8 +109,8 @@ public class GuiCraftingPreview extends GuiBase {
             GlStateManager.pushMatrix();
             GlStateManager.scale(scale, scale, 1);
 
-            drawString(calculateOffsetOnScale(x + 39, scale), calculateOffsetOnScale(y + 57, scale), t("gui.refinedstorage:crafting_preview.circular"));
-            drawString(calculateOffsetOnScale(x + 40, scale), calculateOffsetOnScale(y + 64, scale), t("gui.refinedstorage:crafting_preview.loop"));
+            drawString(RenderUtils.getOffsetOnScale(x + 39, scale), RenderUtils.getOffsetOnScale(y + 57, scale), t("gui.refinedstorage:crafting_preview.circular"));
+            drawString(RenderUtils.getOffsetOnScale(x + 40, scale), RenderUtils.getOffsetOnScale(y + 64, scale), t("gui.refinedstorage:crafting_preview.loop"));
 
             GlStateManager.popMatrix();
         } else {

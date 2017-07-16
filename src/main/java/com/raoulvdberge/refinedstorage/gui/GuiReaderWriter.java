@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelAdd;
 import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelRemove;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
@@ -109,7 +110,7 @@ public class GuiReaderWriter extends GuiBase {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(calculateOffsetOnScale(x + 5, scale), calculateOffsetOnScale(y + 7, scale), getChannels().get(item));
+                drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 7, scale), getChannels().get(item));
 
                 GlStateManager.popMatrix();
 
