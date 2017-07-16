@@ -32,8 +32,10 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
@@ -209,6 +211,8 @@ public class ProxyCommon {
 
     public void init(FMLInitializationEvent e) {
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
+
+        GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);
 
         CraftingHelper.register(new ResourceLocation(RS.ID + ":enchanted_book"), new IIngredientFactory() {
             @Nonnull
