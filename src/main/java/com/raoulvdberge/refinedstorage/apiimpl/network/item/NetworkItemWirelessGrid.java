@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -45,7 +45,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
             return false;
         }
 
-        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), controllerWorld.provider.getDimension(), WirelessGrid.GRID_TYPE);
+        API.instance().openWirelessGrid(player, hand, controllerWorld.provider.getDimension(), WirelessGrid.ID);
 
         network.sendItemStorageToClient((EntityPlayerMP) player);
 

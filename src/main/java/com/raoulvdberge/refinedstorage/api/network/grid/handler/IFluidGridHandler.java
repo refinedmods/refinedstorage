@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.api.network.grid;
+package com.raoulvdberge.refinedstorage.api.network.grid.handler;
 
 import com.raoulvdberge.refinedstorage.api.IRSAPI;
 import net.minecraft.entity.player.EntityPlayerMP;

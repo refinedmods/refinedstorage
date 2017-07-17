@@ -1,8 +1,9 @@
-package com.raoulvdberge.refinedstorage.item.filter;
+package com.raoulvdberge.refinedstorage.apiimpl.util;
 
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import net.minecraft.item.ItemStack;
 
-public class Filter {
+public class Filter implements IFilter {
     private ItemStack stack;
     private int compare;
     private int mode;
@@ -15,18 +16,22 @@ public class Filter {
         this.modFilter = modFilter;
     }
 
+    @Override
     public ItemStack getStack() {
         return stack;
     }
 
+    @Override
     public int getCompare() {
         return compare;
     }
 
+    @Override
     public int getMode() {
         return mode;
     }
 
+    @Override
     public boolean isModFilter() {
         return modFilter;
     }

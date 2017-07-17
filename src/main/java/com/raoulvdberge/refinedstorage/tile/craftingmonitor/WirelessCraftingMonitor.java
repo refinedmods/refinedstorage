@@ -2,10 +2,10 @@ package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorViewAutomated;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -28,7 +28,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     private BlockPos controller;
     private boolean viewAutomated;
 
-    private List<Filter> filters = new ArrayList<>();
+    private List<IFilter> filters = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), null) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -95,7 +95,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public List<Filter> getFilters() {
+    public List<IFilter> getFilters() {
         return filters;
     }
 

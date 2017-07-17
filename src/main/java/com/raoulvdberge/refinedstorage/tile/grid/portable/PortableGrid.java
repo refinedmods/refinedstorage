@@ -2,27 +2,26 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.ItemGridHandlerPortable;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItemPortable;
-import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.item.ItemEnergyItem;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,6 +32,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PortableGrid implements IGrid, IPortableGrid {
-    public static final int GRID_TYPE = 2;
+    public static int ID;
 
     @Nullable
     private IStorageDisk<ItemStack> storage;
@@ -57,8 +57,8 @@ public class PortableGrid implements IGrid, IPortableGrid {
     private int tabSelected;
     private int size;
 
-    private List<Filter> filters = new ArrayList<>();
-    private List<FilterTab> tabs = new ArrayList<>();
+    private List<IFilter> filters = new ArrayList<>();
+    private List<IGridTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, null) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -290,23 +290,18 @@ public class PortableGrid implements IGrid, IPortableGrid {
     }
 
     @Override
-    public List<Filter> getFilters() {
+    public List<IFilter> getFilters() {
         return filters;
     }
 
     @Override
-    public List<FilterTab> getTabs() {
+    public List<IGridTab> getTabs() {
         return tabs;
     }
 
     @Override
-    public ItemHandlerBase getFilter() {
+    public IItemHandlerModifiable getFilter() {
         return filter;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeConfig() {
-        return null;
     }
 
     @Override

@@ -1,17 +1,14 @@
-package com.raoulvdberge.refinedstorage.tile.grid;
+package com.raoulvdberge.refinedstorage.api.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
-import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.block.GridType;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -58,13 +55,11 @@ public interface IGrid {
 
     void onTabSelectionChanged(int tab);
 
-    List<Filter> getFilters();
+    List<IFilter> getFilters();
 
-    List<FilterTab> getTabs();
+    List<IGridTab> getTabs();
 
-    ItemHandlerBase getFilter();
-
-    TileDataParameter<Integer, ?> getRedstoneModeConfig();
+    IItemHandlerModifiable getFilter();
 
     InventoryCrafting getCraftingMatrix();
 

@@ -5,9 +5,11 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
-import com.raoulvdberge.refinedstorage.api.network.grid.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
@@ -22,12 +24,11 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
-import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -124,8 +125,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         this.scrollbar = new Scrollbar(174, getTabDelta() + getHeader(), 12, (getVisibleRows() * 18) - 2);
 
-        if (grid.getRedstoneModeConfig() != null) {
-            addSideButton(new SideButtonRedstoneMode(this, grid.getRedstoneModeConfig()));
+        if (grid instanceof NetworkNodeGrid || grid instanceof TilePortableGrid) {
+            addSideButton(new SideButtonRedstoneMode(this, grid instanceof NetworkNodeGrid ? TileGrid.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
         }
 
         this.konamiOffsetsX = new int[9 * getVisibleRows()];
@@ -342,7 +343,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         return !grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT - 4 : 0;
     }
 
-    private void drawTab(FilterTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
+    private void drawTab(IGridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
         int i = grid.getTabs().indexOf(tab);
         boolean selected = i == grid.getTabSelected();
 
@@ -392,7 +393,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         tabHovering = -1;
 
-        for (FilterTab tab : grid.getTabs()) {
+        for (IGridTab tab : grid.getTabs()) {
             drawTab(tab, false, x, y, mouseX, mouseY);
         }
 
@@ -426,7 +427,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getFooter());
 
-        for (FilterTab tab : grid.getTabs()) {
+        for (IGridTab tab : grid.getTabs()) {
             drawTab(tab, true, x, y, mouseX, mouseY);
         }
 

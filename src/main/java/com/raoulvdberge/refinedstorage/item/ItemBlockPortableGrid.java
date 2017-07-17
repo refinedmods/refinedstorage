@@ -1,8 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -28,7 +27,7 @@ public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), 0, PortableGrid.GRID_TYPE);
+            API.instance().openWirelessGrid(player, hand, world.provider.getDimension(), PortableGrid.ID);
         }
 
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);

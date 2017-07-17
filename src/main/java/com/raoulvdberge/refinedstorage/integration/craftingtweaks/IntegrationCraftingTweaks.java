@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.integration.craftingtweaks;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.raoulvdberge.refinedstorage.block.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.container.slot.SlotGridCrafting;
 import net.minecraft.nbt.NBTTagCompound;

@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonGridSortingType extends SideButton {

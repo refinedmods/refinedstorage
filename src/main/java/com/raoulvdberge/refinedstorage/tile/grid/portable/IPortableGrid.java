@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -23,5 +24,5 @@ public interface IPortableGrid {
 
     ItemHandlerBase getDisk();
 
-    ItemHandlerBase getFilter();
+    IItemHandlerModifiable getFilter();
 }

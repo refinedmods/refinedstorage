@@ -3,21 +3,21 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
-import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -95,8 +96,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             return slot == 0 ? super.insertItem(slot, stack, simulate) : stack;
         }
     };
-    private List<Filter> filters = new ArrayList<>();
-    private List<FilterTab> tabs = new ArrayList<>();
+    private List<IFilter> filters = new ArrayList<>();
+    private List<IGridTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ItemHandlerListenerNetworkNode(this));
 
     private GridType type;
@@ -201,7 +202,18 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public String getGuiTitle() {
-        return getType() == GridType.FLUID ? "gui.refinedstorage:fluid_grid" : "gui.refinedstorage:grid";
+        GridType type = getType();
+
+        switch (type) {
+            case CRAFTING:
+                return "gui.refinedstorage:crafting_grid";
+            case PATTERN:
+                return "gui.refinedstorage:pattern_grid";
+            case FLUID:
+                return "gui.refinedstorage:fluid_grid";
+            default:
+                return "gui.refinedstorage:grid";
+        }
     }
 
     public IItemHandler getPatterns() {
@@ -209,17 +221,17 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
-    public ItemHandlerBase getFilter() {
+    public IItemHandlerModifiable getFilter() {
         return filter;
     }
 
     @Override
-    public List<Filter> getFilters() {
+    public List<IFilter> getFilters() {
         return filters;
     }
 
     @Override
-    public List<FilterTab> getTabs() {
+    public List<IGridTab> getTabs() {
         return tabs;
     }
 
@@ -246,17 +258,23 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
-        if (network != null && getType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        onRecipeTransfer(this, player, recipe);
+    }
+
+    public static void onRecipeTransfer(IGrid grid, EntityPlayer player, ItemStack[][] recipe) {
+        INetwork network = grid.getNetwork();
+
+        if (network != null && grid.getType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
         }
 
         // First try to empty the crafting matrix
-        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-            ItemStack slot = matrix.getStackInSlot(i);
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
+            ItemStack slot = grid.getCraftingMatrix().getStackInSlot(i);
 
             if (!slot.isEmpty()) {
                 // Only if we are a crafting grid. Pattern grids can just be emptied.
-                if (getType() == GridType.CRAFTING) {
+                if (grid.getType() == GridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
                     if (network != null) {
                         if (network.insertItem(slot, slot.getCount(), true) != null) {
@@ -272,17 +290,17 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                     }
                 }
 
-                matrix.setInventorySlotContents(i, ItemStack.EMPTY);
+                grid.getCraftingMatrix().setInventorySlotContents(i, ItemStack.EMPTY);
             }
         }
 
         // Now let's fill the matrix
-        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
             if (recipe[i] != null) {
                 ItemStack[] possibilities = recipe[i];
 
                 // If we are a crafting grid
-                if (getType() == GridType.CRAFTING) {
+                if (grid.getType() == GridType.CRAFTING) {
                     boolean found = false;
 
                     // If we are connected, first try to get the possibilities from the network
@@ -291,7 +309,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                             ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), false);
 
                             if (took != null) {
-                                matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(took));
+                                grid.getCraftingMatrix().setInventorySlotContents(i, StackUtils.nullToEmpty(took));
 
                                 found = true;
 
@@ -305,7 +323,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                         for (ItemStack possibility : possibilities) {
                             for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
                                 if (API.instance().getComparer().isEqual(possibility, player.inventory.getStackInSlot(j), IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE))) {
-                                    matrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
+                                    grid.getCraftingMatrix().setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
 
                                     player.inventory.decrStackSize(j, 1);
 
@@ -320,9 +338,9 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                             }
                         }
                     }
-                } else if (getType() == GridType.PATTERN) {
+                } else if (grid.getType() == GridType.PATTERN) {
                     // If we are a pattern grid we can just set the slot
-                    matrix.setInventorySlotContents(i, possibilities[0]);
+                    grid.getCraftingMatrix().setInventorySlotContents(i, possibilities[0]);
                 }
             }
         }
@@ -345,9 +363,17 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCrafted(EntityPlayer player) {
-        NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(matrix, world);
+        onCrafted(this, world, player);
+    }
 
-        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+    public static void onCrafted(IGrid grid, World world, EntityPlayer player) {
+        NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(grid.getCraftingMatrix(), world);
+
+        INetwork network = grid.getNetwork();
+
+        InventoryCrafting matrix = grid.getCraftingMatrix();
+
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);
 
             if (i < remainder.size() && !remainder.get(i).isEmpty()) {
@@ -374,26 +400,32 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             }
         }
 
-        onCraftingMatrixChanged();
+        grid.onCraftingMatrixChanged();
     }
 
     @Override
     public void onCraftedShift(EntityPlayer player) {
+        onCraftedShift(this, player);
+    }
+
+    public static void onCraftedShift(IGrid grid, EntityPlayer player) {
         List<ItemStack> craftedItemsList = new ArrayList<>();
         int craftedItems = 0;
-        ItemStack crafted = result.getStackInSlot(0);
+        ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
 
         while (true) {
-            onCrafted(player);
+            grid.onCrafted(player);
 
             craftedItemsList.add(crafted.copy());
 
             craftedItems += crafted.getCount();
 
-            if (!API.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.getCount() > crafted.getMaxStackSize()) {
+            if (!API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) || craftedItems + crafted.getCount() > crafted.getMaxStackSize()) {
                 break;
             }
         }
+
+        INetwork network = grid.getNetwork();
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
@@ -405,7 +437,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             }
         }
 
-        FMLCommonHandler.instance().firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, craftedItems), matrix);
+        FMLCommonHandler.instance().firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, craftedItems), grid.getCraftingMatrix());
     }
 
     public void onCreatePattern() {
@@ -529,11 +561,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     @Override
     public void onTabSelectionChanged(int tab) {
         TileDataManager.setParameter(TileGrid.TAB_SELECTED, tab);
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeConfig() {
-        return TileGrid.REDSTONE_MODE;
     }
 
     @Override

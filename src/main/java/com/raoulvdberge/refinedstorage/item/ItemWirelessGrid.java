@@ -10,6 +10,10 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 
 public class ItemWirelessGrid extends ItemNetworkItem {
+    public ItemWirelessGrid(String name) {
+        super(name);
+    }
+
     public ItemWirelessGrid() {
         super("wireless_grid");
     }

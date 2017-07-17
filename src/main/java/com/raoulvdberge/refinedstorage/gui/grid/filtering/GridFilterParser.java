@@ -1,16 +1,16 @@
 package com.raoulvdberge.refinedstorage.gui.grid.filtering;
 
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
 public final class GridFilterParser {
-    public static List<Predicate<IGridStack>> getFilters(IGrid grid, String query, List<Filter> filters) {
+    public static List<Predicate<IGridStack>> getFilters(IGrid grid, String query, List<IFilter> filters) {
         List<Predicate<IGridStack>> gridFilters = new LinkedList<>();
 
         for (String part : query.toLowerCase().trim().split(" ")) {

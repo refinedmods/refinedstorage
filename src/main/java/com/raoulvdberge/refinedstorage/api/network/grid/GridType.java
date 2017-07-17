@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.block;
+package com.raoulvdberge.refinedstorage.api.network.grid;
 
 import net.minecraft.util.IStringSerializable;
 

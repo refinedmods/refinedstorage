@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
-import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
+import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import com.raoulvdberge.refinedstorage.network.MessageFilterUpdate;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
