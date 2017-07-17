@@ -95,7 +95,7 @@ public class ItemGridHandler implements IItemGridHandler {
             INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
             if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
-                ((NetworkItemWirelessGrid) networkItem).drainEnergy(RS.INSTANCE.config.wirelessGridExtractUsage);
+                ((NetworkItemWirelessGrid) networkItem).drainEnergy(((NetworkItemWirelessGrid) networkItem).getExtractUsage());
             }
         }
     }
@@ -111,7 +111,7 @@ public class ItemGridHandler implements IItemGridHandler {
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
         if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
-            ((NetworkItemWirelessGrid) networkItem).drainEnergy(RS.INSTANCE.config.wirelessGridInsertUsage);
+            ((NetworkItemWirelessGrid) networkItem).drainEnergy(((NetworkItemWirelessGrid) networkItem).getInsertUsage());
         }
 
         return remainder;
@@ -145,7 +145,7 @@ public class ItemGridHandler implements IItemGridHandler {
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
         if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
-            ((NetworkItemWirelessGrid) networkItem).drainEnergy(RS.INSTANCE.config.wirelessGridInsertUsage);
+            ((NetworkItemWirelessGrid) networkItem).drainEnergy(((NetworkItemWirelessGrid) networkItem).getInsertUsage());
         }
     }
 

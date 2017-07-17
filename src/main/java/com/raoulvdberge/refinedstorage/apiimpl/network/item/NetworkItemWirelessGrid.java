@@ -67,4 +67,12 @@ public class NetworkItemWirelessGrid implements INetworkItem {
             }
         }
     }
+
+    public int getInsertUsage() {
+        return RS.INSTANCE.config.wirelessGridInsertUsage;
+    }
+
+    public int getExtractUsage() {
+        return RS.INSTANCE.config.wirelessGridExtractUsage;
+    }
 }
