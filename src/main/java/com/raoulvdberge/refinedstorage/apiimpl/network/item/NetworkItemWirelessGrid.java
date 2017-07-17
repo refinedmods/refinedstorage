@@ -18,9 +18,9 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class NetworkItemWirelessGrid implements INetworkItem {
-    private INetworkItemHandler handler;
+    protected INetworkItemHandler handler;
     private EntityPlayer player;
-    private ItemStack stack;
+    protected ItemStack stack;
 
     public NetworkItemWirelessGrid(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
         this.handler = handler;
