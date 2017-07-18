@@ -122,7 +122,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     @Nullable
     public synchronized ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
+            if (API.instance().getComparer().isEqualNoQuantityNoSanitize(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
                     int remainingSpace = getCapacity() - getStored();
 

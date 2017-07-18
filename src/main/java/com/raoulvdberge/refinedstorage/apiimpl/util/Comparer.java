@@ -21,11 +21,6 @@ public class Comparer implements IComparer {
         if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
             return validity == EnumActionResult.SUCCESS;
         }
-        
-        if(IntegrationForestry.isLoaded()) {
-        	ItemStack[] items = {left, right};
-        	flags = IntegrationForestry.isItem(flags, items);
-        }
 
         if ((flags & COMPARE_OREDICT) == COMPARE_OREDICT) {
             if (isEqualOredict(left, right)) {
@@ -44,6 +39,15 @@ public class Comparer implements IComparer {
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
+            if(IntegrationForestry.isLoaded() && (flags & NO_FORESTRY_SANTIZE) != NO_FORESTRY_SANTIZE) {
+            	// Only sanitize Forestry items if we want to compare NBT, Forestry is loaded, and no explicit flag not to sanitize.
+            	if (IntegrationForestry.isBreedable(left)) {
+            		left = IntegrationForestry.sanitize(left.copy(), flags);
+            	}
+            	if (IntegrationForestry.isBreedable(right)) {
+            	    right = IntegrationForestry.sanitize(right.copy(), flags);
+            	}
+            }
             if ((flags & COMPARE_STRIP_NBT) == COMPARE_STRIP_NBT) {
                 left = stripTags(left.copy());
                 right = stripTags(right.copy());
@@ -200,9 +204,6 @@ public class Comparer implements IComparer {
                         stack.getTagCompound().removeTag(profile);
                     }
                     break;
-                case "forestry":
-                	stack.getTagCompound().removeTag("GEN");
-                	break;
                 case "minecraft":
                     stack.getTagCompound().removeTag("RepairCost");
                     break;
