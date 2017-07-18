@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.block.BlockNode;
+import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -19,6 +20,11 @@ public class Comparer implements IComparer {
 
         if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
             return validity == EnumActionResult.SUCCESS;
+        }
+        
+        if(IntegrationForestry.isLoaded()) {
+        	ItemStack[] items = {left, right};
+        	flags = IntegrationForestry.isItem(flags, items);
         }
 
         if ((flags & COMPARE_OREDICT) == COMPARE_OREDICT) {
@@ -194,6 +200,9 @@ public class Comparer implements IComparer {
                         stack.getTagCompound().removeTag(profile);
                     }
                     break;
+                case "forestry":
+                	stack.getTagCompound().removeTag("GEN");
+                	break;
                 case "minecraft":
                     stack.getTagCompound().removeTag("RepairCost");
                     break;
