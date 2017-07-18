@@ -26,4 +26,6 @@ public interface INetworkItem {
      * @return true if the network item can be opened, false otherwise
      */
     boolean onOpen(INetwork network, EntityPlayer player, World controllerWorld, EnumHand hand);
+
+    void onAction(NetworkItemAction action);
 }

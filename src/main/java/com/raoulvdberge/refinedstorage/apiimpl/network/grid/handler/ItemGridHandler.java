@@ -7,12 +7,11 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
+import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
-import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessCraftingMonitor;
-import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStartResponse;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -94,8 +93,8 @@ public class ItemGridHandler implements IItemGridHandler {
 
             INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
-            if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
-                ((NetworkItemWirelessGrid) networkItem).drainEnergy(((NetworkItemWirelessGrid) networkItem).getExtractUsage());
+            if (networkItem != null) {
+                networkItem.onAction(NetworkItemAction.ITEM_EXTRACTED);
             }
         }
     }
@@ -110,8 +109,8 @@ public class ItemGridHandler implements IItemGridHandler {
 
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
-        if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
-            ((NetworkItemWirelessGrid) networkItem).drainEnergy(((NetworkItemWirelessGrid) networkItem).getInsertUsage());
+        if (networkItem != null) {
+            networkItem.onAction(NetworkItemAction.ITEM_INSERTED);
         }
 
         return remainder;
@@ -144,8 +143,8 @@ public class ItemGridHandler implements IItemGridHandler {
 
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
-        if (networkItem != null && networkItem instanceof NetworkItemWirelessGrid) {
-            ((NetworkItemWirelessGrid) networkItem).drainEnergy(((NetworkItemWirelessGrid) networkItem).getInsertUsage());
+        if (networkItem != null) {
+            networkItem.onAction(NetworkItemAction.ITEM_INSERTED);
         }
     }
 
@@ -226,8 +225,8 @@ public class ItemGridHandler implements IItemGridHandler {
 
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
-        if (networkItem != null && networkItem instanceof NetworkItemWirelessCraftingMonitor) {
-            ((NetworkItemWirelessCraftingMonitor) networkItem).drainEnergy(id == -1 ? RS.INSTANCE.config.wirelessCraftingMonitorCancelAllUsage : RS.INSTANCE.config.wirelessCraftingMonitorCancelUsage);
+        if (networkItem != null) {
+            networkItem.onAction(id == -1 ? NetworkItemAction.CRAFTING_TASK_ALL_CANCELLED : NetworkItemAction.CRAFTING_TASK_CANCELLED);
         }
     }
 }

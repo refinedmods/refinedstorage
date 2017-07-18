@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -53,7 +54,19 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
         return true;
     }
 
-    public void drainEnergy(int energy) {
+    @Override
+    public void onAction(NetworkItemAction action) {
+        switch (action) {
+            case CRAFTING_TASK_CANCELLED:
+                drainEnergy(RS.INSTANCE.config.wirelessCraftingMonitorCancelUsage);
+                break;
+            case CRAFTING_TASK_ALL_CANCELLED:
+                drainEnergy(RS.INSTANCE.config.wirelessCraftingMonitorCancelAllUsage);
+                break;
+        }
+    }
+
+    private void drainEnergy(int energy) {
         if (RS.INSTANCE.config.wirelessCraftingMonitorUsesEnergy && stack.getItemDamage() != ItemWirelessCraftingMonitor.TYPE_CREATIVE) {
             IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 

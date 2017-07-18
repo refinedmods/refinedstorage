@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
@@ -18,9 +19,9 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class NetworkItemWirelessGrid implements INetworkItem {
-    protected INetworkItemHandler handler;
+    private INetworkItemHandler handler;
     private EntityPlayer player;
-    protected ItemStack stack;
+    private ItemStack stack;
 
     public NetworkItemWirelessGrid(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
         this.handler = handler;
@@ -54,7 +55,19 @@ public class NetworkItemWirelessGrid implements INetworkItem {
         return true;
     }
 
-    public void drainEnergy(int energy) {
+    @Override
+    public void onAction(NetworkItemAction action) {
+        switch (action) {
+            case ITEM_INSERTED:
+                drainEnergy(RS.INSTANCE.config.wirelessGridInsertUsage);
+                break;
+            case ITEM_EXTRACTED:
+                drainEnergy(RS.INSTANCE.config.wirelessGridExtractUsage);
+                break;
+        }
+    }
+
+    private void drainEnergy(int energy) {
         if (RS.INSTANCE.config.wirelessGridUsesEnergy && stack.getItemDamage() != ItemWirelessGrid.TYPE_CREATIVE) {
             IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
@@ -66,13 +79,5 @@ public class NetworkItemWirelessGrid implements INetworkItem {
                 player.closeScreen();
             }
         }
-    }
-
-    public int getInsertUsage() {
-        return RS.INSTANCE.config.wirelessGridInsertUsage;
-    }
-
-    public int getExtractUsage() {
-        return RS.INSTANCE.config.wirelessGridExtractUsage;
     }
 }

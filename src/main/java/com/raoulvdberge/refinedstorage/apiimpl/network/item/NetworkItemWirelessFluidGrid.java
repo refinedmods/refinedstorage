@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
@@ -54,7 +55,19 @@ public class NetworkItemWirelessFluidGrid implements INetworkItem {
         return true;
     }
 
-    public void drainEnergy(int energy) {
+    @Override
+    public void onAction(NetworkItemAction action) {
+        switch (action) {
+            case FLUID_INSERTED:
+                drainEnergy(RS.INSTANCE.config.wirelessFluidGridInsertUsage);
+                break;
+            case FLUID_EXTRACTED:
+                drainEnergy(RS.INSTANCE.config.wirelessFluidGridExtractUsage);
+                break;
+        }
+    }
+
+    private void drainEnergy(int energy) {
         if (RS.INSTANCE.config.wirelessFluidGridUsesEnergy && stack.getItemDamage() != ItemWirelessFluidGrid.TYPE_CREATIVE) {
             IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
