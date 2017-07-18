@@ -17,6 +17,27 @@ import java.util.List;
  * Represents a grid.
  */
 public interface IGrid {
+    int SORTING_DIRECTION_ASCENDING = 0;
+    int SORTING_DIRECTION_DESCENDING = 1;
+
+    int SORTING_TYPE_QUANTITY = 0;
+    int SORTING_TYPE_NAME = 1;
+    int SORTING_TYPE_ID = 2;
+
+    int SEARCH_BOX_MODE_NORMAL = 0;
+    int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
+    int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 2;
+    int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
+
+    int VIEW_TYPE_NORMAL = 0;
+    int VIEW_TYPE_NON_CRAFTABLES = 1;
+    int VIEW_TYPE_CRAFTABLES = 2;
+
+    int SIZE_STRETCH = 0;
+    int SIZE_SMALL = 1;
+    int SIZE_MEDIUM = 2;
+    int SIZE_LARGE = 3;
+
     /**
      * @return the grid type
      */
@@ -174,4 +195,36 @@ public interface IGrid {
      * @return true if the grid is active, false otherwise
      */
     boolean isActive();
+
+    static boolean isValidViewType(int type) {
+        return type == VIEW_TYPE_NORMAL ||
+            type == VIEW_TYPE_CRAFTABLES ||
+            type == VIEW_TYPE_NON_CRAFTABLES;
+    }
+
+    static boolean isValidSearchBoxMode(int mode) {
+        return mode == SEARCH_BOX_MODE_NORMAL ||
+            mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
+            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
+    }
+
+    static boolean isSearchBoxModeWithAutoselection(int mode) {
+        return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
+    }
+
+    static boolean isValidSortingType(int type) {
+        return type == SORTING_TYPE_QUANTITY || type == SORTING_TYPE_NAME || type == SORTING_TYPE_ID;
+    }
+
+    static boolean isValidSortingDirection(int direction) {
+        return direction == SORTING_DIRECTION_ASCENDING || direction == SORTING_DIRECTION_DESCENDING;
+    }
+
+    static boolean isValidSize(int size) {
+        return size == SIZE_STRETCH ||
+            size == SIZE_SMALL ||
+            size == SIZE_MEDIUM ||
+            size == SIZE_LARGE;
+    }
 }

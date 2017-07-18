@@ -57,19 +57,19 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public static final TileDataParameter<Integer, TilePortableGrid> REDSTONE_MODE = RedstoneMode.createParameter();
     public static final TileDataParameter<Integer, TilePortableGrid> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energyStorage.getEnergyStored());
     public static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingDirection, (t, v) -> {
-        if (NetworkNodeGrid.isValidSortingDirection(v)) {
+        if (IGrid.isValidSortingDirection(v)) {
             t.setSortingDirection(v);
             t.markDirty();
         }
     }, p -> GuiGrid.markForSorting());
     public static final TileDataParameter<Integer, TilePortableGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingType, (t, v) -> {
-        if (NetworkNodeGrid.isValidSortingType(v)) {
+        if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.markDirty();
         }
     }, p -> GuiGrid.markForSorting());
     public static final TileDataParameter<Integer, TilePortableGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSearchBoxMode, (t, v) -> {
-        if (NetworkNodeGrid.isValidSearchBoxMode(v)) {
+        if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
             t.markDirty();
         }
@@ -79,7 +79,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         }
     });
     public static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSize, (t, v) -> {
-        if (NetworkNodeGrid.isValidSize(v)) {
+        if (IGrid.isValidSize(v)) {
             t.setSize(v);
             t.markDirty();
         }

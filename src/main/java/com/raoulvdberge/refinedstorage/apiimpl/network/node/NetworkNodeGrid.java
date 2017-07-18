@@ -55,27 +55,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
     public static final String NBT_BLOCKING_PATTERN = "BlockingPattern";
 
-    public static final int SORTING_DIRECTION_ASCENDING = 0;
-    public static final int SORTING_DIRECTION_DESCENDING = 1;
-
-    public static final int SORTING_TYPE_QUANTITY = 0;
-    public static final int SORTING_TYPE_NAME = 1;
-    public static final int SORTING_TYPE_ID = 2;
-
-    public static final int SEARCH_BOX_MODE_NORMAL = 0;
-    public static final int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
-    public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 2;
-    public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
-
-    public static final int VIEW_TYPE_NORMAL = 0;
-    public static final int VIEW_TYPE_NON_CRAFTABLES = 1;
-    public static final int VIEW_TYPE_CRAFTABLES = 2;
-
-    public static final int SIZE_STRETCH = 0;
-    public static final int SIZE_SMALL = 1;
-    public static final int SIZE_MEDIUM = 2;
-    public static final int SIZE_LARGE = 3;
-
     private Container craftingContainer = new Container() {
         @Override
         public boolean canInteractWith(EntityPlayer player) {
@@ -675,37 +654,5 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             default:
                 return new CombinedInvWrapper(filter);
         }
-    }
-
-    public static boolean isValidViewType(int type) {
-        return type == VIEW_TYPE_NORMAL ||
-            type == VIEW_TYPE_CRAFTABLES ||
-            type == VIEW_TYPE_NON_CRAFTABLES;
-    }
-
-    public static boolean isValidSearchBoxMode(int mode) {
-        return mode == SEARCH_BOX_MODE_NORMAL ||
-            mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
-    }
-
-    public static boolean isSearchBoxModeWithAutoselection(int mode) {
-        return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
-    }
-
-    public static boolean isValidSortingType(int type) {
-        return type == SORTING_TYPE_QUANTITY || type == SORTING_TYPE_NAME || type == SORTING_TYPE_ID;
-    }
-
-    public static boolean isValidSortingDirection(int direction) {
-        return direction == SORTING_DIRECTION_ASCENDING || direction == SORTING_DIRECTION_DESCENDING;
-    }
-
-    public static boolean isValidSize(int size) {
-        return size == SIZE_STRETCH ||
-            size == SIZE_SMALL ||
-            size == SIZE_MEDIUM ||
-            size == SIZE_LARGE;
     }
 }

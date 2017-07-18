@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.util.text.TextFormatting;
 
@@ -28,12 +27,12 @@ public class SideButtonGridViewType extends SideButton {
     public void actionPerformed() {
         int type = grid.getViewType();
 
-        if (type == NetworkNodeGrid.VIEW_TYPE_NORMAL) {
-            type = NetworkNodeGrid.VIEW_TYPE_NON_CRAFTABLES;
-        } else if (type == NetworkNodeGrid.VIEW_TYPE_NON_CRAFTABLES) {
-            type = NetworkNodeGrid.VIEW_TYPE_CRAFTABLES;
-        } else if (type == NetworkNodeGrid.VIEW_TYPE_CRAFTABLES) {
-            type = NetworkNodeGrid.VIEW_TYPE_NORMAL;
+        if (type == IGrid.VIEW_TYPE_NORMAL) {
+            type = IGrid.VIEW_TYPE_NON_CRAFTABLES;
+        } else if (type == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
+            type = IGrid.VIEW_TYPE_CRAFTABLES;
+        } else if (type == IGrid.VIEW_TYPE_CRAFTABLES) {
+            type = IGrid.VIEW_TYPE_NORMAL;
         }
 
         grid.onViewTypeChanged(type);

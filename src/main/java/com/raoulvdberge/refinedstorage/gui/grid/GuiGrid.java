@@ -209,9 +209,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             stacks.sort(SORTING_NAME);
 
-            if (grid.getSortingType() == NetworkNodeGrid.SORTING_TYPE_QUANTITY) {
+            if (grid.getSortingType() == IGrid.SORTING_TYPE_QUANTITY) {
                 stacks.sort(SORTING_QUANTITY);
-            } else if (grid.getSortingType() == NetworkNodeGrid.SORTING_TYPE_ID) {
+            } else if (grid.getSortingType() == IGrid.SORTING_TYPE_ID) {
                 stacks.sort(SORTING_ID);
             }
         }
@@ -291,15 +291,15 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     @Override
     public int getVisibleRows() {
         switch (grid.getSize()) {
-            case NetworkNodeGrid.SIZE_STRETCH:
+            case IGrid.SIZE_STRETCH:
                 int screenSpaceAvailable = height - getHeader() - getFooter() - (hadTabs ? ContainerGrid.TAB_HEIGHT : 0);
 
                 return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRowsStretch));
-            case NetworkNodeGrid.SIZE_SMALL:
+            case IGrid.SIZE_SMALL:
                 return 3;
-            case NetworkNodeGrid.SIZE_MEDIUM:
+            case IGrid.SIZE_MEDIUM:
                 return 5;
-            case NetworkNodeGrid.SIZE_LARGE:
+            case IGrid.SIZE_LARGE:
                 return 8;
             default:
                 return 3;
@@ -628,12 +628,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             } else {
                 saveHistory();
 
-                if (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
+                if (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
                     searchField.setFocused(false);
                 }
             }
             keyHandled = true;
-        } else if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
+        } else if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
             searchField.setFocused(!searchField.isFocused());
 
             saveHistory();
@@ -684,15 +684,15 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private void updateJEI() {
-        if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == NetworkNodeGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
+        if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
             RSJEIPlugin.INSTANCE.getRuntime().getIngredientFilter().setFilterText(searchField.getText());
         }
     }
 
     public void updateSearchFieldFocus(int mode) {
         if (searchField != null) {
-            searchField.setCanLoseFocus(!NetworkNodeGrid.isSearchBoxModeWithAutoselection(mode));
-            searchField.setFocused(NetworkNodeGrid.isSearchBoxModeWithAutoselection(mode));
+            searchField.setCanLoseFocus(!IGrid.isSearchBoxModeWithAutoselection(mode));
+            searchField.setFocused(IGrid.isSearchBoxModeWithAutoselection(mode));
         }
     }
 

@@ -49,19 +49,19 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
             if (grid instanceof WirelessFluidGrid) {
                 ItemStack stack = ((WirelessFluidGrid) grid).getStack();
 
-                if (NetworkNodeGrid.isValidSortingDirection(message.sortingDirection)) {
+                if (IGrid.isValidSortingDirection(message.sortingDirection)) {
                     stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
                 }
 
-                if (NetworkNodeGrid.isValidSortingType(message.sortingType)) {
+                if (IGrid.isValidSortingType(message.sortingType)) {
                     stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, message.sortingType);
                 }
 
-                if (NetworkNodeGrid.isValidSearchBoxMode(message.searchBoxMode)) {
+                if (IGrid.isValidSearchBoxMode(message.searchBoxMode)) {
                     stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
                 }
 
-                if (NetworkNodeGrid.isValidSize(message.size)) {
+                if (IGrid.isValidSize(message.size)) {
                     stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SIZE, message.size);
                 }
             }
