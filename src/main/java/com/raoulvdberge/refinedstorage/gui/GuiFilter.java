@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import com.raoulvdberge.refinedstorage.network.MessageFilterUpdate;
@@ -51,7 +52,7 @@ public class GuiFilter extends GuiBase {
     }
 
     private void updateModeButton(int mode) {
-        String text = mode == ItemFilter.MODE_WHITELIST ? t("sidebutton.refinedstorage:mode.whitelist") : t("sidebutton.refinedstorage:mode.blacklist");
+        String text = mode == IFilter.MODE_WHITELIST ? t("sidebutton.refinedstorage:mode.whitelist") : t("sidebutton.refinedstorage:mode.blacklist");
 
         toggleMode.setWidth(fontRenderer.getStringWidth(text) + 12);
         toggleMode.displayString = text;
@@ -104,7 +105,7 @@ public class GuiFilter extends GuiBase {
         } else if (button == compareOredict) {
             compare ^= IComparer.COMPARE_OREDICT;
         } else if (button == toggleMode) {
-            mode = mode == ItemFilter.MODE_WHITELIST ? ItemFilter.MODE_BLACKLIST : ItemFilter.MODE_WHITELIST;
+            mode = mode == IFilter.MODE_WHITELIST ? IFilter.MODE_BLACKLIST : IFilter.MODE_WHITELIST;
 
             updateModeButton(mode);
         } else if (button == toggleModFilter) {

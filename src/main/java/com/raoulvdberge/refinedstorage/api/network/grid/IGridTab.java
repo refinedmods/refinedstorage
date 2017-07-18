@@ -5,10 +5,22 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
+/**
+ * Represents a grid tab.
+ */
 public interface IGridTab {
+    /**
+     * @return the filters
+     */
     List<IFilter> getFilters();
 
+    /**
+     * @return the name
+     */
     String getName();
 
+    /**
+     * @return the icon
+     */
     ItemStack getIcon();
 }

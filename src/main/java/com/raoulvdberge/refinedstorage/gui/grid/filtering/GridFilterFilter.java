@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -27,20 +26,20 @@ public class GridFilterFilter implements Predicate<IGridStack> {
             return true;
         }
 
-        int lastMode = ItemFilter.MODE_WHITELIST;
+        int lastMode = IFilter.MODE_WHITELIST;
 
         for (IFilter filter : filters) {
             lastMode = filter.getMode();
 
             if (filter.isModFilter()) {
                 if (filter.getStack().getItem().getRegistryName().getResourceDomain().equalsIgnoreCase(stackModId)) {
-                    return filter.getMode() == ItemFilter.MODE_WHITELIST;
+                    return filter.getMode() == IFilter.MODE_WHITELIST;
                 }
             } else if (API.instance().getComparer().isEqual(stack, filter.getStack(), filter.getCompare())) {
-                return filter.getMode() == ItemFilter.MODE_WHITELIST;
+                return filter.getMode() == IFilter.MODE_WHITELIST;
             }
         }
 
-        return lastMode != ItemFilter.MODE_WHITELIST;
+        return lastMode != IFilter.MODE_WHITELIST;
     }
 }

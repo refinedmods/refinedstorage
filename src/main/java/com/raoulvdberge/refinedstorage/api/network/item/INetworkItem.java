@@ -25,5 +25,10 @@ public interface INetworkItem {
      */
     boolean onOpen(INetwork network, EntityPlayer player, EnumHand hand);
 
+    /**
+     * Called when an action occurs that is defined in {@link NetworkItemAction} and the network item is in use.
+     *
+     * @param action the action
+     */
     void onAction(NetworkItemAction action);
 }

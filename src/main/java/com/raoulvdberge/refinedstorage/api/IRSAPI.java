@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.grid.wireless.IWirelessGridFactory;
 import com.raoulvdberge.refinedstorage.api.network.grid.wireless.IWirelessGridRegistry;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
@@ -109,9 +110,20 @@ public interface IRSAPI {
     @Nonnull
     ICraftingMonitorElementList createCraftingMonitorElementList();
 
+    /**
+     * @return the wireless grid registry
+     */
     @Nonnull
     IWirelessGridRegistry getWirelessGridRegistry();
 
+    /**
+     * Opens a wireless grid for the given player.
+     *
+     * @param player           the player
+     * @param hand             the hand where the wireless grid is in
+     * @param networkDimension the dimension of the bound network
+     * @param id               the id of the wireless grid, as returned in {@link IWirelessGridRegistry#add(IWirelessGridFactory)}
+     */
     void openWirelessGrid(EntityPlayer player, EnumHand hand, int networkDimension, int id);
 
     /**
