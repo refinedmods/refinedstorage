@@ -7,6 +7,8 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
+import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
@@ -401,6 +403,14 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         }
 
         grid.onCraftingMatrixChanged();
+
+        if (network != null) {
+            INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
+
+            if (networkItem != null) {
+                networkItem.onAction(NetworkItemAction.ITEM_CRAFTED);
+            }
+        }
     }
 
     @Override
