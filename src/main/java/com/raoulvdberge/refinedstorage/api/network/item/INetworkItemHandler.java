@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.api.network.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -19,11 +18,10 @@ public interface INetworkItemHandler {
     /**
      * Called when a player opens a network item.
      *
-     * @param player          the player that opened the network item
-     * @param controllerWorld the world of the controller
-     * @param hand            the hand the player opened it with
+     * @param player the player that opened the network item
+     * @param hand   the hand the player opened it with
      */
-    void onOpen(EntityPlayer player, World controllerWorld, EnumHand hand);
+    void onOpen(EntityPlayer player, EnumHand hand);
 
     /**
      * Called when the player closes a network item.

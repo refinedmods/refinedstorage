@@ -9,7 +9,6 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +31,7 @@ public class NetworkItemHandler implements INetworkItemHandler {
     }
 
     @Override
-    public void onOpen(EntityPlayer player, World controllerWorld, EnumHand hand) {
+    public void onOpen(EntityPlayer player, EnumHand hand) {
         boolean inRange = false;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
@@ -57,7 +56,7 @@ public class NetworkItemHandler implements INetworkItemHandler {
 
         INetworkItem item = ((INetworkItemProvider) player.getHeldItem(hand).getItem()).provide(this, player, player.getHeldItem(hand));
 
-        if (item.onOpen(network, player, controllerWorld, hand)) {
+        if (item.onOpen(network, player, hand)) {
             items.add(item);
         }
     }

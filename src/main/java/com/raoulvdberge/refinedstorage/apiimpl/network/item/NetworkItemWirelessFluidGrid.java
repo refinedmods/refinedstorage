@@ -14,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -35,7 +34,7 @@ public class NetworkItemWirelessFluidGrid implements INetworkItem {
     }
 
     @Override
-    public boolean onOpen(INetwork network, EntityPlayer player, World controllerWorld, EnumHand hand) {
+    public boolean onOpen(INetwork network, EntityPlayer player, EnumHand hand) {
         if (RS.INSTANCE.config.wirelessFluidGridUsesEnergy && stack.getItemDamage() != ItemWirelessFluidGrid.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessFluidGridOpenUsage) {
             return false;
         }
@@ -46,7 +45,7 @@ public class NetworkItemWirelessFluidGrid implements INetworkItem {
             return false;
         }
 
-        API.instance().openWirelessGrid(player, hand, controllerWorld.provider.getDimension(), WirelessFluidGrid.ID);
+        API.instance().openWirelessGrid(player, hand, network.world().provider.getDimension(), WirelessFluidGrid.ID);
 
         network.sendFluidStorageToClient((EntityPlayerMP) player);
 

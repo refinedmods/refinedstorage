@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -34,7 +33,7 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
     }
 
     @Override
-    public boolean onOpen(INetwork network, EntityPlayer player, World controllerWorld, EnumHand hand) {
+    public boolean onOpen(INetwork network, EntityPlayer player, EnumHand hand) {
         if (RS.INSTANCE.config.wirelessCraftingMonitorUsesEnergy && stack.getItemDamage() != ItemWirelessCraftingMonitor.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessCraftingMonitorOpenUsage) {
             return false;
         }
@@ -45,7 +44,7 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
             return false;
         }
 
-        player.openGui(RS.INSTANCE, RSGui.WIRELESS_CRAFTING_MONITOR, player.getEntityWorld(), hand.ordinal(), controllerWorld.provider.getDimension(), 0);
+        player.openGui(RS.INSTANCE, RSGui.WIRELESS_CRAFTING_MONITOR, player.getEntityWorld(), hand.ordinal(), network.world().provider.getDimension(), 0);
 
         network.sendCraftingMonitorUpdate((EntityPlayerMP) player);
 
