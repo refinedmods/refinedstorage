@@ -112,7 +112,7 @@ public interface IRSAPI {
     @Nonnull
     IWirelessGridRegistry getWirelessGridRegistry();
 
-    void openWirelessGrid(EntityPlayer player, EnumHand hand, int controllerDimension, int id);
+    void openWirelessGrid(EntityPlayer player, EnumHand hand, int networkDimension, int id);
 
     /**
      * Notifies the neighbors of a node that there is a node placed at the given position.

@@ -30,10 +30,10 @@ import java.util.List;
 public class WirelessGrid implements IGrid {
     public static int ID;
 
-    protected ItemStack stack;
+    private ItemStack stack;
 
-    protected int controllerDimension;
-    private BlockPos controller;
+    private int networkDimension;
+    private BlockPos network;
 
     private int viewType;
     private int sortingType;
@@ -57,9 +57,9 @@ public class WirelessGrid implements IGrid {
         }
     };
 
-    public WirelessGrid(int controllerDimension, ItemStack stack) {
-        this.controllerDimension = controllerDimension;
-        this.controller = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
+    public WirelessGrid(int networkDimension, ItemStack stack) {
+        this.networkDimension = networkDimension;
+        this.network = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
 
         this.stack = stack;
 
@@ -87,10 +87,10 @@ public class WirelessGrid implements IGrid {
     @Override
     @Nullable
     public INetwork getNetwork() {
-        World world = DimensionManager.getWorld(controllerDimension);
+        World world = DimensionManager.getWorld(networkDimension);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(controller);
+            TileEntity tile = world.getTileEntity(network);
 
             return tile instanceof INetwork ? (INetwork) tile : null;
         }

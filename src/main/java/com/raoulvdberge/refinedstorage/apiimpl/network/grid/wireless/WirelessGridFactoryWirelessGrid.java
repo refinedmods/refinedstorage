@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 public class WirelessGridFactoryWirelessGrid implements IWirelessGridFactory {
     @Nonnull
     @Override
-    public IGrid create(EntityPlayer player, EnumHand hand, int controllerDimension) {
-        return new WirelessGrid(controllerDimension, player.getHeldItem(hand));
+    public IGrid create(EntityPlayer player, EnumHand hand, int networkDimension) {
+        return new WirelessGrid(networkDimension, player.getHeldItem(hand));
     }
 }

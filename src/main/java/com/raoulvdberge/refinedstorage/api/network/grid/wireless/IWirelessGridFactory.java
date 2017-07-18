@@ -8,5 +8,5 @@ import javax.annotation.Nonnull;
 
 public interface IWirelessGridFactory {
     @Nonnull
-    IGrid create(EntityPlayer player, EnumHand hand, int controllerDimension);
+    IGrid create(EntityPlayer player, EnumHand hand, int networkDimension);
 }

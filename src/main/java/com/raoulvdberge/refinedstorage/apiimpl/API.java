@@ -187,8 +187,8 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public void openWirelessGrid(EntityPlayer player, EnumHand hand, int controllerDimension, int id) {
-        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), controllerDimension, id);
+    public void openWirelessGrid(EntityPlayer player, EnumHand hand, int networkDimension, int id) {
+        player.openGui(RS.INSTANCE, RSGui.WIRELESS_GRID, player.getEntityWorld(), hand.ordinal(), networkDimension, id);
     }
 
     @Override

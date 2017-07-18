@@ -29,17 +29,17 @@ public class WirelessFluidGrid implements IGrid {
 
     private ItemStack stack;
 
-    private int controllerDimension;
-    private BlockPos controller;
+    private int networkDimension;
+    private BlockPos network;
 
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
     private int size;
 
-    public WirelessFluidGrid(int controllerDimension, ItemStack stack) {
-        this.controllerDimension = controllerDimension;
-        this.controller = new BlockPos(ItemWirelessFluidGrid.getX(stack), ItemWirelessFluidGrid.getY(stack), ItemWirelessFluidGrid.getZ(stack));
+    public WirelessFluidGrid(int networkDimension, ItemStack stack) {
+        this.networkDimension = networkDimension;
+        this.network = new BlockPos(ItemWirelessFluidGrid.getX(stack), ItemWirelessFluidGrid.getY(stack), ItemWirelessFluidGrid.getZ(stack));
 
         this.stack = stack;
 
@@ -61,10 +61,10 @@ public class WirelessFluidGrid implements IGrid {
     @Override
     @Nullable
     public INetwork getNetwork() {
-        World world = DimensionManager.getWorld(controllerDimension);
+        World world = DimensionManager.getWorld(networkDimension);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(controller);
+            TileEntity tile = world.getTileEntity(network);
 
             return tile instanceof INetwork ? (INetwork) tile : null;
         }
