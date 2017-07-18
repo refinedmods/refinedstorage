@@ -2,6 +2,7 @@
 
 ### 1.5.13
 - Fixed Wireless Fluid Grid not using up energy (raoulvdberge)
+- Fixed Wireless Crafting Monitor remaining in network item list (raoulvdberge)
 
 ### 1.5.12
 - The Network Transmitter now uses 1 FE/t per block instead of 4 FE/t (raoulvdberge)

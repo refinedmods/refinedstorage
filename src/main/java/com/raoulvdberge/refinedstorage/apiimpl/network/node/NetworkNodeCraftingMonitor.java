@@ -128,6 +128,11 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         TileDataManager.setParameter(TileCraftingMonitor.VIEW_AUTOMATED, viewAutomated);
     }
 
+    @Override
+    public void onClosed(EntityPlayer player) {
+        // NO OP
+    }
+
     public void setViewAutomated(boolean viewAutomated) {
         this.viewAutomated = viewAutomated;
     }

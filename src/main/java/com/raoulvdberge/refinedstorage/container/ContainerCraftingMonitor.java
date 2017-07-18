@@ -25,6 +25,15 @@ public class ContainerCraftingMonitor extends ContainerBase {
         addPlayerInventory(8, 148);
     }
 
+    @Override
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
+
+        if (!player.getEntityWorld().isRemote) {
+            craftingMonitor.onClosed(player);
+        }
+    }
+
     public ICraftingMonitor getCraftingMonitor() {
         return craftingMonitor;
     }

@@ -11,11 +11,6 @@ import javax.annotation.Nullable;
  */
 public interface INetworkItemHandler {
     /**
-     * Called every network tick.
-     */
-    void update();
-
-    /**
      * Called when a player opens a network item.
      *
      * @param player the player that opened the network item

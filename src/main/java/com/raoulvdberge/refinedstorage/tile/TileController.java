@@ -207,8 +207,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 }
             }
 
-            networkItemHandler.update();
-
             if (getType() == ControllerType.NORMAL) {
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
                     energy.setEnergyStored(energy.getMaxEnergyStored());

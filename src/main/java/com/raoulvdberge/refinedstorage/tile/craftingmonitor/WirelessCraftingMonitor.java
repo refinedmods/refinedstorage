@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorViewAutomated;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -137,5 +138,14 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     @Override
     public boolean isActive() {
         return true;
+    }
+
+    @Override
+    public void onClosed(EntityPlayer player) {
+        INetwork network = getNetwork();
+
+        if (network != null) {
+            network.getNetworkItemHandler().onClose(player);
+        }
     }
 }
