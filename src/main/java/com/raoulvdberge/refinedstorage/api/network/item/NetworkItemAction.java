@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.network.item;
 public enum NetworkItemAction {
     ITEM_INSERTED,
     ITEM_EXTRACTED,
+    ITEM_CRAFTED,
     FLUID_INSERTED,
     FLUID_EXTRACTED,
     CRAFTING_TASK_CANCELLED,
