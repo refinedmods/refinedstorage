@@ -14,7 +14,7 @@ public interface IComparer {
     int COMPARE_QUANTITY = 4;
     int COMPARE_OREDICT = 8;
     int COMPARE_STRIP_NBT = 16;
-    int NO_FORESTRY_SANTIZE = 32;
+    int FORESTRY_SANTIZE = 32;
 
     /**
      * Compares two stacks by the given flags.
@@ -46,17 +46,6 @@ public interface IComparer {
      */
     default boolean isEqualNoQuantity(@Nullable ItemStack left, @Nullable ItemStack right) {
         return isEqual(left, right, COMPARE_NBT | COMPARE_DAMAGE);
-    }
-    
-    /**
-     * Compares two stacks by NBT and damage and ignores Forestry sanitation.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @return true if the left and right stack are the same, false otherwise
-     */
-    default boolean isEqualNoQuantityNoSanitize(@Nullable ItemStack left, @Nullable ItemStack right) {
-        return isEqual(left, right, COMPARE_NBT | COMPARE_DAMAGE | NO_FORESTRY_SANTIZE);
     }
 
     /**

@@ -39,8 +39,8 @@ public class Comparer implements IComparer {
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if(IntegrationForestry.isLoaded() && (flags & NO_FORESTRY_SANTIZE) != NO_FORESTRY_SANTIZE) {
-            	// Only sanitize Forestry items if we want to compare NBT, Forestry is loaded, and no explicit flag not to sanitize.
+            if(IntegrationForestry.isLoaded() && (flags & FORESTRY_SANTIZE) == FORESTRY_SANTIZE) {
+            	// Only sanitize Forestry items if we want to compare NBT, Forestry is loaded, and flag to sanitize.
             	if (IntegrationForestry.isBreedable(left)) {
             		left = IntegrationForestry.sanitize(left.copy(), flags);
             	}
