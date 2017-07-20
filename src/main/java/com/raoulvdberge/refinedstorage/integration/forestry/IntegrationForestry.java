@@ -1,10 +1,14 @@
 package com.raoulvdberge.refinedstorage.integration.forestry;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
 
 public final class IntegrationForestry {
-	public enum Tag {
+	enum Tag {
 		GENOME("Genome", 64),				// Bees, Trees, Butterflies
 		MATE("Mate", 128),					// Bees, Butterflies
 		GEN("GEN", 256),					// Bees
@@ -20,17 +24,10 @@ public final class IntegrationForestry {
 			this.name = name;
 			this.flag = flag;
 		}
-		
-		public String getName() {
-			return name;
-		}
-		
-		public int getFlag() {
-			return flag;
-		}
 	}
 	
 	private static final String ID = "forestry";
+	
 	private static final String QUEEN_BEE = "forestry:bee_queen_ge";
 	private static final String PRINCESS_BEE = "forestry:bee_princess_ge";
 	private static final String DRONE_BEE = "forestry:bee_drone_ge";
@@ -44,8 +41,9 @@ public final class IntegrationForestry {
 	private static final String CATERPILLAR = "forestry:caterpillar_ge";
 	private static final String COCOON = "forestry:cocoon_ge";
 	
-	//public static final int allFlags = (64+128+256+512+1024+2048+4096);
-	public static final int tempFlags = (256+1024);
+	private static final String[] FORESTRY_NAMES = {QUEEN_BEE,PRINCESS_BEE,DRONE_BEE,LARVAE_BEE,SAPLING,POLLEN,BUTTERFLY,SERUM,CATERPILLAR,COCOON};
+	
+	public static final int tempFlags = (Tag.GEN.flag+Tag.IS_ANLAYZED.flag);
 	
     public static boolean isLoaded() {
         return Loader.isModLoaded(ID);
@@ -58,20 +56,13 @@ public final class IntegrationForestry {
      * @return		true if breedable, else false
      */
 	public static boolean isBreedable(ItemStack item) {
-		switch (item.getItem().getRegistryName().toString()) {
-		case QUEEN_BEE:
-		case PRINCESS_BEE:
-		case DRONE_BEE:
-		case LARVAE_BEE:
-		case SAPLING:
-		case POLLEN:
-		case BUTTERFLY:
-		case SERUM:
-		case CATERPILLAR:
-		case COCOON:
-			return true;
-		default: return false;
+		String itemName = item.getItem().getRegistryName().toString();
+		for(String forestryName : FORESTRY_NAMES) {
+			if(itemName.equals(forestryName)) {
+				return true;
+			}
 		}
+		return false;
 	}
 	
 	/**
@@ -81,78 +72,40 @@ public final class IntegrationForestry {
 	 * @return		the item with appropriate NBT tags removed
 	 */
 	public static ItemStack sanitize(ItemStack item, int flags) {
+		NBTTagCompound tagCompound = item.getTagCompound().copy();
+		ArrayList<Tag> tagsToRemove = new ArrayList<>();
 		switch (item.getItem().getRegistryName().toString()) {
 			case QUEEN_BEE:
 			case PRINCESS_BEE:
-				if((flags & Tag.GEN.flag) == Tag.GEN.flag && item.getTagCompound().hasKey(Tag.GEN.name)) {
-					item.getTagCompound().removeTag(Tag.GEN.name);
-					return item;
-				}
+				tagsToRemove.add(Tag.GEN);
 			case DRONE_BEE:
 			case LARVAE_BEE:
-				if((flags & Tag.GENOME.flag) == Tag.GENOME.flag && item.getTagCompound().hasKey(Tag.GENOME.name)) {
-					item.getTagCompound().removeTag(Tag.GENOME.name);
-					return item;
-				}
-				if((flags & Tag.MATE.flag) == Tag.MATE.flag && item.getTagCompound().hasKey(Tag.MATE.name)) {
-					item.getTagCompound().removeTag(Tag.MATE.name);
-					return item;
-				}
-				if((flags & Tag.HEALTH.flag) == Tag.HEALTH.flag && item.getTagCompound().hasKey(Tag.HEALTH.name)) {
-					item.getTagCompound().removeTag(Tag.HEALTH.name);
-					return item;
-				}
-				if((flags & Tag.IS_ANLAYZED.flag) == Tag.IS_ANLAYZED.flag && item.getTagCompound().hasKey(Tag.IS_ANLAYZED.name)) {
-					item.getTagCompound().removeTag(Tag.IS_ANLAYZED.name);
-					return item;
-				}
-				if((flags & Tag.MAX_HEALTH.flag) == Tag.MAX_HEALTH.flag && item.getTagCompound().hasKey(Tag.MAX_HEALTH.name)) {
-					item.getTagCompound().removeTag(Tag.MAX_HEALTH.name);
-					return item;
-				}
+				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.MATE, Tag.HEALTH, Tag.IS_ANLAYZED, Tag.MAX_HEALTH);
+				item.setTagCompound(removeTags(tagsToRemove, tagCompound, tempFlags));
 				break;
 			case SAPLING:
 			case POLLEN:
-				if((flags & Tag.GENOME.flag) == Tag.GENOME.flag && item.getTagCompound().hasKey(Tag.GENOME.name)) {
-					item.getTagCompound().removeTag(Tag.GENOME.name);
-					return item;
-				}
-				if((flags & Tag.IS_ANLAYZED.flag) == Tag.IS_ANLAYZED.flag && item.getTagCompound().hasKey(Tag.IS_ANLAYZED.name)) {
-					item.getTagCompound().removeTag(Tag.IS_ANLAYZED.name);
-					return item;
-				}
+				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.IS_ANLAYZED);
+				item.setTagCompound(removeTags(tagsToRemove, tagCompound, tempFlags));
 				break;
 			case BUTTERFLY:
 			case SERUM:
 			case CATERPILLAR:
 			case COCOON:
-				if((flags & Tag.GENOME.flag) == Tag.GENOME.flag && item.getTagCompound().hasKey(Tag.GENOME.name)) {
-					item.getTagCompound().removeTag(Tag.GENOME.name);
-					return item;
-				}
-				if((flags & Tag.MATE.flag) == Tag.MATE.flag && item.getTagCompound().hasKey(Tag.MATE.name)) {
-					item.getTagCompound().removeTag(Tag.MATE.name);
-					return item;
-				}
-				if((flags & Tag.HEALTH.flag) == Tag.HEALTH.flag && item.getTagCompound().hasKey(Tag.HEALTH.name)) {
-					item.getTagCompound().removeTag(Tag.HEALTH.name);
-					return item;
-				}
-				if((flags & Tag.IS_ANLAYZED.flag) == Tag.IS_ANLAYZED.flag && item.getTagCompound().hasKey(Tag.IS_ANLAYZED.name)) {
-					item.getTagCompound().removeTag(Tag.IS_ANLAYZED.name);
-					return item;
-				}
-				if((flags & Tag.MAX_HEALTH.flag) == Tag.MAX_HEALTH.flag && item.getTagCompound().hasKey(Tag.MAX_HEALTH.name)) {
-					item.getTagCompound().removeTag(Tag.MAX_HEALTH.name);
-					return item;
-				}
-				if((flags & Tag.AGE.flag) == Tag.AGE.flag && item.getTagCompound().hasKey(Tag.AGE.name)) {
-					item.getTagCompound().removeTag(Tag.AGE.name);
-					return item;
-				}
+				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.MATE, Tag.HEALTH, Tag.IS_ANLAYZED, Tag.MAX_HEALTH, Tag.AGE);
+				item.setTagCompound(removeTags(tagsToRemove, tagCompound, tempFlags));
 				break;
 			default: throw new IllegalArgumentException("Tried to sanitize \"" + item.getItem().getRegistryName().toString() +"\" for Forestry!");
 		}
-		return item; // Do nothing
+		return item;
+	}
+	
+	private static NBTTagCompound removeTags(ArrayList<Tag> tagsToRemove, NBTTagCompound compound, int flags) {
+		for(Tag tag : tagsToRemove) {
+			if((flags & tag.flag) == tag.flag && compound.hasKey(tag.name)) {
+				compound.removeTag(tag.name);
+			}
+		}
+		return compound;
 	}
 }

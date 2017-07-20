@@ -20,6 +20,7 @@ public class GuiFilter extends GuiBase {
     private GuiCheckBox compareDamage;
     private GuiCheckBox compareNBT;
     private GuiCheckBox compareOredict;
+    private GuiCheckBox compareForestry;
     private GuiCheckBox toggleModFilter;
     private GuiButton toggleMode;
     private GuiTextField nameField;
@@ -38,7 +39,8 @@ public class GuiFilter extends GuiBase {
         compareDamage = addCheckBox(x + 7, y + 77, t("gui.refinedstorage:filter.compare_damage"), (compare & IComparer.COMPARE_DAMAGE) == IComparer.COMPARE_DAMAGE);
         compareNBT = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4, y + 77, t("gui.refinedstorage:filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT);
         compareOredict = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4 + compareNBT.getButtonWidth() + 4, y + 77, t("gui.refinedstorage:filter.compare_oredict"), (compare & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT);
-        toggleModFilter = addCheckBox(0, y + 71 + 25, t("gui.refinedstorage:filter.mod_filter"), modFilter);
+        compareForestry = addCheckBox(0, y + 71 + 34, t("gui.refinedstorage:filter.compare_forestry"), (compare & IComparer.COMPARE_FORESTRY) == IComparer.COMPARE_FORESTRY);
+        toggleModFilter = addCheckBox(0, y + 71 + 21, t("gui.refinedstorage:filter.mod_filter"), modFilter);
         toggleMode = addButton(x + 7, y + 71 + 21, 0, 20, "");
         updateModeButton(mode);
         nameField = new GuiTextField(0, fontRenderer, x + 34, y + 121, 137 - 6, fontRenderer.FONT_HEIGHT);
@@ -56,6 +58,7 @@ public class GuiFilter extends GuiBase {
         toggleMode.setWidth(fontRenderer.getStringWidth(text) + 12);
         toggleMode.displayString = text;
         toggleModFilter.x = toggleMode.x + toggleMode.getButtonWidth() + 4;
+        compareForestry.x = toggleMode.x + toggleMode.getButtonWidth() + 4;
     }
 
     @Override
@@ -103,7 +106,9 @@ public class GuiFilter extends GuiBase {
             compare ^= IComparer.COMPARE_NBT;
         } else if (button == compareOredict) {
             compare ^= IComparer.COMPARE_OREDICT;
-        } else if (button == toggleMode) {
+        } else if (button == compareForestry) {
+            compare ^= IComparer.COMPARE_FORESTRY;
+        }else if (button == toggleMode) {
             mode = mode == ItemFilter.MODE_WHITELIST ? ItemFilter.MODE_BLACKLIST : ItemFilter.MODE_WHITELIST;
 
             updateModeButton(mode);
