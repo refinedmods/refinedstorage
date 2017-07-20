@@ -33,16 +33,19 @@ public final class IntegrationForestry {
 	private static final String ID = "forestry";
 	private static final String QUEEN_BEE = "forestry:bee_queen_ge";
 	private static final String PRINCESS_BEE = "forestry:bee_princess_ge";
-	//private static final String DRONE_BEE = "forestry:bee_drone_ge";
-	//private static final String LARVAE_BEE = "forestry:bee_larvae_ge";
+	private static final String DRONE_BEE = "forestry:bee_drone_ge";
+	private static final String LARVAE_BEE = "forestry:bee_larvae_ge";
 	
-	//private static final String SAPLING = "forestry:sapling";
-	//private static final String POLLEN = "forestry:pollen_fertile";
+	private static final String SAPLING = "forestry:sapling";
+	private static final String POLLEN = "forestry:pollen_fertile";
 	
-	//private static final String BUTTERFLY = "forestry:butterfly_ge";
-	//private static final String SERUM = "forestry:serum_ge";
-	//private static final String CATERPILLAR = "forestry:caterpillar_ge";
-	//private static final String COCOON = "forestry:cocoon_ge";
+	private static final String BUTTERFLY = "forestry:butterfly_ge";
+	private static final String SERUM = "forestry:serum_ge";
+	private static final String CATERPILLAR = "forestry:caterpillar_ge";
+	private static final String COCOON = "forestry:cocoon_ge";
+	
+	//public static final int allFlags = (64+128+256+512+1024+2048+4096);
+	public static final int tempFlags = (256+1024);
 	
     public static boolean isLoaded() {
         return Loader.isModLoaded(ID);
@@ -58,17 +61,15 @@ public final class IntegrationForestry {
 		switch (item.getItem().getRegistryName().toString()) {
 		case QUEEN_BEE:
 		case PRINCESS_BEE:
-			return true;
-		/* Do nothing with these for now
 		case DRONE_BEE:
-		case LARVAE:
+		case LARVAE_BEE:
 		case SAPLING:
 		case POLLEN:
 		case BUTTERFLY:
 		case SERUM:
 		case CATERPILLAR:
 		case COCOON:
-		*/
+			return true;
 		default: return false;
 		}
 	}
@@ -83,22 +84,75 @@ public final class IntegrationForestry {
 		switch (item.getItem().getRegistryName().toString()) {
 			case QUEEN_BEE:
 			case PRINCESS_BEE:
-				//if((flags & Tag.GEN.flag) == Tag.GEN.flag && item.getTagCompound().hasKey(Tag.GEN.name)) {
-				if(item.getTagCompound().hasKey(Tag.GEN.name)) {	// Don't use any flags for now
+				if((flags & Tag.GEN.flag) == Tag.GEN.flag && item.getTagCompound().hasKey(Tag.GEN.name)) {
 					item.getTagCompound().removeTag(Tag.GEN.name);
 					return item;
 				}
-			/* Do nothing with these for now
 			case DRONE_BEE:
-			case LARVAE:
+			case LARVAE_BEE:
+				if((flags & Tag.GENOME.flag) == Tag.GENOME.flag && item.getTagCompound().hasKey(Tag.GENOME.name)) {
+					item.getTagCompound().removeTag(Tag.GENOME.name);
+					return item;
+				}
+				if((flags & Tag.MATE.flag) == Tag.MATE.flag && item.getTagCompound().hasKey(Tag.MATE.name)) {
+					item.getTagCompound().removeTag(Tag.MATE.name);
+					return item;
+				}
+				if((flags & Tag.HEALTH.flag) == Tag.HEALTH.flag && item.getTagCompound().hasKey(Tag.HEALTH.name)) {
+					item.getTagCompound().removeTag(Tag.HEALTH.name);
+					return item;
+				}
+				if((flags & Tag.IS_ANLAYZED.flag) == Tag.IS_ANLAYZED.flag && item.getTagCompound().hasKey(Tag.IS_ANLAYZED.name)) {
+					item.getTagCompound().removeTag(Tag.IS_ANLAYZED.name);
+					return item;
+				}
+				if((flags & Tag.MAX_HEALTH.flag) == Tag.MAX_HEALTH.flag && item.getTagCompound().hasKey(Tag.MAX_HEALTH.name)) {
+					item.getTagCompound().removeTag(Tag.MAX_HEALTH.name);
+					return item;
+				}
+				break;
 			case SAPLING:
 			case POLLEN:
+				if((flags & Tag.GENOME.flag) == Tag.GENOME.flag && item.getTagCompound().hasKey(Tag.GENOME.name)) {
+					item.getTagCompound().removeTag(Tag.GENOME.name);
+					return item;
+				}
+				if((flags & Tag.IS_ANLAYZED.flag) == Tag.IS_ANLAYZED.flag && item.getTagCompound().hasKey(Tag.IS_ANLAYZED.name)) {
+					item.getTagCompound().removeTag(Tag.IS_ANLAYZED.name);
+					return item;
+				}
+				break;
 			case BUTTERFLY:
 			case SERUM:
 			case CATERPILLAR:
 			case COCOON:
-			*/
+				if((flags & Tag.GENOME.flag) == Tag.GENOME.flag && item.getTagCompound().hasKey(Tag.GENOME.name)) {
+					item.getTagCompound().removeTag(Tag.GENOME.name);
+					return item;
+				}
+				if((flags & Tag.MATE.flag) == Tag.MATE.flag && item.getTagCompound().hasKey(Tag.MATE.name)) {
+					item.getTagCompound().removeTag(Tag.MATE.name);
+					return item;
+				}
+				if((flags & Tag.HEALTH.flag) == Tag.HEALTH.flag && item.getTagCompound().hasKey(Tag.HEALTH.name)) {
+					item.getTagCompound().removeTag(Tag.HEALTH.name);
+					return item;
+				}
+				if((flags & Tag.IS_ANLAYZED.flag) == Tag.IS_ANLAYZED.flag && item.getTagCompound().hasKey(Tag.IS_ANLAYZED.name)) {
+					item.getTagCompound().removeTag(Tag.IS_ANLAYZED.name);
+					return item;
+				}
+				if((flags & Tag.MAX_HEALTH.flag) == Tag.MAX_HEALTH.flag && item.getTagCompound().hasKey(Tag.MAX_HEALTH.name)) {
+					item.getTagCompound().removeTag(Tag.MAX_HEALTH.name);
+					return item;
+				}
+				if((flags & Tag.AGE.flag) == Tag.AGE.flag && item.getTagCompound().hasKey(Tag.AGE.name)) {
+					item.getTagCompound().removeTag(Tag.AGE.name);
+					return item;
+				}
+				break;
 			default: throw new IllegalArgumentException("Tried to sanitize \"" + item.getItem().getRegistryName().toString() +"\" for Forestry!");
 		}
+		return item; // Do nothing
 	}
 }

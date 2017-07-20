@@ -40,6 +40,8 @@ public class SideButtonCompare extends SideButton {
             ty = 48;
         } else if (mask == IComparer.COMPARE_OREDICT) {
             ty = 224;
+        } else if (mask == IComparer.COMPARE_FORESTRY) {
+            ty = 48;
         }
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;
@@ -47,6 +49,8 @@ public class SideButtonCompare extends SideButton {
         // This is reversed in icons.png :D
         if (mask == IComparer.COMPARE_OREDICT) {
             tx = tx == 16 ? 0 : 16;
+        } else if (mask == IComparer.COMPARE_FORESTRY) {
+        	tx = tx == 16 ? 32 : 48;
         }
 
         gui.drawTexture(x, y, tx, ty, 16, 16);
