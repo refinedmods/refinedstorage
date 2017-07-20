@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.container.ContainerDiskManipulator;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
-import com.raoulvdberge.refinedstorage.tile.TileExporter;
 
 public class GuiDiskManipulator extends GuiBase {
     public GuiDiskManipulator(ContainerDiskManipulator container) {

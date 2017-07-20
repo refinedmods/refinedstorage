@@ -7,7 +7,6 @@ import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonMode;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonType;
 import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
-import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 
 public class GuiImporter extends GuiBase {

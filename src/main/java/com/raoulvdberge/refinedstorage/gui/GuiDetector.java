@@ -8,7 +8,6 @@ import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonDetectorMode;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonType;
 import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
-import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.gui.GuiTextField;
 

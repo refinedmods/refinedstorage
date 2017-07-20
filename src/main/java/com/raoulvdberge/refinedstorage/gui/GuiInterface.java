@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.container.ContainerInterface;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
-import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
 
 public class GuiInterface extends GuiBase {
