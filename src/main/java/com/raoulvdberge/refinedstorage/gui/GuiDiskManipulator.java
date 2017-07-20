@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerDiskManipulator;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
+import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 
 public class GuiDiskManipulator extends GuiBase {
@@ -19,6 +20,9 @@ public class GuiDiskManipulator extends GuiBase {
         addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_OREDICT));
+        if(IntegrationForestry.isLoaded()) {
+        	addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_FORESTRY));
+        }
     }
 
     @Override

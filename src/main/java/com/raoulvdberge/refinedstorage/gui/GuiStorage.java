@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
+import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -50,6 +51,9 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_DAMAGE));
             addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_NBT));
             addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_OREDICT));
+            if(IntegrationForestry.isLoaded()) {
+            	addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_FORESTRY));
+            }
         }
 
         if (gui.getVoidExcessParameter() != null) {

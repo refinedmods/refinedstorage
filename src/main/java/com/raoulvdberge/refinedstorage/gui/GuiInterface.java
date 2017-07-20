@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerInterface;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
 
 public class GuiInterface extends GuiBase {
@@ -18,6 +19,9 @@ public class GuiInterface extends GuiBase {
         addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_OREDICT));
+        if(IntegrationForestry.isLoaded()) {
+        	addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_FORESTRY));
+        }
     }
 
     @Override

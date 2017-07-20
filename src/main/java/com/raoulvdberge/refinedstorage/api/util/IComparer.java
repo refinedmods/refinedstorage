@@ -14,6 +14,7 @@ public interface IComparer {
     int COMPARE_QUANTITY = 4;
     int COMPARE_OREDICT = 8;
     int COMPARE_STRIP_NBT = 16;
+    int COMPARE_FORESTRY = 32;
 
     /**
      * Compares two stacks by the given flags.

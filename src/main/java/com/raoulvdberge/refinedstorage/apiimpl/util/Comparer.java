@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.block.BlockNode;
+import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
@@ -38,6 +39,15 @@ public class Comparer implements IComparer {
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
+            if(IntegrationForestry.isLoaded() && (flags & COMPARE_FORESTRY) == COMPARE_FORESTRY) {
+            	// Only sanitize Forestry items if we want to compare NBT, Forestry is loaded, and flag to sanitize.
+            	if (IntegrationForestry.isBreedable(left)) {
+            		left = IntegrationForestry.sanitize(left.copy(), IntegrationForestry.tempFlags); // Temporarily set to only do some flags
+            	}
+            	if (IntegrationForestry.isBreedable(right)) {
+            	    right = IntegrationForestry.sanitize(right.copy(), IntegrationForestry.tempFlags); // Temporarily set to only do some flags
+            	}
+            }
             if ((flags & COMPARE_STRIP_NBT) == COMPARE_STRIP_NBT) {
                 left = stripTags(left.copy());
                 right = stripTags(right.copy());
