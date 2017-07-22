@@ -20,9 +20,8 @@ public class GuiDiskManipulator extends GuiBase {
         addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_OREDICT));
-		if(IntegrationForestry.isLoaded()) {
-			addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE,
-			IComparer.COMPARE_FORESTRY | IntegrationForestry.Tag.GEN.getFlag() | IntegrationForestry.Tag.IS_ANALYZED.getFlag()));
+        if(IntegrationForestry.isLoaded()) {
+            addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_FORESTRY | IntegrationForestry.Tag.GEN.getFlag() | IntegrationForestry.Tag.IS_ANALYZED.getFlag()));
         }
     }
 
