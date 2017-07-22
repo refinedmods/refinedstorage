@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

@@ -1,9 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network;
 
+import javax.annotation.Nullable;
+
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeFactory;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

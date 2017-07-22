@@ -1,10 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -17,6 +12,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 
 public class CraftingStepProcess extends CraftingStep {
     public static final String ID = "process";

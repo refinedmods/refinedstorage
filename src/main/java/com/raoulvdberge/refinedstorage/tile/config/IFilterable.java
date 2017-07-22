@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;

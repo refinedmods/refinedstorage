@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.NetworkNodeExternalStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageItemExternal;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;

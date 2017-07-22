@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
 

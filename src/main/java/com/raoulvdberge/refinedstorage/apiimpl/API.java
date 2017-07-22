@@ -32,6 +32,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;

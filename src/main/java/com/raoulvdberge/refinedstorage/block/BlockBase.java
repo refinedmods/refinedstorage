@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;

@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonCraftingMonitorV
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorCancel;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;

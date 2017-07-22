@@ -1,13 +1,14 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.*;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.*;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 
 public class ReaderWriterChannel implements IReaderWriterChannel {
     private static final String NBT_HANDLER = "Handler_%s";

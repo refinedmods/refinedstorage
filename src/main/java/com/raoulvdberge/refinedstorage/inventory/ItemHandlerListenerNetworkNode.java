@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-
 import java.util.function.Consumer;
+
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 
 public class ItemHandlerListenerNetworkNode implements Consumer<Integer> {
     private INetworkNode node;

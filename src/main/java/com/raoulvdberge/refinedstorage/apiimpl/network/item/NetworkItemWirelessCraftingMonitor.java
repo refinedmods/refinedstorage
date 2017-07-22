@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

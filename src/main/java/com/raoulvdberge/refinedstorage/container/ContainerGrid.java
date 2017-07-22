@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;

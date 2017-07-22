@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.security;
 
-import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 
 public class SecurityCard implements ISecurityCard {
     private UUID owner;

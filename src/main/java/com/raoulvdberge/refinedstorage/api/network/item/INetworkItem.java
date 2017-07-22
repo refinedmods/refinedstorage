@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.item;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;

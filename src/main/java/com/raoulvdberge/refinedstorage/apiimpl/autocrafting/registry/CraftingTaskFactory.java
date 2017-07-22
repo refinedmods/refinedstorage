@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingStep;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;

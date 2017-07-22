@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+
 import net.minecraft.tileentity.TileEntity;
 
 public interface IAccessType {

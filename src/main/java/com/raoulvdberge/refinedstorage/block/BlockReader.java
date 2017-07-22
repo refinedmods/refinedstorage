@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

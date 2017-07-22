@@ -16,6 +16,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessG
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStartResponse;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;

@@ -1,9 +1,11 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
+
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
+
 import java.util.List;
 
 /**

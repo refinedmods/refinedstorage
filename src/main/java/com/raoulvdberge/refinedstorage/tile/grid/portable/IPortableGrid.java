@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

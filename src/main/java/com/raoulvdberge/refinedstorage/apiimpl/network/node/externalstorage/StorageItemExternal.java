@@ -1,12 +1,14 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
+import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nullable;
+
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

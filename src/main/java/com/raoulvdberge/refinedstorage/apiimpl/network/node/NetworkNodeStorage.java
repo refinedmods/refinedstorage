@@ -17,6 +17,7 @@ import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;

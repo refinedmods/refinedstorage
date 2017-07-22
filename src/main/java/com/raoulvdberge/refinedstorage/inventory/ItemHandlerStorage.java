@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 

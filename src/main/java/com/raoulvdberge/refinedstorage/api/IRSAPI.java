@@ -1,5 +1,12 @@
 package com.raoulvdberge.refinedstorage.api;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+
+import javax.annotation.Nonnull;
+
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
@@ -14,12 +21,6 @@ import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
-
-import javax.annotation.Nonnull;
 
 /**
  * Represents a Refined Storage API implementation.

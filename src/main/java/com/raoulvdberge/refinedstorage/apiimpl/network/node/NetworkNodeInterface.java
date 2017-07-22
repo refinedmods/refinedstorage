@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;

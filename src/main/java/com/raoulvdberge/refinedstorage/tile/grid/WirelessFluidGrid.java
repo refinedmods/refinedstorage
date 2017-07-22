@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessFluidGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;

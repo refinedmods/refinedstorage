@@ -1,10 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
+
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;

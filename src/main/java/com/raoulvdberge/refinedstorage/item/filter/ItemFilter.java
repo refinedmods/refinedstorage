@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
 import com.raoulvdberge.refinedstorage.item.ItemBase;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;

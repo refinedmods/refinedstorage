@@ -112,7 +112,7 @@ misc.refinedstorage:reader_writer.redstone=Redstone strength: %d
 sidebutton.refinedstorage:compare.1=Compare damage
 sidebutton.refinedstorage:compare.2=Compare NBT
 sidebutton.refinedstorage:compare.8=Compare ore dictionary
-sidebutton.refinedstorage:compare.32=Compare Forestry items
+sidebutton.refinedstorage:compare.1312=Compare Forestry items
 
 sidebutton.refinedstorage:redstone_mode=Redstone mode
 sidebutton.refinedstorage:redstone_mode.0=Ignore redstone signal

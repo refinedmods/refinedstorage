@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

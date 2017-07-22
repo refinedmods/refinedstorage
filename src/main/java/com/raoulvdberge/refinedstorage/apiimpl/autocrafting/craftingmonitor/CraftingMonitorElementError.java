@@ -1,11 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
-import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
+
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 
 public class CraftingMonitorElementError implements ICraftingMonitorElement {
     public static final String ID = "error";

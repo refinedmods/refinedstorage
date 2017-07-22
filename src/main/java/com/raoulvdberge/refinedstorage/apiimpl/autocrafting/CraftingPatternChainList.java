@@ -1,13 +1,13 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 
 public class CraftingPatternChainList implements Iterable<CraftingPatternChainList.CraftingPatternChain> {
     LinkedList<CraftingPatternChain> innerChain = new LinkedList<>();

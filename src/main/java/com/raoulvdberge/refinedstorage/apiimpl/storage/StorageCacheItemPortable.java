@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.network.MessageGridItemDelta;
 import com.raoulvdberge.refinedstorage.network.MessageGridItemUpdate;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

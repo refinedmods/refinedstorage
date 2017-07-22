@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;

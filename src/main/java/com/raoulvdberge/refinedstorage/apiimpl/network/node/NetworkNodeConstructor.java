@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.tile.TileConstructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSkull;
 import net.minecraft.block.SoundType;

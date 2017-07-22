@@ -8,12 +8,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
 
 public final class IntegrationForestry {
-	enum Tag {
+	public enum Tag {
 		GENOME("Genome", 64),				// Bees, Trees, Butterflies
 		MATE("Mate", 128),					// Bees, Butterflies
 		GEN("GEN", 256),					// Bees
 		HEALTH("Health", 512),				// Bees, Butterflies
-		IS_ANLAYZED("IsAnalyzed", 1024),	// Bees, Trees, Butterflies
+		IS_ANALYZED("IsAnalyzed", 1024),	// Bees, Trees, Butterflies
 		MAX_HEALTH("MaxH", 2048),			// Bees, Butterflies
 		AGE("Age", 4096);					// Butterflies
 		
@@ -23,6 +23,10 @@ public final class IntegrationForestry {
 		Tag(String name, int flag){
 			this.name = name;
 			this.flag = flag;
+		}
+		
+		public int getFlag() {
+			return flag;
 		}
 	}
 	
@@ -41,9 +45,8 @@ public final class IntegrationForestry {
 	private static final String CATERPILLAR = "forestry:caterpillar_ge";
 	private static final String COCOON = "forestry:cocoon_ge";
 	
-	private static final String[] FORESTRY_NAMES = {QUEEN_BEE,PRINCESS_BEE,DRONE_BEE,LARVAE_BEE,SAPLING,POLLEN,BUTTERFLY,SERUM,CATERPILLAR,COCOON};
-	
-	public static final int tempFlags = (Tag.GEN.flag+Tag.IS_ANLAYZED.flag);
+	private static final String[] FORESTRY_NAMES =
+		{QUEEN_BEE,PRINCESS_BEE,DRONE_BEE,LARVAE_BEE,SAPLING,POLLEN,BUTTERFLY,SERUM,CATERPILLAR,COCOON};
 	
     public static boolean isLoaded() {
         return Loader.isModLoaded(ID);
@@ -80,20 +83,20 @@ public final class IntegrationForestry {
 				tagsToRemove.add(Tag.GEN);
 			case DRONE_BEE:
 			case LARVAE_BEE:
-				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.MATE, Tag.HEALTH, Tag.IS_ANLAYZED, Tag.MAX_HEALTH);
-				item.setTagCompound(removeTags(tagsToRemove, tagCompound, tempFlags));
+				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.MATE, Tag.HEALTH, Tag.IS_ANALYZED, Tag.MAX_HEALTH);
+				item.setTagCompound(removeTags(tagsToRemove, tagCompound, flags));
 				break;
 			case SAPLING:
 			case POLLEN:
-				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.IS_ANLAYZED);
-				item.setTagCompound(removeTags(tagsToRemove, tagCompound, tempFlags));
+				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.IS_ANALYZED);
+				item.setTagCompound(removeTags(tagsToRemove, tagCompound, flags));
 				break;
 			case BUTTERFLY:
 			case SERUM:
 			case CATERPILLAR:
 			case COCOON:
-				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.MATE, Tag.HEALTH, Tag.IS_ANLAYZED, Tag.MAX_HEALTH, Tag.AGE);
-				item.setTagCompound(removeTags(tagsToRemove, tagCompound, tempFlags));
+				Collections.addAll(tagsToRemove, Tag.GENOME, Tag.MATE, Tag.HEALTH, Tag.IS_ANALYZED, Tag.MAX_HEALTH, Tag.AGE);
+				item.setTagCompound(removeTags(tagsToRemove, tagCompound, flags));
 				break;
 			default: throw new IllegalArgumentException("Tried to sanitize \"" + item.getItem().getRegistryName().toString() +"\" for Forestry!");
 		}

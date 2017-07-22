@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
 import com.raoulvdberge.refinedstorage.network.MessageSecurityManagerUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;

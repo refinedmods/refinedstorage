@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
 import com.raoulvdberge.refinedstorage.gui.GuiReaderWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;

@@ -1,12 +1,13 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
-import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import mezz.jei.api.IGuiHelper;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 
 public final class RecipeMakerSolderer {
     public static List<RecipeWrapperSolderer> getRecipes(IGuiHelper guiHelper) {

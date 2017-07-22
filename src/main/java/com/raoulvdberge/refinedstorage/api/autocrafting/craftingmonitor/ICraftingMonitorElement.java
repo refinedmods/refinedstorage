@@ -1,11 +1,12 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor;
 
-import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+
+import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 
 /**
  * Represents a crafting monitor element.

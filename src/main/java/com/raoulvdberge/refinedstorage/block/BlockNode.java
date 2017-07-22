@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
+
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;

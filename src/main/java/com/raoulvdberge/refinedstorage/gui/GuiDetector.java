@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonType;
 import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+
 import net.minecraft.client.gui.GuiTextField;
 
 import java.io.IOException;
@@ -30,7 +31,8 @@ public class GuiDetector extends GuiBase {
         addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_OREDICT));
         if(IntegrationForestry.isLoaded()) {
-        	addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_FORESTRY));
+        	addSideButton(new SideButtonCompare(this, TileDetector.COMPARE,
+        			IComparer.COMPARE_FORESTRY | IntegrationForestry.Tag.GEN.getFlag() | IntegrationForestry.Tag.IS_ANALYZED.getFlag()));
         }
 
         AMOUNT = new GuiTextField(0, fontRenderer, x + 41 + 1, y + 23 + 1, 50, fontRenderer.FONT_HEIGHT);

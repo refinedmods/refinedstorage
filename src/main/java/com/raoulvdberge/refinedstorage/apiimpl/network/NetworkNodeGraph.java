@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;

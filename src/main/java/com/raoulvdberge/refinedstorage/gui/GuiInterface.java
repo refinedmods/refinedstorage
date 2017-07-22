@@ -20,7 +20,8 @@ public class GuiInterface extends GuiBase {
         addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_OREDICT));
         if(IntegrationForestry.isLoaded()) {
-        	addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_FORESTRY));
+        	addSideButton(new SideButtonCompare(this, TileInterface.COMPARE,
+        			IComparer.COMPARE_FORESTRY | IntegrationForestry.Tag.GEN.getFlag() | IntegrationForestry.Tag.IS_ANALYZED.getFlag()));
         }
     }
 
