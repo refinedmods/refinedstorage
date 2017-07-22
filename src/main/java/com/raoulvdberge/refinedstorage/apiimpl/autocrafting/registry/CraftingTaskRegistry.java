@@ -1,10 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry;
 
-import javax.annotation.Nullable;
-
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -2,15 +2,13 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.block.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessFluidGridSettingsUpdate;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -20,27 +18,28 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
 public class WirelessFluidGrid implements IGrid {
-    public static final int GRID_TYPE = 1;
+    public static int ID;
 
     private ItemStack stack;
 
-    private int controllerDimension;
-    private BlockPos controller;
+    private int networkDimension;
+    private BlockPos network;
 
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
     private int size;
 
-    public WirelessFluidGrid(int controllerDimension, ItemStack stack) {
-        this.controllerDimension = controllerDimension;
-        this.controller = new BlockPos(ItemWirelessFluidGrid.getX(stack), ItemWirelessFluidGrid.getY(stack), ItemWirelessFluidGrid.getZ(stack));
+    public WirelessFluidGrid(int networkDimension, ItemStack stack) {
+        this.networkDimension = networkDimension;
+        this.network = new BlockPos(ItemWirelessFluidGrid.getX(stack), ItemWirelessFluidGrid.getY(stack), ItemWirelessFluidGrid.getZ(stack));
 
         this.stack = stack;
 
@@ -62,10 +61,10 @@ public class WirelessFluidGrid implements IGrid {
     @Override
     @Nullable
     public INetwork getNetwork() {
-        World world = DimensionManager.getWorld(controllerDimension);
+        World world = DimensionManager.getWorld(networkDimension);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(controller);
+            TileEntity tile = world.getTileEntity(network);
 
             return tile instanceof INetwork ? (INetwork) tile : null;
         }
@@ -155,22 +154,17 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
-    public List<Filter> getFilters() {
+    public List<IFilter> getFilters() {
         return Collections.emptyList();
     }
 
     @Override
-    public List<FilterTab> getTabs() {
+    public List<IGridTab> getTabs() {
         return Collections.emptyList();
     }
 
     @Override
-    public ItemHandlerBase getFilter() {
-        return null;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeConfig() {
+    public IItemHandlerModifiable getFilter() {
         return null;
     }
 

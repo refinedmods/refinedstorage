@@ -1,7 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
@@ -19,25 +20,25 @@ import javax.annotation.Nullable;
 
 public class TileGrid extends TileNode<NetworkNodeGrid> {
     public static final TileDataParameter<Integer, TileGrid> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getViewType(), (t, v) -> {
-        if (NetworkNodeGrid.isValidViewType(v)) {
+        if (IGrid.isValidViewType(v)) {
             t.getNode().setViewType(v);
             t.getNode().markDirty();
         }
     }, p -> GuiGrid.markForSorting());
     public static final TileDataParameter<Integer, TileGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
-        if (NetworkNodeGrid.isValidSortingDirection(v)) {
+        if (IGrid.isValidSortingDirection(v)) {
             t.getNode().setSortingDirection(v);
             t.getNode().markDirty();
         }
     }, p -> GuiGrid.markForSorting());
     public static final TileDataParameter<Integer, TileGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
-        if (NetworkNodeGrid.isValidSortingType(v)) {
+        if (IGrid.isValidSortingType(v)) {
             t.getNode().setSortingType(v);
             t.getNode().markDirty();
         }
     }, p -> GuiGrid.markForSorting());
     public static final TileDataParameter<Integer, TileGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
-        if (NetworkNodeGrid.isValidSearchBoxMode(v)) {
+        if (IGrid.isValidSearchBoxMode(v)) {
             t.getNode().setSearchBoxMode(v);
             t.getNode().markDirty();
         }
@@ -47,7 +48,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         }
     });
     public static final TileDataParameter<Integer, TileGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSize(), (t, v) -> {
-        if (NetworkNodeGrid.isValidSize(v)) {
+        if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }

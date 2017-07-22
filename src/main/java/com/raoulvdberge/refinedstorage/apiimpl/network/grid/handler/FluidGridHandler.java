@@ -1,11 +1,12 @@
-package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
+package com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.grid.IFluidGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
+import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
@@ -64,6 +65,12 @@ public class FluidGridHandler implements IFluidGridHandler {
                     player.inventory.setItemStack(fluidHandler.getContainer());
                     player.updateHeldItem();
                 }
+
+                INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
+
+                if (networkItem != null) {
+                    networkItem.onAction(NetworkItemAction.FLUID_EXTRACTED);
+                }
             }
         }
     }
@@ -81,6 +88,12 @@ public class FluidGridHandler implements IFluidGridHandler {
             result = StackUtils.getFluid(container, false);
 
             network.insertFluid(result.getValue(), result.getValue().amount, false);
+
+            INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
+
+            if (networkItem != null) {
+                networkItem.onAction(NetworkItemAction.FLUID_INSERTED);
+            }
 
             return result.getLeft();
         }

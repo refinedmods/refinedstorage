@@ -1,12 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
-
-import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;

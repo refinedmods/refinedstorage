@@ -1,17 +1,12 @@
 package com.raoulvdberge.refinedstorage.api;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
-
-import javax.annotation.Nonnull;
-
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.grid.wireless.IWirelessGridFactory;
+import com.raoulvdberge.refinedstorage.api.network.grid.wireless.IWirelessGridRegistry;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
@@ -21,6 +16,14 @@ import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+
+import javax.annotation.Nonnull;
 
 /**
  * Represents a Refined Storage API implementation.
@@ -106,6 +109,22 @@ public interface IRSAPI {
      */
     @Nonnull
     ICraftingMonitorElementList createCraftingMonitorElementList();
+
+    /**
+     * @return the wireless grid registry
+     */
+    @Nonnull
+    IWirelessGridRegistry getWirelessGridRegistry();
+
+    /**
+     * Opens a wireless grid for the given player.
+     *
+     * @param player           the player
+     * @param hand             the hand where the wireless grid is in
+     * @param networkDimension the dimension of the bound network
+     * @param id               the id of the wireless grid, as returned in {@link IWirelessGridRegistry#add(IWirelessGridFactory)}
+     */
+    void openWirelessGrid(EntityPlayer player, EnumHand hand, int networkDimension, int id);
 
     /**
      * Notifies the neighbors of a node that there is a node placed at the given position.

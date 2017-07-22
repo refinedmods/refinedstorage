@@ -1,5 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.security;
 
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
+import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
+import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.management.UserListOps;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -7,13 +13,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
-import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
-import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 
 public class SecurityManager implements ISecurityManager {
     private INetwork network;

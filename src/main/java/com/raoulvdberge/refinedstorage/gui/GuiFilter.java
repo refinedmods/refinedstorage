@@ -2,11 +2,11 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
 import com.raoulvdberge.refinedstorage.integration.forestry.IntegrationForestry;
-import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
+import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import com.raoulvdberge.refinedstorage.network.MessageFilterUpdate;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
@@ -22,7 +22,7 @@ public class GuiFilter extends GuiBase {
     private GuiCheckBox compareDamage;
     private GuiCheckBox compareNBT;
     private GuiCheckBox compareOredict;
-    private GuiCheckBox compareForestry;
+	private GuiCheckBox compareForestry;
     private GuiCheckBox toggleModFilter;
     private GuiButton toggleMode;
     private GuiTextField nameField;
@@ -42,11 +42,11 @@ public class GuiFilter extends GuiBase {
         compareNBT = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4, y + 77, t("gui.refinedstorage:filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT);
         compareOredict = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4 + compareNBT.getButtonWidth() + 4, y + 77, t("gui.refinedstorage:filter.compare_oredict"), (compare & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT);
         if(IntegrationForestry.isLoaded()) {
+			compareForestry = addCheckBox(0, y + 71 + 34, t("gui.refinedstorage:filter.compare_forestry"), (compare & IComparer.COMPARE_FORESTRY) == IComparer.COMPARE_FORESTRY);
         	toggleModFilter = addCheckBox(0, y + 71 + 21, t("gui.refinedstorage:filter.mod_filter"), modFilter);
-        	compareForestry = addCheckBox(0, y + 71 + 34, t("gui.refinedstorage:filter.compare_forestry"), (compare & IComparer.COMPARE_FORESTRY) == IComparer.COMPARE_FORESTRY);
         } else {
-        	toggleModFilter = addCheckBox(0, y + 71 + 25, t("gui.refinedstorage:filter.mod_filter"), modFilter);
-        }
+			toggleModFilter = addCheckBox(0, y + 71 + 25, t("gui.refinedstorage:filter.mod_filter"), modFilter);
+		}
         toggleMode = addButton(x + 7, y + 71 + 21, 0, 20, "");
         updateModeButton(mode);
         nameField = new GuiTextField(0, fontRenderer, x + 34, y + 121, 137 - 6, fontRenderer.FONT_HEIGHT);
@@ -59,16 +59,14 @@ public class GuiFilter extends GuiBase {
     }
 
     private void updateModeButton(int mode) {
-        String text = mode == ItemFilter.MODE_WHITELIST ? t("sidebutton.refinedstorage:mode.whitelist") : t("sidebutton.refinedstorage:mode.blacklist");
+        String text = mode == IFilter.MODE_WHITELIST ? t("sidebutton.refinedstorage:mode.whitelist") : t("sidebutton.refinedstorage:mode.blacklist");
 
         toggleMode.setWidth(fontRenderer.getStringWidth(text) + 12);
         toggleMode.displayString = text;
-        if(IntegrationForestry.isLoaded()) {
-	        toggleModFilter.x = toggleMode.x + toggleMode.getButtonWidth() + 2;
-	        compareForestry.x = toggleMode.x + toggleMode.getButtonWidth() + 2;
-        } else {
-        	toggleModFilter.x = toggleMode.x + toggleMode.getButtonWidth() + 4;
+		if(IntegrationForestry.isLoaded()) {
+	        compareForestry.x = toggleMode.x + toggleMode.getButtonWidth() + 4;
         }
+        toggleModFilter.x = toggleMode.x + toggleMode.getButtonWidth() + 4;
     }
 
     @Override
@@ -119,7 +117,7 @@ public class GuiFilter extends GuiBase {
         } else if (button == compareForestry) {
             compare ^= (IComparer.COMPARE_FORESTRY | IntegrationForestry.Tag.GEN.getFlag() | IntegrationForestry.Tag.IS_ANALYZED.getFlag());
         } else if (button == toggleMode) {
-            mode = mode == ItemFilter.MODE_WHITELIST ? ItemFilter.MODE_BLACKLIST : ItemFilter.MODE_WHITELIST;
+            mode = mode == IFilter.MODE_WHITELIST ? IFilter.MODE_BLACKLIST : IFilter.MODE_WHITELIST;
 
             updateModeButton(mode);
         } else if (button == toggleModFilter) {

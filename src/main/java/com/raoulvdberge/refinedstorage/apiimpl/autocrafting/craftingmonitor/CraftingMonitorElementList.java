@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
-import java.util.*;
-
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
+
+import java.util.*;
 
 public class CraftingMonitorElementList implements ICraftingMonitorElementList {
     private List<ICraftingMonitorElement> elements = new LinkedList<>();

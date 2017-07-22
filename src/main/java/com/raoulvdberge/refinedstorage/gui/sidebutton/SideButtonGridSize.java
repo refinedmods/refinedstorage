@@ -1,8 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonGridSize extends SideButton {
@@ -25,13 +24,13 @@ public class SideButtonGridSize extends SideButton {
 
         int tx = 0;
 
-        if (size == NetworkNodeGrid.SIZE_STRETCH) {
+        if (size == IGrid.SIZE_STRETCH) {
             tx = 48;
-        } else if (size == NetworkNodeGrid.SIZE_SMALL) {
+        } else if (size == IGrid.SIZE_SMALL) {
             tx = 0;
-        } else if (size == NetworkNodeGrid.SIZE_MEDIUM) {
+        } else if (size == IGrid.SIZE_MEDIUM) {
             tx = 16;
-        } else if (size == NetworkNodeGrid.SIZE_LARGE) {
+        } else if (size == IGrid.SIZE_LARGE) {
             tx = 32;
         }
 
@@ -42,14 +41,14 @@ public class SideButtonGridSize extends SideButton {
     public void actionPerformed() {
         int size = grid.getSize();
 
-        if (size == NetworkNodeGrid.SIZE_STRETCH) {
-            size = NetworkNodeGrid.SIZE_SMALL;
-        } else if (size == NetworkNodeGrid.SIZE_SMALL) {
-            size = NetworkNodeGrid.SIZE_MEDIUM;
-        } else if (size == NetworkNodeGrid.SIZE_MEDIUM) {
-            size = NetworkNodeGrid.SIZE_LARGE;
-        } else if (size == NetworkNodeGrid.SIZE_LARGE) {
-            size = NetworkNodeGrid.SIZE_STRETCH;
+        if (size == IGrid.SIZE_STRETCH) {
+            size = IGrid.SIZE_SMALL;
+        } else if (size == IGrid.SIZE_SMALL) {
+            size = IGrid.SIZE_MEDIUM;
+        } else if (size == IGrid.SIZE_MEDIUM) {
+            size = IGrid.SIZE_LARGE;
+        } else if (size == IGrid.SIZE_LARGE) {
+            size = IGrid.SIZE_STRETCH;
         }
 
         grid.onSizeChanged(size);

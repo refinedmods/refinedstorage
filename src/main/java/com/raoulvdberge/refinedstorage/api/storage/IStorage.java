@@ -1,10 +1,9 @@
 package com.raoulvdberge.refinedstorage.api.storage;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Comparator;
 

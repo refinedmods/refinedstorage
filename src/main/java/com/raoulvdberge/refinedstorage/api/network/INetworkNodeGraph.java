@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
-import java.util.Collection;
-
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+
+import java.util.Collection;
 
 /**
  * Represents a graph of all the nodes connected to a network.

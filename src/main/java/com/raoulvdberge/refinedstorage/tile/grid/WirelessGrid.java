@@ -2,17 +2,15 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.block.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -23,18 +21,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WirelessGrid implements IGrid {
-    public static final int GRID_TYPE = 0;
+    public static int ID;
 
     private ItemStack stack;
 
-    private int controllerDimension;
-    private BlockPos controller;
+    private int networkDimension;
+    private BlockPos network;
 
     private int viewType;
     private int sortingType;
@@ -43,8 +42,8 @@ public class WirelessGrid implements IGrid {
     private int tabSelected;
     private int size;
 
-    private List<Filter> filters = new ArrayList<>();
-    private List<FilterTab> tabs = new ArrayList<>();
+    private List<IFilter> filters = new ArrayList<>();
+    private List<IGridTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, null) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -58,9 +57,9 @@ public class WirelessGrid implements IGrid {
         }
     };
 
-    public WirelessGrid(int controllerDimension, ItemStack stack) {
-        this.controllerDimension = controllerDimension;
-        this.controller = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
+    public WirelessGrid(int networkDimension, ItemStack stack) {
+        this.networkDimension = networkDimension;
+        this.network = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
 
         this.stack = stack;
 
@@ -88,10 +87,10 @@ public class WirelessGrid implements IGrid {
     @Override
     @Nullable
     public INetwork getNetwork() {
-        World world = DimensionManager.getWorld(controllerDimension);
+        World world = DimensionManager.getWorld(networkDimension);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(controller);
+            TileEntity tile = world.getTileEntity(network);
 
             return tile instanceof INetwork ? (INetwork) tile : null;
         }
@@ -101,7 +100,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public String getGuiTitle() {
-        return "gui.refinedstorage:wireless_grid";
+        return "gui.refinedstorage:grid";
     }
 
     @Override
@@ -189,23 +188,18 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
-    public List<Filter> getFilters() {
+    public List<IFilter> getFilters() {
         return filters;
     }
 
     @Override
-    public List<FilterTab> getTabs() {
+    public List<IGridTab> getTabs() {
         return tabs;
     }
 
     @Override
-    public ItemHandlerBase getFilter() {
+    public IItemHandlerModifiable getFilter() {
         return filter;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeConfig() {
-        return null;
     }
 
     @Override

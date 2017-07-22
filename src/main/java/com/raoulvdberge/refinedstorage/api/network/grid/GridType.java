@@ -1,11 +1,27 @@
-package com.raoulvdberge.refinedstorage.block;
+package com.raoulvdberge.refinedstorage.api.network.grid;
 
 import net.minecraft.util.IStringSerializable;
 
+/**
+ * Represents a grid type.
+ * Used in {@link IGrid} to determine grid GUI rendering.
+ */
 public enum GridType implements IStringSerializable {
+    /**
+     * A regular grid.
+     */
     NORMAL(0, "normal"),
+    /**
+     * A crafting grid.
+     */
     CRAFTING(1, "crafting"),
+    /**
+     * A pattern grid.
+     */
     PATTERN(2, "pattern"),
+    /**
+     * A fluid grid.
+     */
     FLUID(3, "fluid");
 
     private int id;

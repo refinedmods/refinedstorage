@@ -2,15 +2,15 @@ package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorViewAutomated;
-import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -25,11 +25,13 @@ import java.util.List;
 
 public class WirelessCraftingMonitor implements ICraftingMonitor {
     private ItemStack stack;
-    private int controllerDimension;
-    private BlockPos controller;
+
+    private int networkDimension;
+    private BlockPos network;
+
     private boolean viewAutomated;
 
-    private List<Filter> filters = new ArrayList<>();
+    private List<IFilter> filters = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), null) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -41,18 +43,18 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
             StackUtils.writeItems(this, 0, stack.getTagCompound());
 
-            TileController controller = getController();
+            INetwork network = getNetwork();
 
-            if (controller != null) {
-                controller.sendCraftingMonitorUpdate();
+            if (network != null) {
+                network.sendCraftingMonitorUpdate();
             }
         }
     };
 
-    public WirelessCraftingMonitor(int controllerDimension, ItemStack stack) {
+    public WirelessCraftingMonitor(int networkDimension, ItemStack stack) {
         this.stack = stack;
-        this.controllerDimension = controllerDimension;
-        this.controller = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
+        this.networkDimension = networkDimension;
+        this.network = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
         this.viewAutomated = ItemWirelessCraftingMonitor.canViewAutomated(stack);
 
         if (stack.hasTagCompound()) {
@@ -67,10 +69,10 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
     @Override
     public void onCancelled(EntityPlayerMP player, int id) {
-        TileController controller = getController();
+        INetwork network = getNetwork();
 
-        if (controller != null) {
-            controller.getItemGridHandler().onCraftingCancelRequested(player, id);
+        if (network != null) {
+            network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
     }
 
@@ -81,22 +83,22 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
     @Override
     public BlockPos getNetworkPosition() {
-        return controller;
+        return network;
     }
 
     @Override
     public List<ICraftingTask> getTasks() {
-        TileController controller = getController();
+        INetwork network = getNetwork();
 
-        if (controller != null) {
-            return controller.getCraftingManager().getTasks();
+        if (network != null) {
+            return network.getCraftingManager().getTasks();
         }
 
         return Collections.emptyList();
     }
 
     @Override
-    public List<Filter> getFilters() {
+    public List<IFilter> getFilters() {
         return filters;
     }
 
@@ -117,13 +119,13 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         this.viewAutomated = viewAutomated;
     }
 
-    private TileController getController() {
-        World world = DimensionManager.getWorld(controllerDimension);
+    private INetwork getNetwork() {
+        World world = DimensionManager.getWorld(networkDimension);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(controller);
+            TileEntity tile = world.getTileEntity(network);
 
-            return tile instanceof TileController ? (TileController) tile : null;
+            return tile instanceof INetwork ? (INetwork) tile : null;
         }
 
         return null;
@@ -136,5 +138,14 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     @Override
     public boolean isActive() {
         return true;
+    }
+
+    @Override
+    public void onClosed(EntityPlayer player) {
+        INetwork network = getNetwork();
+
+        if (network != null) {
+            network.getNetworkItemHandler().onClose(player);
+        }
     }
 }

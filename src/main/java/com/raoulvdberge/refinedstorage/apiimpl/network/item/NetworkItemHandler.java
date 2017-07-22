@@ -1,39 +1,29 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentTranslation;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkItemHandler implements INetworkItemHandler {
     private INetwork network;
 
-    private List<INetworkItem> items = new ArrayList<>();
-    private List<INetworkItem> itemsToRemove = new ArrayList<>();
+    private Map<EntityPlayer, INetworkItem> items = new ConcurrentHashMap<>();
 
     public NetworkItemHandler(INetwork network) {
         this.network = network;
     }
 
     @Override
-    public void update() {
-        items.removeAll(itemsToRemove);
-        itemsToRemove.clear();
-    }
-
-    @Override
-    public void onOpen(EntityPlayer player, World controllerWorld, EnumHand hand) {
+    public void onOpen(EntityPlayer player, EnumHand hand) {
         boolean inRange = false;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
@@ -58,32 +48,18 @@ public class NetworkItemHandler implements INetworkItemHandler {
 
         INetworkItem item = ((INetworkItemProvider) player.getHeldItem(hand).getItem()).provide(this, player, player.getHeldItem(hand));
 
-        if (item.onOpen(network, player, controllerWorld, hand)) {
-            items.add(item);
+        if (item.onOpen(network, player, hand)) {
+            items.put(player, item);
         }
     }
 
     @Override
     public void onClose(EntityPlayer player) {
-        INetworkItem item = getItem(player);
-
-        if (item != null) {
-            itemsToRemove.add(item);
-        }
+        items.remove(player);
     }
 
     @Override
     public INetworkItem getItem(EntityPlayer player) {
-        Iterator<INetworkItem> it = items.iterator();
-
-        while (it.hasNext()) {
-            INetworkItem item = it.next();
-
-            if (item.getPlayer() == player) {
-                return item;
-            }
-        }
-
-        return null;
+        return items.get(player);
     }
 }

@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSolderer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;

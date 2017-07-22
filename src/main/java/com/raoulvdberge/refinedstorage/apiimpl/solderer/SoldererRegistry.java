@@ -1,17 +1,15 @@
 package com.raoulvdberge.refinedstorage.apiimpl.solderer;
 
+import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
+import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
-import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
-
 import java.util.LinkedList;
 import java.util.List;
 

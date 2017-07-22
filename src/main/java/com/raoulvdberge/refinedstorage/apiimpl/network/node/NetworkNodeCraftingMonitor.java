@@ -2,15 +2,14 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,7 +28,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     private static final String NBT_VIEW_AUTOMATED = "ViewAutomated";
 
     private boolean viewAutomated = true;
-    private List<Filter> filters = new ArrayList<>();
+    private List<IFilter> filters = new ArrayList<>();
     private ItemHandlerListenerNetworkNode filterListener = new ItemHandlerListenerNetworkNode(this);
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), slot -> {
         filterListener.accept(slot);
@@ -87,7 +86,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public List<Filter> getFilters() {
+    public List<IFilter> getFilters() {
         return filters;
     }
 
@@ -127,6 +126,11 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     @Override
     public void onViewAutomatedChanged(boolean viewAutomated) {
         TileDataManager.setParameter(TileCraftingMonitor.VIEW_AUTOMATED, viewAutomated);
+    }
+
+    @Override
+    public void onClosed(EntityPlayer player) {
+        // NO OP
     }
 
     public void setViewAutomated(boolean viewAutomated) {

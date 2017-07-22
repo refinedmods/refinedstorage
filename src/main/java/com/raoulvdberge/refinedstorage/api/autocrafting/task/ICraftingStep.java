@@ -1,14 +1,13 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.task;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Deque;
 import java.util.List;
-
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 
 /**
  * Represents a step in a crafting task.

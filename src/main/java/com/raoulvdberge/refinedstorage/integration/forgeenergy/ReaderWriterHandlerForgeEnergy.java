@@ -1,5 +1,9 @@
 package com.raoulvdberge.refinedstorage.integration.forgeenergy;
 
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -9,12 +13,6 @@ import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
-
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-
 import java.util.Collections;
 import java.util.List;
 

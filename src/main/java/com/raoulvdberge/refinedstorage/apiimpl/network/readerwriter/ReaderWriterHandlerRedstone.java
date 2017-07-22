@@ -1,5 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -7,11 +11,6 @@ import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.Collections;
 import java.util.List;
-
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 
 public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     public static final String ID = "redstone";

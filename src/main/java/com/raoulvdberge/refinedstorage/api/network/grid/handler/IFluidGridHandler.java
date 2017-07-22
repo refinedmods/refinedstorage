@@ -1,12 +1,11 @@
-package com.raoulvdberge.refinedstorage.api.network.grid;
+package com.raoulvdberge.refinedstorage.api.network.grid.handler;
 
+import com.raoulvdberge.refinedstorage.api.IRSAPI;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
-
-import com.raoulvdberge.refinedstorage.api.IRSAPI;
 
 /**
  * Defines the behavior of fluid grids.

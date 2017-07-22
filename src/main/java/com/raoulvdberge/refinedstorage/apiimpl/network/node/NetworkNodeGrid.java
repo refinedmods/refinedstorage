@@ -3,24 +3,25 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
+import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
-import com.raoulvdberge.refinedstorage.block.GridType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
@@ -32,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -52,27 +54,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public static final String NBT_SIZE = "Size";
     public static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
     public static final String NBT_BLOCKING_PATTERN = "BlockingPattern";
-
-    public static final int SORTING_DIRECTION_ASCENDING = 0;
-    public static final int SORTING_DIRECTION_DESCENDING = 1;
-
-    public static final int SORTING_TYPE_QUANTITY = 0;
-    public static final int SORTING_TYPE_NAME = 1;
-    public static final int SORTING_TYPE_ID = 2;
-
-    public static final int SEARCH_BOX_MODE_NORMAL = 0;
-    public static final int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
-    public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 2;
-    public static final int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
-
-    public static final int VIEW_TYPE_NORMAL = 0;
-    public static final int VIEW_TYPE_NON_CRAFTABLES = 1;
-    public static final int VIEW_TYPE_CRAFTABLES = 2;
-
-    public static final int SIZE_STRETCH = 0;
-    public static final int SIZE_SMALL = 1;
-    public static final int SIZE_MEDIUM = 2;
-    public static final int SIZE_LARGE = 3;
 
     private Container craftingContainer = new Container() {
         @Override
@@ -96,8 +77,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             return slot == 0 ? super.insertItem(slot, stack, simulate) : stack;
         }
     };
-    private List<Filter> filters = new ArrayList<>();
-    private List<FilterTab> tabs = new ArrayList<>();
+    private List<IFilter> filters = new ArrayList<>();
+    private List<IGridTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ItemHandlerListenerNetworkNode(this));
 
     private GridType type;
@@ -202,7 +183,18 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public String getGuiTitle() {
-        return getType() == GridType.FLUID ? "gui.refinedstorage:fluid_grid" : "gui.refinedstorage:grid";
+        GridType type = getType();
+
+        switch (type) {
+            case CRAFTING:
+                return "gui.refinedstorage:crafting_grid";
+            case PATTERN:
+                return "gui.refinedstorage:pattern_grid";
+            case FLUID:
+                return "gui.refinedstorage:fluid_grid";
+            default:
+                return "gui.refinedstorage:grid";
+        }
     }
 
     public IItemHandler getPatterns() {
@@ -210,17 +202,17 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
-    public ItemHandlerBase getFilter() {
+    public IItemHandlerModifiable getFilter() {
         return filter;
     }
 
     @Override
-    public List<Filter> getFilters() {
+    public List<IFilter> getFilters() {
         return filters;
     }
 
     @Override
-    public List<FilterTab> getTabs() {
+    public List<IGridTab> getTabs() {
         return tabs;
     }
 
@@ -247,17 +239,23 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
-        if (network != null && getType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        onRecipeTransfer(this, player, recipe);
+    }
+
+    public static void onRecipeTransfer(IGrid grid, EntityPlayer player, ItemStack[][] recipe) {
+        INetwork network = grid.getNetwork();
+
+        if (network != null && grid.getType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
         }
 
         // First try to empty the crafting matrix
-        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-            ItemStack slot = matrix.getStackInSlot(i);
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
+            ItemStack slot = grid.getCraftingMatrix().getStackInSlot(i);
 
             if (!slot.isEmpty()) {
                 // Only if we are a crafting grid. Pattern grids can just be emptied.
-                if (getType() == GridType.CRAFTING) {
+                if (grid.getType() == GridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
                     if (network != null) {
                         if (network.insertItem(slot, slot.getCount(), true) != null) {
@@ -273,17 +271,17 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                     }
                 }
 
-                matrix.setInventorySlotContents(i, ItemStack.EMPTY);
+                grid.getCraftingMatrix().setInventorySlotContents(i, ItemStack.EMPTY);
             }
         }
 
         // Now let's fill the matrix
-        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
             if (recipe[i] != null) {
                 ItemStack[] possibilities = recipe[i];
 
                 // If we are a crafting grid
-                if (getType() == GridType.CRAFTING) {
+                if (grid.getType() == GridType.CRAFTING) {
                     boolean found = false;
 
                     // If we are connected, first try to get the possibilities from the network
@@ -292,7 +290,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                             ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), false);
 
                             if (took != null) {
-                                matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(took));
+                                grid.getCraftingMatrix().setInventorySlotContents(i, StackUtils.nullToEmpty(took));
 
                                 found = true;
 
@@ -306,7 +304,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                         for (ItemStack possibility : possibilities) {
                             for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
                                 if (API.instance().getComparer().isEqual(possibility, player.inventory.getStackInSlot(j), IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE))) {
-                                    matrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
+                                    grid.getCraftingMatrix().setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
 
                                     player.inventory.decrStackSize(j, 1);
 
@@ -321,9 +319,9 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
                             }
                         }
                     }
-                } else if (getType() == GridType.PATTERN) {
+                } else if (grid.getType() == GridType.PATTERN) {
                     // If we are a pattern grid we can just set the slot
-                    matrix.setInventorySlotContents(i, possibilities[0]);
+                    grid.getCraftingMatrix().setInventorySlotContents(i, possibilities[0]);
                 }
             }
         }
@@ -346,9 +344,17 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCrafted(EntityPlayer player) {
-        NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(matrix, world);
+        onCrafted(this, world, player);
+    }
 
-        for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+    public static void onCrafted(IGrid grid, World world, EntityPlayer player) {
+        NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(grid.getCraftingMatrix(), world);
+
+        INetwork network = grid.getNetwork();
+
+        InventoryCrafting matrix = grid.getCraftingMatrix();
+
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
             ItemStack slot = matrix.getStackInSlot(i);
 
             if (i < remainder.size() && !remainder.get(i).isEmpty()) {
@@ -375,26 +381,40 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             }
         }
 
-        onCraftingMatrixChanged();
+        grid.onCraftingMatrixChanged();
+
+        if (network != null) {
+            INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
+
+            if (networkItem != null) {
+                networkItem.onAction(NetworkItemAction.ITEM_CRAFTED);
+            }
+        }
     }
 
     @Override
     public void onCraftedShift(EntityPlayer player) {
+        onCraftedShift(this, player);
+    }
+
+    public static void onCraftedShift(IGrid grid, EntityPlayer player) {
         List<ItemStack> craftedItemsList = new ArrayList<>();
         int craftedItems = 0;
-        ItemStack crafted = result.getStackInSlot(0);
+        ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
 
         while (true) {
-            onCrafted(player);
+            grid.onCrafted(player);
 
             craftedItemsList.add(crafted.copy());
 
             craftedItems += crafted.getCount();
 
-            if (!API.instance().getComparer().isEqual(crafted, result.getStackInSlot(0)) || craftedItems + crafted.getCount() > crafted.getMaxStackSize()) {
+            if (!API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) || craftedItems + crafted.getCount() > crafted.getMaxStackSize()) {
                 break;
             }
         }
+
+        INetwork network = grid.getNetwork();
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
@@ -406,7 +426,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             }
         }
 
-        FMLCommonHandler.instance().firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, craftedItems), matrix);
+        FMLCommonHandler.instance().firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, craftedItems), grid.getCraftingMatrix());
     }
 
     public void onCreatePattern() {
@@ -533,11 +553,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeConfig() {
-        return TileGrid.REDSTONE_MODE;
-    }
-
-    @Override
     public boolean hasConnectivityState() {
         return true;
     }
@@ -639,37 +654,5 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             default:
                 return new CombinedInvWrapper(filter);
         }
-    }
-
-    public static boolean isValidViewType(int type) {
-        return type == VIEW_TYPE_NORMAL ||
-            type == VIEW_TYPE_CRAFTABLES ||
-            type == VIEW_TYPE_NON_CRAFTABLES;
-    }
-
-    public static boolean isValidSearchBoxMode(int mode) {
-        return mode == SEARCH_BOX_MODE_NORMAL ||
-            mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED ||
-            mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
-    }
-
-    public static boolean isSearchBoxModeWithAutoselection(int mode) {
-        return mode == SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
-    }
-
-    public static boolean isValidSortingType(int type) {
-        return type == SORTING_TYPE_QUANTITY || type == SORTING_TYPE_NAME || type == SORTING_TYPE_ID;
-    }
-
-    public static boolean isValidSortingDirection(int direction) {
-        return direction == SORTING_DIRECTION_ASCENDING || direction == SORTING_DIRECTION_DESCENDING;
-    }
-
-    public static boolean isValidSize(int size) {
-        return size == SIZE_STRETCH ||
-            size == SIZE_SMALL ||
-            size == SIZE_MEDIUM ||
-            size == SIZE_LARGE;
     }
 }

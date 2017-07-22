@@ -11,6 +11,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridFactoryPortableGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridFactoryWirelessFluidGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridFactoryWirelessGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerFluids;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
@@ -27,6 +30,9 @@ import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.ContainerListener;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
@@ -213,6 +219,10 @@ public class ProxyCommon {
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
         GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);
+
+        WirelessGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryWirelessGrid());
+        WirelessFluidGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryWirelessFluidGrid());
+        PortableGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryPortableGrid());
 
         CraftingHelper.register(new ResourceLocation(RS.ID + ":enchanted_book"), new IIngredientFactory() {
             @Nonnull

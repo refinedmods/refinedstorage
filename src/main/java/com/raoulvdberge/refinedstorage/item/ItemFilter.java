@@ -1,13 +1,11 @@
-package com.raoulvdberge.refinedstorage.item.filter;
+package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
-import com.raoulvdberge.refinedstorage.item.ItemBase;
-import com.raoulvdberge.refinedstorage.item.ItemPattern;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,9 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ItemFilter extends ItemBase {
-    public static final int MODE_WHITELIST = 0;
-    public static final int MODE_BLACKLIST = 1;
-
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_MOD_FILTER = "ModFilter";
@@ -85,7 +80,7 @@ public class ItemFilter extends ItemBase {
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        tooltip.add(TextFormatting.YELLOW + I18n.format("sidebutton.refinedstorage:mode." + (getMode(stack) == MODE_WHITELIST ? "whitelist" : "blacklist")) + TextFormatting.RESET);
+        tooltip.add(TextFormatting.YELLOW + I18n.format("sidebutton.refinedstorage:mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")) + TextFormatting.RESET);
 
         if (isModFilter(stack)) {
             tooltip.add(TextFormatting.BLUE + I18n.format("gui.refinedstorage:filter.mod_filter") + TextFormatting.RESET);
@@ -109,7 +104,7 @@ public class ItemFilter extends ItemBase {
     }
 
     public static int getMode(ItemStack stack) {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_MODE)) ? stack.getTagCompound().getInteger(NBT_MODE) : MODE_WHITELIST;
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_MODE)) ? stack.getTagCompound().getInteger(NBT_MODE) : IFilter.MODE_WHITELIST;
     }
 
     public static void setMode(ItemStack stack, int mode) {

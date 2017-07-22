@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-
 import net.minecraft.util.EnumFacing;
 
 /**

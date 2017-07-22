@@ -1,10 +1,12 @@
 package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
+import com.raoulvdberge.refinedstorage.apiimpl.util.Filter;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.item.filter.Filter;
-import com.raoulvdberge.refinedstorage.item.filter.FilterTab;
-import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
+import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -15,10 +17,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class ItemHandlerFilter extends ItemHandlerBase {
-    private List<Filter> filters;
-    private List<FilterTab> tabs;
+    private List<IFilter> filters;
+    private List<IGridTab> tabs;
 
-    public ItemHandlerFilter(List<Filter> filters, List<FilterTab> tabs, @Nullable Consumer<Integer> listener) {
+    public ItemHandlerFilter(List<IFilter> filters, List<IGridTab> tabs, @Nullable Consumer<Integer> listener) {
         super(4, listener, new ItemValidatorBasic(RSItems.FILTER));
 
         this.filters = filters;
@@ -42,7 +44,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
 
                 ItemHandlerFilterItems items = new ItemHandlerFilterItems(filter);
 
-                List<Filter> filters = new ArrayList<>();
+                List<IFilter> filters = new ArrayList<>();
 
                 for (ItemStack item : items.getFilteredItems()) {
                     if (!item.isEmpty()) {
@@ -55,7 +57,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
                 if (icon.isEmpty()) {
                     this.filters.addAll(filters);
                 } else {
-                    tabs.add(new FilterTab(filters, ItemFilter.getName(filter), icon));
+                    tabs.add(new GridTab(filters, ItemFilter.getName(filter), icon));
                 }
             }
         }

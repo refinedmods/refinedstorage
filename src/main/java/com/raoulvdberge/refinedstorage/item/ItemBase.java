@@ -10,13 +10,17 @@ public abstract class ItemBase extends Item {
     public ItemBase(String name) {
         this.name = name;
 
-        setRegistryName(RS.ID, name);
+        setRegistryName(getDomain(), name);
         setCreativeTab(RS.INSTANCE.tab);
+    }
+
+    protected String getDomain() {
+        return RS.ID;
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "item." + RS.ID + ":" + name;
+        return "item." + getDomain() + ":" + name;
     }
 
     @Override

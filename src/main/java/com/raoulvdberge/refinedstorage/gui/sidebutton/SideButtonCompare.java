@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonCompare extends SideButton {
@@ -34,7 +33,7 @@ public class SideButtonCompare extends SideButton {
     @Override
     protected void drawButtonIcon(int x, int y) {
         int ty = 0;
-        boolean forestry = ((mask & IComparer.COMPARE_FORESTRY) == IComparer.COMPARE_FORESTRY); // Unmask this particular flag;
+		boolean forestry = ((mask & IComparer.COMPARE_FORESTRY) == IComparer.COMPARE_FORESTRY); // Unmask this particular flag;
 
         if (mask == IComparer.COMPARE_DAMAGE) {
             ty = 80;
@@ -43,7 +42,7 @@ public class SideButtonCompare extends SideButton {
         } else if (mask == IComparer.COMPARE_OREDICT) {
             ty = 224;
         } else if (forestry) {
-            ty = 48;
+			 ty = 48;
         }
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;
@@ -52,7 +51,7 @@ public class SideButtonCompare extends SideButton {
         if (mask == IComparer.COMPARE_OREDICT) {
             tx = tx == 16 ? 0 : 16;
         } else if (forestry) {
-        	tx = tx == 16 ? 32 : 48;
+			tx = tx == 16 ? 32 : 48;
         }
 
         gui.drawTexture(x, y, tx, ty, 16, 16);

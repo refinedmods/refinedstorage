@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 

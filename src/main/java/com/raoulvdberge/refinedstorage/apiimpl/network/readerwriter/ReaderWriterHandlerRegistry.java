@@ -1,10 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 
-import javax.annotation.Nullable;
-
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerFactory;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

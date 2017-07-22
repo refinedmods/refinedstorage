@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
-import com.raoulvdberge.refinedstorage.item.filter.ItemFilter;
+import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.ByteBufUtils;

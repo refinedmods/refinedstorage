@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,9 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-
 import java.util.List;
 import java.util.UUID;
 

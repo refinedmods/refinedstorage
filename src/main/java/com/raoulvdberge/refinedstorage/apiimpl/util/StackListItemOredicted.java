@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;

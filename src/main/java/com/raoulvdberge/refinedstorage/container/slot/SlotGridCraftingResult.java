@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.IGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;

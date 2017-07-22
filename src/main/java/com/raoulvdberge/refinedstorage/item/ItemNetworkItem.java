@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
-import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -39,12 +39,12 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
             if (!isValid(stack)) {
                 player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
             } else {
-                World controllerWorld = DimensionManager.getWorld(getDimensionId(stack));
+                World networkWorld = DimensionManager.getWorld(getDimensionId(stack));
 
-                TileEntity controller;
+                TileEntity network;
 
-                if (controllerWorld != null && ((controller = controllerWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof TileController)) {
-                    ((TileController) controller).getNetworkItemHandler().onOpen(player, controllerWorld, hand);
+                if (networkWorld != null && ((network = networkWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof INetwork)) {
+                    ((INetwork) network).getNetworkItemHandler().onOpen(player, hand);
                 } else {
                     player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
                 }

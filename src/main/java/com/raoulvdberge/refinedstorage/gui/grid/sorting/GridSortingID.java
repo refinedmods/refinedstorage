@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui.grid.sorting;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,9 +16,9 @@ public class GridSortingID extends GridSorting {
         }
 
         if (x != y) {
-            if (sortingDirection == NetworkNodeGrid.SORTING_DIRECTION_DESCENDING) {
+            if (sortingDirection == IGrid.SORTING_DIRECTION_DESCENDING) {
                 return Integer.compare(x, y);
-            } else if (sortingDirection == NetworkNodeGrid.SORTING_DIRECTION_ASCENDING) {
+            } else if (sortingDirection == IGrid.SORTING_DIRECTION_ASCENDING) {
                 return Integer.compare(y, x);
             }
         }

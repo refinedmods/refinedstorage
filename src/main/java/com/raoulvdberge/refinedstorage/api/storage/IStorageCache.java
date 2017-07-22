@@ -1,10 +1,9 @@
 package com.raoulvdberge.refinedstorage.api.storage;
 
-import javax.annotation.Nonnull;
-
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.BiConsumer;
 

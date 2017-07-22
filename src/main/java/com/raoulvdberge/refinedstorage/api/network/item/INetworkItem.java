@@ -1,10 +1,8 @@
 package com.raoulvdberge.refinedstorage.api.network.item;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
 
 /**
  * Represents a network item (an item that is connected to the network somehow).
@@ -20,11 +18,17 @@ public interface INetworkItem {
     /**
      * Called when the network item is opened.
      *
-     * @param network         the network
-     * @param player          the player
-     * @param controllerWorld the world where the controller is in
-     * @param hand            the hand
+     * @param network the network
+     * @param player  the player
+     * @param hand    the hand
      * @return true if the network item can be opened, false otherwise
      */
-    boolean onOpen(INetwork network, EntityPlayer player, World controllerWorld, EnumHand hand);
+    boolean onOpen(INetwork network, EntityPlayer player, EnumHand hand);
+
+    /**
+     * Called when an action occurs that is defined in {@link NetworkItemAction} and the network item is in use.
+     *
+     * @param action the action
+     */
+    void onAction(NetworkItemAction action);
 }
