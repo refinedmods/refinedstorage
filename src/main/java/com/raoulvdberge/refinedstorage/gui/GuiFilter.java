@@ -46,7 +46,7 @@ public class GuiFilter extends GuiBase {
             toggleModFilter = addCheckBox(0, y + 71 + 21, t("gui.refinedstorage:filter.mod_filter"), modFilter);
         } else {
             toggleModFilter = addCheckBox(0, y + 71 + 25, t("gui.refinedstorage:filter.mod_filter"), modFilter);
-	}
+		}
         toggleMode = addButton(x + 7, y + 71 + 21, 0, 20, "");
         updateModeButton(mode);
         nameField = new GuiTextField(0, fontRenderer, x + 34, y + 121, 137 - 6, fontRenderer.FONT_HEIGHT);
