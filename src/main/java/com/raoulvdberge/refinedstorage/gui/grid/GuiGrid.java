@@ -218,8 +218,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         STACKS = stacks;
 
-        scrollbar.setEnabled(getRows() > getVisibleRows());
-        scrollbar.setMaxOffset(getRows() - getVisibleRows());
+        if (scrollbar != null) {
+            scrollbar.setEnabled(getRows() > getVisibleRows());
+            scrollbar.setMaxOffset(getRows() - getVisibleRows());
+        }
     }
 
     @Override

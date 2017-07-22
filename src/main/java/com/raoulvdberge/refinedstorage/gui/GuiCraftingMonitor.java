@@ -82,15 +82,22 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
-        scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
+        if (scrollbar != null) {
+            scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
+            scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
+        }
 
         if (itemSelected >= getElements().size()) {
             itemSelected = -1;
         }
 
-        cancelButton.enabled = itemSelected != -1 && getElements().get(itemSelected).getTaskId() != -1;
-        cancelAllButton.enabled = getElements().size() > 0;
+        if (cancelButton != null) {
+            cancelButton.enabled = itemSelected != -1 && getElements().get(itemSelected).getTaskId() != -1;
+        }
+
+        if (cancelAllButton != null) {
+            cancelAllButton.enabled = getElements().size() > 0;
+        }
     }
 
     @Override

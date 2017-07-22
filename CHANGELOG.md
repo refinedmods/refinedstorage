@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.14
+- Fixed more crashes relating to scrollbar in GUIs (raoulvdberge)
+
 ### 1.5.13
 - Fixed Wireless Fluid Grid not using up energy (raoulvdberge)
 - Fixed Wireless Crafting Monitor remaining in network item list (raoulvdberge)

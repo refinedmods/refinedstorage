@@ -35,8 +35,10 @@ public class GuiController extends GuiBase {
 
     @Override
     public void update(int x, int y) {
-        scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
-        scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
+        if (scrollbar != null) {
+            scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
+            scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
+        }
     }
 
     @Override
