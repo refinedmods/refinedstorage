@@ -2,6 +2,7 @@
 
 ### 1.5.14
 - Fixed more crashes relating to scrollbar in GUIs (raoulvdberge)
+- A Solderer with Speed Upgrades is now 2 times faster (raoulvdberge)
 
 ### 1.5.13
 - Fixed Wireless Fluid Grid not using up energy (raoulvdberge)
