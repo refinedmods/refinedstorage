@@ -45,6 +45,8 @@ import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+import elucent.albedo.lighting.ILightProvider;
+import elucent.albedo.lighting.Light;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -61,6 +63,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -68,7 +71,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
+@Optional.Interface(iface = "elucent.albedo.lighting.ILightProvider", modid = "albedo")
+public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController>, ILightProvider {
     private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
         if (left.getEnergyUsage() == right.getEnergyUsage()) {
             return 0;
@@ -744,5 +748,33 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Nonnull
     public TileController getNode() {
         return this;
+    }
+
+    @Optional.Method(modid = "albedo")
+    @Override
+    public Light provideLight() {
+        int energy = getEnergyScaledForDisplay();
+
+        if (energy == 0) {
+            return null;
+        }
+
+        float r, g, b;
+
+        if (energy >= 3) {
+            r = 16F;
+            g = 152F;
+            b = 255F;
+        } else {
+            r = 194F;
+            g = 59F;
+            b = 81F;
+        }
+
+        return Light.builder()
+            .pos(pos)
+            .color(r / 255F, g / 255F, b / 255F)
+            .radius(4)
+            .build();
     }
 }
