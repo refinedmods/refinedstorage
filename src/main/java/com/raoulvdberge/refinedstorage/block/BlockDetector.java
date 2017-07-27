@@ -53,7 +53,9 @@ public class BlockDetector extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
-        return ((TileDetector) world.getTileEntity(pos)).getNode().isPowered() ? 15 : 0;
+        TileEntity tile = world.getTileEntity(pos);
+
+        return (tile instanceof TileDetector && ((TileDetector) tile).getNode().isPowered()) ? 15 : 0;
     }
 
     @Override
