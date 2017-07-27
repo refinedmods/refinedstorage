@@ -444,6 +444,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 ty = 2;
             }
 
+            bindTexture("gui/pattern_grid.png");
             drawTexture(x + 172, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
