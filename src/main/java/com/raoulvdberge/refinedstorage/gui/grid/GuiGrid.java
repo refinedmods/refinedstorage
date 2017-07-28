@@ -429,10 +429,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getFooter());
 
-        for (IGridTab tab : grid.getTabs()) {
-            drawTab(tab, true, x, y, mouseX, mouseY);
-        }
-
         if (grid.getType() == GridType.PATTERN) {
             int ty = 0;
 
@@ -444,10 +440,13 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 ty = 2;
             }
 
-            bindTexture("gui/pattern_grid.png");
             drawTexture(x + 172, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
+        for (IGridTab tab : grid.getTabs()) {
+            drawTab(tab, true, x, y, mouseX, mouseY);
+        }
+        
         if (searchField != null) {
             searchField.drawTextBox();
         }
