@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 /**
  * This holds all stacks from all the connected storages from a {@link INetwork}.
@@ -52,14 +51,14 @@ public interface IStorageCache<T> {
      *
      * @param listener the listener
      */
-    void addListener(BiConsumer<T, Integer> listener);
+    void addListener(Runnable listener);
 
     /**
      * Removes a listener from the storage cache.
      *
      * @param listener the listener
      */
-    void removeListener(BiConsumer<T, Integer> listener);
+    void removeListener(Runnable listener);
 
     /**
      * Resorts the storages in this cache according to their priority.

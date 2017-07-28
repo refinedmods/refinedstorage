@@ -13,13 +13,15 @@ import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class StorageCacheFluid implements IStorageCache<FluidStack> {
+    public static final Consumer<INetwork> INVALIDATE = n -> n.getFluidStorageCache().invalidate();
+
     private INetwork network;
     private CopyOnWriteArrayList<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<FluidStack> list = API.instance().createFluidStackList();
-    private List<BiConsumer<FluidStack, Integer>> listeners = new LinkedList<>();
+    private List<Runnable> listeners = new LinkedList<>();
 
     public StorageCacheFluid(INetwork network) {
         this.network = network;
@@ -47,6 +49,8 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
             }
         }
 
+        listeners.forEach(Runnable::run);
+
         network.sendFluidStorageToClient();
     }
 
@@ -56,9 +60,9 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
 
         if (!rebuilding) {
             network.sendFluidStorageDeltaToClient(stack, size);
-        }
 
-        listeners.forEach(l -> l.accept(stack, size));
+            listeners.forEach(Runnable::run);
+        }
     }
 
     @Override
@@ -66,17 +70,17 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
         if (list.remove(stack, size)) {
             network.sendFluidStorageDeltaToClient(stack, -size);
 
-            listeners.forEach(l -> l.accept(stack, -size));
+            listeners.forEach(Runnable::run);
         }
     }
 
     @Override
-    public void addListener(BiConsumer<FluidStack, Integer> listener) {
+    public void addListener(Runnable listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void removeListener(BiConsumer<FluidStack, Integer> listener) {
+    public void removeListener(Runnable listener) {
         listeners.remove(listener);
     }
 

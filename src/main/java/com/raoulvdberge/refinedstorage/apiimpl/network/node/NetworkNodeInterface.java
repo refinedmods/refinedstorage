@@ -23,11 +23,24 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private ItemHandlerBase importItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerBase exportSpecimenItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase exportSpecimenItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this)) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            if (network != null) {
+                if (!isEmpty() && itemsStorage != null) {
+                    removeItemStorage(network);
+                } else if (isEmpty() && itemsStorage == null) {
+                    createItemStorage(network);
+                }
+            }
+        }
+    };
     private ItemHandlerBase exportItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
 
     private IItemHandler items = new ItemHandlerProxy(importItems, exportItems);
-    private ItemHandlerInterface itemsNetwork;
+    private ItemHandlerInterface itemsStorage;
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
@@ -122,15 +135,23 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     protected void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        if (state) {
-            itemsNetwork = new ItemHandlerInterface(network, network.getItemStorageCache(), importItems);
-
-            network.getItemStorageCache().addListener(itemsNetwork);
-        } else if (itemsNetwork != null) {
-            network.getItemStorageCache().removeListener(itemsNetwork);
-
-            itemsNetwork = null;
+        if (state && exportSpecimenItems.isEmpty()) {
+            createItemStorage(network);
+        } else if (itemsStorage != null) {
+            removeItemStorage(network);
         }
+    }
+
+    private void createItemStorage(INetwork network) {
+        itemsStorage = new ItemHandlerInterface(network, network.getItemStorageCache(), importItems);
+
+        network.getItemStorageCache().addListener(itemsStorage);
+    }
+
+    private void removeItemStorage(INetwork network) {
+        network.getItemStorageCache().removeListener(itemsStorage);
+
+        itemsStorage = null;
     }
 
     @Override
@@ -204,8 +225,8 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         return exportItems;
     }
 
-    public IItemHandler getItemsOrNetworkItems() {
-        return (itemsNetwork != null && exportSpecimenItems.isEmpty()) ? itemsNetwork : items;
+    public IItemHandler getItemsOrStorage() {
+        return itemsStorage != null ? itemsStorage : items;
     }
 
     public IItemHandler getItems() {

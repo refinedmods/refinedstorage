@@ -9,6 +9,8 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.integration.storagedrawers.StorageItemItemRepository;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -224,8 +226,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
             }
         }
 
-        network.getItemStorageCache().invalidate();
-        network.getFluidStorageCache().invalidate();
+        network.getNodeGraph().schedulePostRebuildAction(StorageCacheItem.INVALIDATE);
+        network.getNodeGraph().schedulePostRebuildAction(StorageCacheFluid.INVALIDATE);
     }
 
     @Override

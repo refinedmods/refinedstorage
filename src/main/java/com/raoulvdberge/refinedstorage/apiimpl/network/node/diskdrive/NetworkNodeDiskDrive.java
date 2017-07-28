@@ -6,6 +6,8 @@ import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -132,8 +134,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getItemStorageCache().invalidate();
-        network.getFluidStorageCache().invalidate();
+        network.getNodeGraph().schedulePostRebuildAction(StorageCacheItem.INVALIDATE);
+        network.getNodeGraph().schedulePostRebuildAction(StorageCacheFluid.INVALIDATE);
 
         WorldUtils.updateBlock(world, pos);
     }

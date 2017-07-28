@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
@@ -117,7 +118,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getFluidStorageCache().invalidate();
+        network.getNodeGraph().schedulePostRebuildAction(StorageCacheFluid.INVALIDATE);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
@@ -114,7 +115,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getItemStorageCache().invalidate();
+        network.getNodeGraph().schedulePostRebuildAction(StorageCacheItem.INVALIDATE);
     }
 
     @Override

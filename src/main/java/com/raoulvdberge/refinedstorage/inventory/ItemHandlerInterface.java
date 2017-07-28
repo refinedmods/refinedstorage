@@ -8,9 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.function.BiConsumer;
 
-public class ItemHandlerInterface implements IItemHandler, BiConsumer<ItemStack, Integer> {
+public class ItemHandlerInterface implements IItemHandler, Runnable {
     private INetwork network;
     private IStorageCache<ItemStack> storageCache;
     private IItemHandler importItems;
@@ -69,7 +68,7 @@ public class ItemHandlerInterface implements IItemHandler, BiConsumer<ItemStack,
     }
 
     @Override
-    public void accept(ItemStack stack, Integer amount) {
+    public void run() {
         invalidate();
     }
 

@@ -17,12 +17,11 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     private IPortableGrid portableGrid;
     private IStackList<ItemStack> list = API.instance().createItemStackList();
-    private List<BiConsumer<ItemStack, Integer>> listeners = new LinkedList<>();
+    private List<Runnable> listeners = new LinkedList<>();
 
     public StorageCacheItemPortable(IPortableGrid portableGrid) {
         this.portableGrid = portableGrid;
@@ -36,6 +35,8 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
             portableGrid.getStorage().getStacks().forEach(list::add);
         }
 
+        listeners.forEach(Runnable::run);
+
         portableGrid.getWatchers().forEach(this::sendUpdateTo);
     }
 
@@ -45,9 +46,9 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
 
         if (!rebuilding) {
             portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, size), (EntityPlayerMP) w));
-        }
 
-        listeners.forEach(l -> l.accept(stack, size));
+            listeners.forEach(Runnable::run);
+        }
     }
 
     @Override
@@ -55,17 +56,17 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
         if (list.remove(stack, size)) {
             portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, -size), (EntityPlayerMP) w));
 
-            listeners.forEach(l -> l.accept(stack, -size));
+            listeners.forEach(Runnable::run);
         }
     }
 
     @Override
-    public void addListener(BiConsumer<ItemStack, Integer> listener) {
+    public void addListener(Runnable listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void removeListener(BiConsumer<ItemStack, Integer> listener) {
+    public void removeListener(Runnable listener) {
         listeners.remove(listener);
     }
 

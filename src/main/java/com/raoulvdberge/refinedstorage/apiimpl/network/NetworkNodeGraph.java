@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network;
 
 import com.google.common.collect.Sets;
 import com.raoulvdberge.refinedstorage.RSBlocks;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
@@ -16,16 +17,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Consumer;
 
 import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
 
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
     private Set<INetworkNode> nodes = Sets.newConcurrentHashSet();
+    private Set<Consumer<INetwork>> postRebuildActions = new HashSet<>();
+    private boolean rebuilding = false;
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
@@ -40,6 +41,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
             return;
         }
+
+        rebuilding = true;
 
         Operator operator = new Operator();
 
@@ -66,8 +69,22 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             node.onDisconnected(controller);
         }
 
+        postRebuildActions.forEach(a -> a.accept(controller));
+        postRebuildActions.clear();
+
         if (!operator.newNodes.isEmpty() || !operator.previousNodes.isEmpty()) {
             controller.getDataManager().sendParameterToWatchers(TileController.NODES);
+        }
+
+        rebuilding = false;
+    }
+
+    @Override
+    public void schedulePostRebuildAction(Consumer<INetwork> action) {
+        if (rebuilding) {
+            postRebuildActions.add(action);
+        } else {
+            action.accept(controller);
         }
     }
 
