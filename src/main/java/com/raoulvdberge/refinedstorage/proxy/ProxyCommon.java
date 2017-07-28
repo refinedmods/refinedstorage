@@ -213,12 +213,12 @@ public class ProxyCommon {
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.WRENCH);
         registerItem(RSItems.SECURITY_CARD);
-
-        GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);
     }
 
     public void init(FMLInitializationEvent e) {
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
+
+        GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);
 
         WirelessGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryWirelessGrid());
         WirelessFluidGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryWirelessFluidGrid());
