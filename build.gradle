@@ -47,9 +47,6 @@ repositories {
     maven {
         url "https://dl.bintray.com/jaquadro/dev"
     }
-    maven {
-        url 'https://repo.elytradev.com/'
-    }
 }
 
 dependencies {
@@ -58,7 +55,6 @@ dependencies {
     deobfCompile "MCMultiPart2:MCMultiPart:2.2.2"
     // deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.0.28:api"
     deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.12-5.2.9:api"
-    deobfCompile "elucent:albedo:2.0-SNAPSHOT"
 }
 
 processResources {
