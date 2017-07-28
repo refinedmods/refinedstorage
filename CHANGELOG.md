@@ -8,6 +8,7 @@
 - Fixed bug where pattern create button wasn't visible when grid tabs were selected (raoulvdberge)
 - Fixed performance issue with Controllers turning off and on and Interfaces (raoulvdberge)
 - Fixed Interfaces exposing network inventory don't hide storages that are disconnected (raoulvdberge)
+- Fixed Quartz to Silicon smelting recipe not being removable with CraftTweaker due to being registered in the wrong phase (raoulvdberge)
 - A Solderer with Speed Upgrades is now 2 times faster (raoulvdberge)
 
 ### 1.5.13
