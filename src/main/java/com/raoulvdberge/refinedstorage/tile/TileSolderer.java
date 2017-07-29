@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRecipe;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeSolderer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,11 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileSolderer extends TileNode<NetworkNodeSolderer> {
-    public static final TileDataParameter<Integer, TileSolderer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
-        ISoldererRecipe recipe = t.getNode().getRecipe();
-
-        return recipe == null ? 0 : recipe.getDuration();
-    });
+    public static final TileDataParameter<Integer, TileSolderer> DURATION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getDuration());
     public static final TileDataParameter<Integer, TileSolderer> PROGRESS = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getProgress());
     public static final TileDataParameter<Boolean, TileSolderer> WORKING = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isWorking());
 

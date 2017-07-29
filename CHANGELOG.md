@@ -7,7 +7,7 @@
 - Fixed bug where pattern create button wasn't visible when grid tabs were selected (raoulvdberge)
 - Fixed performance issue with Controllers turning off and on and Interfaces (raoulvdberge)
 - Fixed Interfaces exposing network inventory don't hide storages that are disconnected (raoulvdberge)
-- A Solderer with Speed Upgrades is now 2 times faster (raoulvdberge)
+- Added config option to modify the Solderer speed per Speed Upgrade, defaulting to 22.5% faster per upgrade, making it 90% faster on a fully upgraded Solderer (raoulvdberge)
 
 ### 1.5.13
 - Fixed Wireless Fluid Grid not using up energy (raoulvdberge)

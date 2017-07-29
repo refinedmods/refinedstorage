@@ -98,15 +98,9 @@ public class NetworkNodeSolderer extends NetworkNode {
 
                 markDirty();
             } else if ((result.getStackInSlot(0).isEmpty() || API.instance().getComparer().isEqualNoQuantity(recipe.getResult(), result.getStackInSlot(0))) && result.getStackInSlot(0).getCount() + recipe.getResult().getCount() <= result.getStackInSlot(0).getMaxStackSize()) {
-                int increase = 1 + (upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED) * 2);
+                progress++;
 
-                if (progress + increase > recipe.getDuration()) {
-                    progress = recipe.getDuration();
-                } else {
-                    progress += increase;
-                }
-
-                if (progress >= recipe.getDuration()) {
+                if (progress >= getDuration()) {
                     ItemStack resultSlot = result.getStackInSlot(0);
 
                     if (resultSlot.isEmpty()) {
@@ -204,16 +198,20 @@ public class NetworkNodeSolderer extends NetworkNode {
         return upgrades;
     }
 
-    public ISoldererRecipe getRecipe() {
-        return recipe;
-    }
-
     public boolean isWorking() {
         return working;
     }
 
     public int getProgress() {
         return progress;
+    }
+
+    public int getDuration() {
+        if (recipe == null) {
+            return 0;
+        }
+
+        return (int) ((float) recipe.getDuration() - ((float) recipe.getDuration() / 100F * ((float) upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED) * RS.INSTANCE.config.soldererSpeedIncreasePerSpeedUpgrade)));
     }
 
     @Override

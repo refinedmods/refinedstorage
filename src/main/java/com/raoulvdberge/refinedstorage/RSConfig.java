@@ -96,6 +96,7 @@ public final class RSConfig {
     //region Upgrades
     public int rangeUpgradeUsage;
     public int speedUpgradeUsage;
+    public float soldererSpeedIncreasePerSpeedUpgrade;
     public int craftingUpgradeUsage;
     public int stackUpgradeUsage;
     public int interdimensionalUpgradeUsage;
@@ -217,6 +218,7 @@ public final class RSConfig {
         //region Upgrades
         rangeUpgradeUsage = config.getInt("range", UPGRADES, 8, 0, Integer.MAX_VALUE, "The additional energy used per Range Upgrade");
         speedUpgradeUsage = config.getInt("speed", UPGRADES, 2, 0, Integer.MAX_VALUE, "The additional energy used per Speed Upgrade");
+        soldererSpeedIncreasePerSpeedUpgrade = config.getFloat("soldererSpeedIncreasePerSpeedUpgrade", UPGRADES, 22.5F, 0F, 25F, "The speed increase percentage in the Solderer per Speed Upgrade");
         craftingUpgradeUsage = config.getInt("crafting", UPGRADES, 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
         stackUpgradeUsage = config.getInt("stack", UPGRADES, 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
         interdimensionalUpgradeUsage = config.getInt("interdimensional", UPGRADES, 1000, 0, Integer.MAX_VALUE, "The additional energy used by the Interdimensional Upgrade");
