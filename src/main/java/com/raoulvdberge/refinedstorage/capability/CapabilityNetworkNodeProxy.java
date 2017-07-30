@@ -29,7 +29,7 @@ public class CapabilityNetworkNodeProxy {
             @Override
             @Nonnull
             public INetworkNode getNode() {
-                return null;
+                throw new UnsupportedOperationException("Cannot use default implementation");
             }
         });
 
