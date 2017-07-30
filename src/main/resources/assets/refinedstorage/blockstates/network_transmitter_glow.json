@@ -1,0 +1,27 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "refinedstorage:cube_all_glow",
+    "textures": {
+      "all": "refinedstorage:blocks/network_transmitter_disconnected",
+      "glow": "refinedstorage:blocks/none"
+    }
+  },
+  "variants": {
+    "inventory": [
+      {
+        "transform": "forge:default-block"
+      }
+    ],
+    "connected": {
+      "true": {
+        "textures": {
+          "all": "refinedstorage:blocks/network_transmitter_connected",
+          "glow": "refinedstorage:blocks/network_transmitter_connected_glow"
+        }
+      },
+      "false": {
+      }
+    }
+  }
+}
