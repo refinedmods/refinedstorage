@@ -8,6 +8,7 @@
 - Fixed performance issue with Controllers turning off and on and Interfaces (raoulvdberge)
 - Fixed Interfaces exposing network inventory don't hide storages that are disconnected (raoulvdberge)
 - Added config option to modify the Solderer speed per Speed Upgrade, defaulting to 22.5% faster per upgrade, making it 90% faster on a fully upgraded Solderer (raoulvdberge)
+- Added CTM integration (raoulvdberge)
 
 ### 1.5.13
 - Fixed Wireless Fluid Grid not using up energy (raoulvdberge)

@@ -1,12 +1,10 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "orientable",
+    "model": "cube_all",
     "textures": {
-      "particle": "refinedstorage:blocks/controller_0",
-      "side": "refinedstorage:blocks/controller_0",
-      "top": "refinedstorage:blocks/controller_0",
-      "front": "refinedstorage:blocks/controller_0"
+      "particle": "refinedstorage:blocks/controller_off",
+      "all": "refinedstorage:blocks/controller_off"
     }
   },
   "variants": {
@@ -15,80 +13,23 @@
         "transform": "forge:default-block"
       }
     ],
-    "energy": {
-      "0": {
+    "energy_type": {
+      "off": {
+      },
+      "nearly_off": {
         "textures": {
-          "front": "refinedstorage:blocks/controller_0"
+          "all": "refinedstorage:blocks/controller_nearly_off"
         }
       },
-      "1": {
+      "nearly_on": {
         "textures": {
-          "side": "refinedstorage:blocks/controller_1",
-          "top": "refinedstorage:blocks/controller_1",
-          "front": "refinedstorage:blocks/controller_1"
+          "all": "refinedstorage:blocks/controller_nearly_on"
         }
       },
-      "2": {
+      "on": {
         "textures": {
-          "side": "refinedstorage:blocks/controller_2",
-          "top": "refinedstorage:blocks/controller_2",
-          "front": "refinedstorage:blocks/controller_2"
+          "all": "refinedstorage:blocks/controller_on"
         }
-      },
-      "3": {
-        "textures": {
-          "side": "refinedstorage:blocks/controller_on",
-          "top": "refinedstorage:blocks/controller_on",
-          "front": "refinedstorage:blocks/controller_on"
-        }
-      },
-      "4": {
-        "textures": {
-          "side": "refinedstorage:blocks/controller_on",
-          "top": "refinedstorage:blocks/controller_on",
-          "front": "refinedstorage:blocks/controller_on"
-        }
-      },
-      "5": {
-        "textures": {
-          "side": "refinedstorage:blocks/controller_on",
-          "top": "refinedstorage:blocks/controller_on",
-          "front": "refinedstorage:blocks/controller_on"
-        }
-      },
-      "6": {
-        "textures": {
-          "side": "refinedstorage:blocks/controller_on",
-          "top": "refinedstorage:blocks/controller_on",
-          "front": "refinedstorage:blocks/controller_on"
-        }
-      },
-      "7": {
-        "textures": {
-          "side": "refinedstorage:blocks/controller_on",
-          "top": "refinedstorage:blocks/controller_on",
-          "front": "refinedstorage:blocks/controller_on"
-        }
-      }
-    },
-    "direction": {
-      "north": {
-        "y": 0
-      },
-      "east": {
-        "y": 90
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      },
-      "up": {
-        "x": 270
-      },
-      "down": {
-        "x": 90
       }
     }
   }

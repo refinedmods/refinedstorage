@@ -32,6 +32,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.block.BlockController;
+import com.raoulvdberge.refinedstorage.block.ControllerEnergyType;
 import com.raoulvdberge.refinedstorage.block.ControllerType;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
@@ -114,6 +115,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     public static final String NBT_ENERGY = "Energy";
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
+    public static final String NBT_ENERGY_TYPE = "EnergyType";
 
     private static final String NBT_READER_WRITER_CHANNELS = "ReaderWriterChannels";
     private static final String NBT_READER_WRITER_NAME = "Name";
@@ -136,14 +138,13 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     private EnergyForge energy = new EnergyForge(RS.INSTANCE.config.controllerCapacity);
 
-    private int lastEnergyDisplay;
-
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
 
     private boolean craftingMonitorUpdateRequested;
 
     private ControllerType type;
+    private ControllerEnergyType energyType;
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -235,10 +236,10 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 ticksSinceUpdateChanged = 0;
             }
 
-            int energyDisplay = getEnergyScaledForDisplay();
+            ControllerEnergyType energyType = getEnergyType();
 
-            if (lastEnergyDisplay != energyDisplay) {
-                lastEnergyDisplay = energyDisplay;
+            if (this.energyType != energyType) {
+                this.energyType = energyType;
 
                 WorldUtils.updateBlock(world, pos);
             }
@@ -635,16 +636,16 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        tag.setInteger(NBT_ENERGY_CAPACITY, energy.getMaxEnergyStored());
-        tag.setInteger(NBT_ENERGY, energy.getEnergyStored());
+        tag.setInteger(NBT_ENERGY_TYPE, getEnergyType().getId());
 
         return tag;
     }
 
     @Override
     public void readUpdate(NBTTagCompound tag) {
-        energy.setMaxEnergyStored(tag.getInteger(NBT_ENERGY_CAPACITY));
-        energy.setEnergyStored(tag.getInteger(NBT_ENERGY));
+        if (tag.hasKey(NBT_ENERGY_TYPE)) {
+            this.energyType = ControllerEnergyType.getById(tag.getInteger(NBT_ENERGY_TYPE));
+        }
 
         super.readUpdate(tag);
     }
@@ -653,8 +654,26 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         return (int) ((float) stored / (float) capacity * (float) scale);
     }
 
-    public int getEnergyScaledForDisplay() {
-        return getEnergyScaled(energy.getEnergyStored(), energy.getMaxEnergyStored(), 7);
+    public static ControllerEnergyType getEnergyType(int stored, int capacity) {
+        int energy = getEnergyScaled(stored, capacity, 100);
+
+        if (energy <= 0) {
+            return ControllerEnergyType.OFF;
+        } else if (energy <= 10) {
+            return ControllerEnergyType.NEARLY_OFF;
+        } else if (energy <= 20) {
+            return ControllerEnergyType.NEARLY_ON;
+        }
+
+        return ControllerEnergyType.ON;
+    }
+
+    public ControllerEnergyType getEnergyType() {
+        if (world.isRemote) {
+            return energyType;
+        }
+
+        return getEnergyType(energy.getEnergyStored(), energy.getMaxEnergyStored());
     }
 
     @Override
