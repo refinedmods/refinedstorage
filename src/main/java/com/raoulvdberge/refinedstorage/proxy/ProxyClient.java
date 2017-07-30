@@ -203,8 +203,6 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.EXTERNAL_STORAGE), 0, new ModelResourceLocation("refinedstorage:external_storage", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CONSTRUCTOR), 0, new ModelResourceLocation("refinedstorage:constructor", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DESTRUCTOR), 0, new ModelResourceLocation("refinedstorage:destructor", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.READER), 0, new ModelResourceLocation("refinedstorage:reader", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.WRITER), 0, new ModelResourceLocation("refinedstorage:writer", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.SOLDERER), 0, new ModelResourceLocation("refinedstorage:solderer", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.INTERFACE), 0, new ModelResourceLocation("refinedstorage:interface", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_INTERFACE), 0, new ModelResourceLocation("refinedstorage:fluid_interface", "inventory"));
@@ -230,68 +228,34 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), GridType.CRAFTING.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=crafting"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), GridType.PATTERN.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=pattern"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), GridType.FLUID.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=fluid"));
-        ModelLoader.setCustomStateMapper(RSBlocks.GRID, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:grid" + (Loader.isModLoaded("ctm") ? "_glow" : ""), getPropertyString(state.getProperties()));
-            }
-        });
+        ModelLoader.setCustomStateMapper(RSBlocks.GRID, new StateMapperCTM("refinedstorage:grid"));
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CRAFTING_MONITOR), 0, new ModelResourceLocation("refinedstorage:crafting_monitor", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.CRAFTING_MONITOR, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:crafting_monitor" + (Loader.isModLoaded("ctm") ? "_glow" : ""), getPropertyString(state.getProperties()));
-            }
-        });
+        ModelLoader.setCustomStateMapper(RSBlocks.CRAFTING_MONITOR, new StateMapperCTM("refinedstorage:crafting_monitor"));
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:wireless_transmitter", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.WIRELESS_TRANSMITTER, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:wireless_transmitter" + (Loader.isModLoaded("ctm") ? "_glow" : ""), getPropertyString(state.getProperties()));
-            }
-        });
+        ModelLoader.setCustomStateMapper(RSBlocks.WIRELESS_TRANSMITTER, new StateMapperCTM("refinedstorage:wireless_transmitter"));
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.NETWORK_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:network_transmitter", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.NETWORK_TRANSMITTER, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:network_transmitter" + (Loader.isModLoaded("ctm") ? "_glow" : ""), getPropertyString(state.getProperties()));
-            }
-        });
+        ModelLoader.setCustomStateMapper(RSBlocks.NETWORK_TRANSMITTER, new StateMapperCTM("refinedstorage:network_transmitter"));
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.NETWORK_RECEIVER), 0, new ModelResourceLocation("refinedstorage:network_receiver", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.NETWORK_RECEIVER, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:network_receiver" + (Loader.isModLoaded("ctm") ? "_glow" : ""), getPropertyString(state.getProperties()));
-            }
-        });
+        ModelLoader.setCustomStateMapper(RSBlocks.NETWORK_RECEIVER, new StateMapperCTM("refinedstorage:network_receiver"));
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DETECTOR), 0, new ModelResourceLocation("refinedstorage:detector", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.DETECTOR, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:detector" + (Loader.isModLoaded("ctm") ? "_glow" : ""), getPropertyString(state.getProperties()));
-            }
-        });
+        ModelLoader.setCustomStateMapper(RSBlocks.DETECTOR, new StateMapperCTM("refinedstorage:detector"));
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.RELAY), 0, new ModelResourceLocation("refinedstorage:relay", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.RELAY, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:relay" + (Loader.isModLoaded("ctm") ? "_glow" : ""), getPropertyString(state.getProperties()));
-            }
-        });
+        ModelLoader.setCustomStateMapper(RSBlocks.RELAY, new StateMapperCTM("refinedstorage:relay"));
 
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.SECURITY_MANAGER), 0, new ModelResourceLocation("refinedstorage:security_manager", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.SECURITY_MANAGER, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:security_manager" + (Loader.isModLoaded("ctm") ? "_glow" : ""), getPropertyString(state.getProperties()));
-            }
-        });
+        ModelLoader.setCustomStateMapper(RSBlocks.SECURITY_MANAGER, new StateMapperCTM("refinedstorage:security_manager"));
+
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.READER), 0, new ModelResourceLocation("refinedstorage:reader", "inventory"));
+        ModelLoader.setCustomStateMapper(RSBlocks.READER, new StateMapperCTM("refinedstorage:reader"));
+
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.WRITER), 0, new ModelResourceLocation("refinedstorage:writer", "inventory"));
+        ModelLoader.setCustomStateMapper(RSBlocks.WRITER, new StateMapperCTM("refinedstorage:writer"));
 
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.CONTROLLER), stack -> {
             ControllerEnergyType energyType = stack.getItemDamage() == ControllerType.CREATIVE.getId() ? ControllerEnergyType.ON : TileController.getEnergyType(ItemBlockController.getEnergyStored(stack), ItemBlockController.getEnergyCapacity(stack));
