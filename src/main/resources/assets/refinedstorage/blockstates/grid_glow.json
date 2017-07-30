@@ -1,0 +1,89 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "refinedstorage:cube_glow",
+    "textures": {
+      "particle": "refinedstorage:blocks/side",
+      "north": "refinedstorage:blocks/grid_disconnected",
+      "east": "refinedstorage:blocks/grid_left",
+      "south": "refinedstorage:blocks/grid_back",
+      "west": "refinedstorage:blocks/grid_right",
+      "up": "refinedstorage:blocks/grid_top",
+      "down": "refinedstorage:blocks/bottom",
+      "glow": "refinedstorage:blocks/none"
+    }
+  },
+  "variants": {
+    "connected": {
+      "true": {
+        "textures": {
+          "north_normal": "refinedstorage:blocks/grid_front_connected",
+          "north_normal_glow": "refinedstorage:blocks/grid_front_connected_glow",
+          "north_crafting": "refinedstorage:blocks/grid_crafting_front_connected",
+          "north_crafting_glow": "refinedstorage:blocks/grid_crafting_front_connected_glow",
+          "north_pattern": "refinedstorage:blocks/grid_pattern_front_connected",
+          "north_pattern_glow": "refinedstorage:blocks/grid_pattern_front_connected_glow",
+          "north_fluid": "refinedstorage:blocks/grid_fluid_front_connected",
+          "north_fluid_glow": "refinedstorage:blocks/grid_fluid_front_connected_glow"
+        }
+      },
+      "false": {
+        "textures": {
+          "north_normal": "refinedstorage:blocks/grid_front",
+          "north_normal_glow": "refinedstorage:blocks/none",
+          "north_crafting": "refinedstorage:blocks/grid_crafting_front",
+          "north_crafting_glow": "refinedstorage:blocks/none",
+          "north_pattern": "refinedstorage:blocks/grid_pattern_front",
+          "north_pattern_glow": "refinedstorage:blocks/none",
+          "north_fluid": "refinedstorage:blocks/grid_fluid_front",
+          "north_fluid_glow": "refinedstorage:blocks/none"
+        }
+      }
+    },
+    "type": {
+      "normal": {
+        "textures": {
+          "north": "#north_normal",
+          "glow": "#north_normal_glow"
+        }
+      },
+      "crafting": {
+        "textures": {
+          "north": "#north_crafting",
+          "glow": "#north_crafting_glow"
+        }
+      },
+      "pattern": {
+        "textures": {
+          "north": "#north_pattern",
+          "glow": "#north_pattern_glow"
+        }
+      },
+      "fluid": {
+        "textures": {
+          "north": "#north_fluid",
+          "glow": "#north_fluid_glow",
+          "east": "refinedstorage:blocks/grid_fluid_left",
+          "south": "refinedstorage:blocks/grid_fluid_back",
+          "west": "refinedstorage:blocks/grid_fluid_right",
+          "up": "refinedstorage:blocks/grid_fluid_top",
+          "down": "refinedstorage:blocks/bottom"
+        }
+      }
+    },
+    "direction": {
+      "north": {
+        "y": 0
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      }
+    }
+  }
+}
