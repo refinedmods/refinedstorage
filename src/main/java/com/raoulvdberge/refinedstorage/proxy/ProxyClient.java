@@ -210,7 +210,6 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.RELAY), 0, new ModelResourceLocation("refinedstorage:relay", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.INTERFACE), 0, new ModelResourceLocation("refinedstorage:interface", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_INTERFACE), 0, new ModelResourceLocation("refinedstorage:fluid_interface", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:wireless_transmitter", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CRAFTING_MONITOR), 0, new ModelResourceLocation("refinedstorage:crafting_monitor", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CRAFTER), 0, new ModelResourceLocation("refinedstorage:crafter", "connected=false,direction=north"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.NETWORK_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:network_transmitter", "inventory"));
@@ -241,6 +240,14 @@ public class ProxyClient extends ProxyCommon {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
                 return new ModelResourceLocation("refinedstorage:grid" + (Loader.isModLoaded("ctm") ? "_glow" : ""), "connected=" + state.getValue(BlockGrid.CONNECTED) + ",direction=" + state.getValue(RSBlocks.GRID.getDirection().getProperty()) + ",type=" + state.getValue(BlockGrid.TYPE));
+            }
+        });
+
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:wireless_transmitter" + (Loader.isModLoaded("ctm") ? "_glow" : ""), "inventory"));
+        ModelLoader.setCustomStateMapper(RSBlocks.WIRELESS_TRANSMITTER, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation("refinedstorage:wireless_transmitter" + (Loader.isModLoaded("ctm") ? "_glow" : ""), "connected=" + state.getValue(BlockWirelessTransmitter.CONNECTED));
             }
         });
 
