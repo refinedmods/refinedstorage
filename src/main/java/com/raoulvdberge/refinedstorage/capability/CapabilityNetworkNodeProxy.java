@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.capability;
 import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDummy;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -29,7 +30,7 @@ public class CapabilityNetworkNodeProxy {
             @Override
             @Nonnull
             public INetworkNode getNode() {
-                throw new UnsupportedOperationException("Cannot use default implementation");
+                return new NetworkNodeDummy();
             }
         });
 
