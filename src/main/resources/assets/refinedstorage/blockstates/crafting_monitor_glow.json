@@ -10,7 +10,12 @@
       "west": "refinedstorage:blocks/crafting_monitor_right",
       "up": "refinedstorage:blocks/crafting_monitor_top",
       "down": "refinedstorage:blocks/bottom",
-      "glow": "refinedstorage:blocks/none"
+      "glow_north": "refinedstorage:blocks/none",
+      "glow_east": "refinedstorage:blocks/none",
+      "glow_south": "refinedstorage:blocks/none",
+      "glow_west": "refinedstorage:blocks/none",
+      "glow_up": "refinedstorage:blocks/none",
+      "glow_down": "refinedstorage:blocks/none"
     }
   },
   "variants": {
@@ -24,7 +29,7 @@
       "true": {
         "textures": {
           "north": "refinedstorage:blocks/crafting_monitor_front_connected",
-          "glow": "refinedstorage:blocks/crafting_monitor_front_connected_glow"
+          "glow_north": "refinedstorage:blocks/crafting_monitor_front_connected_glow"
         }
       },
       "false": {

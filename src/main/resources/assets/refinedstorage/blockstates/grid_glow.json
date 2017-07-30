@@ -10,7 +10,12 @@
       "west": "refinedstorage:blocks/grid_right",
       "up": "refinedstorage:blocks/grid_top",
       "down": "refinedstorage:blocks/bottom",
-      "glow": "refinedstorage:blocks/none"
+      "glow_north": "refinedstorage:blocks/none",
+      "glow_east": "refinedstorage:blocks/none",
+      "glow_south": "refinedstorage:blocks/none",
+      "glow_west": "refinedstorage:blocks/none",
+      "glow_up": "refinedstorage:blocks/none",
+      "glow_down": "refinedstorage:blocks/none"
     }
   },
   "variants": {
@@ -44,25 +49,25 @@
       "normal": {
         "textures": {
           "north": "#north_normal",
-          "glow": "#north_normal_glow"
+          "glow_north": "#north_normal_glow"
         }
       },
       "crafting": {
         "textures": {
           "north": "#north_crafting",
-          "glow": "#north_crafting_glow"
+          "glow_north": "#north_crafting_glow"
         }
       },
       "pattern": {
         "textures": {
           "north": "#north_pattern",
-          "glow": "#north_pattern_glow"
+          "glow_north": "#north_pattern_glow"
         }
       },
       "fluid": {
         "textures": {
           "north": "#north_fluid",
-          "glow": "#north_fluid_glow",
+          "glow_north": "#north_fluid_glow",
           "east": "refinedstorage:blocks/grid_fluid_left",
           "south": "refinedstorage:blocks/grid_fluid_back",
           "west": "refinedstorage:blocks/grid_fluid_right",
