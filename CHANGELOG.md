@@ -2,6 +2,7 @@
 
 ### 1.5.14
 - Updated Forge to 2426 (raoulvdberge)
+- Updated French translation (cylek56)
 - Fixed more crashes relating to scrollbar in GUIs (raoulvdberge)
 - Fixed crash with Detector (raoulvdberge)
 - Fixed bug where pattern create button wasn't visible when grid tabs were selected (raoulvdberge)
