@@ -130,6 +130,7 @@ sidebutton.refinedstorage:grid.sorting.type=정렬 기준
 sidebutton.refinedstorage:grid.sorting.type.0=수량
 sidebutton.refinedstorage:grid.sorting.type.1=이름
 sidebutton.refinedstorage:grid.sorting.type.2=ID
+sidebutton.refinedstorage:grid.sorting.type.3=InventoryTweaks
 sidebutton.refinedstorage:grid.search_box_mode=검색 모드
 sidebutton.refinedstorage:grid.search_box_mode.0=일반
 sidebutton.refinedstorage:grid.search_box_mode.1=일반 (자동 선택됨)

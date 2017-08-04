@@ -82,6 +82,7 @@ sidebutton.refinedstorage:grid.sorting.direction.1=Вниз
 sidebutton.refinedstorage:grid.sorting.type=Тип сортировки
 sidebutton.refinedstorage:grid.sorting.type.0=Количество
 sidebutton.refinedstorage:grid.sorting.type.1=Название
+sidebutton.refinedstorage:grid.sorting.type.3=InventoryTweaks
 sidebutton.refinedstorage:grid.search_box_mode=Режим строки поиска
 sidebutton.refinedstorage:grid.search_box_mode.0=Обычный
 sidebutton.refinedstorage:grid.search_box_mode.1=Обычный (автовыбор)

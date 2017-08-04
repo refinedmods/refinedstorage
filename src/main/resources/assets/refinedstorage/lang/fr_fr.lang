@@ -102,6 +102,7 @@ sidebutton.refinedstorage:grid.sorting.direction.1=Décroissant
 sidebutton.refinedstorage:grid.sorting.type=Type de Tri
 sidebutton.refinedstorage:grid.sorting.type.0=Quantité
 sidebutton.refinedstorage:grid.sorting.type.1=Nom
+sidebutton.refinedstorage:grid.sorting.type.3=InventoryTweaks
 sidebutton.refinedstorage:grid.search_box_mode=Mode de la Barre de Recherche
 sidebutton.refinedstorage:grid.search_box_mode.0=Normal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normal (Séléction Auto)
