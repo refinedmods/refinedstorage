@@ -446,7 +446,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         for (IGridTab tab : grid.getTabs()) {
             drawTab(tab, true, x, y, mouseX, mouseY);
         }
-        
+
         if (searchField != null) {
             searchField.drawTextBox();
         }
