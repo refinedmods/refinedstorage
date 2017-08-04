@@ -87,6 +87,7 @@ sidebutton.refinedstorage:grid.sorting.direction.1=Aflopend
 sidebutton.refinedstorage:grid.sorting.type=Sorteer Type
 sidebutton.refinedstorage:grid.sorting.type.0=Hoeveelheid
 sidebutton.refinedstorage:grid.sorting.type.1=Naam
+sidebutton.refinedstorage:grid.sorting.type.3=InventoryTweaks
 sidebutton.refinedstorage:grid.search_box_mode=Zoekbalk Mode
 sidebutton.refinedstorage:grid.search_box_mode.0=Normaal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normaal (autogeselecteerd)

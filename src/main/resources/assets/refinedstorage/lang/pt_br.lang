@@ -63,6 +63,7 @@ sidebutton.refinedstorage:grid.sorting.direction.1=Descendente
 sidebutton.refinedstorage:grid.sorting.type=Tipo de Organização
 sidebutton.refinedstorage:grid.sorting.type.0=Quantidade
 sidebutton.refinedstorage:grid.sorting.type.1=Nome
+sidebutton.refinedstorage:grid.sorting.type.3=InventoryTweaks
 sidebutton.refinedstorage:grid.search_box_mode=Modo da Caixa de Pesquisa
 sidebutton.refinedstorage:grid.search_box_mode.0=Normal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normal (autoseleção)

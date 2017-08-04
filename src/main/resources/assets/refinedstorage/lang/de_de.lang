@@ -102,6 +102,7 @@ sidebutton.refinedstorage:grid.sorting.direction.1=absteigend
 sidebutton.refinedstorage:grid.sorting.type=Sortierung nach
 sidebutton.refinedstorage:grid.sorting.type.0=Menge
 sidebutton.refinedstorage:grid.sorting.type.1=Name
+sidebutton.refinedstorage:grid.sorting.type.3=InventoryTweaks
 sidebutton.refinedstorage:grid.search_box_mode=Suchfenstermodus
 sidebutton.refinedstorage:grid.search_box_mode.0=Normal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normal (automatische Wahl)

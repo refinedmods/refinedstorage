@@ -85,6 +85,7 @@ sidebutton.refinedstorage:grid.sorting.direction.1=下降
 sidebutton.refinedstorage:grid.sorting.type=排序按
 sidebutton.refinedstorage:grid.sorting.type.0=数量
 sidebutton.refinedstorage:grid.sorting.type.1=名字
+sidebutton.refinedstorage:grid.sorting.type.3=InventoryTweaks
 sidebutton.refinedstorage:grid.search_box_mode=搜索框模式
 sidebutton.refinedstorage:grid.search_box_mode.0=标准搜索
 sidebutton.refinedstorage:grid.search_box_mode.1=自动搜索

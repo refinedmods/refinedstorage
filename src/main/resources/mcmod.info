@@ -1,16 +1,18 @@
 [
     {
-      "modid": "refinedstorage",
-      "name": "Refined Storage",
-      "description": "An elegant solution to your hoarding problem",
-      "version": "1.4.21",
-      "mcversion": "1.11.2",
-      "url": "https://refinedstorage.raoulvdberge.com",
-      "updateUrl": "",
-      "authorList": ["Refined Storage contributors"],
-      "credits": "",
-      "logoFile": "assets/refinedstorage/textures/logo.png",
-      "screenshots": [],
-      "dependencies": []
+        "modid": "refinedstorage",
+        "name": "Refined Storage",
+        "description": "An elegant solution to your hoarding problem",
+        "version": "1.4.21",
+        "mcversion": "1.11.2",
+        "url": "https://refinedstorage.raoulvdberge.com",
+        "updateUrl": "",
+        "authorList": ["Refined Storage contributors"],
+        "credits": "",
+        "logoFile": "assets/refinedstorage/textures/logo.png",
+        "screenshots": [],
+        "dependencies": [
+            "inventorytweaks"
+        ]
     }
 ]
