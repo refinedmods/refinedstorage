@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.gui.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSorting;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingID;
+import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingInventoryTweaks;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingName;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingQuantity;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
@@ -52,6 +53,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     private static final GridSorting SORTING_QUANTITY = new GridSortingQuantity();
     private static final GridSorting SORTING_NAME = new GridSortingName();
     private static final GridSorting SORTING_ID = new GridSortingID();
+    private static final GridSorting SORTING_INVENTORYTWEAKS = new GridSortingInventoryTweaks();
 
     private static final List<String> SEARCH_HISTORY = new ArrayList<>();
 
@@ -197,6 +199,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             SORTING_NAME.setSortingDirection(grid.getSortingDirection());
             SORTING_QUANTITY.setSortingDirection(grid.getSortingDirection());
             SORTING_ID.setSortingDirection(grid.getSortingDirection());
+            SORTING_INVENTORYTWEAKS.setSortingDirection(grid.getSortingDirection());
 
             stacks.sort(SORTING_NAME);
 
@@ -204,6 +207,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 stacks.sort(SORTING_QUANTITY);
             } else if (grid.getSortingType() == NetworkNodeGrid.SORTING_TYPE_ID) {
                 stacks.sort(SORTING_ID);
+            } else if (grid.getSortingType() == NetworkNodeGrid.SORTING_TYPE_INVENTORYTWEAKS) {
+                stacks.sort(SORTING_INVENTORYTWEAKS);
             }
         }
 
