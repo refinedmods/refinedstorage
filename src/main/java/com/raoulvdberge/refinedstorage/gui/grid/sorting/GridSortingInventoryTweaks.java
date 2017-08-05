@@ -7,12 +7,7 @@ import net.minecraftforge.fml.common.Loader;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
-/**
- * A GridSorting implementation for the Inventory Tweaks sorting mod
- * @author Cooliojazz
- */
 public class GridSortingInventoryTweaks extends GridSorting {
-
     @Override
     public int compare(IGridStack o1, IGridStack o2) {
         try {
@@ -29,5 +24,4 @@ public class GridSortingInventoryTweaks extends GridSorting {
         }
         return 0;
     }
-    
 }
