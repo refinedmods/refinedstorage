@@ -7,19 +7,24 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
 public class ModelDiskManipulator implements IModel {
-    private static final ResourceLocation MODEL_BASE_CONNECTED = new ResourceLocation("refinedstorage:block/disk_manipulator_connected");
+    private static final ResourceLocation MODEL_BASE_CONNECTED = new ResourceLocation("refinedstorage:block/disk_manipulator_connected" + (Loader.isModLoaded("ctm") ? "_glow" : ""));
     private static final ResourceLocation MODEL_BASE_DISCONNECTED = new ResourceLocation("refinedstorage:block/disk_manipulator_disconnected");
+
     private static final ResourceLocation MODEL_DISK = new ResourceLocation("refinedstorage:block/disk");
     private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation("refinedstorage:block/disk_near_capacity");
     private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation("refinedstorage:block/disk_full");
     private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation("refinedstorage:block/disk_disconnected");
+
+    private static final ResourceLocation TEXTURE_BASE_CONNECTED_GLOW = new ResourceLocation("refinedstorage:blocks/disk_manipulator_connected_glow");
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
@@ -33,6 +38,11 @@ public class ModelDiskManipulator implements IModel {
         dependencies.add(MODEL_DISK_DISCONNECTED);
 
         return dependencies;
+    }
+
+    @Override
+    public Collection<ResourceLocation> getTextures() {
+        return Collections.singletonList(TEXTURE_BASE_CONNECTED_GLOW);
     }
 
     @Override

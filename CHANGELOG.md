@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.15
+- Added CTM integration for Disk Manipulator (raoulvdberge)
+
 ### 1.5.14
 - Updated Forge to 2426 (raoulvdberge)
 - Updated French translation (cylek56)

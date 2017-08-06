@@ -15,6 +15,7 @@ import java.util.function.Function;
 
 public class ModelDiskDrive implements IModel {
     private static final ResourceLocation MODEL_BASE = new ResourceLocation("refinedstorage:block/disk_drive");
+
     private static final ResourceLocation MODEL_DISK = new ResourceLocation("refinedstorage:block/disk");
     private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation("refinedstorage:block/disk_near_capacity");
     private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation("refinedstorage:block/disk_full");
