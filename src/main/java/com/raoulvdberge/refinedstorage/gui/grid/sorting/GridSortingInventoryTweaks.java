@@ -9,26 +9,23 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
 public class GridSortingInventoryTweaks extends GridSorting {
-    InvTweaksAPI api;
+    private InvTweaksAPI api = null;
 
     public GridSortingInventoryTweaks() {
         try {
-            api = (InvTweaksAPI)Class.forName("invtweaks.forge.InvTweaksMod", true, Loader.instance().getModClassLoader()).getField("instance").get(null);
+            api = (InvTweaksAPI) Class.forName("invtweaks.forge.InvTweaksMod", true, Loader.instance().getModClassLoader()).getField("instance").get(null);
         } catch (Exception ex) {
-            api = null;
             LogManager.getLogger(getClass()).log(Level.ERROR, "Error with InventoryTweak sorting", ex);
         }
     }
-    
-    
     
     @Override
     public int compare(IGridStack o1, IGridStack o2) {
         if (api != null && o1 instanceof GridStackItem && o2 instanceof GridStackItem) {
             if (sortingDirection == NetworkNodeGrid.SORTING_DIRECTION_DESCENDING) {
-                return api.compareItems(((GridStackItem)o1).getStack(), ((GridStackItem)o2).getStack());
+                return api.compareItems(((GridStackItem) o1).getStack(), ((GridStackItem) o2).getStack());
             } else if (sortingDirection == NetworkNodeGrid.SORTING_DIRECTION_ASCENDING) {
-                return api.compareItems(((GridStackItem)o2).getStack(), ((GridStackItem)o1).getStack());
+                return api.compareItems(((GridStackItem) o2).getStack(), ((GridStackItem) o1).getStack());
             }
         }
         return 0;
