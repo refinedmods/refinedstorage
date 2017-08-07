@@ -44,10 +44,22 @@ public final class RenderUtils {
     }
 
     public static String formatQuantity(int qty) {
-        if (qty >= 1000000) {
-            return QUANTITY_FORMATTER.format((float) qty / 1000000F) + "M";
+        if (qty >= 1_000_000) {
+            float qtyShort = (float) qty / 1_000_000F;
+
+            if (qty >= 100_000_000) {
+                qtyShort = Math.round(qtyShort); // XXX.XM looks weird.
+            }
+
+            return QUANTITY_FORMATTER.format(qtyShort) + "M";
         } else if (qty >= 1000) {
-            return QUANTITY_FORMATTER.format((float) qty / 1000F) + "K";
+            float qtyShort = (float) qty / 1000F;
+
+            if (qty >= 100_000) {
+                qtyShort = Math.round(qtyShort); // XXX.XK looks weird.
+            }
+
+            return QUANTITY_FORMATTER.format(qtyShort) + "K";
         }
 
         return String.valueOf(qty);
