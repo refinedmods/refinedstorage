@@ -11,6 +11,6 @@
       "credits": "",
       "logoFile": "assets/refinedstorage/textures/logo.png",
       "screenshots": [],
-      "dependencies": ["inventorytweaks"]
+      "dependencies": []
     }
 ]
