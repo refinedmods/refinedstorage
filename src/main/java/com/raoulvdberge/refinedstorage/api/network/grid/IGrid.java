@@ -23,6 +23,7 @@ public interface IGrid {
     int SORTING_TYPE_QUANTITY = 0;
     int SORTING_TYPE_NAME = 1;
     int SORTING_TYPE_ID = 2;
+    int SORTING_TYPE_INVENTORYTWEAKS = 3;
 
     int SEARCH_BOX_MODE_NORMAL = 0;
     int SEARCH_BOX_MODE_NORMAL_AUTOSELECTED = 1;
@@ -214,7 +215,7 @@ public interface IGrid {
     }
 
     static boolean isValidSortingType(int type) {
-        return type == SORTING_TYPE_QUANTITY || type == SORTING_TYPE_NAME || type == SORTING_TYPE_ID;
+        return type == SORTING_TYPE_QUANTITY || type == SORTING_TYPE_NAME || type == SORTING_TYPE_ID || type == SORTING_TYPE_INVENTORYTWEAKS;
     }
 
     static boolean isValidSortingDirection(int direction) {
