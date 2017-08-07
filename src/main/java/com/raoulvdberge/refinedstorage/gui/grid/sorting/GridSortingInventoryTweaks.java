@@ -5,8 +5,6 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import invtweaks.api.InvTweaksAPI;
 import net.minecraftforge.fml.common.Loader;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 
 public class GridSortingInventoryTweaks extends GridSorting {
     private InvTweaksAPI api = null;
@@ -14,9 +12,7 @@ public class GridSortingInventoryTweaks extends GridSorting {
     public GridSortingInventoryTweaks() {
         try {
             api = (InvTweaksAPI) Class.forName("invtweaks.forge.InvTweaksMod", true, Loader.instance().getModClassLoader()).getField("instance").get(null);
-        } catch (Exception ex) {
-            LogManager.getLogger(getClass()).log(Level.ERROR, "Error with InventoryTweak sorting", ex);
-        }
+        } catch (Exception ex) { }
     }
     
     @Override
