@@ -6,6 +6,7 @@
 - Added CTM integration for Disk Manipulator (raoulvdberge)
 - Fixed possible rare dupe bug with Importer (raoulvdberge)
 - Fixed Shulker Box dupe bug with Destructor (raoulvdberge)
+- Fixed Grid crash with search history (raoulvdberge)
 
 ### 1.5.14
 - Updated Forge to 2426 (raoulvdberge)

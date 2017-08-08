@@ -14,11 +14,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
-import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSorting;
-import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingID;
-import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingInventoryTweaks;
-import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingName;
-import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingQuantity;
+import com.raoulvdberge.refinedstorage.gui.grid.sorting.*;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
@@ -651,6 +647,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private void updateSearchHistory(int delta) {
+        if (SEARCH_HISTORY.isEmpty()) {
+            return;
+        }
+
         if (searchHistory == -1) {
             searchHistory = SEARCH_HISTORY.size();
         }
