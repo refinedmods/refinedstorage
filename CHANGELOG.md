@@ -4,6 +4,7 @@
 - Updated Forge to 2444 (MC 1.12.1) (raoulvdberge)
 - Added InventoryTweaks Grid sorting (cooliojazz)
 - Added CTM integration for Disk Manipulator (raoulvdberge)
+- Fixed possible rare dupe bug with Importer (raoulvdberge)
 
 ### 1.5.14
 - Updated Forge to 2426 (raoulvdberge)
