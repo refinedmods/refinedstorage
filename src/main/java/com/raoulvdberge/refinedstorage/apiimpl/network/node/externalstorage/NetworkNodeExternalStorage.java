@@ -205,7 +205,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         }
 
         if (type == IType.ITEMS) {
-            if (facing.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) {
+            if (DRAWER_GROUP_CAPABILITY != null && facing.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) {
                 itemStorages.add(new StorageItemItemRepository(this, () -> {
                     TileEntity f = getFacingTile();
 
