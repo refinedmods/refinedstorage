@@ -5,6 +5,7 @@
 - Added InventoryTweaks Grid sorting (cooliojazz)
 - Added CTM integration for Disk Manipulator (raoulvdberge)
 - Fixed possible rare dupe bug with Importer (raoulvdberge)
+- Fixed Shulker Box dupe bug with Destructor (raoulvdberge)
 
 ### 1.5.14
 - Updated Forge to 2426 (raoulvdberge)

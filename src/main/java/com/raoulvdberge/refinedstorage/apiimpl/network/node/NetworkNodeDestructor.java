@@ -14,12 +14,15 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -104,7 +107,18 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 if (!frontStack.isEmpty()) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(world, front) != -1.0) {
                         NonNullList<ItemStack> drops = NonNullList.create();
-                        if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(world, front, frontBlockState, null)) {
+
+                        if (frontBlock instanceof BlockShulkerBox) {
+                            drops.add(((BlockShulkerBox) frontBlock).getItem(world, front, frontBlockState));
+
+                            TileEntity shulkerBoxTile = world.getTileEntity(front);
+
+                            if (shulkerBoxTile instanceof TileEntityShulkerBox) {
+                                // Avoid dropping the shulker box when Block#breakBlock is called
+                                ((TileEntityShulkerBox) shulkerBoxTile).setDestroyedByCreativePlayer(true);
+                                ((TileEntityShulkerBox) shulkerBoxTile).clear();
+                            }
+                        } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_SILK_TOUCH) && frontBlock.canSilkHarvest(world, front, frontBlockState, null)) {
                             drops.add(frontStack);
                         } else {
                             frontBlock.getDrops(drops, world, front, frontBlockState, upgrades.getFortuneLevel());
