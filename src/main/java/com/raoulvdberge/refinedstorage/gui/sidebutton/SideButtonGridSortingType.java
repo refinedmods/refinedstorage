@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.gui.grid.sorting.GridSortingInventoryTweaks;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Loader;
 
@@ -39,7 +40,7 @@ public class SideButtonGridSortingType extends SideButton {
                 type = IGrid.SORTING_TYPE_ID;
             }
         } else if (type == IGrid.SORTING_TYPE_ID) {
-            if (grid.getType() == GridType.FLUID || !Loader.isModLoaded("inventorytweaks")) {
+            if (grid.getType() == GridType.FLUID || !Loader.isModLoaded(GridSortingInventoryTweaks.MOD_ID)) {
                 type = IGrid.SORTING_TYPE_QUANTITY;
             } else {
                 type = IGrid.SORTING_TYPE_INVENTORYTWEAKS;

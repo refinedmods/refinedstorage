@@ -28,10 +28,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12-14.21.1.2426"
+    version = "1.12.1-14.22.0.2444"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20170727"
+    mappings = "snapshot_20170807"
 }
 
 repositories {
@@ -54,8 +54,8 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12:4.7.2.77:api"
-    runtime "mezz.jei:jei_1.12:4.7.2.77"
+    deobfCompile "mezz.jei:jei_1.12:4.7.5.84:api"
+    runtime "mezz.jei:jei_1.12:4.7.5.84"
     deobfCompile "MCMultiPart2:MCMultiPart:2.2.2"
     // deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.0.28:api"
     deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.12-5.2.9:api"
