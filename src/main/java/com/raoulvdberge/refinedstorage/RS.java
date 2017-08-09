@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-@Mod(modid = RS.ID, version = RS.VERSION, dependencies = RS.DEPENDENCIES, guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON)
+@Mod(modid = RS.ID, version = RS.VERSION, dependencies = RS.DEPENDENCIES, acceptedMinecraftVersions = "[1.12,1.13)", guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON)
 public final class RS {
     static {
         FluidRegistry.enableUniversalBucket();
