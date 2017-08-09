@@ -43,7 +43,17 @@ public class StorageItemItemHandler extends StorageItemExternal {
     public int getCapacity() {
         IItemHandler handler = handlerSupplier.get();
 
-        return handler != null ? handler.getSlots() * 64 : 0;
+        if (handler == null) {
+            return 0;
+        }
+
+        int capacity = 0;
+
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            capacity += Math.min(handler.getSlotLimit(i), handler.getStackInSlot(i).getMaxStackSize());
+        }
+
+        return capacity;
     }
 
     @Override
@@ -122,9 +132,7 @@ public class StorageItemItemHandler extends StorageItemExternal {
         int size = 0;
 
         for (int i = 0; i < handler.getSlots(); ++i) {
-            if (!handler.getStackInSlot(i).isEmpty()) {
-                size += handler.getStackInSlot(i).getCount();
-            }
+            size += handler.getStackInSlot(i).getCount();
         }
 
         return size;

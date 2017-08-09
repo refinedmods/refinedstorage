@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.IOException;
@@ -104,7 +105,7 @@ public class GuiStorage extends GuiBase {
             drawTooltip(mouseX, mouseY, (gui.getCapacity() == -1 ?
                 t("misc.refinedstorage:storage.stored_minimal", gui.getStored()) :
                 t("misc.refinedstorage:storage.stored_capacity_minimal", gui.getStored(), gui.getCapacity())
-            ) + "\n" + t("misc.refinedstorage:storage.full", full));
+            ) + "\n" + TextFormatting.GRAY + t("misc.refinedstorage:storage.full", full));
         }
     }
 
