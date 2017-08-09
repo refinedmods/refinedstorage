@@ -104,7 +104,7 @@ public class StorageItemItemHandler extends StorageItemExternal {
 
                 if (!got.isEmpty()) {
                     if (received == null) {
-                        received = got;
+                        received = got.copy();
                     } else {
                         received.grow(got.getCount());
                     }
