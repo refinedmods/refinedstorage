@@ -7,6 +7,7 @@
 - Fixed possible rare dupe bug with Importer (raoulvdberge)
 - Fixed Shulker Box dupe bug with Destructor (raoulvdberge)
 - Fixed Grid crash with search history (raoulvdberge)
+- Fixed Grid crash with search field (raoulvdberge)
 - Fixed External Storage not working without Storage Drawers (raoulvdberge)
 
 ### 1.5.14

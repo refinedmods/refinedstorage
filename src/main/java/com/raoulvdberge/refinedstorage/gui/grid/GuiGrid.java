@@ -539,23 +539,25 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, clickedButton);
 
-        boolean wasSearchFieldFocused = searchField.isFocused();
-
-        searchField.mouseClicked(mouseX, mouseY, clickedButton);
-
         if (tabHovering >= 0 && tabHovering < grid.getTabs().size()) {
             grid.onTabSelectionChanged(tabHovering);
         }
 
-        if (clickedButton == 1 && inBounds(79, 5 + getTabDelta(), 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
-            searchField.setText("");
-            searchField.setFocused(true);
+        if (searchField != null) {
+            boolean wasSearchFieldFocused = searchField.isFocused();
 
-            sortItems();
+            searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
-            updateJEI();
-        } else if (wasSearchFieldFocused != searchField.isFocused()) {
-            saveHistory();
+            if (clickedButton == 1 && inBounds(79, 5 + getTabDelta(), 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
+                searchField.setText("");
+                searchField.setFocused(true);
+
+                sortItems();
+
+                updateJEI();
+            } else if (wasSearchFieldFocused != searchField.isFocused()) {
+                saveHistory();
+            }
         }
 
         boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
