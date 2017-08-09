@@ -150,13 +150,15 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                 if (took != null && ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                     took = network.extractItem(slot, 1, compare, false);
 
-                    ItemHandlerHelper.insertItem(handler, took, false);
+                    if (took != null) {
+                        ItemHandlerHelper.insertItem(handler, took, false);
 
-                    craftOnlyToExtract[i]--;
+                        craftOnlyToExtract[i]--;
 
-                    if (craftOnlyToExtract[i] <= 0) {
-                        craftOnlyToExtract[i] = null;
-                        craftOnlyTask[i] = null;
+                        if (craftOnlyToExtract[i] <= 0) {
+                            craftOnlyToExtract[i] = null;
+                            craftOnlyTask[i] = null;
+                        }
                     }
                 }
             } else if (!network.getCraftingManager().getTasks().contains(craftOnlyTask[i])) {
@@ -188,7 +190,9 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
             } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                 took = network.extractItem(slot, upgrades.getItemInteractCount(), compare, false);
 
-                ItemHandlerHelper.insertItem(handler, took, false);
+                if (took != null) {
+                    ItemHandlerHelper.insertItem(handler, took, false);
+                }
             }
         }
     }

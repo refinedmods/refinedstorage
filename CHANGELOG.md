@@ -2,6 +2,7 @@
 
 ### 1.5.16
 - Fixed crash when placing a Controller (raoulvdberge)
+- Fixed crash when configuring an Exporter (raoulvdberge)
 
 ### 1.5.15
 - Updated Forge to 2444 (MC 1.12.1) (raoulvdberge)
