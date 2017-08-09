@@ -3,6 +3,7 @@
 ### 1.5.15
 - Updated Forge to 2444 (MC 1.12.1) (raoulvdberge)
 - Added InventoryTweaks Grid sorting (cooliojazz)
+- Added InventoryTweaks inventory sort ability in Refined Storage GUIs (raoulvdberge)
 - Added CTM integration for Disk Manipulator (raoulvdberge)
 - Fixed possible rare dupe bug with Importer (raoulvdberge)
 - Fixed Shulker Box dupe bug with Destructor (raoulvdberge)
