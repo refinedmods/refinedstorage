@@ -100,14 +100,14 @@ public class GuiReaderWriter extends GuiBase {
 
         int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
+        float scale = fontRenderer.getUnicodeFlag() ? 1F : 0.5F;
+
         for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getChannels().size()) {
                 if (item == itemSelected) {
                     itemSelectedX = x;
                     itemSelectedY = y;
                 }
-
-                float scale = 0.5f;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);

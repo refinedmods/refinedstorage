@@ -105,7 +105,8 @@ public class GuiCraftingPreview extends GuiBase {
 
         int x = 7;
         int y = 15;
-        float scale = 0.5f;
+
+        float scale = fontRenderer.getUnicodeFlag() ? 1F : 0.5F;
 
         if (stacks.isEmpty()) {
             GlStateManager.pushMatrix();

@@ -32,7 +32,7 @@ public class CraftingMonitorElementText implements ICraftingMonitorElement {
     @Override
     @SideOnly(Side.CLIENT)
     public void draw(int x, int y, IElementDrawers drawers) {
-        float scale = 0.5f;
+        float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);

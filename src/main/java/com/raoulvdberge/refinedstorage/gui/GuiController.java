@@ -74,7 +74,7 @@ public class GuiController extends GuiBase {
 
                 drawItem(x, y + 5, node.getStack());
 
-                float scale = 0.5f;
+                float scale = fontRenderer.getUnicodeFlag() ? 1F : 0.5F;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);

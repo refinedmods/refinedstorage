@@ -31,7 +31,7 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
     public void draw(int x, int y, IElementDrawers drawers) {
         drawers.getItemDrawer().draw(x + 2 + offset, y + 1, stack);
 
-        float scale = 0.5f;
+        float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);

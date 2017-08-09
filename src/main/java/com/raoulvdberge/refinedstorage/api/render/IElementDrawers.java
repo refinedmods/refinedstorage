@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.render;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -34,6 +35,11 @@ public interface IElementDrawers {
     default IElementDrawer<Integer> getOverlayDrawer() {
         return getNullDrawer();
     }
+
+    /**
+     * @return the font renderer
+     */
+    FontRenderer getFontRenderer();
 
     /**
      * DO NOT OVERRIDE!

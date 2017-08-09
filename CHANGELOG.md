@@ -10,6 +10,7 @@
 - Fixed Grid crash with search field (raoulvdberge)
 - Fixed External Storage not working without Storage Drawers (raoulvdberge)
 - Fixed External Storage not calculating max stack size in the calculation of it's capacity display in the GUI (raoulvdberge)
+- Fixed Refined Storage not drawing small text correctly with Unicode font (raoulvdberge)
 
 ### 1.5.14
 - Updated Forge to 2426 (raoulvdberge)

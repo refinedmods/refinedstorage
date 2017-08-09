@@ -69,7 +69,7 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
         y += 7;
         drawers.getFluidDrawer().draw(x, y, getElement());
 
-        float scale = 0.5f;
+        float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);

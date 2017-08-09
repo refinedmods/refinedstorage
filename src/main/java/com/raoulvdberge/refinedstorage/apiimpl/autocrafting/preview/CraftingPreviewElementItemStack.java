@@ -68,11 +68,14 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
         if (missing) {
             drawers.getOverlayDrawer().draw(x, y, 0xFFF2DEDE);
         }
+
         x += 5;
         y += 7;
+
         drawers.getItemDrawer().draw(x, y, getElement());
 
-        float scale = 0.5f;
+        float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
+
         y += 2;
 
         GlStateManager.pushMatrix();
