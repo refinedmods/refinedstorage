@@ -144,7 +144,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private boolean craftingMonitorUpdateRequested;
 
     private ControllerType type;
-    private ControllerEnergyType energyType;
+    private ControllerEnergyType energyType = ControllerEnergyType.OFF;
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
