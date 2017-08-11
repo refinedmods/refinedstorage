@@ -135,12 +135,14 @@ public final class RSUtils {
     public static void writeItemStack(ByteBuf buf, ItemStack stack) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getCount());
+        buf.writeInt(stack.getMetadata());
         buf.writeInt(stack.getItemDamage());
         ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
     }
 
     public static ItemStack readItemStack(ByteBuf buf) {
         ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
+        stack.setItemDamage(buf.readInt());
         stack.setTagCompound(ByteBufUtils.readTag(buf));
         return stack;
     }
