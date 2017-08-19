@@ -1,4 +1,4 @@
-/*package com.raoulvdberge.refinedstorage.integration.oc;
+package com.raoulvdberge.refinedstorage.integration.oc;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import li.cil.oc.api.driver.Converter;
@@ -17,4 +17,4 @@ public class ConverterCraftingTask implements Converter {
             output.put("quantity", task.getQuantity());
         }
     }
-}*/
+}

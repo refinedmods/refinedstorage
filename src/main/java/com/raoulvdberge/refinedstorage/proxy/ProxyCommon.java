@@ -24,6 +24,8 @@ import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
+import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
+import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
@@ -243,9 +245,9 @@ public class ProxyCommon {
 
         SoldererRecipeLoader.load();
 
-        /*if (IntegrationOC.isLoaded()) {
+        if (IntegrationOC.isLoaded()) {
             DriverNetwork.register();
-        }*/
+        }
 
         if (IntegrationCraftingTweaks.isLoaded()) {
             IntegrationCraftingTweaks.register();

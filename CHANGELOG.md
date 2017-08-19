@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.17
+- Re-added support for OpenComputers (raoulvdberge)
+
 ### 1.5.16
 - Fixed crash when placing a Controller (raoulvdberge)
 - Fixed crash when configuring an Exporter (raoulvdberge)

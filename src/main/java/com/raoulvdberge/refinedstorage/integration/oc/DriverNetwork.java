@@ -1,6 +1,6 @@
-/*package com.raoulvdberge.refinedstorage.integration.oc;
+package com.raoulvdberge.refinedstorage.integration.oc;
 
-import com.raoulvdberge.refinedstorage.proxy.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import li.cil.oc.api.Driver;
 import li.cil.oc.api.driver.DriverBlock;
 import li.cil.oc.api.network.ManagedEnvironment;
@@ -28,4 +28,4 @@ public class DriverNetwork implements DriverBlock {
         Driver.add(new ConverterCraftingPattern());
         Driver.add(new ConverterCraftingTask());
     }
-}*/
+}
