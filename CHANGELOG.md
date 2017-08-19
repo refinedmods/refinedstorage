@@ -2,6 +2,7 @@
 
 ### 1.5.17
 - Re-added support for OpenComputers (raoulvdberge)
+- Fixed crash with Grid (raoulvdberge)
 
 ### 1.5.16
 - Fixed crash when placing a Controller (raoulvdberge)

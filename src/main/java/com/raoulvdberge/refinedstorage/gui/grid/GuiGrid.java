@@ -618,6 +618,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             konami.pop();
         }
 
+        if (searchField == null) {
+            return;
+        }
+
         if (checkHotbarKeys(keyCode)) {
             // NO OP
         } else if (searchField.textboxKeyTyped(character, keyCode)) {
