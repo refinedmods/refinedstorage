@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.5.18
+- Added Project E integration for the External Storage on the Transmutation Table (raoulvdberge)
+- Added Project E integration for the energy values of Solderer items (raoulvdberge)
+
 ### 1.5.17
 - Re-added support for OpenComputers (raoulvdberge)
 - Fixed crash with Grid (raoulvdberge)

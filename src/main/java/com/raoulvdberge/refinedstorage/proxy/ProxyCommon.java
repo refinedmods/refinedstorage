@@ -26,6 +26,7 @@ import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCra
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
 import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
+import com.raoulvdberge.refinedstorage.integration.projecte.IntegrationProjectE;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
@@ -251,6 +252,10 @@ public class ProxyCommon {
 
         if (IntegrationCraftingTweaks.isLoaded()) {
             IntegrationCraftingTweaks.register();
+        }
+
+        if (IntegrationProjectE.isLoaded()) {
+            IntegrationProjectE.register();
         }
     }
 

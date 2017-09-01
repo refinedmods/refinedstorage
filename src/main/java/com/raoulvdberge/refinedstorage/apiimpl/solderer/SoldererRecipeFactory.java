@@ -45,6 +45,7 @@ public class SoldererRecipeFactory {
 
         final ItemStack result = CraftingHelper.getItemStack(JsonUtils.getJsonObject(json, "result"), context);
         final int duration = JsonUtils.getInt(json, "duration");
+        final boolean projectERecipe = JsonUtils.getBoolean(json, "projecte", true);
 
         return new ISoldererRecipe() {
             @Override
@@ -67,6 +68,11 @@ public class SoldererRecipeFactory {
             @Override
             public int getDuration() {
                 return duration;
+            }
+
+            @Override
+            public boolean isProjectERecipe() {
+                return projectERecipe;
             }
         };
     }

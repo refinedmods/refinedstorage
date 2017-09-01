@@ -194,6 +194,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         }
     }
 
+    @Nullable
     public TileEntity getFacingTile() {
         return world.getTileEntity(pos.offset(getDirection()));
     }

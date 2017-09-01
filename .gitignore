@@ -14,5 +14,4 @@ run/
 .idea/
 out/
 translation-diff.diff
-src/main/java/mcmultipart/*
-src/main/resources/assets/mcmultiparttest/*
+src/main/java/moze_intel/*

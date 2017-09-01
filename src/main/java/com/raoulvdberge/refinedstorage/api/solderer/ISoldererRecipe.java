@@ -32,4 +32,11 @@ public interface ISoldererRecipe {
      * @return the duration in ticks that this recipe takes to give the result back
      */
     int getDuration();
+
+    /**
+     * @return whether this recipe can be used to calculate the EMC value of the resulting item in the Project E mod
+     */
+    default boolean isProjectERecipe() {
+        return true;
+    }
 }
