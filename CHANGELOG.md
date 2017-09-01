@@ -4,6 +4,7 @@
 - Added Project E integration for the External Storage on the Transmutation Table (raoulvdberge)
 - Added Project E integration for the energy values of Solderer items (raoulvdberge)
 - Fixed network not disconnecting when Controller is broken (raoulvdberge)
+- The Fortune Upgrade doesn't use NBT anymore to store the fortune level (raoulvdberge)
 
 ### 1.5.17
 - Re-added support for OpenComputers (raoulvdberge)

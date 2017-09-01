@@ -1,12 +1,10 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSItems;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
@@ -20,9 +18,9 @@ public class ItemUpgrade extends ItemBase {
     public static final int TYPE_STACK = 4;
     public static final int TYPE_INTERDIMENSIONAL = 5;
     public static final int TYPE_SILK_TOUCH = 6;
-    public static final int TYPE_FORTUNE = 7;
-
-    private static final String NBT_FORTUNE = "Fortune";
+    public static final int TYPE_FORTUNE_1 = 7;
+    public static final int TYPE_FORTUNE_2 = 8;
+    public static final int TYPE_FORTUNE_3 = 9;
 
     public ItemUpgrade() {
         super("upgrade");
@@ -33,15 +31,15 @@ public class ItemUpgrade extends ItemBase {
 
     @Override
     public boolean hasEffect(ItemStack stack) {
-        return stack.getMetadata() == TYPE_SILK_TOUCH || stack.getMetadata() == TYPE_FORTUNE;
+        return stack.getMetadata() == TYPE_SILK_TOUCH || getFortuneLevel(stack) > 0;
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        if (stack.getItemDamage() == TYPE_FORTUNE) {
-            tooltip.add(I18n.format("enchantment.lootBonusDigger") + " " + I18n.format("enchantment.level." + ItemUpgrade.getFortuneLevel(stack)));
+        if (getFortuneLevel(stack) > 0) {
+            tooltip.add(I18n.format("enchantment.lootBonusDigger") + " " + I18n.format("enchantment.level." + getFortuneLevel(stack)));
         }
     }
 
@@ -51,28 +49,19 @@ public class ItemUpgrade extends ItemBase {
             return;
         }
 
-        for (int i = 0; i <= 6; ++i) {
+        for (int i = 0; i <= 9; ++i) {
             items.add(new ItemStack(this, 1, i));
         }
-
-        for (int j = 1; j <= 3; ++j) {
-            items.add(initializeForFortune(j));
-        }
     }
 
-    public static ItemStack initializeForFortune(int level) {
-        ItemStack stack = new ItemStack(RSItems.UPGRADE, 1, TYPE_FORTUNE);
-        stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setInteger(NBT_FORTUNE, level);
-        return stack;
-    }
-
-    public static int getFortuneLevel(ItemStack stack) {
-        if (stack != null && stack.getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
-            NBTTagCompound tag = stack.getTagCompound();
-
-            if (tag.hasKey(ItemUpgrade.NBT_FORTUNE)) {
-                return tag.getInteger(ItemUpgrade.NBT_FORTUNE);
+    public static int getFortuneLevel(@Nullable ItemStack stack) {
+        if (stack != null) {
+            if (stack.getMetadata() == TYPE_FORTUNE_1) {
+                return 1;
+            } else if (stack.getMetadata() == TYPE_FORTUNE_2) {
+                return 2;
+            } else if (stack.getMetadata() == TYPE_FORTUNE_3) {
+                return 3;
             }
         }
 
@@ -93,8 +82,10 @@ public class ItemUpgrade extends ItemBase {
                 return RS.INSTANCE.config.interdimensionalUpgradeUsage;
             case TYPE_SILK_TOUCH:
                 return RS.INSTANCE.config.silkTouchUpgradeUsage;
-            case TYPE_FORTUNE:
-                return RS.INSTANCE.config.fortuneUpgradeUsagePerFortune * ItemUpgrade.getFortuneLevel(stack);
+            case TYPE_FORTUNE_1:
+            case TYPE_FORTUNE_2:
+            case TYPE_FORTUNE_3:
+                return RS.INSTANCE.config.fortuneUpgradeUsagePerFortune * getFortuneLevel(stack);
             default:
                 return 0;
         }

@@ -58,13 +58,19 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
     }
 
     public int getFortuneLevel() {
+        int maxFortune = 0;
+
         for (int i = 0; i < getSlots(); ++i) {
-            if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_FORTUNE) {
-                return ItemUpgrade.getFortuneLevel(getStackInSlot(i));
+            if (!getStackInSlot(i).isEmpty()) {
+                int fortune = ItemUpgrade.getFortuneLevel(getStackInSlot(i));
+
+                if (fortune > maxFortune) {
+                    maxFortune = fortune;
+                }
             }
         }
 
-        return 0;
+        return maxFortune;
     }
 
     public int getItemInteractCount() {

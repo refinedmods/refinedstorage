@@ -1,10 +1,7 @@
 {
   "result": {
-    "nbt": {
-      "Fortune": 3
-    },
     "item": "refinedstorage:upgrade",
-    "data": 7
+    "data": 9
   },
   "duration": 250,
   "rows": [
