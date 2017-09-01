@@ -34,7 +34,7 @@ public interface ISoldererRecipe {
     int getDuration();
 
     /**
-     * @return whether this recipe can be used to calculate the EMC value of the resulting item in the Project E mod
+     * @return whether this recipe can be used to calculate the EMC value of the resulting item in the ProjectE mod
      */
     default boolean isProjectERecipe() {
         return true;

@@ -35,8 +35,11 @@ public class StorageItemTransmutationTable extends StorageItemExternal {
         if (externalStorage.getOwner() != null) {
             IKnowledgeProvider provider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(externalStorage.getOwner());
 
-            for (ItemStack knowledge : provider.getKnowledge()) {
-                stored.add(ItemHandlerHelper.copyStackWithSize(knowledge, (int) Math.floor(provider.getEmc() / (double) ProjectEAPI.getEMCProxy().getValue(knowledge))));
+            // @todo: https://github.com/sinkillerj/ProjectE/issues/1591
+            if (!provider.getClass().getName().equals("moze_intel.projecte.impl.TransmutationOffline$1")) {
+                for (ItemStack knowledge : provider.getKnowledge()) {
+                    stored.add(ItemHandlerHelper.copyStackWithSize(knowledge, (int) Math.floor(provider.getEmc() / (double) ProjectEAPI.getEMCProxy().getValue(knowledge))));
+                }
             }
         }
 
@@ -51,27 +54,30 @@ public class StorageItemTransmutationTable extends StorageItemExternal {
         if (externalStorage.getOwner() != null) {
             IKnowledgeProvider provider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(externalStorage.getOwner());
 
-            int emc = ProjectEAPI.getEMCProxy().getValue(actualStack) * size;
+            // @todo: https://github.com/sinkillerj/ProjectE/issues/1591
+            if (!provider.getClass().getName().equals("moze_intel.projecte.impl.TransmutationOffline$1")) {
+                int emc = ProjectEAPI.getEMCProxy().getValue(actualStack) * size;
 
-            if (emc == 0) {
-                return actualStack;
-            }
-
-            if (!simulate) {
-                provider.setEmc(provider.getEmc() + emc);
-
-                if (!provider.hasKnowledge(stack)) {
-                    provider.addKnowledge(stack);
+                if (emc == 0) {
+                    return actualStack;
                 }
 
-                EntityPlayer player = externalStorage.getWorld().getPlayerEntityByUUID(externalStorage.getOwner());
+                if (!simulate) {
+                    provider.setEmc(provider.getEmc() + emc);
 
-                if (player != null) {
-                    provider.sync((EntityPlayerMP) player);
+                    if (!provider.hasKnowledge(stack)) {
+                        provider.addKnowledge(stack);
+                    }
+
+                    EntityPlayer player = externalStorage.getWorld().getPlayerEntityByUUID(externalStorage.getOwner());
+
+                    if (player != null) {
+                        provider.sync((EntityPlayerMP) player);
+                    }
                 }
-            }
 
-            return null;
+                return null;
+            }
         }
 
         return actualStack;
@@ -83,7 +89,8 @@ public class StorageItemTransmutationTable extends StorageItemExternal {
         if (externalStorage.getOwner() != null) {
             IKnowledgeProvider provider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(externalStorage.getOwner());
 
-            if (provider.hasKnowledge(stack)) {
+            // @todo: https://github.com/sinkillerj/ProjectE/issues/1591
+            if (!provider.getClass().getName().equals("moze_intel.projecte.impl.TransmutationOffline$1") && provider.hasKnowledge(stack)) {
                 double singleEmc = ProjectEAPI.getEMCProxy().getValue(stack);
 
                 int maxExtract = (int) Math.floor(provider.getEmc() / singleEmc);
