@@ -5,22 +5,24 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public abstract class ItemBase extends Item {
+    private final String domain;
     private final String name;
 
     public ItemBase(String name) {
-        this.name = name;
-
-        setRegistryName(getDomain(), name);
-        setCreativeTab(RS.INSTANCE.tab);
+        this(RS.ID, name);
     }
 
-    protected String getDomain() {
-        return RS.ID;
+    public ItemBase(String domain, String name) {
+        this.domain = domain;
+        this.name = name;
+
+        setRegistryName(domain, name);
+        setCreativeTab(RS.INSTANCE.tab);
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "item." + getDomain() + ":" + name;
+        return "item." + domain + ":" + name;
     }
 
     @Override

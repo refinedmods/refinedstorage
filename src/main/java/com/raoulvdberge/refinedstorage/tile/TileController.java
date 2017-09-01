@@ -570,8 +570,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
 
         if (tag.hasKey(NBT_ENERGY)) {
             energy.setEnergyStored(tag.getInteger(NBT_ENERGY));
@@ -599,8 +599,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        super.writeToNBT(tag);
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
 
         tag.setInteger(NBT_ENERGY, energy.getEnergyStored());
 

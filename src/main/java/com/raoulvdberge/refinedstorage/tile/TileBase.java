@@ -68,37 +68,37 @@ public abstract class TileBase extends TileEntity {
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
+    public final NBTTagCompound getUpdateTag() {
         return writeUpdate(super.getUpdateTag());
     }
 
     @Nullable
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
+    public final SPacketUpdateTileEntity getUpdatePacket() {
         return new SPacketUpdateTileEntity(pos, 1, getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+    public final void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         readUpdate(packet.getNbtCompound());
     }
 
     @Override
-    public void handleUpdateTag(NBTTagCompound tag) {
+    public final void handleUpdateTag(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
         readUpdate(tag);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
+    public final void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
         read(tag);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public final NBTTagCompound writeToNBT(NBTTagCompound tag) {
         return write(super.writeToNBT(tag));
     }
 

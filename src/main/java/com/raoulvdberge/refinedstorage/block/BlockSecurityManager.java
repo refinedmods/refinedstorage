@@ -5,9 +5,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -22,15 +20,6 @@ public class BlockSecurityManager extends BlockNode {
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new TileSecurityManager();
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, placer, stack);
-
-        if (!world.isRemote && placer instanceof EntityPlayer) {
-            ((TileSecurityManager) world.getTileEntity(pos)).getNode().setOwner(((EntityPlayer) placer).getGameProfile().getId());
-        }
     }
 
     @Override

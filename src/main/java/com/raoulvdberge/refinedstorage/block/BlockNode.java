@@ -10,6 +10,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -35,12 +36,16 @@ public abstract class BlockNode extends BlockBase {
         super.onBlockPlacedBy(world, pos, state, placer, stack);
 
         if (!world.isRemote) {
-            if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_REFINED_STORAGE_DATA)) {
-                TileEntity tile = world.getTileEntity(pos);
+            TileEntity tile = world.getTileEntity(pos);
 
-                if (tile instanceof TileNode) {
+            if (tile instanceof TileNode) {
+                if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_REFINED_STORAGE_DATA)) {
                     ((TileNode) tile).getNode().readConfiguration(stack.getTagCompound().getCompoundTag(NBT_REFINED_STORAGE_DATA));
                     ((TileNode) tile).getNode().markDirty();
+                }
+
+                if (placer instanceof EntityPlayer) {
+                    ((TileNode) tile).getNode().setOwner(((EntityPlayer) placer).getGameProfile().getId());
                 }
             }
 

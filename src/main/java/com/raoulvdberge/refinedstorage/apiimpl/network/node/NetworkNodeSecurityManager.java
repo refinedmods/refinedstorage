@@ -19,15 +19,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class NetworkNodeSecurityManager extends NetworkNode implements ISecurityCardContainer {
     public static final String ID = "security_manager";
-
-    private static final String NBT_OWNER = "Owner";
 
     private List<ISecurityCard> actualCards = new ArrayList<>();
 
@@ -46,9 +43,6 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         }
     };
     private ItemHandlerBase editCard = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD));
-
-    @Nullable
-    private UUID owner;
 
     public NetworkNodeSecurityManager(World world, BlockPos pos) {
         super(world, pos);
@@ -74,17 +68,6 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         if (ticks == 1) {
             rebuildCards();
         }
-    }
-
-    public void setOwner(@Nullable UUID owner) {
-        this.owner = owner;
-
-        markDirty();
-    }
-
-    @Nullable
-    public UUID getOwner() {
-        return owner;
     }
 
     private void rebuildCards() {
@@ -115,10 +98,6 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        if (tag.hasKey(NBT_OWNER)) {
-            owner = UUID.fromString(tag.getString(NBT_OWNER));
-        }
-
         StackUtils.readItems(cards, 0, tag);
         StackUtils.readItems(editCard, 1, tag);
     }
@@ -131,10 +110,6 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
-
-        if (owner != null) {
-            tag.setString(NBT_OWNER, owner.toString());
-        }
 
         StackUtils.writeItems(cards, 0, tag);
         StackUtils.writeItems(editCard, 1, tag);

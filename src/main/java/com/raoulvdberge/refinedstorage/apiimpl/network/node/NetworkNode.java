@@ -22,14 +22,19 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, IWrenchable {
+    private static final String NBT_OWNER = "Owner";
+
     @Nullable
     protected INetwork network;
     protected World world;
     protected BlockPos pos;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
+    @Nullable
+    protected UUID owner;
 
     private EnumFacing direction;
 
@@ -131,6 +136,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
+        if (owner != null) {
+            tag.setUniqueId(NBT_OWNER, owner);
+        }
+
         writeConfiguration(tag);
 
         return tag;
@@ -144,6 +153,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
     }
 
     public void read(NBTTagCompound tag) {
+        if (tag.hasKey(NBT_OWNER)) {
+            owner = tag.getUniqueId(NBT_OWNER);
+        }
+
         readConfiguration(tag);
     }
 
@@ -217,6 +230,17 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void setOwner(@Nullable UUID owner) {
+        this.owner = owner;
+
+        markDirty();
+    }
+
+    @Nullable
+    public UUID getOwner() {
+        return owner;
     }
 
     @Override
