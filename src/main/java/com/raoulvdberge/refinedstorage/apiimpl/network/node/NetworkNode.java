@@ -137,7 +137,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         if (owner != null) {
-            tag.setUniqueId(NBT_OWNER, owner);
+            tag.setString(NBT_OWNER, owner.toString()); // @todo: Use proper NBT UUID methods
         }
 
         writeConfiguration(tag);
@@ -154,7 +154,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
 
     public void read(NBTTagCompound tag) {
         if (tag.hasKey(NBT_OWNER)) {
-            owner = tag.getUniqueId(NBT_OWNER);
+            owner = UUID.fromString(tag.getString(NBT_OWNER)); // @todo: Use proper NBT UUID methods
         }
 
         readConfiguration(tag);
