@@ -76,7 +76,7 @@ public class GridStackItem implements IGridStack {
     }
 
     @Override
-    public String getTooltip() {
+    public String getTooltip(boolean quantity) {
         List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
 
         // From GuiScreen#renderToolTip
@@ -88,6 +88,10 @@ public class GridStackItem implements IGridStack {
             }
         }
 
+        if (quantity && !lines.isEmpty()) {
+            lines.set(0, lines.get(0) + " " + TextFormatting.GRAY + "(" + RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(stack.getCount()) + "x)" + TextFormatting.RESET);
+        }
+
         return lines.stream().collect(Collectors.joining("\n"));
     }
 
@@ -96,23 +100,17 @@ public class GridStackItem implements IGridStack {
         return stack.getCount();
     }
 
-    private String getQuantityForDisplay(boolean advanced) {
-        int qty = stack.getCount();
+    @Override
+    public void draw(GuiBase gui, int x, int y) {
+        String text = null;
 
         if (displayCraftText) {
-            return I18n.format("gui.refinedstorage:grid.craft");
-        } else if (advanced && qty > 1) {
-            return String.valueOf(qty);
-        } else if (qty == 1) {
-            return null;
+            text = I18n.format("gui.refinedstorage:grid.craft");
+        } else if (stack.getCount() > 1) {
+            text = RenderUtils.formatQuantity(stack.getCount());
         }
 
-        return RenderUtils.formatQuantity(qty);
-    }
-
-    @Override
-    public void draw(GuiBase gui, int x, int y, boolean isOverWithShift) {
-        gui.drawItem(x, y, stack, true, getQuantityForDisplay(isOverWithShift));
+        gui.drawItem(x, y, stack, true, text);
     }
 
     @Override

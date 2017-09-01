@@ -39,7 +39,7 @@ public class GridStackFluid implements IGridStack {
     }
 
     @Override
-    public String getTooltip() {
+    public String getTooltip(boolean quantity) {
         return stack.getFluid().getLocalizedName(stack);
     }
 
@@ -49,7 +49,7 @@ public class GridStackFluid implements IGridStack {
     }
 
     @Override
-    public void draw(GuiBase gui, int x, int y, boolean isOverWithShift) {
+    public void draw(GuiBase gui, int x, int y) {
         GuiBase.FLUID_RENDERER.draw(gui.mc, x, y, stack);
 
         gui.drawQuantity(x, y, RenderUtils.formatQuantity((int) ((float) stack.amount / 1000F)));

@@ -22,6 +22,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -253,21 +254,21 @@ public abstract class GuiBase extends GuiContainer {
         drawItem(x, y, stack, withOverlay, null);
     }
 
-    public void drawItem(int x, int y, ItemStack stack, boolean withOverlay, String message) {
+    public void drawItem(int x, int y, ItemStack stack, boolean withOverlay, @Nullable String text) {
         zLevel = 200.0F;
         itemRender.zLevel = 200.0F;
 
         itemRender.renderItemIntoGUI(stack, x, y);
 
         if (withOverlay) {
-            drawItemOverlay(stack, message, x, y);
+            drawItemOverlay(stack, text, x, y);
         }
 
         zLevel = 0.0F;
         itemRender.zLevel = 0.0F;
     }
 
-    public void drawItemOverlay(ItemStack stack, String text, int x, int y) {
+    public void drawItemOverlay(ItemStack stack, @Nullable String text, int x, int y) {
         itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, x, y, "");
 
         if (text != null) {

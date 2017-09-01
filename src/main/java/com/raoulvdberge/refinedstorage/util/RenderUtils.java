@@ -30,6 +30,7 @@ import java.util.Locale;
 
 public final class RenderUtils {
     public static final DecimalFormat QUANTITY_FORMATTER = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
+    public static final DecimalFormat QUANTITY_FORMATTER_UNFORMATTED = new DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.US));
 
     public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
 

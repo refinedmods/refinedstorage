@@ -476,7 +476,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             }
 
             if (slot < STACKS.size()) {
-                STACKS.get(slot).draw(this, xx, yy, GuiScreen.isShiftKeyDown() && slotNumber == slot);
+                STACKS.get(slot).draw(this, xx, yy);
             }
 
             if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !grid.isActive()) {
@@ -506,7 +506,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (isOverSlotWithStack()) {
             IGridStack stack = STACKS.get(slotNumber);
 
-            drawTooltip(stack instanceof GridStackItem ? ((GridStackItem) stack).getStack() : ItemStack.EMPTY, mouseX, mouseY, stack.getTooltip());
+            drawTooltip(stack instanceof GridStackItem ? ((GridStackItem) stack).getStack() : ItemStack.EMPTY, mouseX, mouseY, stack.getTooltip(GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()));
         }
 
         if (isOverClear(mouseX, mouseY)) {

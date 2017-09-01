@@ -5,6 +5,7 @@
 - Added Project E integration for the energy values of Solderer items (raoulvdberge)
 - Fixed network not disconnecting when Controller is broken (raoulvdberge)
 - The Fortune Upgrade doesn't use NBT anymore to store the fortune level (raoulvdberge)
+- Pressing SHIFT over an item in the Grid will no longer display the full unformatted count, instead, use CTRL + SHIFT and it will be displayed in the tooltip (raoulvdberge)
 
 ### 1.5.17
 - Re-added support for OpenComputers (raoulvdberge)

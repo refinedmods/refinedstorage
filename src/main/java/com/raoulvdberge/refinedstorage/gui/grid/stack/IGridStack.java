@@ -11,11 +11,11 @@ public interface IGridStack {
 
     String[] getOreIds();
 
-    String getTooltip();
+    String getTooltip(boolean quantity);
 
     int getQuantity();
 
-    void draw(GuiBase gui, int x, int y, boolean isOverWithShift);
+    void draw(GuiBase gui, int x, int y);
 
     Object getIngredient();
 }
