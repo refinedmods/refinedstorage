@@ -35,7 +35,7 @@ public abstract class StorageItemExternal implements IStorage<ItemStack> {
             // If we exceed the cache size, than that means this item is added
             if (i >= cache.size()) {
                 if (!actual.isEmpty()) {
-                    network.getItemStorageCache().add(actual, actual.getCount(), false);
+                    network.getItemStorageCache().add(actual, actual.getCount(), false, true);
                 }
 
                 continue;
@@ -45,29 +45,29 @@ public abstract class StorageItemExternal implements IStorage<ItemStack> {
 
             if (!cached.isEmpty() && actual.isEmpty()) {
                 // If the cached is not empty but the actual is, we remove this item
-                network.getItemStorageCache().remove(cached, cached.getCount());
+                network.getItemStorageCache().remove(cached, cached.getCount(), true);
             } else if (cached.isEmpty() && !actual.isEmpty()) {
                 // If the cached is empty and the actual isn't, we added this item
-                network.getItemStorageCache().add(actual, actual.getCount(), false);
+                network.getItemStorageCache().add(actual, actual.getCount(), false, true);
 
                 network.getCraftingManager().track(actual, actual.getCount());
             } else if (cached.isEmpty() && actual.isEmpty()) {
                 // If they're both empty, nothing happens
             } else if (!API.instance().getComparer().isEqualNoQuantity(cached, actual)) {
                 // If both items mismatch, remove the old and add the new
-                network.getItemStorageCache().remove(cached, cached.getCount());
-                network.getItemStorageCache().add(actual, actual.getCount(), false);
+                network.getItemStorageCache().remove(cached, cached.getCount(), true);
+                network.getItemStorageCache().add(actual, actual.getCount(), false, true);
 
                 network.getCraftingManager().track(actual, actual.getCount());
             } else if (cached.getCount() != actual.getCount()) {
                 int delta = actual.getCount() - cached.getCount();
 
                 if (delta > 0) {
-                    network.getItemStorageCache().add(actual, delta, false);
+                    network.getItemStorageCache().add(actual, delta, false, true);
 
                     network.getCraftingManager().track(actual, delta);
                 } else {
-                    network.getItemStorageCache().remove(actual, Math.abs(delta));
+                    network.getItemStorageCache().remove(actual, Math.abs(delta), true);
                 }
             }
         }
@@ -77,12 +77,14 @@ public abstract class StorageItemExternal implements IStorage<ItemStack> {
         if (cache.size() > newStacks.size()) {
             for (int i = newStacks.size(); i < cache.size(); ++i) {
                 if (cache.get(i) != ItemStack.EMPTY) {
-                    network.getItemStorageCache().remove(cache.get(i), cache.get(i).getCount());
+                    network.getItemStorageCache().remove(cache.get(i), cache.get(i).getCount(), true);
                 }
             }
         }
 
         this.cache = newStacks;
+
+        network.sendBatchedItemStorageDeltaToClient();
     }
 
     @Override

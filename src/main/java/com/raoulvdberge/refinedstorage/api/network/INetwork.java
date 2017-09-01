@@ -91,10 +91,16 @@ public interface INetwork {
     /**
      * Sends a item storage change to all clients that are watching a grid connected to this network.
      *
-     * @param stack the stack
-     * @param delta the delta
+     * @param stack   the stack
+     * @param delta   the delta
+     * @param batched whether the delta can be batched to be sent all at once using {@link #sendBatchedItemStorageDeltaToClient()}
      */
-    void sendItemStorageDeltaToClient(ItemStack stack, int delta);
+    void sendItemStorageDeltaToClient(ItemStack stack, int delta, boolean batched);
+
+    /**
+     * Sends batched item storage deltas, accumulated through {@link #sendItemStorageDeltaToClient(ItemStack, int, boolean)}.
+     */
+    void sendBatchedItemStorageDeltaToClient();
 
     /**
      * Sends a grid update packet with all the fluids to all clients that are watching a grid connected to this network.

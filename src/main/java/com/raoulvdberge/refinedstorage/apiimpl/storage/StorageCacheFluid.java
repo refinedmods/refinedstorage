@@ -45,7 +45,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
             }
 
             for (FluidStack stack : storage.getStacks()) {
-                add(stack, stack.amount, true);
+                add(stack, stack.amount, true, false);
             }
         }
 
@@ -55,7 +55,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     }
 
     @Override
-    public synchronized void add(@Nonnull FluidStack stack, int size, boolean rebuilding) {
+    public synchronized void add(@Nonnull FluidStack stack, int size, boolean rebuilding, boolean batched) {
         list.add(stack, size);
 
         if (!rebuilding) {
@@ -66,7 +66,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     }
 
     @Override
-    public synchronized void remove(@Nonnull FluidStack stack, int size) {
+    public synchronized void remove(@Nonnull FluidStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
             network.sendFluidStorageDeltaToClient(stack, -size);
 

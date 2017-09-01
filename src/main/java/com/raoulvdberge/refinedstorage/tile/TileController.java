@@ -63,6 +63,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,6 +133,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private ISecurityManager securityManager = new SecurityManager(this);
 
     private IStorageCache<ItemStack> itemStorage = new StorageCacheItem(this);
+    private List<Pair<ItemStack, Integer>> batchedItemStorageDeltas = new LinkedList<>();
+
     private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
 
     private Map<String, IReaderWriterChannel> readerWriterChannels = new HashMap<>();
@@ -298,10 +301,25 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public void sendItemStorageDeltaToClient(ItemStack stack, int delta) {
-        world.getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
+    public void sendBatchedItemStorageDeltaToClient() {
+        if (!batchedItemStorageDeltas.isEmpty()) {
+            world.getMinecraftServer().getPlayerList().getPlayers().stream()
+                .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
+                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, batchedItemStorageDeltas), player));
+
+            batchedItemStorageDeltas.clear();
+        }
+    }
+
+    @Override
+    public void sendItemStorageDeltaToClient(ItemStack stack, int delta, boolean batched) {
+        if (!batched) {
+            world.getMinecraftServer().getPlayerList().getPlayers().stream()
+                .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
+                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
+        } else {
+            batchedItemStorageDeltas.add(Pair.of(stack, delta));
+        }
     }
 
     @Override
@@ -439,7 +457,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         }
 
         if (!simulate && inserted - insertedExternally > 0) {
-            itemStorage.add(stack, inserted - insertedExternally, false);
+            itemStorage.add(stack, inserted - insertedExternally, false, false);
         }
 
         return remainder;
@@ -484,7 +502,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         }
 
         if (newStack != null && newStack.getCount() - extractedExternally > 0 && !simulate) {
-            itemStorage.remove(newStack, newStack.getCount() - extractedExternally);
+            itemStorage.remove(newStack, newStack.getCount() - extractedExternally, false);
         }
 
         return newStack;
@@ -526,7 +544,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         }
 
         if (inserted > 0) {
-            fluidStorage.add(stack, inserted, false);
+            fluidStorage.add(stack, inserted, false, false);
         }
 
         return remainder;
@@ -567,7 +585,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         }
 
         if (newStack != null && !simulate) {
-            fluidStorage.remove(newStack, newStack.amount);
+            fluidStorage.remove(newStack, newStack.amount, false);
         }
 
         return newStack;

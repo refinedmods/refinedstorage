@@ -13,6 +13,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,20 +31,22 @@ public class StorageItemTransmutationTable extends StorageItemExternal {
 
     @Override
     public Collection<ItemStack> getStacks() {
-        List<ItemStack> stored = new LinkedList<>();
-
         if (externalStorage.getOwner() != null) {
             IKnowledgeProvider provider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(externalStorage.getOwner());
 
             // @todo: https://github.com/sinkillerj/ProjectE/issues/1591
             if (!provider.getClass().getName().equals("moze_intel.projecte.impl.TransmutationOffline$1")) {
+                List<ItemStack> stored = new LinkedList<>();
+
                 for (ItemStack knowledge : provider.getKnowledge()) {
                     stored.add(ItemHandlerHelper.copyStackWithSize(knowledge, (int) Math.floor(provider.getEmc() / (double) ProjectEAPI.getEMCProxy().getValue(knowledge))));
                 }
+
+                return stored;
             }
         }
 
-        return stored;
+        return Collections.emptyList();
     }
 
     @Nullable

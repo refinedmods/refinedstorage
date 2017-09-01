@@ -41,7 +41,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public void add(@Nonnull ItemStack stack, int size, boolean rebuilding) {
+    public void add(@Nonnull ItemStack stack, int size, boolean rebuilding, boolean batched) {
         list.add(stack, size);
 
         if (!rebuilding) {
@@ -52,7 +52,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public void remove(@Nonnull ItemStack stack, int size) {
+    public void remove(@Nonnull ItemStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
             portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, -size), (EntityPlayerMP) w));
 
