@@ -267,6 +267,15 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
+    public void invalidate() {
+        super.invalidate();
+
+        if (world != null && !world.isRemote) {
+            nodeGraph.disconnectAll();
+        }
+    }
+
+    @Override
     public IStorageCache<ItemStack> getItemStorageCache() {
         return itemStorage;
     }

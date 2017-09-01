@@ -3,6 +3,7 @@
 ### 1.5.18
 - Added Project E integration for the External Storage on the Transmutation Table (raoulvdberge)
 - Added Project E integration for the energy values of Solderer items (raoulvdberge)
+- Fixed network not disconnecting when Controller is broken (raoulvdberge)
 
 ### 1.5.17
 - Re-added support for OpenComputers (raoulvdberge)
