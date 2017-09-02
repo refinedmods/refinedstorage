@@ -14,4 +14,3 @@ run/
 .idea/
 out/
 translation-diff.diff
-src/main/java/moze_intel/*
