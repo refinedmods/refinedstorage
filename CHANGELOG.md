@@ -6,6 +6,7 @@
 - Fixed network not disconnecting when Controller is broken (raoulvdberge)
 - Fixed bug where when multiple Fortune Upgrades are inserted, it chooses the first Fortune Upgrade instead of the highest one (raoulvdberge)
 - Fixed some translations having too big "Craft" text (raoulvdberge)
+- Fixed crash with GUI when toggling the Grid size quickly (raoulvdberge)
 - The Fortune Upgrade doesn't use NBT anymore to store the fortune level (raoulvdberge)
 - Pressing SHIFT over an item in the Grid will no longer display the full unformatted count, instead, use CTRL + SHIFT and it will be displayed in the tooltip (raoulvdberge)
 

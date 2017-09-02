@@ -162,7 +162,9 @@ public abstract class GuiBase extends GuiContainer {
 
         String sideButtonTooltip = null;
 
-        for (GuiButton button : buttonList) {
+        for (int i = 0; i < buttonList.size(); ++i) {
+            GuiButton button = buttonList.get(i);
+
             if (button instanceof SideButton && ((SideButton) button).isHovered()) {
                 sideButtonTooltip = ((SideButton) button).getTooltip();
             }
@@ -325,10 +327,6 @@ public abstract class GuiBase extends GuiContainer {
         GlStateManager.disableLighting();
         GuiUtils.drawHoveringText(stack, lines, x, y, width - guiLeft, height, -1, fontRenderer);
         GlStateManager.enableLighting();
-    }
-
-    public void drawTooltip(int x, int y, List<String> lines) {
-        drawTooltip(ItemStack.EMPTY, x, y, lines);
     }
 
     public void drawTexture(int x, int y, int textureX, int textureY, int width, int height) {
