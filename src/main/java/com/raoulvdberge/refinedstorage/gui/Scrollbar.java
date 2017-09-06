@@ -63,7 +63,7 @@ public class Scrollbar {
             wasClicking = down;
 
             if (isScrolling) {
-                setOffset((int) Math.floor((float) (mouseY - SCROLLER_HEIGHT) / (float) (height - SCROLLER_HEIGHT) * (float) maxOffset));
+                setOffset((int) Math.floor((float) (mouseY - y) / (float) (height - SCROLLER_HEIGHT) * (float) maxOffset));
             }
         }
     }
