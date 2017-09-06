@@ -96,6 +96,11 @@ public class StorageItemTransmutationTable extends StorageItemExternal {
             if (!provider.getClass().getName().equals("moze_intel.projecte.impl.TransmutationOffline$1") && provider.hasKnowledge(stack)) {
                 double singleEmc = ProjectEAPI.getEMCProxy().getValue(stack);
 
+                // If we have the Tome of Knowledge, IKnowledgeProvider#hasKnowledge will always return true, even if the item has no EMC assigned
+                if (singleEmc == 0) {
+                    return null;
+                }
+
                 int maxExtract = (int) Math.floor(provider.getEmc() / singleEmc);
 
                 if (size > maxExtract) {
