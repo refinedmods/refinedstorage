@@ -309,7 +309,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public int getTabPage() {
-        return world.isRemote ? TAB_PAGE.getValue() : tabPage;
+        return world.isRemote ? TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
     }
 
     @Override

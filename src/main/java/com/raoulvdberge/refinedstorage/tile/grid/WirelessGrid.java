@@ -132,7 +132,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public int getTabPage() {
-        return tabPage;
+        return Math.min(tabPage, getTotalTabPages());
     }
 
     @Override

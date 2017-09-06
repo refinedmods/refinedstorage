@@ -238,7 +238,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
     @Override
     public int getTabPage() {
-        return tabPage;
+        return Math.min(tabPage, getTotalTabPages());
     }
 
     @Override
