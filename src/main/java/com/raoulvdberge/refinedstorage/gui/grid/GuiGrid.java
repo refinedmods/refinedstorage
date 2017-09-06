@@ -70,6 +70,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     private GuiCheckBox processingPattern;
     private GuiCheckBox blockingPattern;
 
+    private GuiButton tabPageLeft;
+    private GuiButton tabPageRight;
+
     private IGrid grid;
 
     private boolean hadTabs = false;
@@ -121,17 +124,20 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void init(int x, int y) {
         ((ContainerGrid) this.inventorySlots).initSlots();
 
-        this.scrollbar = new Scrollbar(174, getTabDelta() + getHeader(), 12, (getVisibleRows() * 18) - 2);
+        this.scrollbar = new Scrollbar(174, getTabHeight() + getHeader(), 12, (getVisibleRows() * 18) - 2);
 
         if (grid instanceof NetworkNodeGrid || grid instanceof TilePortableGrid) {
             addSideButton(new SideButtonRedstoneMode(this, grid instanceof NetworkNodeGrid ? TileGrid.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
         }
 
+        tabPageLeft = addButton(getGuiLeft(), getGuiTop() - 22, 20, 20, "<", true, grid.getTotalTabPages() > 0);
+        tabPageRight = addButton(getGuiLeft() + getXSize() - 22 - 32, getGuiTop() - 22, 20, 20, ">", true, grid.getTotalTabPages() > 0);
+
         this.konamiOffsetsX = new int[9 * getVisibleRows()];
         this.konamiOffsetsY = new int[9 * getVisibleRows()];
 
         int sx = x + 80 + 1;
-        int sy = y + 6 + 1 + getTabDelta();
+        int sy = y + 6 + 1 + getTabHeight();
 
         if (searchField == null) {
             searchField = new GuiTextField(0, fontRenderer, sx, sy, 88 - 6, fontRenderer.FONT_HEIGHT);
@@ -146,11 +152,11 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         }
 
         if (grid.getType() == GridType.PATTERN) {
-            processingPattern = addCheckBox(x + 7, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
-            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            processingPattern = addCheckBox(x + 7, y + getTabHeight() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
+            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + getTabHeight() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
 
             if (((NetworkNodeGrid) grid).isProcessingPattern()) {
-                blockingPattern = addCheckBox(oredictPattern.x + oredictPattern.width + 5, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:blocking"), TileGrid.BLOCKING_PATTERN.getValue());
+                blockingPattern = addCheckBox(oredictPattern.x + oredictPattern.width + 5, y + getTabHeight() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:blocking"), TileGrid.BLOCKING_PATTERN.getValue());
             }
         }
 
@@ -223,6 +229,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             scrollbar.setEnabled(getRows() > getVisibleRows());
             scrollbar.setMaxOffset(getRows() - getVisibleRows());
         }
+
+        tabPageLeft.visible = grid.getTotalTabPages() > 0;
+        tabPageRight.visible = grid.getTotalTabPages() > 0;
     }
 
     @Override
@@ -273,7 +282,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public int getYPlayerInventory() {
-        int yp = getTabDelta() + getHeader() + (getVisibleRows() * 18);
+        int yp = getTabHeight() + getHeader() + (getVisibleRows() * 18);
 
         if (grid.getType() == GridType.NORMAL || grid.getType() == GridType.FLUID) {
             yp += 16;
@@ -318,11 +327,11 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     public boolean isOverSlotArea(int mouseX, int mouseY) {
-        return inBounds(7, 19 + getTabDelta(), 162, 18 * getVisibleRows(), mouseX, mouseY);
+        return inBounds(7, 19 + getTabHeight(), 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
     private boolean isOverClear(int mouseX, int mouseY) {
-        int y = getTabDelta() + getHeader() + (getVisibleRows() * 18) + 4;
+        int y = getTabHeight() + getHeader() + (getVisibleRows() * 18) + 4;
 
         switch (grid.getType()) {
             case CRAFTING:
@@ -339,22 +348,21 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == GridType.PATTERN && inBounds(172, getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
+        return grid.getType() == GridType.PATTERN && inBounds(172, getTabHeight() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
     }
 
-    private int getTabDelta() {
+    private int getTabHeight() {
         return !grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT - 4 : 0;
     }
 
-    private void drawTab(IGridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY) {
-        int i = grid.getTabs().indexOf(tab);
-        boolean selected = i == grid.getTabSelected();
+    private void drawTab(IGridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY, int index, int num) {
+        boolean selected = index == grid.getTabSelected();
 
         if ((foregroundLayer && !selected) || (!foregroundLayer && selected)) {
             return;
         }
 
-        int tx = x + ((ContainerGrid.TAB_WIDTH + 1) * i);
+        int tx = x + ((ContainerGrid.TAB_WIDTH + 1) * num);
         int ty = y;
 
         bindTexture("icons.png");
@@ -371,7 +379,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (selected) {
             uvx = 227;
 
-            if (i > 0) {
+            if (num > 0) {
                 uvx = 226;
                 uvy = 194;
                 tbw++;
@@ -385,10 +393,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        drawItem(otx + 6, ty + 8 - (!selected ? 2 : 0), tab.getIcon());
+        drawItem(otx + 6, ty + 9 - (!selected ? 3 : 0), tab.getIcon());
 
         if (inBounds(tx, ty, ContainerGrid.TAB_WIDTH, ContainerGrid.TAB_HEIGHT, mouseX, mouseY)) {
-            tabHovering = i;
+            tabHovering = index;
         }
     }
 
@@ -396,8 +404,11 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         tabHovering = -1;
 
-        for (IGridTab tab : grid.getTabs()) {
-            drawTab(tab, false, x, y, mouseX, mouseY);
+        int j = 0;
+        for (int i = grid.getTabPage() * IGrid.TABS_PER_PAGE; i < (grid.getTabPage() * IGrid.TABS_PER_PAGE) + IGrid.TABS_PER_PAGE; ++i) {
+            if (i < grid.getTabs().size()) {
+                drawTab(grid.getTabs().get(i), false, x, y, mouseX, mouseY, i, j++);
+            }
         }
 
         if (grid.getType() == GridType.CRAFTING) {
@@ -410,12 +421,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             bindTexture("gui/grid.png");
         }
 
-        int yy = y + getTabDelta();
+        int yy = y + getTabHeight();
 
         drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getHeader());
 
         if (grid.getType() != GridType.FLUID) {
-            drawTexture(x + screenWidth - 34 + 4, y + getTabDelta(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
+            drawTexture(x + screenWidth - 34 + 4, y + getTabHeight(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
         }
 
         int rows = getVisibleRows();
@@ -441,11 +452,14 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 ty = 2;
             }
 
-            drawTexture(x + 172, y + getTabDelta() + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
+            drawTexture(x + 172, y + getTabHeight() + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
-        for (IGridTab tab : grid.getTabs()) {
-            drawTab(tab, true, x, y, mouseX, mouseY);
+        j = 0;
+        for (int i = grid.getTabPage() * IGrid.TABS_PER_PAGE; i < (grid.getTabPage() * IGrid.TABS_PER_PAGE) + IGrid.TABS_PER_PAGE; ++i) {
+            if (i < grid.getTabs().size()) {
+                drawTab(grid.getTabs().get(i), true, x, y, mouseX, mouseY, i, j++);
+            }
         }
 
         if (searchField != null) {
@@ -455,11 +469,17 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7 + getTabDelta(), t(grid.getGuiTitle()));
+        drawString(7, 7 + getTabHeight(), t(grid.getGuiTitle()));
         drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
+        if (grid.getTotalTabPages() > 0) {
+            String text = (grid.getTabPage() + 1) + " / " + (grid.getTotalTabPages() + 1);
+
+            drawString((int) ((193F - (float) fontRenderer.getStringWidth(text)) / 2F), -16, text, 0xFFFFFF);
+        }
+
         int x = 8;
-        int y = 19 + getTabDelta();
+        int y = 19 + getTabHeight();
 
         this.slotNumber = -1;
 
@@ -532,6 +552,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             TileDataManager.setParameter(TileGrid.BLOCKING_PATTERN, blockingPattern.isChecked());
         } else if (button == processingPattern) {
             TileDataManager.setParameter(TileGrid.PROCESSING_PATTERN, processingPattern.isChecked());
+        } else if (button == tabPageLeft) {
+            grid.onTabPageChanged(grid.getTabPage() - 1);
+        } else if (button == tabPageRight) {
+            grid.onTabPageChanged(grid.getTabPage() + 1);
         }
     }
 
@@ -548,7 +572,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
-            if (clickedButton == 1 && inBounds(79, 5 + getTabDelta(), 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
+            if (clickedButton == 1 && inBounds(79, 5 + getTabHeight(), 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
                 searchField.setText("");
                 searchField.setFocused(true);
 

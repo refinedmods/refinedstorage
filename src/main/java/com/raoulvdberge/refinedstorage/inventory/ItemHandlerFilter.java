@@ -38,32 +38,38 @@ public class ItemHandlerFilter extends ItemHandlerBase {
             ItemStack filter = getStackInSlot(i);
 
             if (!filter.isEmpty()) {
-                int compare = ItemFilter.getCompare(filter);
-                int mode = ItemFilter.getMode(filter);
-                boolean modFilter = ItemFilter.isModFilter(filter);
-
-                ItemHandlerFilterItems items = new ItemHandlerFilterItems(filter);
-
-                List<IFilter> filters = new ArrayList<>();
-
-                for (ItemStack item : items.getFilteredItems()) {
-                    if (!item.isEmpty()) {
-                        filters.add(new Filter(item, compare, mode, modFilter));
-                    }
-                }
-
-                ItemStack icon = ItemFilter.getIcon(filter);
-
-                if (icon.isEmpty()) {
-                    this.filters.addAll(filters);
-                } else {
-                    tabs.add(new GridTab(filters, ItemFilter.getName(filter), icon));
-                }
+                addFilter(filter);
             }
         }
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             GuiGrid.markForSorting();
+        }
+    }
+
+    private void addFilter(ItemStack filter) {
+        int compare = ItemFilter.getCompare(filter);
+        int mode = ItemFilter.getMode(filter);
+        boolean modFilter = ItemFilter.isModFilter(filter);
+
+        ItemHandlerFilterItems items = new ItemHandlerFilterItems(filter);
+
+        List<IFilter> filters = new ArrayList<>();
+
+        for (ItemStack stack : items.getFilteredItems()) {
+            if (stack.getItem() == RSItems.FILTER) {
+                addFilter(stack);
+            } else if (!stack.isEmpty()) {
+                filters.add(new Filter(stack, compare, mode, modFilter));
+            }
+        }
+
+        ItemStack icon = ItemFilter.getIcon(filter);
+
+        if (icon.isEmpty()) {
+            this.filters.addAll(filters);
+        } else {
+            tabs.add(new GridTab(filters, ItemFilter.getName(filter), icon));
         }
     }
 }

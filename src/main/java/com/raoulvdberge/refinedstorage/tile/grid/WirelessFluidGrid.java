@@ -103,6 +103,16 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
+    public int getTabPage() {
+        return 0;
+    }
+
+    @Override
+    public int getTotalTabPages() {
+        return 0;
+    }
+
+    @Override
     public int getSize() {
         return size;
     }
@@ -150,6 +160,11 @@ public class WirelessFluidGrid implements IGrid {
 
     @Override
     public void onTabSelectionChanged(int tab) {
+        // NO OP
+    }
+
+    @Override
+    public void onTabPageChanged(int page) {
         // NO OP
     }
 

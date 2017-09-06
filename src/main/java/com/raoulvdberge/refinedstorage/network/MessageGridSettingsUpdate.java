@@ -18,17 +18,19 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
     private int searchBoxMode;
     private int size;
     private int tabSelected;
+    private int tabPage;
 
     public MessageGridSettingsUpdate() {
     }
 
-    public MessageGridSettingsUpdate(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected) {
+    public MessageGridSettingsUpdate(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected, int tabPage) {
         this.viewType = viewType;
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
         this.searchBoxMode = searchBoxMode;
         this.size = size;
         this.tabSelected = tabSelected;
+        this.tabPage = tabPage;
     }
 
     @Override
@@ -39,6 +41,7 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
         searchBoxMode = buf.readInt();
         size = buf.readInt();
         tabSelected = buf.readInt();
+        tabPage = buf.readInt();
     }
 
     @Override
@@ -49,6 +52,7 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
         buf.writeInt(searchBoxMode);
         buf.writeInt(size);
         buf.writeInt(tabSelected);
+        buf.writeInt(tabPage);
     }
 
     @Override
@@ -84,6 +88,7 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
                 }
 
                 stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, message.tabSelected);
+                stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, message.tabPage);
             }
         }
     }

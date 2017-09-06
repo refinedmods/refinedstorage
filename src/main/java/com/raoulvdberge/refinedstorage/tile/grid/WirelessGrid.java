@@ -40,6 +40,7 @@ public class WirelessGrid implements IGrid {
     private int sortingDirection;
     private int searchBoxMode;
     private int tabSelected;
+    private int tabPage;
     private int size;
 
     private List<IFilter> filters = new ArrayList<>();
@@ -68,6 +69,7 @@ public class WirelessGrid implements IGrid {
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
         this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
+        this.tabPage = ItemWirelessGrid.getTabPage(stack);
         this.size = ItemWirelessGrid.getSize(stack);
 
         if (stack.hasTagCompound()) {
@@ -129,13 +131,23 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
+    public int getTabPage() {
+        return tabPage;
+    }
+
+    @Override
+    public int getTotalTabPages() {
+        return (int) Math.floor((float) tabs.size() / (float) IGrid.TABS_PER_PAGE);
+    }
+
+    @Override
     public int getSize() {
         return size;
     }
 
     @Override
     public void onViewTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected()));
+        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.viewType = type;
 
@@ -144,7 +156,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected()));
+        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingType = type;
 
@@ -153,7 +165,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected()));
+        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingDirection = direction;
 
@@ -162,14 +174,14 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected()));
+        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
 
         this.searchBoxMode = searchBoxMode;
     }
 
     @Override
     public void onSizeChanged(int size) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected()));
+        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
 
         this.size = size;
 
@@ -182,9 +194,18 @@ public class WirelessGrid implements IGrid {
     public void onTabSelectionChanged(int tab) {
         this.tabSelected = tab == tabSelected ? -1 : tab;
 
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected));
+        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
         GuiGrid.markForSorting();
+    }
+
+    @Override
+    public void onTabPageChanged(int page) {
+        if (page >= 0 && page <= getTotalTabPages()) {
+            RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
+
+            this.tabPage = page;
+        }
     }
 
     @Override

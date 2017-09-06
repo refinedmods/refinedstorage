@@ -24,6 +24,7 @@ public abstract class SideButton extends GuiButton {
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableAlpha();
 
         hovered = gui.inBounds(x, y, width, height, mouseX, mouseY);

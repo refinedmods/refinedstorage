@@ -96,6 +96,12 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             GuiGrid.markForSorting();
         }
     });
+    public static final TileDataParameter<Integer, TilePortableGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabPage, (t, v) -> {
+        if (v >= 0 && v <= t.getTotalTabPages()) {
+            t.setTabPage(v);
+            t.markDirty();
+        }
+    });
 
     private static final String NBT_ENERGY = "Energy";
     private static final String NBT_DISK_STATE = "DiskState";
@@ -110,6 +116,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private int sortingDirection;
     private int searchBoxMode;
     private int tabSelected;
+    private int tabPage;
     private int size;
 
     private List<IFilter> filters = new ArrayList<>();
@@ -181,6 +188,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(TAB_SELECTED);
+        dataManager.addWatchedParameter(TAB_PAGE);
     }
 
     public PortableGridDiskState getDiskState() {
@@ -204,6 +212,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
         this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
+        this.tabPage = ItemWirelessGrid.getTabPage(stack);
         this.size = ItemWirelessGrid.getSize(stack);
 
         this.energyStorage.setEnergyStored(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored());
@@ -299,6 +308,16 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
+    public int getTabPage() {
+        return world.isRemote ? TAB_PAGE.getValue() : tabPage;
+    }
+
+    @Override
+    public int getTotalTabPages() {
+        return (int) Math.floor((float) tabs.size() / (float) IGrid.TABS_PER_PAGE);
+    }
+
+    @Override
     public int getSize() {
         return world.isRemote ? SIZE.getValue() : size;
     }
@@ -317,6 +336,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     public void setTabSelected(int tabSelected) {
         this.tabSelected = tabSelected;
+    }
+
+    public void setTabPage(int page) {
+        this.tabPage = page;
     }
 
     public void setSize(int size) {
@@ -351,6 +374,13 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     @Override
     public void onTabSelectionChanged(int tab) {
         TileDataManager.setParameter(TAB_SELECTED, tab);
+    }
+
+    @Override
+    public void onTabPageChanged(int page) {
+        if (page >= 0 && page <= getTotalTabPages()) {
+            TileDataManager.setParameter(TilePortableGrid.TAB_PAGE, page);
+        }
     }
 
     @Override
@@ -490,6 +520,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         tag.setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
         tag.setInteger(NetworkNodeGrid.NBT_SIZE, size);
         tag.setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
+        tag.setInteger(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
 
         StackUtils.writeItems(disk, 0, tag);
         StackUtils.writeItems(filter, 1, tag);
@@ -523,6 +554,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         if (tag.hasKey(NetworkNodeGrid.NBT_TAB_SELECTED)) {
             tabSelected = tag.getInteger(NetworkNodeGrid.NBT_TAB_SELECTED);
+        }
+
+        if (tag.hasKey(NetworkNodeGrid.NBT_TAB_PAGE)) {
+            tabPage = tag.getInteger(NetworkNodeGrid.NBT_TAB_PAGE);
         }
 
         StackUtils.readItems(disk, 0, tag);

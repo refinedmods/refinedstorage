@@ -51,6 +51,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
     public static final String NBT_OREDICT_PATTERN = "OredictPattern";
     public static final String NBT_TAB_SELECTED = "TabSelected";
+    public static final String NBT_TAB_PAGE = "TabPage";
     public static final String NBT_SIZE = "Size";
     public static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
     public static final String NBT_BLOCKING_PATTERN = "BlockingPattern";
@@ -90,6 +91,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private int size = SIZE_STRETCH;
 
     private int tabSelected = -1;
+    private int tabPage = 0;
 
     private boolean oredictPattern = false;
     private boolean processingPattern = false;
@@ -133,6 +135,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     public void setTabSelected(int tabSelected) {
         this.tabSelected = tabSelected;
+    }
+
+    public void setTabPage(int page) {
+        this.tabPage = page;
     }
 
     public void setSize(int size) {
@@ -523,6 +529,16 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
+    public int getTabPage() {
+        return world.isRemote ? TileGrid.TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
+    }
+
+    @Override
+    public int getTotalTabPages() {
+        return (int) Math.floor((float) tabs.size() / (float) IGrid.TABS_PER_PAGE);
+    }
+
+    @Override
     public void onViewTypeChanged(int type) {
         TileDataManager.setParameter(TileGrid.VIEW_TYPE, type);
     }
@@ -553,6 +569,13 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     @Override
+    public void onTabPageChanged(int page) {
+        if (page >= 0 && page <= getTotalTabPages()) {
+            TileDataManager.setParameter(TileGrid.TAB_PAGE, page);
+        }
+    }
+
+    @Override
     public boolean hasConnectivityState() {
         return true;
     }
@@ -568,6 +591,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
         if (tag.hasKey(NBT_TAB_SELECTED)) {
             tabSelected = tag.getInteger(NBT_TAB_SELECTED);
+        }
+
+        if (tag.hasKey(NBT_TAB_PAGE)) {
+            tabPage = tag.getInteger(NBT_TAB_PAGE);
         }
     }
 
@@ -586,6 +613,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         StackUtils.writeItems(matrixProcessing, 3, tag);
 
         tag.setInteger(NBT_TAB_SELECTED, tabSelected);
+        tag.setInteger(NBT_TAB_PAGE, tabPage);
 
         return tag;
     }

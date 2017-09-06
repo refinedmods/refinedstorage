@@ -17,6 +17,8 @@ import java.util.List;
  * Represents a grid.
  */
 public interface IGrid {
+    int TABS_PER_PAGE = 6;
+
     int SORTING_DIRECTION_ASCENDING = 0;
     int SORTING_DIRECTION_DESCENDING = 1;
 
@@ -97,6 +99,16 @@ public interface IGrid {
     int getTabSelected();
 
     /**
+     * @return the current page that the tab is on
+     */
+    int getTabPage();
+
+    /**
+     * @return the total amount of tab pages
+     */
+    int getTotalTabPages();
+
+    /**
      * @return the size mode
      */
     int getSize();
@@ -130,6 +142,11 @@ public interface IGrid {
      * @param tab the new selected tab
      */
     void onTabSelectionChanged(int tab);
+
+    /**
+     * @param page the new selected page
+     */
+    void onTabPageChanged(int page);
 
     /**
      * @return the filters

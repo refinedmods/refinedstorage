@@ -61,6 +61,7 @@ public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
                 ItemWirelessGrid.getSortingType(oldStack) == ItemWirelessGrid.getSortingType(newStack) &&
                 ItemWirelessGrid.getSearchBoxMode(oldStack) == ItemWirelessGrid.getSearchBoxMode(newStack) &&
                 ItemWirelessGrid.getTabSelected(oldStack) == ItemWirelessGrid.getTabSelected(newStack) &&
+                ItemWirelessGrid.getTabPage(oldStack) == ItemWirelessGrid.getTabPage(newStack) &&
                 ItemWirelessGrid.getSize(oldStack) == ItemWirelessGrid.getSize(newStack)) {
                 return false;
             }

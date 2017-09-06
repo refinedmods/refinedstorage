@@ -45,6 +45,10 @@ public class ItemWirelessGrid extends ItemNetworkItem {
         return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_TAB_SELECTED)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_TAB_SELECTED) : -1;
     }
 
+    public static int getTabPage(ItemStack stack) {
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_TAB_PAGE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_TAB_PAGE) : 0;
+    }
+
     public static int getSize(ItemStack stack) {
         return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SIZE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SIZE) : IGrid.SIZE_STRETCH;
     }

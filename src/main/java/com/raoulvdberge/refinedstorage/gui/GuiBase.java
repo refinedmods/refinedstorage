@@ -197,10 +197,6 @@ public abstract class GuiBase extends GuiContainer {
         }
     }
 
-    public GuiButton addButton(int x, int y, int w, int h, String text) {
-        return addButton(x, y, w, h, text, true);
-    }
-
     public GuiCheckBox addCheckBox(int x, int y, String text, boolean checked) {
         GuiCheckBox checkBox = new GuiCheckBox(lastButtonId++, x, y, text, checked);
 
@@ -209,9 +205,14 @@ public abstract class GuiBase extends GuiContainer {
         return checkBox;
     }
 
-    public GuiButton addButton(int x, int y, int w, int h, String text, boolean enabled) {
+    public GuiButton addButton(int x, int y, int w, int h, String text) {
+        return addButton(x, y, w, h, text, true, true);
+    }
+
+    public GuiButton addButton(int x, int y, int w, int h, String text, boolean enabled, boolean visible) {
         GuiButton button = new GuiButton(lastButtonId++, x, y, w, h, text);
         button.enabled = enabled;
+        button.visible = visible;
 
         buttonList.add(button);
 

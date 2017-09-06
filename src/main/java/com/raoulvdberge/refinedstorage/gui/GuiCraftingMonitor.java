@@ -76,8 +76,8 @@ public class GuiCraftingMonitor extends GuiBase {
         int cancelButtonWidth = 14 + fontRenderer.getStringWidth(cancel);
         int cancelAllButtonWidth = 14 + fontRenderer.getStringWidth(cancelAll);
 
-        cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 20, cancel, false);
-        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 20, cancelAll, false);
+        cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 20, cancel, false, true);
+        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 20, cancelAll, false, true);
     }
 
     @Override

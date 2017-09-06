@@ -65,6 +65,12 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
             GuiGrid.markForSorting();
         }
     });
+    public static final TileDataParameter<Integer, TileGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
+        if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
+            t.getNode().setTabPage(v);
+            t.getNode().markDirty();
+        }
+    });
     public static final TileDataParameter<Boolean, TileGrid> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isOredictPattern(), (t, v) -> {
         t.getNode().setOredictPattern(v);
         t.getNode().markDirty();
@@ -106,6 +112,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(TAB_SELECTED);
+        dataManager.addWatchedParameter(TAB_PAGE);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
         dataManager.addWatchedParameter(PROCESSING_PATTERN);
         dataManager.addWatchedParameter(BLOCKING_PATTERN);
