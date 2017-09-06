@@ -137,7 +137,7 @@ public class WirelessGrid implements IGrid {
 
     @Override
     public int getTotalTabPages() {
-        return (int) Math.floor((float) tabs.size() / (float) IGrid.TABS_PER_PAGE);
+        return (int) Math.floor((float) Math.max(0, tabs.size() - 1) / (float) IGrid.TABS_PER_PAGE);
     }
 
     @Override
