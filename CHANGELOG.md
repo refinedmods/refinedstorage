@@ -10,6 +10,7 @@
 - Fixed some translations having too big "Craft" text (raoulvdberge)
 - Fixed crash with GUI when toggling the Grid size quickly (raoulvdberge)
 - Fixed scrollbar not scrolling correctly when clicked with mouse when grid tabs are visible (raoulvdberge)
+- Reader and Writer blocks now face the block you're placing it on, not the player (raoulvdberge)
 - The Fortune Upgrade doesn't use NBT anymore to store the fortune level (raoulvdberge)
 - Pressing SHIFT over an item in the Grid will no longer display the full unformatted count, instead, use CTRL + SHIFT and it will be displayed in the tooltip (raoulvdberge)
 

@@ -94,6 +94,6 @@ public class BlockWriter extends BlockCable {
     @Override
     @Nullable
     public Direction getDirection() {
-        return Direction.ANY_FACE_PLAYER;
+        return Direction.ANY;
     }
 }
