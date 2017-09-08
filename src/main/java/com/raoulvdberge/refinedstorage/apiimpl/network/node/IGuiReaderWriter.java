@@ -16,7 +16,7 @@ public interface IGuiReaderWriter {
 
     INetwork getNetwork();
 
-    boolean canUpdate();
+    boolean isActive();
 
     default void onAdd(String name) {
         INetwork network = getNetwork();

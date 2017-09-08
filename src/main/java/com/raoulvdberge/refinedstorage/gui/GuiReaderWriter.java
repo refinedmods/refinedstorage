@@ -195,6 +195,6 @@ public class GuiReaderWriter extends GuiBase {
     }
 
     private List<String> getChannels() {
-        return readerWriter.canUpdate() ? CHANNELS : Collections.emptyList();
+        return readerWriter.isActive() ? CHANNELS : Collections.emptyList();
     }
 }
