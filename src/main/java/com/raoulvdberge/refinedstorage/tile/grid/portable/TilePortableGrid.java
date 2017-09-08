@@ -246,6 +246,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SIZE, size);
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
+        stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
 
         stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(energyStorage.getEnergyStored(), false);
 
