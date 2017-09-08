@@ -68,9 +68,7 @@ public class StorageItemTransmutationTable extends StorageItemExternal {
                 if (!simulate) {
                     provider.setEmc(provider.getEmc() + emc);
 
-                    if (!provider.hasKnowledge(stack)) {
-                        provider.addKnowledge(stack);
-                    }
+                    handleKnowledge(provider, stack.copy());
 
                     EntityPlayer player = externalStorage.getWorld().getPlayerEntityByUUID(externalStorage.getOwner());
 
@@ -84,6 +82,23 @@ public class StorageItemTransmutationTable extends StorageItemExternal {
         }
 
         return actualStack;
+    }
+
+    // @todo: https://github.com/sinkillerj/ProjectE/issues/1592
+    private void handleKnowledge(IKnowledgeProvider provider, ItemStack stack) {
+        if (stack.getCount() > 1) {
+            stack.setCount(1);
+        }
+
+        if (!stack.getHasSubtypes() && stack.getMaxDamage() != 0) {
+            stack.setItemDamage(0);
+        }
+
+        if (!provider.hasKnowledge(stack)) {
+            stack.setTagCompound(null);
+
+            provider.addKnowledge(stack);
+        }
     }
 
     @Nullable
