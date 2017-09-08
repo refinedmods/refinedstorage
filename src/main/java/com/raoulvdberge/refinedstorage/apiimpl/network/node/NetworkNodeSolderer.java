@@ -46,8 +46,7 @@ public class NetworkNodeSolderer extends NetworkNode {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            recipe = API.instance().getSoldererRegistry().getRecipe(this);
-            progress = 0;
+            recipe = API.instance().getSoldererRegistry().getRecipe(ingredients);
         }
     };
 
@@ -95,6 +94,7 @@ public class NetworkNodeSolderer extends NetworkNode {
         if (working) {
             if (recipe == null) {
                 working = false;
+                progress = 0;
 
                 markDirty();
             } else if ((result.getStackInSlot(0).isEmpty() || API.instance().getComparer().isEqualNoQuantity(recipe.getResult(), result.getStackInSlot(0))) && result.getStackInSlot(0).getCount() + recipe.getResult().getCount() <= result.getStackInSlot(0).getMaxStackSize()) {
