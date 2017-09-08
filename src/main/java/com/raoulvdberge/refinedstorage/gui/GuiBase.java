@@ -261,7 +261,11 @@ public abstract class GuiBase extends GuiContainer {
         zLevel = 200.0F;
         itemRender.zLevel = 200.0F;
 
-        itemRender.renderItemIntoGUI(stack, x, y);
+        try {
+            itemRender.renderItemIntoGUI(stack, x, y);
+        } catch (Throwable t) {
+            // NO OP
+        }
 
         if (withOverlay) {
             drawItemOverlay(stack, text, x, y);
@@ -272,7 +276,11 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     public void drawItemOverlay(ItemStack stack, @Nullable String text, int x, int y) {
-        itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, x, y, "");
+        try {
+            itemRender.renderItemOverlayIntoGUI(fontRenderer, stack, x, y, "");
+        } catch (Throwable t) {
+            // NO OP
+        }
 
         if (text != null) {
             drawQuantity(x, y, text);

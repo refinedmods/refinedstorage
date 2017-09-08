@@ -4,6 +4,7 @@
 - Added Project E integration for the External Storage on the Transmutation Table (raoulvdberge)
 - Added Project E integration for the energy values of Solderer items (raoulvdberge)
 - Added support for more than 4 grid tabs in the Grid by putting filters IN filters (raoulvdberge)
+- Added protection for other mods causing crashes when drawing an item or display name (raoulvdberge)
 - Fixed network not disconnecting when Controller is broken (raoulvdberge)
 - Fixed bug where when multiple Fortune Upgrades are inserted, it chooses the first Fortune Upgrade instead of the highest one (raoulvdberge)
 - Fixed some translations having too big "Craft" text (raoulvdberge)

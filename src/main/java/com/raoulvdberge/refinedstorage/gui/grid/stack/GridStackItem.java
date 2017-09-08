@@ -58,7 +58,11 @@ public class GridStackItem implements IGridStack {
 
     @Override
     public String getName() {
-        return stack.getDisplayName();
+        try {
+            return stack.getDisplayName();
+        } catch (Throwable t) {
+            return "";
+        }
     }
 
     @Override
@@ -69,7 +73,11 @@ public class GridStackItem implements IGridStack {
     @Override
     public String[] getOreIds() {
         if (oreIds == null) {
-            oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).collect(Collectors.toList()).toArray(new String[0]);
+            if (stack.isEmpty()) {
+                oreIds = new String[]{};
+            } else {
+                oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).collect(Collectors.toList()).toArray(new String[0]);
+            }
         }
 
         return oreIds;
@@ -77,22 +85,26 @@ public class GridStackItem implements IGridStack {
 
     @Override
     public String getTooltip(boolean quantity) {
-        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+        try {
+            List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
 
-        // From GuiScreen#renderToolTip
-        for (int i = 0; i < lines.size(); ++i) {
-            if (i == 0) {
-                lines.set(i, stack.getRarity().rarityColor + lines.get(i));
-            } else {
-                lines.set(i, TextFormatting.GRAY + lines.get(i));
+            // From GuiScreen#renderToolTip
+            for (int i = 0; i < lines.size(); ++i) {
+                if (i == 0) {
+                    lines.set(i, stack.getRarity().rarityColor + lines.get(i));
+                } else {
+                    lines.set(i, TextFormatting.GRAY + lines.get(i));
+                }
             }
-        }
 
-        if (quantity && !lines.isEmpty()) {
-            lines.set(0, lines.get(0) + " " + TextFormatting.GRAY + "(" + RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(stack.getCount()) + "x)" + TextFormatting.RESET);
-        }
+            if (quantity && !lines.isEmpty()) {
+                lines.set(0, lines.get(0) + " " + TextFormatting.GRAY + "(" + RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(stack.getCount()) + "x)" + TextFormatting.RESET);
+            }
 
-        return lines.stream().collect(Collectors.joining("\n"));
+            return lines.stream().collect(Collectors.joining("\n"));
+        } catch (Throwable t) {
+            return "";
+        }
     }
 
     @Override
