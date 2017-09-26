@@ -20,7 +20,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.5.18"
+version = "1.5.19"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
@@ -28,10 +28,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12.1-14.22.0.2444"
+    version = "1.12.2-14.23.0.2493"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20170807"
+    mappings = "snapshot_20170926"
 }
 
 repositories {
@@ -54,11 +54,11 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12:4.7.5.84:api"
-    runtime "mezz.jei:jei_1.12:4.7.5.84"
+    deobfCompile "mezz.jei:jei_1.12.2:4.7.11.101:api"
+    runtime "mezz.jei:jei_1.12.2:4.7.11.101"
     deobfCompile "MCMultiPart2:MCMultiPart:2.2.2"
     deobfCompile "li.cil.oc:OpenComputers:MC1.12.1-1.7.0.4:api"
-    deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.12-5.2.9:api"
+    deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.12.1-5.3.3:api"
     compile "inventory-tweaks:InventoryTweaks:1.63+beta.107:api"
 }
 
