@@ -2,6 +2,7 @@
 
 ### 1.5.19
 - Updated Forge to 2493 (MC 1.12.2) (raoulvdberge)
+- Fixed RS blocks requiring a pickaxe to be broken (raoulvdberge)
 
 ### 1.5.18
 - Added Project E integration for the External Storage on the Transmutation Table (raoulvdberge)

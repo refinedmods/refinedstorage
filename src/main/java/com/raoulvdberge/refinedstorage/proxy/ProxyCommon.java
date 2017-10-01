@@ -53,6 +53,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientFactory;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -292,6 +293,13 @@ public class ProxyCommon {
             if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("processing_pattern_encoder")) {
                 missing.ignore();
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onHarvestCheck(PlayerEvent.HarvestCheck e) {
+        if (e.getTargetBlock().getBlock() instanceof BlockBase) {
+            e.setCanHarvest(true); // Allow break without tool
         }
     }
 
