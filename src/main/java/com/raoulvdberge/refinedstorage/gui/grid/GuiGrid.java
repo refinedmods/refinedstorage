@@ -230,8 +230,13 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             scrollbar.setMaxOffset(getRows() - getVisibleRows());
         }
 
-        tabPageLeft.visible = grid.getTotalTabPages() > 0;
-        tabPageRight.visible = grid.getTotalTabPages() > 0;
+        if (tabPageLeft != null) {
+            tabPageLeft.visible = grid.getTotalTabPages() > 0;
+        }
+
+        if (tabPageRight != null) {
+            tabPageRight.visible = grid.getTotalTabPages() > 0;
+        }
     }
 
     @Override
