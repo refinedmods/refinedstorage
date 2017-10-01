@@ -46,6 +46,10 @@ public abstract class BlockBase extends Block {
         return RS.ID;
     }
 
+    protected Object getModObject() {
+        return RS.INSTANCE;
+    }
+
     @Override
     public String getUnlocalizedName() {
         return "block." + getDomain() + ":" + name;
@@ -181,7 +185,7 @@ public abstract class BlockBase extends Block {
             }
         }
 
-        player.openGui(RS.INSTANCE, guiId, world, pos.getX(), pos.getY(), pos.getZ());
+        player.openGui(getModObject(), guiId, world, pos.getX(), pos.getY(), pos.getZ());
 
         return true;
     }
