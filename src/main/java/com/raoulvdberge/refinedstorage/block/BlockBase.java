@@ -38,13 +38,17 @@ public abstract class BlockBase extends Block {
         this.name = name;
 
         setHardness(1.9F);
-        setRegistryName(RS.ID, name);
+        setRegistryName(getDomain(), name);
         setCreativeTab(RS.INSTANCE.tab);
+    }
+
+    protected String getDomain() {
+        return RS.ID;
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "block." + RS.ID + ":" + name;
+        return "block." + getDomain() + ":" + name;
     }
 
     protected BlockStateContainer.Builder createBlockStateBuilder() {
