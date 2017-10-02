@@ -79,7 +79,7 @@ public class GuiController extends GuiBase {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(scale, scale, 1);
 
-                drawString(RenderUtils.getOffsetOnScale(x + 1, scale), RenderUtils.getOffsetOnScale(y - 2, scale), node.getStack().getDisplayName());
+                drawString(RenderUtils.getOffsetOnScale(x + 1, scale), RenderUtils.getOffsetOnScale(y - 2, scale), trimNameIfNeeded(!fontRenderer.getUnicodeFlag(), node.getStack().getDisplayName()));
                 drawString(RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
                 GlStateManager.popMatrix();
@@ -110,5 +110,13 @@ public class GuiController extends GuiBase {
 
     private int getRows() {
         return Math.max(0, (int) Math.ceil((float) TileController.NODES.getValue().size() / 2F));
+    }
+
+    private String trimNameIfNeeded(boolean scaled, String name) {
+        int max = scaled ? 20 : 13;
+        if (name.length() > max) {
+            name = name.substring(0, max) + "...";
+        }
+        return name;
     }
 }
