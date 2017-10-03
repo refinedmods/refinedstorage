@@ -183,18 +183,34 @@ public class ItemGridHandler implements IItemGridHandler {
 
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
                 } else {
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), stack, quantity), player);
+                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity), player);
                 }
-            }, "RS crafting calculation");
+            }, "RS crafting preview calculation");
 
             calculationThread.start();
         }
     }
 
     @Override
-    public void onCraftingRequested(EntityPlayerMP player, ItemStack stack, int quantity) {
+    public void onCraftingRequested(EntityPlayerMP player, int hash, int quantity) {
         if (quantity <= 0 || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
+        }
+
+        ItemStack stack = null;
+
+        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
+            for (ItemStack output : pattern.getOutputs()) {
+                if (output != null && API.instance().getItemStackHashCode(output) == hash) {
+                    stack = output;
+
+                    break;
+                }
+            }
+
+            if (stack != null) {
+                break;
+            }
         }
 
         if (stack != null) {

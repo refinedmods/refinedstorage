@@ -293,7 +293,7 @@ public class ProxyClient extends ProxyCommon {
                 screen = ((GuiCraftingStart) screen).getParent();
             }
 
-            FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.stack, message.quantity));
+            FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity));
         });
     }
 

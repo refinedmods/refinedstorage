@@ -149,7 +149,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(EntityPlayerMP player, ItemStack stack, int quantity) {
+    public void onCraftingRequested(EntityPlayerMP player, int hash, int quantity) {
         // NO OP
     }
 
