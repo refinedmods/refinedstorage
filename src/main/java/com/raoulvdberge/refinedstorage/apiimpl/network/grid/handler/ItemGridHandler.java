@@ -38,7 +38,8 @@ public class ItemGridHandler implements IItemGridHandler {
         }
 
         int itemSize = item.getCount();
-        int maxItemSize = item.getItem().getItemStackLimit(item);
+        // We copy here because some mods change the NBT tag of an item after getting the stack limit
+        int maxItemSize = item.getItem().getItemStackLimit(item.copy());
 
         boolean single = (flags & EXTRACT_SINGLE) == EXTRACT_SINGLE;
 
