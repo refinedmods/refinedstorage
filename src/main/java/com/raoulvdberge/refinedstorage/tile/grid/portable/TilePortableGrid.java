@@ -31,7 +31,6 @@ import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.client.Minecraft;
@@ -461,8 +460,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public List<TileDataWatcher> getWatchers() {
-        return dataManager.getWatchers();
+    public List<EntityPlayer> getWatchers() {
+        return dataManager.getPlayersWatching();
     }
 
     @Override

@@ -39,6 +39,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PortableGrid implements IGrid, IPortableGrid {
@@ -166,8 +167,8 @@ public class PortableGrid implements IGrid, IPortableGrid {
     }
 
     @Override
-    public List<TileDataWatcher> getWatchers() {
-        return dummyWatchers;
+    public List<EntityPlayer> getWatchers() {
+        return Collections.singletonList(player);
     }
 
     @Override
