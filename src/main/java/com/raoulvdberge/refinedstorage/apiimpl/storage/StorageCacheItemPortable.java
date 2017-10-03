@@ -9,7 +9,6 @@ import com.raoulvdberge.refinedstorage.network.MessageGridItemDelta;
 import com.raoulvdberge.refinedstorage.network.MessageGridItemUpdate;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
@@ -37,7 +36,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
 
         listeners.forEach(Runnable::run);
 
-        portableGrid.getWatchers().forEach(this::sendUpdateTo);
+        portableGrid.getWatchers().forEach(w -> sendUpdateTo(w.getPlayer()));
     }
 
     @Override
@@ -45,7 +44,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
         list.add(stack, size);
 
         if (!rebuilding) {
-            portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, size), (EntityPlayerMP) w));
+            portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, size), w.getPlayer()));
 
             listeners.forEach(Runnable::run);
         }
@@ -54,7 +53,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     @Override
     public void remove(@Nonnull ItemStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
-            portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, -size), (EntityPlayerMP) w));
+            portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, -size), w.getPlayer()));
 
             listeners.forEach(Runnable::run);
         }
@@ -85,13 +84,13 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
         return Collections.emptyList();
     }
 
-    public void sendUpdateTo(EntityPlayer player) {
+    public void sendUpdateTo(EntityPlayerMP player) {
         RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(buf -> {
             buf.writeInt(list.getStacks().size());
 
             for (ItemStack stack : list.getStacks()) {
                 StackUtils.writeItemStack(buf, stack, null, false);
             }
-        }, false), (EntityPlayerMP) player);
+        }, false), player);
     }
 }

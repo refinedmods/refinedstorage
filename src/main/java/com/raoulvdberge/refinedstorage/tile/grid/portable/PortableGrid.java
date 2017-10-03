@@ -22,9 +22,11 @@ import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.item.ItemEnergyItem;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -37,7 +39,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PortableGrid implements IGrid, IPortableGrid {
@@ -49,6 +50,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
     private ItemGridHandlerPortable handler = new ItemGridHandlerPortable(this, this);
 
     private EntityPlayer player;
+    private List<TileDataWatcher> dummyWatchers = new ArrayList<>();
     private ItemStack stack;
 
     private int sortingType;
@@ -122,6 +124,10 @@ public class PortableGrid implements IGrid, IPortableGrid {
             this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
             this.tabPage = ItemWirelessGrid.getTabPage(stack);
             this.size = ItemWirelessGrid.getSize(stack);
+
+            if (player instanceof EntityPlayerMP) {
+                this.dummyWatchers.add(new TileDataWatcher((EntityPlayerMP) player, null));
+            }
         }
 
         if (!stack.hasTagCompound()) {
@@ -160,8 +166,8 @@ public class PortableGrid implements IGrid, IPortableGrid {
     }
 
     @Override
-    public List<EntityPlayer> getWatchers() {
-        return Collections.singletonList(player);
+    public List<TileDataWatcher> getWatchers() {
+        return dummyWatchers;
     }
 
     @Override

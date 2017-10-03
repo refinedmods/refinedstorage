@@ -31,10 +31,12 @@ import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -459,7 +461,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public List<EntityPlayer> getWatchers() {
+    public List<TileDataWatcher> getWatchers() {
         return dataManager.getWatchers();
     }
 
@@ -612,7 +614,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         return super.getCapability(capability, facing);
     }
 
-    public void onOpened(EntityPlayer player) {
+    public void onOpened(EntityPlayerMP player) {
         cache.sendUpdateTo(player);
 
         drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);

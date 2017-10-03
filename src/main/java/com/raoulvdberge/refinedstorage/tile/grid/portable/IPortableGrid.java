@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import net.minecraft.entity.player.EntityPlayer;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -16,7 +16,7 @@ public interface IPortableGrid {
     @Nullable
     IStorageDisk<ItemStack> getStorage();
 
-    List<EntityPlayer> getWatchers();
+    List<TileDataWatcher> getWatchers();
 
     void drainEnergy(int energy);
 

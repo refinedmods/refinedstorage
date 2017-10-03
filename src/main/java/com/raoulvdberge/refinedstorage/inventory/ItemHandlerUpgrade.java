@@ -49,9 +49,7 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
         int usage = 0;
 
         for (int i = 0; i < getSlots(); ++i) {
-            if (!getStackInSlot(i).isEmpty()) {
-                usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i));
-            }
+            usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i));
         }
 
         return usage;

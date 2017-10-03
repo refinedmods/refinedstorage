@@ -5,6 +5,7 @@
 - Fixed Refined Storage blocks requiring a pickaxe to be broken (raoulvdberge)
 - Fixed Grid GUI crash (raoulvdberge)
 - Fixed device names overflowing Controller GUI (raoulvdberge)
+- Fixed high CPU load when Refined Storage GUIs are open (raoulvdberge)
 
 ### 1.5.18
 - Added Project E integration for the External Storage on the Transmutation Table (raoulvdberge)

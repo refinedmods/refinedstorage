@@ -4,8 +4,10 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import invtweaks.api.container.InventoryContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -13,14 +15,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @InventoryContainer(showOptions = false)
 public abstract class ContainerBase extends Container {
+    @Nullable
     private TileBase tile;
+    @Nullable
+    private TileDataWatcher listener;
     private EntityPlayer player;
 
-    public ContainerBase(TileBase tile, EntityPlayer player) {
+    public ContainerBase(@Nullable TileBase tile, EntityPlayer player) {
         this.tile = tile;
+        if (tile != null && player instanceof EntityPlayerMP) {
+            listener = new TileDataWatcher((EntityPlayerMP) player, tile.getDataManager());
+        }
         this.player = player;
     }
 
@@ -28,6 +37,7 @@ public abstract class ContainerBase extends Container {
         return player;
     }
 
+    @Nullable
     public TileBase getTile() {
         return tile;
     }
@@ -160,5 +170,23 @@ public abstract class ContainerBase extends Container {
 
     protected boolean isHeldItemDisabled() {
         return false;
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
+        if (listener != null) {
+            listener.detectAndSendChanges();
+        }
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer player) {
+        super.onContainerClosed(player);
+
+        if (listener != null) {
+            listener.onClosed();
+        }
     }
 }

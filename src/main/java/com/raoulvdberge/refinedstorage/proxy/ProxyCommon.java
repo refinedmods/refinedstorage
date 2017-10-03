@@ -30,7 +30,6 @@ import com.raoulvdberge.refinedstorage.integration.projecte.IntegrationProjectE;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.data.ContainerListener;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
@@ -138,7 +137,6 @@ public class ProxyCommon {
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
-        MinecraftForge.EVENT_BUS.register(new ContainerListener());
         MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
 
         registerTile(TileController.class, "controller");

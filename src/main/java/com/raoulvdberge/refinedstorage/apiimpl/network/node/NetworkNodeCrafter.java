@@ -69,15 +69,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public int getEnergyUsage() {
-        int usage = RS.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage();
-
-        for (int i = 0; i < patterns.getSlots(); ++i) {
-            if (!patterns.getStackInSlot(i).isEmpty()) {
-                usage += RS.INSTANCE.config.crafterPerPatternUsage;
-            }
-        }
-
-        return usage;
+        return RS.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage() + (RS.INSTANCE.config.crafterPerPatternUsage * actualPatterns.size());
     }
 
     @Override
