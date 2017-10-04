@@ -18,6 +18,7 @@ import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class ItemNetworkItem extends ItemEnergyItem implements INetworkItemProvider {
     private static final String NBT_CONTROLLER_X = "ControllerX";
@@ -36,22 +37,26 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            if (!isValid(stack)) {
-                player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
-            } else {
-                World networkWorld = DimensionManager.getWorld(getDimensionId(stack));
-
-                TileEntity network;
-
-                if (networkWorld != null && ((network = networkWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof INetwork)) {
-                    ((INetwork) network).getNetworkItemHandler().onOpen(player, hand);
-                } else {
-                    player.sendMessage(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
-                }
-            }
+            applyNetwork(stack, n -> n.getNetworkItemHandler().onOpen(player, hand), player::sendMessage);
         }
 
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+    }
+
+    public void applyNetwork(ItemStack stack, Consumer<INetwork> networkConsumer, Consumer<TextComponentTranslation> errorConsumer) {
+        if (!isValid(stack)) {
+            errorConsumer.accept(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
+        } else {
+            World networkWorld = DimensionManager.getWorld(getDimensionId(stack));
+
+            TileEntity network;
+
+            if (networkWorld != null && ((network = networkWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof INetwork)) {
+                networkConsumer.accept((INetwork) network);
+            } else {
+                errorConsumer.accept(new TextComponentTranslation("misc.refinedstorage:network_item.not_found"));
+            }
+        }
     }
 
     @Override
