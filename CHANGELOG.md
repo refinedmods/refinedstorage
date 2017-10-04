@@ -8,6 +8,7 @@
 - Fixed high CPU load when Refined Storage GUIs are open (raoulvdberge)
 - Fixed not being able to extract Mekanism tanks and bins from the Grid (raoulvdberge)
 - Fixed not being able to craft Immersive Engineering Revolver (raoulvdberge)
+- Fixed rare bug when server crashes on startup due to network node not existing (raoulvdberge)
 
 ### 1.5.18
 - Added Project E integration for the External Storage on the Transmutation Table (raoulvdberge)
