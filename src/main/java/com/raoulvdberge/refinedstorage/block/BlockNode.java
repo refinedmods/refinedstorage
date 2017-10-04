@@ -66,7 +66,7 @@ public abstract class BlockNode extends BlockBase {
         manager.removeNode(pos);
         manager.markForSaving();
 
-        if (node.getNetwork() != null) {
+        if (node != null && node.getNetwork() != null) {
             node.getNetwork().getNodeGraph().rebuild();
         }
     }
