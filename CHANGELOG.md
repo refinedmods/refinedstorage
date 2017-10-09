@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.20
+- Restore MC 1.12.0 compatibility (raoulvdberge)
+
 ### 1.5.19
 - Updated Forge to 2493 (MC 1.12.2) (raoulvdberge)
 - Fixed Refined Storage blocks requiring a pickaxe to be broken (raoulvdberge)

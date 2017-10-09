@@ -58,6 +58,6 @@ public class SoldererRecipeLoader {
             }
 
             return true;
-        }, false, false);
+        });
     }
 }
