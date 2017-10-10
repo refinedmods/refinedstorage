@@ -25,6 +25,7 @@ public class SoldererRecipeLoader {
     public static void load() {
         JsonContext context = new JsonContext(RS.ID);
 
+        // @todo: Move to non-deprecated method in MC 1.13.
         CraftingHelper.findFiles(Loader.instance().activeModContainer(), "assets/" + RS.ID + "/solderer_recipes", root -> {
             // @todo: Load the constants into to the context.
 
