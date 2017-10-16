@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.21
+- Updated Portuguese (Brazilian) translation (Pinz714)
+
 ### 1.5.20
 - Restore MC 1.12.0 compatibility (raoulvdberge)
 
