@@ -88,10 +88,14 @@ public class BlockExternalStorage extends BlockCable {
         super.neighborChanged(state, world, pos, block, fromPos);
 
         if (!world.isRemote) {
-            NetworkNodeExternalStorage externalStorage = ((TileExternalStorage) world.getTileEntity(pos)).getNode();
+            TileEntity tile = world.getTileEntity(pos);
 
-            if (externalStorage.getNetwork() != null) {
-                externalStorage.updateStorage(externalStorage.getNetwork());
+            if (tile instanceof TileExternalStorage) {
+                NetworkNodeExternalStorage externalStorage = ((TileExternalStorage) tile).getNode();
+
+                if (externalStorage.getNetwork() != null) {
+                    externalStorage.updateStorage(externalStorage.getNetwork());
+                }
             }
         }
     }
