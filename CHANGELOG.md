@@ -4,6 +4,7 @@
 - Updated Portuguese (Brazilian) translation (Pinz714)
 - Fixed crash with External Storage (raoulvdberge)
 - Fixed stack-crafting in the crafting grid (crafting table) causing lag on a dedicated server (Lordmau5)
+- Fixed cable blocks, Wireless Transmitter, Detector and Portable Grid acting as full blocks (being able to place torches on them etc) (raoulvdberge)
 
 ### 1.5.20
 - Restore MC 1.12.0 compatibility (raoulvdberge)
