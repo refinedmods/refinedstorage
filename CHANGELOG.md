@@ -3,6 +3,7 @@
 ### 1.5.21
 - Updated Portuguese (Brazilian) translation (Pinz714)
 - Fixed crash with External Storage (raoulvdberge)
+- Attempted fix for stack-crafting causing lag on a dedicated server (Lordmau5)
 
 ### 1.5.20
 - Restore MC 1.12.0 compatibility (raoulvdberge)

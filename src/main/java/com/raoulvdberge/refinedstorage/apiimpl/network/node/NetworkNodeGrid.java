@@ -246,8 +246,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
         if (currentRecipe == null) {
             result.setInventorySlotContents(0, ItemStack.EMPTY);
-        }
-        else {
+        } else {
             result.setInventorySlotContents(0, currentRecipe.getCraftingResult(matrix));
         }
 
