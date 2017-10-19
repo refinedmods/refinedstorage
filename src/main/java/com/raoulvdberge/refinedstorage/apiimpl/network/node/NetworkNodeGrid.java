@@ -27,6 +27,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -67,6 +68,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             onCraftingMatrixChanged();
         }
     };
+    private IRecipe currentRecipe;
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
     private ItemHandlerBase matrixProcessing = new ItemHandlerBase(9 * 2, new ItemHandlerListenerNetworkNode(this));
@@ -238,7 +240,16 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public void onCraftingMatrixChanged() {
-        result.setInventorySlotContents(0, CraftingManager.findMatchingResult(matrix, world));
+        if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
+            currentRecipe = CraftingManager.findMatchingRecipe(matrix, world);
+        }
+
+        if (currentRecipe == null) {
+            result.setInventorySlotContents(0, ItemStack.EMPTY);
+        }
+        else {
+            result.setInventorySlotContents(0, currentRecipe.getCraftingResult(matrix));
+        }
 
         markDirty();
     }
