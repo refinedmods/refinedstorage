@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.5.22
+- Added oredict, blocking, processing, ore inputs access to OpenComputers API (raoulvdberge)
+- The Crafter can now only store 1 stack size pattern per slot (raoulvdberge)
+
 ### 1.5.21
 - Updated Portuguese (Brazilian) translation (Pinz714)
 - Fixed crash with External Storage (raoulvdberge)

@@ -39,6 +39,11 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
                 network.getCraftingManager().rebuild();
             }
         }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
     };
 
     private List<ICraftingPattern> actualPatterns = new ArrayList<>();
