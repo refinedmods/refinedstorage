@@ -3,6 +3,7 @@
 ### 1.5.22
 - Added oredict, blocking, processing, ore inputs access to OpenComputers API (raoulvdberge)
 - The Crafter can now only store 1 stack size pattern per slot (raoulvdberge)
+- Fixed not being able to use JEI R and U keys on Grid with tabs (raoulvdberge)
 
 ### 1.5.21
 - Updated Portuguese (Brazilian) translation (Pinz714)

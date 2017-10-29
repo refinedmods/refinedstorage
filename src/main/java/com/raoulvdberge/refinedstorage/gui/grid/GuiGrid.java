@@ -335,6 +335,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         return inBounds(7, 19 + getTabHeight(), 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
+    public int getSlotNumber() {
+        return slotNumber;
+    }
+
     private boolean isOverClear(int mouseX, int mouseY) {
         int y = getTabHeight() + getHeader() + (getVisibleRows() * 18) + 4;
 
@@ -400,7 +404,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         drawItem(otx + 6, ty + 9 - (!selected ? 3 : 0), tab.getIcon());
 
-        if (inBounds(tx, ty, ContainerGrid.TAB_WIDTH, ContainerGrid.TAB_HEIGHT, mouseX, mouseY)) {
+        if (inBounds(tx, ty, ContainerGrid.TAB_WIDTH, ContainerGrid.TAB_HEIGHT - (selected ? 2 : 7), mouseX, mouseY)) {
             tabHovering = index;
         }
     }

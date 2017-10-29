@@ -26,17 +26,7 @@ public class GuiHandlerGrid implements IAdvancedGuiHandler<GuiGrid> {
         mouseY -= gui.getGuiTop();
 
         if (gui.getScrollbar() != null && !gui.getSearchField().isFocused() && gui.isOverSlotArea(mouseX, mouseY)) {
-            mouseX -= 7;
-            mouseY -= 19;
-
-            int x = mouseX / 18;
-            int y = mouseY / 18;
-
-            y += gui.getScrollbar().getOffset();
-
-            int slot = y * 9 + x;
-
-            return slot >= 0 && slot < GuiGrid.STACKS.size() ? GuiGrid.STACKS.get(slot).getIngredient() : null;
+            return gui.getSlotNumber() >= 0 && gui.getSlotNumber() < GuiGrid.STACKS.size() ? GuiGrid.STACKS.get(gui.getSlotNumber()).getIngredient() : null;
         }
 
         return null;
