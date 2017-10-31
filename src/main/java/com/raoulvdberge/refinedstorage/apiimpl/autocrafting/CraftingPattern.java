@@ -273,7 +273,24 @@ public class CraftingPattern implements ICraftingPattern {
             ", byproducts=" + byproducts +
             '}';
     }
-
+    
+    @Override
+    public boolean equals (Object obj) {
+    	return this==obj || (obj instanceof ICraftingPattern && this.alike((ICraftingPattern)obj));
+    }
+    
+    String toHash;
+    @Override
+    public int hashCode() {
+    	if(toHash==null){
+    		toHash=new String();
+    		for(ItemStack mItemStack : this.getOutputs()){
+    			toHash+=mItemStack.toString()+" ";
+    		}
+    	}
+    	return toHash.hashCode();
+    }
+    
     @Override
     public boolean alike(ICraftingPattern other) {
         if (other == this) {

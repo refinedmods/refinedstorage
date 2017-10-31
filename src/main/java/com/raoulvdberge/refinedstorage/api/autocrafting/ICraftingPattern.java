@@ -14,7 +14,10 @@ public interface ICraftingPattern {
      * @return the {@link ICraftingPatternContainer} where the pattern is in
      */
     ICraftingPatternContainer getContainer();
-
+    
+    public int hashCode();
+    
+    public boolean equals (Object obj);
     /**
      * @return the crafting pattern stack
      */
