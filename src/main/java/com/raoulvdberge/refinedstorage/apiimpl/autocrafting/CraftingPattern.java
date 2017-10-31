@@ -279,16 +279,20 @@ public class CraftingPattern implements ICraftingPattern {
     	return this==obj || (obj instanceof ICraftingPattern && this.alike((ICraftingPattern)obj));
     }
     
-    String toHash;
+    Integer hashCode;
     @Override
     public int hashCode() {
-    	if(toHash==null){
-    		toHash=new String();
+    	if(hashCode==null){
+    		hashCode=0;
     		for(ItemStack mItemStack : this.getOutputs()){
-    			toHash+=mItemStack.toString()+" ";
+    			int itemHashCode=0;
+    			itemHashCode=mItemStack.getCount();
+    			itemHashCode=itemHashCode*31+mItemStack.getItem().hashCode();
+    			itemHashCode=itemHashCode*31+mItemStack.getItemDamage();
+    			hashCode=hashCode*31+itemHashCode;
     		}
     	}
-    	return toHash.hashCode();
+    	return hashCode;
     }
     
     @Override
