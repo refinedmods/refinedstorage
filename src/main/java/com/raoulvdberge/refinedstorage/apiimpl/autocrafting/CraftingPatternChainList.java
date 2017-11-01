@@ -16,19 +16,18 @@ public class CraftingPatternChainList implements Iterable<CraftingPatternChainLi
     Map<ICraftingPattern, CraftingPatternChain> innerChainMap = new HashMap<>();
     
     public void add(ICraftingPattern pattern) {
-    	CraftingPatternChain chain = innerChainMap.get(pattern);
-    	if (chain == null) {
-    		chain = new CraftingPatternChain(pattern);
-    		innerChain.add(chain);
-    		innerChainMap.put(pattern, chain);
-    	} else {
-    		if (!chain.add(pattern)) {
-    			chain = new CraftingPatternChain(pattern);
-        		innerChain.add(chain);
-        		innerChainMap.put(pattern, chain);
-    		}
-    		
-    	}
+        CraftingPatternChain chain = innerChainMap.get(pattern);
+        if (chain == null) {
+            chain = new CraftingPatternChain(pattern);
+            innerChain.add(chain);
+            innerChainMap.put(pattern, chain);
+        } else {
+            if (!chain.add(pattern)) {
+                chain = new CraftingPatternChain(pattern);
+                innerChain.add(chain);
+                innerChainMap.put(pattern, chain);
+            }	
+        }
     }
 
     public void addAll(Collection<ICraftingPattern> patterns) {
@@ -45,8 +44,8 @@ public class CraftingPatternChainList implements Iterable<CraftingPatternChainLi
     }
 
     public void clear() {
-    	innerChain.clear();
-    	innerChainMap.clear();
+        innerChain.clear();
+        innerChainMap.clear();
     }
 
     public static class CraftingPatternChain implements ICraftingPatternChain {
