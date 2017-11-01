@@ -14,7 +14,7 @@ public interface ICraftingPattern {
      * @return the {@link ICraftingPatternContainer} where the pattern is in
      */
     ICraftingPatternContainer getContainer();
-    
+
     /**
      * @return the crafting pattern stack
      */

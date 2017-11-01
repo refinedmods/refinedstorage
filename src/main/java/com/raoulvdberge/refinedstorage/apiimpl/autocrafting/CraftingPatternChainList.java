@@ -5,26 +5,24 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class CraftingPatternChainList implements Iterable<CraftingPatternChainList.CraftingPatternChain> {
     LinkedList<CraftingPatternChain> innerChain = new LinkedList<>();
-    Map<ICraftingPattern,CraftingPatternChain>innerChainMap=new HashMap<>();
+    Map<ICraftingPattern, CraftingPatternChain> innerChainMap = new HashMap<>();
     public void add(ICraftingPattern pattern) {
-    	CraftingPatternChain chain=innerChainMap.get(pattern);
-    	if(chain==null){
-    		chain=new CraftingPatternChain(pattern);
+    	CraftingPatternChain chain = innerChainMap.get(pattern);
+    	if(chain == null){
+    		chain = new CraftingPatternChain(pattern);
     		innerChain.add(chain);
     		innerChainMap.put(pattern, chain);
     	} else {
     		if(!chain.add(pattern)){
-    			chain=new CraftingPatternChain(pattern);
+    			chain = new CraftingPatternChain(pattern);
         		innerChain.add(chain);
         		innerChainMap.put(pattern, chain);
     		}
