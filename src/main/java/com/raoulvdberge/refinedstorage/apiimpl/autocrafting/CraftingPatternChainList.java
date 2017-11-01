@@ -14,14 +14,15 @@ import java.util.stream.Collectors;
 public class CraftingPatternChainList implements Iterable<CraftingPatternChainList.CraftingPatternChain> {
     LinkedList<CraftingPatternChain> innerChain = new LinkedList<>();
     Map<ICraftingPattern, CraftingPatternChain> innerChainMap = new HashMap<>();
+    
     public void add(ICraftingPattern pattern) {
     	CraftingPatternChain chain = innerChainMap.get(pattern);
-    	if(chain == null){
+    	if (chain == null) {
     		chain = new CraftingPatternChain(pattern);
     		innerChain.add(chain);
     		innerChainMap.put(pattern, chain);
     	} else {
-    		if(!chain.add(pattern)){
+    		if (!chain.add(pattern)) {
     			chain = new CraftingPatternChain(pattern);
         		innerChain.add(chain);
         		innerChainMap.put(pattern, chain);

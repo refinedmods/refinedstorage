@@ -289,6 +289,7 @@ public class CraftingPattern implements ICraftingPattern {
     			itemHashCode = mItemStack.getCount();
     			itemHashCode = itemHashCode * 31 + mItemStack.getItem().hashCode();
     			itemHashCode = itemHashCode * 31 + mItemStack.getItemDamage();
+    			itemHashCode = itemHashCode * 31 + Objects.hashCode(mItemStack.getTagCompound());
     			hashCodeCached = hashCodeCached * 31 + itemHashCode;
     		}
     	}
