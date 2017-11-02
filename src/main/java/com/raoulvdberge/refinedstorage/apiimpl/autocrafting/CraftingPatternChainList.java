@@ -4,21 +4,29 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CraftingPatternChainList implements Iterable<CraftingPatternChainList.CraftingPatternChain> {
     LinkedList<CraftingPatternChain> innerChain = new LinkedList<>();
-
+    Map<ICraftingPattern, CraftingPatternChain> innerChainMap = new HashMap<>();
+    
     public void add(ICraftingPattern pattern) {
-        int i = 0;
-        while (i < innerChain.size() && !innerChain.get(i).add(pattern)) {
-            i++;
-        }
-        if (i == innerChain.size()) {
-            innerChain.add(new CraftingPatternChain(pattern));
+        CraftingPatternChain chain = innerChainMap.get(pattern);
+        if (chain == null) {
+            chain = new CraftingPatternChain(pattern);
+            innerChain.add(chain);
+            innerChainMap.put(pattern, chain);
+        } else {
+            if (!chain.add(pattern)) {
+                chain = new CraftingPatternChain(pattern);
+                innerChain.add(chain);
+                innerChainMap.put(pattern, chain);
+            }	
         }
     }
 
@@ -37,6 +45,7 @@ public class CraftingPatternChainList implements Iterable<CraftingPatternChainLi
 
     public void clear() {
         innerChain.clear();
+        innerChainMap.clear();
     }
 
     public static class CraftingPatternChain implements ICraftingPatternChain {
