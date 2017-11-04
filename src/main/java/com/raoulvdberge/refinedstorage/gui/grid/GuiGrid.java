@@ -680,6 +680,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             saveHistory();
             keyHandled = true;
+        } else if (keyCode == RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX.getKeyCode()) {
+            RS.INSTANCE.network.sendToServer(new MessageGridClear());
         } else {
             super.keyTyped(character, keyCode);
         }

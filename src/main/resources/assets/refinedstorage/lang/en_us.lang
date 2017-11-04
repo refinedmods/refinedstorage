@@ -1,6 +1,7 @@
 itemGroup.refinedstorage=Refined Storage
 
-key.refinedstorage.focusSearchBar=Grid Search Bar Focus
+key.refinedstorage.focusSearchBar=Focus Grid Search Bar
+key.refinedstorage.clearGridCraftingMatrix=Clear Grid Crafting Matrix
 
 gui.refinedstorage:controller.0=Controller
 gui.refinedstorage:controller.1=Creative Controller
