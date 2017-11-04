@@ -88,6 +88,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         pattern.getTagCompound().setTag(String.format(NBT_SLOT, slot), stack.serializeNBT());
     }
 
+    @Nullable
     public static ItemStack getSlot(ItemStack pattern, int slot) {
         String id = String.format(NBT_SLOT, slot);
 

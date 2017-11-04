@@ -61,7 +61,7 @@ public class ContainerGrid extends ContainerBase {
 
         if (grid.getType() == GridType.PATTERN) {
             addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 172, headerAndSlots + 4));
-            addSlotToContainer(new SlotOutput(((NetworkNodeGrid) grid).getPatterns(), 1, 172, headerAndSlots + 40));
+            addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 1, 172, headerAndSlots + 40));
         }
 
         if (grid instanceof IPortableGrid) {

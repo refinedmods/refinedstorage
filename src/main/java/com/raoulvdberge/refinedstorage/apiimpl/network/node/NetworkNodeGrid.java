@@ -39,7 +39,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,10 +73,20 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     private ItemHandlerBase matrixProcessing = new ItemHandlerBase(9 * 2, new ItemHandlerListenerNetworkNode(this));
 
     private ItemHandlerBase patterns = new ItemHandlerBase(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN)) {
-        @Nonnull
         @Override
-        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            return slot == 0 ? super.insertItem(slot, stack, simulate) : stack;
+        protected void onContentsChanged(int slot) {
+            super.onContentsChanged(slot);
+
+            if (slot == 1 && !processingPattern && !getStackInSlot(slot).isEmpty()) {
+                for (int i = 0; i < 9; ++i) {
+                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(ItemPattern.getSlot(getStackInSlot(slot), i)));
+                }
+            }
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return slot == 1 ? 1 : super.getSlotLimit(slot);
         }
     };
     private List<IFilter> filters = new ArrayList<>();
