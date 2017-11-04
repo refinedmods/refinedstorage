@@ -456,7 +456,9 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     public void onCreatePattern() {
         if (canCreatePattern()) {
-            patterns.extractItem(0, 1, false);
+            if (patterns.getStackInSlot(1).isEmpty()) {
+                patterns.extractItem(0, 1, false);
+            }
 
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
@@ -491,7 +493,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     public boolean canCreatePattern() {
-        if (patterns.getStackInSlot(0).isEmpty() || !patterns.getStackInSlot(1).isEmpty()) {
+        if (patterns.getStackInSlot(0).isEmpty()) {
             return false;
         }
 
