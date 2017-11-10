@@ -96,7 +96,11 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
     classifier 'api'
 }
 
-task signJar(type: SignJar, dependsOn: reobfJar, onlyIf: project.hasProperty('keyStore')) {
+task signJar(type: SignJar, dependsOn: reobfJar) {
+    onlyIf {
+        project.hasProperty('keyStore')
+    }
+
     keyStore = project.property('keyStore')
     alias = project.property('keyStoreAlias')
     storePass = project.property('keyStorePass')
@@ -104,8 +108,6 @@ task signJar(type: SignJar, dependsOn: reobfJar, onlyIf: project.hasProperty('ke
     inputFile = jar.archivePath
     outputFile = jar.archivePath
 }
-
-build.dependsOn signJar
 
 artifacts {
     archives deobfJar
