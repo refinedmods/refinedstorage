@@ -128,7 +128,7 @@ public class WirelessFluidGrid implements IGrid {
 
         this.sortingType = type;
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override
@@ -137,7 +137,7 @@ public class WirelessFluidGrid implements IGrid {
 
         this.sortingDirection = direction;
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override

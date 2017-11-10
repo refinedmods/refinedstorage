@@ -6,6 +6,7 @@
 - The Crafter can now only store 1 stack size pattern per slot (raoulvdberge)
 - You can now re-insert a Pattern in the pattern output slot in the Pattern Grid to modify an existing pattern (raoulvdberge)
 - Fixed not being able to use JEI R and U keys on Grid with tabs (raoulvdberge)
+- Fixed lag when opening a Grid with lots of items by offloading the grid sorting to another thread (raoulvdberge)
 - The Refined Storage jar is now signed (raoulvdberge)
 
 ### 1.5.21

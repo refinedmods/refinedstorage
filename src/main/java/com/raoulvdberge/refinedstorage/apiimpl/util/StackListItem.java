@@ -41,7 +41,6 @@ public class StackListItem implements IStackList<ItemStack> {
     public boolean remove(@Nonnull ItemStack stack, int size) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-
                 boolean success = otherStack.getCount() - size >= 0;
                 otherStack.shrink(size);
 

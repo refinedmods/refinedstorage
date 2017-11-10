@@ -43,7 +43,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
         }
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-            GuiGrid.markForSorting();
+            GuiGrid.scheduleSort();
         }
     }
 

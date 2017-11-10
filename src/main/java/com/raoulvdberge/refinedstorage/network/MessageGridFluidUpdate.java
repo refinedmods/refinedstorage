@@ -58,7 +58,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
             GuiGrid.FLUIDS.put(item.getStack().getFluid(), item);
         }
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
 
         return null;
     }

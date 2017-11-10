@@ -84,7 +84,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
             message.gridStacks.forEach(p -> process(p.getLeft(), p.getRight()));
         }
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
 
         return null;
     }

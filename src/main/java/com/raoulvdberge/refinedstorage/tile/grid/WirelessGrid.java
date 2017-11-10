@@ -151,7 +151,7 @@ public class WirelessGrid implements IGrid {
 
         this.viewType = type;
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override
@@ -160,7 +160,7 @@ public class WirelessGrid implements IGrid {
 
         this.sortingType = type;
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override
@@ -169,7 +169,7 @@ public class WirelessGrid implements IGrid {
 
         this.sortingDirection = direction;
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override
@@ -196,7 +196,7 @@ public class WirelessGrid implements IGrid {
 
         RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override

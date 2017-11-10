@@ -13,8 +13,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
-import com.raoulvdberge.refinedstorage.gui.grid.sorting.*;
+import com.raoulvdberge.refinedstorage.gui.grid.sorting.Sorter;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
@@ -44,14 +43,8 @@ import org.lwjgl.input.Keyboard;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
 
 public class GuiGrid extends GuiBase implements IGridDisplay {
-    private static final GridSorting SORTING_QUANTITY = new GridSortingQuantity();
-    private static final GridSorting SORTING_NAME = new GridSortingName();
-    private static final GridSorting SORTING_ID = new GridSortingID();
-    private static final GridSorting SORTING_INVENTORYTWEAKS = new GridSortingInventoryTweaks();
-
     private static final List<String> SEARCH_HISTORY = new ArrayList<>();
 
     public static final ListMultimap<Item, GridStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
@@ -60,7 +53,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public static List<IGridStack> STACKS = new ArrayList<>();
     public static boolean CAN_CRAFT;
 
-    private static boolean markedForSorting;
+    private static boolean SCHEDULE_SORT = false;
+    private Queue<Sorter> sortingQueue = new ArrayDeque<>();
 
     private boolean wasConnected;
 
@@ -97,10 +91,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     private int[] konamiOffsetsX;
     private int[] konamiOffsetsY;
-
-    public static void markForSorting() {
-        markedForSorting = true;
-    }
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, grid.getType() == GridType.FLUID ? 193 : 227, 0);
@@ -169,7 +159,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         addSideButton(new SideButtonGridSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, grid));
 
-        sortItems();
+        scheduleSort();
     }
 
     @Override
@@ -181,62 +171,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         return grid;
     }
 
-    private void sortItems() {
-        List<IGridStack> stacks = new ArrayList<>();
-
-        if (grid.isActive()) {
-            stacks.addAll(grid.getType() == GridType.FLUID ? FLUIDS.values() : ITEMS.values());
-
-            List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
-                grid,
-                searchField != null ? searchField.getText() : "",
-                (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
-            );
-
-            Iterator<IGridStack> t = stacks.iterator();
-
-            while (t.hasNext()) {
-                IGridStack stack = t.next();
-
-                for (Predicate<IGridStack> filter : filters) {
-                    if (!filter.test(stack)) {
-                        t.remove();
-
-                        break;
-                    }
-                }
-            }
-
-            SORTING_NAME.setSortingDirection(grid.getSortingDirection());
-            SORTING_QUANTITY.setSortingDirection(grid.getSortingDirection());
-            SORTING_ID.setSortingDirection(grid.getSortingDirection());
-            SORTING_INVENTORYTWEAKS.setSortingDirection(grid.getSortingDirection());
-
-            stacks.sort(SORTING_NAME);
-
-            if (grid.getSortingType() == IGrid.SORTING_TYPE_QUANTITY) {
-                stacks.sort(SORTING_QUANTITY);
-            } else if (grid.getSortingType() == IGrid.SORTING_TYPE_ID) {
-                stacks.sort(SORTING_ID);
-            } else if (grid.getSortingType() == IGrid.SORTING_TYPE_INVENTORYTWEAKS) {
-                stacks.sort(SORTING_INVENTORYTWEAKS);
-            }
-        }
-
-        STACKS = stacks;
-
-        if (scrollbar != null) {
-            scrollbar.setEnabled(getRows() > getVisibleRows());
-            scrollbar.setMaxOffset(getRows() - getVisibleRows());
-        }
-
-        if (tabPageLeft != null) {
-            tabPageLeft.visible = grid.getTotalTabPages() > 0;
-        }
-
-        if (tabPageRight != null) {
-            tabPageRight.visible = grid.getTotalTabPages() > 0;
-        }
+    public static void scheduleSort() {
+        SCHEDULE_SORT = true;
     }
 
     @Override
@@ -251,13 +187,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (wasConnected != grid.isActive()) {
             wasConnected = grid.isActive();
 
-            markForSorting();
-        }
-
-        if (markedForSorting) {
-            markedForSorting = false;
-
-            sortItems();
+            scheduleSort();
         }
 
         boolean hasTabs = !getGrid().getTabs().isEmpty();
@@ -266,6 +196,21 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             hadTabs = hasTabs;
 
             initGui();
+        }
+
+        if (SCHEDULE_SORT) {
+            SCHEDULE_SORT = false;
+
+            sortingQueue.add(new Sorter(this));
+        }
+
+        Sorter sorter = sortingQueue.peek();
+        if (sorter != null) {
+            if (!sorter.isStarted()) {
+                sorter.start();
+            } else if (sorter.isDone()) {
+                sortingQueue.poll();
+            }
         }
     }
 
@@ -478,7 +423,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7 + getTabHeight(), t(grid.getGuiTitle()));
+        drawString(7, 7 + getTabHeight(), t(grid.getGuiTitle()) + " " + STACKS.size() + "," + sortingQueue.size());
         drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
         if (grid.getTotalTabPages() > 0) {
@@ -585,7 +530,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 searchField.setText("");
                 searchField.setFocused(true);
 
-                sortItems();
+                scheduleSort();
 
                 updateJEI();
             } else if (wasSearchFieldFocused != searchField.isFocused()) {
@@ -659,8 +604,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             // NO OP
         } else if (searchField.textboxKeyTyped(character, keyCode)) {
             updateJEI();
+            scheduleSort();
 
-            sortItems();
             keyHandled = true;
         } else if (searchField.isFocused() && (keyCode == Keyboard.KEY_UP || keyCode == Keyboard.KEY_DOWN || keyCode == Keyboard.KEY_RETURN)) {
             if (keyCode == Keyboard.KEY_UP) {
@@ -706,7 +651,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             if (delta == 1) {
                 searchField.setText("");
 
-                sortItems();
+                scheduleSort();
 
                 updateJEI();
 
@@ -716,7 +661,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         searchField.setText(SEARCH_HISTORY.get(searchHistory));
 
-        sortItems();
+        scheduleSort();
 
         updateJEI();
     }
@@ -758,5 +703,13 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (blockingPattern != null) {
             blockingPattern.setIsChecked(checked);
         }
+    }
+
+    public GuiButton getTabPageLeft() {
+        return tabPageLeft;
+    }
+
+    public GuiButton getTabPageRight() {
+        return tabPageRight;
     }
 }

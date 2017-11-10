@@ -99,7 +99,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
             }
         }
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
 
         return null;
     }

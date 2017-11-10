@@ -262,7 +262,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
         this.sortingType = type;
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override
@@ -271,7 +271,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
         this.sortingDirection = direction;
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override
@@ -298,7 +298,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
         RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
     }
 
     @Override

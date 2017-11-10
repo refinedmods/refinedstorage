@@ -48,14 +48,14 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
                     stack.getStack().amount += message.delta;
                 }
 
-                GuiGrid.markForSorting();
+                GuiGrid.scheduleSort();
 
                 return null;
             }
         }
 
         GuiGrid.FLUIDS.put(fluid, message.clientStack);
-        GuiGrid.markForSorting();
+        GuiGrid.scheduleSort();
 
         return null;
     }

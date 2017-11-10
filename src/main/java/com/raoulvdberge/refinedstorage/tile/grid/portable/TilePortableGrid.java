@@ -62,13 +62,13 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             t.setSortingDirection(v);
             t.markDirty();
         }
-    }, p -> GuiGrid.markForSorting());
+    }, p -> GuiGrid.scheduleSort());
     public static final TileDataParameter<Integer, TilePortableGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingType, (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.markDirty();
         }
-    }, p -> GuiGrid.markForSorting());
+    }, p -> GuiGrid.scheduleSort());
     public static final TileDataParameter<Integer, TilePortableGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSearchBoxMode, (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
@@ -94,7 +94,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         t.markDirty();
     }, p -> {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
-            GuiGrid.markForSorting();
+            GuiGrid.scheduleSort();
         }
     });
     public static final TileDataParameter<Integer, TilePortableGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabPage, (t, v) -> {
