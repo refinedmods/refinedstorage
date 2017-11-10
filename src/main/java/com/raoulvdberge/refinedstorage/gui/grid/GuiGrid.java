@@ -423,7 +423,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7 + getTabHeight(), t(grid.getGuiTitle()) + " " + STACKS.size() + "," + sortingQueue.size());
+        drawString(7, 7 + getTabHeight(), t(grid.getGuiTitle()));
         drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
         if (grid.getTotalTabPages() > 0) {
