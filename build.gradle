@@ -111,6 +111,8 @@ signJar.onlyIf {
     project.hasProperty('keyStore')
 }
 
+build.dependsOn signJar
+
 artifacts {
     archives deobfJar
     archives apiJar
