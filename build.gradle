@@ -97,16 +97,16 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
-    onlyIf {
-        project.hasProperty('keyStore')
-    }
-
     keyStore = project.property('keyStore')
     alias = project.property('keyStoreAlias')
     storePass = project.property('keyStorePass')
     keyPass = project.property('keyStoreKeyPass')
     inputFile = jar.archivePath
     outputFile = jar.archivePath
+}
+
+signJar.onlyIf {
+    project.hasProperty('keyStore')
 }
 
 artifacts {
