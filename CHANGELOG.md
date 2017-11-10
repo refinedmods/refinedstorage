@@ -8,6 +8,7 @@
 - Fixed not being able to use JEI R and U keys on Grid with tabs (raoulvdberge)
 - Fixed lag when opening a Grid with lots of items by offloading the grid sorting to another thread (raoulvdberge)
 - The Refined Storage jar is now signed (raoulvdberge)
+- Updated Chinese translation (TartaricAcid)
 
 ### 1.5.21
 - Updated Portuguese (Brazilian) translation (Pinz714)
