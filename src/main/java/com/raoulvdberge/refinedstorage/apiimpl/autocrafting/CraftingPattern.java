@@ -29,7 +29,7 @@ public class CraftingPattern implements ICraftingPattern {
     private List<ItemStack> outputs = new ArrayList<>();
     private List<ItemStack> byproducts = new ArrayList<>();
     private Integer hashCodeCached = null;
-    
+
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         this.container = container;
         this.stack = Comparer.stripTags(stack);
@@ -274,12 +274,12 @@ public class CraftingPattern implements ICraftingPattern {
             ", byproducts=" + byproducts +
             '}';
     }
-    
+
     @Override
-    public boolean equals (Object obj) {
+    public boolean equals(Object obj) {
         return this == obj || (obj instanceof ICraftingPattern && this.alike((ICraftingPattern) obj));
     }
-    
+
     @Override
     public int hashCode() {
         if (hashCodeCached == null) {
@@ -295,7 +295,7 @@ public class CraftingPattern implements ICraftingPattern {
         }
         return hashCodeCached;
     }
-    
+
     @Override
     public boolean alike(ICraftingPattern other) {
         if (other == this) {

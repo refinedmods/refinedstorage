@@ -3,18 +3,13 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CraftingPatternChainList implements Iterable<CraftingPatternChainList.CraftingPatternChain> {
     LinkedList<CraftingPatternChain> innerChain = new LinkedList<>();
     Map<ICraftingPattern, CraftingPatternChain> innerChainMap = new HashMap<>();
-    
+
     public void add(ICraftingPattern pattern) {
         CraftingPatternChain chain = innerChainMap.get(pattern);
         if (chain == null) {
@@ -26,7 +21,7 @@ public class CraftingPatternChainList implements Iterable<CraftingPatternChainLi
                 chain = new CraftingPatternChain(pattern);
                 innerChain.add(chain);
                 innerChainMap.put(pattern, chain);
-            }	
+            }
         }
     }
 
