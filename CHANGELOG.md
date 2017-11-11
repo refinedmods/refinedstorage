@@ -9,6 +9,7 @@
 - Fixed lag when opening a Grid with lots of items by offloading the grid sorting to another thread (raoulvdberge)
 - The Refined Storage jar is now signed (raoulvdberge)
 - Updated Chinese translation (TartaricAcid)
+- Performance improvement when adding patterns to the network (xinyuan-liu)
 
 ### 1.5.21
 - Updated Portuguese (Brazilian) translation (Pinz714)
