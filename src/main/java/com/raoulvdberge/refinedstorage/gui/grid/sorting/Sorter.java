@@ -15,7 +15,7 @@ public class Sorter implements Runnable {
     private static final GridSorting SORTING_QUANTITY = new GridSortingQuantity();
     private static final GridSorting SORTING_NAME = new GridSortingName();
     private static final GridSorting SORTING_ID = new GridSortingID();
-    private static final GridSorting SORTING_INVENTORY_TWEAKS = new GridSortingInventoryTweaks();
+    private static final GridSorting SORTING_INVENTORYTWEAKS = new GridSortingInventoryTweaks();
 
     private boolean done;
     private boolean started;
@@ -58,7 +58,7 @@ public class Sorter implements Runnable {
             SORTING_NAME.setSortingDirection(grid.getSortingDirection());
             SORTING_QUANTITY.setSortingDirection(grid.getSortingDirection());
             SORTING_ID.setSortingDirection(grid.getSortingDirection());
-            SORTING_INVENTORY_TWEAKS.setSortingDirection(grid.getSortingDirection());
+            SORTING_INVENTORYTWEAKS.setSortingDirection(grid.getSortingDirection());
 
             stacks.sort(SORTING_NAME);
 
@@ -67,7 +67,7 @@ public class Sorter implements Runnable {
             } else if (grid.getSortingType() == IGrid.SORTING_TYPE_ID) {
                 stacks.sort(SORTING_ID);
             } else if (grid.getSortingType() == IGrid.SORTING_TYPE_INVENTORYTWEAKS) {
-                stacks.sort(SORTING_INVENTORY_TWEAKS);
+                stacks.sort(SORTING_INVENTORYTWEAKS);
             }
         }
 
