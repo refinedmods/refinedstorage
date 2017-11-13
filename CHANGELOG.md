@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.23
+- Fixed duplication bug with autocrafting (raoulvdberge)
+
 ### 1.5.22
 - Added oredict, blocking, processing, ore inputs access to OpenComputers API (raoulvdberge)
 - Added shortcut to clear Grid crafting matrix (CTRL+X) (raoulvdberge)

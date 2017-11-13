@@ -63,7 +63,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             ItemStack patternStack = patterns.getStackInSlot(i);
 
             if (!patternStack.isEmpty()) {
-                ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(world, patternStack, this);
+                ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(world, patternStack.copy(), this);
 
                 if (pattern.isValid()) {
                     actualPatterns.add(pattern);
