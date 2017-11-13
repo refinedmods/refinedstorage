@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -40,7 +41,7 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public String getTooltip(boolean quantity) {
-        return stack.getFluid().getLocalizedName(stack);
+        return stack.getFluid().getLocalizedName(stack) + (quantity ? (" " + TextFormatting.GRAY + "(" + RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(stack.amount) + " mB)" + TextFormatting.RESET) : "");
     }
 
     @Override
