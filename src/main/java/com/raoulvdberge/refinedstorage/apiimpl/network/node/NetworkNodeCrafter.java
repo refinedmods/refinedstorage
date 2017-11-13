@@ -63,6 +63,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             ItemStack patternStack = patterns.getStackInSlot(i);
 
             if (!patternStack.isEmpty()) {
+                // We copy the pattern stack because if we remove it from the inventory, the crafting task will use a pattern with an invalid stack...
                 ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(world, patternStack.copy(), this);
 
                 if (pattern.isValid()) {
