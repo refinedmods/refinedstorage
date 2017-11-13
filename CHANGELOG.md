@@ -2,6 +2,7 @@
 
 ### 1.5.23
 - Fixed duplication bug with autocrafting (raoulvdberge)
+- Fixed Fluid Interface with Stack Upgrade not exporting liquids (raoulvdberge)
 
 ### 1.5.22
 - Added oredict, blocking, processing, ore inputs access to OpenComputers API (raoulvdberge)

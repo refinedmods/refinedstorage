@@ -120,6 +120,14 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
                 if (stackInStorage != null) {
                     int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
 
+                    int spaceRemaining = tankOut.getCapacity() - tankOut.getFluidAmount();
+                    if (toExtract > spaceRemaining) {
+                        toExtract = spaceRemaining;
+                    }
+                    if (toExtract <= 0) {
+                        return;
+                    }
+
                     FluidStack took = network.extractFluid(stack, toExtract, compare, true);
 
                     if (took != null && (toExtract - tankOut.fillInternal(took, false)) == 0) {
