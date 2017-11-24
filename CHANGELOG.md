@@ -2,6 +2,8 @@
 
 ### 1.5.24
 - The Grid now displays last modified information (player name and date) and size on tooltips of stacks (raoulvdberge)
+- Removed craft-only mode for the Exporter (raoulvdberge)
+- Fixed Exporter with Stack Upgrade not working correctly in Regulator Mode (raoulvdberge)
 
 ### 1.5.23
 - Fixed duplication bug with autocrafting (raoulvdberge)

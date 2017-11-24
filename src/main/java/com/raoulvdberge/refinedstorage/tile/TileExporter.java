@@ -14,7 +14,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileExporter extends TileNode<NetworkNodeExporter> {
+public class
+TileExporter extends TileNode<NetworkNodeExporter> {
     public static final TileDataParameter<Integer, TileExporter> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileExporter> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean, TileExporter> REGULATOR = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isRegulator(), (t, v) -> {
@@ -43,16 +44,11 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
             ((ContainerExporter) ((GuiExporter) Minecraft.getMinecraft().currentScreen).inventorySlots).initSlots();
         }
     });
-    public static final TileDataParameter<Boolean, TileExporter> CRAFT_ONLY = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isCraftOnly(), (t, v) -> {
-        t.getNode().setCraftOnly(v);
-        t.getNode().markDirty();
-    });
 
     public TileExporter() {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(REGULATOR);
-        dataManager.addWatchedParameter(CRAFT_ONLY);
     }
 
     @Override

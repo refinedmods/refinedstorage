@@ -13,7 +13,7 @@ public final class TimeUtils {
     public static String getAgo(long ago, String by) {
         long diff = System.currentTimeMillis() - ago;
 
-        if (diff < SECOND * 5) {
+        if (diff < SECOND * 10) {
             return I18n.format("misc.refinedstorage:last_modified.just_now", by);
         } else if (diff < MINUTE) {
             return I18n.format("misc.refinedstorage:last_modified.second" + ((diff / SECOND) > 1 ? "s" : ""), diff / SECOND, by);
