@@ -14,8 +14,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class
-TileExporter extends TileNode<NetworkNodeExporter> {
+public class TileExporter extends TileNode<NetworkNodeExporter> {
     public static final TileDataParameter<Integer, TileExporter> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileExporter> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean, TileExporter> REGULATOR = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isRegulator(), (t, v) -> {
