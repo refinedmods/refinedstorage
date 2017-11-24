@@ -12,11 +12,11 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -97,8 +97,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         ItemStack inserted = deposit.getKey();
         long insertedAt = deposit.getValue();
 
-        // @todo: why doesn't this break on servers???
-        if (Minecraft.getSystemTime() - insertedAt < DEPOSIT_ALL_MAX_DELAY) {
+        if (MinecraftServer.getCurrentTimeMillis() - insertedAt < DEPOSIT_ALL_MAX_DELAY) {
             for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
                 ItemStack toInsert = player.inventory.getStackInSlot(i);
 
@@ -125,7 +124,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, StackUtils.nullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
 
-            deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, Minecraft.getSystemTime()));
+            deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, MinecraftServer.getCurrentTimeMillis()));
         }
 
         return true;
