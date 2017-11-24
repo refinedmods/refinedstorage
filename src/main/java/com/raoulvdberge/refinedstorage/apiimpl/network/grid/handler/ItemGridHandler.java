@@ -72,6 +72,8 @@ public class ItemGridHandler implements IItemGridHandler {
         ItemStack took = network.extractItem(item, size, true);
 
         if (took != null) {
+            network.getItemStorageTracker().changed(player, took.copy());
+
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
@@ -106,6 +108,8 @@ public class ItemGridHandler implements IItemGridHandler {
             return stack;
         }
 
+        network.getItemStorageTracker().changed(player, stack.copy());
+
         ItemStack remainder = network.insertItem(stack, stack.getCount(), false);
 
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
@@ -125,6 +129,8 @@ public class ItemGridHandler implements IItemGridHandler {
 
         ItemStack stack = player.inventory.getItemStack();
         int size = single ? 1 : stack.getCount();
+
+        network.getItemStorageTracker().changed(player, stack.copy());
 
         if (single) {
             if (network.insertItem(stack, size, true) == null) {

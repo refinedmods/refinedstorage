@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.24
+- The Grid now displays last modified information (player name and date) and size on tooltips of stacks (raoulvdberge)
+
 ### 1.5.23
 - Fixed duplication bug with autocrafting (raoulvdberge)
 - Fixed Fluid Interface with Stack Upgrade not exporting fluids (raoulvdberge)

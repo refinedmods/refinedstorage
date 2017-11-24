@@ -2,12 +2,14 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -37,12 +39,26 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
 
             for (ItemStack stack : network.getItemStorageCache().getList().getStacks()) {
                 StackUtils.writeItemStack(buf, stack, network, false);
+
+                IStorageTracker.IStorageTrackerEntry entry = network.getItemStorageTracker().get(stack);
+                buf.writeBoolean(entry != null);
+                if (entry != null) {
+                    buf.writeLong(entry.getTime());
+                    ByteBufUtils.writeUTF8String(buf, entry.getName());
+                }
             }
 
             for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
                 for (ItemStack output : pattern.getOutputs()) {
                     if (output != null) {
                         StackUtils.writeItemStack(buf, output, network, true);
+
+                        IStorageTracker.IStorageTrackerEntry entry = network.getItemStorageTracker().get(output);
+                        buf.writeBoolean(entry != null);
+                        if (entry != null) {
+                            buf.writeLong(entry.getTime());
+                            ByteBufUtils.writeUTF8String(buf, entry.getName());
+                        }
                     }
                 }
             }

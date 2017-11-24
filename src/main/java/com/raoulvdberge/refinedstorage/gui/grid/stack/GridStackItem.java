@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -12,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +25,8 @@ public class GridStackItem implements IGridStack {
     private boolean craftable;
     private boolean displayCraftText;
     private String[] oreIds = null;
+    @Nullable
+    private IStorageTracker.IStorageTrackerEntry entry;
 
     public GridStackItem(ByteBuf buf) {
         this.stack = StackUtils.readItemStack(buf);
@@ -29,6 +34,10 @@ public class GridStackItem implements IGridStack {
         this.craftable = buf.readBoolean();
 
         setDisplayCraftText(buf.readBoolean());
+
+        if (buf.readBoolean()) {
+            this.entry = new StorageTrackerEntry(buf);
+        }
     }
 
     public ItemStack getStack() {
@@ -84,7 +93,7 @@ public class GridStackItem implements IGridStack {
     }
 
     @Override
-    public String getTooltip(boolean quantity) {
+    public String getTooltip() {
         try {
             List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
 
@@ -97,10 +106,6 @@ public class GridStackItem implements IGridStack {
                 }
             }
 
-            if (quantity && !lines.isEmpty()) {
-                lines.set(0, lines.get(0) + " " + TextFormatting.GRAY + "(" + RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(stack.getCount()) + "x)" + TextFormatting.RESET);
-            }
-
             return lines.stream().collect(Collectors.joining("\n"));
         } catch (Throwable t) {
             return "";
@@ -110,6 +115,11 @@ public class GridStackItem implements IGridStack {
     @Override
     public int getQuantity() {
         return stack.getCount();
+    }
+
+    @Override
+    public String getFormattedFullQuantity() {
+        return RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(getQuantity());
     }
 
     @Override
@@ -128,6 +138,17 @@ public class GridStackItem implements IGridStack {
     @Override
     public Object getIngredient() {
         return stack;
+    }
+
+    @Nullable
+    @Override
+    public IStorageTracker.IStorageTrackerEntry getTrackerEntry() {
+        return entry;
+    }
+
+    @Override
+    public void setTrackerEntry(@Nullable IStorageTracker.IStorageTrackerEntry entry) {
+        this.entry = entry;
     }
 
     @Override

@@ -97,6 +97,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         ItemStack inserted = deposit.getKey();
         long insertedAt = deposit.getValue();
 
+        // @todo: why doesn't this break on servers???
         if (Minecraft.getSystemTime() - insertedAt < DEPOSIT_ALL_MAX_DELAY) {
             for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
                 ItemStack toInsert = player.inventory.getStackInSlot(i);

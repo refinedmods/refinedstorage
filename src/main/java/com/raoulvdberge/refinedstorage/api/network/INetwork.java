@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -273,6 +274,16 @@ public interface INetwork {
     default FluidStack extractFluid(FluidStack stack, int size, boolean simulate) {
         return extractFluid(stack, size, IComparer.COMPARE_NBT, simulate);
     }
+
+    /**
+     * @return the storage tracker for items
+     */
+    IStorageTracker<ItemStack> getItemStorageTracker();
+
+    /**
+     * @return the storage tracker for fluids
+     */
+    IStorageTracker<FluidStack> getFluidStorageTracker();
 
     /**
      * @return the world where this network is in

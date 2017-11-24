@@ -1,18 +1,23 @@
 package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nullable;
 
 public class GridStackFluid implements IGridStack {
     private int hash;
     private FluidStack stack;
+    @Nullable
+    private IStorageTracker.IStorageTrackerEntry entry;
 
-    public GridStackFluid(Pair<Integer, FluidStack> data) {
+    public GridStackFluid(Pair<Integer, FluidStack> data, @Nullable IStorageTracker.IStorageTrackerEntry entry) {
         this.hash = data.getLeft();
         this.stack = data.getRight();
+        this.entry = entry;
     }
 
     public FluidStack getStack() {
@@ -40,13 +45,18 @@ public class GridStackFluid implements IGridStack {
     }
 
     @Override
-    public String getTooltip(boolean quantity) {
-        return stack.getFluid().getLocalizedName(stack) + (quantity ? (" " + TextFormatting.GRAY + "(" + RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(stack.amount) + " mB)" + TextFormatting.RESET) : "");
+    public String getTooltip() {
+        return stack.getFluid().getLocalizedName(stack);
     }
 
     @Override
     public int getQuantity() {
         return stack.amount;
+    }
+
+    @Override
+    public String getFormattedFullQuantity() {
+        return RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(getQuantity()) + " mB";
     }
 
     @Override
@@ -59,6 +69,17 @@ public class GridStackFluid implements IGridStack {
     @Override
     public Object getIngredient() {
         return stack;
+    }
+
+    @Nullable
+    @Override
+    public IStorageTracker.IStorageTrackerEntry getTrackerEntry() {
+        return entry;
+    }
+
+    @Override
+    public void setTrackerEntry(@Nullable IStorageTracker.IStorageTrackerEntry entry) {
+        this.entry = entry;
     }
 
     @Override

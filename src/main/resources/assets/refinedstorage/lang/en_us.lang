@@ -110,6 +110,22 @@ misc.refinedstorage:processing=Processing
 
 misc.refinedstorage:reader_writer.redstone=Redstone strength: %d
 
+misc.refinedstorage:total=%s total
+
+misc.refinedstorage:last_modified.just_now=Last modified just now by %s
+misc.refinedstorage:last_modified.second=Last modified %d second ago by %s
+misc.refinedstorage:last_modified.seconds=Last modified %d seconds ago by %s
+misc.refinedstorage:last_modified.minute=Last modified %d minute ago by %s
+misc.refinedstorage:last_modified.minutes=Last modified %d minutes ago by %s
+misc.refinedstorage:last_modified.hour=Last modified %d hour ago by %s
+misc.refinedstorage:last_modified.hours=Last modified %d hours ago by %s
+misc.refinedstorage:last_modified.day=Last modified %d day ago by %s
+misc.refinedstorage:last_modified.days=Last modified %d days ago by %s
+misc.refinedstorage:last_modified.week=Last modified %d week ago by %s
+misc.refinedstorage:last_modified.weeks=Last modified %d weeks ago by %s
+misc.refinedstorage:last_modified.year=Last modified %d year ago by %s
+misc.refinedstorage:last_modified.years=Last modified %d years ago by %s
+
 sidebutton.refinedstorage:compare.1=Compare damage
 sidebutton.refinedstorage:compare.2=Compare NBT
 sidebutton.refinedstorage:compare.8=Compare ore dictionary

@@ -20,6 +20,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
@@ -31,6 +32,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.Stor
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
 import com.raoulvdberge.refinedstorage.block.BlockController;
 import com.raoulvdberge.refinedstorage.block.ControllerEnergyType;
 import com.raoulvdberge.refinedstorage.block.ControllerType;
@@ -121,6 +124,9 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private static final String NBT_READER_WRITER_CHANNELS = "ReaderWriterChannels";
     private static final String NBT_READER_WRITER_NAME = "Name";
 
+    private static final String NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker";
+    private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
+
     private IItemGridHandler itemGridHandler = new ItemGridHandler(this);
     private IFluidGridHandler fluidGridHandler = new FluidGridHandler(this);
 
@@ -133,9 +139,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private ISecurityManager securityManager = new SecurityManager(this);
 
     private IStorageCache<ItemStack> itemStorage = new StorageCacheItem(this);
+    private StorageTrackerItem itemStorageTracker = new StorageTrackerItem(this::markDirty);
     private List<Pair<ItemStack, Integer>> batchedItemStorageDeltas = new LinkedList<>();
 
     private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
+    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
 
     private Map<String, IReaderWriterChannel> readerWriterChannels = new HashMap<>();
 
@@ -305,7 +313,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         if (!batchedItemStorageDeltas.isEmpty()) {
             world.getMinecraftServer().getPlayerList().getPlayers().stream()
                 .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
-                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, batchedItemStorageDeltas), player));
+                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, itemStorageTracker, batchedItemStorageDeltas), player));
 
             batchedItemStorageDeltas.clear();
         }
@@ -316,7 +324,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         if (!batched) {
             world.getMinecraftServer().getPlayerList().getPlayers().stream()
                 .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
-                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, stack, delta), player));
+                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, itemStorageTracker, stack, delta), player));
         } else {
             batchedItemStorageDeltas.add(Pair.of(stack, delta));
         }
@@ -338,7 +346,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
         world.getMinecraftServer().getPlayerList().getPlayers().stream()
             .filter(player -> isWatchingGrid(player, GridType.FLUID))
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(stack, delta), player));
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(this, stack, delta), player));
     }
 
     private boolean isWatchingGrid(EntityPlayer player, GridType... types) {
@@ -592,6 +600,16 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
+    public IStorageTracker<ItemStack> getItemStorageTracker() {
+        return itemStorageTracker;
+    }
+
+    @Override
+    public IStorageTracker<FluidStack> getFluidStorageTracker() {
+        return fluidStorageTracker;
+    }
+
+    @Override
     public World world() {
         return world;
     }
@@ -623,6 +641,14 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 readerWriterChannels.put(name, channel);
             }
         }
+
+        if (tag.hasKey(NBT_ITEM_STORAGE_TRACKER)) {
+            itemStorageTracker.readFromNBT(tag.getTagList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+        }
+
+        if (tag.hasKey(NBT_FLUID_STORAGE_TRACKER)) {
+            fluidStorageTracker.readFromNBT(tag.getTagList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+        }
     }
 
     @Override
@@ -646,6 +672,9 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         }
 
         tag.setTag(NBT_READER_WRITER_CHANNELS, readerWriterChannelsList);
+
+        tag.setTag(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNBT());
+        tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNBT());
 
         return tag;
     }

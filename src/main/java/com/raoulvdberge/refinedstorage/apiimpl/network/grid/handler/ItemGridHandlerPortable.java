@@ -72,6 +72,8 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
         ItemStack took = portableGrid.getStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, true);
 
         if (took != null) {
+            portableGrid.getStorageTracker().changed(player, took.copy());
+
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
@@ -103,6 +105,8 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
             return stack;
         }
 
+        portableGrid.getStorageTracker().changed(player, stack.copy());
+
         ItemStack remainder = portableGrid.getStorage().insert(stack, stack.getCount(), false);
 
         portableGrid.drainEnergy(RS.INSTANCE.config.portableGridInsertUsage);
@@ -118,6 +122,8 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
 
         ItemStack stack = player.inventory.getItemStack();
         int size = single ? 1 : stack.getCount();
+
+        portableGrid.getStorageTracker().changed(player, stack.copy());
 
         if (single) {
             if (portableGrid.getStorage().insert(stack, size, true) == null) {

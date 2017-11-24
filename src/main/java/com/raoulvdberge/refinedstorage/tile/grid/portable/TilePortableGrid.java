@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItemPortable;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
 import com.raoulvdberge.refinedstorage.block.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.PortableGridType;
@@ -43,6 +44,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -107,6 +109,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private static final String NBT_ENERGY = "Energy";
     private static final String NBT_DISK_STATE = "DiskState";
     private static final String NBT_CONNECTED = "Connected";
+
+    private static final String NBT_STORAGE_TRACKER = "StorageTracker";
 
     private EnergyForge energyStorage = new EnergyForge(ItemEnergyItem.CAPACITY);
     private PortableGridType type;
@@ -181,6 +185,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private PortableGridDiskState diskState = PortableGridDiskState.NONE;
     private boolean connected;
 
+    private StorageTrackerItem storageTracker = new StorageTrackerItem(this::markDirty);
+
     public TilePortableGrid() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
         dataManager.addWatchedParameter(ENERGY_STORED);
@@ -226,6 +232,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             StackUtils.readItems(disk, 4, stack.getTagCompound());
 
             this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
+
+            if (stack.getTagCompound().hasKey(PortableGrid.NBT_STORAGE_TRACKER)) {
+                storageTracker.readFromNBT(stack.getTagCompound().getTagList(PortableGrid.NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            }
         }
 
         this.diskState = getDiskState(this);
@@ -248,6 +258,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SIZE, size);
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
+
+        stack.getTagCompound().setTag(PortableGrid.NBT_STORAGE_TRACKER, storageTracker.serializeNBT());
 
         stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(energyStorage.getEnergyStored(), false);
 
@@ -401,6 +413,11 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
+    public StorageTrackerItem getStorageTracker() {
+        return storageTracker;
+    }
+
+    @Override
     public InventoryCrafting getCraftingMatrix() {
         return null;
     }
@@ -531,6 +548,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         redstoneMode.write(tag);
 
+        tag.setTag(NBT_STORAGE_TRACKER, storageTracker.serializeNBT());
+
         return tag;
     }
 
@@ -570,6 +589,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         }
 
         redstoneMode = RedstoneMode.read(tag);
+
+        if (tag.hasKey(NBT_STORAGE_TRACKER)) {
+            storageTracker.readFromNBT(tag.getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+        }
     }
 
     @Override

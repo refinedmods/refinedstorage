@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.network.MessageGridItemDelta;
@@ -12,6 +13,7 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -45,7 +47,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
         list.add(stack, size);
 
         if (!rebuilding) {
-            portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, size), (EntityPlayerMP) w));
+            portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getStorageTracker(), stack, size), (EntityPlayerMP) w));
 
             listeners.forEach(Runnable::run);
         }
@@ -54,7 +56,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     @Override
     public void remove(@Nonnull ItemStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
-            portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, stack, -size), (EntityPlayerMP) w));
+            portableGrid.getWatchers().forEach(w -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getStorageTracker(), stack, -size), (EntityPlayerMP) w));
 
             listeners.forEach(Runnable::run);
         }
@@ -91,6 +93,13 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
 
             for (ItemStack stack : list.getStacks()) {
                 StackUtils.writeItemStack(buf, stack, null, false);
+
+                IStorageTracker.IStorageTrackerEntry entry = portableGrid.getStorageTracker().get(stack);
+                buf.writeBoolean(entry != null);
+                if (entry != null) {
+                    buf.writeLong(entry.getTime());
+                    ByteBufUtils.writeUTF8String(buf, entry.getName());
+                }
             }
         }, false), (EntityPlayerMP) player);
     }

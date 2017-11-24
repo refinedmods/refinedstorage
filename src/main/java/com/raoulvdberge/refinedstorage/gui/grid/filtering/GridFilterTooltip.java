@@ -13,7 +13,7 @@ public class GridFilterTooltip implements Predicate<IGridStack> {
 
     @Override
     public boolean test(IGridStack stack) {
-        String otherTooltip = stack.getTooltip(false).trim().toLowerCase();
+        String otherTooltip = stack.getTooltip().trim().toLowerCase();
 
         if (!otherTooltip.contains("\n")) {
             return false;

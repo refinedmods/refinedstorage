@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHand
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItemPortable;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
@@ -29,6 +30,7 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -42,6 +44,8 @@ import java.util.List;
 
 public class PortableGrid implements IGrid, IPortableGrid {
     public static int ID;
+
+    public static final String NBT_STORAGE_TRACKER = "StorageTracker";
 
     @Nullable
     private IStorageDisk<ItemStack> storage;
@@ -57,6 +61,10 @@ public class PortableGrid implements IGrid, IPortableGrid {
     private int tabSelected;
     private int tabPage;
     private int size;
+
+    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> {
+        stack.getTagCompound().setTag(NBT_STORAGE_TRACKER, getStorageTracker().serializeNBT());
+    });
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
@@ -126,6 +134,10 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
         if (!stack.hasTagCompound()) {
             stack.setTagCompound(new NBTTagCompound());
+        }
+
+        if (stack.getTagCompound().hasKey(NBT_STORAGE_TRACKER)) {
+            storageTracker.readFromNBT(stack.getTagCompound().getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
         if (player != null) {
@@ -323,6 +335,11 @@ public class PortableGrid implements IGrid, IPortableGrid {
     @Override
     public IItemHandlerModifiable getFilter() {
         return filter;
+    }
+
+    @Override
+    public StorageTrackerItem getStorageTracker() {
+        return storageTracker;
     }
 
     @Override

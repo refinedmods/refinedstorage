@@ -55,6 +55,8 @@ public class FluidGridHandler implements IFluidGridHandler {
             if (bucket != null) {
                 IFluidHandlerItem fluidHandler = bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 
+                network.getFluidStorageTracker().changed(player, stack.copy());
+
                 fluidHandler.fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME, false), true);
 
                 if (shift) {
@@ -85,6 +87,8 @@ public class FluidGridHandler implements IFluidGridHandler {
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
         if (result.getValue() != null && network.insertFluid(result.getValue(), result.getValue().amount, true) == null) {
+            network.getFluidStorageTracker().changed(player, result.getValue().copy());
+
             result = StackUtils.getFluid(container, false);
 
             network.insertFluid(result.getValue(), result.getValue().amount, false);

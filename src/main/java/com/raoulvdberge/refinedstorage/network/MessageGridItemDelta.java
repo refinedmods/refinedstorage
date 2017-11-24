@@ -1,12 +1,14 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -19,6 +21,7 @@ import java.util.List;
 public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGridItemDelta, IMessage> {
     @Nullable
     private INetwork network;
+    private IStorageTracker<ItemStack> storageTracker;
 
     private List<Pair<ItemStack, Integer>> deltas;
     @Nullable
@@ -32,14 +35,16 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
     public MessageGridItemDelta() {
     }
 
-    public MessageGridItemDelta(@Nullable INetwork network, ItemStack stack, int delta) {
+    public MessageGridItemDelta(@Nullable INetwork network, IStorageTracker<ItemStack> storageTracker, ItemStack stack, int delta) {
         this.network = network;
+        this.storageTracker = storageTracker;
         this.stack = stack;
         this.delta = delta;
     }
 
-    public MessageGridItemDelta(@Nullable INetwork network, List<Pair<ItemStack, Integer>> deltas) {
+    public MessageGridItemDelta(@Nullable INetwork network, IStorageTracker<ItemStack> storageTracker, List<Pair<ItemStack, Integer>> deltas) {
         this.network = network;
+        this.storageTracker = storageTracker;
         this.deltas = deltas;
     }
 
@@ -65,12 +70,28 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
             buf.writeInt(1);
 
             StackUtils.writeItemStack(buf, stack, network, false);
+
+            IStorageTracker.IStorageTrackerEntry entry = storageTracker.get(stack);
+            buf.writeBoolean(entry != null);
+            if (entry != null) {
+                buf.writeLong(entry.getTime());
+                ByteBufUtils.writeUTF8String(buf, entry.getName());
+            }
+
             buf.writeInt(delta);
         } else {
             buf.writeInt(deltas.size());
 
             for (Pair<ItemStack, Integer> delta : deltas) {
                 StackUtils.writeItemStack(buf, delta.getLeft(), network, false);
+
+                IStorageTracker.IStorageTrackerEntry entry = storageTracker.get(stack);
+                buf.writeBoolean(entry != null);
+                if (entry != null) {
+                    buf.writeLong(entry.getTime());
+                    ByteBufUtils.writeUTF8String(buf, entry.getName());
+                }
+
                 buf.writeInt(delta.getRight());
             }
         }
@@ -109,6 +130,8 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
                         stack.getStack().grow(delta);
                     }
                 }
+
+                stack.setTrackerEntry(gridStack.getTrackerEntry());
 
                 return;
             }
