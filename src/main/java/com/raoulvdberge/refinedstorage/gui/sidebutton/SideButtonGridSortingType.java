@@ -35,11 +35,13 @@ public class SideButtonGridSortingType extends SideButton {
             type = IGrid.SORTING_TYPE_NAME;
         } else if (type == IGrid.SORTING_TYPE_NAME) {
             if (grid.getType() == GridType.FLUID) {
-                type = IGrid.SORTING_TYPE_QUANTITY;
+                type = IGrid.SORTING_TYPE_LAST_MODIFIED;
             } else {
                 type = IGrid.SORTING_TYPE_ID;
             }
         } else if (type == IGrid.SORTING_TYPE_ID) {
+            type = IGrid.SORTING_TYPE_LAST_MODIFIED;
+        } else if (type == NetworkNodeGrid.SORTING_TYPE_LAST_MODIFIED) {
             if (grid.getType() == GridType.FLUID || !Loader.isModLoaded(GridSortingInventoryTweaks.MOD_ID)) {
                 type = IGrid.SORTING_TYPE_QUANTITY;
             } else {

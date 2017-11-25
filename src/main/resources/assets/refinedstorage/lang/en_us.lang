@@ -147,6 +147,7 @@ sidebutton.refinedstorage:grid.sorting.type.0=Quantity
 sidebutton.refinedstorage:grid.sorting.type.1=Name
 sidebutton.refinedstorage:grid.sorting.type.2=ID
 sidebutton.refinedstorage:grid.sorting.type.3=InventoryTweaks
+sidebutton.refinedstorage:grid.sorting.type.4=Last modified
 sidebutton.refinedstorage:grid.search_box_mode=Search box mode
 sidebutton.refinedstorage:grid.search_box_mode.0=Normal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normal (autoselected)

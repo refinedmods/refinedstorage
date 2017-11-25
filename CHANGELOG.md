@@ -2,6 +2,7 @@
 
 ### 1.5.24
 - The Grid now displays last modified information (player name and date) and size on tooltips of stacks (raoulvdberge)
+- Added "Last modified" sorting option in the Grid (raoulvdberge)
 - Removed craft-only mode for the Exporter (raoulvdberge)
 - Fixed Exporter with Stack Upgrade not working correctly in Regulator Mode (raoulvdberge)
 

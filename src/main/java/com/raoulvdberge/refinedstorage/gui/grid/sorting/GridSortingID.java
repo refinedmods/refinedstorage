@@ -10,6 +10,7 @@ public class GridSortingID extends GridSorting {
     public int compare(IGridStack left, IGridStack right) {
         int x = left.getHash();
         int y = right.getHash();
+
         if (left.getIngredient() instanceof ItemStack && right.getIngredient() instanceof ItemStack) {
             x = Item.getIdFromItem(((ItemStack) left.getIngredient()).getItem());
             y = Item.getIdFromItem(((ItemStack) right.getIngredient()).getItem());
