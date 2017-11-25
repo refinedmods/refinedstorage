@@ -20,19 +20,25 @@ public class SideButtonGridViewType extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, grid.getViewType() * 16, 112, 16, 16);
+        gui.drawTexture(x, y, (grid.getViewType() - (grid.getViewType() >= 3 ? 3 : 0)) * 16, 112, 16, 16);
     }
 
     @Override
     public void actionPerformed() {
         int type = grid.getViewType();
 
-        if (type == IGrid.VIEW_TYPE_NORMAL) {
+        if (type == IGrid.VIEW_TYPE_NORMAL_DETAILED) {
+            type = IGrid.VIEW_TYPE_NON_CRAFTABLES_DETAILED;
+        } else if (type == IGrid.VIEW_TYPE_NON_CRAFTABLES_DETAILED) {
+            type = IGrid.VIEW_TYPE_CRAFTABLES_DETAILED;
+        } else if (type == IGrid.VIEW_TYPE_CRAFTABLES_DETAILED) {
+            type = IGrid.VIEW_TYPE_NORMAL;
+        } else if (type == IGrid.VIEW_TYPE_NORMAL) {
             type = IGrid.VIEW_TYPE_NON_CRAFTABLES;
         } else if (type == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
             type = IGrid.VIEW_TYPE_CRAFTABLES;
         } else if (type == IGrid.VIEW_TYPE_CRAFTABLES) {
-            type = IGrid.VIEW_TYPE_NORMAL;
+            type = IGrid.VIEW_TYPE_NORMAL_DETAILED;
         }
 
         grid.onViewTypeChanged(type);

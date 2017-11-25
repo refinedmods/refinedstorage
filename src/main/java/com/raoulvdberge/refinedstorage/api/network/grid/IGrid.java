@@ -33,9 +33,12 @@ public interface IGrid {
     int SEARCH_BOX_MODE_JEI_SYNCHRONIZED = 2;
     int SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED = 3;
 
-    int VIEW_TYPE_NORMAL = 0;
-    int VIEW_TYPE_NON_CRAFTABLES = 1;
-    int VIEW_TYPE_CRAFTABLES = 2;
+    int VIEW_TYPE_NORMAL_DETAILED = 0;
+    int VIEW_TYPE_NON_CRAFTABLES_DETAILED = 1;
+    int VIEW_TYPE_CRAFTABLES_DETAILED = 2;
+    int VIEW_TYPE_NORMAL = 3;
+    int VIEW_TYPE_NON_CRAFTABLES = 4;
+    int VIEW_TYPE_CRAFTABLES = 5;
 
     int SIZE_STRETCH = 0;
     int SIZE_SMALL = 1;
@@ -216,9 +219,16 @@ public interface IGrid {
     boolean isActive();
 
     static boolean isValidViewType(int type) {
-        return type == VIEW_TYPE_NORMAL ||
+        return isValidViewTypeDetailed(type) ||
+            type == VIEW_TYPE_NORMAL ||
             type == VIEW_TYPE_CRAFTABLES ||
             type == VIEW_TYPE_NON_CRAFTABLES;
+    }
+
+    static boolean isValidViewTypeDetailed(int type) {
+        return type == VIEW_TYPE_NORMAL_DETAILED ||
+            type == VIEW_TYPE_CRAFTABLES_DETAILED ||
+            type == VIEW_TYPE_NON_CRAFTABLES_DETAILED;
     }
 
     static boolean isValidSearchBoxMode(int mode) {

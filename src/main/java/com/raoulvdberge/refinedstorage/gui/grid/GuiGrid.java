@@ -508,10 +508,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         // RS BEGIN
         List<String> textLines = Lists.newArrayList(gridStack.getTooltip().split("\n"));
 
-        textLines.add("");
-
-        if (gridStack.getTrackerEntry() != null) {
+        if (IGrid.isValidViewTypeDetailed(grid.getViewType())) {
             textLines.add("");
+
+            if (gridStack.getTrackerEntry() != null) {
+                textLines.add("");
+            }
         }
 
         ItemStack stack = gridStack instanceof GridStackItem ? ((GridStackItem) gridStack).getStack() : ItemStack.EMPTY;
@@ -547,17 +549,19 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             }
 
             // RS BEGIN
-            int size = (int) (font.getStringWidth(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity())) * textScale);
-
-            if (size > tooltipTextWidth) {
-                tooltipTextWidth = size;
-            }
-
-            if (gridStack.getTrackerEntry() != null) {
-                size = (int) (font.getStringWidth(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName())) * textScale);
+            if (IGrid.isValidViewTypeDetailed(grid.getViewType())) {
+                int size = (int) (font.getStringWidth(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity())) * textScale);
 
                 if (size > tooltipTextWidth) {
                     tooltipTextWidth = size;
+                }
+
+                if (gridStack.getTrackerEntry() != null) {
+                    size = (int) (font.getStringWidth(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName())) * textScale);
+
+                    if (size > tooltipTextWidth) {
+                        tooltipTextWidth = size;
+                    }
                 }
             }
             // RS END
@@ -610,26 +614,28 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, textLines, tooltipX, tooltipTop, font, tooltipTextWidth, tooltipHeight));
 
             // RS BEGIN
-            GlStateManager.pushMatrix();
-            GlStateManager.scale(textScale, textScale, 1);
+            if (IGrid.isValidViewTypeDetailed(grid.getViewType())) {
+                GlStateManager.pushMatrix();
+                GlStateManager.scale(textScale, textScale, 1);
 
-            font.drawStringWithShadow(
-                TextFormatting.GRAY + I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity()),
-                RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                RenderUtils.getOffsetOnScale(tooltipTop + tooltipHeight - (gridStack.getTrackerEntry() != null ? 15 : 6) - (font.getUnicodeFlag() ? 2 : 0), textScale),
-                -1
-            );
-
-            if (gridStack.getTrackerEntry() != null) {
                 font.drawStringWithShadow(
-                    TextFormatting.GRAY + TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()),
+                    TextFormatting.GRAY + I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity()),
                     RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                    RenderUtils.getOffsetOnScale(tooltipTop + tooltipHeight - 6 - (font.getUnicodeFlag() ? 2 : 0), textScale),
+                    RenderUtils.getOffsetOnScale(tooltipTop + tooltipHeight - (gridStack.getTrackerEntry() != null ? 15 : 6) - (font.getUnicodeFlag() ? 2 : 0), textScale),
                     -1
                 );
-            }
 
-            GlStateManager.popMatrix();
+                if (gridStack.getTrackerEntry() != null) {
+                    font.drawStringWithShadow(
+                        TextFormatting.GRAY + TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()),
+                        RenderUtils.getOffsetOnScale(tooltipX, textScale),
+                        RenderUtils.getOffsetOnScale(tooltipTop + tooltipHeight - 6 - (font.getUnicodeFlag() ? 2 : 0), textScale),
+                        -1
+                    );
+                }
+
+                GlStateManager.popMatrix();
+            }
             // RS END
 
             GlStateManager.enableLighting();

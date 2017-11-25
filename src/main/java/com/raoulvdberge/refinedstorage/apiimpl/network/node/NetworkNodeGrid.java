@@ -95,7 +95,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     private GridType type;
 
-    private int viewType = VIEW_TYPE_NORMAL;
+    private int viewType = VIEW_TYPE_NORMAL_DETAILED;
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
     private int sortingType = SORTING_TYPE_QUANTITY;
     private int searchBoxMode = SEARCH_BOX_MODE_NORMAL;
