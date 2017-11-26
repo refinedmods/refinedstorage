@@ -8,6 +8,7 @@
 - Fixed Exporter with Stack Upgrade not working correctly in Regulator Mode (raoulvdberge)
 - Fixed crash with the Constructor (raoulvdberge)
 - Fixed patterns being able to crash when no inputs are provided (raoulvdberge)
+- Fixed possible crash with network scanning (raoulvdberge)
 
 ### 1.5.23
 - Fixed duplication bug with autocrafting (raoulvdberge)
