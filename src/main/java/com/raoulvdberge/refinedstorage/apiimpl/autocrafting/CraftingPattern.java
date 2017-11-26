@@ -140,7 +140,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public boolean isValid() {
-        return inputs.stream().filter(Objects::nonNull).count() > 0 && !outputs.isEmpty();
+        return !inputs.isEmpty() && inputs.stream().filter(Objects::nonNull).count() > 0 && !outputs.isEmpty();
     }
 
     @Override
