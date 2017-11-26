@@ -24,7 +24,11 @@ public class SideButtonGridSortingType extends SideButton {
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, grid.getSortingType() * 16, 32, 16, 16);
+        if (grid.getSortingType() == IGrid.SORTING_TYPE_LAST_MODIFIED) {
+            gui.drawTexture(x, y, 48, 48, 16, 16);
+        } else {
+            gui.drawTexture(x, y, grid.getSortingType() * 16, 32, 16, 16);
+        }
     }
 
     @Override
