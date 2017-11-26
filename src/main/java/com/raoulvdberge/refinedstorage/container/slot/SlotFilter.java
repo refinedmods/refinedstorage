@@ -12,6 +12,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class SlotFilter extends SlotItemHandler {
     public static final int FILTER_ALLOW_SIZE = 1;
@@ -64,7 +65,8 @@ public class SlotFilter extends SlotItemHandler {
         return (flags & FILTER_ALLOW_BLOCKS) == FILTER_ALLOW_BLOCKS;
     }
 
-    public static IBlockState getBlockState(IBlockAccess world, BlockPos pos, ItemStack stack) {
+    @Nullable
+    public static IBlockState getBlockState(IBlockAccess world, BlockPos pos, @Nullable ItemStack stack) {
         if (stack != null) {
             Item item = stack.getItem();
 

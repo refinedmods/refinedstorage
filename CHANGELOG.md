@@ -6,6 +6,7 @@
 - Added a "detailed" variant for every Grid view type option, to disable the modified information on the tooltip (raoulvdberge)
 - Removed craft-only mode for the Exporter (raoulvdberge)
 - Fixed Exporter with Stack Upgrade not working correctly in Regulator Mode (raoulvdberge)
+- Fixed crash with the Constructor (raoulvdberge)
 
 ### 1.5.23
 - Fixed duplication bug with autocrafting (raoulvdberge)

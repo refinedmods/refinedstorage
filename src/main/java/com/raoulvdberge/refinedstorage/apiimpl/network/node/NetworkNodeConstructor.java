@@ -51,16 +51,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     private static final int BASE_SPEED = 20;
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            item = getStackInSlot(slot).isEmpty() ? null : getStackInSlot(slot).copy();
-            block = SlotFilter.getBlockState(world, pos.offset(getDirection()), getStackInSlot(slot));
-        }
-    };
-
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
@@ -68,9 +59,6 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
     private boolean drop = false;
-
-    private IBlockState block;
-    private ItemStack item;
 
     public NetworkNodeConstructor(World world, BlockPos pos) {
         super(world, pos);
@@ -86,14 +74,18 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         super.update();
 
         if (network != null && canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
-            if (type == IType.ITEMS) {
+            if (type == IType.ITEMS && !itemFilters.getStackInSlot(0).isEmpty()) {
+                ItemStack item = itemFilters.getStackInSlot(0);
+
+                IBlockState block = SlotFilter.getBlockState(world, pos.offset(getDirection()), item);
+
                 if (block != null) {
-                    if (drop && item != null) {
+                    if (drop) {
                         dropItem();
                     } else {
                         placeBlock();
                     }
-                } else if (item != null) {
+                } else {
                     if (item.getItem() == Items.FIREWORKS && !drop) {
                         ItemStack took = network.extractItem(item, 1, false);
 
@@ -104,7 +96,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                         dropItem();
                     }
                 }
-            } else if (type == IType.FLUIDS) {
+            } else if (type == IType.FLUIDS && !fluidFilters.getStackInSlot(0).isEmpty()) {
                 FluidStack stack = fluidFilters.getFluidStackInSlot(0);
 
                 if (stack != null && stack.getFluid().canBePlacedInWorld()) {
@@ -149,80 +141,85 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     private void placeBlock() {
         BlockPos front = pos.offset(getDirection());
 
-        if (world.isAirBlock(front) && block.getBlock().canPlaceBlockAt(world, front)) {
-            ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, true);
+        ItemStack item = itemFilters.getStackInSlot(0);
 
-            if (took != null) {
-                IBlockState state = block.getBlock().getStateForPlacement(world, front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) world), EnumHand.MAIN_HAND);
+        ItemStack took = network.extractItem(item, 1, compare, true);
+
+        if (took != null) {
+            IBlockState state = SlotFilter.getBlockState(world, front, took);
+
+            if (state != null && world.isAirBlock(front) && state.getBlock().canPlaceBlockAt(world, front)) {
+                state = state.getBlock().getStateForPlacement(world, front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) world), EnumHand.MAIN_HAND);
 
                 if (!canPlace(front, state)) {
                     return;
                 }
 
-                took = network.extractItem(itemFilters.getStackInSlot(0), 1, compare, false);
+                took = network.extractItem(item, 1, compare, false);
 
-                if (item.getItem() instanceof ItemBlock) {
-                    ((ItemBlock) item.getItem()).placeBlockAt(
-                        took,
-                        FakePlayerFactory.getMinecraft((WorldServer) world),
-                        world,
-                        front,
-                        getDirection(),
-                        0,
-                        0,
-                        0,
-                        state
-                    );
-                } else {
-                    world.setBlockState(front, state, 1 | 2);
+                if (took != null) {
+                    if (item.getItem() instanceof ItemBlock) {
+                        ((ItemBlock) item.getItem()).placeBlockAt(
+                            took,
+                            FakePlayerFactory.getMinecraft((WorldServer) world),
+                            world,
+                            front,
+                            getDirection(),
+                            0,
+                            0,
+                            0,
+                            state
+                        );
+                    } else {
+                        world.setBlockState(front, state, 1 | 2);
 
-                    state.getBlock().onBlockPlacedBy(world, front, state, FakePlayerFactory.getMinecraft((WorldServer) world), took);
-                }
-
-                // From ItemBlock#onItemUse
-                SoundType blockSound = block.getBlock().getSoundType(state, world, pos, null);
-                world.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
-
-                if (block.getBlock() == Blocks.SKULL) {
-                    world.setBlockState(front, world.getBlockState(front).withProperty(BlockSkull.FACING, getDirection()));
-
-                    TileEntity tile = world.getTileEntity(front);
-
-                    if (tile instanceof TileEntitySkull) {
-                        TileEntitySkull skullTile = (TileEntitySkull) tile;
-
-                        if (item.getItemDamage() == 3) {
-                            GameProfile playerInfo = null;
-
-                            if (item.hasTagCompound()) {
-                                NBTTagCompound tag = item.getTagCompound();
-
-                                if (tag.hasKey("SkullOwner", 10)) {
-                                    playerInfo = NBTUtil.readGameProfileFromNBT(tag.getCompoundTag("SkullOwner"));
-                                } else if (tag.hasKey("SkullOwner", 8) && !tag.getString("SkullOwner").isEmpty()) {
-                                    playerInfo = new GameProfile(null, tag.getString("SkullOwner"));
-                                }
-                            }
-
-                            skullTile.setPlayerProfile(playerInfo);
-                        } else {
-                            skullTile.setType(item.getMetadata());
-                        }
-
-                        Blocks.SKULL.checkWitherSpawn(world, front, skullTile);
+                        state.getBlock().onBlockPlacedBy(world, front, state, FakePlayerFactory.getMinecraft((WorldServer) world), took);
                     }
 
-                }
-            } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                ItemStack craft = itemFilters.getStackInSlot(0);
+                    // From ItemBlock#onItemUse
+                    SoundType blockSound = state.getBlock().getSoundType(state, world, pos, null);
+                    world.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
 
-                network.getCraftingManager().schedule(craft, 1, compare);
+                    if (state.getBlock() == Blocks.SKULL) {
+                        world.setBlockState(front, world.getBlockState(front).withProperty(BlockSkull.FACING, getDirection()));
+
+                        TileEntity tile = world.getTileEntity(front);
+
+                        if (tile instanceof TileEntitySkull) {
+                            TileEntitySkull skullTile = (TileEntitySkull) tile;
+
+                            if (item.getItemDamage() == 3) {
+                                GameProfile playerInfo = null;
+
+                                if (item.hasTagCompound()) {
+                                    NBTTagCompound tag = item.getTagCompound();
+
+                                    if (tag.hasKey("SkullOwner", 10)) {
+                                        playerInfo = NBTUtil.readGameProfileFromNBT(tag.getCompoundTag("SkullOwner"));
+                                    } else if (tag.hasKey("SkullOwner", 8) && !tag.getString("SkullOwner").isEmpty()) {
+                                        playerInfo = new GameProfile(null, tag.getString("SkullOwner"));
+                                    }
+                                }
+
+                                skullTile.setPlayerProfile(playerInfo);
+                            } else {
+                                skullTile.setType(item.getMetadata());
+                            }
+
+                            Blocks.SKULL.checkWitherSpawn(world, front, skullTile);
+                        }
+                    }
+                }
             }
+        } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+            ItemStack craft = itemFilters.getStackInSlot(0);
+
+            network.getCraftingManager().schedule(craft, 1, compare);
         }
     }
 
     private void dropItem() {
-        ItemStack took = network.extractItem(item, upgrades.getItemInteractCount(), false);
+        ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), upgrades.getItemInteractCount(), false);
 
         if (took != null) {
             BehaviorDefaultDispenseItem.doDispense(world, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
