@@ -59,6 +59,12 @@ import java.util.List;
 public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, IRedstoneConfigurable {
     public static final TileDataParameter<Integer, TilePortableGrid> REDSTONE_MODE = RedstoneMode.createParameter();
     public static final TileDataParameter<Integer, TilePortableGrid> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energyStorage.getEnergyStored());
+    public static final TileDataParameter<Integer, TilePortableGrid> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getViewType, (t, v) -> {
+        if (IGrid.isValidViewType(v)) {
+            t.setViewType(v);
+            t.markDirty();
+        }
+    }, p -> GuiGrid.scheduleSort());
     public static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.setSortingDirection(v);
@@ -117,6 +123,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
+    private int viewType;
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
@@ -190,6 +197,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public TilePortableGrid() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
         dataManager.addWatchedParameter(ENERGY_STORED);
+        dataManager.addWatchedParameter(VIEW_TYPE);
         dataManager.addWatchedParameter(SORTING_DIRECTION);
         dataManager.addWatchedParameter(SORTING_TYPE);
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
@@ -215,6 +223,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     public void onPassItemContext(ItemStack stack) {
+        this.viewType = ItemWirelessGrid.getViewType(stack);
         this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
@@ -252,6 +261,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         stack.setTagCompound(new NBTTagCompound());
 
+        stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_VIEW_TYPE, viewType);
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, sortingDirection);
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, sortingType);
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
@@ -298,7 +308,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public int getViewType() {
-        return -1;
+        return world.isRemote ? VIEW_TYPE.getValue() : viewType;
     }
 
     @Override
@@ -336,6 +346,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         return world.isRemote ? SIZE.getValue() : size;
     }
 
+    public void setViewType(int viewType) {
+        this.viewType = viewType;
+    }
+
     public void setSortingType(int sortingType) {
         this.sortingType = sortingType;
     }
@@ -362,7 +376,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public void onViewTypeChanged(int type) {
-        // NO OP
+        TileDataManager.setParameter(VIEW_TYPE, type);
     }
 
     @Override

@@ -55,6 +55,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
     private EntityPlayer player;
     private ItemStack stack;
 
+    private int viewType;
     private int sortingType;
     private int sortingDirection;
     private int searchBoxMode;
@@ -124,6 +125,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
         this.stack = stack;
 
         if (player != null) {
+            this.viewType = ItemWirelessGrid.getViewType(stack);
             this.sortingType = ItemWirelessGrid.getSortingType(stack);
             this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
             this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
@@ -225,7 +227,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
     @Override
     public int getViewType() {
-        return -1;
+        return viewType;
     }
 
     @Override
@@ -265,7 +267,11 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
     @Override
     public void onViewTypeChanged(int type) {
-        // NO OP
+        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+
+        this.viewType = type;
+
+        GuiGrid.scheduleSort();
     }
 
     @Override

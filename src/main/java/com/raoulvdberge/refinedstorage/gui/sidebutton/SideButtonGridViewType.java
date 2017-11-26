@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.gui.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonGridViewType extends SideButton {
@@ -27,18 +28,26 @@ public class SideButtonGridViewType extends SideButton {
     public void actionPerformed() {
         int type = grid.getViewType();
 
-        if (type == IGrid.VIEW_TYPE_NORMAL_DETAILED) {
-            type = IGrid.VIEW_TYPE_NON_CRAFTABLES_DETAILED;
-        } else if (type == IGrid.VIEW_TYPE_NON_CRAFTABLES_DETAILED) {
-            type = IGrid.VIEW_TYPE_CRAFTABLES_DETAILED;
-        } else if (type == IGrid.VIEW_TYPE_CRAFTABLES_DETAILED) {
-            type = IGrid.VIEW_TYPE_NORMAL;
-        } else if (type == IGrid.VIEW_TYPE_NORMAL) {
-            type = IGrid.VIEW_TYPE_NON_CRAFTABLES;
-        } else if (type == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
-            type = IGrid.VIEW_TYPE_CRAFTABLES;
-        } else if (type == IGrid.VIEW_TYPE_CRAFTABLES) {
-            type = IGrid.VIEW_TYPE_NORMAL_DETAILED;
+        if (grid instanceof IPortableGrid) {
+            if (type == IGrid.VIEW_TYPE_NORMAL_DETAILED) {
+                type = IGrid.VIEW_TYPE_NORMAL;
+            } else {
+                type = IGrid.VIEW_TYPE_NORMAL_DETAILED;
+            }
+        } else {
+            if (type == IGrid.VIEW_TYPE_NORMAL_DETAILED) {
+                type = IGrid.VIEW_TYPE_NON_CRAFTABLES_DETAILED;
+            } else if (type == IGrid.VIEW_TYPE_NON_CRAFTABLES_DETAILED) {
+                type = IGrid.VIEW_TYPE_CRAFTABLES_DETAILED;
+            } else if (type == IGrid.VIEW_TYPE_CRAFTABLES_DETAILED) {
+                type = IGrid.VIEW_TYPE_NORMAL;
+            } else if (type == IGrid.VIEW_TYPE_NORMAL) {
+                type = IGrid.VIEW_TYPE_NON_CRAFTABLES;
+            } else if (type == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
+                type = IGrid.VIEW_TYPE_CRAFTABLES;
+            } else if (type == IGrid.VIEW_TYPE_CRAFTABLES) {
+                type = IGrid.VIEW_TYPE_NORMAL_DETAILED;
+            }
         }
 
         grid.onViewTypeChanged(type);
