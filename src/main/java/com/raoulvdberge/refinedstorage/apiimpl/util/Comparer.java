@@ -179,9 +179,6 @@ public class Comparer implements IComparer {
                     stack.getTagCompound().removeTag("hammerDmg");
                     stack.getTagCompound().removeTag("cutterDmg");
                     break;
-                case "storagedrawers":
-                    stack.getTagCompound().removeTag("material");
-                    break;
                 case "fluxnetworks":
                     stack.getTagCompound().removeTag("dropped");
                     stack.getTagCompound().removeTag("energy");

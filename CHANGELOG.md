@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.25
+- Fixed not being able to autocraft different Storage Drawers' wood drawers (raoulvdberge)
+
 ### 1.5.24
 - The Grid now displays last modified information (player name and date) and size on tooltips of stacks (raoulvdberge)
 - Added "Last modified" sorting option in the Grid (raoulvdberge)
