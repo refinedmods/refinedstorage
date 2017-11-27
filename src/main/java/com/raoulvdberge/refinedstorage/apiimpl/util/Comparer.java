@@ -179,6 +179,10 @@ public class Comparer implements IComparer {
                     stack.getTagCompound().removeTag("hammerDmg");
                     stack.getTagCompound().removeTag("cutterDmg");
                     break;
+                case "modularrouters":
+                    stack.getTagCompound().removeTag("ModuleFilter");
+                    stack.getTagCompound().removeTag("Flags");
+                    break;
                 case "fluxnetworks":
                     stack.getTagCompound().removeTag("dropped");
                     stack.getTagCompound().removeTag("energy");
