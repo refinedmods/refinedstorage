@@ -202,6 +202,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     @Override
     @Nonnull
     public ICraftingPattern create(World world, ItemStack stack, ICraftingPatternContainer container) {
-        return new CraftingPattern(world, container, stack);
+        // We copy the pattern stack because if we remove it from the inventory, the crafting task will use a pattern with an invalid stack...
+        return new CraftingPattern(world, container, stack.copy());
     }
 }
