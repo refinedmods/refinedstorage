@@ -3,6 +3,7 @@
 ### 1.5.25
 - Fixed not being able to autocraft different Storage Drawers' wood drawers (raoulvdberge)
 - Fixed not being able to autocraft certain Modular Routers items (raoulvdberge)
+- Fixed last modified date not being sent when extracting from an External Storage (raoulvdberge)
 
 ### 1.5.24
 - The Grid now displays last modified information (player name and date) and size on tooltips of stacks (raoulvdberge)

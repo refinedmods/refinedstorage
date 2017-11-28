@@ -85,7 +85,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
             for (Pair<ItemStack, Integer> delta : deltas) {
                 StackUtils.writeItemStack(buf, delta.getLeft(), network, false);
 
-                IStorageTracker.IStorageTrackerEntry entry = storageTracker.get(stack);
+                IStorageTracker.IStorageTrackerEntry entry = storageTracker.get(delta.getLeft());
                 buf.writeBoolean(entry != null);
                 if (entry != null) {
                     buf.writeLong(entry.getTime());

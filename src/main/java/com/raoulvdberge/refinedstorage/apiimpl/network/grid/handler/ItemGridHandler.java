@@ -69,11 +69,12 @@ public class ItemGridHandler implements IItemGridHandler {
 
         size = Math.min(size, maxItemSize);
 
+        // Do this before actually extracting, since external storage sends updates as soon as a change happens (so before the storage tracker used to track)
+        network.getItemStorageTracker().changed(player, item.copy());
+
         ItemStack took = network.extractItem(item, size, true);
 
         if (took != null) {
-            network.getItemStorageTracker().changed(player, took.copy());
-
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 

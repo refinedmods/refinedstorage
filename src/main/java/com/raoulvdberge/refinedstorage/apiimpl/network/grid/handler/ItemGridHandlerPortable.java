@@ -69,11 +69,12 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
 
         size = Math.min(size, maxItemSize);
 
+        // Do this before actually extracting, since portable grid sends updates as soon as a change happens (so before the storage tracker used to track)
+        portableGrid.getStorageTracker().changed(player, item.copy());
+
         ItemStack took = portableGrid.getStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, true);
 
         if (took != null) {
-            portableGrid.getStorageTracker().changed(player, took.copy());
-
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
