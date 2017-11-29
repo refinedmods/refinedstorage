@@ -187,8 +187,10 @@ public class StackListItem implements IStackList<ItemStack> {
 
     public static ItemStack[] toCraftingGrid(IStackList<ItemStack> list, List<ItemStack> grid, int compare) {
         ItemStack[] took = new ItemStack[Math.max(9, grid.size())];
+
         for (int i = 0; i < grid.size(); i++) {
             ItemStack input = grid.get(i);
+
             if (input != null) {
                 // This will be a tool, like a hammer
                 if (input.isItemStackDamageable()) {
@@ -196,14 +198,19 @@ public class StackListItem implements IStackList<ItemStack> {
                 } else {
                     compare |= IComparer.COMPARE_DAMAGE;
                 }
+
                 ItemStack actualInput = list.get(input, compare);
+
                 if (actualInput != null) {
                     ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.getCount());
+
                     took[i] = taken;
+
                     list.remove(taken, taken.getCount());
                 }
             }
         }
+
         return took;
     }
 }

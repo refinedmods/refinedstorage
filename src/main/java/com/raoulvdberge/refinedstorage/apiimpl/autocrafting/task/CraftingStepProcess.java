@@ -34,11 +34,15 @@ public class CraftingStepProcess extends CraftingStep {
         if (!super.canStartProcessing()) {
             return false;
         }
+
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
+
         int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
+
         if (inventory != null) {
             Deque<ItemStack> toInsert = new LinkedList<>();
-            for (ItemStack stack : getToInsert()) {
+
+            for (ItemStack stack : getInputs()) {
                 // This will be a tool, like a hammer
                 if (stack.isItemStackDamageable()) {
                     compare &= ~IComparer.COMPARE_DAMAGE;
@@ -56,14 +60,17 @@ public class CraftingStepProcess extends CraftingStep {
                 } else {
                     items.undo();
                     fluids.undo();
+
                     return false;
                 }
             }
 
             items.undo();
             fluids.undo();
-            return insert(inventory, toInsert, true);
+
+            return insertItems(inventory, toInsert, true);
         }
+
         return false;
     }
 
@@ -72,21 +79,26 @@ public class CraftingStepProcess extends CraftingStep {
         if (!super.canStartProcessing()) {
             return false;
         }
+
         IItemHandler inventory = getPattern().getContainer().getFacingInventory();
-        return inventory != null && insert(inventory, new LinkedList<>(getToInsert()), true);
+
+        return inventory != null && insertItems(inventory, new LinkedList<>(getInputs()), true);
     }
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        LinkedList<ItemStack> actualInputs = new LinkedList<>();
+        LinkedList<ItemStack> extracted = new LinkedList<>();
+
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
-        if (extractItems(actualInputs, compare, toInsertItems)) {
+
+        if (extractItems(extracted, compare, toInsertItems)) {
             IItemHandler inventory = getPattern().getContainer().getFacingInventory();
-            if (insert(inventory, new ArrayDeque<>(actualInputs), true)) {
-                insert(inventory, actualInputs, false);
+
+            if (insertItems(inventory, new ArrayDeque<>(extracted), true)) {
+                insertItems(inventory, extracted, false);
             } else {
                 // Something went wrong here, redo!
-                toInsertItems.addAll(actualInputs);
+                toInsertItems.addAll(extracted);
                 startedProcessing = false;
             }
         }
@@ -99,26 +111,23 @@ public class CraftingStepProcess extends CraftingStep {
         return super.writeToNBT(tag);
     }
 
-    /**
-     * Insert or simulate insertion of {@link ItemStack}s into an {@link IItemHandler}
-     *
-     * @param dest     target {@link IItemHandler}
-     * @param stacks   a {@link Deque} of {@link ItemStack}s
-     * @param simulate simulate or actually insert the {@link ItemStack}s
-     * @return true when all can be inserted, false otherwise
-     */
-    private static boolean insert(IItemHandler dest, Deque<ItemStack> stacks, boolean simulate) {
+    private static boolean insertItems(IItemHandler inventory, Deque<ItemStack> stacks, boolean simulate) {
         ItemStack current = stacks.poll();
-        List<Integer> availableSlots = IntStream.range(0, dest.getSlots()).boxed().collect(Collectors.toList());
+
+        List<Integer> availableSlots = IntStream.range(0, inventory.getSlots()).boxed().collect(Collectors.toList());
+
         while (current != null && !availableSlots.isEmpty()) {
             ItemStack remainder = null;
+
             for (Integer slot : availableSlots) {
-                remainder = dest.insertItem(slot, current, simulate);
+                remainder = inventory.insertItem(slot, current, simulate);
+
                 if (remainder.isEmpty() || current.getCount() != remainder.getCount()) {
                     availableSlots.remove(slot);
                     break;
                 }
             }
+
             if (remainder == null || remainder.isEmpty()) {
                 current = stacks.poll();
             } else if (current.getCount() == remainder.getCount()) {
@@ -127,6 +136,7 @@ public class CraftingStepProcess extends CraftingStep {
                 current = remainder;
             }
         }
+
         return current == null && stacks.isEmpty();
     }
 }

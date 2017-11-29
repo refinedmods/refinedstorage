@@ -20,12 +20,16 @@ public class CraftingStepCraft extends CraftingStep {
     public static final String ID = "craft";
     private static final String NBT_TO_INSERT = "ToInsert";
 
-    private List<ItemStack> toInsert;
+    private List<ItemStack> inputs;
 
-    public CraftingStepCraft(INetwork network, ICraftingPattern pattern, List<ItemStack> toInsert, List<ICraftingStep> preliminarySteps) {
+    public CraftingStepCraft(INetwork network, ICraftingPattern pattern, List<ItemStack> inputs, List<ICraftingStep> preliminarySteps) {
         super(network, pattern, preliminarySteps);
-        this.toInsert = new LinkedList<>();
-        toInsert.forEach(stack -> this.toInsert.add(stack == null ? null : stack.copy()));
+
+        this.inputs = new LinkedList<>();
+
+        for (ItemStack input : inputs) {
+            this.inputs.add(input == null ? null : input.copy());
+        }
     }
 
     public CraftingStepCraft(INetwork network) {
@@ -33,8 +37,8 @@ public class CraftingStepCraft extends CraftingStep {
     }
 
     @Override
-    public List<ItemStack> getToInsert() {
-        return toInsert == null ? super.getToInsert() : toInsert.stream().filter(Objects::nonNull).collect(Collectors.toList());
+    public List<ItemStack> getInputs() {
+        return inputs == null ? super.getInputs() : inputs.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     @Override
@@ -42,8 +46,10 @@ public class CraftingStepCraft extends CraftingStep {
         if (!super.canStartProcessing()) {
             return false;
         }
+
         int compare = CraftingTask.DEFAULT_COMPARE;
-        for (ItemStack stack : getToInsert()) {
+
+        for (ItemStack stack : getInputs()) {
             // This will be a tool, like a hammer
             if (stack.isItemStackDamageable()) {
                 compare &= ~IComparer.COMPARE_DAMAGE;
@@ -52,30 +58,38 @@ public class CraftingStepCraft extends CraftingStep {
             }
 
             ItemStack actualStack = items.get(stack, compare);
+
             if (isItemAvailable(items, fluids, stack, actualStack, compare) == null) {
                 items.undo();
                 fluids.undo();
+
                 return false;
             }
         }
+
         items.undo();
         fluids.undo();
+
         return true;
     }
 
     @Override
     public void execute(Deque<ItemStack> toInsertItems, Deque<FluidStack> toInsertFluids) {
-        List<ItemStack> actualInputs = new LinkedList<>();
-        if (extractItems(actualInputs, CraftingTask.DEFAULT_COMPARE, toInsertItems)) {
-            IStackList<ItemStack> stackList = API.instance().createItemStackList();
-            actualInputs.forEach(stackList::add);
+        List<ItemStack> extracted = new LinkedList<>();
 
-            ItemStack[] took = StackListItem.toCraftingGrid(stackList, toInsert, CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
+        if (extractItems(extracted, CraftingTask.DEFAULT_COMPARE, toInsertItems)) {
+            IStackList<ItemStack> extractedStacks = API.instance().createItemStackList();
+
+            extracted.forEach(extractedStacks::add);
+
+            ItemStack[] took = StackListItem.toCraftingGrid(extractedStacks, inputs, CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0));
 
             List<ItemStack> outputs = pattern.isOredict() ? pattern.getOutputs(took) : pattern.getOutputs();
             if (outputs == null) {
-                toInsertItems.addAll(actualInputs);
+                toInsertItems.addAll(extracted);
+
                 startedProcessing = false;
+
                 return;
             }
 
@@ -103,7 +117,7 @@ public class CraftingStepCraft extends CraftingStep {
 
         NBTTagList toInsertList = new NBTTagList();
 
-        for (ItemStack insert : toInsert) {
+        for (ItemStack insert : inputs) {
             toInsertList.appendTag(insert == null ? new NBTTagCompound() : insert.serializeNBT());
         }
 
@@ -117,13 +131,16 @@ public class CraftingStepCraft extends CraftingStep {
         if (super.readFromNBT(tag)) {
             if (tag.hasKey(NBT_TO_INSERT)) {
                 NBTTagList toInsertList = tag.getTagList(NBT_TO_INSERT, Constants.NBT.TAG_COMPOUND);
-                toInsert = new ArrayList<>(toInsertList.tagCount());
+
+                inputs = new ArrayList<>(toInsertList.tagCount());
+
                 for (int i = 0; i < toInsertList.tagCount(); ++i) {
                     ItemStack stack = new ItemStack(toInsertList.getCompoundTagAt(i));
+
                     if (stack.isEmpty()) {
-                        toInsert.add(null);
+                        inputs.add(null);
                     } else {
-                        toInsert.add(stack);
+                        inputs.add(stack);
                     }
                 }
             }

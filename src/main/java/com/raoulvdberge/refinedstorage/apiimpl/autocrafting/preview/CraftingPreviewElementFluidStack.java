@@ -20,8 +20,8 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
     private FluidStack stack;
     private int available;
     private boolean missing;
+    // If missing is true then toCraft is the missing amount
     private int toCraft;
-    // if missing is true then toCraft is the missing amount
 
     public CraftingPreviewElementFluidStack(FluidStack stack) {
         this.stack = stack.copy();
@@ -65,8 +65,10 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
         if (missing) {
             drawers.getOverlayDrawer().draw(x, y, 0xFFF2DEDE);
         }
+
         x += 5;
         y += 7;
+
         drawers.getFluidDrawer().draw(x, y, getElement());
 
         float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;

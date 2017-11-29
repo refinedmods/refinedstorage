@@ -19,9 +19,9 @@ public interface ICraftingStep {
     ICraftingPattern getPattern();
 
     /**
-     * @return the stacks to insert
+     * @return the input stacks
      */
-    List<ItemStack> getToInsert();
+    List<ItemStack> getInputs();
 
     /**
      * @return a list of steps the have to be done before this one can be started

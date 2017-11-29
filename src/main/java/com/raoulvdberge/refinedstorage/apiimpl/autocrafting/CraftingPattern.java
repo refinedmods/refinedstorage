@@ -55,6 +55,7 @@ public class CraftingPattern implements ICraftingPattern {
             for (IRecipe r : CraftingManager.REGISTRY) {
                 if (r.matches(inv, world)) {
                     recipe = r;
+
                     break;
                 }
             }
@@ -86,7 +87,7 @@ public class CraftingPattern implements ICraftingPattern {
                     }
 
                     for (ItemStack remaining : recipe.getRemainingItems(inv)) {
-                        if (remaining != null) {
+                        if (!remaining.isEmpty()) {
                             ItemStack cleaned = Comparer.stripTags(remaining.copy());
                             byproducts.add(cleaned);
                         }
@@ -94,34 +95,34 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }
         } else {
-            outputs = ItemPattern.getOutputs(stack).stream().collect(Collectors.toList());
-        }
+            outputs = ItemPattern.getOutputs(stack);
 
-        if (oreInputs.isEmpty()) {
-            for (ItemStack input : inputs) {
-                if (input == null) {
-                    oreInputs.add(Collections.emptyList());
-                } else if (!input.isEmpty()) {
-                    int[] ids = OreDictionary.getOreIDs(input);
-                    if (ids == null || ids.length == 0) {
-                        oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
-                    } else if (isOredict()) {
-                        List<ItemStack> oredict = Arrays.stream(ids)
-                            .mapToObj(OreDictionary::getOreName)
-                            .map(OreDictionary::getOres)
-                            .flatMap(List::stream)
-                            .map(ItemStack::copy)
-                            .map(Comparer::stripTags)
-                            .map(s -> {
-                                s.setCount(input.getCount());
-                                return s;
-                            })
-                            .collect(Collectors.toList());
-                        // Add original stack as first, should prevent some issues
-                        oredict.add(0, Comparer.stripTags(input.copy()));
-                        oreInputs.add(oredict);
-                    } else {
-                        oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
+            if (oreInputs.isEmpty()) {
+                for (ItemStack input : inputs) {
+                    if (input == null) {
+                        oreInputs.add(Collections.emptyList());
+                    } else if (!input.isEmpty()) {
+                        int[] ids = OreDictionary.getOreIDs(input);
+
+                        if (ids.length == 0) {
+                            oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
+                        } else if (isOredict()) {
+                            List<ItemStack> oredict = Arrays.stream(ids)
+                                .mapToObj(OreDictionary::getOreName)
+                                .map(OreDictionary::getOres)
+                                .flatMap(List::stream)
+                                .map(ItemStack::copy)
+                                .map(Comparer::stripTags)
+                                .peek(s -> s.setCount(input.getCount()))
+                                .collect(Collectors.toList());
+
+                            // Add original stack as first, should prevent some issues
+                            oredict.add(0, Comparer.stripTags(input.copy()));
+
+                            oreInputs.add(oredict);
+                        } else {
+                            oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
+                        }
                     }
                 }
             }
@@ -218,7 +219,7 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         for (ItemStack remaining : recipe.getRemainingItems(inv)) {
-            if (remaining != null) {
+            if (!remaining.isEmpty()) {
                 byproducts.add(remaining.copy());
             }
         }

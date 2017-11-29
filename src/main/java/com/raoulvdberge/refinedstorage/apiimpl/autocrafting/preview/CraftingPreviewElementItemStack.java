@@ -20,8 +20,8 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
     private ItemStack stack;
     private int available;
     private boolean missing;
+    // If missing is true then toCraft is the missing amount
     private int toCraft;
-    // if missing is true then toCraft is the missing amount
 
     public CraftingPreviewElementItemStack(ItemStack stack) {
         this.stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
@@ -54,6 +54,7 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
 
         ItemStack stack = new ItemStack(item, 1, meta);
         stack.setTagCompound(tag);
+
         return new CraftingPreviewElementItemStack(stack, available, missing, toCraft);
     }
 

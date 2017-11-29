@@ -140,7 +140,8 @@ public class Comparer implements IComparer {
         return EnumActionResult.PASS;
     }
 
-    public static ItemStack stripTags(ItemStack stack) {
+    @Nullable
+    public static ItemStack stripTags(@Nullable ItemStack stack) {
         if (stack != null && stack.hasTagCompound()) {
             switch (stack.getItem().getRegistryName().getResourceDomain()) {
                 case "mekanism":
