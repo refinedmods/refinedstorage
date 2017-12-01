@@ -106,7 +106,7 @@ public abstract class CraftingStep implements ICraftingStep {
 
     @Override
     public List<ItemStack> getInputs() {
-        return pattern.getInputs().stream().filter(Objects::nonNull).collect(Collectors.toList());
+        return pattern.getInputs().stream().filter(Objects::nonNull).filter(s -> !s.isEmpty()).collect(Collectors.toList());
     }
 
     @Override

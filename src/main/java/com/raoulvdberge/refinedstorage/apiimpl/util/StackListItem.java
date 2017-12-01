@@ -22,6 +22,10 @@ public class StackListItem implements IStackList<ItemStack> {
 
     @Override
     public void add(@Nonnull ItemStack stack, int size) {
+        if (stack.isEmpty() || size <= 0) {
+            return;
+        }
+
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if ((long) otherStack.getCount() + (long) size > Integer.MAX_VALUE) {
@@ -34,7 +38,7 @@ public class StackListItem implements IStackList<ItemStack> {
             }
         }
 
-        stacks.put(stack.getItem(), size == 0 ? stack.copy() : ItemHandlerHelper.copyStackWithSize(stack, size));
+        stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, size));
     }
 
     @Override

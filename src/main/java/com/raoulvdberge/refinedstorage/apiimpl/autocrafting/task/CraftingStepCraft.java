@@ -38,7 +38,7 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public List<ItemStack> getInputs() {
-        return inputs == null ? super.getInputs() : inputs.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        return inputs == null ? super.getInputs() : inputs.stream().filter(Objects::nonNull).filter(s -> !s.isEmpty()).collect(Collectors.toList());
     }
 
     @Override

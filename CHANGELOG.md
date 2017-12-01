@@ -2,6 +2,7 @@
 
 ### 1.5.26
 - Added Funky Locomotion integration (raoulvdberge)
+- Minor fixes to autocrafting (raoulvdberge)
 
 ### 1.5.25
 - Fixed not being able to autocraft different Storage Drawers' wood drawers (raoulvdberge)
