@@ -129,7 +129,7 @@ public class CraftingTask implements ICraftingTask {
         List<ICraftingStep> previousSteps = new LinkedList<>();
 
         IStackList<ItemStack> byproductList = API.instance().createItemStackList();
-        pattern.getByproducts().stream().filter(s -> !s.isEmpty()).forEach(byproductList::add);
+        pattern.getByproducts().forEach(byproductList::add);
 
         for (List<ItemStack> inputs : pattern.getOreInputs()) {
             if (inputs == null || inputs.isEmpty()) {
@@ -303,9 +303,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         for (ItemStack byproduct : (!pattern.isProcessing() && pattern.isOredict() && missing.isEmpty()) ? pattern.getByproducts(took) : pattern.getByproducts()) {
-            if (byproduct != null && !byproduct.isEmpty()) {
-                toInsert.add(byproduct);
-            }
+            toInsert.add(byproduct);
         }
 
         usedPatterns.remove(pattern);
