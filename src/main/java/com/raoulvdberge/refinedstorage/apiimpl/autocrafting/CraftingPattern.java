@@ -99,15 +99,15 @@ public class CraftingPattern implements ICraftingPattern {
 
             if (oreInputs.isEmpty()) {
                 for (ItemStack input : inputs) {
-                    if (input == null) {
+                    if (input == null || input.isEmpty()) {
                         oreInputs.add(Collections.emptyList());
-                    } else if (!input.isEmpty()) {
+                    } else {
                         int[] ids = OreDictionary.getOreIDs(input);
 
                         if (ids.length == 0) {
                             oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                         } else if (isOredict()) {
-                            List<ItemStack> oredict = Arrays.stream(ids)
+                            List<ItemStack> oredictInputs = Arrays.stream(ids)
                                 .mapToObj(OreDictionary::getOreName)
                                 .map(OreDictionary::getOres)
                                 .flatMap(List::stream)
@@ -117,9 +117,9 @@ public class CraftingPattern implements ICraftingPattern {
                                 .collect(Collectors.toList());
 
                             // Add original stack as first, should prevent some issues
-                            oredict.add(0, Comparer.stripTags(input.copy()));
+                            oredictInputs.add(0, Comparer.stripTags(input.copy()));
 
-                            oreInputs.add(oredict);
+                            oreInputs.add(oredictInputs);
                         } else {
                             oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                         }
