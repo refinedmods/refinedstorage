@@ -38,6 +38,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
 
     private EnumFacing direction;
 
+    private boolean throttlingDisabled;
     private boolean couldUpdate;
     private int ticksSinceUpdateChanged;
 
@@ -104,6 +105,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         return 4;
     }
 
+    public void setThrottlingDisabled() {
+        throttlingDisabled = true;
+    }
+
     @Override
     public void update() {
         ++ticks;
@@ -113,9 +118,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         if (couldUpdate != canUpdate) {
             ++ticksSinceUpdateChanged;
 
-            if (canUpdate ? (ticksSinceUpdateChanged > getUpdateThrottleInactiveToActive()) : (ticksSinceUpdateChanged > getUpdateThrottleActiveToInactive())) {
+            if ((canUpdate ? (ticksSinceUpdateChanged > getUpdateThrottleInactiveToActive()) : (ticksSinceUpdateChanged > getUpdateThrottleActiveToInactive())) || throttlingDisabled) {
                 ticksSinceUpdateChanged = 0;
                 couldUpdate = canUpdate;
+                throttlingDisabled = false;
 
                 if (hasConnectivityState()) {
                     WorldUtils.updateBlock(world, pos);

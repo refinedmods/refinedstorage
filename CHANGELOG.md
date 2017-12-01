@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.26
+- Added Funky Locomotion integration (raoulvdberge)
+
 ### 1.5.25
 - Fixed not being able to autocraft different Storage Drawers' wood drawers (raoulvdberge)
 - Fixed not being able to autocraft certain Modular Routers items (raoulvdberge)

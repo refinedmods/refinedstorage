@@ -149,6 +149,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     private EnergyForge energy = new EnergyForge(RS.INSTANCE.config.controllerCapacity);
 
+    private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
 
@@ -236,9 +237,10 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             if (couldRun != canRun) {
                 ++ticksSinceUpdateChanged;
 
-                if (canRun ? (ticksSinceUpdateChanged > THROTTLE_INACTIVE_TO_ACTIVE) : (ticksSinceUpdateChanged > THROTTLE_ACTIVE_TO_INACTIVE)) {
+                if ((canRun ? (ticksSinceUpdateChanged > THROTTLE_INACTIVE_TO_ACTIVE) : (ticksSinceUpdateChanged > THROTTLE_ACTIVE_TO_INACTIVE)) || throttlingDisabled) {
                     ticksSinceUpdateChanged = 0;
                     couldRun = canRun;
+                    throttlingDisabled = false;
 
                     nodeGraph.rebuild();
                     securityManager.rebuild();
