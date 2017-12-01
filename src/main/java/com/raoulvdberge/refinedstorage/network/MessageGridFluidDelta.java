@@ -56,7 +56,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
         for (GridStackFluid stack : GuiGrid.FLUIDS.get(fluid)) {
             if (stack.equals(message.clientStack)) {
-                if (stack.getStack().amount + message.delta == 0) {
+                if (stack.getStack().amount + message.delta <= 0) {
                     GuiGrid.FLUIDS.remove(fluid, stack);
                 } else {
                     stack.getStack().amount += message.delta;

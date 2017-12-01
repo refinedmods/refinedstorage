@@ -115,7 +115,7 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
         for (GridStackItem stack : GuiGrid.ITEMS.get(item)) {
             if (stack.equals(gridStack)) {
-                if (stack.getStack().getCount() + delta == 0) {
+                if (stack.getStack().getCount() + delta <= 0) {
                     if (gridStack.isCraftable()) {
                         stack.setDisplayCraftText(true);
                     } else {
