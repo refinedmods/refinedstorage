@@ -5,8 +5,6 @@ import com.google.gson.JsonSyntaxException;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
@@ -27,6 +25,8 @@ import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
+import com.raoulvdberge.refinedstorage.integration.funkylocomotion.IntegrationFunkyLocomotion;
+import com.raoulvdberge.refinedstorage.integration.funkylocomotion.MoveFactoryNetworkNode;
 import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.integration.projecte.IntegrationProjectE;
@@ -41,9 +41,7 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.rwtema.funkylocomotion.api.FunkyRegistry;
-import com.rwtema.funkylocomotion.api.IMoveFactory;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.init.Items;
@@ -51,13 +49,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.IIngredientFactory;
@@ -276,57 +269,8 @@ public class ProxyCommon {
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> e) {
         blocksToRegister.forEach(b -> {
-            if (b instanceof BlockNode && FunkyRegistry.INSTANCE != null) {
-                FunkyRegistry.INSTANCE.registerMoveFactoryBlock(b, new IMoveFactory() {
-                    @Override
-                    public NBTTagCompound destroyBlock(World world, BlockPos pos) {
-                        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
-
-                        INetworkNode node = manager.getNode(pos);
-
-                        TileNode tile = (TileNode) world.getTileEntity(pos);
-
-                        NBTTagCompound tag = new NBTTagCompound();
-
-                        tag.setInteger("Direction", tile.getDirection().ordinal());
-                        tag.setTag("Node", node.write(new NBTTagCompound()));
-                        tag.setString("NodeID", node.getId());
-
-                        // Funky Locomotion requires this
-                        IBlockState state = world.getBlockState(pos);
-                        tag.setString("Block", Block.REGISTRY.getNameForObject(state.getBlock()).toString());
-                        tag.setInteger("Meta", state.getBlock().getMetaFromState(state));
-                        tag.setTag("Tile", tile.writeToNBT(new NBTTagCompound()));
-
-                        manager.removeNode(pos); // Avoid inventory dropping
-                        manager.markForSaving();
-
-                        return tag;
-                    }
-
-                    @Override
-                    @SuppressWarnings("deprecation")
-                    public boolean recreateBlock(World world, BlockPos pos, NBTTagCompound tag) {
-                        NetworkNode node = (NetworkNode) API.instance().getNetworkNodeRegistry().get(tag.getString("NodeID")).create(tag.getCompoundTag("Node"), world, pos);
-                        node.setThrottlingDisabled();
-
-                        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
-
-                        manager.setNode(pos, node);
-                        manager.markForSaving();
-
-                        Block block = Block.REGISTRY.getObject(new ResourceLocation(tag.getString("Block")));
-                        world.setBlockState(pos, block.getStateFromMeta(tag.getInteger("Meta")));
-
-                        TileEntity tile = world.getTileEntity(pos);
-                        if (tile instanceof TileNode) {
-                            ((TileNode) tile).setDirection(EnumFacing.getFront(tag.getInteger("Direction")));
-                            tile.markDirty();
-                        }
-
-                        return true;
-                    }
-                });
+            if (b instanceof BlockNode && IntegrationFunkyLocomotion.isLoaded()) {
+                FunkyRegistry.INSTANCE.registerMoveFactoryBlock(b, new MoveFactoryNetworkNode());
             }
 
             e.getRegistry().register(b);
