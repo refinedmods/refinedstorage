@@ -99,7 +99,7 @@ public class CraftingTask implements ICraftingTask {
 
         ItemStack requested = this.requested != null ? this.requested : pattern.getOutputs().get(0);
 
-        toCraft.add(ItemHandlerHelper.copyStackWithSize(requested, quantity));
+        toCraft.add(requested, quantity);
 
         int quantity = this.quantity;
 
@@ -186,7 +186,7 @@ public class CraftingTask implements ICraftingTask {
 
                         do {
                             previousSteps.add(calculate(networkItems, networkFluids, inputPattern, toInsert));
-                            toCraft.add(ItemHandlerHelper.copyStackWithSize(input, craftQuantity));
+                            toCraft.add(input, craftQuantity);
                             extraStack = toInsert.get(input, compare);
                         } while (extraStack != null && extraStack.getCount() < needed);
                     }
