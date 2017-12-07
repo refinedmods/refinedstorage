@@ -7,18 +7,17 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class StackListItem implements IStackList<ItemStack> {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private List<ItemStack> removeTracker = new LinkedList<>();
     protected boolean needsCleanup = false;
-    private Set<Item> touchedItems = new HashSet<>();
 
     @Override
     public void add(@Nonnull ItemStack stack, int size) {
@@ -49,7 +48,6 @@ public class StackListItem implements IStackList<ItemStack> {
                 otherStack.shrink(size);
 
                 if (otherStack.isEmpty()) {
-                    touchedItems.add(stack.getItem());
                     needsCleanup = true;
                 }
 
@@ -71,7 +69,6 @@ public class StackListItem implements IStackList<ItemStack> {
                 otherStack.shrink(size);
 
                 if (otherStack.isEmpty()) {
-                    touchedItems.add(stack.getItem());
                     needsCleanup = true;
                 }
 
@@ -129,14 +126,8 @@ public class StackListItem implements IStackList<ItemStack> {
 
     @Override
     public void clean() {
-        List<Pair<Item, ItemStack>> toRemove = touchedItems.stream()
-            .flatMap(item -> stacks.get(item).stream().map(stack -> Pair.of(item, stack)))
-            .filter(pair -> pair.getValue().isEmpty())
-            .collect(Collectors.toList());
+        stacks.values().removeIf(ItemStack::isEmpty);
 
-        toRemove.forEach(pair -> stacks.remove(pair.getLeft(), pair.getRight()));
-
-        touchedItems.clear();
         needsCleanup = false;
     }
 
@@ -156,6 +147,7 @@ public class StackListItem implements IStackList<ItemStack> {
         if (needsCleanup) {
             clean();
         }
+
         return stacks.values();
     }
 
