@@ -145,7 +145,15 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                 }
             }
 
-            stackSize = slot.getCount() - found;
+            int needed = 0;
+
+            for (int i = 0; i < itemFilters.getSlots(); ++i) {
+                if (API.instance().getComparer().isEqualNoQuantity(slot, itemFilters.getStackInSlot(i))) {
+                    needed += itemFilters.getStackInSlot(i).getCount();
+                }
+            }
+
+            stackSize = needed - found;
 
             if (stackSize <= 0) {
                 return;
@@ -158,7 +166,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
         if (took == null) {
             if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                network.getCraftingManager().schedule(slot, 1, compare);
+                network.getCraftingManager().schedule(slot, stackSize, compare);
             }
         } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
             took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, false);
