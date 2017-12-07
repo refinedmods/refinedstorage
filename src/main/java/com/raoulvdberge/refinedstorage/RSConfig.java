@@ -235,15 +235,15 @@ public final class RSConfig {
     public List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<>();
 
-        list.addAll(new ConfigElement(config.getCategory(ENERGY)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(CONTROLLER)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(UPGRADES)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(WIRELESS_TRANSMITTER)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(GRID)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(WIRELESS_GRID)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(WIRELESS_FLUID_GRID)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(WIRELESS_CRAFTING_MONITOR)).getChildElements());
-        list.addAll(new ConfigElement(config.getCategory(PORTABLE_GRID)).getChildElements());
+        list.add(new ConfigElement(config.getCategory(ENERGY)));
+        list.add(new ConfigElement(config.getCategory(CONTROLLER)));
+        list.add(new ConfigElement(config.getCategory(UPGRADES)));
+        list.add(new ConfigElement(config.getCategory(WIRELESS_TRANSMITTER)));
+        list.add(new ConfigElement(config.getCategory(GRID)));
+        list.add(new ConfigElement(config.getCategory(WIRELESS_GRID)));
+        list.add(new ConfigElement(config.getCategory(WIRELESS_FLUID_GRID)));
+        list.add(new ConfigElement(config.getCategory(WIRELESS_CRAFTING_MONITOR)));
+        list.add(new ConfigElement(config.getCategory(PORTABLE_GRID)));
 
         return list;
     }
