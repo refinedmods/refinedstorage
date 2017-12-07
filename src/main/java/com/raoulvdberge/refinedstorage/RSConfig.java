@@ -58,6 +58,7 @@ public final class RSConfig {
     //region Grid
     public int maxRowsStretch;
     public boolean largeFont;
+    public boolean detailedTooltip;
     //endregion
 
     //region Wireless Transmitter
@@ -179,7 +180,8 @@ public final class RSConfig {
 
         //region Grid
         maxRowsStretch = config.getInt("maxRowsStretch", GRID, Integer.MAX_VALUE, 3, Integer.MAX_VALUE, "The maximum amount of rows that the Grid can show when stretched");
-        largeFont = config.getBoolean("largeFont", GRID, false, "Whether the controller should use a large font for stack quantity display");
+        largeFont = config.getBoolean("largeFont", GRID, false, "Whether the Grid should use a large font for stack quantity display");
+        detailedTooltip = config.getBoolean("detailedTooltip", GRID, true, "Whether the Grid should display a detailed tooltip when hovering over an item or fluid");
         //endregion
 
         //region Wireless Transmitter

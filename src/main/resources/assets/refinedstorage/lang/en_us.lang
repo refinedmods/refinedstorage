@@ -136,12 +136,9 @@ sidebutton.refinedstorage:redstone_mode.1=Only work with redstone signal
 sidebutton.refinedstorage:redstone_mode.2=Only work without redstone signal
 
 sidebutton.refinedstorage:grid.view_type=Display
-sidebutton.refinedstorage:grid.view_type.0=Normal (detailed)
-sidebutton.refinedstorage:grid.view_type.1=No craftables (detailed)
-sidebutton.refinedstorage:grid.view_type.2=Only craftables (detailed)
-sidebutton.refinedstorage:grid.view_type.3=Normal
-sidebutton.refinedstorage:grid.view_type.4=No craftables
-sidebutton.refinedstorage:grid.view_type.5=Only craftables
+sidebutton.refinedstorage:grid.view_type.0=Normal
+sidebutton.refinedstorage:grid.view_type.1=No craftables
+sidebutton.refinedstorage:grid.view_type.2=Only craftables
 sidebutton.refinedstorage:grid.sorting.direction=Sorting direction
 sidebutton.refinedstorage:grid.sorting.direction.0=Ascending
 sidebutton.refinedstorage:grid.sorting.direction.1=Descending

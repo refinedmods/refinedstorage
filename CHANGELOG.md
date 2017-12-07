@@ -6,6 +6,7 @@
 - Fixed Exporter in Regulator Mode not regulating properly when same item is specified multiple times (raoulvdberge)
 - Fixed air appearing in Grid (raoulvdberge)
 - Fixed config categories not correctly appearing in ingame config GUI (raoulvdberge)
+- Removed "detailed" Grid view type variant, made detailed tooltips a config option instead (raoulvdberge)
 
 ### 1.5.25
 - Fixed not being able to autocraft different Storage Drawers' wood drawers (raoulvdberge)

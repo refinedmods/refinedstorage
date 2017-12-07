@@ -24,9 +24,9 @@ public final class GridFilterParser {
             }
         }
 
-        if (grid.getViewType() == IGrid.VIEW_TYPE_NON_CRAFTABLES_DETAILED || grid.getViewType() == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
+        if (grid.getViewType() == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
             gridFilters.add(new GridFilterCraftable(false));
-        } else if (grid.getViewType() == IGrid.VIEW_TYPE_CRAFTABLES_DETAILED || grid.getViewType() == IGrid.VIEW_TYPE_CRAFTABLES) {
+        } else if (grid.getViewType() == IGrid.VIEW_TYPE_CRAFTABLES) {
             gridFilters.add(new GridFilterCraftable(true));
         }
 

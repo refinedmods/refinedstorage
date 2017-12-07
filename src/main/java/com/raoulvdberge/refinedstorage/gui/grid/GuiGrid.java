@@ -508,7 +508,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         // RS BEGIN
         List<String> textLines = Lists.newArrayList(gridStack.getTooltip().split("\n"));
 
-        if (IGrid.isValidViewTypeDetailed(grid.getViewType())) {
+        if (RS.INSTANCE.config.detailedTooltip) {
             textLines.add("");
 
             if (gridStack.getTrackerEntry() != null) {
@@ -549,7 +549,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             }
 
             // RS BEGIN
-            if (IGrid.isValidViewTypeDetailed(grid.getViewType())) {
+            if (RS.INSTANCE.config.detailedTooltip) {
                 int size = (int) (font.getStringWidth(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity())) * textScale);
 
                 if (size > tooltipTextWidth) {
@@ -614,7 +614,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, textLines, tooltipX, tooltipTop, font, tooltipTextWidth, tooltipHeight));
 
             // RS BEGIN
-            if (IGrid.isValidViewTypeDetailed(grid.getViewType())) {
+            if (RS.INSTANCE.config.detailedTooltip) {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(textScale, textScale, 1);
 

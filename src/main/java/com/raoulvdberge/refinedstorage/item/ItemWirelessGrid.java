@@ -26,7 +26,7 @@ public class ItemWirelessGrid extends ItemNetworkItem {
     }
 
     public static int getViewType(ItemStack stack) {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_VIEW_TYPE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_VIEW_TYPE) : IGrid.VIEW_TYPE_NORMAL_DETAILED;
+        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_VIEW_TYPE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_VIEW_TYPE) : IGrid.VIEW_TYPE_NORMAL;
     }
 
     public static int getSortingType(ItemStack stack) {
