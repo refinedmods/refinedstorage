@@ -509,7 +509,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         List<String> textLines = Lists.newArrayList(gridStack.getTooltip().split("\n"));
 
         if (RS.INSTANCE.config.detailedTooltip) {
-            textLines.add("");
+            if (!(gridStack instanceof GridStackItem) || !((GridStackItem) gridStack).doesDisplayCraftText()) {
+                textLines.add("");
+            }
 
             if (gridStack.getTrackerEntry() != null) {
                 textLines.add("");
@@ -550,10 +552,14 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             // RS BEGIN
             if (RS.INSTANCE.config.detailedTooltip) {
-                int size = (int) (font.getStringWidth(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity())) * textScale);
+                int size;
 
-                if (size > tooltipTextWidth) {
-                    tooltipTextWidth = size;
+                if (!(gridStack instanceof GridStackItem) || !((GridStackItem) gridStack).doesDisplayCraftText()) {
+                    size = (int) (font.getStringWidth(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity())) * textScale);
+
+                    if (size > tooltipTextWidth) {
+                        tooltipTextWidth = size;
+                    }
                 }
 
                 if (gridStack.getTrackerEntry() != null) {
@@ -618,12 +624,14 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(textScale, textScale, 1);
 
-                font.drawStringWithShadow(
-                    TextFormatting.GRAY + I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity()),
-                    RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                    RenderUtils.getOffsetOnScale(tooltipTop + tooltipHeight - (gridStack.getTrackerEntry() != null ? 15 : 6) - (font.getUnicodeFlag() ? 2 : 0), textScale),
-                    -1
-                );
+                if (!(gridStack instanceof GridStackItem) || !((GridStackItem) gridStack).doesDisplayCraftText()) {
+                    font.drawStringWithShadow(
+                        TextFormatting.GRAY + I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity()),
+                        RenderUtils.getOffsetOnScale(tooltipX, textScale),
+                        RenderUtils.getOffsetOnScale(tooltipTop + tooltipHeight - (gridStack.getTrackerEntry() != null ? 15 : 6) - (font.getUnicodeFlag() ? 2 : 0), textScale),
+                        -1
+                    );
+                }
 
                 if (gridStack.getTrackerEntry() != null) {
                     font.drawStringWithShadow(
