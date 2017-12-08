@@ -17,7 +17,6 @@ import java.util.List;
 public class StackListItem implements IStackList<ItemStack> {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
     private List<ItemStack> removeTracker = new LinkedList<>();
-    protected boolean needsCleanup = false;
 
     @Override
     public void add(@Nonnull ItemStack stack, int size) {
@@ -45,10 +44,11 @@ public class StackListItem implements IStackList<ItemStack> {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 boolean success = otherStack.getCount() - size >= 0;
-                otherStack.shrink(size);
 
-                if (otherStack.isEmpty()) {
-                    needsCleanup = true;
+                if (otherStack.getCount() - size <= 0) {
+                    stacks.remove(otherStack.getItem(), otherStack);
+                } else {
+                    otherStack.shrink(size);
                 }
 
                 return success;
@@ -66,10 +66,11 @@ public class StackListItem implements IStackList<ItemStack> {
                 this.removeTracker.add(removed);
 
                 boolean success = otherStack.getCount() - size >= 0;
-                otherStack.shrink(size);
 
-                if (otherStack.isEmpty()) {
-                    needsCleanup = true;
+                if (otherStack.getCount() - size <= 0) {
+                    stacks.remove(otherStack.getItem(), otherStack);
+                } else {
+                    otherStack.shrink(size);
                 }
 
                 return success;
@@ -106,10 +107,6 @@ public class StackListItem implements IStackList<ItemStack> {
     @Override
     @Nullable
     public ItemStack get(int hash) {
-        if (needsCleanup) {
-            clean();
-        }
-
         for (ItemStack stack : this.stacks.values()) {
             if (API.instance().getItemStackHashCode(stack) == hash) {
                 return stack;
@@ -125,13 +122,6 @@ public class StackListItem implements IStackList<ItemStack> {
     }
 
     @Override
-    public void clean() {
-        stacks.values().removeIf(ItemStack::isEmpty);
-
-        needsCleanup = false;
-    }
-
-    @Override
     public boolean isEmpty() {
         return stacks.isEmpty();
     }
@@ -144,10 +134,6 @@ public class StackListItem implements IStackList<ItemStack> {
     @Nonnull
     @Override
     public Collection<ItemStack> getStacks() {
-        if (needsCleanup) {
-            clean();
-        }
-
         return stacks.values();
     }
 
@@ -155,10 +141,6 @@ public class StackListItem implements IStackList<ItemStack> {
     @Nonnull
     public IStackList<ItemStack> copy() {
         StackListItem list = new StackListItem();
-
-        if (needsCleanup) {
-            clean();
-        }
 
         for (ItemStack stack : stacks.values()) {
             list.stacks.put(stack.getItem(), stack.copy());
@@ -169,10 +151,6 @@ public class StackListItem implements IStackList<ItemStack> {
 
     @Nonnull
     public StackListItemOredicted getOredicted() {
-        if (needsCleanup) {
-            clean();
-        }
-
         return new StackListItemOredicted(this);
     }
 

@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class StackListFluid implements IStackList<FluidStack> {
     private ArrayListMultimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
@@ -107,15 +106,6 @@ public class StackListFluid implements IStackList<FluidStack> {
     @Override
     public void clear() {
         stacks.clear();
-    }
-
-    @Override
-    public void clean() {
-        List<FluidStack> toRemove = stacks.values().stream()
-            .filter(stack -> stack.amount <= 0)
-            .collect(Collectors.toList());
-
-        toRemove.forEach(stack -> stacks.remove(stack.getFluid(), stack));
     }
 
     @Override

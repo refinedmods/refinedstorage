@@ -5,17 +5,16 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class StackListItemOredicted implements IStackList<ItemStack> {
     private StackListItem underlyingList;
     private ArrayListMultimap<Integer, ItemStack> stacks = ArrayListMultimap.create();
-    private Set<Integer> touchedIds = new HashSet<>();
 
     private StackListItemOredicted() {
     }
@@ -50,30 +49,12 @@ public class StackListItemOredicted implements IStackList<ItemStack> {
 
     @Override
     public boolean remove(@Nonnull ItemStack stack, int size) {
-        boolean rvalue = underlyingList.remove(stack, size);
-
-        if (underlyingList.needsCleanup) {
-            touchedIds.addAll(Arrays.stream(OreDictionary.getOreIDs(stack)).boxed().collect(Collectors.toList()));
-
-            clean();
-        }
-
-        return rvalue;
+        return underlyingList.remove(stack, size);
     }
 
     @Override
     public boolean trackedRemove(@Nonnull ItemStack stack, int size) {
-        // Calling tracked remove with a stack from get causes the reference to be the same
-        // When the underlying list empties the stack the reference will become empty, thus we need to copy before hand
-        ItemStack original = stack.copy();
-        boolean rvalue = underlyingList.trackedRemove(stack, size);
-
-        if (underlyingList.needsCleanup) {
-            touchedIds.addAll(Arrays.stream(OreDictionary.getOreIDs(original)).boxed().collect(Collectors.toList()));
-            clean();
-        }
-
-        return rvalue;
+        return underlyingList.trackedRemove(stack, size);
     }
 
     @Override
@@ -123,10 +104,6 @@ public class StackListItemOredicted implements IStackList<ItemStack> {
     @Nullable
     @Override
     public ItemStack get(int hash) {
-        if (underlyingList.needsCleanup) {
-            clean();
-        }
-
         return underlyingList.get(hash);
     }
 
@@ -134,22 +111,6 @@ public class StackListItemOredicted implements IStackList<ItemStack> {
     public void clear() {
         stacks.clear();
         underlyingList.clear();
-    }
-
-    private void localClean() {
-        List<Map.Entry<Integer, ItemStack>> toRemove = touchedIds.stream()
-            .flatMap(id -> stacks.get(id).stream().map(stack -> Pair.of(id, stack)))
-            .filter(entry -> entry.getValue().isEmpty())
-            .collect(Collectors.toList());
-
-        toRemove.forEach(entry -> stacks.remove(entry.getKey(), entry.getValue()));
-        touchedIds.clear();
-    }
-
-    @Override
-    public void clean() {
-        localClean();
-        underlyingList.clean();
     }
 
     @Override

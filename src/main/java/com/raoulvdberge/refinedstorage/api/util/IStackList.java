@@ -112,11 +112,6 @@ public interface IStackList<T> {
     void clear();
 
     /**
-     * Removes all empty stacks.
-     */
-    void clean();
-
-    /**
      * @return true if the list is empty, false otherwise
      */
     boolean isEmpty();
