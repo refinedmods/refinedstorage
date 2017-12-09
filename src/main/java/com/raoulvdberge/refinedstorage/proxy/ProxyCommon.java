@@ -20,13 +20,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipeLoader;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.block.BlockNode;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
 import com.raoulvdberge.refinedstorage.integration.funkylocomotion.IntegrationFunkyLocomotion;
-import com.raoulvdberge.refinedstorage.integration.funkylocomotion.MoveFactoryNetworkNode;
+import com.raoulvdberge.refinedstorage.integration.funkylocomotion.MoveFactoryRegisterer;
 import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.integration.projecte.IntegrationProjectE;
@@ -40,7 +39,6 @@ import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import com.rwtema.funkylocomotion.api.FunkyRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
@@ -268,13 +266,11 @@ public class ProxyCommon {
 
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> e) {
-        blocksToRegister.forEach(b -> {
-            if (b instanceof BlockNode && IntegrationFunkyLocomotion.isLoaded()) {
-                FunkyRegistry.INSTANCE.registerMoveFactoryBlock(b, new MoveFactoryNetworkNode());
-            }
+        blocksToRegister.forEach(e.getRegistry()::register);
 
-            e.getRegistry().register(b);
-        });
+        if (IntegrationFunkyLocomotion.isLoaded()) {
+            MoveFactoryRegisterer.register(blocksToRegister);
+        }
     }
 
     @SubscribeEvent

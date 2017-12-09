@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.integration.funkylocomotion;
 
-import com.rwtema.funkylocomotion.api.FunkyRegistry;
+import net.minecraftforge.fml.common.Loader;
 
 public final class IntegrationFunkyLocomotion {
     public static boolean isLoaded() {
-        return FunkyRegistry.INSTANCE != null;
+        return Loader.isModLoaded("funkylocomotion");
     }
 }
