@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.27
+- Fixed non-oredict patterns not consuming resources (raoulvdberge)
+
 ### 1.5.26
 - Added Funky Locomotion integration (raoulvdberge)
 - Minor fixes to autocrafting (raoulvdberge)

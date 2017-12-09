@@ -96,33 +96,33 @@ public class CraftingPattern implements ICraftingPattern {
             }
         } else {
             outputs = ItemPattern.getOutputs(stack);
+        }
 
-            if (oreInputs.isEmpty()) {
-                for (ItemStack input : inputs) {
-                    if (input == null || input.isEmpty()) {
-                        oreInputs.add(Collections.emptyList());
+        if (oreInputs.isEmpty()) {
+            for (ItemStack input : inputs) {
+                if (input == null || input.isEmpty()) {
+                    oreInputs.add(Collections.emptyList());
+                } else {
+                    int[] ids = OreDictionary.getOreIDs(input);
+
+                    if (ids.length == 0) {
+                        oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
+                    } else if (isOredict()) {
+                        List<ItemStack> oredictInputs = Arrays.stream(ids)
+                            .mapToObj(OreDictionary::getOreName)
+                            .map(OreDictionary::getOres)
+                            .flatMap(List::stream)
+                            .map(ItemStack::copy)
+                            .map(Comparer::stripTags)
+                            .peek(s -> s.setCount(input.getCount()))
+                            .collect(Collectors.toList());
+
+                        // Add original stack as first, should prevent some issues
+                        oredictInputs.add(0, Comparer.stripTags(input.copy()));
+
+                        oreInputs.add(oredictInputs);
                     } else {
-                        int[] ids = OreDictionary.getOreIDs(input);
-
-                        if (ids.length == 0) {
-                            oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
-                        } else if (isOredict()) {
-                            List<ItemStack> oredictInputs = Arrays.stream(ids)
-                                .mapToObj(OreDictionary::getOreName)
-                                .map(OreDictionary::getOres)
-                                .flatMap(List::stream)
-                                .map(ItemStack::copy)
-                                .map(Comparer::stripTags)
-                                .peek(s -> s.setCount(input.getCount()))
-                                .collect(Collectors.toList());
-
-                            // Add original stack as first, should prevent some issues
-                            oredictInputs.add(0, Comparer.stripTags(input.copy()));
-
-                            oreInputs.add(oredictInputs);
-                        } else {
-                            oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
-                        }
+                        oreInputs.add(Collections.singletonList(Comparer.stripTags(input)));
                     }
                 }
             }
