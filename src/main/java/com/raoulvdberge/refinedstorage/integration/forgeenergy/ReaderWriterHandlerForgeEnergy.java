@@ -45,10 +45,12 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
         int toExtract = 0;
 
         for (IWriter writer : channel.getWriters()) {
-            TileEntity tile = writer.getWorld().getTileEntity(writer.getPos().offset(writer.getDirection()));
+            if (writer.canUpdate()) {
+                TileEntity tile = writer.getWorld().getTileEntity(writer.getPos().offset(writer.getDirection()));
 
-            if (tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite())) {
-                toExtract += tile.getCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite()).receiveEnergy(storage.extractEnergy(toSend, false), false);
+                if (tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite())) {
+                    toExtract += tile.getCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite()).receiveEnergy(storage.extractEnergy(toSend, false), false);
+                }
             }
         }
 
