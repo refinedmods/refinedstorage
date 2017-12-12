@@ -26,7 +26,7 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     private FluidTankReaderWriter tankReader, tankWriter;
 
     public ReaderWriterHandlerFluids(@Nullable NBTTagCompound tag) {
-        this.tank = new FluidTank(4 * Fluid.BUCKET_VOLUME);
+        this.tank = new FluidTank(16 * Fluid.BUCKET_VOLUME);
         this.tankReader = new FluidTankReaderWriter(tank, true, false);
         this.tankWriter = new FluidTankReaderWriter(tank, false, true);
 

@@ -1,5 +1,11 @@
 # Refined Storage Changelog
 
+### 1.5.28
+- Fixed Writers not pushing energy (raoulvdberge)
+- Item Reader/Writers can now store 16 stacks (raoulvdberge)
+- Fluid Reader/Writers can now store 16 buckets (raoulvdberge)
+- Energy Reader/Writers can now store 16000 FE (raoulvdberge)
+
 ### 1.5.27
 - Fixed non-oredict patterns not consuming resources (raoulvdberge)
 

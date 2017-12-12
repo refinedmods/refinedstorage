@@ -27,7 +27,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     private ItemHandlerReaderWriter itemsReader, itemsWriter;
 
     public ReaderWriterHandlerItems(@Nullable NBTTagCompound tag) {
-        this.items = new ItemStackHandler(4);
+        this.items = new ItemStackHandler(16);
         this.itemsWriter = new ItemHandlerReaderWriter(items, false, true);
         this.itemsReader = new ItemHandlerReaderWriter(items, true, false);
 

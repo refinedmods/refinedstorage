@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,7 +26,7 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     private EnergyStorageReaderWriter storageReader, storageWriter;
 
     public ReaderWriterHandlerForgeEnergy(@Nullable NBTTagCompound tag) {
-        this.storage = new EnergyStorage(4000);
+        this.storage = new EnergyStorage(16000);
         this.storageReader = new EnergyStorageReaderWriter(storage, false, true);
         this.storageWriter = new EnergyStorageReaderWriter(storage, true, false);
 
@@ -36,6 +37,22 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
 
     @Override
     public void update(IReaderWriterChannel channel) {
+        if (channel.getWriters().isEmpty()) {
+            return;
+        }
+
+        int toSend = (int) Math.floor((float) storage.getEnergyStored() / (float) channel.getWriters().size());
+        int toExtract = 0;
+
+        for (IWriter writer : channel.getWriters()) {
+            TileEntity tile = writer.getWorld().getTileEntity(writer.getPos().offset(writer.getDirection()));
+
+            if (tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite())) {
+                toExtract += tile.getCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite()).receiveEnergy(storage.extractEnergy(toSend, false), false);
+            }
+        }
+
+        storage.extractEnergy(toExtract, false);
     }
 
     @Override
