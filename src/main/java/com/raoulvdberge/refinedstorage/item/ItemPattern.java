@@ -99,6 +99,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         return new ItemStack(pattern.getTagCompound().getCompoundTag(id));
     }
 
+    // @todo: Store slot number for outputs as well, so it can be filled in the pattern grid when the pattern is re-inserted. For 1.13
     public static void addOutput(ItemStack pattern, ItemStack output) {
         if (!pattern.hasTagCompound()) {
             pattern.setTagCompound(new NBTTagCompound());
