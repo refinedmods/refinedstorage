@@ -79,7 +79,7 @@ public final class RenderUtils {
     }
 
     public static Vec3d getEnd(EntityPlayer player) {
-        double reachDistance = player instanceof EntityPlayerMP ? ((EntityPlayerMP) player).interactionManager.getBlockReachDistance() : (player.capabilities.isCreativeMode ? 5.0D : 4.5D);
+        double reachDistance = player instanceof EntityPlayerMP ? player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() : (player.capabilities.isCreativeMode ? 5.0D : 4.5D);
 
         Vec3d lookVec = player.getLookVec();
         Vec3d start = getStart(player);

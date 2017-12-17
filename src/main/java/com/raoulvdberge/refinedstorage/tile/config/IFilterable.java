@@ -24,6 +24,7 @@ public interface IFilterable {
         });
     }
 
+    // @todo: Change in 1.13 to be by default blacklist, and accept all on blacklist and none on whitelist when no filter is set
     static boolean canTake(IItemHandler filters, int mode, int compare, ItemStack stack) {
         if (mode == WHITELIST) {
             int slots = 0;

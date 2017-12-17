@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorageMo
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -48,7 +47,7 @@ public class BlockStorageMonitor extends BlockNode {
         super.onBlockClicked(world, pos, player);
 
         if (!world.isRemote) {
-            RayTraceResult rayResult = ForgeHooks.rayTraceEyes(player, ((EntityPlayerMP) player).interactionManager.getBlockReachDistance() + 1);
+            RayTraceResult rayResult = ForgeHooks.rayTraceEyes(player, player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1);
 
             if (rayResult == null) {
                 return;
