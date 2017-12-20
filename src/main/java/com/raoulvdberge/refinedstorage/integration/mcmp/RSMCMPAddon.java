@@ -103,7 +103,7 @@ public class RSMCMPAddon implements IMCMPAddon {
         });
     }
 
-    public static boolean hasConnectionWith(TileEntity tile, List<AxisAlignedBB> boxes) {
+    public static boolean hasObstructingMultipart(TileEntity tile, List<AxisAlignedBB> testBoxes) {
         if (tile != null && tile.hasCapability(MCMPCapabilities.MULTIPART_TILE, null)) {
             IMultipartTile multipartTile = tile.getCapability(MCMPCapabilities.MULTIPART_TILE, null);
 
@@ -111,14 +111,14 @@ public class RSMCMPAddon implements IMCMPAddon {
                 for (IPartInfo info : ((PartCableTile) multipartTile).getInfo().getContainer().getParts().values()) {
                     IMultipart multipart = info.getPart();
 
-                    if (MultipartOcclusionHelper.testBoxIntersection(boxes, multipart.getOcclusionBoxes(info))) {
-                        return false;
+                    if (!(multipart instanceof PartCable) && MultipartOcclusionHelper.testBoxIntersection(testBoxes, multipart.getOcclusionBoxes(info))) {
+                        return true;
                     }
                 }
             }
         }
 
-        return true;
+        return false;
     }
 
     @Nullable

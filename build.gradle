@@ -56,7 +56,7 @@ repositories {
 dependencies {
     deobfCompile "mezz.jei:jei_1.12.2:4.8.5.136:api"
     runtime "mezz.jei:jei_1.12.2:4.8.5.136"
-    deobfCompile "MCMultiPart2:MCMultiPart:2.4.0"
+    deobfCompile "MCMultiPart2:MCMultiPart:2.4.1"
     deobfCompile "li.cil.oc:OpenComputers:MC1.12.1-1.7.1.43:api"
     deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.12.1-5.3.3:api"
     compile "inventory-tweaks:InventoryTweaks:1.63:api"

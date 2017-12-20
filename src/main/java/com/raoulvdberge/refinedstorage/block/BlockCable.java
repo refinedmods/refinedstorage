@@ -78,12 +78,12 @@ public class BlockCable extends BlockNode {
         TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
 
         state = super.getActualState(state, world, pos)
-            .withProperty(NORTH, hasConnectionWith(world, pos, tile, EnumFacing.NORTH))
-            .withProperty(EAST, hasConnectionWith(world, pos, tile, EnumFacing.EAST))
-            .withProperty(SOUTH, hasConnectionWith(world, pos, tile, EnumFacing.SOUTH))
-            .withProperty(WEST, hasConnectionWith(world, pos, tile, EnumFacing.WEST))
-            .withProperty(UP, hasConnectionWith(world, pos, tile, EnumFacing.UP))
-            .withProperty(DOWN, hasConnectionWith(world, pos, tile, EnumFacing.DOWN));
+            .withProperty(NORTH, hasConnectionWith(world, pos, this, tile, EnumFacing.NORTH))
+            .withProperty(EAST, hasConnectionWith(world, pos, this, tile, EnumFacing.EAST))
+            .withProperty(SOUTH, hasConnectionWith(world, pos, this, tile, EnumFacing.SOUTH))
+            .withProperty(WEST, hasConnectionWith(world, pos, this, tile, EnumFacing.WEST))
+            .withProperty(UP, hasConnectionWith(world, pos, this, tile, EnumFacing.UP))
+            .withProperty(DOWN, hasConnectionWith(world, pos, this, tile, EnumFacing.DOWN));
 
         return state;
     }
@@ -101,22 +101,22 @@ public class BlockCable extends BlockNode {
         return getActualState(stateForRendering, world, pos);
     }
 
-    private boolean hasConnectionWith(IBlockAccess world, BlockPos pos, TileEntity tile, EnumFacing direction) {
+    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos, BlockBase block, TileEntity tile, EnumFacing direction) {
         if (!(tile instanceof TileNode)) {
             return false;
         }
 
-        TileEntity otherTile = world.getTileEntity(pos.offset(direction));
+        TileEntity otherTile = RSMCMPAddon.unwrapTile(world, pos.offset(direction));
         EnumFacing otherTileSide = direction.getOpposite();
 
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
-            if (getDirection() != null && ((TileNode) tile).getNode().getFacingTile() == otherTile) {
+            if (block.getDirection() != null && ((TileNode) tile).getNode().getFacingTile() == otherTile) {
                 return false;
             }
 
             if (IntegrationMCMP.isLoaded()) {
-                return RSMCMPAddon.hasConnectionWith(tile, Collections.singletonList(BlockCable.getCableExtensionAABB(direction)))
-                    && RSMCMPAddon.hasConnectionWith(otherTile, Collections.singletonList(BlockCable.getCableExtensionAABB(direction.getOpposite())));
+                return !RSMCMPAddon.hasObstructingMultipart(tile, Collections.singletonList(BlockCable.getCableExtensionAABB(direction)))
+                    && !RSMCMPAddon.hasObstructingMultipart(otherTile, Collections.singletonList(BlockCable.getCableExtensionAABB(direction.getOpposite())));
             }
 
             return true;
