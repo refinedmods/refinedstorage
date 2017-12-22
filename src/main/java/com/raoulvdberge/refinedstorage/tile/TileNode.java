@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
@@ -92,7 +93,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
         INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
 
-        NetworkNode node = (NetworkNode) manager.getNode(pos);
+        INetworkNode node = manager.getNode(pos);
 
         if (node == null || !node.getId().equals(getNodeId())) {
             manager.setNode(pos, node = createNode(world, pos));
