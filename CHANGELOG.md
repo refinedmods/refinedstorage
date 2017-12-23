@@ -1,8 +1,9 @@
 # Refined Storage Changelog
 
 ### 1.5.29
-- Update Forge to 2577 (minimum Forge version required is now 2555 for MC 1.12.2)
+- Update Forge to 2577 (minimum Forge version required is now 2555 for MC 1.12.2) (raoulvdberge)
 - Fixed bug where MCMP multiparts were blocking RS network connections (raoulvdberge)
+- Fixed Reader/Writers for energy extracting energy when not needed (raoulvdberge)
 
 ### 1.5.28
 - Fixed Writers not pushing energy (raoulvdberge)

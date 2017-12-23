@@ -49,7 +49,7 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
                 TileEntity tile = writer.getWorld().getTileEntity(writer.getPos().offset(writer.getDirection()));
 
                 if (tile != null && tile.hasCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite())) {
-                    toExtract += tile.getCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite()).receiveEnergy(storage.extractEnergy(toSend, false), false);
+                    toExtract += tile.getCapability(CapabilityEnergy.ENERGY, writer.getDirection().getOpposite()).receiveEnergy(storage.extractEnergy(toSend, true), false);
                 }
             }
         }
