@@ -106,7 +106,7 @@ public class BlockCable extends BlockNode {
             return false;
         }
 
-        TileEntity otherTile = RSMCMPAddon.unwrapTile(world, pos.offset(direction));
+        TileEntity otherTile = world.getTileEntity(pos.offset(direction));
         EnumFacing otherTileSide = direction.getOpposite();
 
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
