@@ -662,6 +662,10 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         } else if (button == blockingPattern) {
             TileDataManager.setParameter(TileGrid.BLOCKING_PATTERN, blockingPattern.isChecked());
         } else if (button == processingPattern) {
+            // Rebuild the inventory slots before the slot change packet arrives
+            TileGrid.PROCESSING_PATTERN.setValue(processingPattern.isChecked());
+            ((ContainerGrid) this.inventorySlots).initSlots();
+
             TileDataManager.setParameter(TileGrid.PROCESSING_PATTERN, processingPattern.isChecked());
         } else if (button == tabPageLeft) {
             grid.onTabPageChanged(grid.getTabPage() - 1);
