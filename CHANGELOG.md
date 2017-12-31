@@ -3,6 +3,7 @@
 ### 1.5.31
 - Improved the "cannot craft! loop in processing..." error message (raoulvdberge)
 - Fixed error logs when toggling the Pattern Grid from and to processing mode (raoulvdberge)
+- Storage disk and block stored and capacity counts are formatted now in the tooltip (raoulvdberge)
 
 ### 1.5.30
 - Fixed crashing bug when MCMultiPart is not installed (raoulvdberge)

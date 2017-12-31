@@ -103,8 +103,8 @@ public class GuiStorage extends GuiBase {
             }
 
             drawTooltip(mouseX, mouseY, (gui.getCapacity() == -1 ?
-                t("misc.refinedstorage:storage.stored_minimal", gui.getStored()) :
-                t("misc.refinedstorage:storage.stored_capacity_minimal", gui.getStored(), gui.getCapacity())
+                t("misc.refinedstorage:storage.stored_minimal", RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(gui.getStored())) :
+                t("misc.refinedstorage:storage.stored_capacity_minimal", RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(gui.getStored()), RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(gui.getCapacity()))
             ) + "\n" + TextFormatting.GRAY + t("misc.refinedstorage:storage.full", full));
         }
     }

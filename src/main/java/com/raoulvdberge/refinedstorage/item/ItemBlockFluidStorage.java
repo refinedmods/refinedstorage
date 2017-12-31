@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -35,9 +36,9 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
             NBTTagCompound tag = stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE);
 
             if (type == FluidStorageType.TYPE_CREATIVE) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", StorageDiskFluid.getStored(tag)));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(StorageDiskFluid.getStored(tag))));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", StorageDiskFluid.getStored(tag), type.getCapacity()));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(StorageDiskFluid.getStored(tag)), RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(type.getCapacity())));
             }
         }
     }

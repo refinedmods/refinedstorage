@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -101,9 +102,9 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider<It
 
         if (storage.isValid(stack)) {
             if (storage.getCapacity() == -1) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", storage.getStored()));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(storage.getStored())));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", storage.getStored(), storage.getCapacity()));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(storage.getStored()), RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(storage.getCapacity())));
             }
         }
     }
