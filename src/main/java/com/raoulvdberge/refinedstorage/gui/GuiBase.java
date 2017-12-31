@@ -113,7 +113,11 @@ public abstract class GuiBase extends GuiContainer {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         drawDefaultBackground();
 
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        try {
+            super.drawScreen(mouseX, mouseY, partialTicks);
+        } catch (Exception e) {
+            // NO OP: Prevent a MC crash (see #1483)
+        }
 
         renderHoveredToolTip(mouseX, mouseY);
 
