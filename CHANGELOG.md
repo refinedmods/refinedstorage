@@ -5,6 +5,7 @@
 - Fixed error logs when toggling the Pattern Grid from and to processing mode (raoulvdberge)
 - Fixed pattern slots in Crafters not being accessible (raoulvdberge)
 - Storage disk and block stored and capacity counts are formatted now in the tooltip (raoulvdberge)
+- Made the Disk Manipulator unsided (inserting goes to insert slots and extracting from output slots) (raoulvdberge)
 
 ### 1.5.30
 - Fixed crashing bug when MCMultiPart is not installed (raoulvdberge)

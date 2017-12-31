@@ -5,10 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -104,6 +101,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
         }
     };
+
+    private ItemHandlerProxy disks = new ItemHandlerProxy(inputDisks, outputDisks);
 
     public NetworkNodeDiskManipulator(World world, BlockPos pos) {
         super(world, pos);
@@ -397,6 +396,10 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     public IItemHandler getOutputDisks() {
         return outputDisks;
+    }
+
+    public ItemHandlerProxy getDisks() {
+        return disks;
     }
 
     public ItemHandlerBase getItemFilters() {

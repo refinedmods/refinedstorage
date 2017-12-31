@@ -59,7 +59,7 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(facing == EnumFacing.DOWN ? getNode().getOutputDisks() : getNode().getInputDisks());
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getDisks());
         }
 
         return super.getCapability(capability, facing);
