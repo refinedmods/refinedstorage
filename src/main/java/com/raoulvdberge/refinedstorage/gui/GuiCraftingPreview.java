@@ -132,16 +132,16 @@ public class GuiCraftingPreview extends GuiBase {
             ICraftingPattern pattern = ItemPattern.getPatternFromCache(parent.mc.world, (ItemStack) stacks.get(0).getElement());
 
             int yy = 80;
-            for (ItemStack input : pattern.getOutputs()) {
-                if (input != null) {
+            for (ItemStack output : pattern.getOutputs()) {
+                if (output != null) {
                     GlStateManager.pushMatrix();
                     GlStateManager.scale(scale, scale, 1);
-                    drawString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 7, scale), input.getDisplayName());
+                    drawString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 7, scale), output.getDisplayName());
                     GlStateManager.popMatrix();
 
                     RenderHelper.enableGUIStandardItemLighting();
                     GlStateManager.enableDepth();
-                    drawItem(x + 5, yy, input);
+                    drawItem(x + 5, yy, output);
                     RenderHelper.disableStandardItemLighting();
 
                     yy += 17;
