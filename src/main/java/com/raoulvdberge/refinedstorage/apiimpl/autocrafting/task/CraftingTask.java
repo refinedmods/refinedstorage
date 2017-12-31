@@ -16,6 +16,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craf
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementInfo;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
@@ -57,7 +58,7 @@ public class CraftingTask implements ICraftingTask {
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
 
     private Set<ICraftingPattern> usedPatterns = new HashSet<>();
-    private boolean recurseFound = false;
+    private ICraftingPattern recursedPattern = null;
 
     private Deque<ItemStack> toInsertItems = new ArrayDeque<>();
     private Deque<FluidStack> toInsertFluids = new ArrayDeque<>();
@@ -102,7 +103,7 @@ public class CraftingTask implements ICraftingTask {
         int quantity = this.quantity;
 
         ICraftingPattern currentPattern;
-        while (quantity > 0 && !recurseFound) {
+        while (quantity > 0 && recursedPattern == null) {
             currentPattern = this.chain == null ? this.pattern : this.chain.cycle();
 
             mainSteps.add(calculate(networkList, networkFluidList, currentPattern, toInsert));
@@ -115,8 +116,8 @@ public class CraftingTask implements ICraftingTask {
 
     @Nullable
     private ICraftingStep calculate(IStackList<ItemStack> networkItems, IStackList<FluidStack> networkFluids, ICraftingPattern pattern, IStackList<ItemStack> toInsert) {
-        recurseFound |= !usedPatterns.add(pattern);
-        if (recurseFound) {
+        if (!usedPatterns.add(pattern)) {
+            recursedPattern = pattern;
             return null;
         }
 
@@ -252,7 +253,7 @@ public class CraftingTask implements ICraftingTask {
 
                         input.shrink(craftQuantity);
 
-                        if (!recurseFound) {
+                        if (recursedPattern == null) {
                             // Calculate added all the crafted outputs toInsert
                             // So we remove the ones we use from toInsert
                             ItemStack inserted = toInsert.get(inputCrafted, compare);
@@ -708,7 +709,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean isValid() {
-        return !recurseFound;
+        return recursedPattern == null;
     }
 
     @Override
@@ -719,7 +720,7 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public List<ICraftingPreviewElement> getPreviewStacks() {
         if (!isValid()) {
-            return Collections.emptyList();
+            return Collections.singletonList(new CraftingPreviewElementError(recursedPattern.getStack()));
         }
 
         Map<Integer, CraftingPreviewElementItemStack> map = new LinkedHashMap<>();

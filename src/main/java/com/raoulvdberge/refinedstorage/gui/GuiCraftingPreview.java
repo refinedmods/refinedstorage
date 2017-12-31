@@ -1,11 +1,14 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
+import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStart;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -88,13 +91,17 @@ public class GuiCraftingPreview extends GuiBase {
         }
     }
 
+    private boolean hasErrored() {
+        return stacks.size() == 1 && stacks.get(0) instanceof CraftingPreviewElementError;
+    }
+
     @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/crafting_preview.png");
 
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
-        if (stacks.isEmpty()) {
+        if (hasErrored()) {
             drawRect(x + 7, y + 20, x + 142, y + 139, 0xFFDBDBDB);
         }
     }
@@ -108,14 +115,38 @@ public class GuiCraftingPreview extends GuiBase {
 
         float scale = fontRenderer.getUnicodeFlag() ? 1F : 0.5F;
 
-        if (stacks.isEmpty()) {
+        if (hasErrored()) {
             GlStateManager.pushMatrix();
             GlStateManager.scale(scale, scale, 1);
 
-            drawString(RenderUtils.getOffsetOnScale(x + 39, scale), RenderUtils.getOffsetOnScale(y + 57, scale), t("gui.refinedstorage:crafting_preview.circular"));
-            drawString(RenderUtils.getOffsetOnScale(x + 40, scale), RenderUtils.getOffsetOnScale(y + 64, scale), t("gui.refinedstorage:crafting_preview.loop"));
+            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 10, scale), t("gui.refinedstorage:crafting_preview.error.0"));
+            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 20, scale), t("gui.refinedstorage:crafting_preview.error.1"));
+            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 30, scale), t("gui.refinedstorage:crafting_preview.error.2"));
+            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 40, scale), t("gui.refinedstorage:crafting_preview.error.3"));
+            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 50, scale), t("gui.refinedstorage:crafting_preview.error.4"));
+
+            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 60, scale), t("gui.refinedstorage:crafting_preview.error.5"));
 
             GlStateManager.popMatrix();
+
+            ICraftingPattern pattern = ItemPattern.getPatternFromCache(parent.mc.world, (ItemStack) stacks.get(0).getElement());
+
+            int yy = 80;
+            for (ItemStack input : pattern.getOutputs()) {
+                if (input != null) {
+                    GlStateManager.pushMatrix();
+                    GlStateManager.scale(scale, scale, 1);
+                    drawString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 7, scale), input.getDisplayName());
+                    GlStateManager.popMatrix();
+
+                    RenderHelper.enableGUIStandardItemLighting();
+                    GlStateManager.enableDepth();
+                    drawItem(x + 5, yy, input);
+                    RenderHelper.disableStandardItemLighting();
+
+                    yy += 17;
+                }
+            }
         } else {
             int slot = scrollbar != null ? (scrollbar.getOffset() * 2) : 0;
 

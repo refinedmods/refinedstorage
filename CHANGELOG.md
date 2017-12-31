@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.31
+- Improved the "cannot craft! loop in processing..." error message (raoulvdberge)
+
 ### 1.5.30
 - Fixed crashing bug when MCMultiPart is not installed (raoulvdberge)
 
