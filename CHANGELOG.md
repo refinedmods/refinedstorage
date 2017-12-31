@@ -5,6 +5,7 @@
 - Fixed error logs when toggling the Pattern Grid from and to processing mode (raoulvdberge)
 - Fixed pattern slots in Crafters not being accessible (raoulvdberge)
 - Fixed rare Grid crash (raoulvdberge)
+- Fixed OpenComputers cable showing up in Grid as air (raoulvdberge)
 - Storage disk and block stored and capacity counts are formatted now in the tooltip (raoulvdberge)
 - Made the Disk Manipulator unsided (inserting goes to insert slots and extracting from output slots) (raoulvdberge)
 

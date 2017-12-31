@@ -94,12 +94,12 @@ public final class StackUtils {
     public static void writeItemStack(ByteBuf buf, ItemStack stack) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getCount());
-        buf.writeInt(stack.getItemDamage());
+        buf.writeShort(stack.getItemDamage());
         ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
     }
 
     public static ItemStack readItemStack(ByteBuf buf) {
-        ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readInt());
+        ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readShort());
         stack.setTagCompound(ByteBufUtils.readTag(buf));
         return stack;
     }
