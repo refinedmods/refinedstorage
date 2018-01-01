@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-Copyright © 2015 - 2017 Refined Storage contributors
+Copyright © 2015 - 2018 Raoul Van den Berge
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
