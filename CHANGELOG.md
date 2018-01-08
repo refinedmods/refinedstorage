@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.32
+- Added Spanish translation (Samuelrock)
+
 ### 1.5.31
 - Improved the "cannot craft! loop in processing..." error message (raoulvdberge)
 - Fixed error logs when toggling the Pattern Grid from and to processing mode (raoulvdberge)
