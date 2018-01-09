@@ -493,7 +493,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
     
     private boolean patternAvailable() {
-        return patterns.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty();
+        return !(patterns.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty());
     }
 
     public boolean canCreatePattern() {
