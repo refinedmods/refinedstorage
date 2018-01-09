@@ -7,8 +7,8 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 public class GridSortingQuantity extends GridSorting {
     @Override
     public int compare(IGridStack left, IGridStack right) {
-        int leftSize = isStackCraftableEmpty(left) ? 0 : left.getQuantity();
-        int rightSize = isStackCraftableEmpty(right) ? 0 : right.getQuantity();
+        int leftSize = left.getQuantity();
+        int rightSize = right.getQuantity();
 
         if (leftSize != rightSize) {
             if (sortingDirection == IGrid.SORTING_DIRECTION_ASCENDING) {
@@ -19,11 +19,5 @@ public class GridSortingQuantity extends GridSorting {
         }
 
         return 0;
-    }
-    
-    private boolean isStackCraftableEmpty(IGridStack stack) {
-        if (!(stack instanceof GridStackItem))
-            return false;
-        return ((GridStackItem)stack).doesDisplayCraftText();
     }
 }
