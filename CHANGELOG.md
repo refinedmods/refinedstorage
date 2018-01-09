@@ -3,6 +3,7 @@
 ### 1.5.32
 - Added Spanish translation (Samuelrock)
 - Fixed issue where the Pattern Grid can only overwrite patterns when blank ones are present (ineternet)
+- Changed stack quantity of craftable items from 1 to 0 to fix Quantity Sorting (ineternet)
 
 ### 1.5.31
 - Improved the "cannot craft! loop in processing..." error message (raoulvdberge)
