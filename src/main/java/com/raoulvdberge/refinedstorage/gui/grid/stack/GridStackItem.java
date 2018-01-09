@@ -114,7 +114,7 @@ public class GridStackItem implements IGridStack {
 
     @Override
     public int getQuantity() {
-        return stack.getCount();
+        return doesDisplayCraftText() ? 0 : stack.getCount();
     }
 
     @Override
