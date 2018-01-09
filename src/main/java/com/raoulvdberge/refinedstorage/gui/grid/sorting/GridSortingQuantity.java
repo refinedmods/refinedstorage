@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.gui.grid.sorting;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 
 public class GridSortingQuantity extends GridSorting {
     @Override
