@@ -455,7 +455,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     public void onCreatePattern() {
-        if (canCreatePattern()) {
+        if (
+        ) {
             if (patterns.getStackInSlot(1).isEmpty()) {
                 patterns.extractItem(0, 1, false);
             }
@@ -491,9 +492,13 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             patterns.setStackInSlot(1, pattern);
         }
     }
+    
+    private boolean patternAvailable() {
+        return patterns.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty();
+    }
 
     public boolean canCreatePattern() {
-        if (patterns.getStackInSlot(0).isEmpty()) {
+        if (!patternAvailable()) {
             return false;
         }
 
@@ -515,7 +520,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
             return inputsFilled > 0 && outputsFilled > 0;
         } else {
-            return !result.getStackInSlot(0).isEmpty();
+            return patternAvailable();
         }
     }
 
