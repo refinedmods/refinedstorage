@@ -455,8 +455,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
     }
 
     public void onCreatePattern() {
-        if (
-        ) {
+        if (canCreatePattern()) {
             if (patterns.getStackInSlot(1).isEmpty()) {
                 patterns.extractItem(0, 1, false);
             }
