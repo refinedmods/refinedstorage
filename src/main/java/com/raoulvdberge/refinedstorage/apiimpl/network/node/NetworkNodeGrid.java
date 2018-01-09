@@ -491,9 +491,13 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             patterns.setStackInSlot(1, pattern);
         }
     }
+    
+    private boolean isPatternAvailable() {
+        return !(patterns.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty());
+    }
 
     public boolean canCreatePattern() {
-        if (patterns.getStackInSlot(0).isEmpty()) {
+        if (!isPatternAvailable()) {
             return false;
         }
 
@@ -515,7 +519,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
             return inputsFilled > 0 && outputsFilled > 0;
         } else {
-            return !result.getStackInSlot(0).isEmpty();
+            return isPatternAvailable();
         }
     }
 
