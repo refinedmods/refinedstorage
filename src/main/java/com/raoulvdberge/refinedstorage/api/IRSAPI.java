@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHan
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -37,8 +38,15 @@ public interface IRSAPI {
     IComparer getComparer();
 
     /**
+     * @return the quantity formatter
+     */
+    @Nonnull
+    IQuantityFormatter getQuantityFormatter();
+
+    /**
      * @return the network node factory
      */
+    @Nonnull
     INetworkNodeRegistry getNetworkNodeRegistry();
 
     /**
@@ -54,6 +62,7 @@ public interface IRSAPI {
     /**
      * @return the default storage disk behavior
      */
+    @Nonnull
     IStorageDiskBehavior getDefaultStorageDiskBehavior();
 
     /**

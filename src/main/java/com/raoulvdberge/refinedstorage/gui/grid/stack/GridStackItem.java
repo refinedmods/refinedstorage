@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -119,7 +119,7 @@ public class GridStackItem implements IGridStack {
 
     @Override
     public String getFormattedFullQuantity() {
-        return RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(getQuantity());
+        return API.instance().getQuantityFormatter().format(getQuantity());
     }
 
     @Override
@@ -129,7 +129,7 @@ public class GridStackItem implements IGridStack {
         if (displayCraftText) {
             text = I18n.format("gui.refinedstorage:grid.craft");
         } else if (stack.getCount() > 1) {
-            text = RenderUtils.formatQuantity(stack.getCount());
+            text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }
 
         gui.drawItem(x, y, stack, true, text);

@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -56,14 +56,14 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public String getFormattedFullQuantity() {
-        return RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(getQuantity()) + " mB";
+        return API.instance().getQuantityFormatter().format(getQuantity()) + " mB";
     }
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
         GuiBase.FLUID_RENDERER.draw(gui.mc, x, y, stack);
 
-        gui.drawQuantity(x, y, RenderUtils.formatQuantity((int) ((float) stack.amount / 1000F)));
+        gui.drawQuantity(x, y, API.instance().getQuantityFormatter().formatWithUnits((int) ((float) stack.amount / 1000F)));
     }
 
     @Override

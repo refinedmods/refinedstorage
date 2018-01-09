@@ -7,7 +7,6 @@ import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -110,9 +109,9 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
 
         if (storage.isValid(stack)) {
             if (storage.getCapacity() == -1) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(storage.getStored())));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", API.instance().getQuantityFormatter().format(storage.getStored())));
             } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(storage.getStored()), RenderUtils.QUANTITY_FORMATTER_UNFORMATTED.format(storage.getCapacity())));
+                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", API.instance().getQuantityFormatter().format(storage.getStored()), API.instance().getQuantityFormatter().format(storage.getCapacity())));
             }
         }
     }

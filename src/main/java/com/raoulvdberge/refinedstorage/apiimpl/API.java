@@ -19,6 +19,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHan
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
@@ -33,6 +34,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskBehavior;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
+import com.raoulvdberge.refinedstorage.apiimpl.util.QuantityFormatter;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
@@ -58,6 +60,7 @@ public class API implements IRSAPI {
     private static final IRSAPI INSTANCE = new API();
 
     private IComparer comparer = new Comparer();
+    private IQuantityFormatter quantityFormatter = new QuantityFormatter();
     private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
     private IStorageDiskBehavior storageDiskBehavior = new StorageDiskBehavior();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
@@ -97,6 +100,13 @@ public class API implements IRSAPI {
     }
 
     @Override
+    @Nonnull
+    public IQuantityFormatter getQuantityFormatter() {
+        return quantityFormatter;
+    }
+
+    @Override
+    @Nonnull
     public INetworkNodeRegistry getNetworkNodeRegistry() {
         return networkNodeRegistry;
     }
@@ -122,6 +132,7 @@ public class API implements IRSAPI {
     }
 
     @Override
+    @Nonnull
     public IStorageDiskBehavior getDefaultStorageDiskBehavior() {
         return storageDiskBehavior;
     }

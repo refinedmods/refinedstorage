@@ -34,7 +34,7 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);
 
-        drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 21 + offset, scale), RenderUtils.getOffsetOnScale(y + 7, scale), RenderUtils.QUANTITY_FORMATTER.format((float) stack.amount / 1000F) + "x " + stack.getLocalizedName());
+        drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 21 + offset, scale), RenderUtils.getOffsetOnScale(y + 7, scale), API.instance().getQuantityFormatter().format(stack.amount) + " mB " + stack.getLocalizedName());
 
         GlStateManager.popMatrix();
     }

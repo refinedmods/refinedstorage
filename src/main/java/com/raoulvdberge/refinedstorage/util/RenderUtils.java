@@ -22,16 +22,9 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.Collection;
-import java.util.Locale;
 
 public final class RenderUtils {
-    public static final DecimalFormat QUANTITY_FORMATTER = new DecimalFormat("####0.#", DecimalFormatSymbols.getInstance(Locale.US));
-    public static final DecimalFormat QUANTITY_FORMATTER_UNFORMATTED = new DecimalFormat("#,###", DecimalFormatSymbols.getInstance(Locale.US));
-
     public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
 
     // From ForgeBlockStateV1
@@ -39,32 +32,6 @@ public final class RenderUtils {
 
     private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_ITEM_TRANSFORM;
     private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_BLOCK_TRANSFORM;
-
-    static {
-        QUANTITY_FORMATTER.setRoundingMode(RoundingMode.DOWN);
-    }
-
-    public static String formatQuantity(int qty) {
-        if (qty >= 1_000_000) {
-            float qtyShort = (float) qty / 1_000_000F;
-
-            if (qty >= 100_000_000) {
-                qtyShort = Math.round(qtyShort); // XXX.XM looks weird.
-            }
-
-            return QUANTITY_FORMATTER.format(qtyShort) + "M";
-        } else if (qty >= 1000) {
-            float qtyShort = (float) qty / 1000F;
-
-            if (qty >= 100_000) {
-                qtyShort = Math.round(qtyShort); // XXX.XK looks weird.
-            }
-
-            return QUANTITY_FORMATTER.format(qtyShort) + "K";
-        }
-
-        return String.valueOf(qty);
-    }
 
     public static AxisAlignedBB getBounds(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
         return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
