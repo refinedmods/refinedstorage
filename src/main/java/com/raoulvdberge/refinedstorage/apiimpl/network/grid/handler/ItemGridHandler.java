@@ -58,7 +58,11 @@ public class ItemGridHandler implements IItemGridHandler {
         if ((flags & EXTRACT_HALF) == EXTRACT_HALF && itemSize > 1) {
             size = itemSize / 2;
 
-            if (size > maxItemSize / 2) {
+            // Rationale for this check:
+            // If we have 32 buckets, and we want to extract half, we expect/need to get 8 (max stack size 16 / 2).
+            // Without this check, we would get 16 (total stack size 32 / 2).
+            // Max item size also can't be 1. Otherwise, if we want to extract half of 8 lava buckets, we would get size 0 (1 / 2).
+            if (size > maxItemSize / 2 && maxItemSize != 1) {
                 size = maxItemSize / 2;
             }
         } else if (single) {
