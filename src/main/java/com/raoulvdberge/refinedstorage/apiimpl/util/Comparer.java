@@ -42,6 +42,7 @@ public class Comparer implements IComparer {
                 left = stripTags(left.copy());
                 right = stripTags(right.copy());
             }
+
             if (!isEqualNBT(left, right)) {
                 return false;
             }
@@ -97,6 +98,8 @@ public class Comparer implements IComparer {
             if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().hasNoTags()) {
                 return true;
             } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().hasNoTags()) {
+                return true;
+            } else if (!left.hasTagCompound() && !right.hasTagCompound()) {
                 return true;
             }
 

@@ -4,6 +4,7 @@
 - Added Spanish translation (Samuelrock)
 - Fixed issue where the Pattern Grid can only overwrite patterns when blank ones are present (ineternet)
 - Fixed not being able to extract half a stack of items with max stack size 1 in Grid when using right click (raoulvdberge)
+- Fixed 2 same stacks using capabilities without NBT tag not treated equal (raoulvdberge)
 - Changed stack quantity of craftable items from 1 to 0 to fix Quantity Sorting (ineternet)
 
 ### 1.5.31
