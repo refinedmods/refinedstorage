@@ -7,6 +7,7 @@
 - Fixed 2 same stacks using capabilities without NBT tag not treated equal (raoulvdberge)
 - Changed stack quantity of craftable items from 1 to 0 to fix Quantity Sorting (ineternet)
 - Changed fluid stack amount to not display "0" anymore (ineternet)
+- Fixed Interface NBT-insensitive exporting acting up weird (ineternet)
 
 ### 1.5.31
 - Improved the "cannot craft! loop in processing..." error message (raoulvdberge)
