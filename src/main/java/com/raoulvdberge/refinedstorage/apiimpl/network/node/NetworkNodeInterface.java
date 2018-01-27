@@ -95,7 +95,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                 if (!got.isEmpty()) {
                     exportItems.setStackInSlot(i, StackUtils.nullToEmpty(network.insertItemTracked(got, got.getCount())));
                 }
-            } else if (!got.isEmpty() && !API.instance().getComparer().isEqualNoQuantity(wanted, got)) {
+            } else if (!got.isEmpty() && !API.instance().getComparer().isEqual(wanted, got, getCompare())) {
                 exportItems.setStackInSlot(i, StackUtils.nullToEmpty(network.insertItemTracked(got, got.getCount())));
             } else {
                 int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
