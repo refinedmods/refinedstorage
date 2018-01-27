@@ -47,7 +47,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import scala.Console;
 
 import org.lwjgl.input.Keyboard;
 
