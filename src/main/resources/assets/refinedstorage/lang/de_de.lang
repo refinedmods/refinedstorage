@@ -104,6 +104,10 @@ sidebutton.refinedstorage:grid.search_box_mode.0=Normal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normal (automatische Wahl)
 sidebutton.refinedstorage:grid.search_box_mode.2=JEI synchron
 sidebutton.refinedstorage:grid.search_box_mode.3=JEI synchron (automatische Wahl)
+sidebutton.refinedstorage:grid.search_box_mode.4=Normal (behalten)
+sidebutton.refinedstorage:grid.search_box_mode.5=Normal (behalten, automatische Wahl)
+sidebutton.refinedstorage:grid.search_box_mode.6=JEI synchron (behalten)
+sidebutton.refinedstorage:grid.search_box_mode.7=JEI synchron (behalten, automatische Wahl)
 
 sidebutton.refinedstorage:mode=Modus
 sidebutton.refinedstorage:mode.whitelist=Erlaubt

@@ -47,6 +47,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
@@ -58,6 +59,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     public static final ListMultimap<Item, GridStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
     public static final ListMultimap<Fluid, GridStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    
+    private static String SEARCH_KEEP_TEXT = "";
 
     public static List<IGridStack> STACKS = new ArrayList<>();
     public static boolean CAN_CRAFT;
@@ -143,7 +146,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             searchField.setEnableBackgroundDrawing(false);
             searchField.setVisible(true);
             searchField.setTextColor(16777215);
-
             updateSearchFieldFocus(grid.getSearchBoxMode());
         } else {
             searchField.x = sx;
@@ -167,8 +169,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         addSideButton(new SideButtonGridSortingType(this, grid));
         addSideButton(new SideButtonGridSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, grid));
-
-        scheduleSort();
+        
+        if (IGrid.isSearchBoxModeWithKeep(grid.getSearchBoxMode())) {
+            updateSearchFieldText(SEARCH_KEEP_TEXT);
+            scheduleSort();
+            updateJEI();
+        }
     }
 
     @Override
@@ -688,7 +694,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
             if (clickedButton == 1 && inBounds(79, 5 + getTabHeight(), 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
-                searchField.setText("");
+                updateSearchFieldText("");
                 searchField.setFocused(true);
 
                 scheduleSort();
@@ -764,6 +770,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (checkHotbarKeys(keyCode)) {
             // NO OP
         } else if (searchField.textboxKeyTyped(character, keyCode)) {
+            if (IGrid.isSearchBoxModeWithKeep(grid.getSearchBoxMode())) {
+                SEARCH_KEEP_TEXT = this.searchField.getText();
+            }
             updateJEI();
             scheduleSort();
 
@@ -776,12 +785,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             } else {
                 saveHistory();
 
-                if (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
+                if (!IGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode())) {
                     searchField.setFocused(false);
                 }
             }
             keyHandled = true;
-        } else if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
+        } else if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && !IGrid.isSearchBoxModeWithAutoselection(grid.getSearchBoxMode())) {
             searchField.setFocused(!searchField.isFocused());
 
             saveHistory();
@@ -810,7 +819,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             searchHistory = SEARCH_HISTORY.size() - 1;
 
             if (delta == 1) {
-                searchField.setText("");
+                updateSearchFieldText("");
 
                 scheduleSort();
 
@@ -820,7 +829,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             }
         }
 
-        searchField.setText(SEARCH_HISTORY.get(searchHistory));
+        updateSearchFieldText(SEARCH_HISTORY.get(searchHistory));
 
         scheduleSort();
 
@@ -838,8 +847,17 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private void updateJEI() {
-        if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
+        if (IntegrationJEI.isLoaded() && IGrid.isSearchBoxModeWithJEISynchronized(grid.getSearchBoxMode())) {
             RSJEIPlugin.INSTANCE.getRuntime().getIngredientFilter().setFilterText(searchField.getText());
+        }
+    }
+    
+    public void updateSearchFieldText(String text) {
+        if (searchField != null) {
+            searchField.setText(text);
+            if (IGrid.isSearchBoxModeWithKeep(grid.getSearchBoxMode())) {
+                SEARCH_KEEP_TEXT = this.searchField.getText();
+            }
         }
     }
 

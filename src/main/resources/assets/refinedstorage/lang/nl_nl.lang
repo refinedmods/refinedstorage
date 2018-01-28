@@ -89,6 +89,10 @@ sidebutton.refinedstorage:grid.search_box_mode.0=Normaal
 sidebutton.refinedstorage:grid.search_box_mode.1=Normaal (autogeselecteerd)
 sidebutton.refinedstorage:grid.search_box_mode.2=JEI gesynchronizeerd
 sidebutton.refinedstorage:grid.search_box_mode.3=JEI gesynchronizeerd (autogeselecteerd)
+sidebutton.refinedstorage:grid.search_box_mode.4=Normaal (houden)
+sidebutton.refinedstorage:grid.search_box_mode.5=Normaal (houden, autogeselecteerd)
+sidebutton.refinedstorage:grid.search_box_mode.6=JEI gesynchronizeerd (houden)
+sidebutton.refinedstorage:grid.search_box_mode.7=JEI gesynchronizeerd (houden, autogeselecteerd)
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Whitelist
