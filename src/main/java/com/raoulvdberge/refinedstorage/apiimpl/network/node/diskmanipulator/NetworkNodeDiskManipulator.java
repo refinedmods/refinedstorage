@@ -131,7 +131,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         int slot = 0;
         if (type == IType.ITEMS) {
-            while (slot < 3 && (itemStorages[slot] == null || itemStorages[slot].getCapacity() <= 0)) {
+            while (slot < 3 && itemStorages[slot] == null) {
                 slot++;
             }
 
