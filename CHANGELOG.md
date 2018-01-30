@@ -8,6 +8,7 @@
 - Changed stack quantity of craftable items from 1 to 0 to fix Quantity Sorting (ineternet)
 - Changed fluid stack amount to not display "0" anymore (ineternet)
 - Fixed NBT/metadata check on exporting in an Interface (ineternet)
+- Fixed Disk Manipulator being stuck on unemptiable, non-empty disks (ineternet)
 
 ### 1.5.31
 - Improved the "cannot craft! loop in processing..." error message (raoulvdberge)
