@@ -131,7 +131,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         int slot = 0;
         if (type == IType.ITEMS) {
-            while (slot < 3 && itemStorages[slot] == null) {
+            while (slot < 3 && (itemStorages[slot] == null || checkItemDiskDone(itemStorages[slot], slot))) {
                 slot++;
             }
 
@@ -143,13 +143,11 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             if (ioMode == IO_MODE_INSERT) {
                 insertItemIntoNetwork(storage, slot);
-                if (isItemDiskDone(storage))
-                    moveDriveToOutput(slot);
             } else if (ioMode == IO_MODE_EXTRACT) {
                 extractItemFromNetwork(storage, slot);
             }
         } else if (type == IType.FLUIDS) {
-            while (slot < 3 && fluidStorages[slot] == null) {
+            while (slot < 3 && (fluidStorages[slot] == null || checkFluidDiskDone(fluidStorages[slot], slot))) {
                 slot++;
             }
 
@@ -161,8 +159,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             if (ioMode == IO_MODE_INSERT) {
                 insertFluidIntoNetwork(storage, slot);
-                if (isFluidDiskDone(storage))
-                    moveDriveToOutput(slot);
             } else if (ioMode == IO_MODE_EXTRACT) {
                 extractFluidFromNetwork(storage, slot);
             }
@@ -194,8 +190,9 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     //Iterate through disk stacks, if none can be inserted, return that it is done processing and can be output.
-    private boolean isItemDiskDone(IStorageDisk<ItemStack> storage) {
+    private boolean checkItemDiskDone(IStorageDisk<ItemStack> storage, int slot) {
         if (storage.getStored() == 0) {
+            moveDriveToOutput(slot);
             return true;
         }
 
@@ -288,8 +285,9 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     }
 
-    public boolean isFluidDiskDone(IStorageDisk<FluidStack> storage) {
+    private boolean checkFluidDiskDone(IStorageDisk<FluidStack> storage, int slot) {
         if (storage.getStored() == 0) {
+            moveDriveToOutput(slot);
             return true;
         }
 
