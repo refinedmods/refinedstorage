@@ -1,4 +1,30 @@
 {
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [-15, 75, 90],
+      "scale": [0.4, 0.4, 0.4],
+      "translation": [0, 3, 0]
+    },
+    "firstperson_righthand": {
+      "rotation": [-15, 75, 90],
+      "scale": [0.4, 0.4, 0.4],
+      "translation": [0, 3, 0]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [0, 120, 90],
+      "scale": [0.4, 0.4, 0.4],
+      "translation": [1, 3, 2]
+    },
+    "thirdperson_righthand": {
+      "rotation": [0, 120, 90],
+      "scale": [0.4, 0.4, 0.4],
+      "translation": [1, 3, 2]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "scale": [0.625, 0.625, 0.625]
+    }
+  },
   "elements": [
     {
       "name": "cube",
