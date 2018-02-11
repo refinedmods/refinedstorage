@@ -313,8 +313,6 @@ public class ProxyClient extends ProxyCommon {
             if (model.getResourceDomain().equals(RS.ID)) {
                 if (model.getResourcePath().equals("pattern")) {
                     e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
-                } else if (model.getResourcePath().equals("portable_grid")) {
-                    e.getModelRegistry().putObject(model, new BakedModelPortableGrid(e.getModelRegistry().getObject(model)));
                 }
             }
         }
