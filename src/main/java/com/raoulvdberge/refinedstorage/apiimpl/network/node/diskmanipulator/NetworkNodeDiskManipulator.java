@@ -131,7 +131,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         int slot = 0;
         if (type == IType.ITEMS) {
-            while (slot < 3 && itemStorages[slot] == null) {
+            while (slot < 3 && (itemStorages[slot] == null || checkItemDiskDone(itemStorages[slot], slot))) {
                 slot++;
             }
 
@@ -147,7 +147,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 extractItemFromNetwork(storage, slot);
             }
         } else if (type == IType.FLUIDS) {
-            while (slot < 3 && fluidStorages[slot] == null) {
+            while (slot < 3 && (fluidStorages[slot] == null || checkFluidDiskDone(fluidStorages[slot], slot))) {
                 slot++;
             }
 
@@ -166,11 +166,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private void insertItemIntoNetwork(IStorageDisk<ItemStack> storage, int slot) {
-        if (storage.getStored() == 0) {
-            moveDriveToOutput(slot);
-            return;
-        }
-
         List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack stack = stacks.get(i);
@@ -192,6 +187,30 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         if (storage.getStacks().size() == 0) {
             moveDriveToOutput(slot);
         }
+    }
+
+    //Iterate through disk stacks, if none can be inserted, return that it is done processing and can be output.
+    private boolean checkItemDiskDone(IStorageDisk<ItemStack> storage, int slot) {
+        if (storage.getStored() == 0) {
+            moveDriveToOutput(slot);
+            return true;
+        }
+
+        List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
+        for (int i = 0; i < stacks.size(); ++i) {
+            ItemStack stack = stacks.get(i);
+
+            ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, true);
+            if (extracted == null) {
+                continue;
+            }
+
+            ItemStack remainder = network.insertItem(extracted, extracted.getCount(), true);
+            if (remainder == null) { //An item could be inserted (no remainders when trying to). This disk isn't done.
+                return false;
+            }
+        }
+        return true;
     }
 
     private void extractItemFromNetwork(IStorageDisk<ItemStack> storage, int slot) {
@@ -243,11 +262,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private void insertFluidIntoNetwork(IStorageDisk<FluidStack> storage, int slot) {
-        if (storage.getStored() == 0) {
-            moveDriveToOutput(slot);
-            return;
-        }
-
         List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
 
         FluidStack extracted = null;
@@ -269,6 +283,29 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         if (remainder != null) {
             storage.insert(remainder, remainder.amount, false);
         }
+    }
+
+    private boolean checkFluidDiskDone(IStorageDisk<FluidStack> storage, int slot) {
+        if (storage.getStored() == 0) {
+            moveDriveToOutput(slot);
+            return true;
+        }
+
+        List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
+        for (int i = 0; i < stacks.size(); ++i) {
+            FluidStack stack = stacks.get(i);
+
+            FluidStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, true);
+            if (extracted == null) {
+                continue;
+            }
+
+            FluidStack remainder = network.insertFluid(extracted, extracted.amount, true);
+            if (remainder == null) { //A fluid could be inserted (no remainders when trying to). This disk isn't done.
+                return false;
+            }
+        }
+        return true;
     }
 
     private void extractFluidFromNetwork(IStorageDisk<FluidStack> storage, int slot) {
