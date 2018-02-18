@@ -1,4 +1,37 @@
 {
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [10, 130, 0],
+      "scale": [0.4, 0.4, 0.4],
+      "translation": [2, 3.5, 0]
+    },
+    "firstperson_righthand": {
+      "rotation": [10, 130, 0],
+      "scale": [0.4, 0.4, 0.4],
+      "translation": [2, 3.5, 0]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [10, 180, 0],
+      "scale": [0.4, 0.4, 0.4],
+      "translation": [0, 3, 1]
+    },
+    "thirdperson_righthand": {
+      "rotation": [10, 180, 0],
+      "scale": [0.4, 0.4, 0.4],
+      "translation": [0, 3, 1]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "scale": [0.625, 0.625, 0.625]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.25, 0.25, 0.25]
+    },
+    "fixed": {
+      "scale": [0.75, 0.75, 0.75]
+    }
+  },
   "elements": [
     {
       "name": "cube",
