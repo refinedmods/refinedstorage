@@ -9,6 +9,7 @@
 - Changed fluid stack amount to not display "0" anymore (ineternet)
 - Fixed NBT/metadata check on exporting in an Interface (ineternet)
 - Fixed Disk Manipulator being stuck on unemptiable, non-empty disks (ineternet)
+- Fixed orientations of the Portable Grid (TeamSpen210)
 - Disk Manipulator in fluid mode will now extract a bucket at a time instead of 1 mB (or 64 buckets at a time with a Stack Upgrade instead of 64 mB) (raoulvdberge)
 
 ### 1.5.31
