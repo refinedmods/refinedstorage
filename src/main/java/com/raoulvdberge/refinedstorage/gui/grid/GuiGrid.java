@@ -62,8 +62,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public static List<IGridStack> STACKS = new ArrayList<>();
     public static boolean CAN_CRAFT;
 
-    private static boolean SCHEDULE_SORT = false;
-    private Queue<Sorter> sortingQueue = new ArrayDeque<>();
+    private static final Sorter SORTER = new Sorter();
+    private static boolean SCHEDULE_SORT;
 
     private boolean wasConnected;
 
@@ -210,16 +210,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (SCHEDULE_SORT) {
             SCHEDULE_SORT = false;
 
-            sortingQueue.add(new Sorter(this));
-        }
-
-        Sorter sorter = sortingQueue.peek();
-        if (sorter != null) {
-            if (!sorter.isStarted()) {
-                sorter.start();
-            } else if (sorter.isDone()) {
-                sortingQueue.poll();
-            }
+            SORTER.startIfPossible(this);
         }
     }
 

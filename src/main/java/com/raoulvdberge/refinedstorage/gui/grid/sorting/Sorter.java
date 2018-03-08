@@ -18,14 +18,9 @@ public class Sorter implements Runnable {
     private static final GridSorting SORTING_INVENTORYTWEAKS = new GridSortingInventoryTweaks();
     private static final GridSorting SORTING_LAST_MODIFIED = new GridSortingLastModified();
 
-    private boolean done;
-    private boolean started;
+    private boolean busy;
 
     private GuiGrid gui;
-
-    public Sorter(GuiGrid gui) {
-        this.gui = gui;
-    }
 
     @Override
     public void run() {
@@ -90,20 +85,15 @@ public class Sorter implements Runnable {
             gui.getTabPageRight().visible = grid.getTotalTabPages() > 0;
         }
 
-        this.done = true;
+        this.busy = false;
     }
 
-    public void start() {
-        this.started = true;
+    public void startIfPossible(GuiGrid gui) {
+        if (!busy) {
+            this.busy = true;
+            this.gui = gui;
 
-        new Thread(this, "RS grid sorting").start();
-    }
-
-    public boolean isStarted() {
-        return started;
-    }
-
-    public boolean isDone() {
-        return done;
+            new Thread(this, "RS grid sorting").start();
+        }
     }
 }
