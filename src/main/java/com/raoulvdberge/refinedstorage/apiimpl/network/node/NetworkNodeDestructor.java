@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
+import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -72,6 +74,16 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
         return RS.INSTANCE.config.destructorUsage + upgrades.getEnergyUsage();
     }
 
+    private WorldServer getWorldServer() {
+        World world = this.world;
+
+        if (IntegrationMCMP.isLoaded()) {
+            world = RSMCMPAddon.unwrapWorld(world);
+        }
+
+        return (WorldServer) world;
+    }
+
     @Override
     public void update() {
         super.update();
@@ -130,7 +142,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                             }
                         }
 
-                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(world, front, frontBlockState, FakePlayerFactory.getMinecraft((WorldServer) world));
+                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(world, front, frontBlockState, FakePlayerFactory.getMinecraft(getWorldServer()));
 
                         if (!MinecraftForge.EVENT_BUS.post(e)) {
                             world.playEvent(null, 2001, front, Block.getStateId(frontBlockState));

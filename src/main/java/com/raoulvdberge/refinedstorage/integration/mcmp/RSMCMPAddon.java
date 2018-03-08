@@ -14,6 +14,7 @@ import mcmultipart.api.ref.MCMPCapabilities;
 import mcmultipart.api.slot.EnumCenterSlot;
 import mcmultipart.block.BlockMultipartContainer;
 import mcmultipart.block.TileMultipartContainer;
+import mcmultipart.util.MCMPWorldWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -23,6 +24,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -134,6 +136,14 @@ public class RSMCMPAddon implements IMCMPAddon {
         }
 
         return tile;
+    }
+
+    public static World unwrapWorld(World world) {
+        if (world instanceof MCMPWorldWrapper) {
+            return ((MCMPWorldWrapper) world).getActualWorld();
+        }
+
+        return world;
     }
 
     public static Block unwrapBlock(IBlockAccess world, BlockPos pos) {
