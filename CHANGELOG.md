@@ -12,6 +12,7 @@
 - Fixed orientations of the Portable Grid (TeamSpen210)
 - Fixed crafting event in Crafting Grid being fired twice (raoulvdberge)
 - Fixed a crash when the Constructor tries to place a block when a multipart is attached to it (raoulvdberge)
+- Fixed an autocrafting crash (raoulvdberge)
 - Attempted to fix FPS drop on Grid sorting (raoulvdberge)
 - Disk Manipulator in fluid mode will now extract a bucket at a time instead of 1 mB (or 64 buckets at a time with a Stack Upgrade instead of 64 mB) (raoulvdberge)
 

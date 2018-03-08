@@ -249,15 +249,19 @@ public class CraftingTask implements ICraftingTask {
                         toCraft.add(inputCrafted);
                         actualInputs.add(inputCrafted);
 
-                        previousSteps.add(calculate(networkItems, networkFluids, inputPattern, toInsert));
+                        ICraftingStep step = calculate(networkItems, networkFluids, inputPattern, toInsert);
 
                         input.shrink(craftQuantity);
 
-                        if (recursedPattern == null) {
-                            // Calculate added all the crafted outputs toInsert
-                            // So we remove the ones we use from toInsert
-                            ItemStack inserted = toInsert.get(inputCrafted, compare);
-                            toInsert.remove(inserted, craftQuantity);
+                        if (step != null) {
+                            previousSteps.add(step);
+
+                            if (recursedPattern == null) {
+                                // Calculate added all the crafted outputs toInsert
+                                // So we remove the ones we use from toInsert
+                                ItemStack inserted = toInsert.get(inputCrafted, compare);
+                                toInsert.remove(inserted, craftQuantity);
+                            }
                         }
                     } else {
                         // Fluid checks are with a stack size of one
