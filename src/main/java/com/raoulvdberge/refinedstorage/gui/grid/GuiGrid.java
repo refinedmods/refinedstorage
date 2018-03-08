@@ -50,8 +50,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuiGrid extends GuiBase implements IGridDisplay {
     private static final List<String> SEARCH_HISTORY = new ArrayList<>();
@@ -85,22 +85,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     private int searchHistory = -1;
 
-    private Deque<Integer> konami = new ArrayDeque<>(Arrays.asList(
-        Keyboard.KEY_UP,
-        Keyboard.KEY_UP,
-        Keyboard.KEY_DOWN,
-        Keyboard.KEY_DOWN,
-        Keyboard.KEY_LEFT,
-        Keyboard.KEY_RIGHT,
-        Keyboard.KEY_LEFT,
-        Keyboard.KEY_RIGHT,
-        Keyboard.KEY_B,
-        Keyboard.KEY_A
-    ));
-
-    private int[] konamiOffsetsX;
-    private int[] konamiOffsetsY;
-
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, grid.getType() == GridType.FLUID ? 193 : 227, 0);
 
@@ -131,9 +115,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         tabPageLeft = addButton(getGuiLeft(), getGuiTop() - 22, 20, 20, "<", true, grid.getTotalTabPages() > 0);
         tabPageRight = addButton(getGuiLeft() + getXSize() - 22 - 32, getGuiTop() - 22, 20, 20, ">", true, grid.getTotalTabPages() > 0);
-
-        this.konamiOffsetsX = new int[9 * getVisibleRows()];
-        this.konamiOffsetsY = new int[9 * getVisibleRows()];
 
         int sx = x + 80 + 1;
         int sy = y + 6 + 1 + getTabHeight();
@@ -186,13 +167,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public void update(int x, int y) {
-        if (konami.isEmpty()) {
-            for (int i = 0; i < 9 * getVisibleRows(); ++i) {
-                konamiOffsetsX[i] += (ThreadLocalRandom.current().nextBoolean() ? 1 : -1) * ThreadLocalRandom.current().nextInt(5);
-                konamiOffsetsY[i] += (ThreadLocalRandom.current().nextBoolean() ? 1 : -1) * ThreadLocalRandom.current().nextInt(5);
-            }
-        }
-
         if (wasConnected != grid.isActive()) {
             wasConnected = grid.isActive();
 
@@ -442,25 +416,22 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         RenderHelper.enableGUIStandardItemLighting();
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
-            int xx = x + (konami.isEmpty() ? konamiOffsetsX[i] : 0);
-            int yy = y + (konami.isEmpty() ? konamiOffsetsY[i] : 0);
-
-            if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !grid.isActive()) {
+            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
                 this.slotNumber = slot;
             }
 
             if (slot < STACKS.size()) {
-                STACKS.get(slot).draw(this, xx, yy);
+                STACKS.get(slot).draw(this, x, y);
             }
 
-            if (inBounds(xx, yy, 16, 16, mouseX, mouseY) || !grid.isActive()) {
+            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
                 int color = grid.isActive() ? -2130706433 : 0xFF5B5B5B;
 
                 GlStateManager.disableLighting();
                 GlStateManager.disableDepth();
                 zLevel = 190;
                 GlStateManager.colorMask(true, true, true, false);
-                drawGradientRect(xx, yy, xx + 16, yy + 16, color, color);
+                drawGradientRect(x, y, x + 16, y + 16, color, color);
                 zLevel = 0;
                 GlStateManager.colorMask(true, true, true, true);
                 GlStateManager.enableLighting();
@@ -744,10 +715,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
-        if (!konami.isEmpty() && konami.peek() == keyCode) {
-            konami.pop();
-        }
-
         if (searchField == null) {
             return;
         }
