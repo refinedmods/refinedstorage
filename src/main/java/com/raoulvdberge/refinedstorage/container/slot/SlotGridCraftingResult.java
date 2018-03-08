@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
 
@@ -23,8 +22,6 @@ public class SlotGridCraftingResult extends SlotCrafting {
     @Override
     @Nonnull
     public ItemStack onTake(EntityPlayer player, @Nonnull ItemStack stack) {
-        FMLCommonHandler.instance().firePlayerCraftingEvent(player, stack, grid.getCraftingMatrix());
-
         onCrafting(stack);
 
         if (!player.getEntityWorld().isRemote) {
