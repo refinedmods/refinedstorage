@@ -203,7 +203,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     //Iterate through disk stacks, if none can be inserted, return that it is done processing and can be output.
     private boolean checkItemDiskDone(IStorageDisk<ItemStack> storage, int slot) {
-        if (storage.getStored() == 0) {
+        if ((ioMode == IO_MODE_INSERT && storage.getStored() == 0) || (ioMode == IO_MODE_EXTRACT && storage.getStored() == storage.getCapacity()) ) {
             moveDriveToOutput(slot);
             return true;
         }
@@ -298,7 +298,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private boolean checkFluidDiskDone(IStorageDisk<FluidStack> storage, int slot) {
-        if (storage.getStored() == 0) {
+        if ((ioMode == IO_MODE_INSERT && storage.getStored() == 0) || (ioMode == IO_MODE_EXTRACT && storage.getStored() == storage.getCapacity()) ) {
             moveDriveToOutput(slot);
             return true;
         }
