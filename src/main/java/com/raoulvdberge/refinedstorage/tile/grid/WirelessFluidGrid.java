@@ -3,8 +3,11 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
@@ -28,7 +31,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class WirelessFluidGrid implements IGrid {
+public class WirelessFluidGrid implements IGridNetworkAware {
     public static int ID;
 
     private ItemStack stack;
@@ -79,6 +82,28 @@ public class WirelessFluidGrid implements IGrid {
     @Override
     public IStorageCacheListener createListener(EntityPlayerMP player) {
         return new StorageCacheListenerGridFluid(player, getNetwork());
+    }
+
+    @Nullable
+    @Override
+    public IStorageCache getStorageCache() {
+        INetwork network = getNetwork();
+
+        return network != null ? network.getFluidStorageCache() : null;
+    }
+
+    @Nullable
+    @Override
+    public IItemGridHandler getItemHandler() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public IFluidGridHandler getFluidHandler() {
+        INetwork network = getNetwork();
+
+        return network != null ? network.getFluidGridHandler() : null;
     }
 
     @Override

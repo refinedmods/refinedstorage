@@ -52,6 +52,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GuiGrid extends GuiBase implements IGridDisplay {
+    private static final List<String> SEARCH_HISTORY = new ArrayList<>();
+
     private IGridView view;
 
     private GuiTextField searchField;
@@ -70,7 +72,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     private int slotNumber;
 
-    private List<String> searchHistory = new ArrayList<>();
     private int searchHistoryIndex = -1;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
@@ -742,20 +743,20 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private void updateSearchHistory(int delta) {
-        if (searchHistory.isEmpty()) {
+        if (SEARCH_HISTORY.isEmpty()) {
             return;
         }
 
         if (searchHistoryIndex == -1) {
-            searchHistoryIndex = searchHistory.size();
+            searchHistoryIndex = SEARCH_HISTORY.size();
         }
 
         searchHistoryIndex += delta;
 
         if (searchHistoryIndex < 0) {
             searchHistoryIndex = 0;
-        } else if (searchHistoryIndex > searchHistory.size() - 1) {
-            searchHistoryIndex = searchHistory.size() - 1;
+        } else if (searchHistoryIndex > SEARCH_HISTORY.size() - 1) {
+            searchHistoryIndex = SEARCH_HISTORY.size() - 1;
 
             if (delta == 1) {
                 searchField.setText("");
@@ -768,7 +769,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             }
         }
 
-        searchField.setText(searchHistory.get(searchHistoryIndex));
+        searchField.setText(SEARCH_HISTORY.get(searchHistoryIndex));
 
         view.sort();
 
@@ -776,12 +777,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private void saveHistory() {
-        if (!searchHistory.isEmpty() && searchHistory.get(searchHistory.size() - 1).equals(searchField.getText())) {
+        if (!SEARCH_HISTORY.isEmpty() && SEARCH_HISTORY.get(SEARCH_HISTORY.size() - 1).equals(searchField.getText())) {
             return;
         }
 
         if (!searchField.getText().trim().isEmpty()) {
-            searchHistory.add(searchField.getText());
+            SEARCH_HISTORY.add(searchField.getText());
         }
     }
 

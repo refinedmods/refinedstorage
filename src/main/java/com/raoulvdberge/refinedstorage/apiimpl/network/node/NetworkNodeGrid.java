@@ -6,14 +6,19 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -41,10 +46,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkNodeGrid extends NetworkNode implements IGrid {
+public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
     public static final String ID = "grid";
 
     public static final String NBT_VIEW_TYPE = "ViewType";
@@ -192,7 +198,25 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
 
     @Override
     public IStorageCacheListener createListener(EntityPlayerMP player) {
-        return new StorageCacheListenerGridItem(player, network);
+        return getType() == GridType.FLUID ? new StorageCacheListenerGridFluid(player, network) : new StorageCacheListenerGridItem(player, network);
+    }
+
+    @Nullable
+    @Override
+    public IStorageCache getStorageCache() {
+        return network != null ? (getType() == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache()) : null;
+    }
+
+    @Nullable
+    @Override
+    public IItemGridHandler getItemHandler() {
+        return network != null ? network.getItemGridHandler() : null;
+    }
+
+    @Nullable
+    @Override
+    public IFluidGridHandler getFluidHandler() {
+        return network != null ? network.getFluidGridHandler() : null;
     }
 
     @Override
@@ -264,7 +288,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         onRecipeTransfer(this, player, recipe);
     }
 
-    public static void onRecipeTransfer(IGrid grid, EntityPlayer player, ItemStack[][] recipe) {
+    public static void onRecipeTransfer(IGridNetworkAware grid, EntityPlayer player, ItemStack[][] recipe) {
         INetwork network = grid.getNetwork();
 
         if (network != null && grid.getType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
@@ -369,7 +393,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         onCrafted(this, world, player);
     }
 
-    public static void onCrafted(IGrid grid, World world, EntityPlayer player) {
+    public static void onCrafted(IGridNetworkAware grid, World world, EntityPlayer player) {
         NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(grid.getCraftingMatrix(), world);
 
         INetwork network = grid.getNetwork();
@@ -419,7 +443,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         onCraftedShift(this, player);
     }
 
-    public static void onCraftedShift(IGrid grid, EntityPlayer player) {
+    public static void onCraftedShift(IGridNetworkAware grid, EntityPlayer player) {
         List<ItemStack> craftedItemsList = new ArrayList<>();
         int craftedItems = 0;
         ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);

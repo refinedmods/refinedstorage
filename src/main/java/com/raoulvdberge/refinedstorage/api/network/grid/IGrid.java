@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.api.network.grid;
 
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
@@ -51,45 +50,27 @@ public interface IGrid {
     GridType getType();
 
     /**
-     * @return the network of this grid, or null if the network is unavailable
-     */
-    @Nullable
-    INetwork getNetwork();
-
-    /**
-     * @return a listener for this grid
+     * @return a listener for this grid, will be attached to the storage cache in {@link #getStorageCache()}
      */
     IStorageCacheListener createListener(EntityPlayerMP player);
 
     /**
-     * @return the storage cache for this grid
+     * @return the storage cache for this grid, or null if this grid is unavailable
      */
     @Nullable
-    default IStorageCache getStorageCache() {
-        INetwork network = getNetwork();
-
-        if (network == null) {
-            return null;
-        }
-
-        return getType() == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache();
-    }
+    IStorageCache getStorageCache();
 
     /**
-     * @return the item grid handler of the network of the grid, or null if the network is unavailable
+     * @return the item grid handler, or null if there is no handler available
      */
     @Nullable
-    default IItemGridHandler getItemHandler() {
-        return getNetwork() != null ? getNetwork().getItemGridHandler() : null;
-    }
+    IItemGridHandler getItemHandler();
 
     /**
-     * @return the fluid grid handler of the network of the grid, or null if the network is unavailable
+     * @return the fluid grid handler, or null if there is no handler available
      */
     @Nullable
-    default IFluidGridHandler getFluidHandler() {
-        return getNetwork() != null ? getNetwork().getFluidGridHandler() : null;
-    }
+    IFluidGridHandler getFluidHandler();
 
     /**
      * @return an unlocalized gui title

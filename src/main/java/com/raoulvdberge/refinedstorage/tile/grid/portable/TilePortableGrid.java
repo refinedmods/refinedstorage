@@ -2,10 +2,10 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
@@ -279,12 +279,6 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Nullable
     @Override
-    public INetwork getNetwork() {
-        return null;
-    }
-
-    @Nullable
-    @Override
     public IStorageCache getStorageCache() {
         return storage != null ? cache : null;
     }
@@ -298,6 +292,12 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     @Override
     public IItemGridHandler getItemHandler() {
         return handler;
+    }
+
+    @Nullable
+    @Override
+    public IFluidGridHandler getFluidHandler() {
+        return null;
     }
 
     @Override

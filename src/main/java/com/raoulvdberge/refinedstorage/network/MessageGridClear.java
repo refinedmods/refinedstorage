@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
@@ -31,8 +31,8 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
     public void handle(MessageGridClear message, EntityPlayerMP player) {
         Container container = player.openContainer;
 
-        if (container instanceof ContainerGrid) {
-            IGrid grid = ((ContainerGrid) container).getGrid();
+        if (container instanceof ContainerGrid && ((ContainerGrid) container).getGrid() instanceof IGridNetworkAware) {
+            IGridNetworkAware grid = (IGridNetworkAware) ((ContainerGrid) container).getGrid();
 
             InventoryCrafting matrix = grid.getCraftingMatrix();
 
