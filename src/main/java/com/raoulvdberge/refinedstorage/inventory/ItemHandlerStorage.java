@@ -9,7 +9,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class ItemHandlerStorage implements IItemHandler, Runnable {
+public class ItemHandlerStorage implements IItemHandler {
     private IStorage<ItemStack> storage;
     private IStorageCache<ItemStack> storageCache;
     private ItemStack[] storageCacheData;
@@ -50,12 +50,7 @@ public class ItemHandlerStorage implements IItemHandler, Runnable {
         return 64;
     }
 
-    @Override
-    public void run() {
-        invalidate();
-    }
-
-    private void invalidate() {
+    public void invalidate() {
         this.storageCacheData = storageCache.getList().getStacks().toArray(new ItemStack[0]);
     }
 }

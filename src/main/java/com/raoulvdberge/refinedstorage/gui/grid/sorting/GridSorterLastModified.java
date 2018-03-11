@@ -3,17 +3,22 @@ package com.raoulvdberge.refinedstorage.gui.grid.sorting;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 
-public class GridSortingLastModified extends GridSorting {
+public class GridSorterLastModified implements IGridSorter {
     @Override
-    public int compare(IGridStack left, IGridStack right) {
+    public boolean isApplicable(IGrid grid) {
+        return grid.getSortingType() == IGrid.SORTING_TYPE_LAST_MODIFIED;
+    }
+
+    @Override
+    public int compare(IGridStack left, IGridStack right, GridSorterDirection sortingDirection) {
         long lt = left.getTrackerEntry() != null ? left.getTrackerEntry().getTime() : 0;
         long rt = right.getTrackerEntry() != null ? right.getTrackerEntry().getTime() : 0;
 
         if (lt != rt) {
             // For "last modified" the comparison is reversed
-            if (sortingDirection == IGrid.SORTING_DIRECTION_DESCENDING) {
+            if (sortingDirection == GridSorterDirection.DESCENDING) {
                 return Long.compare(rt, lt);
-            } else if (sortingDirection == IGrid.SORTING_DIRECTION_ASCENDING) {
+            } else if (sortingDirection == GridSorterDirection.ASCENDING) {
                 return Long.compare(lt, rt);
             }
         }

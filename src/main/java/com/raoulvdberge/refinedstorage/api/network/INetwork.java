@@ -80,48 +80,6 @@ public interface INetwork {
     IStorageCache<FluidStack> getFluidStorageCache();
 
     /**
-     * Sends a grid update packet with all the items to all clients that are watching a grid connected to this network.
-     */
-    void sendItemStorageToClient();
-
-    /**
-     * Sends a grid update packet with all the items to a specific player.
-     */
-    void sendItemStorageToClient(EntityPlayerMP player);
-
-    /**
-     * Sends a item storage change to all clients that are watching a grid connected to this network.
-     *
-     * @param stack   the stack
-     * @param delta   the delta
-     * @param batched whether the delta can be batched to be sent all at once using {@link #sendBatchedItemStorageDeltaToClient()}
-     */
-    void sendItemStorageDeltaToClient(ItemStack stack, int delta, boolean batched);
-
-    /**
-     * Sends batched item storage deltas, accumulated through {@link #sendItemStorageDeltaToClient(ItemStack, int, boolean)}.
-     */
-    void sendBatchedItemStorageDeltaToClient();
-
-    /**
-     * Sends a grid update packet with all the fluids to all clients that are watching a grid connected to this network.
-     */
-    void sendFluidStorageToClient();
-
-    /**
-     * Sends a grid packet with all the fluids to a specific player.
-     */
-    void sendFluidStorageToClient(EntityPlayerMP player);
-
-    /**
-     * Sends a fluids storage change to all clients that are watching a grid connected to this network.
-     *
-     * @param stack the stack
-     * @param delta the delta
-     */
-    void sendFluidStorageDeltaToClient(FluidStack stack, int delta);
-
-    /**
      * Makes the network send a crafting monitor update to all players as soon as it can.
      */
     void markCraftingMonitorForUpdate();

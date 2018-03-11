@@ -85,9 +85,4 @@ public class GridStackFluid implements IGridStack {
     public void setTrackerEntry(@Nullable IStorageTracker.IStorageTrackerEntry entry) {
         this.entry = entry;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof GridStackFluid && ((GridStackFluid) obj).getStack().isFluidEqual(stack);
-    }
 }

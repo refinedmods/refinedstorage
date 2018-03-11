@@ -1,9 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui.grid;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimaps;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
@@ -14,10 +11,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.grid.sorting.Sorter;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.sorting.*;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
+import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
+import com.raoulvdberge.refinedstorage.gui.grid.view.IGridView;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
@@ -37,13 +36,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -51,44 +48,43 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GuiGrid extends GuiBase implements IGridDisplay {
-    private static final List<String> SEARCH_HISTORY = new ArrayList<>();
-
-    public static final ListMultimap<Item, GridStackItem> ITEMS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-    public static final ListMultimap<Fluid, GridStackFluid> FLUIDS = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-
-    public static List<IGridStack> STACKS = new ArrayList<>();
-    public static boolean CAN_CRAFT;
-
-    private static final Sorter SORTER = new Sorter();
-    private static boolean SCHEDULE_SORT;
-
-    private boolean wasConnected;
+    private IGridView view;
 
     private GuiTextField searchField;
-
     private GuiCheckBox oredictPattern;
     private GuiCheckBox processingPattern;
     private GuiCheckBox blockingPattern;
-
     private GuiButton tabPageLeft;
     private GuiButton tabPageRight;
 
     private IGrid grid;
 
+    private boolean wasConnected;
     private boolean hadTabs = false;
+
     private int tabHovering = -1;
 
     private int slotNumber;
 
-    private int searchHistory = -1;
+    private List<String> searchHistory = new ArrayList<>();
+    private int searchHistoryIndex = -1;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, grid.getType() == GridType.FLUID ? 193 : 227, 0);
 
+        List<IGridSorter> defaultSorters = new LinkedList<>();
+        defaultSorters.add(new GridSorterName());
+        defaultSorters.add(new GridSorterQuantity());
+        defaultSorters.add(new GridSorterID());
+        defaultSorters.add(new GridSorterInventoryTweaks());
+        defaultSorters.add(new GridSorterLastModified());
+
         this.grid = grid;
+        this.view = grid.getType() == GridType.FLUID ? new GridViewFluid(this, defaultSorters) : new GridViewItem(this, defaultSorters);
         this.wasConnected = this.grid.isActive();
     }
 
@@ -149,7 +145,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         addSideButton(new SideButtonGridSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, grid));
 
-        scheduleSort();
+        view.sort();
     }
 
     @Override
@@ -161,8 +157,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         return grid;
     }
 
-    public static void scheduleSort() {
-        SCHEDULE_SORT = true;
+    public IGridView getView() {
+        return view;
     }
 
     @Override
@@ -170,7 +166,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         if (wasConnected != grid.isActive()) {
             wasConnected = grid.isActive();
 
-            scheduleSort();
+            view.sort();
         }
 
         boolean hasTabs = !getGrid().getTabs().isEmpty();
@@ -179,12 +175,6 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             hadTabs = hasTabs;
 
             initGui();
-        }
-
-        if (SCHEDULE_SORT) {
-            SCHEDULE_SORT = false;
-
-            SORTER.startIfPossible(this);
         }
     }
 
@@ -221,7 +211,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public int getRows() {
-        return Math.max(0, (int) Math.ceil((float) STACKS.size() / 9F));
+        return Math.max(0, (int) Math.ceil((float) view.getStacks().size() / 9F));
     }
 
     @Override
@@ -243,7 +233,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     public boolean isOverSlotWithStack() {
-        return grid.isActive() && isOverSlot() && slotNumber < STACKS.size();
+        return grid.isActive() && isOverSlot() && slotNumber < view.getStacks().size();
     }
 
     private boolean isOverSlot() {
@@ -420,8 +410,8 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 this.slotNumber = slot;
             }
 
-            if (slot < STACKS.size()) {
-                STACKS.get(slot).draw(this, x, y);
+            if (slot < view.getStacks().size()) {
+                view.getStacks().get(slot).draw(this, x, y);
             }
 
             if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
@@ -449,7 +439,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         }
 
         if (isOverSlotWithStack()) {
-            drawGridTooltip(STACKS.get(slotNumber), mouseX, mouseY);
+            drawGridTooltip(view.getStacks().get(slotNumber), mouseX, mouseY);
         }
 
         if (isOverClear(mouseX, mouseY)) {
@@ -653,7 +643,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 searchField.setText("");
                 searchField.setFocused(true);
 
-                scheduleSort();
+                view.sort();
 
                 updateJEI();
             } else if (wasSearchFieldFocused != searchField.isFocused()) {
@@ -681,9 +671,9 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
             if (isOverSlotWithStack()) {
                 if (grid.getType() != GridType.FLUID && (held.isEmpty() || (!held.isEmpty() && clickedButton == 2))) {
-                    GridStackItem stack = (GridStackItem) STACKS.get(slotNumber);
+                    GridStackItem stack = (GridStackItem) view.getStacks().get(slotNumber);
 
-                    if (stack.isCraftable() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) && CAN_CRAFT) {
+                    if (stack.isCraftable() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) && view.canCraft()) {
                         FMLCommonHandler.instance().showGuiScreen(new GuiCraftingStart(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
                     } else {
                         int flags = 0;
@@ -703,7 +693,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                         RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
                     }
                 } else if (grid.getType() == GridType.FLUID && held.isEmpty()) {
-                    RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(STACKS.get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
+                    RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(view.getStacks().get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                 }
             }
         }
@@ -723,7 +713,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             // NO OP
         } else if (searchField.textboxKeyTyped(character, keyCode)) {
             updateJEI();
-            scheduleSort();
+            view.sort();
 
             keyHandled = true;
         } else if (searchField.isFocused() && (keyCode == Keyboard.KEY_UP || keyCode == Keyboard.KEY_DOWN || keyCode == Keyboard.KEY_RETURN)) {
@@ -752,25 +742,25 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private void updateSearchHistory(int delta) {
-        if (SEARCH_HISTORY.isEmpty()) {
+        if (searchHistory.isEmpty()) {
             return;
         }
 
-        if (searchHistory == -1) {
-            searchHistory = SEARCH_HISTORY.size();
+        if (searchHistoryIndex == -1) {
+            searchHistoryIndex = searchHistory.size();
         }
 
-        searchHistory += delta;
+        searchHistoryIndex += delta;
 
-        if (searchHistory < 0) {
-            searchHistory = 0;
-        } else if (searchHistory > SEARCH_HISTORY.size() - 1) {
-            searchHistory = SEARCH_HISTORY.size() - 1;
+        if (searchHistoryIndex < 0) {
+            searchHistoryIndex = 0;
+        } else if (searchHistoryIndex > searchHistory.size() - 1) {
+            searchHistoryIndex = searchHistory.size() - 1;
 
             if (delta == 1) {
                 searchField.setText("");
 
-                scheduleSort();
+                view.sort();
 
                 updateJEI();
 
@@ -778,20 +768,20 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
             }
         }
 
-        searchField.setText(SEARCH_HISTORY.get(searchHistory));
+        searchField.setText(searchHistory.get(searchHistoryIndex));
 
-        scheduleSort();
+        view.sort();
 
         updateJEI();
     }
 
     private void saveHistory() {
-        if (!SEARCH_HISTORY.isEmpty() && SEARCH_HISTORY.get(SEARCH_HISTORY.size() - 1).equals(searchField.getText())) {
+        if (!searchHistory.isEmpty() && searchHistory.get(searchHistory.size() - 1).equals(searchField.getText())) {
             return;
         }
 
         if (!searchField.getText().trim().isEmpty()) {
-            SEARCH_HISTORY.add(searchField.getText());
+            searchHistory.add(searchField.getText());
         }
     }
 

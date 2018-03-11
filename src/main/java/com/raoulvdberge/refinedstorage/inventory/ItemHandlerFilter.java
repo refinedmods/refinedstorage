@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Filter;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
@@ -43,7 +44,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
         }
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-            GuiGrid.scheduleSort();
+            GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
         }
     }
 

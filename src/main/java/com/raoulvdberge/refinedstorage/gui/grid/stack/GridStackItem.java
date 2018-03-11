@@ -150,9 +150,4 @@ public class GridStackItem implements IGridStack {
     public void setTrackerEntry(@Nullable IStorageTracker.IStorageTrackerEntry entry) {
         this.entry = entry;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof IGridStack && ((GridStackItem) obj).getHash() == hash;
-    }
 }

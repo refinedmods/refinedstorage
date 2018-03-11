@@ -3,8 +3,11 @@ package com.raoulvdberge.refinedstorage.api.network.grid;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -52,6 +55,25 @@ public interface IGrid {
      */
     @Nullable
     INetwork getNetwork();
+
+    /**
+     * @return a listener for this grid
+     */
+    IStorageCacheListener createListener(EntityPlayerMP player);
+
+    /**
+     * @return the storage cache for this grid
+     */
+    @Nullable
+    default IStorageCache getStorageCache() {
+        INetwork network = getNetwork();
+
+        if (network == null) {
+            return null;
+        }
+
+        return getType() == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache();
+    }
 
     /**
      * @return the item grid handler of the network of the grid, or null if the network is unavailable

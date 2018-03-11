@@ -11,7 +11,6 @@ import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -46,8 +45,6 @@ public class NetworkItemWirelessFluidGrid implements INetworkItem {
         }
 
         API.instance().openWirelessGrid(player, hand, network.world().provider.getDimension(), WirelessFluidGrid.ID);
-
-        network.sendFluidStorageToClient((EntityPlayerMP) player);
 
         drainEnergy(RS.INSTANCE.config.wirelessFluidGridOpenUsage);
 

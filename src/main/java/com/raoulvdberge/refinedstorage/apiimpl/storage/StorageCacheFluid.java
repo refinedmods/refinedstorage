@@ -1,10 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorage;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,7 +18,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     private INetwork network;
     private CopyOnWriteArrayList<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<FluidStack> list = API.instance().createFluidStackList();
-    private List<Runnable> listeners = new LinkedList<>();
+    private List<IStorageCacheListener<FluidStack>> listeners = new LinkedList<>();
 
     public StorageCacheFluid(INetwork network) {
         this.network = network;
@@ -49,9 +46,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
             }
         }
 
-        listeners.forEach(Runnable::run);
-
-        network.sendFluidStorageToClient();
+        listeners.forEach(IStorageCacheListener::onInvalidated);
     }
 
     @Override
@@ -59,28 +54,31 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
         list.add(stack, size);
 
         if (!rebuilding) {
-            network.sendFluidStorageDeltaToClient(stack, size);
-
-            listeners.forEach(Runnable::run);
+            listeners.forEach(l -> l.onChanged(stack, size));
         }
     }
 
     @Override
     public synchronized void remove(@Nonnull FluidStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
-            network.sendFluidStorageDeltaToClient(stack, -size);
-
-            listeners.forEach(Runnable::run);
+            listeners.forEach(l -> l.onChanged(stack, -size));
         }
     }
 
     @Override
-    public void addListener(Runnable listener) {
-        listeners.add(listener);
+    public void flush() {
+        throw new UnsupportedOperationException("Cannot flush fluid storage cache");
     }
 
     @Override
-    public void removeListener(Runnable listener) {
+    public void addListener(IStorageCacheListener<FluidStack> listener) {
+        listeners.add(listener);
+
+        listener.onAttached();
+    }
+
+    @Override
+    public void removeListener(IStorageCacheListener<FluidStack> listener) {
         listeners.remove(listener);
     }
 

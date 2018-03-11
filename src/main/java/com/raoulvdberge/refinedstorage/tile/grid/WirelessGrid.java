@@ -5,7 +5,10 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
@@ -13,6 +16,7 @@ import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -101,6 +105,11 @@ public class WirelessGrid implements IGrid {
     }
 
     @Override
+    public IStorageCacheListener createListener(EntityPlayerMP player) {
+        return new StorageCacheListenerGridItem(player, getNetwork());
+    }
+
+    @Override
     public String getGuiTitle() {
         return "gui.refinedstorage:grid";
     }
@@ -151,7 +160,7 @@ public class WirelessGrid implements IGrid {
 
         this.viewType = type;
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -160,7 +169,7 @@ public class WirelessGrid implements IGrid {
 
         this.sortingType = type;
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -169,14 +178,14 @@ public class WirelessGrid implements IGrid {
 
         this.sortingDirection = direction;
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
         RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
 
-        this.searchBoxMode = searchBoxMode;
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -196,7 +205,7 @@ public class WirelessGrid implements IGrid {
 
         RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override

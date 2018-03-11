@@ -139,8 +139,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getNodeGraph().schedulePostRebuildAction(StorageCacheItem.INVALIDATE);
-        network.getNodeGraph().schedulePostRebuildAction(StorageCacheFluid.INVALIDATE);
+        network.getNodeGraph().addPostRebuildHandler(StorageCacheItem.INVALIDATE);
+        network.getNodeGraph().addPostRebuildHandler(StorageCacheFluid.INVALIDATE);
 
         WorldUtils.updateBlock(world, pos);
     }

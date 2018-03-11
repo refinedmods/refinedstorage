@@ -25,7 +25,7 @@ import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodePr
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
     private Set<INetworkNode> nodes = Sets.newConcurrentHashSet();
-    private Set<Consumer<INetwork>> postRebuildActions = new HashSet<>();
+    private Set<Consumer<INetwork>> postRebuildHandlers = new HashSet<>();
     private boolean rebuilding = false;
 
     public NetworkNodeGraph(TileController controller) {
@@ -69,8 +69,8 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             node.onDisconnected(controller);
         }
 
-        postRebuildActions.forEach(a -> a.accept(controller));
-        postRebuildActions.clear();
+        postRebuildHandlers.forEach(h -> h.accept(controller));
+        postRebuildHandlers.clear();
 
         if (!operator.newNodes.isEmpty() || !operator.previousNodes.isEmpty()) {
             controller.getDataManager().sendParameterToWatchers(TileController.NODES);
@@ -80,11 +80,11 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     @Override
-    public void schedulePostRebuildAction(Consumer<INetwork> action) {
+    public void addPostRebuildHandler(Consumer<INetwork> handler) {
         if (rebuilding) {
-            postRebuildActions.add(action);
+            postRebuildHandlers.add(handler);
         } else {
-            action.accept(controller);
+            handler.accept(controller);
         }
     }
 

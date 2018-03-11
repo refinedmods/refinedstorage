@@ -6,16 +6,15 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
-import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
+import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
@@ -26,6 +25,7 @@ import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -39,7 +39,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PortableGrid implements IGrid, IPortableGrid {
@@ -172,11 +171,6 @@ public class PortableGrid implements IGrid, IPortableGrid {
     }
 
     @Override
-    public List<EntityPlayer> getWatchers() {
-        return Collections.singletonList(player);
-    }
-
-    @Override
     public void drainEnergy(int energy) {
         if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemBlockPortableGrid.TYPE_CREATIVE) {
             stack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(energy, false);
@@ -210,6 +204,17 @@ public class PortableGrid implements IGrid, IPortableGrid {
     @Override
     public INetwork getNetwork() {
         return null;
+    }
+
+    @Nullable
+    @Override
+    public IStorageCache getStorageCache() {
+        return storage != null ? cache : null;
+    }
+
+    @Override
+    public IStorageCacheListener createListener(EntityPlayerMP player) {
+        return new StorageCacheListenerGridPortable(this, player);
     }
 
     @Nullable
@@ -274,7 +279,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
         this.sortingType = type;
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -283,7 +288,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
         this.sortingDirection = direction;
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -310,7 +315,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
         RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -384,6 +389,10 @@ public class PortableGrid implements IGrid, IPortableGrid {
     @Override
     public boolean isActive() {
         if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemBlockPortableGrid.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.portableGridOpenUsage) {
+            return false;
+        }
+
+        if (disk.getStackInSlot(0).isEmpty()) {
             return false;
         }
 

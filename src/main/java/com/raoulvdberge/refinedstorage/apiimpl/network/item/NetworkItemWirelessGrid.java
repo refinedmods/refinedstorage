@@ -11,7 +11,6 @@ import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -46,8 +45,6 @@ public class NetworkItemWirelessGrid implements INetworkItem {
         }
 
         API.instance().openWirelessGrid(player, hand, network.world().provider.getDimension(), WirelessGrid.ID);
-
-        network.sendItemStorageToClient((EntityPlayerMP) player);
 
         drainEnergy(RS.INSTANCE.config.wirelessGridOpenUsage);
 

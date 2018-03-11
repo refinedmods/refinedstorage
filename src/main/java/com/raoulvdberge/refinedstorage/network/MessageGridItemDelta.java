@@ -2,11 +2,11 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -99,46 +99,16 @@ public class MessageGridItemDelta implements IMessage, IMessageHandler<MessageGr
 
     @Override
     public IMessage onMessage(MessageGridItemDelta message, MessageContext ctx) {
-        if (message.gridStack != null) {
-            process(message.gridStack, message.delta);
-        } else {
-            message.gridStacks.forEach(p -> process(p.getLeft(), p.getRight()));
-        }
+        GuiBase.executeLater(GuiGrid.class, grid -> {
+            if (message.gridStack != null) {
+                grid.getView().postChange(message.gridStack, message.delta);
+            } else {
+                message.gridStacks.forEach(p -> grid.getView().postChange(p.getLeft(), p.getRight()));
+            }
 
-        GuiGrid.scheduleSort();
+            grid.getView().sort();
+        });
 
         return null;
-    }
-
-    private void process(GridStackItem gridStack, int delta) {
-        Item item = gridStack.getStack().getItem();
-
-        for (GridStackItem stack : GuiGrid.ITEMS.get(item)) {
-            if (stack.equals(gridStack)) {
-                if (stack.getStack().getCount() + delta <= 0) {
-                    if (gridStack.isCraftable()) {
-                        stack.setDisplayCraftText(true);
-                    } else {
-                        GuiGrid.ITEMS.remove(item, stack);
-                    }
-                } else {
-                    if (stack.doesDisplayCraftText()) {
-                        stack.setDisplayCraftText(false);
-
-                        stack.getStack().setCount(delta);
-                    } else {
-                        stack.getStack().grow(delta);
-                    }
-                }
-
-                stack.setTrackerEntry(gridStack.getTrackerEntry());
-
-                return;
-            }
-        }
-
-        gridStack.getStack().setCount(delta);
-
-        GuiGrid.ITEMS.put(item, gridStack);
     }
 }

@@ -5,9 +5,14 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class GridSortingID extends GridSorting {
+public class GridSorterID implements IGridSorter {
     @Override
-    public int compare(IGridStack left, IGridStack right) {
+    public boolean isApplicable(IGrid grid) {
+        return grid.getSortingType() == IGrid.SORTING_TYPE_ID;
+    }
+
+    @Override
+    public int compare(IGridStack left, IGridStack right, GridSorterDirection sortingDirection) {
         int x = left.getHash();
         int y = right.getHash();
 
@@ -17,9 +22,9 @@ public class GridSortingID extends GridSorting {
         }
 
         if (x != y) {
-            if (sortingDirection == IGrid.SORTING_DIRECTION_DESCENDING) {
+            if (sortingDirection == GridSorterDirection.DESCENDING) {
                 return Integer.compare(x, y);
-            } else if (sortingDirection == IGrid.SORTING_DIRECTION_ASCENDING) {
+            } else if (sortingDirection == GridSorterDirection.ASCENDING) {
                 return Integer.compare(y, x);
             }
         }

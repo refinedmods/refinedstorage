@@ -84,7 +84,7 @@ public abstract class StorageItemExternal implements IStorage<ItemStack> {
 
         this.cache = newStacks;
 
-        network.sendBatchedItemStorageDeltaToClient();
+        network.getItemStorageCache().flush();
     }
 
     @Override

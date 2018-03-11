@@ -3,8 +3,10 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,7 +21,7 @@ import java.util.List;
 public class MessageGridFluidUpdate implements IMessage, IMessageHandler<MessageGridFluidUpdate, IMessage> {
     private INetwork network;
     private boolean canCraft;
-    private List<GridStackFluid> stacks = new ArrayList<>();
+    private List<IGridStack> stacks = new ArrayList<>();
 
     public MessageGridFluidUpdate() {
     }
@@ -60,15 +62,11 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
 
     @Override
     public IMessage onMessage(MessageGridFluidUpdate message, MessageContext ctx) {
-        GuiGrid.CAN_CRAFT = message.canCraft;
-
-        GuiGrid.FLUIDS.clear();
-
-        for (GridStackFluid item : message.stacks) {
-            GuiGrid.FLUIDS.put(item.getStack().getFluid(), item);
-        }
-
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> {
+            grid.getView().setCanCraft(message.canCraft);
+            grid.getView().setStacks(message.stacks);
+            grid.getView().sort();
+        });
 
         return null;
     }

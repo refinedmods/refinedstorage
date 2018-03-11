@@ -5,6 +5,8 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.slot.*;
@@ -27,6 +29,8 @@ public class ContainerGrid extends ContainerBase {
     public static final int TAB_HEIGHT = 31;
 
     private IGrid grid;
+    private IStorageCache cache;
+    private IStorageCacheListener listener;
     private IGridDisplay display;
 
     private SlotGridCraftingResult craftingResultSlot;
@@ -159,11 +163,39 @@ public class ContainerGrid extends ContainerBase {
     }
 
     @Override
+    public void detectAndSendChanges() {
+        if (!getPlayer().world.isRemote) {
+            // The grid is offline.
+            if (grid.getStorageCache() == null) {
+                // The grid just went offline, there is still a listener.
+                if (listener != null) {
+                    // Remove it from the previous cache and clean up.
+                    cache.removeListener(listener);
+
+                    listener = null;
+                    cache = null;
+                }
+            } else if (listener == null) { // The grid came online.
+                listener = grid.createListener((EntityPlayerMP) getPlayer());
+                cache = grid.getStorageCache();
+
+                cache.addListener(listener);
+            }
+        }
+
+        super.detectAndSendChanges();
+    }
+
+    @Override
     public void onContainerClosed(EntityPlayer player) {
         super.onContainerClosed(player);
 
         if (!player.getEntityWorld().isRemote) {
             grid.onClosed(player);
+
+            if (cache != null && listener != null) {
+                cache.removeListener(listener);
+            }
         }
     }
 

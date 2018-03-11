@@ -24,13 +24,12 @@ import org.lwjgl.input.Mouse;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Consumer;
 
 public abstract class GuiBase extends GuiContainer {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
+    private static final Map<Class, Queue<Consumer>> RUNNABLES = new HashMap<>();
 
     public static final RenderUtils.FluidRenderer FLUID_RENDERER = new RenderUtils.FluidRenderer(-1, 16, 16);
 
@@ -77,6 +76,16 @@ public abstract class GuiBase extends GuiContainer {
         this.ySize = screenHeight;
     }
 
+    private void runRunnables() {
+        Queue<Consumer> queue = RUNNABLES.get(getClass());
+        if (queue != null && !queue.isEmpty()) {
+            Consumer callback;
+            while ((callback = queue.poll()) != null) {
+                callback.accept(this);
+            }
+        }
+    }
+
     public Scrollbar getScrollbar() {
         return scrollbar;
     }
@@ -92,6 +101,8 @@ public abstract class GuiBase extends GuiContainer {
         lastButtonId = 0;
         lastSideButtonY = getSideButtonYStart();
 
+        runRunnables();
+
         init(guiLeft, guiTop);
     }
 
@@ -105,6 +116,8 @@ public abstract class GuiBase extends GuiContainer {
     @Override
     public void updateScreen() {
         super.updateScreen();
+
+        runRunnables();
 
         update(guiLeft, guiTop);
     }
@@ -364,5 +377,15 @@ public abstract class GuiBase extends GuiContainer {
 
     public int getGuiTop() {
         return guiTop;
+    }
+
+    public static <T> void executeLater(Class<T> clazz, Consumer<T> callback) {
+        Queue<Consumer> queue = RUNNABLES.get(clazz);
+
+        if (queue == null) {
+            RUNNABLES.put(clazz, queue = new ArrayDeque<>());
+        }
+
+        queue.add(callback);
     }
 }

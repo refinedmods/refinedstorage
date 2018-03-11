@@ -6,8 +6,6 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
-import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -16,7 +14,6 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
@@ -39,10 +36,10 @@ import com.raoulvdberge.refinedstorage.block.ControllerEnergyType;
 import com.raoulvdberge.refinedstorage.block.ControllerType;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
-import com.raoulvdberge.refinedstorage.network.*;
+import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorElements;
+import com.raoulvdberge.refinedstorage.network.MessageReaderWriterUpdate;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
@@ -50,7 +47,6 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -66,7 +62,6 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -140,7 +135,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     private IStorageCache<ItemStack> itemStorage = new StorageCacheItem(this);
     private StorageTrackerItem itemStorageTracker = new StorageTrackerItem(this::markDirty);
-    private List<Pair<ItemStack, Integer>> batchedItemStorageDeltas = new LinkedList<>();
 
     private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
     private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
@@ -296,71 +290,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Override
     public IStorageCache<FluidStack> getFluidStorageCache() {
         return fluidStorage;
-    }
-
-    @Override
-    public void sendItemStorageToClient() {
-        world.getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
-            .forEach(this::sendItemStorageToClient);
-    }
-
-    @Override
-    public void sendItemStorageToClient(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(this, securityManager.hasPermission(Permission.AUTOCRAFTING, player)), player);
-    }
-
-    @Override
-    public void sendBatchedItemStorageDeltaToClient() {
-        if (!batchedItemStorageDeltas.isEmpty()) {
-            world.getMinecraftServer().getPlayerList().getPlayers().stream()
-                .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
-                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, itemStorageTracker, batchedItemStorageDeltas), player));
-
-            batchedItemStorageDeltas.clear();
-        }
-    }
-
-    @Override
-    public void sendItemStorageDeltaToClient(ItemStack stack, int delta, boolean batched) {
-        if (!batched) {
-            world.getMinecraftServer().getPlayerList().getPlayers().stream()
-                .filter(player -> isWatchingGrid(player, GridType.NORMAL, GridType.CRAFTING, GridType.PATTERN))
-                .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridItemDelta(this, itemStorageTracker, stack, delta), player));
-        } else {
-            batchedItemStorageDeltas.add(Pair.of(stack, delta));
-        }
-    }
-
-    @Override
-    public void sendFluidStorageToClient() {
-        world.getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, GridType.FLUID))
-            .forEach(this::sendFluidStorageToClient);
-    }
-
-    @Override
-    public void sendFluidStorageToClient(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(this, securityManager.hasPermission(Permission.AUTOCRAFTING, player)), player);
-    }
-
-    @Override
-    public void sendFluidStorageDeltaToClient(FluidStack stack, int delta) {
-        world.getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> isWatchingGrid(player, GridType.FLUID))
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(this, stack, delta), player));
-    }
-
-    private boolean isWatchingGrid(EntityPlayer player, GridType... types) {
-        if (player.openContainer.getClass() == ContainerGrid.class) {
-            IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
-
-            if (grid.getNetwork() != null && pos.equals(grid.getNetwork().getPosition())) {
-                return Arrays.asList(types).contains(grid.getType());
-            }
-        }
-
-        return false;
     }
 
     @Override

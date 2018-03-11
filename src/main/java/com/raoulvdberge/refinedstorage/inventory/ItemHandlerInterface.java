@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.inventory;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -9,7 +10,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
-public class ItemHandlerInterface implements IItemHandler, Runnable {
+public class ItemHandlerInterface implements IItemHandler, IStorageCacheListener<ItemStack> {
     private INetwork network;
     private IStorageCache<ItemStack> storageCache;
     private IItemHandler importItems;
@@ -67,12 +68,22 @@ public class ItemHandlerInterface implements IItemHandler, Runnable {
         return 64;
     }
 
+    private void invalidate() {
+        this.storageCacheData = storageCache.getList().getStacks().toArray(new ItemStack[0]);
+    }
+
     @Override
-    public void run() {
+    public void onAttached() {
+        // NO OP
+    }
+
+    @Override
+    public void onInvalidated() {
         invalidate();
     }
 
-    private void invalidate() {
-        this.storageCacheData = storageCache.getList().getStacks().toArray(new ItemStack[0]);
+    @Override
+    public void onChanged(@Nonnull ItemStack stack, int size) {
+        invalidate();
     }
 }

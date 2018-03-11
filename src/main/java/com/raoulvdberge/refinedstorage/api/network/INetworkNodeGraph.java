@@ -17,9 +17,9 @@ public interface INetworkNodeGraph {
     /**
      * Adds a runnable that is run after the graph is rebuilt.
      *
-     * @param action the action to run
+     * @param handler the action to run
      */
-    void schedulePostRebuildAction(Consumer<INetwork> action);
+    void addPostRebuildHandler(Consumer<INetwork> handler);
 
     /**
      * @return a collection of all connected nodes

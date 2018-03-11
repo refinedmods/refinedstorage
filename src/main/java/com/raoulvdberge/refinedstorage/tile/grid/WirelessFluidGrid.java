@@ -5,12 +5,16 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessFluidGridSettingsUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -73,6 +77,11 @@ public class WirelessFluidGrid implements IGrid {
     }
 
     @Override
+    public IStorageCacheListener createListener(EntityPlayerMP player) {
+        return new StorageCacheListenerGridFluid(player, getNetwork());
+    }
+
+    @Override
     public String getGuiTitle() {
         return "gui.refinedstorage:fluid_grid";
     }
@@ -128,7 +137,7 @@ public class WirelessFluidGrid implements IGrid {
 
         this.sortingType = type;
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -137,7 +146,7 @@ public class WirelessFluidGrid implements IGrid {
 
         this.sortingDirection = direction;
 
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override

@@ -56,8 +56,8 @@ public class BlockGrid extends BlockNode {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote && tryOpenNetworkGui(RSGui.GRID, player, world, pos, side)) {
-            ((TileGrid) world.getTileEntity(pos)).getNode().onOpened(player);
+        if (!world.isRemote) {
+            tryOpenNetworkGui(RSGui.GRID, player, world, pos, side);
         }
 
         return true;

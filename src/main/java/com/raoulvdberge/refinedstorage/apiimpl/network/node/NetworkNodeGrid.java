@@ -10,9 +10,11 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
@@ -188,14 +190,9 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
         return type == null ? GridType.NORMAL : type;
     }
 
-    public void onOpened(EntityPlayer player) {
-        if (network != null) {
-            if (getType() == GridType.FLUID) {
-                network.sendFluidStorageToClient((EntityPlayerMP) player);
-            } else {
-                network.sendItemStorageToClient((EntityPlayerMP) player);
-            }
-        }
+    @Override
+    public IStorageCacheListener createListener(EntityPlayerMP player) {
+        return new StorageCacheListenerGridItem(player, network);
     }
 
     @Override
@@ -491,7 +488,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGrid {
             patterns.setStackInSlot(1, pattern);
         }
     }
-    
+
     private boolean isPatternAvailable() {
         return !(patterns.getStackInSlot(0).isEmpty() && patterns.getStackInSlot(1).isEmpty());
     }

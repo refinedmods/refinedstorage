@@ -11,7 +11,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -122,7 +121,7 @@ public class BlockPortableGrid extends BlockBase {
         if (!world.isRemote) {
             player.openGui(RS.INSTANCE, RSGui.PORTABLE_GRID, world, pos.getX(), pos.getY(), pos.getZ());
 
-            ((TilePortableGrid) world.getTileEntity(pos)).onOpened((EntityPlayerMP) player);
+            ((TilePortableGrid) world.getTileEntity(pos)).onOpened();
         }
 
         return true;

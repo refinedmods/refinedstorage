@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -24,19 +25,19 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
             t.getNode().setViewType(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiGrid.scheduleSort());
+    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
     public static final TileDataParameter<Integer, TileGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.getNode().setSortingDirection(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiGrid.scheduleSort());
+    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
     public static final TileDataParameter<Integer, TileGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.getNode().setSortingType(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiGrid.scheduleSort());
+    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
     public static final TileDataParameter<Integer, TileGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.getNode().setSearchBoxMode(v);
@@ -60,11 +61,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     public static final TileDataParameter<Integer, TileGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();
-    }, p -> {
-        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
-            GuiGrid.scheduleSort();
-        }
-    });
+    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
     public static final TileDataParameter<Integer, TileGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
         if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
             t.getNode().setTabPage(v);

@@ -49,18 +49,23 @@ public interface IStorageCache<T> {
     void remove(@Nonnull T stack, int size, boolean batched);
 
     /**
+     * Notifies storage cache listeners about batched up storage cache changes.
+     */
+    void flush();
+
+    /**
      * Adds a listener to be called when this storage cache changes.
      *
      * @param listener the listener
      */
-    void addListener(Runnable listener);
+    void addListener(IStorageCacheListener<T> listener);
 
     /**
      * Removes a listener from the storage cache.
      *
      * @param listener the listener
      */
-    void removeListener(Runnable listener);
+    void removeListener(IStorageCacheListener<T> listener);
 
     /**
      * Resorts the storages in this cache according to their priority.

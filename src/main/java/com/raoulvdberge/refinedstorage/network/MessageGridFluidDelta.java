@@ -3,11 +3,11 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -52,26 +52,10 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
     @Override
     public IMessage onMessage(MessageGridFluidDelta message, MessageContext ctx) {
-        Fluid fluid = message.clientStack.getStack().getFluid();
-
-        for (GridStackFluid stack : GuiGrid.FLUIDS.get(fluid)) {
-            if (stack.equals(message.clientStack)) {
-                if (stack.getStack().amount + message.delta <= 0) {
-                    GuiGrid.FLUIDS.remove(fluid, stack);
-                } else {
-                    stack.getStack().amount += message.delta;
-                }
-
-                stack.setTrackerEntry(message.clientStack.getTrackerEntry());
-
-                GuiGrid.scheduleSort();
-
-                return null;
-            }
-        }
-
-        GuiGrid.FLUIDS.put(fluid, message.clientStack);
-        GuiGrid.scheduleSort();
+        GuiBase.executeLater(GuiGrid.class, grid -> {
+            grid.getView().postChange(message.clientStack, message.delta);
+            grid.getView().sort();
+        });
 
         return null;
     }
