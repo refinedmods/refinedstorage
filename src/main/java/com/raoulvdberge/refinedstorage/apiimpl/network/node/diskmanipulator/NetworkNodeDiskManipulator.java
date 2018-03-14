@@ -209,8 +209,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             if (storage.getStored() == storage.getCapacity()) {
                 moveDriveToOutput(slot);
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
 
@@ -309,8 +308,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             if (storage.getStored() == storage.getCapacity()) {
                 moveDriveToOutput(slot);
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
 
