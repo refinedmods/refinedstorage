@@ -48,17 +48,17 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private IStorageDisk<FluidStack>[] fluidStorages = new IStorageDisk[6];
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK) {
--        @Override
--        public int getItemInteractCount() {
--            int count = super.getItemInteractCount();
--
--            if (type == IType.FLUIDS) {
--                count *= Fluid.BUCKET_VOLUME;
--            }
--
--            return count;
--        }
--    };
+        @Override
+        public int getItemInteractCount() {
+            int count = super.getItemInteractCount();
+
+            if (type == IType.FLUIDS) {
+                count *= Fluid.BUCKET_VOLUME;
+            }
+
+            return count;
+        }
+    };
 
     private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
         @Override
