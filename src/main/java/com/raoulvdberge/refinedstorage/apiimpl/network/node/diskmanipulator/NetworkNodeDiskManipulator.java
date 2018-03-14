@@ -210,8 +210,9 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 moveDriveToOutput(slot);
                 return true;
             }
-            else
+            else {
                 return false;
+            }
 
         List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
@@ -309,8 +310,9 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 moveDriveToOutput(slot);
                 return true;
             }
-            else
+            else {
                 return false;
+            }
 
         List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
