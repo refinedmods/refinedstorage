@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -46,7 +47,18 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private IStorageDisk<ItemStack>[] itemStorages = new IStorageDisk[6];
     private IStorageDisk<FluidStack>[] fluidStorages = new IStorageDisk[6];
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK) {
+-        @Override
+-        public int getItemInteractCount() {
+-            int count = super.getItemInteractCount();
+-
+-            if (type == IType.FLUIDS) {
+-                count *= Fluid.BUCKET_VOLUME;
+-            }
+-
+-            return count;
+-        }
+-    };
 
     private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
         @Override
