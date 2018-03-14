@@ -4,13 +4,12 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -80,57 +79,9 @@ public interface INetwork {
     IStorageCache<FluidStack> getFluidStorageCache();
 
     /**
-     * Makes the network send a crafting monitor update to all players as soon as it can.
+     * @return the {@link IReaderWriterManager} of this network
      */
-    void markCraftingMonitorForUpdate();
-
-    /**
-     * Sends a crafting monitor update to all players that are watching a crafting monitor.
-     * <p>
-     * WARNING: In most cases, you should just use {@link INetwork#markCraftingMonitorForUpdate()}, if not,
-     * you can get high bandwidth usage.
-     */
-    void sendCraftingMonitorUpdate();
-
-    /**
-     * Sends a crafting monitor update to a specific player.
-     *
-     * @param player the player
-     */
-    void sendCraftingMonitorUpdate(EntityPlayerMP player);
-
-    /**
-     * @param name the name of the reader writer channel
-     * @return the reader writer channel, or null if nothing was found
-     */
-    @Nullable
-    IReaderWriterChannel getReaderWriterChannel(String name);
-
-    /**
-     * Adds a new reader writer channel.
-     *
-     * @param name the name of this channel
-     */
-    void addReaderWriterChannel(String name);
-
-    /**
-     * Removes a reader writer channel.
-     *
-     * @param name the name of the channel to remove
-     */
-    void removeReaderWriterChannel(String name);
-
-    /**
-     * Sends a reader writer channel update to all players watching a reader or writer.
-     */
-    void sendReaderWriterChannelUpdate();
-
-    /**
-     * Sends a reader writer channel update to a specific player.
-     *
-     * @param player the player to send to
-     */
-    void sendReaderWriterChannelUpdate(EntityPlayerMP player);
+    IReaderWriterManager getReaderWriterManager();
 
     /**
      * Inserts an item in this network.

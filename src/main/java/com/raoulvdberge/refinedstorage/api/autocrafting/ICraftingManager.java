@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -216,4 +217,23 @@ public interface ICraftingManager {
      * @return the written tag
      */
     NBTTagCompound writeToNBT(NBTTagCompound tag);
+
+    /**
+     * Makes the network send a crafting monitor update to all players as soon as it can.
+     */
+    void markCraftingMonitorForUpdate();
+
+    /**
+     * Sends a crafting monitor update to all players that are watching a crafting monitor.
+     * <p>
+     * WARNING: In most cases, you should just use {@link ICraftingManager#markCraftingMonitorForUpdate()}, if not, you can get high bandwidth usage.
+     */
+    void sendCraftingMonitorUpdate();
+
+    /**
+     * Sends a crafting monitor update to a specific player.
+     *
+     * @param player the player
+     */
+    void sendCraftingMonitorUpdate(EntityPlayerMP player);
 }

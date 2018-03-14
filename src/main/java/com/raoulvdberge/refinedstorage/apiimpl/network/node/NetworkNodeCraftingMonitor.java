@@ -34,7 +34,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         filterListener.accept(slot);
 
         if (network != null) {
-            network.sendCraftingMonitorUpdate();
+            network.getCraftingManager().sendCraftingMonitorUpdate();
         }
     });
 
@@ -92,7 +92,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
     public void onOpened(EntityPlayer player) {
         if (network != null) {
-            network.sendCraftingMonitorUpdate((EntityPlayerMP) player);
+            network.getCraftingManager().sendCraftingMonitorUpdate((EntityPlayerMP) player);
         }
     }
 

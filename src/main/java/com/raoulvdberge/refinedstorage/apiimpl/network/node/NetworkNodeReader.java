@@ -86,7 +86,7 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
 
     public void onOpened(EntityPlayer entity) {
         if (network != null) {
-            network.sendReaderWriterChannelUpdate((EntityPlayerMP) entity);
+            network.getReaderWriterManager().sendUpdateTo((EntityPlayerMP) entity);
         }
     }
 }

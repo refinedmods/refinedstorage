@@ -1,18 +1,15 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDetector;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 
@@ -30,15 +27,7 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
     public static final TileDataParameter<Integer, TileDetector> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getAmount(), (t, v) -> {
         t.getNode().setAmount(v);
         t.getNode().markDirty();
-    }, p -> {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-
-            if (gui instanceof GuiDetector) {
-                GuiDetector.AMOUNT.setText(String.valueOf(p));
-            }
-        }
-    });
+    }, p -> GuiBase.executeLater(GuiDetector.class, detector -> detector.getAmount().setText(String.valueOf(p))));
 
     public TileDetector() {
         dataManager.addWatchedParameter(COMPARE);

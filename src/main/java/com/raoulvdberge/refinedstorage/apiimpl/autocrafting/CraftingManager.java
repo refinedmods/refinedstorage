@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingStep;
@@ -10,7 +11,10 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
+import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorElements;
 import com.raoulvdberge.refinedstorage.tile.TileController;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -36,6 +40,8 @@ public class CraftingManager implements ICraftingManager {
     private List<ICraftingTask> craftingTasksToCancel = new ArrayList<>();
     private List<NBTTagCompound> craftingTasksToRead = new ArrayList<>();
     private List<ICraftingStep> runningSteps = new ArrayList<>();
+
+    private boolean craftingMonitorUpdateRequested;
 
     private int ticks;
 
@@ -195,9 +201,15 @@ public class CraftingManager implements ICraftingManager {
                     .collect(Collectors.toList());
 
                 if (craftingTasksChanged) {
-                    network.getNetwork().markCraftingMonitorForUpdate();
+                    markCraftingMonitorForUpdate();
                 }
             }
+        }
+
+        if (craftingMonitorUpdateRequested) {
+            craftingMonitorUpdateRequested = false;
+
+            sendCraftingMonitorUpdate();
         }
     }
 
@@ -246,7 +258,7 @@ public class CraftingManager implements ICraftingManager {
 
                 add(task);
 
-                network.markCraftingMonitorForUpdate();
+                markCraftingMonitorForUpdate();
 
                 return task;
             }
@@ -278,6 +290,23 @@ public class CraftingManager implements ICraftingManager {
 
         // Auto reschedules stuck tasks after a pattern rebuild
         craftingTasks.forEach(t -> t.getMissing().clear());
+    }
+
+    @Override
+    public void markCraftingMonitorForUpdate() {
+        craftingMonitorUpdateRequested = true;
+    }
+
+    @Override
+    public void sendCraftingMonitorUpdate() {
+        network.world().getMinecraftServer().getPlayerList().getPlayers().stream()
+            .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && network.getPosition().equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
+            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player));
+    }
+
+    @Override
+    public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player);
     }
 
     private static ICraftingTask readCraftingTask(INetwork network, NBTTagCompound tag) {

@@ -50,6 +50,7 @@ public interface IGrid {
     GridType getType();
 
     /**
+     * @param player the player to create a listener for
      * @return a listener for this grid, will be attached to the storage cache in {@link #getStorageCache()}
      */
     IStorageCacheListener createListener(EntityPlayerMP player);

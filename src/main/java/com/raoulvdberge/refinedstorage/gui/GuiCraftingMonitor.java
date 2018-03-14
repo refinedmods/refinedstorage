@@ -19,13 +19,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class GuiCraftingMonitor extends GuiBase {
-    public static List<ICraftingMonitorElement> ELEMENTS = Collections.emptyList();
-
     public class CraftingMonitorElementDrawers extends ElementDrawers {
-        private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
+        private IElementDrawer<Integer> overlayDrawer = (x, y, color) -> {
             GlStateManager.color(1, 1, 1, 1);
             GlStateManager.disableLighting();
-            drawRect(x, y, x + ITEM_WIDTH, y + ITEM_HEIGHT - 1, colour);
+            drawRect(x, y, x + ITEM_WIDTH, y + ITEM_HEIGHT - 1, color);
         };
 
         @Override
@@ -43,11 +41,11 @@ public class GuiCraftingMonitor extends GuiBase {
     private GuiButton cancelAllButton;
 
     private ICraftingMonitor craftingMonitor;
+    private List<ICraftingMonitorElement> elements = Collections.emptyList();
 
     private IElementDrawers drawers = new CraftingMonitorElementDrawers();
 
     private int itemSelected = -1;
-
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
@@ -58,8 +56,12 @@ public class GuiCraftingMonitor extends GuiBase {
         this.scrollbar = new Scrollbar(157, 20, 12, 89);
     }
 
+    public void setElements(List<ICraftingMonitorElement> elements) {
+        this.elements = elements;
+    }
+
     private List<ICraftingMonitorElement> getElements() {
-        return craftingMonitor.isActive() ? ELEMENTS : Collections.emptyList();
+        return craftingMonitor.isActive() ? elements : Collections.emptyList();
     }
 
     @Override

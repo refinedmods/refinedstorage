@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiTextField;
 import java.io.IOException;
 
 public class GuiDetector extends GuiBase {
-    public static GuiTextField AMOUNT;
+    private GuiTextField amount;
 
     public GuiDetector(ContainerDetector container) {
         super(container, 176, 137);
@@ -29,13 +29,13 @@ public class GuiDetector extends GuiBase {
         addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_OREDICT));
 
-        AMOUNT = new GuiTextField(0, fontRenderer, x + 41 + 1, y + 23 + 1, 50, fontRenderer.FONT_HEIGHT);
-        AMOUNT.setText(String.valueOf(TileDetector.AMOUNT.getValue()));
-        AMOUNT.setEnableBackgroundDrawing(false);
-        AMOUNT.setVisible(true);
-        AMOUNT.setTextColor(16777215);
-        AMOUNT.setCanLoseFocus(true);
-        AMOUNT.setFocused(false);
+        amount = new GuiTextField(0, fontRenderer, x + 41 + 1, y + 23 + 1, 50, fontRenderer.FONT_HEIGHT);
+        amount.setText(String.valueOf(TileDetector.AMOUNT.getValue()));
+        amount.setEnableBackgroundDrawing(false);
+        amount.setVisible(true);
+        amount.setTextColor(16777215);
+        amount.setCanLoseFocus(true);
+        amount.setFocused(false);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class GuiDetector extends GuiBase {
 
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
-        AMOUNT.drawTextBox();
+        amount.drawTextBox();
     }
 
     @Override
@@ -59,8 +59,8 @@ public class GuiDetector extends GuiBase {
 
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
-        if (!checkHotbarKeys(keyCode) && AMOUNT.textboxKeyTyped(character, keyCode)) {
-            Integer result = Ints.tryParse(AMOUNT.getText());
+        if (!checkHotbarKeys(keyCode) && amount.textboxKeyTyped(character, keyCode)) {
+            Integer result = Ints.tryParse(amount.getText());
 
             if (result != null) {
                 TileDataManager.setParameter(TileDetector.AMOUNT, result);
@@ -74,6 +74,10 @@ public class GuiDetector extends GuiBase {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        AMOUNT.mouseClicked(mouseX, mouseY, mouseButton);
+        amount.mouseClicked(mouseX, mouseY, mouseButton);
+    }
+
+    public GuiTextField getAmount() {
+        return amount;
     }
 }

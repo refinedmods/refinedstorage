@@ -18,12 +18,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class GuiReaderWriter extends GuiBase {
-    public static List<String> CHANNELS = Collections.emptyList();
-
     private static final int VISIBLE_ROWS = 4;
 
     private static final int ITEM_WIDTH = 143;
     private static final int ITEM_HEIGHT = 18;
+
+    private List<String> channels = Collections.emptyList();
 
     private GuiButton add;
     private GuiButton remove;
@@ -31,7 +31,6 @@ public class GuiReaderWriter extends GuiBase {
     private IGuiReaderWriter readerWriter;
 
     private int itemSelected = -1;
-
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
@@ -56,6 +55,14 @@ public class GuiReaderWriter extends GuiBase {
         name.setFocused(false);
 
         updateSelection(readerWriter.getChannelParameter().getValue());
+    }
+
+    private List<String> getChannels() {
+        return readerWriter.isActive() ? channels : Collections.emptyList();
+    }
+
+    public void setChannels(List<String> channels) {
+        this.channels = channels;
     }
 
     @Override
@@ -152,9 +159,9 @@ public class GuiReaderWriter extends GuiBase {
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (keyCode == Keyboard.KEY_DELETE) {
-            sendRemove();
+            onRemove();
         } else if (name.isFocused() && keyCode == Keyboard.KEY_RETURN) {
-            sendAdd();
+            onAdd();
         } else if (!checkHotbarKeys(keyCode) && name.textboxKeyTyped(character, keyCode)) {
             // NO OP
         } else {
@@ -167,13 +174,13 @@ public class GuiReaderWriter extends GuiBase {
         super.actionPerformed(button);
 
         if (button == add) {
-            sendAdd();
+            onAdd();
         } else if (button == remove) {
-            sendRemove();
+            onRemove();
         }
     }
 
-    private void sendAdd() {
+    private void onAdd() {
         String name = this.name.getText().trim();
 
         if (!name.isEmpty()) {
@@ -181,7 +188,7 @@ public class GuiReaderWriter extends GuiBase {
         }
     }
 
-    private void sendRemove() {
+    private void onRemove() {
         String name = this.name.getText().trim();
 
         if (!name.isEmpty()) {
@@ -192,9 +199,5 @@ public class GuiReaderWriter extends GuiBase {
     public void updateSelection(String channel) {
         this.itemSelected = getChannels().indexOf(channel);
         this.name.setText(itemSelected != -1 ? getChannels().get(itemSelected) : "");
-    }
-
-    private List<String> getChannels() {
-        return readerWriter.isActive() ? CHANNELS : Collections.emptyList();
     }
 }

@@ -408,7 +408,7 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        network.markCraftingMonitorForUpdate();
+        network.getCraftingManager().markCraftingMonitorForUpdate();
     }
 
     @Override
@@ -493,7 +493,7 @@ public class CraftingTask implements ICraftingTask {
 
                             usedContainers.put(container, timesUsed);
 
-                            network.markCraftingMonitorForUpdate();
+                            network.getCraftingManager().markCraftingMonitorForUpdate();
                         }
                     }
                 }
@@ -542,7 +542,7 @@ public class CraftingTask implements ICraftingTask {
                 calculate();
             }
 
-            network.markCraftingMonitorForUpdate();
+            network.getCraftingManager().markCraftingMonitorForUpdate();
         }
     }
 

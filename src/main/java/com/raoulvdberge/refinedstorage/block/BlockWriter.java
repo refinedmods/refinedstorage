@@ -40,7 +40,7 @@ public class BlockWriter extends BlockCable {
 
             if (player.isSneaking()) {
                 if (writer.getNetwork() != null) {
-                    IReaderWriterChannel channel = writer.getNetwork().getReaderWriterChannel(writer.getChannel());
+                    IReaderWriterChannel channel = writer.getNetwork().getReaderWriterManager().getChannel(writer.getChannel());
 
                     if (channel != null) {
                         channel.getHandlers().stream().map(h -> h.getStatusWriter(writer, channel)).flatMap(List::stream).forEach(player::sendMessage);

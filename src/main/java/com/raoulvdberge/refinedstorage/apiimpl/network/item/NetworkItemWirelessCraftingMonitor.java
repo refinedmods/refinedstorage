@@ -46,7 +46,7 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
 
         player.openGui(RS.INSTANCE, RSGui.WIRELESS_CRAFTING_MONITOR, player.getEntityWorld(), hand.ordinal(), network.world().provider.getDimension(), 0);
 
-        network.sendCraftingMonitorUpdate((EntityPlayerMP) player);
+        network.getCraftingManager().sendCraftingMonitorUpdate((EntityPlayerMP) player);
 
         drainEnergy(RS.INSTANCE.config.wirelessCraftingMonitorOpenUsage);
 

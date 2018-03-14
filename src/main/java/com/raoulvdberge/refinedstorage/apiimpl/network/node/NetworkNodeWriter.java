@@ -66,7 +66,7 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     @Override
     public void setChannel(String channel) {
         if (network != null && channel.equals("")) {
-            IReaderWriterChannel networkChannel = network.getReaderWriterChannel(this.channel);
+            IReaderWriterChannel networkChannel = network.getReaderWriterManager().getChannel(this.channel);
 
             if (networkChannel != null) {
                 for (IReaderWriterHandler handler : networkChannel.getHandlers()) {
@@ -118,7 +118,7 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
 
     public void onOpened(EntityPlayer entity) {
         if (network != null) {
-            network.sendReaderWriterChannelUpdate((EntityPlayerMP) entity);
+            network.getReaderWriterManager().sendUpdateTo((EntityPlayerMP) entity);
         }
     }
 }

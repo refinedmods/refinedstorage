@@ -78,11 +78,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             t.setSearchBoxMode(v);
             t.markDirty();
         }
-    }, p -> {
-        if (Minecraft.getMinecraft().currentScreen instanceof GuiGrid) {
-            ((GuiGrid) Minecraft.getMinecraft().currentScreen).updateSearchFieldFocus(p);
-        }
-    });
+    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateSearchFieldFocus(p)));
     public static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);

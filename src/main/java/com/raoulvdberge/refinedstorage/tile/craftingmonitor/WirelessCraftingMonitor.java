@@ -46,7 +46,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
             INetwork network = getNetwork();
 
             if (network != null) {
-                network.sendCraftingMonitorUpdate();
+                network.getCraftingManager().sendCraftingMonitorUpdate();
             }
         }
     };

@@ -183,7 +183,7 @@ public abstract class CraftingStep implements ICraftingStep {
 
                     stack.shrink(toReceive);
 
-                    network.markCraftingMonitorForUpdate();
+                    network.getCraftingManager().markCraftingMonitorForUpdate();
 
                     if (stack.isEmpty()) {
                         return true;

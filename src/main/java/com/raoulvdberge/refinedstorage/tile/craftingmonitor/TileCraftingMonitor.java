@@ -18,7 +18,7 @@ public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
         INetwork network = t.getNode().getNetwork();
 
         if (network != null) {
-            network.sendCraftingMonitorUpdate();
+            network.getCraftingManager().sendCraftingMonitorUpdate();
         }
     });
 

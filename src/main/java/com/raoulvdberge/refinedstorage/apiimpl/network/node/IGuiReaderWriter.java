@@ -22,7 +22,7 @@ public interface IGuiReaderWriter {
         INetwork network = getNetwork();
 
         if (network != null && !name.isEmpty()) {
-            network.addReaderWriterChannel(name);
+            network.getReaderWriterManager().addChannel(name);
         }
     }
 
@@ -30,7 +30,7 @@ public interface IGuiReaderWriter {
         INetwork network = getNetwork();
 
         if (network != null && !name.isEmpty()) {
-            network.removeReaderWriterChannel(name);
+            network.getReaderWriterManager().removeChannel(name);
         }
     }
 }

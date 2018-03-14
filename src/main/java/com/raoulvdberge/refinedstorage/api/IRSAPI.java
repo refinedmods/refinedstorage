@@ -96,6 +96,8 @@ public interface IRSAPI {
     IReaderWriterHandlerRegistry getReaderWriterHandlerRegistry();
 
     /**
+     * @param name    the name of the channel
+     * @param network the network
      * @return a new reader writer channel
      */
     @Nonnull

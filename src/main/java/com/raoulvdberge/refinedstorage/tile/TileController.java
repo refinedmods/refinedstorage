@@ -11,14 +11,12 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandler;
@@ -26,6 +24,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHand
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageFluidExternal;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageItemExternal;
+import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
@@ -35,11 +34,7 @@ import com.raoulvdberge.refinedstorage.block.BlockController;
 import com.raoulvdberge.refinedstorage.block.ControllerEnergyType;
 import com.raoulvdberge.refinedstorage.block.ControllerType;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
-import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
-import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorElements;
-import com.raoulvdberge.refinedstorage.network.MessageReaderWriterUpdate;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
@@ -47,11 +42,9 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -65,7 +58,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
@@ -116,9 +111,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
     public static final String NBT_ENERGY_TYPE = "EnergyType";
 
-    private static final String NBT_READER_WRITER_CHANNELS = "ReaderWriterChannels";
-    private static final String NBT_READER_WRITER_NAME = "Name";
-
     private static final String NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker";
     private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
 
@@ -139,15 +131,13 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
     private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
 
-    private Map<String, IReaderWriterChannel> readerWriterChannels = new HashMap<>();
+    private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this, this::markDirty);
 
     private EnergyForge energy = new EnergyForge(RS.INSTANCE.config.controllerCapacity);
 
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
-
-    private boolean craftingMonitorUpdateRequested;
 
     private ControllerType type;
     private ControllerEnergyType energyType = ControllerEnergyType.OFF;
@@ -197,20 +187,10 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             if (canRun()) {
                 craftingManager.update();
 
-                for (IReaderWriterChannel channel : readerWriterChannels.values()) {
-                    for (IReaderWriterHandler handler : channel.getHandlers()) {
-                        handler.update(channel);
-                    }
-                }
+                readerWriterManager.update();
 
-                if (!craftingManager.getTasks().isEmpty() || !readerWriterChannels.isEmpty()) {
+                if (!craftingManager.getTasks().isEmpty()) {
                     markDirty();
-                }
-
-                if (craftingMonitorUpdateRequested) {
-                    craftingMonitorUpdateRequested = false;
-
-                    sendCraftingMonitorUpdate();
                 }
             }
 
@@ -293,61 +273,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public void markCraftingMonitorForUpdate() {
-        craftingMonitorUpdateRequested = true;
-    }
-
-    @Override
-    public void sendCraftingMonitorUpdate() {
-        world.getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && pos.equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player));
-    }
-
-    @Override
-    public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player);
-    }
-
-    @Nullable
-    @Override
-    public IReaderWriterChannel getReaderWriterChannel(String name) {
-        return readerWriterChannels.get(name);
-    }
-
-    @Override
-    public void addReaderWriterChannel(String name) {
-        readerWriterChannels.put(name, API.instance().createReaderWriterChannel(name, this));
-
-        sendReaderWriterChannelUpdate();
-    }
-
-    @Override
-    public void removeReaderWriterChannel(String name) {
-        IReaderWriterChannel channel = getReaderWriterChannel(name);
-
-        if (channel != null) {
-            channel.getReaders().forEach(reader -> reader.setChannel(""));
-            channel.getWriters().forEach(writer -> writer.setChannel(""));
-
-            readerWriterChannels.remove(name);
-
-            sendReaderWriterChannelUpdate();
-        }
-    }
-
-    @Override
-    public void sendReaderWriterChannelUpdate() {
-        world.getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> player.openContainer instanceof ContainerReaderWriter &&
-                ((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork() != null &&
-                pos.equals(((ContainerReaderWriter) player.openContainer).getReaderWriter().getNetwork().getPosition()))
-            .forEach(this::sendReaderWriterChannelUpdate);
-    }
-
-    @Override
-    public void sendReaderWriterChannelUpdate(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageReaderWriterUpdate(readerWriterChannels.keySet()), player);
+    public IReaderWriterManager getReaderWriterManager() {
+        return readerWriterManager;
     }
 
     @Override
@@ -557,21 +484,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         craftingManager.readFromNBT(tag);
 
-        if (tag.hasKey(NBT_READER_WRITER_CHANNELS)) {
-            NBTTagList readerWriterChannelsList = tag.getTagList(NBT_READER_WRITER_CHANNELS, Constants.NBT.TAG_COMPOUND);
-
-            for (int i = 0; i < readerWriterChannelsList.tagCount(); ++i) {
-                NBTTagCompound channelTag = readerWriterChannelsList.getCompoundTagAt(i);
-
-                String name = channelTag.getString(NBT_READER_WRITER_NAME);
-
-                IReaderWriterChannel channel = API.instance().createReaderWriterChannel(name, this);
-
-                channel.readFromNBT(channelTag);
-
-                readerWriterChannels.put(name, channel);
-            }
-        }
+        readerWriterManager.readFromNBT(tag);
 
         if (tag.hasKey(NBT_ITEM_STORAGE_TRACKER)) {
             itemStorageTracker.readFromNBT(tag.getTagList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
@@ -592,17 +505,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         craftingManager.writeToNBT(tag);
 
-        NBTTagList readerWriterChannelsList = new NBTTagList();
-
-        for (Map.Entry<String, IReaderWriterChannel> entry : readerWriterChannels.entrySet()) {
-            NBTTagCompound channelTag = entry.getValue().writeToNBT(new NBTTagCompound());
-
-            channelTag.setString(NBT_READER_WRITER_NAME, entry.getKey());
-
-            readerWriterChannelsList.appendTag(channelTag);
-        }
-
-        tag.setTag(NBT_READER_WRITER_CHANNELS, readerWriterChannelsList);
+        readerWriterManager.writeToNBT(tag);
 
         tag.setTag(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNBT());
         tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNBT());

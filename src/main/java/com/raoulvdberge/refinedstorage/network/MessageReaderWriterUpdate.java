@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiReaderWriter;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -8,22 +9,20 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 public class MessageReaderWriterUpdate implements IMessage, IMessageHandler<MessageReaderWriterUpdate, IMessage> {
-    private Collection<String> channels;
+    private List<String> channels = new ArrayList<>();
 
     public MessageReaderWriterUpdate() {
     }
 
-    public MessageReaderWriterUpdate(Collection<String> channels) {
+    public MessageReaderWriterUpdate(List<String> channels) {
         this.channels = channels;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        this.channels = new ArrayList<>();
-
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
@@ -42,7 +41,7 @@ public class MessageReaderWriterUpdate implements IMessage, IMessageHandler<Mess
 
     @Override
     public IMessage onMessage(MessageReaderWriterUpdate message, MessageContext ctx) {
-        GuiReaderWriter.CHANNELS = (ArrayList<String>) message.channels;
+        GuiBase.executeLater(GuiReaderWriter.class, readerWriter -> readerWriter.setChannels(message.channels));
 
         return null;
     }

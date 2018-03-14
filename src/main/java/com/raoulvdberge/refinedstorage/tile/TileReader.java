@@ -72,7 +72,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
             return false;
         }
 
-        IReaderWriterChannel channel = reader.getNetwork().getReaderWriterChannel(reader.getChannel());
+        IReaderWriterChannel channel = reader.getNetwork().getReaderWriterManager().getChannel(reader.getChannel());
 
         if (channel == null) {
             return false;
@@ -106,7 +106,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
                 return null;
             }
 
-            IReaderWriterChannel channel = reader.getNetwork().getReaderWriterChannel(reader.getChannel());
+            IReaderWriterChannel channel = reader.getNetwork().getReaderWriterManager().getChannel(reader.getChannel());
 
             if (channel == null) {
                 return null;

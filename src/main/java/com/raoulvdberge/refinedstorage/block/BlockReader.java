@@ -39,7 +39,7 @@ public class BlockReader extends BlockCable {
 
             if (player.isSneaking()) {
                 if (reader.getNetwork() != null) {
-                    IReaderWriterChannel channel = reader.getNetwork().getReaderWriterChannel(reader.getChannel());
+                    IReaderWriterChannel channel = reader.getNetwork().getReaderWriterManager().getChannel(reader.getChannel());
 
                     if (channel != null) {
                         channel.getHandlers().stream().map(h -> h.getStatusReader(reader, channel)).flatMap(List::stream).forEach(player::sendMessage);

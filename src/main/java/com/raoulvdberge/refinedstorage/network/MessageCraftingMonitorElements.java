@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterFilter;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
@@ -70,7 +71,9 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
 
     @Override
     public IMessage onMessage(MessageCraftingMonitorElements message, MessageContext ctx) {
-        GuiCraftingMonitor.ELEMENTS = message.elements;
+        GuiBase.executeLater(GuiCraftingMonitor.class, craftingMonitor -> {
+            craftingMonitor.setElements(message.elements);
+        });
 
         return null;
     }
