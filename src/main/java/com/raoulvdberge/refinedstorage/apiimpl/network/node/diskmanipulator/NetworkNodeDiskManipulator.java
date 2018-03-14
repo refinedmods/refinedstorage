@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -47,18 +46,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private IStorageDisk<ItemStack>[] itemStorages = new IStorageDisk[6];
     private IStorageDisk<FluidStack>[] fluidStorages = new IStorageDisk[6];
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK) {
-        @Override
-        public int getItemInteractCount() {
-            int count = super.getItemInteractCount();
-
-            if (type == IType.FLUIDS) {
-                count *= Fluid.BUCKET_VOLUME;
-            }
-
-            return count;
-        }
-    };
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
         @Override
@@ -195,18 +183,18 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             // We need to check if the stack was inserted
             storage.insert(((extracted == remainder) ? remainder.copy() : remainder), remainder.getCount(), false);
         }
-
-        if (storage.getStacks().size() == 0) {
-            moveDriveToOutput(slot);
-        }
     }
 
     //Iterate through disk stacks, if none can be inserted, return that it is done processing and can be output.
     private boolean checkItemDiskDone(IStorageDisk<ItemStack> storage, int slot) {
-        if ((ioMode == IO_MODE_INSERT && storage.getStored() == 0) || (ioMode == IO_MODE_EXTRACT && storage.getStored() == storage.getCapacity()) ) {
+        if (ioMode == IO_MODE_INSERT && storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return true;
         }
+
+        //In Extract mode, we just need to check if the disk is full or not.
+        if (ioMode == IO_MODE_EXTRACT)
+            return storage.getStored() == storage.getCapacity();
 
         List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
@@ -226,11 +214,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private void extractItemFromNetwork(IStorageDisk<ItemStack> storage, int slot) {
-        if (storage.getStored() == storage.getCapacity()) {
-            moveDriveToOutput(slot);
-            return;
-        }
-
         ItemStack extracted = null;
         int i = 0;
 
@@ -298,10 +281,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private boolean checkFluidDiskDone(IStorageDisk<FluidStack> storage, int slot) {
-        if ((ioMode == IO_MODE_INSERT && storage.getStored() == 0) || (ioMode == IO_MODE_EXTRACT && storage.getStored() == storage.getCapacity()) ) {
+        if (ioMode == IO_MODE_INSERT && storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return true;
         }
+
+        //In Extract mode, we just need to check if the disk is full or not.
+        if (ioMode == IO_MODE_EXTRACT)
+            return storage.getStored() == storage.getCapacity();
 
         List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
@@ -321,11 +308,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private void extractFluidFromNetwork(IStorageDisk<FluidStack> storage, int slot) {
-        if (storage.getStored() == storage.getCapacity()) {
-            moveDriveToOutput(slot);
-            return;
-        }
-
         FluidStack extracted = null;
         int i = 0;
 
