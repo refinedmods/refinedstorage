@@ -207,10 +207,11 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         //In Extract mode, we just need to check if the disk is full or not.
         if (ioMode == IO_MODE_EXTRACT)
             if (storage.getStored() == storage.getCapacity()) {
-                moveDriveToOutput(slot)
+                moveDriveToOutput(slot);
                 return true;
             }
-            else return false;
+            else
+                return false;
 
         List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
@@ -305,10 +306,11 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         //In Extract mode, we just need to check if the disk is full or not.
         if (ioMode == IO_MODE_EXTRACT)
             if (storage.getStored() == storage.getCapacity()) {
-                moveDriveToOutput(slot)
+                moveDriveToOutput(slot);
                 return true;
             }
-            else return false;
+            else
+                return false;
 
         List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
