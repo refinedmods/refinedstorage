@@ -124,7 +124,12 @@ public class ContainerCrafterManager extends ContainerBase {
             if (newContainerData == null) { // We're only resizing, get the previous inventory...
                 dummy = dummyInventories.get(entry.getKey());
             } else {
-                dummyInventories.put(entry.getKey(), dummy = new ItemHandlerBase(entry.getValue()));
+                dummyInventories.put(entry.getKey(), dummy = new ItemHandlerBase(entry.getValue()) {
+                    @Override
+                    public int getSlotLimit(int slot) {
+                        return 1;
+                    }
+                });
             }
 
             for (int slot = 0; slot < entry.getValue(); ++slot) {
