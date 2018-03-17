@@ -195,18 +195,23 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             // We need to check if the stack was inserted
             storage.insert(((extracted == remainder) ? remainder.copy() : remainder), remainder.getCount(), false);
         }
-
-        if (storage.getStacks().size() == 0) {
-            moveDriveToOutput(slot);
-        }
     }
 
     //Iterate through disk stacks, if none can be inserted, return that it is done processing and can be output.
     private boolean checkItemDiskDone(IStorageDisk<ItemStack> storage, int slot) {
-        if (storage.getStored() == 0) {
+        if (ioMode == IO_MODE_INSERT && storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return true;
         }
+
+        //In Extract mode, we just need to check if the disk is full or not.
+        if (ioMode == IO_MODE_EXTRACT)
+            if (storage.getStored() == storage.getCapacity()) {
+                moveDriveToOutput(slot);
+                return true;
+            } else {
+                return false;
+            }
 
         List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
@@ -226,11 +231,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private void extractItemFromNetwork(IStorageDisk<ItemStack> storage, int slot) {
-        if (storage.getStored() == storage.getCapacity()) {
-            moveDriveToOutput(slot);
-            return;
-        }
-
         ItemStack extracted = null;
         int i = 0;
 
@@ -298,10 +298,19 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private boolean checkFluidDiskDone(IStorageDisk<FluidStack> storage, int slot) {
-        if (storage.getStored() == 0) {
+        if (ioMode == IO_MODE_INSERT && storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return true;
         }
+
+        //In Extract mode, we just need to check if the disk is full or not.
+        if (ioMode == IO_MODE_EXTRACT)
+            if (storage.getStored() == storage.getCapacity()) {
+                moveDriveToOutput(slot);
+                return true;
+            } else {
+                return false;
+            }
 
         List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
         for (int i = 0; i < stacks.size(); ++i) {
@@ -321,11 +330,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private void extractFluidFromNetwork(IStorageDisk<FluidStack> storage, int slot) {
-        if (storage.getStored() == storage.getCapacity()) {
-            moveDriveToOutput(slot);
-            return;
-        }
-
         FluidStack extracted = null;
         int i = 0;
 
