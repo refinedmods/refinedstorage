@@ -71,7 +71,7 @@ public class ProxyClient extends ProxyCommon {
         itemColors.registerItemColorHandler((stack, tintIndex) -> {
             CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
 
-            if (BakedModelPattern.canDisplayPatternOutput(pattern)) {
+            if (BakedModelPattern.canDisplayPatternOutput(stack, pattern)) {
                 int color = itemColors.colorMultiplier(pattern.getOutputs().get(0), tintIndex);
 
                 if (color != -1) {

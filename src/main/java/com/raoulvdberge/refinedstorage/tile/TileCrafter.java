@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafter;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -11,6 +13,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileCrafter extends TileNode<NetworkNodeCrafter> {
+    public static final TileDataParameter<String, TileCrafter> NAME = new TileDataParameter<>(DataSerializers.STRING, NetworkNodeCrafter.DEFAULT_NAME, t -> t.getNode().getName());
+
+    public TileCrafter() {
+        dataManager.addWatchedParameter(NAME);
+    }
+
     @Override
     @Nonnull
     public NetworkNodeCrafter createNode(World world, BlockPos pos) {

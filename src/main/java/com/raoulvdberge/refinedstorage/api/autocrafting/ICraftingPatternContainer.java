@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.List;
 
@@ -29,6 +30,16 @@ public interface ICraftingPatternContainer {
      * @return the patterns stored in this container
      */
     List<ICraftingPattern> getPatterns();
+
+    /**
+     * @return the pattern inventory
+     */
+    IItemHandlerModifiable getPatternInventory();
+
+    /**
+     * @return the name of this container
+     */
+    String getName();
 
     /**
      * @return the position of this container

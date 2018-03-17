@@ -28,4 +28,5 @@ public final class RSGui {
     public static final int SECURITY_MANAGER = 24;
     public static final int STORAGE_MONITOR = 25;
     public static final int PORTABLE_GRID = 26;
+    public static final int CRAFTER_MANAGER = 27;
 }

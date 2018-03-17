@@ -138,6 +138,8 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageSecurityManagerUpdate.class, MessageSecurityManagerUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageWirelessFluidGridSettingsUpdate.class, MessageWirelessFluidGridSettingsUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageWirelessCraftingMonitorViewAutomated.class, MessageWirelessCraftingMonitorViewAutomated.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageCrafterManagerSlotSizes.class, MessageCrafterManagerSlotSizes.class, id++, Side.CLIENT);
+        RS.INSTANCE.network.registerMessage(MessageCrafterManagerRequestSlotData.class, MessageCrafterManagerRequestSlotData.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
@@ -170,6 +172,7 @@ public class ProxyCommon {
         registerTile(TileWriter.class, "writer");
         registerTile(TileStorageMonitor.class, "storage_monitor");
         registerTile(TilePortableGrid.class, "portable_grid");
+        registerTile(TileCrafterManager.class, "crafter_manager");
 
         registerBlock(RSBlocks.CONTROLLER);
         registerBlock(RSBlocks.GRID);
@@ -200,6 +203,7 @@ public class ProxyCommon {
         registerBlock(RSBlocks.NETWORK_TRANSMITTER);
         registerBlock(RSBlocks.NETWORK_RECEIVER);
         registerBlock(RSBlocks.DISK_MANIPULATOR);
+        registerBlock(RSBlocks.CRAFTER_MANAGER);
 
         registerItem(RSItems.QUARTZ_ENRICHED_IRON);
         registerItem(RSItems.STORAGE_DISK);

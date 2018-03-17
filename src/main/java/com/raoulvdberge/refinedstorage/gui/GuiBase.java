@@ -67,6 +67,8 @@ public abstract class GuiBase extends GuiContainer {
 
     protected Scrollbar scrollbar;
 
+    private boolean initializing;
+
     public GuiBase(Container container, int screenWidth, int screenHeight) {
         super(container);
 
@@ -92,6 +94,12 @@ public abstract class GuiBase extends GuiContainer {
 
     @Override
     public void initGui() {
+        if (initializing) { // Fix double initialize because of runRunnables
+            return;
+        }
+
+        initializing = true;
+
         calcHeight();
 
         super.initGui();
@@ -104,6 +112,8 @@ public abstract class GuiBase extends GuiContainer {
         runRunnables();
 
         init(guiLeft, guiTop);
+
+        initializing = false;
     }
 
     protected void calcHeight() {

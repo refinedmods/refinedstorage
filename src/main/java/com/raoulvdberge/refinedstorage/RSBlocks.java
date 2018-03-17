@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage;
 import com.raoulvdberge.refinedstorage.block.*;
 
 public final class RSBlocks {
+    // @todo: Switch to registry inject
     public static final BlockController CONTROLLER = new BlockController();
     public static final BlockCable CABLE = new BlockCable();
     public static final BlockGrid GRID = new BlockGrid();
@@ -32,4 +33,5 @@ public final class RSBlocks {
     public static final BlockQuartzEnrichedIron QUARTZ_ENRICHED_IRON = new BlockQuartzEnrichedIron();
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();
+    public static final BlockCrafterManager CRAFTER_MANAGER = new BlockCrafterManager();
 }

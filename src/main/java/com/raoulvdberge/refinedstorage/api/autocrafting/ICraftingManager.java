@@ -6,10 +6,12 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The crafting manager handles the storing, updating, adding and deleting of crafting tasks in a network.
@@ -19,6 +21,16 @@ public interface ICraftingManager {
      * @return the crafting tasks in this network, do NOT modify this list
      */
     List<ICraftingTask> getTasks();
+
+    /**
+     * @return all the crafting pattern containers
+     */
+    List<ICraftingPatternContainer> getContainers();
+
+    /**
+     * @return named crafting pattern containers
+     */
+    Map<String, List<IItemHandlerModifiable>> getNamedContainers();
 
     /**
      * Adds a crafting task.

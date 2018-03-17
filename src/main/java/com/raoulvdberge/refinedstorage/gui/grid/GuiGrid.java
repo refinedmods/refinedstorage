@@ -144,7 +144,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         addSideButton(new SideButtonGridSortingDirection(this, grid));
         addSideButton(new SideButtonGridSortingType(this, grid));
         addSideButton(new SideButtonGridSearchBoxMode(this));
-        addSideButton(new SideButtonGridSize(this, grid));
+        addSideButton(new SideButtonGridSize(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
 
         view.sort();
     }
@@ -213,6 +213,16 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     @Override
     public int getRows() {
         return Math.max(0, (int) Math.ceil((float) view.getStacks().size() / 9F));
+    }
+
+    @Override
+    public int getCurrentOffset() {
+        return scrollbar.getOffset();
+    }
+
+    @Override
+    public String getSearchFieldText() {
+        return searchField == null ? "" : searchField.getText();
     }
 
     @Override
@@ -799,6 +809,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         }
     }
 
+    // @todo: Move logic to other class so we can reuse search field in crafter manager
     public GuiTextField getSearchField() {
         return searchField;
     }

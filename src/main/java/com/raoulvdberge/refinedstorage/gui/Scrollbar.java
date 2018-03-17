@@ -2,7 +2,14 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import org.lwjgl.input.Mouse;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Scrollbar {
+    public interface ScrollbarListener {
+        void onOffsetChanged(int oldOffset, int newOffset);
+    }
+
     private static final int SCROLLER_HEIGHT = 15;
 
     private int x;
@@ -17,11 +24,17 @@ public class Scrollbar {
     private boolean wasClicking = false;
     private boolean isScrolling = false;
 
+    private List<ScrollbarListener> listeners = new LinkedList<>();
+
     public Scrollbar(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    public void addListener(ScrollbarListener listener) {
+        listeners.add(listener);
     }
 
     public int getWidth() {
@@ -87,8 +100,12 @@ public class Scrollbar {
     }
 
     public void setOffset(int offset) {
+        int oldOffset = this.offset;
+
         if (offset >= 0 && offset <= maxOffset) {
             this.offset = offset;
+
+            listeners.forEach(l -> l.onOffsetChanged(oldOffset, offset));
         }
     }
 }

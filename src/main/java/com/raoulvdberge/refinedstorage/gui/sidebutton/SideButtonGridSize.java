@@ -4,23 +4,27 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.util.text.TextFormatting;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public class SideButtonGridSize extends SideButton {
-    private IGrid grid;
+    private Supplier<Integer> size;
+    private Consumer<Integer> handler;
 
-    public SideButtonGridSize(GuiBase gui, IGrid grid) {
+    public SideButtonGridSize(GuiBase gui, Supplier<Integer> size, Consumer<Integer> handler) {
         super(gui);
-
-        this.grid = grid;
+        this.size = size;
+        this.handler = handler;
     }
 
     @Override
     public String getTooltip() {
-        return GuiBase.t("sidebutton.refinedstorage:grid.size") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:grid.size." + grid.getSize());
+        return GuiBase.t("sidebutton.refinedstorage:grid.size") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:grid.size." + this.size.get());
     }
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        int size = grid.getSize();
+        int size = this.size.get();
 
         int tx = 0;
 
@@ -39,7 +43,7 @@ public class SideButtonGridSize extends SideButton {
 
     @Override
     public void actionPerformed() {
-        int size = grid.getSize();
+        int size = this.size.get();
 
         if (size == IGrid.SIZE_STRETCH) {
             size = IGrid.SIZE_SMALL;
@@ -51,6 +55,6 @@ public class SideButtonGridSize extends SideButton {
             size = IGrid.SIZE_STRETCH;
         }
 
-        grid.onSizeChanged(size);
+        this.handler.accept(size);
     }
 }

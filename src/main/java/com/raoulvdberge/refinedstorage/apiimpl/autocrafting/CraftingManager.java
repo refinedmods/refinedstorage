@@ -21,6 +21,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -33,6 +34,8 @@ public class CraftingManager implements ICraftingManager {
 
     private TileController network;
 
+    private List<ICraftingPatternContainer> containers = new ArrayList<>();
+    private Map<String, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
     private CraftingPatternChainList patterns = new CraftingPatternChainList();
 
     private List<ICraftingTask> craftingTasks = new ArrayList<>();
@@ -52,6 +55,16 @@ public class CraftingManager implements ICraftingManager {
     @Override
     public List<ICraftingTask> getTasks() {
         return craftingTasks;
+    }
+
+    @Override
+    public List<ICraftingPatternContainer> getContainers() {
+        return containers;
+    }
+
+    @Override
+    public Map<String, List<IItemHandlerModifiable>> getNamedContainers() {
+        return containerInventories;
     }
 
     @Override
@@ -281,10 +294,23 @@ public class CraftingManager implements ICraftingManager {
     @Override
     public void rebuild() {
         patterns.clear();
+        containerInventories.clear();
 
         for (INetworkNode node : network.getNodeGraph().all()) {
             if (node instanceof ICraftingPatternContainer && node.canUpdate()) {
-                patterns.addAll((((ICraftingPatternContainer) node).getPatterns()));
+                ICraftingPatternContainer container = (ICraftingPatternContainer) node;
+
+                patterns.addAll(container.getPatterns());
+
+                // @todo: ???
+                if (container.getPatternInventory().getSlots() == 9 || true) {
+                    // @todo: Crafter first!
+                    if (!containerInventories.containsKey(container.getName())) {
+                        containerInventories.put(container.getName(), new ArrayList<>());
+                    }
+
+                    containerInventories.get(container.getName()).add(container.getPatternInventory());
+                }
             }
         }
 

@@ -12,6 +12,16 @@ public class GridDisplayDummy implements IGridDisplay {
     }
 
     @Override
+    public int getCurrentOffset() {
+        return 0;
+    }
+
+    @Override
+    public String getSearchFieldText() {
+        return "";
+    }
+
+    @Override
     public int getHeader() {
         return 0;
     }

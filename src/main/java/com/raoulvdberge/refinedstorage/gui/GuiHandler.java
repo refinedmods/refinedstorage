@@ -73,6 +73,8 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerSecurityManager((TileSecurityManager) tile, player);
             case RSGui.STORAGE_MONITOR:
                 return new ContainerStorageMonitor((TileStorageMonitor) tile, player);
+            case RSGui.CRAFTER_MANAGER:
+                return new ContainerCrafterManager((TileCrafterManager) tile, player, new GridDisplayDummy());
             default:
                 return null;
         }
@@ -152,6 +154,10 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiSecurityManager((ContainerSecurityManager) getContainer(ID, player, tile), (TileSecurityManager) tile);
             case RSGui.STORAGE_MONITOR:
                 return new GuiStorageMonitor((ContainerStorageMonitor) getContainer(ID, player, tile));
+            case RSGui.CRAFTER_MANAGER:
+                GuiCrafterManager crafterManagerGui = new GuiCrafterManager(((TileCrafterManager) tile).getNode());
+                crafterManagerGui.setContainer(new ContainerCrafterManager((TileCrafterManager) tile, player, crafterManagerGui));
+                return crafterManagerGui;
             default:
                 return null;
         }

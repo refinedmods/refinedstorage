@@ -5,6 +5,10 @@ public interface IGridDisplay {
 
     int getRows();
 
+    int getCurrentOffset();
+
+    String getSearchFieldText();
+
     int getHeader();
 
     int getFooter();

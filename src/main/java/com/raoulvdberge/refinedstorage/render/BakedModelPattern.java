@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.render;
 
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -12,6 +13,8 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
@@ -74,7 +77,7 @@ public class BakedModelPattern implements IBakedModel {
             public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(world, stack);
 
-                if (canDisplayPatternOutput(pattern)) {
+                if (canDisplayPatternOutput(stack, pattern)) {
                     return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(pattern.getOutputs().get(0), world, entity);
                 }
 
@@ -83,7 +86,21 @@ public class BakedModelPattern implements IBakedModel {
         };
     }
 
-    public static boolean canDisplayPatternOutput(CraftingPattern pattern) {
-        return GuiBase.isShiftKeyDown() && pattern.isValid() && pattern.getOutputs().size() == 1;
+    public static boolean canDisplayPatternOutput(ItemStack patternStack, CraftingPattern pattern) {
+        return (GuiBase.isShiftKeyDown() || isPatternInCrafterManagerSlot(patternStack)) && pattern.isValid() && pattern.getOutputs().size() == 1;
+    }
+
+    public static boolean isPatternInCrafterManagerSlot(ItemStack stack) {
+        Container container = Minecraft.getMinecraft().player.openContainer;
+
+        if (container instanceof ContainerCrafterManager) {
+            for (Slot slot : container.inventorySlots) {
+                if (slot instanceof ContainerCrafterManager.SlotCrafterManager && slot.getStack() == stack) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }
