@@ -302,7 +302,6 @@ public class CraftingManager implements ICraftingManager {
 
                 patterns.addAll(container.getPatterns());
 
-                // @todo: Crafter first!
                 if (!containerInventories.containsKey(container.getName())) {
                     containerInventories.put(container.getName(), new ArrayList<>());
                 }

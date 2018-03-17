@@ -44,19 +44,15 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GuiGrid extends GuiBase implements IResizableDisplay {
-    private static final List<String> SEARCH_HISTORY = new ArrayList<>();
-
     private IGridView view;
 
-    private GuiTextField searchField;
+    private TextFieldSearch searchField;
     private GuiCheckBox oredictPattern;
     private GuiCheckBox processingPattern;
     private GuiCheckBox blockingPattern;
@@ -71,8 +67,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     private int tabHovering = -1;
 
     private int slotNumber;
-
-    private int searchHistoryIndex = -1;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, grid.getType() == GridType.FLUID ? 193 : 227, 0);
@@ -117,10 +111,12 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         int sy = y + 6 + 1 + getTabHeight();
 
         if (searchField == null) {
-            searchField = new GuiTextField(0, fontRenderer, sx, sy, 88 - 6, fontRenderer.FONT_HEIGHT);
-            searchField.setEnableBackgroundDrawing(false);
-            searchField.setVisible(true);
-            searchField.setTextColor(16777215);
+            searchField = new TextFieldSearch(0, fontRenderer, sx, sy, 88 - 6);
+            searchField.addListener(() -> {
+                view.sort();
+
+                updateJEI();
+            });
 
             updateSearchFieldFocus(grid.getSearchBoxMode());
         } else {
@@ -646,20 +642,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         }
 
         if (searchField != null) {
-            boolean wasSearchFieldFocused = searchField.isFocused();
-
             searchField.mouseClicked(mouseX, mouseY, clickedButton);
-
-            if (clickedButton == 1 && inBounds(79, 5 + getTabHeight(), 90, 12, mouseX - guiLeft, mouseY - guiTop)) {
-                searchField.setText("");
-                searchField.setFocused(true);
-
-                view.sort();
-
-                updateJEI();
-            } else if (wasSearchFieldFocused != searchField.isFocused()) {
-                saveHistory();
-            }
         }
 
         boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
@@ -724,75 +707,14 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             // NO OP
         } else if (searchField.textboxKeyTyped(character, keyCode)) {
             updateJEI();
+
             view.sort();
 
-            keyHandled = true;
-        } else if (searchField.isFocused() && (keyCode == Keyboard.KEY_UP || keyCode == Keyboard.KEY_DOWN || keyCode == Keyboard.KEY_RETURN)) {
-            if (keyCode == Keyboard.KEY_UP) {
-                updateSearchHistory(-1);
-            } else if (keyCode == Keyboard.KEY_DOWN) {
-                updateSearchHistory(1);
-            } else {
-                saveHistory();
-
-                if (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
-                    searchField.setFocused(false);
-                }
-            }
-            keyHandled = true;
-        } else if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_NORMAL || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED)) {
-            searchField.setFocused(!searchField.isFocused());
-
-            saveHistory();
             keyHandled = true;
         } else if (keyCode == RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX.getKeyCode()) {
             RS.INSTANCE.network.sendToServer(new MessageGridClear());
         } else {
             super.keyTyped(character, keyCode);
-        }
-    }
-
-    private void updateSearchHistory(int delta) {
-        if (SEARCH_HISTORY.isEmpty()) {
-            return;
-        }
-
-        if (searchHistoryIndex == -1) {
-            searchHistoryIndex = SEARCH_HISTORY.size();
-        }
-
-        searchHistoryIndex += delta;
-
-        if (searchHistoryIndex < 0) {
-            searchHistoryIndex = 0;
-        } else if (searchHistoryIndex > SEARCH_HISTORY.size() - 1) {
-            searchHistoryIndex = SEARCH_HISTORY.size() - 1;
-
-            if (delta == 1) {
-                searchField.setText("");
-
-                view.sort();
-
-                updateJEI();
-
-                return;
-            }
-        }
-
-        searchField.setText(SEARCH_HISTORY.get(searchHistoryIndex));
-
-        view.sort();
-
-        updateJEI();
-    }
-
-    private void saveHistory() {
-        if (!SEARCH_HISTORY.isEmpty() && SEARCH_HISTORY.get(SEARCH_HISTORY.size() - 1).equals(searchField.getText())) {
-            return;
-        }
-
-        if (!searchField.getText().trim().isEmpty()) {
-            SEARCH_HISTORY.add(searchField.getText());
         }
     }
 
@@ -809,7 +731,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         }
     }
 
-    // @todo: Move logic to other class so we can reuse search field in crafter manager
     public GuiTextField getSearchField() {
         return searchField;
     }

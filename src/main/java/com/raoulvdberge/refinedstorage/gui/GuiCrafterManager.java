@@ -8,10 +8,10 @@ import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonGridSize;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.control.TextFieldSearch;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Slot;
@@ -22,7 +22,8 @@ import java.util.Map;
 public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
     private ContainerCrafterManager container;
     private NetworkNodeCrafterManager crafterManager;
-    private GuiTextField searchField;
+
+    private TextFieldSearch searchField;
 
     public GuiCrafterManager(NetworkNodeCrafterManager crafterManager) {
         super(null, 193, 0);
@@ -120,10 +121,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
         int sy = y + 6 + 1;
 
         if (searchField == null) {
-            searchField = new GuiTextField(0, fontRenderer, sx, sy, 88 - 6, fontRenderer.FONT_HEIGHT);
-            searchField.setEnableBackgroundDrawing(false);
-            searchField.setVisible(true);
-            searchField.setTextColor(16777215);
+            searchField = new TextFieldSearch(0, fontRenderer, sx, sy, 88 - 6);
         } else {
             searchField.x = sx;
             searchField.y = sy;
