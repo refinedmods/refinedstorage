@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -98,10 +99,12 @@ public class ContainerCrafterManager extends ContainerBase {
         if (!player.world.isRemote) {
             addPlayerInventory(8, display.getYPlayerInventory());
 
-            for (Map.Entry<String, List<IItemHandlerModifiable>> entry : crafterManager.getNode().getNetwork().getCraftingManager().getNamedContainers().entrySet()) {
-                for (IItemHandlerModifiable handler : entry.getValue()) {
-                    for (int i = 0; i < handler.getSlots(); ++i) {
-                        addSlotToContainer(new SlotItemHandler(handler, i, 0, 0));
+            if (crafterManager.getNode().getNetwork() != null) {
+                for (Map.Entry<String, List<IItemHandlerModifiable>> entry : crafterManager.getNode().getNetwork().getCraftingManager().getNamedContainers().entrySet()) {
+                    for (IItemHandlerModifiable handler : entry.getValue()) {
+                        for (int i = 0; i < handler.getSlots(); ++i) {
+                            addSlotToContainer(new SlotItemHandler(handler, i, 0, 0));
+                        }
                     }
                 }
             }
@@ -125,30 +128,36 @@ public class ContainerCrafterManager extends ContainerBase {
         addPlayerInventory(8, display.getYPlayerInventory());
 
         int y = 19 + 18 - display.getCurrentOffset() * 18;
+        int x = 8;
 
         for (Map.Entry<String, Integer> entry : containerData.entrySet()) {
-            boolean visible = entry.getKey().toLowerCase().contains(display.getSearchFieldText().toLowerCase());
+            // @todo: broken on servers prolly
+            boolean visible = I18n.format(entry.getKey()).toLowerCase().contains(display.getSearchFieldText().toLowerCase());
 
-            for (int i = 0; i < entry.getValue(); ++i) {
-                IItemHandlerModifiable dummy;
+            IItemHandlerModifiable dummy;
 
-                if (newContainerData == null) { // We're only resizing, get the previous inventory...
-                    dummy = dummyInventories.get(entry.getKey() + "," + i);
-                } else {
-                    dummyInventories.put(entry.getKey() + "," + i, dummy = new ItemHandlerBase(9));
-                }
+            if (newContainerData == null) { // We're only resizing, get the previous inventory...
+                dummy = dummyInventories.get(entry.getKey());
+            } else {
+                dummyInventories.put(entry.getKey(), dummy = new ItemHandlerBase(entry.getValue()));
+            }
 
-                for (int j = 0; j < 9; ++j) {
-                    addSlotToContainer(new SlotCrafterManager(dummy, j, 8 + j * 18, y, visible));
-                }
+            for (int slot = 0; slot < entry.getValue(); ++slot) {
+                addSlotToContainer(new SlotCrafterManager(dummy, slot, x, y, visible));
 
                 if (visible) {
-                    y += 18;
+                    x += 18;
+
+                    if ((slot + 1) % 9 == 0) {
+                        x = 8;
+                        y += 18;
+                    }
                 }
             }
 
             if (visible) {
-                y += 18;
+                x = 8;
+                y += 18 * 2;
             }
         }
     }

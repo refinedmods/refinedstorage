@@ -30,8 +30,10 @@ public class NetworkNodeCrafterManager extends NetworkNode {
         return ID;
     }
 
-    public void send(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageCrafterManagerSlotSizes(network.getCraftingManager().getNamedContainers()), player);
+    public void sendTo(EntityPlayerMP player) {
+        if (network != null) {
+            RS.INSTANCE.network.sendTo(new MessageCrafterManagerSlotSizes(network.getCraftingManager().getNamedContainers()), player);
+        }
     }
 
     public int getSize() {

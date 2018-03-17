@@ -9,9 +9,11 @@ import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonGridSize;
 import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.Slot;
 
 import java.io.IOException;
 import java.util.Map;
@@ -76,9 +78,9 @@ public class GuiCrafterManager extends GuiBase implements IGridDisplay {
         int rows = 0;
 
         for (Map.Entry<String, Integer> containerData : container.getContainerData().entrySet()) {
-            if (containerData.getKey().toLowerCase().contains(getSearchFieldText().toLowerCase())) {
+            if (t(containerData.getKey()).toLowerCase().contains(getSearchFieldText().toLowerCase())) {
                 rows++;
-                rows += containerData.getValue();
+                rows += Math.ceil((double) Math.max(9, containerData.getValue()) / 9D);
             }
         }
 
@@ -141,15 +143,25 @@ public class GuiCrafterManager extends GuiBase implements IGridDisplay {
 
         int rows = getVisibleRows();
 
-        for (int i = 0; i < rows; ++i) {
-            y += 18;
+        int yy = y;
 
-            drawTexture(x, y, 0, getHeader() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth, 18);
+        for (int i = 0; i < rows; ++i) {
+            yy += 18;
+
+            drawTexture(x, yy, 0, getHeader() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth, 18);
         }
 
-        y += 18;
+        yy += 18;
 
-        drawTexture(x, y, 0, getHeader() + (18 * 3), screenWidth, getFooter());
+        drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth, getFooter());
+
+        if (container != null) {
+            for (Slot slot : container.inventorySlots) {
+                if (slot instanceof ContainerCrafterManager.SlotCrafterManager && slot.isEnabled()) {
+                    drawTexture(x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
+                }
+            }
+        }
 
         if (searchField != null) {
             searchField.drawTextBox();
@@ -185,12 +197,12 @@ public class GuiCrafterManager extends GuiBase implements IGridDisplay {
         drawString(7, 7, t("gui.refinedstorage:crafter_manager"));
         drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
-        if (container != null) {
+        if (container != null && container.getContainerData() != null) {
             int x = 7;
             int y = 18 - getCurrentOffset() * 18;
 
             for (Map.Entry<String, Integer> entry : container.getContainerData().entrySet()) {
-                if (entry.getKey().toLowerCase().contains(getSearchFieldText().toLowerCase())) {
+                if (t(entry.getKey()).toLowerCase().contains(getSearchFieldText().toLowerCase())) {
                     if (y >= getHeader() - 1 && y < getHeader() + getVisibleRows() * 18 - 1) {
                         GlStateManager.disableLighting();
                         GlStateManager.color(1, 1, 1);
@@ -199,14 +211,12 @@ public class GuiCrafterManager extends GuiBase implements IGridDisplay {
 
                         drawTexturedModalRect(x, y, 0, 174, 18 * 9, 18);
 
-                        drawString(x + 4, y + 5, I18n.format(entry.getKey()));
+                        drawString(x + 4, y + 6, RenderUtils.shorten(I18n.format(entry.getKey()), 25));
                     }
 
-                    y += (entry.getValue() + 1) * 18;
+                    y += (Math.ceil((double) Math.max(9, entry.getValue()) / 9D) + 1) * 18;
                 }
             }
         }
     }
-
-
 }

@@ -54,6 +54,13 @@ public final class RenderUtils {
         return start.addVector(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
     }
 
+    public static String shorten(String text, int length) {
+        if (text.length() > length) {
+            text = text.substring(0, length) + "...";
+        }
+        return text;
+    }
+
     public static AdvancedRayTraceResult collisionRayTrace(BlockPos pos, Vec3d start, Vec3d end, Collection<AxisAlignedBB> boxes) {
         double minDistance = Double.POSITIVE_INFINITY;
         AdvancedRayTraceResult hit = null;

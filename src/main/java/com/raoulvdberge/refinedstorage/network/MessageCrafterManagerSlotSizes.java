@@ -41,7 +41,12 @@ public class MessageCrafterManagerSlotSizes implements IMessage, IMessageHandler
 
         for (Map.Entry<String, List<IItemHandlerModifiable>> entry : containerData.entrySet()) {
             ByteBufUtils.writeUTF8String(buf, entry.getKey());
-            buf.writeInt(entry.getValue().size());
+
+            int slots = 0;
+            for (IItemHandlerModifiable handler : entry.getValue()) {
+                slots += handler.getSlots();
+            }
+            buf.writeInt(slots);
         }
     }
 

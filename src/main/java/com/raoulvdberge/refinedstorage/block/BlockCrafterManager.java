@@ -25,7 +25,7 @@ public class BlockCrafterManager extends BlockNode {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote && tryOpenNetworkGui(RSGui.CRAFTER_MANAGER, player, world, pos, side, Permission.MODIFY, Permission.AUTOCRAFTING)) {
-            ((TileCrafterManager) world.getTileEntity(pos)).getNode().send((EntityPlayerMP) player);
+            ((TileCrafterManager) world.getTileEntity(pos)).getNode().sendTo((EntityPlayerMP) player);
         }
 
         return true;

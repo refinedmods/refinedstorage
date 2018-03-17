@@ -302,15 +302,12 @@ public class CraftingManager implements ICraftingManager {
 
                 patterns.addAll(container.getPatterns());
 
-                // @todo: ???
-                if (container.getPatternInventory().getSlots() == 9 || true) {
-                    // @todo: Crafter first!
-                    if (!containerInventories.containsKey(container.getName())) {
-                        containerInventories.put(container.getName(), new ArrayList<>());
-                    }
-
-                    containerInventories.get(container.getName()).add(container.getPatternInventory());
+                // @todo: Crafter first!
+                if (!containerInventories.containsKey(container.getName())) {
+                    containerInventories.put(container.getName(), new ArrayList<>());
                 }
+
+                containerInventories.get(container.getName()).add(container.getPatternInventory());
             }
         }
 
