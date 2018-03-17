@@ -116,7 +116,7 @@ public class ContainerCrafterManager extends ContainerBase {
         int x = 8;
 
         for (Map.Entry<String, Integer> entry : containerData.entrySet()) {
-            // @todo: broken on servers prolly
+            // @todo: Test on servers
             boolean visible = I18n.format(entry.getKey()).toLowerCase().contains(display.getSearchFieldText().toLowerCase());
 
             IItemHandlerModifiable dummy;
@@ -133,7 +133,8 @@ public class ContainerCrafterManager extends ContainerBase {
                 if (visible) {
                     x += 18;
 
-                    if ((slot + 1) % 9 == 0) {
+                    // Don't increase y level if we are on our last slot row (otherwise we do y += 18 * 3)
+                    if ((slot + 1) % 9 == 0 && slot + 1 < entry.getValue()) {
                         x = 8;
                         y += 18;
                     }

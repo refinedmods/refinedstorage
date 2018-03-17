@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage;
 import com.raoulvdberge.refinedstorage.item.*;
 
 public final class RSItems {
+    // @todo: Switch to registry inject
     public static final ItemStorageDisk STORAGE_DISK = new ItemStorageDisk();
     public static final ItemWirelessGrid WIRELESS_GRID = new ItemWirelessGrid();
     public static final ItemWirelessFluidGrid WIRELESS_FLUID_GRID = new ItemWirelessFluidGrid();

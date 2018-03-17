@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PCG",
+    "EMG",
+    "PCG"
+  ],
+  "key": {
+    "P": {
+      "item": "#advanced_processor"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    },
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "M": {
+      "item": "refinedstorage:machine_casing"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:crafter_manager"
+  }
+}

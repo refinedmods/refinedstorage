@@ -30,4 +30,9 @@ public class BlockCrafterManager extends BlockNode {
 
         return true;
     }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
 }

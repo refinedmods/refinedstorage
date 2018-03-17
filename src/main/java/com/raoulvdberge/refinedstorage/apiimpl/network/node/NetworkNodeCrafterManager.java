@@ -61,4 +61,9 @@ public class NetworkNodeCrafterManager extends NetworkNode {
             size = tag.getInteger(NBT_SIZE);
         }
     }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
+    }
 }

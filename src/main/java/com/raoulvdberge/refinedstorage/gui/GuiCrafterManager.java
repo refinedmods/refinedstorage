@@ -122,6 +122,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
 
         if (searchField == null) {
             searchField = new TextFieldSearch(0, fontRenderer, sx, sy, 88 - 6);
+            searchField.addListener(() -> container.initSlots(null));
         } else {
             searchField.x = sx;
             searchField.y = sy;

@@ -265,6 +265,9 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DESTRUCTOR), 0, new ModelResourceLocation("refinedstorage:destructor", "inventory"));
         ModelLoader.setCustomStateMapper(RSBlocks.DESTRUCTOR, new StateMapperCTM("refinedstorage:destructor"));
 
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CRAFTER_MANAGER), 0, new ModelResourceLocation("refinedstorage:crafter_manager", "connected=false,direction=north"));
+        ModelLoader.setCustomStateMapper(RSBlocks.CRAFTER_MANAGER, new StateMapperCTM("refinedstorage:crafter_manager"));
+
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.CONTROLLER), stack -> {
             ControllerEnergyType energyType = stack.getItemDamage() == ControllerType.CREATIVE.getId() ? ControllerEnergyType.ON : TileController.getEnergyType(ItemBlockController.getEnergyStored(stack), ItemBlockController.getEnergyCapacity(stack));
 
