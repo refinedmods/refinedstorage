@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.container.ContainerWirelessTransmitter;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 
 public class GuiWirelessTransmitter extends GuiBase {

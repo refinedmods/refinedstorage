@@ -1,6 +1,6 @@
-package com.raoulvdberge.refinedstorage.gui.grid;
+package com.raoulvdberge.refinedstorage.gui;
 
-public class GridDisplayDummy implements IGridDisplay {
+public class ResizableDisplayDummy implements IResizableDisplay {
     @Override
     public int getVisibleRows() {
         return 3;
@@ -22,12 +22,12 @@ public class GridDisplayDummy implements IGridDisplay {
     }
 
     @Override
-    public int getHeader() {
+    public int getTopHeight() {
         return 0;
     }
 
     @Override
-    public int getFooter() {
+    public int getBottomHeight() {
         return 0;
     }
 

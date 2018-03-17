@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.ContainerSecurityManager;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
 import com.raoulvdberge.refinedstorage.network.MessageSecurityManagerUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;

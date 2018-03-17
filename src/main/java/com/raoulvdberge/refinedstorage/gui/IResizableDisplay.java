@@ -1,6 +1,6 @@
-package com.raoulvdberge.refinedstorage.gui.grid;
+package com.raoulvdberge.refinedstorage.gui;
 
-public interface IGridDisplay {
+public interface IResizableDisplay {
     int getVisibleRows();
 
     int getRows();
@@ -9,9 +9,9 @@ public interface IGridDisplay {
 
     String getSearchFieldText();
 
-    int getHeader();
+    int getTopHeight();
 
-    int getFooter();
+    int getBottomHeight();
 
     int getYPlayerInventory();
 }

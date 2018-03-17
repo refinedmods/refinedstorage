@@ -1,15 +1,12 @@
-package com.raoulvdberge.refinedstorage.gui;
+package com.raoulvdberge.refinedstorage.gui.control;
 
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import org.lwjgl.input.Mouse;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class Scrollbar {
-    public interface ScrollbarListener {
-        void onOffsetChanged(int oldOffset, int newOffset);
-    }
-
     private static final int SCROLLER_HEIGHT = 15;
 
     private int x;

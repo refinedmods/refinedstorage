@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.gui.sidebutton;
+package com.raoulvdberge.refinedstorage.gui.control;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;

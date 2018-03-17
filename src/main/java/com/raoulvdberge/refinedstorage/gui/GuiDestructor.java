@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerDestructor;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
+import com.raoulvdberge.refinedstorage.gui.control.*;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 
 public class GuiDestructor extends GuiBase {

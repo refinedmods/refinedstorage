@@ -2,10 +2,10 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerImporter;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonCompare;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonMode;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonType;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonMode;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonType;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 
 public class GuiImporter extends GuiBase {

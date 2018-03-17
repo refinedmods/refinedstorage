@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.slot.*;
-import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
+import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
@@ -31,12 +31,12 @@ public class ContainerGrid extends ContainerBase {
     private IGrid grid;
     private IStorageCache cache;
     private IStorageCacheListener listener;
-    private IGridDisplay display;
+    private IResizableDisplay display;
 
     private SlotGridCraftingResult craftingResultSlot;
     private SlotDisabled patternResultSlot;
 
-    public ContainerGrid(IGrid grid, IGridDisplay display, @Nullable TileBase gridTile, EntityPlayer player) {
+    public ContainerGrid(IGrid grid, IResizableDisplay display, @Nullable TileBase gridTile, EntityPlayer player) {
         super(gridTile, player);
 
         this.grid = grid;
@@ -49,7 +49,7 @@ public class ContainerGrid extends ContainerBase {
         this.inventorySlots.clear();
         this.inventoryItemStacks.clear();
 
-        int headerAndSlots = getTabDelta() + display.getHeader() + (display.getVisibleRows() * 18);
+        int headerAndSlots = getTabDelta() + display.getTopHeight() + (display.getVisibleRows() * 18);
 
         if (grid.getType() != GridType.FLUID) {
             int yStart = 6;

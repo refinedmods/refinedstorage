@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.gui.grid.IGridDisplay;
+import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
+import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import net.minecraft.client.resources.I18n;
@@ -12,7 +13,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -63,22 +63,7 @@ public class ContainerCrafterManager extends ContainerBase {
         }
     }
 
-    public class SlotCrafterManager extends SlotItemHandler {
-        private boolean visible;
-
-        private SlotCrafterManager(IItemHandler itemHandler, int index, int xPosition, int yPosition, boolean visible) {
-            super(itemHandler, index, xPosition, yPosition);
-
-            this.visible = visible;
-        }
-
-        @Override
-        public boolean isEnabled() {
-            return yPos >= display.getHeader() && yPos < display.getHeader() + 18 * display.getVisibleRows() && visible;
-        }
-    }
-
-    private IGridDisplay display;
+    private IResizableDisplay display;
     private Map<String, Integer> containerData;
     private Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
 
@@ -91,7 +76,7 @@ public class ContainerCrafterManager extends ContainerBase {
         return listeners;
     }
 
-    public ContainerCrafterManager(TileCrafterManager crafterManager, EntityPlayer player, IGridDisplay display) {
+    public ContainerCrafterManager(TileCrafterManager crafterManager, EntityPlayer player, IResizableDisplay display) {
         super(crafterManager, player);
 
         this.display = display;
@@ -143,7 +128,7 @@ public class ContainerCrafterManager extends ContainerBase {
             }
 
             for (int slot = 0; slot < entry.getValue(); ++slot) {
-                addSlotToContainer(new SlotCrafterManager(dummy, slot, x, y, visible));
+                addSlotToContainer(new SlotCrafterManager(dummy, slot, x, y, visible, display));
 
                 if (visible) {
                     x += 18;

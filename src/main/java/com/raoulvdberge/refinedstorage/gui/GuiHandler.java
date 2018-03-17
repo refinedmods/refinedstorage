@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.container.*;
-import com.raoulvdberge.refinedstorage.gui.grid.GridDisplayDummy;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
 import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
@@ -28,9 +27,9 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.CONTROLLER:
                 return new ContainerController((TileController) tile, player);
             case RSGui.GRID:
-                return new ContainerGrid(((TileGrid) tile).getNode(), new GridDisplayDummy(), (TileGrid) tile, player);
+                return new ContainerGrid(((TileGrid) tile).getNode(), new ResizableDisplayDummy(), (TileGrid) tile, player);
             case RSGui.PORTABLE_GRID:
-                return new ContainerGrid((TilePortableGrid) tile, new GridDisplayDummy(), (TilePortableGrid) tile, player);
+                return new ContainerGrid((TilePortableGrid) tile, new ResizableDisplayDummy(), (TilePortableGrid) tile, player);
             case RSGui.DISK_DRIVE:
                 return new ContainerDiskDrive((TileDiskDrive) tile, player);
             case RSGui.IMPORTER:
@@ -74,7 +73,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.STORAGE_MONITOR:
                 return new ContainerStorageMonitor((TileStorageMonitor) tile, player);
             case RSGui.CRAFTER_MANAGER:
-                return new ContainerCrafterManager((TileCrafterManager) tile, player, new GridDisplayDummy());
+                return new ContainerCrafterManager((TileCrafterManager) tile, player, new ResizableDisplayDummy());
             default:
                 return null;
         }
@@ -176,7 +175,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     private ContainerGrid getGridContainer(EntityPlayer player, int hand, int networkDimension, int id) {
-        return new ContainerGrid(getGrid(player, hand, networkDimension, id), new GridDisplayDummy(), null, player);
+        return new ContainerGrid(getGrid(player, hand, networkDimension, id), new ResizableDisplayDummy(), null, player);
     }
 
     private WirelessCraftingMonitor getCraftingMonitor(EntityPlayer player, int hand, int networkDimension) {

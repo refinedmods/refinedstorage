@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.render;
 
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
+import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -95,7 +96,7 @@ public class BakedModelPattern implements IBakedModel {
 
         if (container instanceof ContainerCrafterManager) {
             for (Slot slot : container.inventorySlots) {
-                if (slot instanceof ContainerCrafterManager.SlotCrafterManager && slot.getStack() == stack) {
+                if (slot instanceof SlotCrafterManager && slot.getStack() == stack) {
                     return true;
                 }
             }

@@ -10,14 +10,14 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.Scrollbar;
+import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.gui.control.*;
 import com.raoulvdberge.refinedstorage.gui.grid.sorting.*;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
 import com.raoulvdberge.refinedstorage.gui.grid.view.IGridView;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.*;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
 import com.raoulvdberge.refinedstorage.network.*;
@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GuiGrid extends GuiBase implements IGridDisplay {
+public class GuiGrid extends GuiBase implements IResizableDisplay {
     private static final List<String> SEARCH_HISTORY = new ArrayList<>();
 
     private IGridView view;
@@ -91,7 +91,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     protected void calcHeight() {
-        this.ySize = getHeader() + getFooter() + (getVisibleRows() * 18);
+        this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
 
         if (hadTabs) {
             this.ySize += ContainerGrid.TAB_HEIGHT;
@@ -104,7 +104,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public void init(int x, int y) {
         ((ContainerGrid) this.inventorySlots).initSlots();
 
-        this.scrollbar = new Scrollbar(174, getTabHeight() + getHeader(), 12, (getVisibleRows() * 18) - 2);
+        this.scrollbar = new Scrollbar(174, getTabHeight() + getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
         if (grid instanceof NetworkNodeGrid || grid instanceof TilePortableGrid) {
             addSideButton(new SideButtonRedstoneMode(this, grid instanceof NetworkNodeGrid ? TileGrid.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
@@ -129,11 +129,11 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         }
 
         if (grid.getType() == GridType.PATTERN) {
-            processingPattern = addCheckBox(x + 7, y + getTabHeight() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
-            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + getTabHeight() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            processingPattern = addCheckBox(x + 7, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
+            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
 
             if (((NetworkNodeGrid) grid).isProcessingPattern()) {
-                blockingPattern = addCheckBox(oredictPattern.x + oredictPattern.width + 5, y + getTabHeight() + getHeader() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:blocking"), TileGrid.BLOCKING_PATTERN.getValue());
+                blockingPattern = addCheckBox(oredictPattern.x + oredictPattern.width + 5, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:blocking"), TileGrid.BLOCKING_PATTERN.getValue());
             }
         }
 
@@ -180,12 +180,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     @Override
-    public int getHeader() {
+    public int getTopHeight() {
         return 19;
     }
 
     @Override
-    public int getFooter() {
+    public int getBottomHeight() {
         if (grid.getType() == GridType.CRAFTING) {
             return 156;
         } else if (grid.getType() == GridType.PATTERN) {
@@ -197,7 +197,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
     @Override
     public int getYPlayerInventory() {
-        int yp = getTabHeight() + getHeader() + (getVisibleRows() * 18);
+        int yp = getTabHeight() + getTopHeight() + (getVisibleRows() * 18);
 
         if (grid.getType() == GridType.NORMAL || grid.getType() == GridType.FLUID) {
             yp += 16;
@@ -229,7 +229,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     public int getVisibleRows() {
         switch (grid.getSize()) {
             case IGrid.SIZE_STRETCH:
-                int screenSpaceAvailable = height - getHeader() - getFooter() - (hadTabs ? ContainerGrid.TAB_HEIGHT : 0);
+                int screenSpaceAvailable = height - getTopHeight() - getBottomHeight() - (hadTabs ? ContainerGrid.TAB_HEIGHT : 0);
 
                 return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRowsStretch));
             case IGrid.SIZE_SMALL:
@@ -260,7 +260,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private boolean isOverClear(int mouseX, int mouseY) {
-        int y = getTabHeight() + getHeader() + (getVisibleRows() * 18) + 4;
+        int y = getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 4;
 
         switch (grid.getType()) {
             case CRAFTING:
@@ -277,7 +277,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == GridType.PATTERN && inBounds(172, getTabHeight() + getHeader() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
+        return grid.getType() == GridType.PATTERN && inBounds(172, getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
     }
 
     private int getTabHeight() {
@@ -352,7 +352,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
 
         int yy = y + getTabHeight();
 
-        drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getHeader());
+        drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getTopHeight());
 
         if (grid.getType() != GridType.FLUID) {
             drawTexture(x + screenWidth - 34 + 4, y + getTabHeight(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
@@ -363,12 +363,12 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            drawTexture(x, yy, 0, getHeader() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), 18);
+            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), 18);
         }
 
         yy += 18;
 
-        drawTexture(x, yy, 0, getHeader() + (18 * 3), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getFooter());
+        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getBottomHeight());
 
         if (grid.getType() == GridType.PATTERN) {
             int ty = 0;
@@ -381,7 +381,7 @@ public class GuiGrid extends GuiBase implements IGridDisplay {
                 ty = 2;
             }
 
-            drawTexture(x + 172, y + getTabHeight() + getHeader() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
+            drawTexture(x + 172, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
         j = 0;

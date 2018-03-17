@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerStorageMonitor;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonCompare;
-import com.raoulvdberge.refinedstorage.gui.sidebutton.SideButtonType;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonType;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 
 public class GuiStorageMonitor extends GuiBase {

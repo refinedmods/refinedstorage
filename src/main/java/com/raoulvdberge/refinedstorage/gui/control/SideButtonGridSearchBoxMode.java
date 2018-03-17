@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.gui.sidebutton;
+package com.raoulvdberge.refinedstorage.gui.control;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
