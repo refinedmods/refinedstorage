@@ -27,6 +27,7 @@ import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCra
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
 import com.raoulvdberge.refinedstorage.integration.funkylocomotion.IntegrationFunkyLocomotion;
 import com.raoulvdberge.refinedstorage.integration.funkylocomotion.MoveFactoryRegisterer;
+import com.raoulvdberge.refinedstorage.integration.inventorysorter.IntegrationInventorySorter;
 import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.integration.projecte.IntegrationProjectE;
@@ -264,6 +265,8 @@ public class ProxyCommon {
         if (IntegrationProjectE.isLoaded()) {
             IntegrationProjectE.register();
         }
+
+        IntegrationInventorySorter.register();
     }
 
     public void postInit(FMLPostInitializationEvent e) {

@@ -39,7 +39,7 @@ public interface ICraftingPatternContainer {
     /**
      * The name of this container for categorizing in the Crafting Manager GUI.
      * Can be a localized or unlocalized name.
-     * If it's unlocalized, it will automatically format the name.
+     * If it's unlocalized, it will automatically localize the name.
      *
      * @return the name of this container
      */

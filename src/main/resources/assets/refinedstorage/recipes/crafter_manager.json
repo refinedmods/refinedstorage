@@ -10,7 +10,7 @@
       "item": "#advanced_processor"
     },
     "C": {
-      "item": "minecraft:chest"
+      "item": "refinedstorage:crafter"
     },
     "G": {
       "type": "forge:ore_dict",
