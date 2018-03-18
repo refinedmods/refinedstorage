@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 1.5.33
+- Added Crafter Manager (raoulvdberge)
+- Fixed Disk Manipulator not extracting items (ineternet)
+- Various internal refactors (raoulvdberge)
+
 ### 1.5.32
 - Added Spanish translation (Samuelrock)
 - Fixed issue where the Pattern Grid can only overwrite patterns when blank ones are present (ineternet)

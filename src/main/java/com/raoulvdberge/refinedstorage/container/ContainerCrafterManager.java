@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Map;
 
 public class ContainerCrafterManager extends ContainerBase {
-    public class Listener implements IContainerListener {
+    public class CrafterManagerListener implements IContainerListener {
         private IContainerListener base;
         private boolean receivedContainerData;
 
-        public Listener(IContainerListener base) {
+        public CrafterManagerListener(IContainerListener base) {
             this.base = base;
         }
 
@@ -35,16 +35,16 @@ public class ContainerCrafterManager extends ContainerBase {
         }
 
         @Override
-        public void sendAllContents(Container containerToSend, NonNullList<ItemStack> itemsList) {
+        public void sendAllContents(Container container, NonNullList<ItemStack> items) {
             if (receivedContainerData) {
-                base.sendAllContents(containerToSend, itemsList);
+                base.sendAllContents(container, items);
             }
         }
 
         @Override
-        public void sendSlotContents(Container containerToSend, int slotInd, ItemStack stack) {
+        public void sendSlotContents(Container container, int slotInd, ItemStack stack) {
             if (receivedContainerData) {
-                base.sendSlotContents(containerToSend, slotInd, stack);
+                base.sendSlotContents(container, slotInd, stack);
             }
         }
 
@@ -53,13 +53,13 @@ public class ContainerCrafterManager extends ContainerBase {
         }
 
         @Override
-        public void sendWindowProperty(Container containerIn, int varToUpdate, int newValue) {
-            base.sendWindowProperty(containerIn, varToUpdate, newValue);
+        public void sendWindowProperty(Container container, int varToUpdate, int newValue) {
+            base.sendWindowProperty(container, varToUpdate, newValue);
         }
 
         @Override
-        public void sendAllWindowProperties(Container containerIn, IInventory inventory) {
-            base.sendAllWindowProperties(containerIn, inventory);
+        public void sendAllWindowProperties(Container container, IInventory inventory) {
+            base.sendAllWindowProperties(container, inventory);
         }
     }
 
@@ -69,7 +69,7 @@ public class ContainerCrafterManager extends ContainerBase {
 
     @Override
     public void addListener(IContainerListener listener) {
-        super.addListener(new Listener(listener));
+        super.addListener(new CrafterManagerListener(listener));
     }
 
     public List<IContainerListener> getListeners() {
@@ -116,7 +116,6 @@ public class ContainerCrafterManager extends ContainerBase {
         int x = 8;
 
         for (Map.Entry<String, Integer> entry : containerData.entrySet()) {
-            // @todo: Test on servers
             boolean visible = I18n.format(entry.getKey()).toLowerCase().contains(display.getSearchFieldText().toLowerCase());
 
             IItemHandlerModifiable dummy;
