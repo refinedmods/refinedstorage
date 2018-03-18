@@ -87,7 +87,7 @@ public abstract class ContainerBase extends Container {
                     if (dragType == 0) {
                         amount = Math.max(1, amount - 1);
                     } else if (dragType == 1) {
-                        amount = Math.min(64, amount + 1);
+                        amount = Math.min(slot.getStack().getMaxStackSize(), amount + 1);
                     }
 
                     slot.getStack().setCount(amount);

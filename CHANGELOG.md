@@ -3,6 +3,7 @@
 ### 1.5.33
 - Added Crafter Manager (raoulvdberge)
 - Fixed Disk Manipulator not extracting items (ineternet)
+- Fixed filter slots not caring about max stack size (raoulvdberge)
 - Various internal refactors (raoulvdberge)
 
 ### 1.5.32
