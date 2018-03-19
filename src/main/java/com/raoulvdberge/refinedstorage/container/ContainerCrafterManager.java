@@ -1,11 +1,12 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -68,6 +69,7 @@ public class ContainerCrafterManager extends ContainerBase {
     private NetworkNodeCrafterManager crafterManager;
     private Map<String, Integer> containerData;
     private Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
+    private Map<String, Integer> headings = new HashMap<>();
 
     @Override
     public void addListener(IContainerListener listener) {
@@ -112,21 +114,20 @@ public class ContainerCrafterManager extends ContainerBase {
 
         this.inventorySlots.clear();
         this.inventoryItemStacks.clear();
+        this.headings.clear();
 
         addPlayerInventory(8, display.getYPlayerInventory());
 
         int y = 19 + 18 - display.getCurrentOffset() * 18;
         int x = 8;
 
-        for (Map.Entry<String, Integer> entry : containerData.entrySet()) {
-            boolean visible = I18n.format(entry.getKey()).toLowerCase().contains(display.getSearchFieldText().toLowerCase());
-
+        for (Map.Entry<String, Integer> category : containerData.entrySet()) {
             IItemHandlerModifiable dummy;
 
             if (newContainerData == null) { // We're only resizing, get the previous inventory...
-                dummy = dummyInventories.get(entry.getKey());
+                dummy = dummyInventories.get(category.getKey());
             } else {
-                dummyInventories.put(entry.getKey(), dummy = new ItemHandlerBase(entry.getValue()) {
+                dummyInventories.put(category.getKey(), dummy = new ItemHandlerBase(category.getValue()) {
                     @Override
                     public int getSlotLimit(int slot) {
                         return 1;
@@ -134,25 +135,58 @@ public class ContainerCrafterManager extends ContainerBase {
                 });
             }
 
-            for (int slot = 0; slot < entry.getValue(); ++slot) {
+            boolean foundItemsInCategory = false;
+
+            int yHeading = y - 19;
+
+            for (int slot = 0; slot < category.getValue(); ++slot) {
+                boolean visible = true;
+
+                if (!display.getSearchFieldText().trim().isEmpty()) {
+                    ItemStack stack = dummy.getStackInSlot(slot);
+
+                    if (stack.isEmpty()) {
+                        visible = false;
+                    } else {
+                        CraftingPattern pattern = ItemPattern.getPatternFromCache(crafterManager.getWorld(), stack);
+
+                        visible = false;
+
+                        for (ItemStack output : pattern.getOutputs()) {
+                            if (output.getDisplayName().toLowerCase().contains(display.getSearchFieldText().toLowerCase())) {
+                                visible = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 addSlotToContainer(new SlotCrafterManager(dummy, slot, x, y, visible, display, crafterManager));
 
                 if (visible) {
+                    foundItemsInCategory = true;
+
                     x += 18;
 
                     // Don't increase y level if we are on our last slot row (otherwise we do y += 18 * 3)
-                    if ((slot + 1) % 9 == 0 && slot + 1 < entry.getValue()) {
+                    if ((slot + 1) % 9 == 0 && slot + 1 < category.getValue()) {
                         x = 8;
                         y += 18;
                     }
                 }
             }
 
-            if (visible) {
+            if (foundItemsInCategory) {
+                headings.put(category.getKey(), yHeading);
+
                 x = 8;
                 y += 18 * 2;
             }
         }
+    }
+
+    public Map<String, Integer> getHeadings() {
+        return headings;
     }
 
     public Map<String, Integer> getContainerData() {

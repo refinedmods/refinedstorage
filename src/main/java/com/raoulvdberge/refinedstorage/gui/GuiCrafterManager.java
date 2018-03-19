@@ -197,24 +197,19 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
         drawString(7, 7, t("gui.refinedstorage:crafter_manager"));
         drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
-        if (container != null && container.getContainerData() != null && crafterManager.isActive()) {
-            int x = 7;
-            int y = 18 - getCurrentOffset() * 18;
+        if (container != null && crafterManager.isActive()) {
+            for (Map.Entry<String, Integer> heading : container.getHeadings().entrySet()) {
+                int y = heading.getValue();
 
-            for (Map.Entry<String, Integer> entry : container.getContainerData().entrySet()) {
-                if (t(entry.getKey()).toLowerCase().contains(getSearchFieldText().toLowerCase())) {
-                    if (y >= getTopHeight() - 1 && y < getTopHeight() + getVisibleRows() * 18 - 1) {
-                        GlStateManager.disableLighting();
-                        GlStateManager.color(1, 1, 1);
+                if (y >= getTopHeight() - 1 && y < getTopHeight() + getVisibleRows() * 18 - 1) {
+                    GlStateManager.disableLighting();
+                    GlStateManager.color(1, 1, 1);
 
-                        bindTexture("gui/crafter_manager.png");
+                    bindTexture("gui/crafter_manager.png");
 
-                        drawTexturedModalRect(x, y, 0, 174, 18 * 9, 18);
+                    drawTexturedModalRect(7, y, 0, 174, 18 * 9, 18);
 
-                        drawString(x + 4, y + 6, RenderUtils.shorten(I18n.format(entry.getKey()), 25));
-                    }
-
-                    y += (Math.ceil((double) Math.max(9, entry.getValue()) / 9D) + 1) * 18;
+                    drawString(7 + 4, y + 6, RenderUtils.shorten(I18n.format(heading.getKey()), 25));
                 }
             }
         }
