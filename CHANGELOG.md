@@ -2,6 +2,7 @@
 
 ### 1.5.33
 - Added Crafter Manager (raoulvdberge)
+- Patterns in the Crafter slots now automatically render the output without pressing shift (raoulvdberge)
 - Fixed Disk Manipulator not extracting items (ineternet)
 - Fixed filter slots not caring about max stack size (raoulvdberge)
 - Various internal refactors (raoulvdberge)

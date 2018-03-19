@@ -19,7 +19,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -99,7 +98,7 @@ public class ContainerCrafterManager extends ContainerBase {
                 for (Map.Entry<String, List<IItemHandlerModifiable>> entry : crafterManager.getNode().getNetwork().getCraftingManager().getNamedContainers().entrySet()) {
                     for (IItemHandlerModifiable handler : entry.getValue()) {
                         for (int i = 0; i < handler.getSlots(); ++i) {
-                            addSlotToContainer(new SlotItemHandler(handler, i, 0, 0));
+                            addSlotToContainer(new SlotCrafterManager(handler, i, 0, 0, true, display, this.crafterManager));
                         }
                     }
                 }

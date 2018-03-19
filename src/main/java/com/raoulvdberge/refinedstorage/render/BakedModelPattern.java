@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.render;
 
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
@@ -88,15 +89,21 @@ public class BakedModelPattern implements IBakedModel {
     }
 
     public static boolean canDisplayPatternOutput(ItemStack patternStack, CraftingPattern pattern) {
-        return (GuiBase.isShiftKeyDown() || isPatternInCrafterManagerSlot(patternStack)) && pattern.isValid() && pattern.getOutputs().size() == 1;
+        return (GuiBase.isShiftKeyDown() || isPatternInDisplaySlot(patternStack)) && pattern.isValid() && pattern.getOutputs().size() == 1;
     }
 
-    public static boolean isPatternInCrafterManagerSlot(ItemStack stack) {
+    public static boolean isPatternInDisplaySlot(ItemStack stack) {
         Container container = Minecraft.getMinecraft().player.openContainer;
 
         if (container instanceof ContainerCrafterManager) {
             for (Slot slot : container.inventorySlots) {
                 if (slot instanceof SlotCrafterManager && slot.getStack() == stack) {
+                    return true;
+                }
+            }
+        } else if (container instanceof ContainerCrafter) {
+            for (Slot slot : container.inventorySlots) {
+                if (slot.slotNumber < 9 && slot.getStack() == stack) {
                     return true;
                 }
             }

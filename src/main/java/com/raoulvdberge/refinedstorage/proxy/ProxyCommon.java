@@ -224,6 +224,8 @@ public class ProxyCommon {
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.WRENCH);
         registerItem(RSItems.SECURITY_CARD);
+
+        IntegrationInventorySorter.register();
     }
 
     public void init(FMLInitializationEvent e) {
@@ -265,8 +267,6 @@ public class ProxyCommon {
         if (IntegrationProjectE.isLoaded()) {
             IntegrationProjectE.register();
         }
-
-        IntegrationInventorySorter.register();
     }
 
     public void postInit(FMLPostInitializationEvent e) {

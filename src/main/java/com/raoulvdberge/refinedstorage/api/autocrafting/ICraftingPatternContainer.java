@@ -33,7 +33,7 @@ public interface ICraftingPatternContainer {
     List<ICraftingPattern> getPatterns();
 
     /**
-     * @return the pattern inventory, or null if no pattern is present
+     * @return the pattern inventory, or null if no pattern inventory is present
      */
     @Nullable
     IItemHandlerModifiable getPatternInventory();
