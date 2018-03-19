@@ -73,20 +73,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
 
     @Override
     public int getRows() {
-        if (container == null || container.getContainerData() == null) {
-            return 0;
-        }
-
-        int rows = 0;
-
-        for (Map.Entry<String, Integer> containerData : container.getContainerData().entrySet()) {
-            if (t(containerData.getKey()).toLowerCase().contains(getSearchFieldText().toLowerCase())) {
-                rows++;
-                rows += Math.ceil((double) Math.max(9, containerData.getValue()) / 9D);
-            }
-        }
-
-        return rows;
+        return (container == null || !crafterManager.isActive()) ? 0 : container.getRows();
     }
 
     @Override

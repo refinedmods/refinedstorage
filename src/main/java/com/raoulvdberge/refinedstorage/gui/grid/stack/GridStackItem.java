@@ -28,6 +28,10 @@ public class GridStackItem implements IGridStack {
     @Nullable
     private IStorageTracker.IStorageTrackerEntry entry;
 
+    public GridStackItem(ItemStack stack) {
+        this.stack = stack;
+    }
+
     public GridStackItem(ByteBuf buf) {
         this.stack = StackUtils.readItemStack(buf);
         this.hash = buf.readInt();

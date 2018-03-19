@@ -4,12 +4,13 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
 public final class GridFilterParser {
-    public static List<Predicate<IGridStack>> getFilters(IGrid grid, String query, List<IFilter> filters) {
+    public static List<Predicate<IGridStack>> getFilters(@Nullable IGrid grid, String query, List<IFilter> filters) {
         List<Predicate<IGridStack>> gridFilters = new LinkedList<>();
 
         for (String part : query.toLowerCase().trim().split(" ")) {
@@ -24,10 +25,12 @@ public final class GridFilterParser {
             }
         }
 
-        if (grid.getViewType() == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
-            gridFilters.add(new GridFilterCraftable(false));
-        } else if (grid.getViewType() == IGrid.VIEW_TYPE_CRAFTABLES) {
-            gridFilters.add(new GridFilterCraftable(true));
+        if (grid != null) {
+            if (grid.getViewType() == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
+                gridFilters.add(new GridFilterCraftable(false));
+            } else if (grid.getViewType() == IGrid.VIEW_TYPE_CRAFTABLES) {
+                gridFilters.add(new GridFilterCraftable(true));
+            }
         }
 
         if (!filters.isEmpty()) {

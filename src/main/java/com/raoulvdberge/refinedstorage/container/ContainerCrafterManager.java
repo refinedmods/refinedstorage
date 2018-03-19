@@ -4,6 +4,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
@@ -19,9 +22,11 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class ContainerCrafterManager extends ContainerBase {
     public class CrafterManagerListener implements IContainerListener {
@@ -70,6 +75,7 @@ public class ContainerCrafterManager extends ContainerBase {
     private Map<String, Integer> containerData;
     private Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
     private Map<String, Integer> headings = new HashMap<>();
+    private int rows;
 
     @Override
     public void addListener(IContainerListener listener) {
@@ -116,10 +122,14 @@ public class ContainerCrafterManager extends ContainerBase {
         this.inventoryItemStacks.clear();
         this.headings.clear();
 
+        rows = 0;
+
         addPlayerInventory(8, display.getYPlayerInventory());
 
         int y = 19 + 18 - display.getCurrentOffset() * 18;
         int x = 8;
+
+        List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(null, display.getSearchFieldText(), Collections.emptyList());
 
         for (Map.Entry<String, Integer> category : containerData.entrySet()) {
             IItemHandlerModifiable dummy;
@@ -139,6 +149,7 @@ public class ContainerCrafterManager extends ContainerBase {
 
             int yHeading = y - 19;
 
+            int slotFound = 0;
             for (int slot = 0; slot < category.getValue(); ++slot) {
                 boolean visible = true;
 
@@ -153,9 +164,13 @@ public class ContainerCrafterManager extends ContainerBase {
                         visible = false;
 
                         for (ItemStack output : pattern.getOutputs()) {
-                            if (output.getDisplayName().toLowerCase().contains(display.getSearchFieldText().toLowerCase())) {
-                                visible = true;
-                                break;
+                            GridStackItem outputConverted = new GridStackItem(output);
+
+                            for (Predicate<IGridStack> filter : filters) {
+                                if (filter.test(outputConverted)) {
+                                    visible = true;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -169,10 +184,13 @@ public class ContainerCrafterManager extends ContainerBase {
                     x += 18;
 
                     // Don't increase y level if we are on our last slot row (otherwise we do y += 18 * 3)
-                    if ((slot + 1) % 9 == 0 && slot + 1 < category.getValue()) {
+                    if ((slotFound + 1) % 9 == 0 && slot + 1 < category.getValue()) {
                         x = 8;
                         y += 18;
+                        rows++;
                     }
+
+                    slotFound++;
                 }
             }
 
@@ -181,6 +199,7 @@ public class ContainerCrafterManager extends ContainerBase {
 
                 x = 8;
                 y += 18 * 2;
+                rows += 2; // Heading and first row
             }
         }
     }
@@ -189,8 +208,8 @@ public class ContainerCrafterManager extends ContainerBase {
         return headings;
     }
 
-    public Map<String, Integer> getContainerData() {
-        return containerData;
+    public int getRows() {
+        return rows;
     }
 
     @Override
