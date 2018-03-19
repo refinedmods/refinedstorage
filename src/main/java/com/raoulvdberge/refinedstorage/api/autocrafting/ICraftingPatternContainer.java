@@ -5,6 +5,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -32,8 +33,9 @@ public interface ICraftingPatternContainer {
     List<ICraftingPattern> getPatterns();
 
     /**
-     * @return the pattern inventory
+     * @return the pattern inventory, or null if no pattern is present
      */
+    @Nullable
     IItemHandlerModifiable getPatternInventory();
 
     /**

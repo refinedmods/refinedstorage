@@ -302,11 +302,11 @@ public class CraftingManager implements ICraftingManager {
 
                 patterns.addAll(container.getPatterns());
 
-                if (!containerInventories.containsKey(container.getName())) {
-                    containerInventories.put(container.getName(), new ArrayList<>());
-                }
+                IItemHandlerModifiable handler = container.getPatternInventory();
 
-                containerInventories.get(container.getName()).add(container.getPatternInventory());
+                if (handler != null) {
+                    containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
+                }
             }
         }
 

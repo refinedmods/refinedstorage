@@ -162,6 +162,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
+    @Nullable
     public IItemHandlerModifiable getPatternInventory() {
         return patterns;
     }
