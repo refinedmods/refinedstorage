@@ -3,91 +3,37 @@
   "defaults": {
     "model": "cube",
     "textures": {
-      "particle": "refinedstorage:blocks/crafter_side",
-      "side": "refinedstorage:blocks/crafter_side",
-      "side_90": "refinedstorage:blocks/crafter_side_90",
-      "side_180": "refinedstorage:blocks/crafter_side_180",
-      "side_270": "refinedstorage:blocks/crafter_side_270",
-      "front": "refinedstorage:blocks/grid_front"
-    },
-    "uvlock": true
+      "particle": "refinedstorage:blocks/side",
+      "north": "refinedstorage:blocks/crafter_manager_front",
+      "east": "refinedstorage:blocks/grid_left",
+      "south": "refinedstorage:blocks/grid_back",
+      "west": "refinedstorage:blocks/grid_right",
+      "up": "refinedstorage:blocks/grid_top",
+      "down": "refinedstorage:blocks/bottom"
+    }
   },
   "variants": {
     "connected": {
       "true": {
         "textures": {
-          "side": "refinedstorage:blocks/crafter_side_connected",
-          "side_90": "refinedstorage:blocks/crafter_side_connected_90",
-          "side_180": "refinedstorage:blocks/crafter_side_connected_180",
-          "side_270": "refinedstorage:blocks/crafter_side_connected_270",
-          "front": "refinedstorage:blocks/grid_front_connected"
+          "north": "refinedstorage:blocks/crafter_manager_front_connected"
         }
       },
       "false": {
-        "textures": {
-        }
       }
     },
     "direction": {
       "north": {
-        "textures": {
-          "down": "#side",
-          "up": "#side",
-          "north": "#front",
-          "east": "#side_90",
-          "south": "refinedstorage:blocks/crafter_bottom",
-          "west": "#side_270"
-        }
+        "y": 0
       },
       "east": {
-        "textures": {
-          "down": "refinedstorage:blocks/crafter_bottom",
-          "up": "#side_90",
-          "north": "#side_270",
-          "east": "#front",
-          "south": "#side_90",
-          "west": "refinedstorage:blocks/crafter_bottom"
-        }
+        "y": 90
       },
       "south": {
-        "textures": {
-          "down": "refinedstorage:blocks/crafter_bottom",
-          "up": "#side_180",
-          "north": "refinedstorage:blocks/crafter_bottom",
-          "east": "#side_270",
-          "south": "#front",
-          "west": "#side_90"
-        }
+        "y": 180
       },
       "west": {
-        "textures": {
-          "down": "refinedstorage:blocks/crafter_bottom",
-          "up": "#side_270",
-          "north": "#side_90",
-          "east": "refinedstorage:blocks/crafter_bottom",
-          "south": "#side_270",
-          "west": "#front"
-        }
-      },
-      "up": {
-        "textures": {
-          "down": "refinedstorage:blocks/crafter_bottom",
-          "up": "#front",
-          "north": "#side",
-          "east": "#side",
-          "south": "#side",
-          "west": "#side"
-        }
-      },
-      "down": {
-        "textures": {
-          "down": "#front",
-          "up": "refinedstorage:blocks/crafter_bottom",
-          "north": "#side_180",
-          "east": "#side_180",
-          "south": "#side_180",
-          "west": "#side_180"
-        }
+        "y": 270
       }
     }
   }

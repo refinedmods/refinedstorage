@@ -99,7 +99,9 @@ public abstract class GridViewBase implements IGridView {
 
                 GridSorterDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? GridSorterDirection.DESCENDING : GridSorterDirection.ASCENDING;
 
-                stacks.sort((left, right) -> new GridSorterName().compare(left, right, sortingDirection));
+                GridSorterName defaultSorting = new GridSorterName();
+
+                stacks.sort((left, right) -> defaultSorting.compare(left, right, sortingDirection));
 
                 sorters.stream().filter(s -> s.isApplicable(grid)).forEach(s -> {
                     stacks.sort((left, right) -> s.compare(left, right, sortingDirection));

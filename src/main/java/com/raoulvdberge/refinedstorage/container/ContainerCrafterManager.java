@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -64,6 +65,7 @@ public class ContainerCrafterManager extends ContainerBase {
     }
 
     private IResizableDisplay display;
+    private NetworkNodeCrafterManager crafterManager;
     private Map<String, Integer> containerData;
     private Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
 
@@ -80,6 +82,7 @@ public class ContainerCrafterManager extends ContainerBase {
         super(crafterManager, player);
 
         this.display = display;
+        this.crafterManager = crafterManager.getNode();
 
         if (!player.world.isRemote) {
             addPlayerInventory(8, display.getYPlayerInventory());
@@ -132,7 +135,7 @@ public class ContainerCrafterManager extends ContainerBase {
             }
 
             for (int slot = 0; slot < entry.getValue(); ++slot) {
-                addSlotToContainer(new SlotCrafterManager(dummy, slot, x, y, visible, display));
+                addSlotToContainer(new SlotCrafterManager(dummy, slot, x, y, visible, display, crafterManager));
 
                 if (visible) {
                     x += 18;

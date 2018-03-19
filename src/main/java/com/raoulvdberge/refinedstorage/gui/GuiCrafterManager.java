@@ -155,7 +155,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
 
         drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth, getBottomHeight());
 
-        if (container != null) {
+        if (container != null && crafterManager.isActive()) {
             for (Slot slot : container.inventorySlots) {
                 if (slot instanceof SlotCrafterManager && slot.isEnabled()) {
                     drawTexture(x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
@@ -197,7 +197,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
         drawString(7, 7, t("gui.refinedstorage:crafter_manager"));
         drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
-        if (container != null && container.getContainerData() != null) {
+        if (container != null && container.getContainerData() != null && crafterManager.isActive()) {
             int x = 7;
             int y = 18 - getCurrentOffset() * 18;
 
