@@ -102,8 +102,8 @@ public class BakedModelPattern implements IBakedModel {
                 }
             }
         } else if (container instanceof ContainerCrafter) {
-            for (Slot slot : container.inventorySlots) {
-                if (slot.slotNumber < 9 && slot.getStack() == stack) {
+            for (int i = 0; i < 9; ++i) {
+                if (container.getSlot(i).getStack() == stack) {
                     return true;
                 }
             }

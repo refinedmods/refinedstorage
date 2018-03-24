@@ -13,7 +13,7 @@ public interface IType {
 
     static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Integer, T> createParameter() {
         return new TileDataParameter<>(DataSerializers.VARINT, ITEMS, t -> ((IType) t.getNode()).getType(), (t, v) -> {
-            if (v == 0 || v == 1) {
+            if (v == IType.ITEMS || v == IType.FLUIDS) {
                 ((IType) t.getNode()).setType(v);
 
                 t.getWorld().playerEntities.stream()
