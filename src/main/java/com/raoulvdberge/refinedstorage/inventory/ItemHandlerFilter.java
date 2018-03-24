@@ -43,7 +43,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
             }
         }
 
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT && !filters.isEmpty()) {
             GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
         }
     }

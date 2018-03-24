@@ -15,7 +15,7 @@ public class TileCrafterManager extends TileNode<NetworkNodeCrafterManager> {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiCrafterManager.class, GuiBase::initGui));
+    }, (initial, p) -> GuiBase.executeLater(GuiCrafterManager.class, GuiBase::initGui));
 
     public TileCrafterManager() {
         dataManager.addWatchedParameter(SIZE);

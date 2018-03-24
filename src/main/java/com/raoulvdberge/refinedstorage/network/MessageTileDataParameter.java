@@ -12,24 +12,27 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class MessageTileDataParameter implements IMessage, IMessageHandler<MessageTileDataParameter, IMessage> {
     private TileEntity tile;
     private TileDataParameter parameter;
+    private boolean initial;
 
     public MessageTileDataParameter() {
     }
 
-    public MessageTileDataParameter(TileEntity tile, TileDataParameter parameter) {
+    public MessageTileDataParameter(TileEntity tile, TileDataParameter parameter, boolean initial) {
         this.tile = tile;
         this.parameter = parameter;
+        this.initial = initial;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         int id = buf.readInt();
+        boolean initial = buf.readBoolean();
 
         TileDataParameter parameter = TileDataManager.getParameter(id);
 
         if (parameter != null) {
             try {
-                parameter.setValue(parameter.getSerializer().read(new PacketBuffer(buf)));
+                parameter.setValue(initial, parameter.getSerializer().read(new PacketBuffer(buf)));
             } catch (Exception e) {
                 // NO OP
             }
@@ -39,6 +42,7 @@ public class MessageTileDataParameter implements IMessage, IMessageHandler<Messa
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(parameter.getId());
+        buf.writeBoolean(initial);
 
         parameter.getSerializer().write((PacketBuffer) buf, parameter.getValueProducer().apply(tile));
     }

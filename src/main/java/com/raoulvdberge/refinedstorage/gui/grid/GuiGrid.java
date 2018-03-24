@@ -71,15 +71,17 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     public GuiGrid(ContainerGrid container, IGrid grid) {
         super(container, grid.getType() == GridType.FLUID ? 193 : 227, 0);
 
-        List<IGridSorter> defaultSorters = new LinkedList<>();
-        defaultSorters.add(new GridSorterName());
-        defaultSorters.add(new GridSorterQuantity());
-        defaultSorters.add(new GridSorterID());
-        defaultSorters.add(new GridSorterInventoryTweaks());
-        defaultSorters.add(new GridSorterLastModified());
+        IGridSorter defaultSorter;
+
+        List<IGridSorter> sorters = new LinkedList<>();
+        sorters.add(defaultSorter = new GridSorterName());
+        sorters.add(new GridSorterQuantity());
+        sorters.add(new GridSorterID());
+        sorters.add(new GridSorterInventoryTweaks());
+        sorters.add(new GridSorterLastModified());
 
         this.grid = grid;
-        this.view = grid.getType() == GridType.FLUID ? new GridViewFluid(this, defaultSorters) : new GridViewItem(this, defaultSorters);
+        this.view = grid.getType() == GridType.FLUID ? new GridViewFluid(this, defaultSorter, sorters) : new GridViewItem(this, defaultSorter, sorters);
         this.wasConnected = this.grid.isActive();
     }
 
@@ -142,7 +144,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         addSideButton(new SideButtonGridSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
 
-        view.sort();
+        updateScrollbarAndTabs();
     }
 
     @Override
@@ -622,7 +624,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             TileDataManager.setParameter(TileGrid.BLOCKING_PATTERN, blockingPattern.isChecked());
         } else if (button == processingPattern) {
             // Rebuild the inventory slots before the slot change packet arrives
-            TileGrid.PROCESSING_PATTERN.setValue(processingPattern.isChecked());
+            TileGrid.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
             ((ContainerGrid) this.inventorySlots).initSlots();
 
             TileDataManager.setParameter(TileGrid.PROCESSING_PATTERN, processingPattern.isChecked());
@@ -744,6 +746,21 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     public void updateBlockingPattern(boolean checked) {
         if (blockingPattern != null) {
             blockingPattern.setIsChecked(checked);
+        }
+    }
+
+    public void updateScrollbarAndTabs() {
+        if (scrollbar != null) {
+            scrollbar.setEnabled(getRows() > getVisibleRows());
+            scrollbar.setMaxOffset(getRows() - getVisibleRows());
+        }
+
+        if (tabPageLeft != null) {
+            tabPageLeft.visible = grid.getTotalTabPages() > 0;
+        }
+
+        if (tabPageRight != null) {
+            tabPageRight.visible = grid.getTotalTabPages() > 0;
         }
     }
 

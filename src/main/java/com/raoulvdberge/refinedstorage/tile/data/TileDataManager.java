@@ -64,7 +64,7 @@ public class TileDataManager {
     }
 
     public void sendParameterToWatchers(TileDataParameter parameter) {
-        watchers.forEach(l -> l.sendParameter(parameter));
+        watchers.forEach(l -> l.sendParameter(false, parameter));
     }
 
     public static void registerParameter(TileDataParameter parameter) {

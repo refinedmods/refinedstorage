@@ -24,35 +24,39 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
             t.getNode().setViewType(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> trySortGrid(initial));
     public static final TileDataParameter<Integer, TileGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSortingDirection(), (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.getNode().setSortingDirection(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> trySortGrid(initial));
     public static final TileDataParameter<Integer, TileGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSortingType(), (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.getNode().setSortingType(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> trySortGrid(initial));
     public static final TileDataParameter<Integer, TileGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.getNode().setSearchBoxMode(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateSearchFieldFocus(p)));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateSearchFieldFocus(p)));
     public static final TileDataParameter<Integer, TileGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSize(), (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
     public static final TileDataParameter<Integer, TileGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> {
+        if (p != -1) {
+            GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        }
+    });
     public static final TileDataParameter<Integer, TileGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
         if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
             t.getNode().setTabPage(v);
@@ -62,7 +66,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     public static final TileDataParameter<Boolean, TileGrid> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isOredictPattern(), (t, v) -> {
         t.getNode().setOredictPattern(v);
         t.getNode().markDirty();
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateOredictPattern(p)));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateOredictPattern(p)));
     public static final TileDataParameter<Boolean, TileGrid> PROCESSING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isProcessingPattern(), (t, v) -> {
         t.getNode().setProcessingPattern(v);
         t.getNode().markDirty();
@@ -75,11 +79,17 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
                 ((ContainerGrid) player.openContainer).initSlots();
                 ((ContainerGrid) player.openContainer).sendAllSlots();
             });
-    }, p -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
     public static final TileDataParameter<Boolean, TileGrid> BLOCKING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isBlockingPattern(), (t, v) -> {
         t.getNode().setBlockingPattern(v);
         t.getNode().markDirty();
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateBlockingPattern(p)));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateBlockingPattern(p)));
+
+    public static void trySortGrid(boolean initial) {
+        if (!initial) {
+            GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        }
+    }
 
     public TileGrid() {
         dataManager.addWatchedParameter(VIEW_TYPE);

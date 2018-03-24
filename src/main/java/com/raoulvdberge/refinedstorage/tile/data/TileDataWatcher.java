@@ -30,7 +30,7 @@ public class TileDataWatcher {
 
     public void detectAndSendChanges() {
         if (!sentInitial) {
-            manager.getParameters().forEach(this::sendParameter);
+            manager.getParameters().forEach(p -> sendParameter(true, p));
 
             sentInitial = true;
         } else {
@@ -45,14 +45,14 @@ public class TileDataWatcher {
 
                     // Avoid sending watched parameter twice (after initial packet)
                     if (cached != null) {
-                        sendParameter(parameter);
+                        sendParameter(false, parameter);
                     }
                 }
             }
         }
     }
 
-    public void sendParameter(TileDataParameter parameter) {
-        RS.INSTANCE.network.sendTo(new MessageTileDataParameter(manager.getTile(), parameter), player);
+    public void sendParameter(boolean initial, TileDataParameter parameter) {
+        RS.INSTANCE.network.sendTo(new MessageTileDataParameter(manager.getTile(), parameter, initial), player);
     }
 }

@@ -38,7 +38,7 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
 
                 player.openContainer.detectAndSendChanges();
             });
-    }, p -> {
+    }, (initial, p) -> {
         if (Minecraft.getMinecraft().currentScreen instanceof GuiExporter) {
             ((ContainerExporter) ((GuiExporter) Minecraft.getMinecraft().currentScreen).inventorySlots).initSlots();
         }

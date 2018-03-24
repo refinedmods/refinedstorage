@@ -27,7 +27,7 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
     public static final TileDataParameter<Integer, TileDetector> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getAmount(), (t, v) -> {
         t.getNode().setAmount(v);
         t.getNode().markDirty();
-    }, p -> GuiBase.executeLater(GuiDetector.class, detector -> detector.getAmount().setText(String.valueOf(p))));
+    }, (initial, p) -> GuiBase.executeLater(GuiDetector.class, detector -> detector.getAmount().setText(String.valueOf(p))));
 
     public TileDetector() {
         dataManager.addWatchedParameter(COMPARE);

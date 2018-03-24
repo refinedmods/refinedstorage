@@ -34,9 +34,9 @@ import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -66,33 +66,33 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             t.setSortingDirection(v);
             t.markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> TileGrid.trySortGrid(initial));
     public static final TileDataParameter<Integer, TilePortableGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingType, (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> TileGrid.trySortGrid(initial));
     public static final TileDataParameter<Integer, TilePortableGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSearchBoxMode, (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
             t.markDirty();
         }
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateSearchFieldFocus(p)));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateSearchFieldFocus(p)));
     public static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);
             t.markDirty();
         }
-    }, p -> {
-        if (Minecraft.getMinecraft().currentScreen != null) {
-            Minecraft.getMinecraft().currentScreen.initGui();
-        }
-    });
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
     public static final TileDataParameter<Integer, TilePortableGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
         t.markDirty();
-    }, p -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> {
+        if (p != -1) {
+            GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        }
+    });
     public static final TileDataParameter<Integer, TilePortableGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabPage, (t, v) -> {
         if (v >= 0 && v <= t.getTotalTabPages()) {
             t.setTabPage(v);

@@ -8,8 +8,8 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import java.util.List;
 
 public class GridViewItem extends GridViewBase {
-    public GridViewItem(GuiGrid gui, List<IGridSorter> sorters) {
-        super(gui, sorters);
+    public GridViewItem(GuiGrid gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
+        super(gui, defaultSorter, sorters);
     }
 
     @Override

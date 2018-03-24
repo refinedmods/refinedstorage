@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class GridStackItem implements IGridStack {
     private int hash;
     private ItemStack stack;
+    private String cachedName;
     private boolean craftable;
     private boolean displayCraftText;
     private String[] oreIds = null;
@@ -72,7 +73,11 @@ public class GridStackItem implements IGridStack {
     @Override
     public String getName() {
         try {
-            return stack.getDisplayName();
+            if (cachedName == null) {
+                cachedName = stack.getDisplayName();
+            }
+
+            return cachedName;
         } catch (Throwable t) {
             return "";
         }

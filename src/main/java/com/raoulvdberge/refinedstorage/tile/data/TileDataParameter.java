@@ -5,7 +5,6 @@ import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class TileDataParameter<T, E extends TileEntity> {
@@ -15,7 +14,7 @@ public class TileDataParameter<T, E extends TileEntity> {
     @Nullable
     private BiConsumer<E, T> valueConsumer;
     @Nullable
-    private Consumer<T> listener;
+    private TileDataParameterClientListener<T> listener;
     private T value;
 
     public TileDataParameter(DataSerializer<T> serializer, T defaultValue, Function<E, T> producer) {
@@ -26,7 +25,7 @@ public class TileDataParameter<T, E extends TileEntity> {
         this(serializer, defaultValue, producer, consumer, null);
     }
 
-    public TileDataParameter(DataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer, @Nullable Consumer<T> listener) {
+    public TileDataParameter(DataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer, @Nullable TileDataParameterClientListener<T> listener) {
         this.value = defaultValue;
         this.serializer = serializer;
         this.valueProducer = producer;
@@ -55,11 +54,11 @@ public class TileDataParameter<T, E extends TileEntity> {
         return valueConsumer;
     }
 
-    public void setValue(T value) {
+    public void setValue(boolean initial, T value) {
         this.value = value;
 
         if (listener != null) {
-            listener.accept(value);
+            listener.onChanged(initial, value);
         }
     }
 

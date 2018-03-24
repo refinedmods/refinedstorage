@@ -7,9 +7,9 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHan
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiReaderWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -27,11 +27,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
             ((IGuiReaderWriter) t.getNode()).setChannel(v);
 
             t.getNode().markDirty();
-        }, p -> {
-            if (Minecraft.getMinecraft().currentScreen instanceof GuiReaderWriter) {
-                ((GuiReaderWriter) Minecraft.getMinecraft().currentScreen).updateSelection(p);
-            }
-        });
+        }, (initial, p) -> GuiBase.executeLater(GuiReaderWriter.class, readerWriter -> readerWriter.updateSelection(p)));
     }
 
     public static final TileDataParameter<String, TileReader> CHANNEL = createChannelParameter();
