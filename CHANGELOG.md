@@ -6,6 +6,8 @@
 - Fixed Disk Manipulator not extracting items (ineternet)
 - Fixed filter slots not caring about max stack size (raoulvdberge)
 - Fixed model warning about Portable Grid (raoulvdberge)
+- Fixed crash when autocompleting Ender IO recipes from JEI (raoulvdberge)
+- Fixed Grid not always using all combinations when using JEI autocompletion (raoulvdberge)
 - Increased Grid performance (raoulvdberge)
 - Various internal refactors (raoulvdberge)
 

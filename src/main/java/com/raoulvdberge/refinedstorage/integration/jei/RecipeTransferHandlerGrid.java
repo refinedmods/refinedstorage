@@ -60,18 +60,18 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
                         IGuiIngredient<ItemStack> ingredient = inputs.get(slot.getSlotIndex() + 1);
 
                         if (ingredient != null) {
-                            List<ItemStack> possibleItems = ingredient.getAllIngredients();
-
                             NBTTagList tags = new NBTTagList();
 
-                            for (int i = 0; i < possibleItems.size(); ++i) {
-                                if (i >= 5) {
-                                    break; // Max 5 possible items to avoid reaching max network packet size
-                                }
+                            for (ItemStack possibleItem : ingredient.getAllIngredients()) {
+                                if (possibleItem != null) {
+                                    possibleItem = possibleItem.copy();
+                                    possibleItem.setTagCompound(possibleItem.getItem().getNBTShareTag(possibleItem));
 
-                                NBTTagCompound tag = new NBTTagCompound();
-                                possibleItems.get(i).writeToNBT(tag);
-                                tags.appendTag(tag);
+                                    NBTTagCompound tag = new NBTTagCompound();
+                                    possibleItem.writeToNBT(tag);
+
+                                    tags.appendTag(tag);
+                                }
                             }
 
                             recipe.setTag("#" + slot.getSlotIndex(), tags);
