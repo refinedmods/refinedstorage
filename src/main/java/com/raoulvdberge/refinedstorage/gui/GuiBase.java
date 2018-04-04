@@ -110,9 +110,9 @@ public abstract class GuiBase extends GuiContainer {
         lastButtonId = 0;
         lastSideButtonY = getSideButtonYStart();
 
-        runRunnables();
-
         init(guiLeft, guiTop);
+
+        runRunnables();
 
         initializing = false;
     }
