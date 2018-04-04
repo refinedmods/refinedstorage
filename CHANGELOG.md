@@ -5,6 +5,8 @@
 - Patterns in the Crafter slots now automatically render the output without pressing shift (raoulvdberge)
 - Fixed Disk Manipulator not extracting items (ineternet)
 - Fixed filter slots not caring about max stack size (raoulvdberge)
+- Fixed model warning about Portable Grid (raoulvdberge)
+- Increased Grid performance (raoulvdberge)
 - Various internal refactors (raoulvdberge)
 
 ### 1.5.32
