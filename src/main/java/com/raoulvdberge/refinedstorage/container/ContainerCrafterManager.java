@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -140,6 +142,16 @@ public class ContainerCrafterManager extends ContainerBase {
                     @Override
                     public int getSlotLimit(int slot) {
                         return 1;
+                    }
+
+                    @Nonnull
+                    @Override
+                    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+                        if (NetworkNodeCrafter.isValidPatternInSlot(getPlayer().getEntityWorld(), stack)) {
+                            return super.insertItem(slot, stack, simulate);
+                        }
+
+                        return stack;
                     }
                 });
             }

@@ -33,7 +33,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private static final String NBT_BLOCKED = "Blocked";
     private static final String NBT_DISPLAY_NAME = "DisplayName";
 
-    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(world, s, this).isValid()) {
+    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> isValidPatternInSlot(world, s)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -52,6 +52,10 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             return 1;
         }
     };
+
+    public static boolean isValidPatternInSlot(World world, ItemStack stack) {
+        return stack.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) stack.getItem()).create(world, stack, null).isValid();
+    }
 
     private List<ICraftingPattern> actualPatterns = new ArrayList<>();
 
@@ -177,6 +181,10 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         if (facing instanceof IWorldNameable) {
             return ((IWorldNameable) facing).getName();
+        }
+
+        if (facing != null) {
+            return world.getBlockState(pos.offset(getDirection())).getBlock().getUnlocalizedName() + ".name";
         }
 
         return DEFAULT_NAME;
