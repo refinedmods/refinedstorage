@@ -3,33 +3,70 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
+import mezz.jei.api.gui.IGuiIngredient;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class MessageGridTransfer extends MessageHandlerPlayerToServer<MessageGridTransfer> implements IMessage {
-    private NBTTagCompound recipe;
+    private Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs;
+    private List<Slot> slots;
+
+    private ItemStack[][] recipe = new ItemStack[9][];
 
     public MessageGridTransfer() {
     }
 
-    public MessageGridTransfer(NBTTagCompound recipe) {
-        this.recipe = recipe;
+    public MessageGridTransfer(Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs, List<Slot> slots) {
+        this.inputs = inputs;
+        this.slots = slots;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        recipe = ByteBufUtils.readTag(buf);
+        int slots = buf.readInt();
+
+        for (int i = 0; i < slots; ++i) {
+            int ingredients = buf.readInt();
+
+            recipe[i] = new ItemStack[ingredients];
+
+            for (int j = 0; j < ingredients; ++j) {
+                recipe[i][j] = StackUtils.readItemStack(buf);
+            }
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeTag(buf, recipe);
+        buf.writeInt(slots.size());
+
+        for (Slot slot : slots) {
+            IGuiIngredient<ItemStack> ingredient = inputs.get(slot.getSlotIndex() + 1);
+
+            List<ItemStack> ingredients = new ArrayList<>();
+
+            if (ingredient != null) {
+                for (ItemStack possibleStack : ingredient.getAllIngredients()) {
+                    if (possibleStack != null) {
+                        ingredients.add(possibleStack);
+                    }
+                }
+            }
+
+            buf.writeInt(ingredients.size());
+
+            for (ItemStack possibleStack : ingredients) {
+                StackUtils.writeItemStack(buf, possibleStack);
+            }
+        }
     }
 
     @Override
@@ -38,21 +75,7 @@ public class MessageGridTransfer extends MessageHandlerPlayerToServer<MessageGri
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
             if (grid.getType() == GridType.CRAFTING || grid.getType() == GridType.PATTERN) {
-                ItemStack[][] actualRecipe = new ItemStack[9][];
-
-                for (int x = 0; x < actualRecipe.length; x++) {
-                    NBTTagList list = message.recipe.getTagList("#" + x, Constants.NBT.TAG_COMPOUND);
-
-                    if (list.tagCount() > 0) {
-                        actualRecipe[x] = new ItemStack[list.tagCount()];
-
-                        for (int y = 0; y < list.tagCount(); y++) {
-                            actualRecipe[x][y] = new ItemStack(list.getCompoundTagAt(y));
-                        }
-                    }
-                }
-
-                grid.onRecipeTransfer(player, actualRecipe);
+                grid.onRecipeTransfer(player, message.recipe);
             }
         }
     }

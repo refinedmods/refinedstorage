@@ -367,7 +367,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                     }
                 } else if (grid.getType() == GridType.PATTERN) {
                     // If we are a pattern grid we can just set the slot
-                    grid.getCraftingMatrix().setInventorySlotContents(i, possibilities[0]);
+                    grid.getCraftingMatrix().setInventorySlotContents(i, possibilities.length == 0 ? ItemStack.EMPTY : possibilities[0]);
                 }
             }
         }
