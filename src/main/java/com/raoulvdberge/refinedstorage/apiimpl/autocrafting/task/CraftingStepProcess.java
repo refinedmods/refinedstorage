@@ -35,7 +35,7 @@ public class CraftingStepProcess extends CraftingStep {
             return false;
         }
 
-        IItemHandler inventory = getPattern().getContainer().getFacingInventory();
+        IItemHandler inventory = getPattern().getContainer().getConnectedInventory();
 
         int compare = CraftingTask.DEFAULT_COMPARE | (pattern.isOredict() ? IComparer.COMPARE_OREDICT : 0);
 
@@ -80,7 +80,7 @@ public class CraftingStepProcess extends CraftingStep {
             return false;
         }
 
-        IItemHandler inventory = getPattern().getContainer().getFacingInventory();
+        IItemHandler inventory = getPattern().getContainer().getConnectedInventory();
 
         return inventory != null && insertItems(inventory, new LinkedList<>(getInputs()), true);
     }
@@ -92,7 +92,7 @@ public class CraftingStepProcess extends CraftingStep {
         int compare = CraftingTask.DEFAULT_COMPARE | (getPattern().isOredict() ? IComparer.COMPARE_OREDICT : 0);
 
         if (extractItems(extracted, compare, toInsertItems)) {
-            IItemHandler inventory = getPattern().getContainer().getFacingInventory();
+            IItemHandler inventory = getPattern().getContainer().getConnectedInventory();
 
             if (insertItems(inventory, new ArrayDeque<>(extracted), true)) {
                 insertItems(inventory, extracted, false);

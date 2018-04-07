@@ -10,6 +10,7 @@
 - Fixed Grid not always using all combinations when using JEI autocompletion (raoulvdberge)
 - Increased Grid performance (raoulvdberge)
 - Various internal refactors (raoulvdberge)
+- Allow crafters to be daisy-chained (tomKPZ)
 
 ### 1.5.32
 - Added Spanish translation (Samuelrock)

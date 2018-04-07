@@ -31,11 +31,14 @@ import java.util.stream.Collectors;
 
 public class CraftingManager implements ICraftingManager {
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
+    private static final String NBT_BLOCKED_CONTAINERS = "BlockedContainers";
+    private static final String NBT_BLOCKED_CONTAINER_UUID = "BlockedContainerUuid";
 
     private TileController network;
 
     private List<ICraftingPatternContainer> containers = new ArrayList<>();
     private Map<String, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
+    private Set<UUID> blockingContainers = new HashSet<>();
     private CraftingPatternChainList patterns = new CraftingPatternChainList();
 
     private List<ICraftingTask> craftingTasks = new ArrayList<>();
@@ -65,6 +68,11 @@ public class CraftingManager implements ICraftingManager {
     @Override
     public Map<String, List<IItemHandlerModifiable>> getNamedContainers() {
         return containerInventories;
+    }
+
+    @Override
+    public Set<UUID> getBlockingContainers() {
+        return blockingContainers;
     }
 
     @Override
@@ -235,17 +243,31 @@ public class CraftingManager implements ICraftingManager {
                 craftingTasksToRead.add(taskList.getCompoundTagAt(i));
             }
         }
+
+        if (tag.hasKey(NBT_BLOCKED_CONTAINERS)) {
+            NBTTagList containerList = tag.getTagList(NBT_BLOCKED_CONTAINERS, Constants.NBT.TAG_COMPOUND);
+
+            for (int i = 0; i < containerList.tagCount(); ++i) {
+                blockingContainers.add(containerList.getCompoundTagAt(i).getUniqueId(NBT_BLOCKED_CONTAINER_UUID));
+            }
+        }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagList craftingTaskList = new NBTTagList();
-
         for (ICraftingTask task : craftingTasks) {
             craftingTaskList.appendTag(task.writeToNBT(new NBTTagCompound()));
         }
-
         tag.setTag(NBT_CRAFTING_TASKS, craftingTaskList);
+
+        NBTTagList blockingContainersList = new NBTTagList();
+        for (UUID uuid : blockingContainers) {
+            NBTTagCompound compound = new NBTTagCompound();
+            compound.setUniqueId(NBT_BLOCKED_CONTAINER_UUID, uuid);
+            blockingContainersList.appendTag(compound);
+        }
+        tag.setTag(NBT_BLOCKED_CONTAINERS, blockingContainersList);
 
         return tag;
     }
