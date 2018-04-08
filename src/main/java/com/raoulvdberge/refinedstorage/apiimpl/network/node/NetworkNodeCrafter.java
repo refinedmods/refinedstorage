@@ -26,7 +26,6 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternContainer {
