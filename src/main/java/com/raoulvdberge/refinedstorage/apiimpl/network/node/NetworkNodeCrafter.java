@@ -23,7 +23,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     public static final String DEFAULT_NAME = "gui.refinedstorage:crafter";
 
-    private static final String NBT_BLOCKED = "Blocked";
     private static final String NBT_BLOCKED_ON = "BlockedOn";
     private static final String NBT_DISPLAY_NAME = "DisplayName";
     private static final String NBT_UUID = "CrafterUuid";
@@ -68,10 +66,9 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
-    // If true, this crafter is blocked on a pattern from itself.
-    private boolean blocked = false;
-
-    // If non-null, this crafter is blocked on a child.
+    // If non-null, the crafter that we're blocked on.  Either this crafter
+    // or a descendant.
+    @Nullable
     private UUID blockedOn = null;
 
     // Used to prevent infinite recursion on getProxyPatternContainer() when
@@ -81,6 +78,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     @Nullable
     private String displayName;
 
+    @Nullable
     private UUID uuid = null;
 
     public NetworkNodeCrafter(World world, BlockPos pos) {
@@ -103,51 +101,22 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         }
     }
 
-    private ICraftingPatternContainer getFacingPatternContainer(INetwork network) {
-        INetworkNode facing = API.instance().getNetworkNodeManager(world).getNode(pos.offset(getDirection()));
-        if (facing instanceof ICraftingPatternContainer) {
-            ICraftingPatternContainer facingPatternContainer = (ICraftingPatternContainer)facing;
-            if (facing.getNetwork() == network) {
-                return facingPatternContainer;
-            }
-        }
-        return null;
-    }
-
-    private void updateCraftingManagerBlockingContainers(INetwork network, boolean blocking) {
-        Set<UUID> blockingContainers = network.getCraftingManager().getBlockingContainers();
-        if (blocking) {
-            blockingContainers.add(getUuid());
-        } else {
-            blockingContainers.remove(getUuid());
-        }
-    }
-
     private void setBlockedInternal(INetwork network, boolean blocked) {
-        if (this.blocked == blocked) {
-            return;
-        }
-
-        this.blocked = blocked;
-        markDirty();
-
-        updateCraftingManagerBlockingContainers(network, blocked);
-
-        if (blocked) {
-            ICraftingPatternContainer proxy = getProxyPatternContainer();
-            if (proxy != null && proxy != this) {
-                proxy.setBlockedOn(getUuid());
-            }
-        }
-    }
-
-    @Nonnull
-    private UUID getUuid() {
+        Set<UUID> blockingContainers = network.getCraftingManager().getBlockingContainers();
         if (uuid == null) {
             uuid = UUID.randomUUID();
             markDirty();
         }
-        return uuid;
+        if (blocked) {
+            blockingContainers.add(uuid);
+
+            ICraftingPatternContainer proxy = getProxyPatternContainer();
+            if (proxy != null) {
+                proxy.setBlockedOn(uuid);
+            }
+        } else {
+            blockingContainers.remove(uuid);
+        }
     }
 
     @Override
@@ -179,15 +148,18 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
+    protected void onDirectionChanged() {
+        if (network != null) {
+            network.getCraftingManager().rebuild();
+        }
+    }
+
+    @Override
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
         StackUtils.readItems(patterns, 0, tag);
         StackUtils.readItems(upgrades, 1, tag);
-
-        if (tag.hasKey(NBT_BLOCKED)) {
-            blocked = tag.getBoolean(NBT_BLOCKED);
-        }
 
         if (tag.hasUniqueId(NBT_BLOCKED_ON)) {
             blockedOn = tag.getUniqueId(NBT_BLOCKED_ON);
@@ -214,8 +186,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         StackUtils.writeItems(patterns, 0, tag);
         StackUtils.writeItems(upgrades, 1, tag);
 
-        tag.setBoolean(NBT_BLOCKED, blocked);
-
         if (blockedOn != null) {
             tag.setUniqueId(NBT_BLOCKED_ON, blockedOn);
         }
@@ -239,17 +209,17 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     @Override
     public IItemHandler getConnectedInventory() {
         ICraftingPatternContainer proxy = getProxyPatternContainer();
-        if (proxy == null || proxy == this) {
-            return WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+        if (proxy == null) {
+            return null;
         }
-        return proxy.getConnectedInventory();
+        return WorldUtils.getItemHandler(proxy.getFacingTile(), proxy.getDirection().getOpposite());
     }
 
     @Override
     public TileEntity getConnectedTile() {
         ICraftingPatternContainer proxy = getProxyPatternContainer();
-        if (proxy == null || proxy == this) {
-            return getFacingTile();
+        if (proxy == null) {
+            return null;
         }
         return proxy.getFacingTile();
     }
@@ -317,15 +287,27 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
+    @Nullable
+    public ICraftingPatternContainer getProxyPatternContainer() {
+        if (visited) {
+            return null;
+        }
+
+        INetworkNode facing = API.instance().getNetworkNodeManager(world).getNode(pos.offset(getDirection()));
+        if (!(facing instanceof ICraftingPatternContainer) || facing.getNetwork() != network) {
+            return this;
+        }
+
+        visited = true;
+        ICraftingPatternContainer facingContainer = ((ICraftingPatternContainer)facing).getProxyPatternContainer();
+        visited = false;
+        return facingContainer;
+    }
+
+    @Override
     public boolean isBlocked() {
-        if (blocked || network != null && network.getCraftingManager().getBlockingContainers().contains(blockedOn)) {
-            return true;
-        }
         ICraftingPatternContainer proxy = getProxyPatternContainer();
-        if (proxy == null || proxy == this) {
-            return false;
-        }
-        return proxy.isBlocked();
+        return proxy != null && network != null && network.getCraftingManager().getBlockingContainers().contains(proxy.getBlockedOn());
     }
 
     @Override
@@ -340,19 +322,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public ICraftingPatternContainer getProxyPatternContainer() {
-        if (visited) {
-            return null;
-        }
-
-        ICraftingPatternContainer facing = getFacingPatternContainer(network);
-        if (facing != null) {
-            visited = true;
-            ICraftingPatternContainer facingContainer = facing.getProxyPatternContainer();
-            visited = false;
-            return facingContainer;
-        }
-
-        return this;
+    @Nullable
+    public UUID getBlockedOn() {
+        return blockedOn;
     }
 }

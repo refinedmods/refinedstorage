@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -35,6 +36,11 @@ public interface ICraftingPatternContainer {
     TileEntity getFacingTile();
 
     /**
+     * @return the direction to the facing tile
+     */
+    EnumFacing getDirection();
+
+    /**
      * @return the patterns stored in this container
      */
     List<ICraftingPattern> getPatterns();
@@ -61,8 +67,9 @@ public interface ICraftingPatternContainer {
 
     /**
      * Containers may be daisy-chained together.  If this container points to
-     * another one, gets the last container in the chain.  Otherwise, this
-     * container is the last in the chain.
+     * another one, gets the last container in the chain.  If containers are
+     * not daisy-chained, returns this container.  If there was a container
+     * loop, returns null.
      *
      * @return the root pattern container
      */
@@ -83,4 +90,10 @@ public interface ICraftingPatternContainer {
      * @param blockedOn the descendant that this container is blocked on
      */
     void setBlockedOn(UUID blockedOn);
+
+    /**
+     * @return the UUID of the container that this container is blocked on
+     */
+    @Nullable
+    UUID getBlockedOn();
 }

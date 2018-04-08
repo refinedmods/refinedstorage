@@ -14,3 +14,4 @@ run/
 .idea/
 out/
 translation-diff.diff
+/bin/
