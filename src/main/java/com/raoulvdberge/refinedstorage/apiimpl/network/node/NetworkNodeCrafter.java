@@ -34,7 +34,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     public static final String DEFAULT_NAME = "gui.refinedstorage:crafter";
 
-    private static final String NBT_BLOCKED_ON = "BlockedOn";
     private static final String NBT_DISPLAY_NAME = "DisplayName";
     private static final String NBT_UUID = "CrafterUuid";
 
@@ -65,11 +64,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private List<ICraftingPattern> actualPatterns = new ArrayList<>();
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
-
-    // If non-null, the crafter that we're blocked on.  Either this crafter
-    // or a descendant.
-    @Nullable
-    private UUID blockedOn = null;
 
     // Used to prevent infinite recursion on getProxyPatternContainer() when
     // there's eg. two crafters facing each other.
@@ -143,10 +137,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         StackUtils.readItems(patterns, 0, tag);
         StackUtils.readItems(upgrades, 1, tag);
 
-        if (tag.hasUniqueId(NBT_BLOCKED_ON)) {
-            blockedOn = tag.getUniqueId(NBT_BLOCKED_ON);
-        }
-
         if (tag.hasKey(NBT_DISPLAY_NAME)) {
             displayName = tag.getString(NBT_DISPLAY_NAME);
         }
@@ -167,10 +157,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         StackUtils.writeItems(patterns, 0, tag);
         StackUtils.writeItems(upgrades, 1, tag);
-
-        if (blockedOn != null) {
-            tag.setUniqueId(NBT_BLOCKED_ON, blockedOn);
-        }
 
         if (displayName != null) {
             tag.setString(NBT_DISPLAY_NAME, displayName);
@@ -289,37 +275,27 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     @Override
     public boolean isBlocked() {
         ICraftingPatternContainer proxy = getProxyPatternContainer();
-        return proxy != null && network != null && network.getCraftingManager().getBlockingContainers().contains(proxy.getBlockedOn());
+        return proxy != null && network != null && network.getCraftingManager().isContainerBlocked(proxy.getUuid());
     }
 
     @Override
     public void setBlocked(INetwork network, boolean blocked) {
-        Set<UUID> blockingContainers = network.getCraftingManager().getBlockingContainers();
+        if (blocked) {
+            ICraftingPatternContainer proxy = getProxyPatternContainer();
+            if (proxy != null) {
+                network.getCraftingManager().addContainerBlock(getUuid(), proxy.getUuid());
+            }
+        } else {
+            network.getCraftingManager().removeContainerBlock(getUuid());
+        }
+    }
+
+    @Override
+    public UUID getUuid() {
         if (uuid == null) {
             uuid = UUID.randomUUID();
             markDirty();
         }
-        if (blocked) {
-            blockingContainers.add(uuid);
-
-            ICraftingPatternContainer proxy = getProxyPatternContainer();
-            if (proxy != null) {
-                proxy.setBlockedOn(uuid);
-            }
-        } else {
-            blockingContainers.remove(uuid);
-        }
-    }
-
-    @Override
-    public void setBlockedOn(UUID blockedOn) {
-        this.blockedOn = blockedOn;
-        markDirty();
-    }
-
-    @Override
-    @Nullable
-    public UUID getBlockedOn() {
-        return blockedOn;
+        return uuid;
     }
 }

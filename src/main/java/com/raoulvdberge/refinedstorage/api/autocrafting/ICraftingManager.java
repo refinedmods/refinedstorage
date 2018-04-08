@@ -35,9 +35,21 @@ public interface ICraftingManager {
     Map<String, List<IItemHandlerModifiable>> getNamedContainers();
 
     /**
-     * @return all crafting pattern containers that are blocking, safe to modify this set
+     * @param blocker the container that is blocking another container
+     * @param blockee the container being blocked, may be the same as blocker
      */
-    Set<UUID> getBlockingContainers();
+    void addContainerBlock(UUID blocker, UUID blockee);
+
+    /**
+     * @param blocker the container that is blocking another container
+     */
+    void removeContainerBlock(UUID blocker);
+
+    /**
+     * @param blockee the container to check
+     * @return whether the container is blocked
+     */
+    boolean isContainerBlocked(UUID blockee);
 
     /**
      * Adds a crafting task.

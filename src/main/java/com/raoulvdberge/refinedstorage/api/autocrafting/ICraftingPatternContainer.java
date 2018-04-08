@@ -90,13 +90,7 @@ public interface ICraftingPatternContainer {
     void setBlocked(INetwork network, boolean blocked);
 
     /**
-     * @param blockedOn the descendant that this container is blocked on
+     * @return the UUID of this container
      */
-    void setBlockedOn(UUID blockedOn);
-
-    /**
-     * @return the UUID of the container that this container is blocked on
-     */
-    @Nullable
-    UUID getBlockedOn();
+    UUID getUuid();
 }

@@ -27,19 +27,25 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class CraftingManager implements ICraftingManager {
     private static final String NBT_CRAFTING_TASKS = "CraftingTasks";
     private static final String NBT_BLOCKED_CONTAINERS = "BlockedContainers";
-    private static final String NBT_BLOCKED_CONTAINER_UUID = "BlockedContainerUuid";
+    private static final String NBT_BLOCKER_UUID = "BlockerUuid";
+    private static final String NBT_BLOCKEE_UUID = "BlockeeUuid";
 
     private TileController network;
 
     private List<ICraftingPatternContainer> containers = new ArrayList<>();
     private Map<String, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
-    private Set<UUID> blockingContainers = new HashSet<>();
     private CraftingPatternChainList patterns = new CraftingPatternChainList();
+
+    // A map of blockers to blockees.
+    private Map<UUID, UUID> blockingContainers = new HashMap<>();
+    // A set of blockees.
+    private Set<UUID> blockedContainers = new HashSet<>();
 
     private List<ICraftingTask> craftingTasks = new ArrayList<>();
     private List<ICraftingTask> craftingTasksToAdd = new ArrayList<>();
@@ -71,8 +77,27 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public Set<UUID> getBlockingContainers() {
-        return blockingContainers;
+    public void addContainerBlock(UUID blocker, UUID blockee) {
+        if (blockedContainers.contains(blockee) || blockingContainers.containsKey(blocker)) {
+            throw new IllegalStateException();
+        }
+        blockedContainers.add(blockee);
+        blockingContainers.put(blocker, blockee);
+    }
+
+    @Override
+    public void removeContainerBlock(UUID blocker) {
+        UUID blockee = blockingContainers.get(blocker);
+        if (blockee == null || !blockedContainers.contains(blockee)) {
+            throw new IllegalStateException();
+        }
+        blockedContainers.remove(blockee);
+        blockingContainers.remove(blocker);
+    }
+
+    @Override
+    public boolean isContainerBlocked(UUID blockee) {
+        return blockedContainers.contains(blockee);
     }
 
     @Override
@@ -238,7 +263,6 @@ public class CraftingManager implements ICraftingManager {
     public void readFromNBT(NBTTagCompound tag) {
         if (tag.hasKey(NBT_CRAFTING_TASKS)) {
             NBTTagList taskList = tag.getTagList(NBT_CRAFTING_TASKS, Constants.NBT.TAG_COMPOUND);
-
             for (int i = 0; i < taskList.tagCount(); ++i) {
                 craftingTasksToRead.add(taskList.getCompoundTagAt(i));
             }
@@ -246,9 +270,9 @@ public class CraftingManager implements ICraftingManager {
 
         if (tag.hasKey(NBT_BLOCKED_CONTAINERS)) {
             NBTTagList containerList = tag.getTagList(NBT_BLOCKED_CONTAINERS, Constants.NBT.TAG_COMPOUND);
-
             for (int i = 0; i < containerList.tagCount(); ++i) {
-                blockingContainers.add(containerList.getCompoundTagAt(i).getUniqueId(NBT_BLOCKED_CONTAINER_UUID));
+                NBTTagCompound compound = containerList.getCompoundTagAt(i);
+                addContainerBlock(compound.getUniqueId(NBT_BLOCKER_UUID), compound.getUniqueId(NBT_BLOCKEE_UUID));
             }
         }
     }
@@ -262,9 +286,10 @@ public class CraftingManager implements ICraftingManager {
         tag.setTag(NBT_CRAFTING_TASKS, craftingTaskList);
 
         NBTTagList blockingContainersList = new NBTTagList();
-        for (UUID uuid : blockingContainers) {
+        for (Entry<UUID, UUID> pair : blockingContainers.entrySet()) {
             NBTTagCompound compound = new NBTTagCompound();
-            compound.setUniqueId(NBT_BLOCKED_CONTAINER_UUID, uuid);
+            compound.setUniqueId(NBT_BLOCKER_UUID, pair.getKey());
+            compound.setUniqueId(NBT_BLOCKEE_UUID, pair.getValue());
             blockingContainersList.appendTag(compound);
         }
         tag.setTag(NBT_BLOCKED_CONTAINERS, blockingContainersList);
