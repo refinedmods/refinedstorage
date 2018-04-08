@@ -101,24 +101,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         }
     }
 
-    private void setBlockedInternal(INetwork network, boolean blocked) {
-        Set<UUID> blockingContainers = network.getCraftingManager().getBlockingContainers();
-        if (uuid == null) {
-            uuid = UUID.randomUUID();
-            markDirty();
-        }
-        if (blocked) {
-            blockingContainers.add(uuid);
-
-            ICraftingPatternContainer proxy = getProxyPatternContainer();
-            if (proxy != null) {
-                proxy.setBlockedOn(uuid);
-            }
-        } else {
-            blockingContainers.remove(uuid);
-        }
-    }
-
     @Override
     public int getEnergyUsage() {
         return RS.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage() + (RS.INSTANCE.config.crafterPerPatternUsage * actualPatterns.size());
@@ -141,7 +123,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             network.getCraftingManager().getTasks().stream()
                 .filter(task -> task.getPattern().getContainer().getPosition().equals(pos))
                 .forEach(task -> network.getCraftingManager().cancel(task));
-            setBlockedInternal(network, false);
+            setBlocked(network, false);
         }
 
         network.getCraftingManager().rebuild();
@@ -311,8 +293,22 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public void setBlocked(boolean blocked) {
-        setBlockedInternal(network, blocked);
+    public void setBlocked(INetwork network, boolean blocked) {
+        Set<UUID> blockingContainers = network.getCraftingManager().getBlockingContainers();
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+            markDirty();
+        }
+        if (blocked) {
+            blockingContainers.add(uuid);
+
+            ICraftingPatternContainer proxy = getProxyPatternContainer();
+            if (proxy != null) {
+                proxy.setBlockedOn(uuid);
+            }
+        } else {
+            blockingContainers.remove(uuid);
+        }
     }
 
     @Override

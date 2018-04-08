@@ -8,6 +8,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -82,9 +84,10 @@ public interface ICraftingPatternContainer {
     boolean isBlocked();
 
     /**
+     * @param network the network associated with this container
      * @param blocked whether the container should be blocked
      */
-    void setBlocked(boolean blocked);
+    void setBlocked(INetwork network, boolean blocked);
 
     /**
      * @param blockedOn the descendant that this container is blocked on
