@@ -8,8 +8,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -69,25 +67,19 @@ public interface ICraftingPatternContainer {
 
     /**
      * Containers may be daisy-chained together.  If this container points to
-     * another one, gets the last container in the chain.  If containers are
+     * another one, gets the root container in the chain.  If containers are
      * not daisy-chained, returns this container.  If there was a container
      * loop, returns null.
      *
      * @return the root pattern container
      */
     @Nullable
-    ICraftingPatternContainer getProxyPatternContainer();
+    ICraftingPatternContainer getRootContainer();
 
     /**
      * @return true if this container or its proxy is blocked, false otherwise
      */
     boolean isBlocked();
-
-    /**
-     * @param network the network associated with this container
-     * @param blocked whether the container should be blocked
-     */
-    void setBlocked(INetwork network, boolean blocked);
 
     /**
      * @return the UUID of this container

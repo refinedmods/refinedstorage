@@ -51,6 +51,12 @@ public interface ICraftingManager {
     boolean isContainerBlocked(UUID blockee);
 
     /**
+     * @param container the container to set the blocking state for
+     * @param blocked whether the container should be blocked
+     */
+    void setContainerBlocked(ICraftingPatternContainer container, boolean blocked);
+
+    /**
      * Adds a crafting task.
      *
      * @param task the task to add

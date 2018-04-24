@@ -64,7 +64,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
-    // Used to prevent infinite recursion on getProxyPatternContainer() when
+    // Used to prevent infinite recursion on getRootContainer() when
     // there's eg. two crafters facing each other.
     private boolean visited = false;
 
@@ -116,7 +116,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             network.getCraftingManager().getTasks().stream()
                 .filter(task -> task.getPattern().getContainer().getPosition().equals(pos))
                 .forEach(task -> network.getCraftingManager().cancel(task));
-            setBlocked(network, false);
+            network.getCraftingManager().setContainerBlocked(this, false);
         }
 
         network.getCraftingManager().rebuild();
@@ -175,7 +175,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public IItemHandler getConnectedInventory() {
-        ICraftingPatternContainer proxy = getProxyPatternContainer();
+        ICraftingPatternContainer proxy = getRootContainer();
         if (proxy == null) {
             return null;
         }
@@ -184,7 +184,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public TileEntity getConnectedTile() {
-        ICraftingPatternContainer proxy = getProxyPatternContainer();
+        ICraftingPatternContainer proxy = getRootContainer();
         if (proxy == null) {
             return null;
         }
@@ -255,7 +255,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     @Nullable
-    public ICraftingPatternContainer getProxyPatternContainer() {
+    public ICraftingPatternContainer getRootContainer() {
         if (visited) {
             return null;
         }
@@ -266,27 +266,15 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         }
 
         visited = true;
-        ICraftingPatternContainer facingContainer = ((ICraftingPatternContainer)facing).getProxyPatternContainer();
+        ICraftingPatternContainer facingContainer = ((ICraftingPatternContainer)facing).getRootContainer();
         visited = false;
         return facingContainer;
     }
 
     @Override
     public boolean isBlocked() {
-        ICraftingPatternContainer proxy = getProxyPatternContainer();
+        ICraftingPatternContainer proxy = getRootContainer();
         return proxy != null && network != null && network.getCraftingManager().isContainerBlocked(proxy.getUuid());
-    }
-
-    @Override
-    public void setBlocked(INetwork network, boolean blocked) {
-        if (blocked) {
-            ICraftingPatternContainer proxy = getProxyPatternContainer();
-            if (proxy != null) {
-                network.getCraftingManager().addContainerBlock(getUuid(), proxy.getUuid());
-            }
-        } else {
-            network.getCraftingManager().removeContainerBlock(getUuid());
-        }
     }
 
     @Override

@@ -404,7 +404,7 @@ public class CraftingTask implements ICraftingTask {
 
         for (ICraftingStep step : getSteps()) {
             if (step.getPattern().isBlocking()) {
-                step.getPattern().getContainer().setBlocked(network, false);
+                network.getCraftingManager().setContainerBlocked(step.getPattern().getContainer(), false);
             }
         }
 

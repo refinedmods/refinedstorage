@@ -78,26 +78,31 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     public void addContainerBlock(UUID blocker, UUID blockee) {
-        if (blockedContainers.contains(blockee) || blockingContainers.containsKey(blocker)) {
-            throw new IllegalStateException();
-        }
         blockedContainers.add(blockee);
         blockingContainers.put(blocker, blockee);
     }
 
     @Override
     public void removeContainerBlock(UUID blocker) {
-        UUID blockee = blockingContainers.get(blocker);
-        if (blockee == null || !blockedContainers.contains(blockee)) {
-            throw new IllegalStateException();
-        }
-        blockedContainers.remove(blockee);
+        blockedContainers.remove(blockingContainers.get(blocker));
         blockingContainers.remove(blocker);
     }
 
     @Override
     public boolean isContainerBlocked(UUID blockee) {
         return blockedContainers.contains(blockee);
+    }
+
+    @Override
+    public void setContainerBlocked(ICraftingPatternContainer container, boolean blocked) {
+        if (blocked) {
+            ICraftingPatternContainer proxy = container.getRootContainer();
+            if (proxy != null) {
+                addContainerBlock(container.getUuid(), proxy.getUuid());
+            }
+        } else {
+            removeContainerBlock(container.getUuid());
+        }
     }
 
     @Override
