@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.34
+- Allow crafters to be daisy-chained (tomKPZ)
+
 ### 1.5.33
 - Added Crafter Manager (raoulvdberge)
 - Patterns in the Crafter slots now automatically render the output without pressing shift (raoulvdberge)

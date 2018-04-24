@@ -122,7 +122,7 @@ public abstract class CraftingStep implements ICraftingStep {
     @Override
     public void setStartedProcessing() {
         if (getPattern().isBlocking()) {
-            getPattern().getContainer().setBlocked(true);
+            network.getCraftingManager().setContainerBlocked(getPattern().getContainer(), true);
         }
 
         startedProcessing = true;
@@ -144,7 +144,7 @@ public abstract class CraftingStep implements ICraftingStep {
         }
 
         if (getPattern().isBlocking()) {
-            getPattern().getContainer().setBlocked(false);
+            network.getCraftingManager().setContainerBlocked(getPattern().getContainer(), false);
         }
 
         return true;

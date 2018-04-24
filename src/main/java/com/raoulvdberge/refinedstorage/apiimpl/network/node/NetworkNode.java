@@ -215,7 +215,15 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
 
     // @todo: Move this data to the network node.
     public void resetDirection() {
-        this.direction = ((TileBase) (IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos))).getDirection();
+        EnumFacing direction = ((TileBase) (IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos))).getDirection();
+        if (!direction.equals(this.direction)) {
+            this.direction = direction;
+            onDirectionChanged();
+        }
+    }
+
+    protected void onDirectionChanged() {
+        // NO OP
     }
 
     @Nullable

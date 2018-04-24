@@ -404,7 +404,7 @@ public class CraftingTask implements ICraftingTask {
 
         for (ICraftingStep step : getSteps()) {
             if (step.getPattern().isBlocking()) {
-                step.getPattern().getContainer().setBlocked(false);
+                network.getCraftingManager().setContainerBlocked(step.getPattern().getContainer(), false);
             }
         }
 
@@ -670,7 +670,7 @@ public class CraftingTask implements ICraftingTask {
                             32
                         );
 
-                        if (step.getPattern().getContainer().getFacingTile() == null) {
+                        if (step.getPattern().getContainer().getConnectedTile() == null) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
                         } else if (!step.hasStartedProcessing() && !step.canStartProcessing()) {
                             element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_in_use");

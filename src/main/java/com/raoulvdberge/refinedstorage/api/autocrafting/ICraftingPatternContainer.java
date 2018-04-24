@@ -1,12 +1,15 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents a network node that contains crafting patterns.
@@ -18,14 +21,24 @@ public interface ICraftingPatternContainer {
     int getSpeedUpdateCount();
 
     /**
-     * @return the inventory that this container is facing
+     * @return the inventory that this container is connected to
      */
-    IItemHandler getFacingInventory();
+    IItemHandler getConnectedInventory();
+
+    /**
+     * @return the tile that this container is connected to
+     */
+    TileEntity getConnectedTile();
 
     /**
      * @return the tile that this container is facing
      */
     TileEntity getFacingTile();
+
+    /**
+     * @return the direction to the facing tile
+     */
+    EnumFacing getDirection();
 
     /**
      * @return the patterns stored in this container
@@ -53,12 +66,23 @@ public interface ICraftingPatternContainer {
     BlockPos getPosition();
 
     /**
-     * @return true if this container is blocked, false otherwise
+     * Containers may be daisy-chained together.  If this container points to
+     * another one, gets the root container in the chain.  If containers are
+     * not daisy-chained, returns this container.  If there was a container
+     * loop, returns null.
+     *
+     * @return the root pattern container
+     */
+    @Nullable
+    ICraftingPatternContainer getRootContainer();
+
+    /**
+     * @return true if this container or its proxy is blocked, false otherwise
      */
     boolean isBlocked();
 
     /**
-     * @param blocked whether the container should be blocked
+     * @return the UUID of this container
      */
-    void setBlocked(boolean blocked);
+    UUID getUuid();
 }

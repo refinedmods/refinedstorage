@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The crafting manager handles the storing, updating, adding and deleting of crafting tasks in a network.
@@ -31,6 +32,29 @@ public interface ICraftingManager {
      * @return named crafting pattern containers
      */
     Map<String, List<IItemHandlerModifiable>> getNamedContainers();
+
+    /**
+     * @param blocker the container that is blocking another container
+     * @param blockee the container being blocked, may be the same as blocker
+     */
+    void addContainerBlock(UUID blocker, UUID blockee);
+
+    /**
+     * @param blocker the container that is blocking another container
+     */
+    void removeContainerBlock(UUID blocker);
+
+    /**
+     * @param blockee the container to check
+     * @return whether the container is blocked
+     */
+    boolean isContainerBlocked(UUID blockee);
+
+    /**
+     * @param container the container to set the blocking state for
+     * @param blocked whether the container should be blocked
+     */
+    void setContainerBlocked(ICraftingPatternContainer container, boolean blocked);
 
     /**
      * Adds a crafting task.
