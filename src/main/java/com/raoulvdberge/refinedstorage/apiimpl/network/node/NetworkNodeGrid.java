@@ -104,8 +104,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
             // Allow in slot 0
             // Disallow in slot 1
             // Only allow in slot 1 when it isn't a blank pattern
-            // This makes it so that written patterns can be re-inserted in the slot to be overwritten again
-            // This makes it so that blank patterns can't be inserted through hoppers.
+            // This makes it so that written patterns can be re-inserted in slot 1 to be overwritten again
+            // This makes it so that blank patterns can't be inserted in slot 1 through hoppers.
             if (slot == 0 || stack.getTagCompound() != null) {
                 return super.insertItem(slot, stack, simulate);
             }

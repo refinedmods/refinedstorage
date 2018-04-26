@@ -3,6 +3,7 @@
 ### 1.5.34
 - Allow crafters to be daisy-chained (tomKPZ)
 - Empty patterns can no longer be inserted in the pattern result slot in the Pattern Grid with hoppers (raoulvdberge)
+- Added OR search operator to the Grid with "|" (raoulvdberge)
 
 ### 1.5.33
 - Added Crafter Manager (raoulvdberge)
