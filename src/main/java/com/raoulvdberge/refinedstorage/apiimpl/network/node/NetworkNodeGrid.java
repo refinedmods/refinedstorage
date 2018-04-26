@@ -46,6 +46,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +96,21 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
         @Override
         public int getSlotLimit(int slot) {
             return slot == 1 ? 1 : super.getSlotLimit(slot);
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+            // Allow in slot 0
+            // Disallow in slot 1
+            // Only allow in slot 1 when it isn't a blank pattern
+            // This makes it so that written patterns can be re-inserted in the slot to be overwritten again
+            // This makes it so that blank patterns can't be inserted through hoppers.
+            if (slot == 0 || stack.getTagCompound() != null) {
+                return super.insertItem(slot, stack, simulate);
+            }
+
+            return stack;
         }
     };
     private List<IFilter> filters = new ArrayList<>();
