@@ -23,6 +23,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
 
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_DAMAGE;
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_NBT;
@@ -59,13 +61,28 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getCraftingManager().getTasks()};
     }
 
+    @Callback(doc = "function(stack:table):table -- Get one pattern of this network.")
+    public Object[] getPattern(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{null, "not connected"};
+        }
+
+        ItemStack stack = args.checkItemStack(0);
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack)};
+    }
+
     @Callback(doc = "function():table -- Gets the patterns of this network.")
     public Object[] getPatterns(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
         }
-
-        return new Object[]{node.getNetwork().getCraftingManager().getPatterns()};
+        List<ItemStack> patterns = new LinkedList<ItemStack>();
+        for (ICraftingPattern pattern : node.getNetwork().getCraftingManager().getPatterns()) {
+            for (ItemStack output : pattern.getOutputs()) {
+                patterns.add(output);
+            }
+        }
+        return new Object[]{patterns};
     }
 
     @Callback(doc = "function(stack:table):boolean -- Whether a crafting pattern exists for this item.")
