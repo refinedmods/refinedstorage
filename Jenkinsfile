@@ -1,6 +1,6 @@
 node {
   stage('Preparation') {
-    git url: 'https://github.com/fspijkerman/refinedstorage.git', branch: 'jenkins'
+    git url: 'https://github.com/raoulvdberge/refinedstorage.git', branch: 'jenkins'
   }
   cache(maxCacheSize: 250, caches: [
     [$class: 'ArbitraryFileCache', excludes: 'modules-2/modules-2.lock,*/plugin-resolution/**', includes: '**/*', path: '${HOME}/.gradle/caches'],
