@@ -20,6 +20,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.items.SlotItemHandler;
+
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nonnull;
@@ -101,6 +103,8 @@ public abstract class GuiBase extends GuiContainer {
 
         initializing = true;
 
+        Keyboard.enableRepeatEvents(true);
+
         calcHeight();
 
         super.initGui();
@@ -115,6 +119,12 @@ public abstract class GuiBase extends GuiContainer {
         runRunnables();
 
         initializing = false;
+    }
+
+    @Override
+    public void onGuiClosed() {
+        super.onGuiClosed();
+        Keyboard.enableRepeatEvents(false);
     }
 
     protected void calcHeight() {

@@ -6,6 +6,7 @@
 - Added OR search operator to the Grid with "|" (raoulvdberge)
 - getPatterns() now only returns all the outputs, this to limit memory usage in OpenComputers (only affects OC integration). (fspijkerman)
 - Added new getPattern(stack:table) function for OpenComputers integration (fspijkerman)
+- Fixed repeated key events not getting handled in some cases (tomKPZ)
 
 ### 1.5.33
 - Added Crafter Manager (raoulvdberge)
