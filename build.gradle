@@ -11,10 +11,6 @@ buildscript {
     }
 }
 
-plugins {
-    id "com.jfrog.bintray" version "1.7"
-}
-
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
@@ -122,10 +118,10 @@ artifacts {
 
 publishing {
     publications {
-        MyPublication(MavenPublication) {
+        mavenJava(MavenPublication) {
             groupId = project.group
             artifactId = project.archivesBaseName
-            version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            version = project.version + '-' + System.getenv('BUILD_NUMBER')
             artifact deobfJar
             artifact sourceJar
             artifact apiJar
@@ -134,17 +130,10 @@ publishing {
     }
 }
 
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['MyPublication']
-    publish = true
-    pkg {
-        repo = 'dev'
-        name = 'refinedstorage'
-        version {
-            name = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
-            released = new Date()
+publishing {
+    repositories {
+        maven {
+          url "/var/www/repo"
         }
     }
 }
