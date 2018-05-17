@@ -28,7 +28,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTas
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
@@ -290,7 +289,7 @@ public class API implements IRSAPI {
             return true;
         }
 
-        NetworkNode rightNode = (NetworkNode) right;
+        INetworkNode rightNode = (INetworkNode) right;
 
         if (left.getWorld().provider.getDimension() != rightNode.getWorld().provider.getDimension()) {
             return false;
