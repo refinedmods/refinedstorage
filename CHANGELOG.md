@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.5.35
+- Updated Russian translation (kellixon)
+
 ### 1.5.34
 - Allow crafters to be daisy-chained (tomKPZ)
 - Empty patterns can no longer be inserted in the pattern result slot in the Pattern Grid with hoppers (raoulvdberge)
