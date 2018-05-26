@@ -5,6 +5,7 @@
 - Removed MCMultiPart integration (raoulvdberge)
 - Removed Project E integration (raoulvdberge)
 - Removed Storage Drawers integration (you can still attach an External Storage to drawers, though) (raoulvdberge)
+- You can no longer put a Filter in filter slots to gain additional filter slots (raoulvdberge)
 - Updated Russian translation (kellixon)
 
 ### 1.5.34

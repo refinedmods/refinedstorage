@@ -1,13 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
-import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -60,14 +58,20 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                         ItemStack slot = itemFilters.getStackInSlot(i);
 
                         if (!slot.isEmpty()) {
-                            if (slot.getItem() == RSItems.FILTER) {
-                                for (ItemStack slotInFilter : ItemFilter.getFilterItemsFromCache(slot)) {
-                                    if (!slotInFilter.isEmpty()) {
-                                        doExport(handler, slotInFilter);
-                                    }
+                            int stackSize = upgrades.getItemInteractCount();
+
+                            ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
+
+                            if (took == null) {
+                                if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                                    network.getCraftingManager().schedule(slot, stackSize, compare);
                                 }
-                            } else {
-                                doExport(handler, slot);
+                            } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
+                                took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, false);
+
+                                if (took != null) {
+                                    ItemHandlerHelper.insertItem(handler, took, false);
+                                }
                             }
                         }
                     }
@@ -100,24 +104,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                         }
                     }
                 }
-            }
-        }
-    }
-
-    private void doExport(IItemHandler handler, ItemStack slot) {
-        int stackSize = upgrades.getItemInteractCount();
-
-        ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
-
-        if (took == null) {
-            if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                network.getCraftingManager().schedule(slot, stackSize, compare);
-            }
-        } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-            took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, false);
-
-            if (took != null) {
-                ItemHandlerHelper.insertItem(handler, took, false);
             }
         }
     }
@@ -203,14 +189,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
         this.type = type;
 
         markDirty();
-    }
-
-    public ItemHandlerBase getItemFilters() {
-        return itemFilters;
-    }
-
-    public ItemHandlerFluid getFluidFilters() {
-        return fluidFilters;
     }
 
     @Override

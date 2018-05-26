@@ -1,10 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile.config;
 
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
@@ -35,13 +33,7 @@ public interface IFilterable {
                 if (!slot.isEmpty()) {
                     slots++;
 
-                    if (slot.getItem() == RSItems.FILTER) {
-                        for (ItemStack slotInFilter : ItemFilter.getFilterItemsFromCache(slot)) {
-                            if (!slotInFilter.isEmpty() && API.instance().getComparer().isEqual(slotInFilter, stack, compare)) {
-                                return true;
-                            }
-                        }
-                    } else if (API.instance().getComparer().isEqual(slot, stack, compare)) {
+                    if (API.instance().getComparer().isEqual(slot, stack, compare)) {
                         return true;
                     }
                 }
@@ -52,16 +44,8 @@ public interface IFilterable {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
-                if (!slot.isEmpty()) {
-                    if (slot.getItem() == RSItems.FILTER) {
-                        for (ItemStack slotInFilter : ItemFilter.getFilterItemsFromCache(slot)) {
-                            if (!slotInFilter.isEmpty() && API.instance().getComparer().isEqual(slotInFilter, stack, compare)) {
-                                return false;
-                            }
-                        }
-                    } else if (API.instance().getComparer().isEqual(slot, stack, compare)) {
-                        return false;
-                    }
+                if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, compare)) {
+                    return false;
                 }
             }
 
