@@ -172,9 +172,6 @@ sidebutton.refinedstorage:access_type.0=Insère and extrait
 sidebutton.refinedstorage:access_type.1=Insère seulement
 sidebutton.refinedstorage:access_type.2=Extrait seulement
 
-sidebutton.refinedstorage:exporter.regulator=Mode régulateur
-sidebutton.refinedstorage:exporter.craft_only=Mode craft uniquement
-
 block.refinedstorage:controller.0.name=Controlleur
 block.refinedstorage:controller.1.name=Controlleur créatif
 block.refinedstorage:cable.name=Cable

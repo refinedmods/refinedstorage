@@ -197,8 +197,6 @@ sidebutton.refinedstorage:access_type.0=Вставить и извлечь
 sidebutton.refinedstorage:access_type.1=Только вставить
 sidebutton.refinedstorage:access_type.2=Только извлечь
 
-sidebutton.refinedstorage:exporter.regulator=Режим регулятора
-
 block.refinedstorage:controller.0.name=Контроллер
 block.refinedstorage:controller.1.name=Творческий контроллер
 block.refinedstorage:cable.name=Кабель

@@ -1,6 +1,10 @@
 # Refined Storage Changelog
 
-### 1.5.35
+### 1.6
+- Removed Regulator mode in the Exporter (raoulvdberge)
+- Removed MCMultiPart integration (raoulvdberge)
+- Removed Project E integration (raoulvdberge)
+- Removed Storage Drawers integration (you can still attach an External Storage to drawers, though) (raoulvdberge)
 - Updated Russian translation (kellixon)
 
 ### 1.5.34

@@ -175,9 +175,6 @@ sidebutton.refinedstorage:access_type.0=输入输出
 sidebutton.refinedstorage:access_type.1=仅输入
 sidebutton.refinedstorage:access_type.2=仅输出
 
-sidebutton.refinedstorage:exporter.regulator=监控模式
-sidebutton.refinedstorage:exporter.craft_only=仅合成模式
-
 block.refinedstorage:controller.0.name=控制器
 block.refinedstorage:controller.1.name=创造控制器
 block.refinedstorage:cable.name=线缆

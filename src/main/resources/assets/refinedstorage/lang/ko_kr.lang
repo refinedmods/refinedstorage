@@ -171,9 +171,6 @@ sidebutton.refinedstorage:access_type.0=입출력
 sidebutton.refinedstorage:access_type.1=입력
 sidebutton.refinedstorage:access_type.2=출력
 
-sidebutton.refinedstorage:exporter.regulator=조절 모드
-sidebutton.refinedstorage:exporter.craft_only=조합 전용 모드
-
 block.refinedstorage:controller.0.name=컨트롤러
 block.refinedstorage:controller.1.name=크리에이티브 컨트롤러
 block.refinedstorage:cable.name=케이블

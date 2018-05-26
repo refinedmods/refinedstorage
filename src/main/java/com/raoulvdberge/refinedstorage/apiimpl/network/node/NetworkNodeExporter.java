@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -22,7 +21,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -31,7 +29,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
-    private static final String NBT_REGULATOR = "Regulator";
 
     private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
@@ -40,7 +37,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
-    private boolean regulator = false;
 
     public NetworkNodeExporter(World world, BlockPos pos) {
         super(world, pos);
@@ -87,29 +83,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                             if (stackInStorage != null) {
                                 int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
 
-                                boolean skipSlot = false;
-
-                                if (regulator) {
-                                    for (IFluidTankProperties tankProperty : handler.getTankProperties()) {
-                                        FluidStack exporterStack = tankProperty.getContents();
-
-                                        if (API.instance().getComparer().isEqual(stackInStorage, exporterStack, compare)) {
-                                            if (exporterStack.amount >= stack.amount * Fluid.BUCKET_VOLUME) {
-                                                skipSlot = true;
-
-                                                break;
-                                            } else {
-                                                toExtract = upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK) ? stack.amount * Fluid.BUCKET_VOLUME - exporterStack.amount : Fluid.BUCKET_VOLUME;
-                                                toExtract = Math.min(toExtract, stackInStorage.amount);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (skipSlot) {
-                                    continue;
-                                }
-
                                 FluidStack took = network.extractFluid(stack, toExtract, compare, true);
 
                                 if (took != null) {
@@ -133,34 +106,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     private void doExport(IItemHandler handler, ItemStack slot) {
         int stackSize = upgrades.getItemInteractCount();
-
-        if (regulator) {
-            int found = 0;
-
-            for (int index = 0; index < handler.getSlots(); index++) {
-                ItemStack handlerStack = handler.getStackInSlot(index);
-
-                if (API.instance().getComparer().isEqual(slot, handlerStack, compare)) {
-                    found += handlerStack.getCount();
-                }
-            }
-
-            int needed = 0;
-
-            for (int i = 0; i < itemFilters.getSlots(); ++i) {
-                if (API.instance().getComparer().isEqualNoQuantity(slot, itemFilters.getStackInSlot(i))) {
-                    needed += itemFilters.getStackInSlot(i).getCount();
-                }
-            }
-
-            stackSize = needed - found;
-
-            if (stackSize <= 0) {
-                return;
-            } else if (!upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK)) {
-                stackSize = 1;
-            }
-        }
 
         ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
 
@@ -216,7 +161,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_TYPE, type);
-        tag.setBoolean(NBT_REGULATOR, regulator);
 
         StackUtils.writeItems(itemFilters, 0, tag);
         StackUtils.writeItems(fluidFilters, 2, tag);
@@ -234,10 +178,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
         if (tag.hasKey(NBT_TYPE)) {
             type = tag.getInteger(NBT_TYPE);
-        }
-
-        if (tag.hasKey(NBT_REGULATOR)) {
-            regulator = tag.getBoolean(NBT_REGULATOR);
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
@@ -263,14 +203,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
         this.type = type;
 
         markDirty();
-    }
-
-    public void setRegulator(boolean regulator) {
-        this.regulator = regulator;
-    }
-
-    public boolean isRegulator() {
-        return world.isRemote ? TileExporter.REGULATOR.getValue() : regulator;
     }
 
     public ItemHandlerBase getItemFilters() {
