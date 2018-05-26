@@ -17,7 +17,7 @@ public class ContainerInterface extends ContainerBase {
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilter(tile.getNode().getExportSpecimenItems(), i, 8 + (18 * i), 54, SlotFilter.FILTER_ALLOW_SIZE));
+            addSlotToContainer(new SlotFilter(tile.getNode().getExportFilterItems(), i, 8 + (18 * i), 54, SlotFilter.FILTER_ALLOW_SIZE));
         }
 
         for (int i = 0; i < 9; ++i) {
