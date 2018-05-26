@@ -294,13 +294,6 @@ item.refinedstorage:upgrade.9.name=Улучшение: "Удача"
 item.refinedstorage:storage_housing.name=Хранилище корпуса
 item.refinedstorage:filter.name=Фильтр
 item.refinedstorage:network_card.name=Сетевая карта
-item.refinedstorage:wrench.name=Ключ
-item.refinedstorage:wrench.saved=Конфигурация написана.
-item.refinedstorage:wrench.read=Конфигурация читается.
-item.refinedstorage:wrench.mode=Режим: %s
-item.refinedstorage:wrench.mode.0=Вращение
-item.refinedstorage:wrench.mode.1=Конфигурация
-item.refinedstorage:wrench.mode.2=Демонтаж
 item.refinedstorage:security_card.name=Карточка безопасности
 item.refinedstorage:security_card.owner=Связано с: %s
 

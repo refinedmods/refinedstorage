@@ -16,8 +16,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public abstract class BlockNode extends BlockBase {
-    public static final String NBT_REFINED_STORAGE_DATA = "RefinedStorageData";
-
     public static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
     public BlockNode(String name) {
@@ -36,15 +34,8 @@ public abstract class BlockNode extends BlockBase {
         if (!world.isRemote) {
             TileEntity tile = world.getTileEntity(pos);
 
-            if (tile instanceof TileNode) {
-                if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_REFINED_STORAGE_DATA)) {
-                    ((TileNode) tile).getNode().readConfiguration(stack.getTagCompound().getCompoundTag(NBT_REFINED_STORAGE_DATA));
-                    ((TileNode) tile).getNode().markDirty();
-                }
-
-                if (placer instanceof EntityPlayer) {
-                    ((TileNode) tile).getNode().setOwner(((EntityPlayer) placer).getGameProfile().getId());
-                }
+            if (tile instanceof TileNode && placer instanceof EntityPlayer) {
+                ((TileNode) tile).getNode().setOwner(((EntityPlayer) placer).getGameProfile().getId());
             }
 
             API.instance().discoverNode(world, pos);

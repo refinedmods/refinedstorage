@@ -221,7 +221,6 @@ public class ProxyCommon {
         registerItem(RSItems.UPGRADE);
         registerItem(RSItems.FILTER);
         registerItem(RSItems.NETWORK_CARD);
-        registerItem(RSItems.WRENCH);
         registerItem(RSItems.SECURITY_CARD);
 
         IntegrationInventorySorter.register();
@@ -280,28 +279,6 @@ public class ProxyCommon {
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> e) {
         itemsToRegister.forEach(e.getRegistry()::register);
-    }
-
-    @SubscribeEvent
-    public void fixItemMappings(RegistryEvent.MissingMappings<Item> e) {
-        for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
-            if (missing.key.getResourceDomain().equals(RS.ID)) {
-                if (missing.key.getResourcePath().equals("grid_filter")) {
-                    missing.remap(RSItems.FILTER);
-                } else if (missing.key.getResourcePath().equals("processing_pattern_encoder")) {
-                    missing.ignore();
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void fixBlockMappings(RegistryEvent.MissingMappings<Block> e) {
-        for (RegistryEvent.MissingMappings.Mapping<Block> missing : e.getMappings()) {
-            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("processing_pattern_encoder")) {
-                missing.ignore();
-            }
-        }
     }
 
     @SubscribeEvent

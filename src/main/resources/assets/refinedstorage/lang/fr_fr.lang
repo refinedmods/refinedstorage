@@ -266,13 +266,6 @@ item.refinedstorage:upgrade.7.name=Amélioration Fortune
 item.refinedstorage:storage_housing.name=Boitier de stockage
 item.refinedstorage:filter.name=Filtre
 item.refinedstorage:network_card.name=Carte réseau
-item.refinedstorage:wrench.name=Clé
-item.refinedstorage:wrench.saved=Configuration sauvée.
-item.refinedstorage:wrench.read=Configuration copiée.
-item.refinedstorage:wrench.mode=Mode: %s
-item.refinedstorage:wrench.mode.0=Rotation
-item.refinedstorage:wrench.mode.1=Configuration
-item.refinedstorage:wrench.mode.2=Démontage
 item.refinedstorage:security_card.name=Carte de sécurité
 item.refinedstorage:security_card.owner=Bound to: %s
 

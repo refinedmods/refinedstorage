@@ -270,13 +270,6 @@ item.refinedstorage:upgrade.9.name=Aprimoramento de Fortuna
 item.refinedstorage:storage_housing.name=Alojamento de Armazenação
 item.refinedstorage:filter.name=Filtro
 item.refinedstorage:network_card.name=Cartão de Rede
-item.refinedstorage:wrench.name=Chave Inglesa
-item.refinedstorage:wrench.saved=Configuração escrita.
-item.refinedstorage:wrench.read=Configuração lida.
-item.refinedstorage:wrench.mode=Modo: %s
-item.refinedstorage:wrench.mode.0=Rotação
-item.refinedstorage:wrench.mode.1=Configuração
-item.refinedstorage:wrench.mode.2=Desmontagem
 item.refinedstorage:security_card.name=Cartão de Segurança
 item.refinedstorage:security_card.owner=Ligado a: %s
 

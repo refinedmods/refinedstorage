@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
@@ -22,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, IWrenchable {
+public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
 
     @Nullable
@@ -149,7 +148,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         return tag;
     }
 
-    @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         redstoneMode.write(tag);
 
@@ -164,7 +162,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         readConfiguration(tag);
     }
 
-    @Override
     public void readConfiguration(NBTTagCompound tag) {
         redstoneMode = RedstoneMode.read(tag);
     }

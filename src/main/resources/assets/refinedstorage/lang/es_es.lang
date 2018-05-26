@@ -292,13 +292,6 @@ item.refinedstorage:upgrade.9.name=Mejora de Fortuna
 item.refinedstorage:storage_housing.name=Carcasa
 item.refinedstorage:filter.name=Filtro
 item.refinedstorage:network_card.name=Tarjeta de Red
-item.refinedstorage:wrench.name=Llave inglesa
-item.refinedstorage:wrench.saved=Configuración Escrita.
-item.refinedstorage:wrench.read=Leer Configuración.
-item.refinedstorage:wrench.mode=Modo: %s
-item.refinedstorage:wrench.mode.0=Rotación
-item.refinedstorage:wrench.mode.1=Configuración
-item.refinedstorage:wrench.mode.2=Desmantelando
 item.refinedstorage:security_card.name=Tarjeta de Seguridad
 item.refinedstorage:security_card.owner=Designado a: %s
 

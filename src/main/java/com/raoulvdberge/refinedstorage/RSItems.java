@@ -19,6 +19,5 @@ public final class RSItems {
     public static final ItemNetworkCard NETWORK_CARD = new ItemNetworkCard();
     public static final ItemFluidStorageDisk FLUID_STORAGE_DISK = new ItemFluidStorageDisk();
     public static final ItemFluidStoragePart FLUID_STORAGE_PART = new ItemFluidStoragePart();
-    public static final ItemWrench WRENCH = new ItemWrench();
     public static final ItemSecurityCard SECURITY_CARD = new ItemSecurityCard();
 }

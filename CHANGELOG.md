@@ -8,6 +8,7 @@
 - You can no longer put a Filter in filter slots to gain additional filter slots (raoulvdberge)
 - If an Interface is configured to expose the entire network storage (by configuring no export slots), it will no longer expose the entire RS storage, due to performance issues (raoulvdberge)
 - The Portable Grid no longer exposes a inventory for crossmod interaction, due to performance issues (raoulvdberge)
+- Removed the Wrench (raoulvdberge)
 - Updated Russian translation (kellixon)
 
 ### 1.5.34
