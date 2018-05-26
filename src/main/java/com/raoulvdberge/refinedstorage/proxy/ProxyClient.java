@@ -9,8 +9,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.render.*;
@@ -331,7 +329,7 @@ public class ProxyClient extends ProxyCommon {
 
         BlockPos pos = e.getTarget().getBlockPos();
 
-        Block block = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapBlock(player.getEntityWorld(), pos) : player.getEntityWorld().getBlockState(pos).getBlock();
+        Block block = player.getEntityWorld().getBlockState(pos).getBlock();
 
         if (!(block instanceof BlockCable)) {
             return;

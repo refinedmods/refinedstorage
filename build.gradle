@@ -16,7 +16,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.5.35"
+version = "1.6"
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
@@ -24,10 +24,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12.2-14.23.1.2577"
+    version = "1.12.2-14.23.4.2703"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20171217"
+    mappings = "snapshot_20180526"
 }
 
 repositories {
@@ -35,13 +35,7 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
     maven {
-        url "http://maven.amadornes.com"
-    }
-    maven {
         url "http://maven.cil.li"
-    }
-    maven {
-        url "https://dl.bintray.com/jaquadro/dev"
     }
     maven {
         name = "CurseForge"
@@ -50,11 +44,9 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.8.5.136:api"
-    runtime "mezz.jei:jei_1.12.2:4.8.5.136"
-    deobfCompile "MCMultiPart2:MCMultiPart:2.4.1"
+    deobfCompile "mezz.jei:jei_1.12.2:4.9.1.191:api"
+    runtime "mezz.jei:jei_1.12.2:4.9.1.191"
     deobfCompile "li.cil.oc:OpenComputers:MC1.12.1-1.7.1.43:api"
-    deobfCompile "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.12.1-5.3.3:api"
     compile "inventory-tweaks:InventoryTweaks:1.63:api"
 }
 

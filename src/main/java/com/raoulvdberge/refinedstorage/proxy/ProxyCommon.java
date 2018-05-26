@@ -30,7 +30,6 @@ import com.raoulvdberge.refinedstorage.integration.funkylocomotion.MoveFactoryRe
 import com.raoulvdberge.refinedstorage.integration.inventorysorter.IntegrationInventorySorter;
 import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
-import com.raoulvdberge.refinedstorage.integration.projecte.IntegrationProjectE;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
@@ -263,10 +262,6 @@ public class ProxyCommon {
         if (IntegrationCraftingTweaks.isLoaded()) {
             IntegrationCraftingTweaks.register();
         }
-
-        if (IntegrationProjectE.isLoaded()) {
-            IntegrationProjectE.register();
-        }
     }
 
     public void postInit(FMLPostInitializationEvent e) {
@@ -327,7 +322,7 @@ public class ProxyCommon {
     }
 
     private void registerTile(Class<? extends TileBase> tile, String id) {
-        GameRegistry.registerTileEntity(tile, RS.ID + ":" + id);
+        GameRegistry.registerTileEntity(tile, new ResourceLocation(RS.ID, id));
 
         try {
             TileBase tileInstance = tile.newInstance();

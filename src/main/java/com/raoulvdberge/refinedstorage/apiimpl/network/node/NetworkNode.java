@@ -5,8 +5,6 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -215,7 +213,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
 
     // @todo: Move this data to the network node.
     public void resetDirection() {
-        EnumFacing direction = ((TileBase) (IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos))).getDirection();
+        EnumFacing direction = ((TileBase) world.getTileEntity(pos)).getDirection();
         if (!direction.equals(this.direction)) {
             this.direction = direction;
             onDirectionChanged();

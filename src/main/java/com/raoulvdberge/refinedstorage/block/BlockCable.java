@@ -1,8 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -75,7 +73,7 @@ public class BlockCable extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
-        TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
+        TileEntity tile = world.getTileEntity(pos);
 
         state = super.getActualState(state, world, pos)
             .withProperty(NORTH, hasConnectionWith(world, pos, this, tile, EnumFacing.NORTH))
@@ -112,11 +110,6 @@ public class BlockCable extends BlockNode {
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
             if (block.getDirection() != null && ((TileNode) tile).getNode().getFacingTile() == otherTile) {
                 return false;
-            }
-
-            if (IntegrationMCMP.isLoaded()) {
-                return !RSMCMPAddon.hasObstructingMultipart(tile, Collections.singletonList(BlockCable.getCableExtensionAABB(direction)))
-                    && !RSMCMPAddon.hasObstructingMultipart(otherTile, Collections.singletonList(BlockCable.getCableExtensionAABB(direction.getOpposite())));
             }
 
             return true;
@@ -237,23 +230,5 @@ public class BlockCable extends BlockNode {
     @Nullable
     public Direction getDirection() {
         return null;
-    }
-
-    public static AxisAlignedBB getCableExtensionAABB(EnumFacing facing) {
-        if (facing == EnumFacing.NORTH) {
-            return NORTH_AABB;
-        } else if (facing == EnumFacing.EAST) {
-            return EAST_AABB;
-        } else if (facing == EnumFacing.SOUTH) {
-            return SOUTH_AABB;
-        } else if (facing == EnumFacing.WEST) {
-            return WEST_AABB;
-        } else if (facing == EnumFacing.UP) {
-            return UP_AABB;
-        } else if (facing == EnumFacing.DOWN) {
-            return DOWN_AABB;
-        }
-
-        return NORTH_AABB;
     }
 }

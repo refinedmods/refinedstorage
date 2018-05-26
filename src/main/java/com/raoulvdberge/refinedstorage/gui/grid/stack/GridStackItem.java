@@ -9,7 +9,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
@@ -85,7 +84,7 @@ public class GridStackItem implements IGridStack {
 
     @Override
     public String getModId() {
-        return Item.REGISTRY.getNameForObject(stack.getItem()).getResourceDomain();
+        return stack.getItem().getCreatorModId(stack);
     }
 
     @Override

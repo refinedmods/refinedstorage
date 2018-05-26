@@ -3,8 +3,6 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -92,7 +90,7 @@ public abstract class BlockNode extends BlockBase {
         state = super.getActualState(state, world, pos);
 
         if (hasConnectivityState()) {
-            TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
+            TileEntity tile = world.getTileEntity(pos);
 
             if (tile instanceof TileNode) {
                 return state.withProperty(CONNECTED, ((TileNode) tile).getNode().isActive());

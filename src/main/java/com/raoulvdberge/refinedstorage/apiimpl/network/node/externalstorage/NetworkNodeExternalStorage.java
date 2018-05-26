@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
 
-import com.jaquadro.minecraft.storagedrawers.api.storage.IDrawerGroup;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
@@ -12,9 +11,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.integration.projecte.IntegrationProjectE;
-import com.raoulvdberge.refinedstorage.integration.projecte.StorageItemTransmutationTable;
-import com.raoulvdberge.refinedstorage.integration.storagedrawers.StorageItemItemRepository;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -29,8 +25,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -39,9 +33,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
-    @CapabilityInject(IDrawerGroup.class)
-    private static final Capability<IDrawerGroup> DRAWER_GROUP_CAPABILITY = null;
-
     public static final String ID = "external_storage";
 
     private static final String NBT_PRIORITY = "Priority";
@@ -203,22 +194,12 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         TileEntity facing = getFacingTile();
 
         if (type == IType.ITEMS) {
-            if (facing != null) {
-                if (DRAWER_GROUP_CAPABILITY != null && facing.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) {
-                    itemStorages.add(new StorageItemItemRepository(this, () -> {
-                        TileEntity f = getFacingTile();
+            if (facing != null && !(facing.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()) && facing.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()).getNode() instanceof IStorageProvider)) {
+                IItemHandler itemHandler = WorldUtils.getItemHandler(facing, getDirection().getOpposite());
 
-                        return (f != null && f.hasCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite())) ? f.getCapability(DRAWER_GROUP_CAPABILITY, getDirection().getOpposite()) : null;
-                    }));
-                } else if (!(facing.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()) && facing.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()).getNode() instanceof IStorageProvider)) {
-                    IItemHandler itemHandler = WorldUtils.getItemHandler(facing, getDirection().getOpposite());
-
-                    if (itemHandler != null) {
-                        itemStorages.add(new StorageItemItemHandler(this, () -> WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite())));
-                    }
+                if (itemHandler != null) {
+                    itemStorages.add(new StorageItemItemHandler(this, () -> WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite())));
                 }
-            } else if (IntegrationProjectE.isLoaded() && world.getBlockState(pos.offset(getDirection())).getBlock().getUnlocalizedName().equals("tile.pe_transmutation_stone")) {
-                itemStorages.add(new StorageItemTransmutationTable(this));
             }
         } else if (type == IType.FLUIDS) {
             IFluidHandler fluidHandler = WorldUtils.getFluidHandler(facing, getDirection().getOpposite());
