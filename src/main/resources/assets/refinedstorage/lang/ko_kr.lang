@@ -103,7 +103,6 @@ misc.refinedstorage:set=설정
 misc.refinedstorage:cancel_all=모두 취소
 misc.refinedstorage:priority=우선 순위
 misc.refinedstorage:oredict=Ore Dictionary
-misc.refinedstorage:blocking=Blocking
 
 misc.refinedstorage:reader_writer.redstone=레드스톤 강도: %d
 
@@ -137,8 +136,6 @@ sidebutton.refinedstorage:grid.size.0=맞춤
 sidebutton.refinedstorage:grid.size.1=작음
 sidebutton.refinedstorage:grid.size.2=중간
 sidebutton.refinedstorage:grid.size.3=큼
-
-sidebutton.refinedstorage:crafting_monitor.view_automated=자동으로 시작된 작업 보기
 
 sidebutton.refinedstorage:mode=모드
 sidebutton.refinedstorage:mode.whitelist=화이트리스트

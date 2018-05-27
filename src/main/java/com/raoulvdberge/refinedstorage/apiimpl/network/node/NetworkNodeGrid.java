@@ -63,7 +63,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
     public static final String NBT_TAB_PAGE = "TabPage";
     public static final String NBT_SIZE = "Size";
     public static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
-    public static final String NBT_BLOCKING_PATTERN = "BlockingPattern";
 
     private Container craftingContainer = new Container() {
         @Override
@@ -130,7 +129,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
     private boolean oredictPattern = false;
     private boolean processingPattern = false;
-    private boolean blockingPattern = false;
 
     public NetworkNodeGrid(World world, BlockPos pos) {
         super(world, pos);
@@ -194,14 +192,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
     public void setProcessingPattern(boolean processingPattern) {
         this.processingPattern = processingPattern;
-    }
-
-    public boolean isBlockingPattern() {
-        return blockingPattern;
-    }
-
-    public void setBlockingPattern(boolean blockingPattern) {
-        this.blockingPattern = blockingPattern;
     }
 
     public GridType getType() {
@@ -499,10 +489,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
-            if (processingPattern) {
-                ItemPattern.setBlocking(pattern, blockingPattern);
-            }
-
             ItemPattern.setOredict(pattern, oredictPattern);
 
             if (processingPattern) {
@@ -692,7 +678,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
         tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
         tag.setBoolean(NBT_PROCESSING_PATTERN, processingPattern);
-        tag.setBoolean(NBT_BLOCKING_PATTERN, blockingPattern);
 
         return tag;
     }
@@ -727,10 +712,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
         if (tag.hasKey(NBT_PROCESSING_PATTERN)) {
             processingPattern = tag.getBoolean(NBT_PROCESSING_PATTERN);
-        }
-
-        if (tag.hasKey(NBT_BLOCKING_PATTERN)) {
-            blockingPattern = tag.getBoolean(NBT_BLOCKING_PATTERN);
         }
     }
 

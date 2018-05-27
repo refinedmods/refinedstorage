@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonCraftingMonitorViewAutomated;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorCancel;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
@@ -70,8 +69,6 @@ public class GuiCraftingMonitor extends GuiBase {
         if (craftingMonitor.getRedstoneModeParameter() != null) {
             addSideButton(new SideButtonRedstoneMode(this, craftingMonitor.getRedstoneModeParameter()));
         }
-
-        addSideButton(new SideButtonCraftingMonitorViewAutomated(this, craftingMonitor));
 
         String cancel = t("gui.cancel");
         String cancelAll = t("misc.refinedstorage:cancel_all");

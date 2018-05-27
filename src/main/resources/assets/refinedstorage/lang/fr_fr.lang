@@ -104,7 +104,6 @@ misc.refinedstorage:set=Fixer
 misc.refinedstorage:cancel_all=Tout annuler
 misc.refinedstorage:priority=Priorité
 misc.refinedstorage:oredict=Oredict
-misc.refinedstorage:blocking=Blocker
 misc.refinedstorage:processing=En Traitement
 
 misc.refinedstorage:reader_writer.redstone=Redstone strength: %d
@@ -139,8 +138,6 @@ sidebutton.refinedstorage:grid.size.0=Etendu
 sidebutton.refinedstorage:grid.size.1=Petit
 sidebutton.refinedstorage:grid.size.2=Moyen
 sidebutton.refinedstorage:grid.size.3=Grand
-
-sidebutton.refinedstorage:crafting_monitor.view_automated=Vue des tâches automatisées
 
 sidebutton.refinedstorage:mode=Mode
 sidebutton.refinedstorage:mode.whitelist=Liste blanche

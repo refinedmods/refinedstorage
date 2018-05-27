@@ -7,7 +7,6 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,9 +24,6 @@ import java.util.List;
 public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
     public static final String ID = "crafting_monitor";
 
-    private static final String NBT_VIEW_AUTOMATED = "ViewAutomated";
-
-    private boolean viewAutomated = true;
     private List<IFilter> filters = new ArrayList<>();
     private ItemHandlerListenerNetworkNode filterListener = new ItemHandlerListenerNetworkNode(this);
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), slot -> {
@@ -102,8 +98,6 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
         StackUtils.writeItems(filter, 0, tag);
 
-        tag.setBoolean(NBT_VIEW_AUTOMATED, viewAutomated);
-
         return tag;
     }
 
@@ -112,29 +106,11 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         super.read(tag);
 
         StackUtils.readItems(filter, 0, tag);
-
-        if (tag.hasKey(NBT_VIEW_AUTOMATED)) {
-            viewAutomated = tag.getBoolean(NBT_VIEW_AUTOMATED);
-        }
-    }
-
-    @Override
-    public boolean canViewAutomated() {
-        return world.isRemote ? TileCraftingMonitor.VIEW_AUTOMATED.getValue() : viewAutomated;
-    }
-
-    @Override
-    public void onViewAutomatedChanged(boolean viewAutomated) {
-        TileDataManager.setParameter(TileCraftingMonitor.VIEW_AUTOMATED, viewAutomated);
     }
 
     @Override
     public void onClosed(EntityPlayer player) {
         // NO OP
-    }
-
-    public void setViewAutomated(boolean viewAutomated) {
-        this.viewAutomated = viewAutomated;
     }
 
     public ItemHandlerFilter getFilter() {

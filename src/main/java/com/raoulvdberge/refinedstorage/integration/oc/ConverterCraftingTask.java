@@ -12,7 +12,7 @@ public class ConverterCraftingTask implements Converter {
             ICraftingTask task = (ICraftingTask) value;
 
             output.put("stack", task.getRequested());
-            output.put("missing", task.getMissing().getStacks());
+            // TODO: output.put("missing", task.getMissing().getStacks());
             output.put("pattern", task.getPattern());
             output.put("quantity", task.getQuantity());
         }

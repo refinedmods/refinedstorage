@@ -104,7 +104,6 @@ misc.refinedstorage:set=Definir
 misc.refinedstorage:cancel_all=Cancelar tudo
 misc.refinedstorage:priority=Prioridade
 misc.refinedstorage:oredict=Oredict
-misc.refinedstorage:blocking=Bloqueio
 misc.refinedstorage:processing=Processamento
 
 misc.refinedstorage:reader_writer.redstone=Força de redstone: %d
@@ -140,8 +139,6 @@ sidebutton.refinedstorage:grid.size.0=Esticado
 sidebutton.refinedstorage:grid.size.1=Pequeno
 sidebutton.refinedstorage:grid.size.2=Médio
 sidebutton.refinedstorage:grid.size.3=Grande
-
-sidebutton.refinedstorage:crafting_monitor.view_automated=Ver tarefas automatizadas
 
 sidebutton.refinedstorage:mode=Modo
 sidebutton.refinedstorage:mode.whitelist=Lista branca

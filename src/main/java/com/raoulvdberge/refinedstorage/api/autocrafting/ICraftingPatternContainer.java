@@ -7,7 +7,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -75,11 +74,6 @@ public interface ICraftingPatternContainer {
      */
     @Nullable
     ICraftingPatternContainer getRootContainer();
-
-    /**
-     * @return true if this container or its proxy is blocked, false otherwise
-     */
-    boolean isBlocked();
 
     /**
      * @return the UUID of this container

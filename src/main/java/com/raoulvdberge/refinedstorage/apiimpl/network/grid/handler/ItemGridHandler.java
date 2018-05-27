@@ -11,7 +11,6 @@ import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStartResponse;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -171,13 +170,12 @@ public class ItemGridHandler implements IItemGridHandler {
             return;
         }
 
+        // TODO why?
         IStackList<ItemStack> cache = API.instance().createItemStackList();
 
         for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
             for (ItemStack output : pattern.getOutputs()) {
-                if (output != null) {
-                    cache.add(output);
-                }
+                cache.add(output);
             }
         }
 
@@ -185,11 +183,14 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
-                ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPatternChain(stack), quantity, false);
+                ICraftingTask task = network.getCraftingManager().create(stack, quantity);
+                if (task == null) {
+                    return;
+                }
 
                 task.calculate();
 
-                if (noPreview && task.getMissing().isEmpty()) {
+                if (noPreview /*&& task.getMissing().isEmpty()*/) { // TODO
                     network.getCraftingManager().add(task);
 
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
@@ -212,7 +213,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
             for (ItemStack output : pattern.getOutputs()) {
-                if (output != null && API.instance().getItemStackHashCode(output) == hash) {
+                if (API.instance().getItemStackHashCode(output) == hash) {
                     stack = output;
 
                     break;
@@ -225,11 +226,12 @@ public class ItemGridHandler implements IItemGridHandler {
         }
 
         if (stack != null) {
-            ICraftingTask task = new CraftingTask(network, stack, network.getCraftingManager().getPatternChain(stack), quantity, false);
+            ICraftingTask task = network.getCraftingManager().create(stack, quantity);
+            if (task == null) {
+                return;
+            }
 
             task.calculate();
-
-            task.getMissing().clear();
 
             network.getCraftingManager().add(task);
         }

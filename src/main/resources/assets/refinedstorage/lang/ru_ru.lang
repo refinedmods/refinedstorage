@@ -110,7 +110,6 @@ misc.refinedstorage:set=Установить
 misc.refinedstorage:cancel_all=Отменить все
 misc.refinedstorage:priority=Приоритет
 misc.refinedstorage:oredict=Словарь руды
-misc.refinedstorage:blocking=Блокировка
 misc.refinedstorage:processing=Обработка
 
 misc.refinedstorage:reader_writer.redstone=Сила красного камня: %d
@@ -163,8 +162,6 @@ sidebutton.refinedstorage:grid.size.0=Вытянутый
 sidebutton.refinedstorage:grid.size.1=Маленький
 sidebutton.refinedstorage:grid.size.2=Средний
 sidebutton.refinedstorage:grid.size.3=Большой
-
-sidebutton.refinedstorage:crafting_monitor.view_automated=Просмотр автоматизированных задач
 
 sidebutton.refinedstorage:mode=Режим
 sidebutton.refinedstorage:mode.whitelist=Белый список

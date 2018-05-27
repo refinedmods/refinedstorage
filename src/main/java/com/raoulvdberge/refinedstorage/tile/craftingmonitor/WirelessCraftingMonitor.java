@@ -1,13 +1,11 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
-import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorViewAutomated;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,8 +26,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
     private int networkDimension;
     private BlockPos network;
-
-    private boolean viewAutomated;
 
     private List<IFilter> filters = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), null) {
@@ -55,7 +51,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         this.stack = stack;
         this.networkDimension = networkDimension;
         this.network = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
-        this.viewAutomated = ItemWirelessCraftingMonitor.canViewAutomated(stack);
 
         if (stack.hasTagCompound()) {
             StackUtils.readItems(filter, 0, stack.getTagCompound());
@@ -105,18 +100,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     @Override
     public ItemHandlerBase getFilter() {
         return filter;
-    }
-
-    @Override
-    public boolean canViewAutomated() {
-        return viewAutomated;
-    }
-
-    @Override
-    public void onViewAutomatedChanged(boolean viewAutomated) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorViewAutomated(viewAutomated));
-
-        this.viewAutomated = viewAutomated;
     }
 
     private INetwork getNetwork() {

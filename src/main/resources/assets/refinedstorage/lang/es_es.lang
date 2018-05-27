@@ -109,7 +109,6 @@ misc.refinedstorage:set=Poner
 misc.refinedstorage:cancel_all=Cancelar todo
 misc.refinedstorage:priority=Prioridad
 misc.refinedstorage:oredict=Diccionario de minerales
-misc.refinedstorage:blocking=Bloqueo
 misc.refinedstorage:processing=Procesándose
 
 misc.refinedstorage:reader_writer.redstone=Fuerza de señal: %d
@@ -162,8 +161,6 @@ sidebutton.refinedstorage:grid.size.0=Tramo
 sidebutton.refinedstorage:grid.size.1=Pequeño
 sidebutton.refinedstorage:grid.size.2=Mediano
 sidebutton.refinedstorage:grid.size.3=largo
-
-sidebutton.refinedstorage:crafting_monitor.view_automated=Ver tareas automatizadas
 
 sidebutton.refinedstorage:mode=Modo
 sidebutton.refinedstorage:mode.whitelist=Permitido

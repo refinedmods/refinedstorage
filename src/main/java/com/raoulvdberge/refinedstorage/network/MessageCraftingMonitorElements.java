@@ -51,10 +51,6 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
         for (ICraftingTask task : craftingMonitor.getTasks()) {
             ItemStack stack = task.getRequested();
 
-            if (!craftingMonitor.canViewAutomated() && task.isAutomated()) {
-                continue;
-            }
-
             if (stack == null || GridFilterFilter.accepts(craftingMonitor.getFilters(), stack, Item.REGISTRY.getNameForObject(stack.getItem()).getResourceDomain())) {
                 elements.addAll(task.getCraftingMonitorElements());
             }

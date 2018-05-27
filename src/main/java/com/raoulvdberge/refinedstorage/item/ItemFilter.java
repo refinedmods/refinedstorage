@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -73,7 +74,7 @@ public class ItemFilter extends ItemBase {
 
         ItemHandlerFilterItems items = new ItemHandlerFilterItems(stack);
 
-        ItemPattern.combineItems(tooltip, false, items.getFilteredItems());
+        RenderUtils.addCombinedItemsToTooltip(tooltip, false, items.getFilteredItems());
     }
 
     public static int getCompare(ItemStack stack) {

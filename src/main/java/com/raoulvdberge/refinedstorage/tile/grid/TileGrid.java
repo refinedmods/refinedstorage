@@ -80,10 +80,6 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
                 ((ContainerGrid) player.openContainer).sendAllSlots();
             });
     }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
-    public static final TileDataParameter<Boolean, TileGrid> BLOCKING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isBlockingPattern(), (t, v) -> {
-        t.getNode().setBlockingPattern(v);
-        t.getNode().markDirty();
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateBlockingPattern(p)));
 
     public static void trySortGrid(boolean initial) {
         if (!initial) {
@@ -101,7 +97,6 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         dataManager.addWatchedParameter(TAB_PAGE);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
         dataManager.addWatchedParameter(PROCESSING_PATTERN);
-        dataManager.addWatchedParameter(BLOCKING_PATTERN);
     }
 
     @Override

@@ -27,10 +27,6 @@ public interface ICraftingMonitor {
 
     ItemHandlerBase getFilter();
 
-    boolean canViewAutomated();
-
-    void onViewAutomatedChanged(boolean viewAutomated);
-
     boolean isActive();
 
     void onClosed(EntityPlayer player);

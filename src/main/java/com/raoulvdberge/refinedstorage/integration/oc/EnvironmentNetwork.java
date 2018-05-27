@@ -22,9 +22,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.Map;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_DAMAGE;
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_NBT;
@@ -68,7 +68,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         ItemStack stack = args.checkItemStack(0);
-        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack)};
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT)};
     }
 
     @Callback(doc = "function():table -- Gets the patterns of this network.")
@@ -93,7 +93,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         ItemStack stack = args.checkItemStack(0);
 
-        return new Object[]{node.getNetwork().getCraftingManager().hasPattern(stack)};
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT) != null};
     }
 
     @Callback(doc = "function(stack:table[, count: number]):table -- Gets a list of missing items for a crafting task.")
@@ -103,18 +103,17 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         ItemStack stack = args.checkItemStack(0);
+        int count = args.optInteger(1, 1);
 
-        if (!node.getNetwork().getCraftingManager().hasPattern(stack)) {
-            throw new IllegalArgumentException("No pattern for this item exists");
+        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, count);
+        if (task == null) {
+            throw new IllegalArgumentException("Could not create crafting task");
         }
 
-        int count = args.optInteger(1, 1);
-        ICraftingPattern pattern = node.getNetwork().getCraftingManager().getPattern(stack);
-
-        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, pattern, count, true);
         task.calculate();
 
-        return new Object[]{task.getMissing().getStacks()};
+        //TODO return new Object[]{task.getMissing().getStacks()};
+        return new Object[]{};
     }
 
     @Callback(doc = "function(stack:table[, count: number]) -- Schedules a crafting task.")
@@ -124,15 +123,13 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         ItemStack stack = args.checkItemStack(0);
+        int amount = args.optInteger(1, 1);
 
-        if (!node.getNetwork().getCraftingManager().hasPattern(stack)) {
-            throw new IllegalArgumentException("No pattern for this item stack exists");
+        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, amount);
+        if (task == null) {
+            throw new IllegalArgumentException("Could not create crafting task");
         }
 
-        int amount = args.optInteger(1, 1);
-        ICraftingPattern pattern = node.getNetwork().getCraftingManager().getPattern(stack);
-
-        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, pattern, amount, true);
         task.calculate();
 
         node.getNetwork().getCraftingManager().add(task);

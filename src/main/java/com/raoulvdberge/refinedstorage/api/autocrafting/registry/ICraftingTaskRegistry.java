@@ -20,7 +20,7 @@ public interface ICraftingTaskRegistry {
      * Returns the crafting task factory by factory id.
      *
      * @param id the factory id
-     * @return the factory
+     * @return the factory, or null if there is no factory
      */
     @Nullable
     ICraftingTaskFactory get(String id);

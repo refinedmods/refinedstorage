@@ -105,7 +105,6 @@ misc.refinedstorage:set=设置
 misc.refinedstorage:cancel_all=取消所有
 misc.refinedstorage:priority=优先级
 misc.refinedstorage:oredict=矿物辞典
-misc.refinedstorage:blocking=阻塞中
 misc.refinedstorage:processing=进行中
 
 misc.refinedstorage:reader_writer.redstone=红石强度：%d
@@ -141,8 +140,6 @@ sidebutton.refinedstorage:grid.size.0=自适应
 sidebutton.refinedstorage:grid.size.1=小
 sidebutton.refinedstorage:grid.size.2=中
 sidebutton.refinedstorage:grid.size.3=大
-
-sidebutton.refinedstorage:crafting_monitor.view_automated=查看自动化进程
 
 sidebutton.refinedstorage:mode=模式
 sidebutton.refinedstorage:mode.whitelist=白名单

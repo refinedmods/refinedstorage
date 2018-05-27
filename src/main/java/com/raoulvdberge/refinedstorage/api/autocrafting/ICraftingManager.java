@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +11,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The crafting manager handles the storing, updating, adding and deleting of crafting tasks in a network.
@@ -24,37 +22,9 @@ public interface ICraftingManager {
     List<ICraftingTask> getTasks();
 
     /**
-     * @return all the crafting pattern containers
-     */
-    List<ICraftingPatternContainer> getContainers();
-
-    /**
      * @return named crafting pattern containers
      */
     Map<String, List<IItemHandlerModifiable>> getNamedContainers();
-
-    /**
-     * @param blocker the container that is blocking another container
-     * @param blockee the container being blocked, may be the same as blocker
-     */
-    void addContainerBlock(UUID blocker, UUID blockee);
-
-    /**
-     * @param blocker the container that is blocking another container
-     */
-    void removeContainerBlock(UUID blocker);
-
-    /**
-     * @param blockee the container to check
-     * @return whether the container is blocked
-     */
-    boolean isContainerBlocked(UUID blockee);
-
-    /**
-     * @param container the container to set the blocking state for
-     * @param blocked whether the container should be blocked
-     */
-    void setContainerBlocked(ICraftingPatternContainer container, boolean blocked);
 
     /**
      * Adds a crafting task.
@@ -70,27 +40,8 @@ public interface ICraftingManager {
      */
     void cancel(@Nonnull ICraftingTask task);
 
-    /**
-     * Creates a crafting task.
-     *
-     * @param stack     the stack to create a task for
-     * @param pattern   the pattern
-     * @param quantity  the quantity
-     * @param automated whether this crafting task is created in an automated way
-     * @return the crafting task
-     */
-    ICraftingTask create(@Nullable ItemStack stack, ICraftingPattern pattern, int quantity, boolean automated);
-
-    /**
-     * Creates a crafting task.
-     *
-     * @param stack        the stack to create a task for
-     * @param patternChain the pattern
-     * @param quantity     the quantity
-     * @param automated    whether this crafting task is created in an automated way
-     * @return the crafting task
-     */
-    ICraftingTask create(@Nullable ItemStack stack, ICraftingPatternChain patternChain, int quantity, boolean automated);
+    @Nullable
+    ICraftingTask create(ItemStack stack, int quantity);
 
     /**
      * Schedules a crafting task if the task isn't scheduled yet.
@@ -121,122 +72,14 @@ public interface ICraftingManager {
     void rebuild();
 
     /**
-     * Returns crafting patterns from an item stack.
+     * Return a crafting pattern from an item stack.
      *
      * @param pattern the stack to get a pattern for
      * @param flags   the flags to compare on, see {@link IComparer}
-     * @return a list of crafting patterns where the given pattern is one of the outputs
-     */
-    List<ICraftingPattern> getPatterns(ItemStack pattern, int flags);
-
-    /**
-     * Returns a crafting pattern for an item stack.
-     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
-     * Internally, this makes a selection out of the available patterns.
-     * It makes this selection based on the item count of the pattern outputs in the system.
-     *
-     * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link IComparer}
-     * @return the pattern, or null if the pattern is not found
+     * @return the crafting pattern, or null if none is found
      */
     @Nullable
-    default ICraftingPattern getPattern(ItemStack pattern, int flags) {
-        ICraftingPatternChain chain = getPatternChain(pattern, flags);
-
-        return chain == null ? null : chain.cycle();
-    }
-
-    /**
-     * Returns a crafting pattern for an item stack.
-     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
-     * Internally, this makes a selection out of the available patterns.
-     * It makes this selection based on the item count of the pattern outputs in the {@link IStackList<ItemStack>} provided.
-     *
-     * @param pattern  the stack to get a pattern for
-     * @param flags    the flags to compare on, see {@link IComparer}
-     * @param itemList the {@link IStackList<ItemStack>} used to calculate the best fitting pattern
-     * @return the pattern, or null if the pattern is not found
-     */
-    @Nullable
-    default ICraftingPattern getPattern(ItemStack pattern, int flags, IStackList<ItemStack> itemList) {
-        ICraftingPatternChain chain = getPatternChain(pattern, flags, itemList);
-
-        return chain == null ? null : chain.cycle();
-    }
-
-    /**
-     * Returns a crafting pattern for an item stack.
-     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
-     * Internally, this makes a selection out of the available patterns.
-     * It makes this selection based on the item count of the pattern outputs in the system.
-     *
-     * @param pattern the stack to get a pattern for
-     * @return the pattern, or null if the pattern is not found
-     */
-    @Nullable
-    default ICraftingPattern getPattern(ItemStack pattern) {
-        return getPattern(pattern, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
-    }
-
-    /**
-     * Returns a crafting pattern chain for an item stack.
-     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
-     * Internally, this makes a selection out of the available patterns.
-     * It makes this selection based on the item count of the pattern outputs in the system.
-     *
-     * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link IComparer}
-     * @return the pattern chain, or null if the pattern chain is not found
-     */
-    @Nullable
-    ICraftingPatternChain getPatternChain(ItemStack pattern, int flags);
-
-    /**
-     * Returns a crafting pattern chain for an item stack.
-     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
-     * Internally, this makes a selection out of the available patterns.
-     * It makes this selection based on the item count of the pattern outputs in the {@link IStackList<ItemStack>} provided.
-     *
-     * @param pattern  the stack to get a pattern for
-     * @param flags    the flags to compare on, see {@link IComparer}
-     * @param itemList the {@link IStackList<ItemStack>} used to calculate the best fitting pattern
-     * @return the pattern chain, or null if the pattern chain is not found
-     */
-    @Nullable
-    ICraftingPatternChain getPatternChain(ItemStack pattern, int flags, IStackList<ItemStack> itemList);
-
-    /**
-     * Returns a crafting pattern for an item stack.
-     * This returns a single crafting pattern, as opposed to {@link ICraftingManager#getPatterns(ItemStack, int)}.
-     * Internally, this makes a selection out of the available patterns.
-     * It makes this selection based on the item count of the pattern outputs in the system.
-     *
-     * @param pattern the stack to get a pattern for
-     * @return the pattern chain, or null if the pattern chain is not found
-     */
-    @Nullable
-    default ICraftingPatternChain getPatternChain(ItemStack pattern) {
-        return getPatternChain(pattern, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
-    }
-
-    /**
-     * Returns if there is a pattern with a given stack as output.
-     *
-     * @param stack the stack
-     * @return true if there is a pattern, false otherwise
-     */
-    default boolean hasPattern(ItemStack stack) {
-        return hasPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
-    }
-
-    /**
-     * Returns if there is a pattern with a given stack as output.
-     *
-     * @param stack the stack
-     * @param flags the flags to compare on, see {@link IComparer}
-     * @return true if there is a pattern, false otherwise
-     */
-    boolean hasPattern(ItemStack stack, int flags);
+    ICraftingPattern getPattern(ItemStack pattern, int flags);
 
     /**
      * Updates the tasks in this manager.

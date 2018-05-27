@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -11,11 +12,13 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,6 +26,9 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class RenderUtils {
     public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
@@ -291,6 +297,32 @@ public final class RenderUtils {
                         drawFluidTexture(x, y, fluidStillSprite, maskTop, maskRight, 100);
                     }
                 }
+            }
+        }
+    }
+
+    public static void addCombinedItemsToTooltip(List<String> tooltip, boolean displayAmount, List<ItemStack> stacks) {
+        Set<Integer> combinedIndices = new HashSet<>();
+
+        for (int i = 0; i < stacks.size(); ++i) {
+            if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
+                ItemStack stack = stacks.get(i);
+
+                String data = stack.getDisplayName();
+
+                int amount = stack.getCount();
+
+                for (int j = i + 1; j < stacks.size(); ++j) {
+                    if (API.instance().getComparer().isEqual(stack, stacks.get(j))) {
+                        amount += stacks.get(j).getCount();
+
+                        combinedIndices.add(j);
+                    }
+                }
+
+                data = (displayAmount ? (TextFormatting.WHITE + String.valueOf(amount) + " ") : "") + TextFormatting.GRAY + data;
+
+                tooltip.add(data);
             }
         }
     }
