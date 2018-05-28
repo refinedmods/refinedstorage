@@ -20,7 +20,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.items.SlotItemHandler;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 

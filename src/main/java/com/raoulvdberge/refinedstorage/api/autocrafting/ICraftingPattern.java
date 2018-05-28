@@ -46,9 +46,9 @@ public interface ICraftingPattern {
 
     /**
      * @param took the items took per slot
-     * @return the outputs based on the items took
+     * @return the output based on the items took
      */
-    NonNullList<ItemStack> getOutputs(NonNullList<ItemStack> took);
+    ItemStack getOutput(NonNullList<ItemStack> took);
 
     /**
      * @return the outputs

@@ -66,7 +66,7 @@ public class GridStackFluid implements IGridStack {
         float amountRaw = ((float) stack.amount / 1000F);
         int amount = (int) amountRaw;
         String formattedAmount = amount >= 1 ? API.instance().getQuantityFormatter().formatWithUnits(amount) : String.format("%.1f", amountRaw);
-        
+
         gui.drawQuantity(x, y, formattedAmount);
     }
 

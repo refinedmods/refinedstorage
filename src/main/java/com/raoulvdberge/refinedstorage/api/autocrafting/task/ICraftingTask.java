@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting.task;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -74,4 +75,9 @@ public interface ICraftingTask {
      * @return true if no recursion was found, false otherwise
      */
     boolean isValid();
+
+    /**
+     * @return the missing items
+     */
+    IStackList<ItemStack> getMissing();
 }

@@ -190,7 +190,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
                 task.calculate();
 
-                if (noPreview /*&& task.getMissing().isEmpty()*/) { // TODO
+                if (noPreview && task.getMissing().isEmpty()) {
                     network.getCraftingManager().add(task);
 
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);

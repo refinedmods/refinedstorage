@@ -93,7 +93,7 @@ public class GridStackItem implements IGridStack {
             if (stack.isEmpty()) {
                 oreIds = new String[]{};
             } else {
-                oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).collect(Collectors.toList()).toArray(new String[0]);
+                oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).toArray(String[]::new);
             }
         }
 

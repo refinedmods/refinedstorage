@@ -8,8 +8,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class Comparer implements IComparer {
     @Override
@@ -37,11 +35,6 @@ public class Comparer implements IComparer {
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if ((flags & COMPARE_STRIP_NBT) == COMPARE_STRIP_NBT) {
-                left = stripTags(left.copy());
-                right = stripTags(right.copy());
-            }
-
             if (!isEqualNBT(left, right)) {
                 return false;
             }
@@ -140,67 +133,5 @@ public class Comparer implements IComparer {
         }
 
         return EnumActionResult.PASS;
-    }
-
-    @Nullable
-    public static ItemStack stripTags(@Nullable ItemStack stack) {
-        if (stack != null && stack.hasTagCompound()) {
-            switch (stack.getItem().getRegistryName().getResourceDomain()) {
-                case "mekanism":
-                case "mekanismgenerators":
-                case "mekanismtools":
-                    stack.getTagCompound().removeTag("mekData");
-                    break;
-                case "enderio":
-                    // Soul vials
-                    stack.getTagCompound().removeTag("entity");
-                    stack.getTagCompound().removeTag("isStub");
-                    // Capacitors
-                    stack.getTagCompound().removeTag("Energy");
-                    // Painted
-                    stack.getTagCompound().removeTag("paintSource__null");
-                    stack.getTagCompound().removeTag("paintSource");
-                    // Sided config
-                    stack.getTagCompound().removeTag("faceModes__null");
-                    stack.getTagCompound().removeTag("faceModes");
-                    // Tank
-                    stack.getTagCompound().removeTag("tank");
-                    stack.getTagCompound().removeTag("voidMode");
-                    stack.getTagCompound().removeTag("inventory");
-                    // Name
-                    stack.getTagCompound().removeTag("display");
-                    stack.getTagCompound().removeTag("eio.abstractMachine");
-                    break;
-                case "simplyjetpacks":
-                    stack.getTagCompound().removeTag("sjData");
-                    stack.getTagCompound().removeTag("PackOn");
-                    break;
-                case "immersiveengineering":
-                    stack.getTagCompound().removeTag("hammerDmg");
-                    stack.getTagCompound().removeTag("cutterDmg");
-                    break;
-                case "modularrouters":
-                    stack.getTagCompound().removeTag("ModuleFilter");
-                    stack.getTagCompound().removeTag("Flags");
-                    break;
-                case "fluxnetworks":
-                    stack.getTagCompound().removeTag("dropped");
-                    stack.getTagCompound().removeTag("energy");
-                    break;
-                case "draconicevolution":
-                    stack.getTagCompound().removeTag("Energy");
-                    stack.getTagCompound().removeTag("DEUpgrades");
-                    Set<String> profiles = stack.getTagCompound().getKeySet().stream().filter(key -> key.startsWith("Profile")).collect(Collectors.toSet());
-                    for (String profile : profiles) {
-                        stack.getTagCompound().removeTag(profile);
-                    }
-                    break;
-                case "minecraft":
-                    stack.getTagCompound().removeTag("RepairCost");
-                    break;
-            }
-        }
-
-        return stack;
     }
 }

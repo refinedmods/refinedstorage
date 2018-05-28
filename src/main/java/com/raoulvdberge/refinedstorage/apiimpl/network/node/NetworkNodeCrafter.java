@@ -265,7 +265,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         }
 
         visited = true;
-        ICraftingPatternContainer facingContainer = ((ICraftingPatternContainer)facing).getRootContainer();
+        ICraftingPatternContainer facingContainer = ((ICraftingPatternContainer) facing).getRootContainer();
         visited = false;
 
         return facingContainer;

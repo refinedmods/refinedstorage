@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -69,6 +68,18 @@ public class CraftingPattern implements ICraftingPattern {
                         this.valid = true;
 
                         outputs.add(output);
+
+                        if (oredict) {
+                            if (recipe.getIngredients().size() > 0) {
+                                inputs.clear();
+
+                                for (int i = 0; i < recipe.getIngredients().size(); ++i) {
+                                    inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
+                                }
+                            } else {
+                                this.valid = false;
+                            }
+                        }
                     }
 
                     break;
@@ -112,9 +123,27 @@ public class CraftingPattern implements ICraftingPattern {
         return outputs;
     }
 
-    @Override
-    public NonNullList<ItemStack> getOutputs(NonNullList<ItemStack> took) {
-        return StackUtils.emptyNonNullList();
+    public ItemStack getOutput(NonNullList<ItemStack> took) {
+        if (processing) {
+            throw new IllegalStateException("Cannot get crafting outputs from processing pattern");
+        }
+
+        if (took.size() != inputs.size()) {
+            throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
+        }
+
+        InventoryCrafting inv = new InventoryCraftingDummy();
+
+        for (int i = 0; i < took.size(); ++i) {
+            inv.setInventorySlotContents(i, took.get(i));
+        }
+
+        ItemStack result = recipe.getCraftingResult(inv);
+        if (result.isEmpty()) {
+            throw new IllegalStateException("Cannot have empty result");
+        }
+
+        return result;
     }
 
     @Override
@@ -124,7 +153,21 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public NonNullList<ItemStack> getByproducts(NonNullList<ItemStack> took) {
-        return StackUtils.emptyNonNullList();
+        if (processing) {
+            throw new IllegalStateException("Cannot get crafting outputs from processing pattern");
+        }
+
+        if (took.size() != inputs.size()) {
+            throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
+        }
+
+        InventoryCrafting inv = new InventoryCraftingDummy();
+
+        for (int i = 0; i < took.size(); ++i) {
+            inv.setInventorySlotContents(i, took.get(i));
+        }
+
+        return recipe.getRemainingItems(inv);
     }
 
     @Override

@@ -78,9 +78,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
         List<ItemStack> patterns = new LinkedList<ItemStack>();
         for (ICraftingPattern pattern : node.getNetwork().getCraftingManager().getPatterns()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                patterns.add(output);
-            }
+            patterns.addAll(pattern.getOutputs());
         }
         return new Object[]{patterns};
     }
@@ -112,8 +110,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         task.calculate();
 
-        //TODO return new Object[]{task.getMissing().getStacks()};
-        return new Object[]{};
+        return new Object[]{task.getMissing().getStacks()};
     }
 
     @Callback(doc = "function(stack:table[, count: number]) -- Schedules a crafting task.")
