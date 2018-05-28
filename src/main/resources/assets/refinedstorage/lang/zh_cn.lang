@@ -33,7 +33,6 @@ gui.refinedstorage:crafting_monitor.items_missing=物品丢失中
 gui.refinedstorage:crafting_monitor.machine_in_use=该机器正在处理其他工作，请稍等
 gui.refinedstorage:crafting_monitor.machine_none=找不到机器
 gui.refinedstorage:crafting_monitor.waiting_for_items=正在等待物品
-gui.refinedstorage:crafting_monitor.blocked=被阻塞，正在等待其他任务
 gui.refinedstorage:wireless_transmitter=无线访问点
 gui.refinedstorage:wireless_transmitter.distance=%d 方块
 gui.refinedstorage:crafter=装配室

@@ -12,7 +12,7 @@ public abstract class CraftingStep {
 
     public abstract boolean canExecute();
 
-    public abstract void execute();
+    public abstract boolean execute();
 
     public ICraftingPattern getPattern() {
         return pattern;

@@ -167,7 +167,16 @@ public class CraftingPattern implements ICraftingPattern {
             inv.setInventorySlotContents(i, took.get(i));
         }
 
-        return recipe.getRemainingItems(inv);
+        NonNullList<ItemStack> remainingItems = recipe.getRemainingItems(inv);
+        NonNullList<ItemStack> sanitized = NonNullList.create();
+
+        for (ItemStack item : remainingItems) {
+            if (!item.isEmpty()) {
+                sanitized.add(item);
+            }
+        }
+
+        return sanitized;
     }
 
     @Override

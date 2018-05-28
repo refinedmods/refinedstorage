@@ -33,7 +33,6 @@ gui.refinedstorage:crafting_monitor.items_missing=Отсутствуют пре�
 gui.refinedstorage:crafting_monitor.machine_in_use=Машина используется
 gui.refinedstorage:crafting_monitor.machine_none=Машина не найдена
 gui.refinedstorage:crafting_monitor.waiting_for_items=Ожидание предметов
-gui.refinedstorage:crafting_monitor.blocked=Заблокировано, ожидание другой задачи
 gui.refinedstorage:wireless_transmitter=Передатчик
 gui.refinedstorage:wireless_transmitter.distance=%d блоков
 gui.refinedstorage:crafter=Крафтер

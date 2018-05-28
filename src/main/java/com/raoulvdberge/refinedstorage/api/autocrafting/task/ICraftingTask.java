@@ -19,7 +19,7 @@ public interface ICraftingTask {
     void calculate();
 
     /**
-     * Updates this task. Gets called every few ticks, depending on the speed of the pattern container.
+     * Updates this task.
      * {@link ICraftingTask#calculate()} must be run before this!
      *
      * @return true if this crafting task is finished and can be deleted from the list, false otherwise

@@ -2,57 +2,50 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class CraftingStepCraft extends CraftingStep {
-    private INetwork network;
+import java.util.List;
 
-    private IStackList<ItemStack> toExtract;
+public class CraftingStepCraft extends CraftingStep {
+    private CraftingInserter inserter;
+    private CraftingExtractor extractor;
+    
     private NonNullList<ItemStack> took;
 
-    public CraftingStepCraft(ICraftingPattern pattern, INetwork network, IStackList<ItemStack> toExtract, NonNullList<ItemStack> took) {
+    public CraftingStepCraft(ICraftingPattern pattern, CraftingInserter inserter, INetwork network, List<ItemStack> toExtract, NonNullList<ItemStack> took) {
         super(pattern);
 
-        this.network = network;
-        this.toExtract = toExtract;
+        this.inserter = inserter;
+        this.extractor = new CraftingExtractor(network, toExtract);
         this.took = took;
     }
 
     @Override
-    public void execute() {
-        for (ItemStack toExtractItem : toExtract.getStacks()) {
-            ItemStack extracted = network.extractItem(toExtractItem, toExtractItem.getCount(), false);
+    public boolean execute() {
+        extractor.extractOne();
 
-            if (extracted == null) {
-                throw new IllegalStateException("Did not extract anything");
+        boolean allExtracted = extractor.isAllExtracted();
+
+        if (allExtracted) {
+            inserter.insert(pattern.getOutput(took));
+
+            for (ItemStack byproduct : pattern.getByproducts(took)) {
+                inserter.insert(byproduct);
             }
         }
 
-        ItemStack output = pattern.getOutput(took);
-
-        network.insertItem(output, output.getCount(), false);
-
-        for (ItemStack byproduct : pattern.getByproducts(took)) {
-            network.insertItem(byproduct, byproduct.getCount(), false);
-        }
+        return allExtracted;
     }
 
     @Override
     public boolean canExecute() {
-        for (ItemStack toExtractItem : toExtract.getStacks()) {
-            ItemStack inNetwork = network.extractItem(toExtractItem, toExtractItem.getCount(), true);
+        extractor.updateStatus();
 
-            if (inNetwork == null || inNetwork.getCount() < toExtractItem.getCount()) {
-                return false;
-            }
-        }
-
-        return true;
+        return extractor.isAllAvailable();
     }
 
-    public IStackList<ItemStack> getToExtract() {
-        return toExtract;
+    public CraftingExtractor getExtractor() {
+        return extractor;
     }
 }

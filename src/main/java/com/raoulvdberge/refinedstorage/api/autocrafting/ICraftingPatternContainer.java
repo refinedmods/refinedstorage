@@ -17,7 +17,7 @@ public interface ICraftingPatternContainer {
     /**
      * @return the amount of speed upgrades in the container
      */
-    int getSpeedUpdateCount();
+    int getSpeedUpgradeCount();
 
     /**
      * @return the inventory that this container is connected to

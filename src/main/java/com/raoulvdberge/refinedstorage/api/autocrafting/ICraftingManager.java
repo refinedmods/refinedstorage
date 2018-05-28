@@ -100,6 +100,7 @@ public interface ICraftingManager {
     /**
      * Makes the network send a crafting monitor update to all players as soon as it can.
      */
+    // TODO: rework system to be subscribed-based, per task
     void markCraftingMonitorForUpdate();
 
     /**
@@ -107,6 +108,7 @@ public interface ICraftingManager {
      * <p>
      * WARNING: In most cases, you should just use {@link ICraftingManager#markCraftingMonitorForUpdate()}, if not, you can get high bandwidth usage.
      */
+    // TODO: rework system to be subscribed-based, per task
     void sendCraftingMonitorUpdate();
 
     /**
@@ -114,5 +116,6 @@ public interface ICraftingManager {
      *
      * @param player the player
      */
+    // TODO: rework system to be subscribed-based, per task
     void sendCraftingMonitorUpdate(EntityPlayerMP player);
 }

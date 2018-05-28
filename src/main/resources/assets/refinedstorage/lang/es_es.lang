@@ -33,7 +33,6 @@ gui.refinedstorage:crafting_monitor.items_missing=Faltan objetos
 gui.refinedstorage:crafting_monitor.machine_in_use=Maquina en uso
 gui.refinedstorage:crafting_monitor.machine_none=Maquina no Hallada
 gui.refinedstorage:crafting_monitor.waiting_for_items=Esperando Objetos
-gui.refinedstorage:crafting_monitor.blocked=Bloqueado, esperando otra tarea
 gui.refinedstorage:wireless_transmitter=Emisor inalámbrico
 gui.refinedstorage:wireless_transmitter.distance=%d bloque(s)
 gui.refinedstorage:crafter=Fabricador

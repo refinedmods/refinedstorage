@@ -31,7 +31,6 @@ gui.refinedstorage:crafting_monitor.items_missing=부족한 아이템
 gui.refinedstorage:crafting_monitor.machine_in_use=기계가 이미 사용 중임
 gui.refinedstorage:crafting_monitor.machine_none=기계를 찾을 수 없음
 gui.refinedstorage:crafting_monitor.waiting_for_items=아이템을 기다리는 중
-gui.refinedstorage:crafting_monitor.blocked=막힘 - 다른 작업에서 대기 중
 gui.refinedstorage:wireless_transmitter=무선 송신기
 gui.refinedstorage:wireless_transmitter.distance=%d블럭
 gui.refinedstorage:crafter=조합기

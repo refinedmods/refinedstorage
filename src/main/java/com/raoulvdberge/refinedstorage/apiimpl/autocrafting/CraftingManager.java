@@ -84,6 +84,8 @@ public class CraftingManager implements ICraftingManager {
     @Override
     public void update() {
         if (network.canRun()) {
+            boolean changed = !tasksToCancel.isEmpty() || !tasksToAdd.isEmpty();
+
             tasksToCancel.forEach(ICraftingTask::onCancelled);
             tasks.removeAll(tasksToCancel);
             tasksToCancel.clear();
@@ -91,7 +93,11 @@ public class CraftingManager implements ICraftingManager {
             tasksToAdd.stream().filter(ICraftingTask::isValid).forEach(tasks::add);
             tasksToAdd.clear();
 
-            tasks.removeIf(ICraftingTask::update);
+            changed = tasks.removeIf(ICraftingTask::update);
+
+            if (changed) {
+                markCraftingMonitorForUpdate();
+            }
         }
 
         if (updateRequested) {

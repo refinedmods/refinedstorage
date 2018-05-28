@@ -168,7 +168,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public int getSpeedUpdateCount() {
+    public int getSpeedUpgradeCount() {
         return upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED);
     }
 
