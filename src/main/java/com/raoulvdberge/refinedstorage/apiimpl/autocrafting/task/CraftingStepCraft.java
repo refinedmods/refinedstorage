@@ -6,21 +6,22 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class CraftingStepCraft implements ICraftingStep {
+public class CraftingStepCraft extends CraftingStep {
     private INetwork network;
+
     private IStackList<ItemStack> toExtract;
     private NonNullList<ItemStack> took;
-    private ICraftingPattern pattern;
 
-    public CraftingStepCraft(INetwork network, IStackList<ItemStack> toExtract, NonNullList<ItemStack> took, ICraftingPattern pattern) {
+    public CraftingStepCraft(ICraftingPattern pattern, INetwork network, IStackList<ItemStack> toExtract, NonNullList<ItemStack> took) {
+        super(pattern);
+
         this.network = network;
         this.toExtract = toExtract;
         this.took = took;
-        this.pattern = pattern;
     }
 
     @Override
-    public boolean execute() {
+    public void execute() {
         for (ItemStack toExtractItem : toExtract.getStacks()) {
             ItemStack extracted = network.extractItem(toExtractItem, toExtractItem.getCount(), false);
 
@@ -36,8 +37,6 @@ public class CraftingStepCraft implements ICraftingStep {
         for (ItemStack byproduct : pattern.getByproducts(took)) {
             network.insertItem(byproduct, byproduct.getCount(), false);
         }
-
-        return true;
     }
 
     @Override
@@ -55,10 +54,5 @@ public class CraftingStepCraft implements ICraftingStep {
 
     public IStackList<ItemStack> getToExtract() {
         return toExtract;
-    }
-
-    @Override
-    public ICraftingPattern getPattern() {
-        return pattern;
     }
 }
