@@ -9,7 +9,10 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementInfo;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +25,7 @@ public class CraftingTask implements ICraftingTask {
     private ItemStack requested;
     private int quantity;
     private ICraftingPattern pattern;
-    private List<CraftingStepSlot> steps = new LinkedList<>();
+    private List<CraftingStepWrapper> steps = new LinkedList<>();
 
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
@@ -43,7 +46,7 @@ public class CraftingTask implements ICraftingTask {
         IStackList<ItemStack> storage = network.getItemStorageCache().getList().copy();
 
         while (qty > 0) {
-            this.steps.add(new CraftingStepSlot(calculateInternal(storage, results, pattern)));
+            this.steps.add(new CraftingStepWrapper(calculateInternal(storage, results, pattern)));
 
             qty -= getQuantityPerCraft(pattern, requested);
         }
@@ -69,9 +72,11 @@ public class CraftingTask implements ICraftingTask {
 
             ItemStack fromSelf = results.get(possibleInput);
             if (fromSelf != null) {
-                results.remove(fromSelf, Math.min(possibleInput.getCount(), fromSelf.getCount()));
+                int toExtractFromSelf = fromSelf.getCount();
 
-                toExtract -= fromSelf.getCount();
+                results.remove(fromSelf, Math.min(possibleInput.getCount(), toExtractFromSelf));
+
+                toExtract -= toExtractFromSelf;
             }
 
             if (toExtract > 0) {
@@ -98,7 +103,7 @@ public class CraftingTask implements ICraftingTask {
                         this.toCraft.add(possibleInput, missing);
 
                         while (missing > 0) {
-                            this.steps.add(new CraftingStepSlot(calculateInternal(mutatedStorage, results, subPattern)));
+                            this.steps.add(new CraftingStepWrapper(calculateInternal(mutatedStorage, results, subPattern)));
 
                             missing -= getQuantityPerCraft(subPattern, possibleInput);
                         }
@@ -144,19 +149,21 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean update() {
-        boolean allFulfilled = true;
+        boolean allCompleted = true;
 
-        for (CraftingStepSlot slot : steps) {
-            if (!slot.isFulfilled()) {
-                allFulfilled = false;
+        for (CraftingStepWrapper step : steps) {
+            if (!step.isCompleted()) {
+                allCompleted = false;
 
-                if (slot.canExecute() && slot.getStep().execute()) {
-                    slot.setFulfilled();
+                if (step.canExecute() && step.getStep().execute()) {
+                    step.setCompleted();
+
+                    network.getCraftingManager().sendCraftingMonitorUpdate();
                 }
             }
         }
 
-        return allFulfilled;
+        return allCompleted;
     }
 
     @Override
@@ -181,11 +188,53 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
-        // TODO
-
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
-        elements.directAdd(new CraftingMonitorElementItemRender(network.getCraftingManager().getTasks().indexOf(this), requested, quantity, 0));
+        elements.directAdd(new CraftingMonitorElementItemRender(
+            network.getCraftingManager().getTasks().indexOf(this),
+            requested != null ? requested : pattern.getOutputs().get(0),
+            quantity,
+            0
+        ));
+
+        if (!missing.isEmpty()) {
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 16));
+
+            missing.getStacks().stream().map(stack -> new CraftingMonitorElementError(new CraftingMonitorElementItemRender(
+                -1,
+                stack,
+                stack.getCount(),
+                32
+            ), "")).forEach(elements::add);
+
+            elements.commit();
+        }
+
+        if (steps.stream().anyMatch(s -> s.getStep() instanceof CraftingStepCraft && !s.isCompleted())) {
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
+
+            for (CraftingStepWrapper step : steps) {
+                if (step.getStep() instanceof CraftingStepCraft && !step.isCompleted()) {
+                    for (ItemStack stack : ((CraftingStepCraft) step.getStep()).getToExtract().getStacks()) {
+                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
+                            -1,
+                            stack,
+                            stack.getCount(),
+                            32
+                        );
+
+                        // TODO: cache this
+                        if (!step.getStep().canExecute()) {
+                            element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
+                        }
+
+                        elements.add(element);
+                    }
+                }
+            }
+
+            elements.commit();
+        }
 
         return elements.getElements();
     }

@@ -1,15 +1,19 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-public class CraftingStepSlot {
+class CraftingStepWrapper {
     private ICraftingStep step;
-    private boolean fulfilled;
+    private boolean completed;
     private int ticks = -1;
 
-    public CraftingStepSlot(ICraftingStep step) {
+    CraftingStepWrapper(ICraftingStep step) {
         this.step = step;
     }
 
-    public boolean canExecute() {
+    boolean canExecute() {
+        if (!step.canExecute()) {
+            return false;
+        }
+
         ticks++;
 
         switch (step.getPattern().getContainer().getSpeedUpdateCount()) {
@@ -27,15 +31,15 @@ public class CraftingStepSlot {
         }
     }
 
-    public ICraftingStep getStep() {
+    ICraftingStep getStep() {
         return step;
     }
 
-    public boolean isFulfilled() {
-        return fulfilled;
+    boolean isCompleted() {
+        return completed;
     }
 
-    public void setFulfilled() {
-        this.fulfilled = true;
+    void setCompleted() {
+        this.completed = true;
     }
 }

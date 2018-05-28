@@ -5,5 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 public interface ICraftingStep {
     boolean execute();
 
+    boolean canExecute();
+
     ICraftingPattern getPattern();
 }

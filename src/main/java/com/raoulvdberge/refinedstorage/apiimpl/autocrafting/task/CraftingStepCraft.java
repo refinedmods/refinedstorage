@@ -22,14 +22,6 @@ public class CraftingStepCraft implements ICraftingStep {
     @Override
     public boolean execute() {
         for (ItemStack toExtractItem : toExtract.getStacks()) {
-            ItemStack inNetwork = network.extractItem(toExtractItem, toExtractItem.getCount(), true);
-
-            if (inNetwork == null || inNetwork.getCount() < toExtractItem.getCount()) {
-                return false;
-            }
-        }
-
-        for (ItemStack toExtractItem : toExtract.getStacks()) {
             ItemStack extracted = network.extractItem(toExtractItem, toExtractItem.getCount(), false);
 
             if (extracted == null) {
@@ -46,6 +38,23 @@ public class CraftingStepCraft implements ICraftingStep {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean canExecute() {
+        for (ItemStack toExtractItem : toExtract.getStacks()) {
+            ItemStack inNetwork = network.extractItem(toExtractItem, toExtractItem.getCount(), true);
+
+            if (inNetwork == null || inNetwork.getCount() < toExtractItem.getCount()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public IStackList<ItemStack> getToExtract() {
+        return toExtract;
     }
 
     @Override
