@@ -34,7 +34,7 @@ public class CraftingPattern implements ICraftingPattern {
         this.oredict = ItemPattern.isOredict(stack);
 
         if (processing) {
-            this.valid = true;
+            this.valid = false; // TODO
 
             for (int i = 0; i < 9; ++i) {
                 ItemStack input = ItemPattern.getSlot(stack, i);

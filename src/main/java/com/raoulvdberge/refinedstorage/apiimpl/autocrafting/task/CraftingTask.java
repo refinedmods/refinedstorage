@@ -69,7 +69,7 @@ public class CraftingTask implements ICraftingTask {
 
             ItemStack fromSelf = results.get(possibleInput);
             if (fromSelf != null) {
-                results.remove(possibleInput, Math.min(possibleInput.getCount(), fromSelf.getCount()));
+                results.remove(fromSelf, Math.min(possibleInput.getCount(), fromSelf.getCount()));
 
                 toExtract -= fromSelf.getCount();
             }
@@ -79,7 +79,7 @@ public class CraftingTask implements ICraftingTask {
 
                 int fromNetworkCount = fromNetwork == null ? 0 : Math.min(toExtract, fromNetwork.getCount());
 
-                itemsToExtract.add(possibleInput);
+                itemsToExtract.add(possibleInput, toExtract);
 
                 if (fromNetworkCount > 0) {
                     this.toTake.add(possibleInput, fromNetworkCount);
@@ -123,7 +123,7 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        return new CraftingStepCraft(network, itemsToExtract, pattern);
+        return new CraftingStepCraft(network, itemsToExtract, took, pattern);
     }
 
     private int getQuantityPerCraft(ICraftingPattern pattern, ItemStack requested) {
@@ -181,6 +181,8 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
+        // TODO
+
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
         elements.directAdd(new CraftingMonitorElementItemRender(network.getCraftingManager().getTasks().indexOf(this), requested, quantity, 0));

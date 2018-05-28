@@ -4,15 +4,18 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public class CraftingStepCraft implements ICraftingStep {
     private INetwork network;
     private IStackList<ItemStack> toExtract;
+    private NonNullList<ItemStack> took;
     private ICraftingPattern pattern;
 
-    public CraftingStepCraft(INetwork network, IStackList<ItemStack> toExtract, ICraftingPattern pattern) {
+    public CraftingStepCraft(INetwork network, IStackList<ItemStack> toExtract, NonNullList<ItemStack> took, ICraftingPattern pattern) {
         this.network = network;
         this.toExtract = toExtract;
+        this.took = took;
         this.pattern = pattern;
     }
 
@@ -27,14 +30,18 @@ public class CraftingStepCraft implements ICraftingStep {
         }
 
         for (ItemStack toExtractItem : toExtract.getStacks()) {
-            network.extractItem(toExtractItem, toExtractItem.getCount(), false);
+            ItemStack extracted = network.extractItem(toExtractItem, toExtractItem.getCount(), false);
+
+            if (extracted == null) {
+                throw new IllegalStateException("Did not extract anything");
+            }
         }
 
-        for (ItemStack output : pattern.getOutputs()) {
-            network.insertItem(output, output.getCount(), false);
-        }
+        ItemStack output = pattern.getOutput(took);
 
-        for (ItemStack byproduct : pattern.getByproducts()) {
+        network.insertItem(output, output.getCount(), false);
+
+        for (ItemStack byproduct : pattern.getByproducts(took)) {
             network.insertItem(byproduct, byproduct.getCount(), false);
         }
 
