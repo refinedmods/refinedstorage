@@ -61,6 +61,8 @@ public class CraftingExtractor {
                 }
 
                 status.set(i, CraftingExtractorItemStatus.EXTRACTED);
+
+                return;
             }
         }
     }

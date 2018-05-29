@@ -75,9 +75,9 @@ public class CraftingTask implements ICraftingTask {
 
             ItemStack fromSelf = results.get(possibleInput);
             if (fromSelf != null) {
-                int toExtractFromSelf = fromSelf.getCount();
+                int toExtractFromSelf = Math.min(possibleInput.getCount(), fromSelf.getCount());
 
-                results.remove(fromSelf, Math.min(possibleInput.getCount(), toExtractFromSelf));
+                results.remove(possibleInput, toExtractFromSelf);
 
                 toExtract -= toExtractFromSelf;
             }
@@ -106,7 +106,7 @@ public class CraftingTask implements ICraftingTask {
                         this.toCraft.add(possibleInput, missing);
 
                         while (missing > 0) {
-                            this.steps.add(calculateInternal(mutatedStorage, results, subPattern));
+                            this.steps.add(calculateInternal(mutatedStorage, results, subPattern)); // TODO: eating from itself?
 
                             missing -= getQuantityPerCraft(subPattern, possibleInput);
                         }
@@ -118,10 +118,6 @@ public class CraftingTask implements ICraftingTask {
         if (pattern.isProcessing()) {
             for (ItemStack output : pattern.getOutputs()) {
                 results.add(output);
-            }
-
-            for (ItemStack byproduct : pattern.getByproducts()) {
-                results.add(byproduct);
             }
         } else {
             results.add(pattern.getOutput(took));

@@ -51,13 +51,13 @@ public interface ICraftingPattern {
     ItemStack getOutput(NonNullList<ItemStack> took);
 
     /**
-     * @return the outputs
+     * @return the byproducts
      */
     NonNullList<ItemStack> getByproducts();
 
     /**
      * @param took the items took per slot
-     * @return the outputs based on the items took
+     * @return the byproducts based on the items took
      */
     NonNullList<ItemStack> getByproducts(NonNullList<ItemStack> took);
 

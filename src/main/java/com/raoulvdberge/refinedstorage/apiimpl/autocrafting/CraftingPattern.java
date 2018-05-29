@@ -125,7 +125,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     public ItemStack getOutput(NonNullList<ItemStack> took) {
         if (processing) {
-            throw new IllegalStateException("Cannot get crafting outputs from processing pattern");
+            throw new IllegalStateException("Cannot get crafting output from processing pattern");
         }
 
         if (took.size() != inputs.size()) {
@@ -148,13 +148,17 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public NonNullList<ItemStack> getByproducts() {
+        if (processing) {
+            throw new IllegalStateException("Cannot get byproduct outputs from processing pattern");
+        }
+
         return byproducts;
     }
 
     @Override
     public NonNullList<ItemStack> getByproducts(NonNullList<ItemStack> took) {
         if (processing) {
-            throw new IllegalStateException("Cannot get crafting outputs from processing pattern");
+            throw new IllegalStateException("Cannot get byproduct outputs from processing pattern");
         }
 
         if (took.size() != inputs.size()) {
