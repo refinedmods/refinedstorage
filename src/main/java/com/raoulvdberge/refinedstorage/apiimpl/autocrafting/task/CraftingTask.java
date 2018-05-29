@@ -73,46 +73,61 @@ public class CraftingTask implements ICraftingTask {
 
             took.add(possibleInput);
 
-            int toExtract = possibleInput.getCount();
-
             ItemStack fromSelf = results.get(possibleInput);
-            if (fromSelf != null) {
-                int toExtractFromSelf = Math.min(possibleInput.getCount(), fromSelf.getCount());
+            ItemStack fromNetwork = mutatedStorage.get(possibleInput);
 
-                results.remove(possibleInput, toExtractFromSelf);
+            int available = (fromNetwork == null ? 0 : fromNetwork.getCount()) + (fromSelf == null ? 0 : fromSelf.getCount());
 
-                toExtract -= toExtractFromSelf;
-            }
+            if (available < possibleInput.getCount()) {
+                ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
 
-            if (toExtract > 0) {
-                ItemStack fromNetwork = mutatedStorage.get(possibleInput);
+                int needed = possibleInput.getCount() - available;
 
-                int fromNetworkCount = fromNetwork == null ? 0 : Math.min(toExtract, fromNetwork.getCount());
+                if (subPattern != null) {
+                    while ((fromSelf == null ? 0 : fromSelf.getCount()) < needed) {
+                        this.steps.add(calculateInternal(mutatedStorage, results, subPattern));
 
-                itemsToExtract.add(possibleInput, toExtract);
-
-                if (fromNetworkCount > 0) {
-                    this.toTake.add(possibleInput, fromNetworkCount);
-
-                    mutatedStorage.remove(possibleInput, fromNetworkCount);
-                }
-
-                if (fromNetworkCount < toExtract) {
-                    int missing = toExtract - fromNetworkCount;
-
-                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
-
-                    if (subPattern == null) {
-                        this.missing.add(possibleInput, missing);
-                    } else {
-                        this.toCraft.add(possibleInput, missing);
-
-                        while (missing > 0) {
-                            this.steps.add(calculateInternal(mutatedStorage, results, subPattern)); // TODO: eating from itself?
-
-                            missing -= getQuantityPerCraft(subPattern, possibleInput);
+                        fromSelf = results.get(possibleInput);
+                        if (fromSelf == null) {
+                            throw new IllegalStateException("Recursive calculation didn't yield anything");
                         }
                     }
+                }
+            }
+
+            fromNetwork = mutatedStorage.get(possibleInput);
+
+            int remaining = possibleInput.getCount();
+
+            while (remaining > 0) {
+                if (fromSelf != null) {
+                    int toTake = Math.min(remaining, fromSelf.getCount());
+
+                    this.toCraft.add(possibleInput, toTake);
+
+                    itemsToExtract.add(possibleInput, toTake);
+
+                    results.remove(possibleInput, toTake);
+
+                    remaining -= toTake;
+
+                    fromSelf = results.get(possibleInput);
+                } else if (fromNetwork != null) {
+                    int toTake = Math.min(remaining, fromNetwork.getCount());
+
+                    this.toTake.add(possibleInput, toTake);
+
+                    itemsToExtract.add(possibleInput, toTake);
+
+                    mutatedStorage.remove(possibleInput, toTake);
+
+                    remaining -= toTake;
+
+                    fromNetwork = mutatedStorage.get(possibleInput);
+                } else {
+                    this.missing.add(possibleInput, remaining);
+
+                    remaining = 0;
                 }
             }
         }
@@ -197,7 +212,7 @@ public class CraftingTask implements ICraftingTask {
 
         elements.directAdd(new CraftingMonitorElementItemRender(
             network.getCraftingManager().getTasks().indexOf(this),
-            requested != null ? requested : pattern.getOutputs().get(0),
+            requested,
             quantity,
             0
         ));
@@ -337,16 +352,16 @@ public class CraftingTask implements ICraftingTask {
     private int getTickInterval(int speedUpgrades) {
         switch (speedUpgrades) {
             case 1:
-                return 8;
+                return 10;
             case 2:
-                return 6;
+                return 8;
             case 3:
-                return 4;
+                return 6;
             case 4:
-                return 2;
+                return 4;
             case 0:
             default:
-                return 10;
+                return 20;
         }
     }
 }

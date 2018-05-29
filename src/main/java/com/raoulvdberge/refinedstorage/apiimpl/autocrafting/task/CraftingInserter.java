@@ -16,13 +16,13 @@ public class CraftingInserter {
     }
 
     public void insert(ItemStack stack) {
-        items.push(new CraftingInserterItem(stack, CraftingInserterItemStatus.WAITING));
+        items.addLast(new CraftingInserterItem(stack, CraftingInserterItemStatus.WAITING));
 
         network.getCraftingManager().sendCraftingMonitorUpdate();
     }
 
     public void insertSingle() {
-        CraftingInserterItem item = items.peek();
+        CraftingInserterItem item = items.peekFirst();
 
         if (item != null) {
             if (network.insertItem(item.getStack(), item.getStack().getCount(), true) == null) {
