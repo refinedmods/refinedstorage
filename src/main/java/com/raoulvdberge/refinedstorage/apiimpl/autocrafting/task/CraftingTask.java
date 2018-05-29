@@ -48,6 +48,8 @@ public class CraftingTask implements ICraftingTask {
         IStackList<ItemStack> results = API.instance().createItemStackList();
         IStackList<ItemStack> storage = network.getItemStorageCache().getList().copy();
 
+        this.toCraft.add(requested, quantity);
+
         while (qty > 0) {
             this.steps.add(calculateInternal(storage, results, pattern));
 
@@ -154,7 +156,7 @@ public class CraftingTask implements ICraftingTask {
             if (!step.isCompleted()) {
                 allCompleted = false;
 
-                if (step.canExecute() && step.execute() && ticks % getTickInterval(step.getPattern().getContainer().getSpeedUpgradeCount()) == 0) { // TODO: speed upgrades handling
+                if (ticks % getTickInterval(step.getPattern().getContainer().getSpeedUpgradeCount()) == 0 && step.canExecute() && step.execute()) {
                     step.setCompleted();
 
                     network.getCraftingManager().sendCraftingMonitorUpdate();
