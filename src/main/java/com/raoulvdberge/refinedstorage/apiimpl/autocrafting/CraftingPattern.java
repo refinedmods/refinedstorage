@@ -34,20 +34,23 @@ public class CraftingPattern implements ICraftingPattern {
         this.oredict = ItemPattern.isOredict(stack);
 
         if (processing) {
-            this.valid = false; // TODO
+            this.valid = true;
 
             for (int i = 0; i < 9; ++i) {
-                ItemStack input = ItemPattern.getSlot(stack, i);
+                ItemStack input = ItemPattern.getInputSlot(stack, i);
 
                 inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
-            }
 
-            this.outputs = ItemPattern.getOutputs(stack);
+                ItemStack output = ItemPattern.getOutputSlot(stack, i);
+                if (output != null) {
+                    outputs.add(output);
+                }
+            }
         } else {
             InventoryCrafting inv = new InventoryCraftingDummy();
 
             for (int i = 0; i < 9; ++i) {
-                ItemStack input = ItemPattern.getSlot(stack, i);
+                ItemStack input = ItemPattern.getInputSlot(stack, i);
 
                 inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
 

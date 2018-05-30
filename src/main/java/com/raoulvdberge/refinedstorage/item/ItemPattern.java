@@ -12,14 +12,11 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,9 +28,10 @@ import java.util.stream.Collectors;
 public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     private static Map<ItemStack, CraftingPattern> PATTERN_CACHE = new HashMap<>();
 
-    private static final String NBT_SLOT = "Slot_%d";
-    private static final String NBT_OUTPUTS = "Outputs";
+    private static final String NBT_INPUT_SLOT = "Input_%d";
+    private static final String NBT_OUTPUT_SLOT = "Output_%d";
     private static final String NBT_OREDICT = "Oredict";
+    private static final String NBT_PROCESSING = "Processing";
 
     public ItemPattern() {
         super("pattern");
@@ -76,61 +74,64 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         }
     }
 
-    public static void setSlot(ItemStack pattern, int slot, ItemStack stack) {
+    public static void setInputSlot(ItemStack pattern, int slot, ItemStack stack) {
         if (!pattern.hasTagCompound()) {
             pattern.setTagCompound(new NBTTagCompound());
         }
 
-        pattern.getTagCompound().setTag(String.format(NBT_SLOT, slot), stack.serializeNBT());
+        pattern.getTagCompound().setTag(String.format(NBT_INPUT_SLOT, slot), stack.serializeNBT());
     }
 
     @Nullable
-    public static ItemStack getSlot(ItemStack pattern, int slot) {
-        String id = String.format(NBT_SLOT, slot);
+    public static ItemStack getInputSlot(ItemStack pattern, int slot) {
+        String id = String.format(NBT_INPUT_SLOT, slot);
 
         if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(id)) {
             return null;
         }
 
-        return new ItemStack(pattern.getTagCompound().getCompoundTag(id));
+        ItemStack stack = new ItemStack(pattern.getTagCompound().getCompoundTag(id));
+        if (stack.isEmpty()) {
+            return null;
+        }
+
+        return stack;
     }
 
-    // @todo: Store slot number for outputs as well, so it can be filled in the pattern grid when the pattern is re-inserted. For 1.13
-    public static void addOutput(ItemStack pattern, ItemStack output) {
+    public static void setOutputSlot(ItemStack pattern, int slot, ItemStack stack) {
         if (!pattern.hasTagCompound()) {
             pattern.setTagCompound(new NBTTagCompound());
         }
 
-        NBTTagList outputs;
-        if (!pattern.getTagCompound().hasKey(NBT_OUTPUTS)) {
-            outputs = new NBTTagList();
-        } else {
-            outputs = pattern.getTagCompound().getTagList(NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
-        }
-
-        outputs.appendTag(output.serializeNBT());
-
-        pattern.getTagCompound().setTag(NBT_OUTPUTS, outputs);
+        pattern.getTagCompound().setTag(String.format(NBT_OUTPUT_SLOT, slot), stack.serializeNBT());
     }
 
-    public static NonNullList<ItemStack> getOutputs(ItemStack pattern) {
-        NonNullList<ItemStack> outputs = NonNullList.create();
+    @Nullable
+    public static ItemStack getOutputSlot(ItemStack pattern, int slot) {
+        String id = String.format(NBT_OUTPUT_SLOT, slot);
 
-        NBTTagList outputsTag = pattern.getTagCompound().getTagList(NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
-
-        for (int i = 0; i < outputsTag.tagCount(); ++i) {
-            ItemStack stack = new ItemStack(outputsTag.getCompoundTagAt(i));
-
-            if (!stack.isEmpty()) {
-                outputs.add(stack);
-            }
+        if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(id)) {
+            return null;
         }
 
-        return outputs;
+        ItemStack stack = new ItemStack(pattern.getTagCompound().getCompoundTag(id));
+        if (stack.isEmpty()) {
+            return null;
+        }
+
+        return stack;
     }
 
     public static boolean isProcessing(ItemStack pattern) {
-        return pattern.hasTagCompound() && pattern.getTagCompound().hasKey(NBT_OUTPUTS);
+        return pattern.hasTagCompound() && pattern.getTagCompound().hasKey(NBT_PROCESSING) && pattern.getTagCompound().getBoolean(NBT_PROCESSING);
+    }
+
+    public static void setProcessing(ItemStack pattern, boolean processing) {
+        if (!pattern.hasTagCompound()) {
+            pattern.setTagCompound(new NBTTagCompound());
+        }
+
+        pattern.getTagCompound().setBoolean(NBT_PROCESSING, processing);
     }
 
     public static boolean isOredict(ItemStack pattern) {

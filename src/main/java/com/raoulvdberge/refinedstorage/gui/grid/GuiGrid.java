@@ -616,8 +616,9 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         if (button == oredictPattern) {
             TileDataManager.setParameter(TileGrid.OREDICT_PATTERN, oredictPattern.isChecked());
         } else if (button == processingPattern) {
-            // Rebuild the inventory slots before the slot change packet arrives
+            // Rebuild the inventory slots before the slot change packet arrives.
             TileGrid.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
+            ((NetworkNodeGrid) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
             ((ContainerGrid) this.inventorySlots).initSlots();
 
             TileDataManager.setParameter(TileGrid.PROCESSING_PATTERN, processingPattern.isChecked());

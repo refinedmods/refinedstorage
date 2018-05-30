@@ -18,7 +18,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -320,7 +319,7 @@ public final class RenderUtils {
                     }
                 }
 
-                data = (displayAmount ? (TextFormatting.WHITE + String.valueOf(amount) + " ") : "") + TextFormatting.GRAY + data;
+                data = (displayAmount ? (String.valueOf(amount) + "x ") : "") + data;
 
                 tooltip.add(data);
             }

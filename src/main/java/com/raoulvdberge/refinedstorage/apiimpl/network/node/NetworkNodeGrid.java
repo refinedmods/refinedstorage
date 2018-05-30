@@ -21,6 +21,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
+import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -85,10 +86,25 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (slot == 1 && !processingPattern && !getStackInSlot(slot).isEmpty()) {
-                for (int i = 0; i < 9; ++i) {
-                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(ItemPattern.getSlot(getStackInSlot(slot), i)));
+            ItemStack pattern = getStackInSlot(slot);
+            if (slot == 1 && !pattern.isEmpty()) {
+                boolean isPatternProcessing = ItemPattern.isProcessing(pattern);
+
+                if (isPatternProcessing && processingPattern) {
+                    for (int i = 0; i < 9; ++i) {
+                        matrixProcessing.setStackInSlot(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
+                    }
+
+                    for (int i = 0; i < 9; ++i) {
+                        matrixProcessing.setStackInSlot(9 + i, StackUtils.nullToEmpty(ItemPattern.getOutputSlot(pattern, i)));
+                    }
+                } else if (!isPatternProcessing && !processingPattern) {
+                    for (int i = 0; i < 9; ++i) {
+                        matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
+                    }
                 }
+
+                sendSlotUpdate(false);
             }
         }
 
@@ -379,13 +395,30 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
         }
     }
 
-    public void onPatternMatrixClear() {
+    public void clearMatrix() {
         for (int i = 0; i < matrixProcessing.getSlots(); ++i) {
             matrixProcessing.setStackInSlot(i, ItemStack.EMPTY);
         }
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             matrix.setInventorySlotContents(i, ItemStack.EMPTY);
+        }
+    }
+
+    public void sendSlotUpdate(boolean initSlots) {
+        if (!world.isRemote) {
+            world.getMinecraftServer()
+                .getPlayerList()
+                .getPlayers()
+                .stream()
+                .filter(player -> player.openContainer instanceof ContainerGrid && ((ContainerGrid) player.openContainer).getTile() != null && ((ContainerGrid) player.openContainer).getTile().getPos().equals(pos))
+                .forEach(player -> {
+                    if (initSlots) {
+                        ((ContainerGrid) player.openContainer).initSlots();
+                    }
+
+                    ((ContainerGrid) player.openContainer).sendAllSlots();
+                });
         }
     }
 
@@ -490,14 +523,15 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
             ItemPattern.setOredict(pattern, oredictPattern);
+            ItemPattern.setProcessing(pattern, processingPattern);
 
             if (processingPattern) {
                 for (int i = 0; i < 18; ++i) {
                     if (!matrixProcessing.getStackInSlot(i).isEmpty()) {
                         if (i >= 9) {
-                            ItemPattern.addOutput(pattern, matrixProcessing.getStackInSlot(i));
+                            ItemPattern.setOutputSlot(pattern, i - 9, matrixProcessing.getStackInSlot(i));
                         } else {
-                            ItemPattern.setSlot(pattern, i, matrixProcessing.getStackInSlot(i));
+                            ItemPattern.setInputSlot(pattern, i, matrixProcessing.getStackInSlot(i));
                         }
                     }
                 }
@@ -506,7 +540,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                     ItemStack ingredient = matrix.getStackInSlot(i);
 
                     if (!ingredient.isEmpty()) {
-                        ItemPattern.setSlot(pattern, i, ingredient);
+                        ItemPattern.setInputSlot(pattern, i, ingredient);
                     }
                 }
             }
@@ -542,7 +576,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
             return inputsFilled > 0 && outputsFilled > 0;
         } else {
-            return isPatternAvailable();
+            return !result.getStackInSlot(0).isEmpty() && isPatternAvailable();
         }
     }
 
