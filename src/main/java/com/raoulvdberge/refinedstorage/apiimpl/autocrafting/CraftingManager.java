@@ -93,9 +93,9 @@ public class CraftingManager implements ICraftingManager {
             tasksToAdd.stream().filter(ICraftingTask::isValid).forEach(tasks::add);
             tasksToAdd.clear();
 
-            changed = tasks.removeIf(ICraftingTask::update);
+            boolean anyFinished = tasks.removeIf(ICraftingTask::update);
 
-            if (changed) {
+            if (changed || anyFinished) {
                 markCraftingMonitorForUpdate();
             }
         }

@@ -76,10 +76,12 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
         }
-        List<ItemStack> patterns = new LinkedList<ItemStack>();
+
+        List<ItemStack> patterns = new LinkedList<>();
         for (ICraftingPattern pattern : node.getNetwork().getCraftingManager().getPatterns()) {
             patterns.addAll(pattern.getOutputs());
         }
+
         return new Object[]{patterns};
     }
 

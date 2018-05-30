@@ -61,9 +61,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
     private int tabPage;
     private int size;
 
-    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> {
-        stack.getTagCompound().setTag(NBT_STORAGE_TRACKER, getStorageTracker().serializeNBT());
-    });
+    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> stack.getTagCompound().setTag(NBT_STORAGE_TRACKER, getStorageTracker().serializeNBT()));
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
