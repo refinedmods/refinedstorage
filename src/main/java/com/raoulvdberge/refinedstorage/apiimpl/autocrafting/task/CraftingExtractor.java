@@ -45,11 +45,11 @@ public class CraftingExtractor {
     }
 
     public boolean isAllAvailable() {
-        return status.stream().allMatch(s -> s == CraftingExtractorItemStatus.AVAILABLE || s == CraftingExtractorItemStatus.EXTRACTED);
+        return !items.isEmpty() && status.stream().allMatch(s -> s == CraftingExtractorItemStatus.AVAILABLE || s == CraftingExtractorItemStatus.EXTRACTED);
     }
 
     public boolean isAllExtracted() {
-        return status.stream().allMatch(s -> s == CraftingExtractorItemStatus.EXTRACTED);
+        return !items.isEmpty() && status.stream().allMatch(s -> s == CraftingExtractorItemStatus.EXTRACTED);
     }
 
     public void extractOne() {

@@ -170,7 +170,6 @@ public class ItemGridHandler implements IItemGridHandler {
             return;
         }
 
-        // TODO why?
         IStackList<ItemStack> cache = API.instance().createItemStackList();
 
         for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
