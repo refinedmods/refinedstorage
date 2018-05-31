@@ -22,7 +22,7 @@ public class NetworkNodeCrafterManager extends NetworkNode {
 
     @Override
     public int getEnergyUsage() {
-        return 0; // TODO: config
+        return RS.INSTANCE.config.crafterManagerUsage;
     }
 
     @Override
