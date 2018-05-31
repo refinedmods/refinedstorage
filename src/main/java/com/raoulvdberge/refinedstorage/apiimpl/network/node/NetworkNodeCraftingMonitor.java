@@ -2,40 +2,44 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
     public static final String ID = "crafting_monitor";
 
-    private List<IFilter> filters = new ArrayList<>();
-    private ItemHandlerListenerNetworkNode filterListener = new ItemHandlerListenerNetworkNode(this);
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), slot -> {
-        filterListener.accept(slot);
+    private static final String NBT_SIZE = "Size";
 
-        if (network != null) {
-            network.getCraftingManager().sendCraftingMonitorUpdate();
-        }
-    });
+    private int size = IGrid.SIZE_STRETCH;
 
     public NetworkNodeCraftingMonitor(World world, BlockPos pos) {
         super(world, pos);
+    }
+
+    @Override
+    public int getSize() {
+        return world.isRemote ? TileCraftingMonitor.SIZE.getValue() : size;
+    }
+
+    @Override
+    public void onSizeChanged(int size) {
+        TileDataManager.setParameter(TileCraftingMonitor.SIZE, size);
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override
@@ -81,11 +85,6 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         return network != null ? network.getCraftingManager().getTasks() : Collections.emptyList();
     }
 
-    @Override
-    public List<IFilter> getFilters() {
-        return filters;
-    }
-
     public void onOpened(EntityPlayer player) {
         if (network != null) {
             network.getCraftingManager().sendCraftingMonitorUpdate((EntityPlayerMP) player);
@@ -93,32 +92,25 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
+    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+        super.writeConfiguration(tag);
 
-        StackUtils.writeItems(filter, 0, tag);
+        tag.setInteger(NBT_SIZE, size);
 
         return tag;
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
-        super.read(tag);
+    public void readConfiguration(NBTTagCompound tag) {
+        super.readConfiguration(tag);
 
-        StackUtils.readItems(filter, 0, tag);
+        if (tag.hasKey(NBT_SIZE)) {
+            size = tag.getInteger(NBT_SIZE);
+        }
     }
 
     @Override
     public void onClosed(EntityPlayer player) {
         // NO OP
-    }
-
-    public ItemHandlerFilter getFilter() {
-        return filter;
-    }
-
-    @Override
-    public IItemHandler getDrops() {
-        return filter;
     }
 }

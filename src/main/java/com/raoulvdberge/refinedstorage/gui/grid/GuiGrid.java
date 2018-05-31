@@ -751,12 +751,4 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             tabPageRight.visible = grid.getTotalTabPages() > 0;
         }
     }
-
-    public GuiButton getTabPageLeft() {
-        return tabPageLeft;
-    }
-
-    public GuiButton getTabPageRight() {
-        return tabPageRight;
-    }
 }

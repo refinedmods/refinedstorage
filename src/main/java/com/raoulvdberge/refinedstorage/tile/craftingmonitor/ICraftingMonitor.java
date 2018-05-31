@@ -1,8 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,9 +21,9 @@ public interface ICraftingMonitor {
 
     List<ICraftingTask> getTasks();
 
-    List<IFilter> getFilters();
+    int getSize();
 
-    ItemHandlerBase getFilter();
+    void onSizeChanged(int size);
 
     boolean isActive();
 

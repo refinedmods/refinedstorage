@@ -2,10 +2,12 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonGridSize;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorCancel;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
@@ -18,7 +20,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiCraftingMonitor extends GuiBase {
+public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
     public class CraftingMonitorElementDrawers extends ElementDrawers {
         private IElementDrawer<Integer> overlayDrawer = (x, y, color) -> {
             GlStateManager.color(1, 1, 1, 1);
@@ -50,10 +52,9 @@ public class GuiCraftingMonitor extends GuiBase {
     private int itemSelectedY = -1;
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, ICraftingMonitor craftingMonitor) {
-        super(container, 210, 230);
+        super(container, 176, 230);
 
         this.craftingMonitor = craftingMonitor;
-        this.scrollbar = new Scrollbar(157, 20, 12, 89);
     }
 
     public void setElements(List<ICraftingMonitorElement> elements) {
@@ -66,9 +67,15 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void init(int x, int y) {
+        ((ContainerCraftingMonitor) this.inventorySlots).initSlots();
+
+        this.scrollbar = new Scrollbar(157, getTopHeight(), 12, (getVisibleRows() * 18) - 1);
+
         if (craftingMonitor.getRedstoneModeParameter() != null) {
             addSideButton(new SideButtonRedstoneMode(this, craftingMonitor.getRedstoneModeParameter()));
         }
+
+        addSideButton(new SideButtonGridSize(this, () -> craftingMonitor.getSize(), size -> craftingMonitor.onSizeChanged(size)));
 
         String cancel = t("gui.cancel");
         String cancelAll = t("misc.refinedstorage:cancel_all");
@@ -76,16 +83,22 @@ public class GuiCraftingMonitor extends GuiBase {
         int cancelButtonWidth = 14 + fontRenderer.getStringWidth(cancel);
         int cancelAllButtonWidth = 14 + fontRenderer.getStringWidth(cancelAll);
 
-        cancelButton = addButton(x + 7, y + 113, cancelButtonWidth, 20, cancel, false, true);
-        cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 113, cancelAllButtonWidth, 20, cancelAll, false, true);
+        int by = y + getTopHeight() + (getVisibleRows() * 18) + 3;
+
+        this.cancelButton = addButton(x + 7, by, cancelButtonWidth, 20, cancel, false, true);
+        this.cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, by, cancelAllButtonWidth, 20, cancelAll, false, true);
+    }
+
+    private void updateScrollbar() {
+        if (scrollbar != null) {
+            scrollbar.setEnabled(getRows() > getVisibleRows());
+            scrollbar.setMaxOffset(getRows() - getVisibleRows());
+        }
     }
 
     @Override
     public void update(int x, int y) {
-        if (scrollbar != null) {
-            scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
-            scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
-        }
+        updateScrollbar();
 
         if (itemSelected >= getElements().size()) {
             itemSelected = -1;
@@ -101,24 +114,40 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     @Override
+    protected void calcHeight() {
+        this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
+        this.screenHeight = ySize;
+    }
+
+    @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/crafting_monitor.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        int yy = y;
 
-        if (itemSelectedX != -1 &&
-            itemSelectedY != -1 &&
-            itemSelected >= 0 &&
-            itemSelected < getElements().size() &&
-            getElements().get(itemSelected).canDrawSelection()) {
-            drawTexture(x + itemSelectedX, y + itemSelectedY, 0, 232, ITEM_WIDTH, ITEM_HEIGHT);
+        drawTexture(x, yy, 0, 0, screenWidth, getTopHeight());
+
+        yy += getTopHeight();
+
+        int rows = getVisibleRows();
+
+        for (int i = 0; i < rows; ++i) {
+            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth, 18);
+
+            yy += 18;
+        }
+
+        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth, getBottomHeight());
+
+        if (itemSelectedX != -1 && itemSelectedY != -1 && itemSelected >= 0 && itemSelected < getElements().size() && getElements().get(itemSelected).canDrawSelection()) {
+            drawRect(x + itemSelectedX, y + itemSelectedY, x + itemSelectedX + ITEM_WIDTH, y + itemSelectedY + ITEM_HEIGHT - 1, 0xFFCCCCCC);
         }
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t(craftingMonitor.getGuiTitle()));
-        drawString(7, 137, t("container.inventory"));
+        drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
         int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
@@ -127,17 +156,17 @@ public class GuiCraftingMonitor extends GuiBase {
         int x = 8;
         int y = 20;
 
-        itemSelectedX = -1;
-        itemSelectedY = -1;
+        this.itemSelectedX = -1;
+        this.itemSelectedY = -1;
         String itemSelectedTooltip = null;
 
-        for (int i = 0; i < VISIBLE_ROWS; ++i) {
+        for (int i = scrollbar.getOffset(); i < scrollbar.getOffset() + getVisibleRows(); ++i) {
             if (item < getElements().size()) {
                 ICraftingMonitorElement element = getElements().get(item);
 
                 if (item == itemSelected) {
-                    itemSelectedX = x;
-                    itemSelectedY = y;
+                    this.itemSelectedX = x;
+                    this.itemSelectedY = y;
                 }
 
                 if (inBounds(x, y, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
@@ -157,8 +186,52 @@ public class GuiCraftingMonitor extends GuiBase {
         }
     }
 
-    private int getRows() {
+    @Override
+    public int getVisibleRows() {
+        switch (craftingMonitor.getSize()) {
+            case IGrid.SIZE_STRETCH:
+                int screenSpaceAvailable = height - getTopHeight() - getBottomHeight();
+
+                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRowsStretch));
+            case IGrid.SIZE_SMALL:
+                return 3;
+            case IGrid.SIZE_MEDIUM:
+                return 5;
+            case IGrid.SIZE_LARGE:
+                return 8;
+            default:
+                return 3;
+        }
+    }
+
+    @Override
+    public int getRows() {
         return getElements().size();
+    }
+
+    @Override
+    public int getCurrentOffset() {
+        return scrollbar.getOffset();
+    }
+
+    @Override
+    public String getSearchFieldText() {
+        return null;
+    }
+
+    @Override
+    public int getTopHeight() {
+        return 20;
+    }
+
+    @Override
+    public int getBottomHeight() {
+        return 120;
+    }
+
+    @Override
+    public int getYPlayerInventory() {
+        return getTopHeight() + (18 * getVisibleRows()) + 38;
     }
 
     @Override
@@ -180,17 +253,17 @@ public class GuiCraftingMonitor extends GuiBase {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        itemSelected = -1;
+        this.itemSelected = -1;
 
-        if (mouseButton == 0 && inBounds(8, 20, 144, 90, mouseX - guiLeft, mouseY - guiTop)) {
+        if (mouseButton == 0) {
             int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
-            for (int i = 0; i < VISIBLE_ROWS; ++i) {
+            for (int i = 0; i < getVisibleRows(); ++i) {
                 int ix = 8;
                 int iy = 20 + (i * ITEM_HEIGHT);
 
                 if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getElements().size()) {
-                    itemSelected = item + i;
+                    this.itemSelected = item + i;
                 }
             }
         }
