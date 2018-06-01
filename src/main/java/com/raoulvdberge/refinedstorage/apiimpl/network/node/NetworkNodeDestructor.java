@@ -59,7 +59,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH, ItemUpgrade.TYPE_FORTUNE_1, ItemUpgrade.TYPE_FORTUNE_2, ItemUpgrade.TYPE_FORTUNE_3);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int mode = IFilterable.WHITELIST;
+    private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
 

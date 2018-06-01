@@ -37,7 +37,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int mode = IFilterable.WHITELIST;
+    private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
 
     private int currentSlot;

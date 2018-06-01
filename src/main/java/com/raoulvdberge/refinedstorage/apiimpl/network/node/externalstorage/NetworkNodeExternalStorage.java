@@ -45,7 +45,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int mode = IFilterable.WHITELIST;
+    private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;

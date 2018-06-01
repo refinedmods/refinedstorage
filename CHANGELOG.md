@@ -14,6 +14,8 @@
 - The Portable Grid no longer exposes a inventory for crossmod interaction, due to performance issues (raoulvdberge)
 - The Crafting Monitor is now resizable and its size can be configured (stretched, small, medium, large) (raoulvdberge)
 - Removed the Wrench (raoulvdberge)
+- Made all IO blocks have a blacklist instead of a whitelist by default (raoulvdberge)
+- An empty blacklist now means: accept any item. An empty whitelist now means: don't accept any item (an empty whitelist USED to mean: accept any item) (raoulvdberge)
 - Updated Russian translation (kellixon)
 
 ### 1.5.34

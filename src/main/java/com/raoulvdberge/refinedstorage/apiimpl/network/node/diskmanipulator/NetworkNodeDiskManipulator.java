@@ -40,7 +40,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private static final String NBT_IO_MODE = "IOMode";
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int mode = IFilterable.WHITELIST;
+    private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
 

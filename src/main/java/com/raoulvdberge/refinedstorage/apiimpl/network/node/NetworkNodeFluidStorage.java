@@ -75,7 +75,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
-    private int mode = IFilterable.WHITELIST;
+    private int mode = IFilterable.BLACKLIST;
     private boolean voidExcess = false;
 
     public NetworkNodeFluidStorage(World world, BlockPos pos) {

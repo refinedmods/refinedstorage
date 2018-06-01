@@ -22,29 +22,22 @@ public interface IFilterable {
         });
     }
 
-    // @todo: Change in 1.13 to be by default blacklist, and accept all on blacklist and none on whitelist when no filter is set
     static boolean canTake(IItemHandler filters, int mode, int compare, ItemStack stack) {
         if (mode == WHITELIST) {
-            int slots = 0;
-
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
-                if (!slot.isEmpty()) {
-                    slots++;
-
-                    if (API.instance().getComparer().isEqual(slot, stack, compare)) {
-                        return true;
-                    }
+                if (API.instance().getComparer().isEqual(slot, stack, compare)) {
+                    return true;
                 }
             }
 
-            return slots == 0;
+            return false;
         } else if (mode == BLACKLIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
 
-                if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, compare)) {
+                if (API.instance().getComparer().isEqual(slot, stack, compare)) {
                     return false;
                 }
             }
@@ -57,21 +50,15 @@ public interface IFilterable {
 
     static boolean canTakeFluids(ItemHandlerFluid filters, int mode, int compare, FluidStack stack) {
         if (mode == WHITELIST) {
-            int slots = 0;
-
             for (int i = 0; i < filters.getSlots(); ++i) {
                 FluidStack slot = filters.getFluidStackInSlot(i);
 
-                if (slot != null) {
-                    slots++;
-
-                    if (API.instance().getComparer().isEqual(slot, stack, compare)) {
-                        return true;
-                    }
+                if (slot != null && API.instance().getComparer().isEqual(slot, stack, compare)) {
+                    return true;
                 }
             }
 
-            return slots == 0;
+            return false;
         } else if (mode == BLACKLIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 FluidStack slot = filters.getFluidStackInSlot(i);
@@ -93,6 +80,7 @@ public interface IFilterable {
                 return false;
             }
         }
+
         return true;
     }
 
