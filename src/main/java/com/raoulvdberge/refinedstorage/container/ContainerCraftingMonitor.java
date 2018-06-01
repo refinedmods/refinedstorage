@@ -43,7 +43,6 @@ public class ContainerCraftingMonitor extends ContainerBase implements ICrafting
         ICraftingManager manager = craftingMonitor.getCraftingManager();
         if (!getPlayer().world.isRemote) {
             if (manager != null && !addedListener) {
-                System.out.println("Added");
                 manager.addListener(this);
 
                 this.addedListener = true;
@@ -59,7 +58,6 @@ public class ContainerCraftingMonitor extends ContainerBase implements ICrafting
 
         ICraftingManager manager = craftingMonitor.getCraftingManager();
         if (!player.getEntityWorld().isRemote && manager != null && addedListener) {
-            System.out.println("Removed");
             manager.removeListener(this);
         }
     }
@@ -107,7 +105,6 @@ public class ContainerCraftingMonitor extends ContainerBase implements ICrafting
 
     @Override
     public void onChanged() {
-        System.out.println("Changed");
         RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingMonitor), (EntityPlayerMP) getPlayer());
     }
 }

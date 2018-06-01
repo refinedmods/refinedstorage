@@ -10,13 +10,11 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 public class CraftingStepProcess extends CraftingStep {
-    private INetwork network;
     private CraftingExtractor extractor;
     private IStackList<ItemStack> itemsToReceive = API.instance().createItemStackList();
 
     public CraftingStepProcess(ICraftingPattern pattern, INetwork network, List<ItemStack> toExtract) {
         super(pattern);
-        this.network = network;
         this.extractor = new CraftingExtractor(network, toExtract);
 
         for (ItemStack output : pattern.getOutputs()) {
