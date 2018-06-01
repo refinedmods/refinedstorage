@@ -155,7 +155,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     public void read(NBTTagCompound tag) {
-        if (tag.hasKey(NBT_OWNER)) {
+        if (tag.hasUniqueId(NBT_OWNER)) {
             owner = tag.getUniqueId(NBT_OWNER);
         }
 
