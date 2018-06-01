@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
@@ -74,21 +75,15 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         return TileCraftingMonitor.REDSTONE_MODE;
     }
 
-    @Nullable
-    @Override
-    public BlockPos getNetworkPosition() {
-        return network != null ? network.getPosition() : null;
-    }
-
     @Override
     public List<ICraftingTask> getTasks() {
         return network != null ? network.getCraftingManager().getTasks() : Collections.emptyList();
     }
 
-    public void onOpened(EntityPlayer player) {
-        if (network != null) {
-            network.getCraftingManager().sendCraftingMonitorUpdate((EntityPlayerMP) player);
-        }
+    @Nullable
+    @Override
+    public ICraftingManager getCraftingManager() {
+        return network != null ? network.getCraftingManager() : null;
     }
 
     @Override

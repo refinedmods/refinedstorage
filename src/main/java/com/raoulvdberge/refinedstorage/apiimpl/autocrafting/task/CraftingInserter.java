@@ -18,13 +18,15 @@ public class CraftingInserter {
     public void insert(ItemStack stack) {
         items.addLast(new CraftingInserterItem(stack, CraftingInserterItemStatus.WAITING));
 
-        network.getCraftingManager().sendCraftingMonitorUpdate();
+        network.getCraftingManager().onTaskChanged();
     }
 
-    public void insertSingle() {
+    public void insertOne() {
         CraftingInserterItem item = items.peekFirst();
 
         if (item != null) {
+            CraftingInserterItemStatus currentStatus = item.getStatus();
+
             if (network.insertItem(item.getStack(), item.getStack().getCount(), true) == null) {
                 ItemStack inserted = network.insertItem(item.getStack(), item.getStack().getCount(), false);
                 if (inserted != null) {
@@ -32,11 +34,13 @@ public class CraftingInserter {
                 }
 
                 items.pop();
-            } else {
-                item.setStatus(CraftingInserterItemStatus.FULL);
-            }
 
-            network.getCraftingManager().sendCraftingMonitorUpdate();
+                network.getCraftingManager().onTaskChanged();
+            } else if (currentStatus != CraftingInserterItemStatus.FULL) {
+                item.setStatus(CraftingInserterItemStatus.FULL);
+
+                network.getCraftingManager().onTaskChanged();
+            }
         }
     }
 

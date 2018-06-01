@@ -31,20 +31,31 @@ public class CraftingExtractor {
         return status;
     }
 
-    // TODO: send crafting monitor update when this changes
     public void updateStatus() {
+        boolean updated = false;
+
         for (int i = 0; i < items.size(); ++i) {
             if (status.get(i) != CraftingExtractorItemStatus.EXTRACTED) {
                 ItemStack stack = items.get(i);
 
                 ItemStack inNetwork = network.extractItem(stack, stack.getCount(), true);
 
+                CraftingExtractorItemStatus previousStatus = status.get(i);
+
                 if (inNetwork == null || inNetwork.getCount() < stack.getCount()) {
                     status.set(i, CraftingExtractorItemStatus.MISSING);
                 } else {
                     status.set(i, CraftingExtractorItemStatus.AVAILABLE);
                 }
+
+                if (previousStatus != status.get(i)) {
+                    updated = true;
+                }
             }
+        }
+
+        if (updated) {
+            network.getCraftingManager().onTaskChanged();
         }
     }
 
@@ -56,7 +67,6 @@ public class CraftingExtractor {
         return !items.isEmpty() && status.stream().allMatch(s -> s == CraftingExtractorItemStatus.EXTRACTED);
     }
 
-    // TODO: send crafting monitor update when this changes
     public void extractOne() {
         for (int i = 0; i < items.size(); ++i) {
             if (status.get(i) == CraftingExtractorItemStatus.AVAILABLE) {
@@ -67,23 +77,26 @@ public class CraftingExtractor {
 
                 status.set(i, CraftingExtractorItemStatus.EXTRACTED);
 
+                network.getCraftingManager().onTaskChanged();
+
                 return;
             }
         }
     }
 
-    // TODO: send crafting monitor update when this changes
-    public void extractOneAndInsert(@Nullable IItemHandler dest) {
+    public void extractOneAndInsert(@Nullable IItemHandler handler) {
         for (int i = 0; i < items.size(); ++i) {
-            if (status.get(i) == CraftingExtractorItemStatus.AVAILABLE) {
+            CraftingExtractorItemStatus previousStatus = status.get(i);
+
+            if (previousStatus == CraftingExtractorItemStatus.AVAILABLE || previousStatus == CraftingExtractorItemStatus.MACHINE_DOES_NOT_ACCEPT || previousStatus == CraftingExtractorItemStatus.MACHINE_NONE) {
                 ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), true);
                 if (extracted == null) {
                     throw new IllegalStateException("Extraction simulation failed while available");
                 }
 
-                if (dest == null) {
+                if (handler == null) {
                     status.set(i, CraftingExtractorItemStatus.MACHINE_NONE);
-                } else if (ItemHandlerHelper.insertItem(dest, extracted, false).isEmpty()) {
+                } else if (ItemHandlerHelper.insertItem(handler, extracted, false).isEmpty()) {
                     extracted = network.extractItem(items.get(i), items.get(i).getCount(), false);
                     if (extracted == null) {
                         throw new IllegalStateException("Did not extract anything while available");
@@ -92,6 +105,10 @@ public class CraftingExtractor {
                     status.set(i, CraftingExtractorItemStatus.EXTRACTED);
                 } else {
                     status.set(i, CraftingExtractorItemStatus.MACHINE_DOES_NOT_ACCEPT);
+                }
+
+                if (previousStatus != status.get(i)) {
+                    network.getCraftingManager().onTaskChanged();
                 }
 
                 return;

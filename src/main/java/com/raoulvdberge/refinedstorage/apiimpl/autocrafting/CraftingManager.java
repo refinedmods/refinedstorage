@@ -1,28 +1,22 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
-import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorElements;
 import com.raoulvdberge.refinedstorage.tile.TileController;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CraftingManager implements ICraftingManager {
     private TileController network;
@@ -35,7 +29,7 @@ public class CraftingManager implements ICraftingManager {
     private List<ICraftingTask> tasksToAdd = new ArrayList<>();
     private List<ICraftingTask> tasksToCancel = new ArrayList<>();
 
-    private boolean updateRequested;
+    private Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
     public CraftingManager(TileController network) {
         this.network = network;
@@ -86,36 +80,47 @@ public class CraftingManager implements ICraftingManager {
         if (network.canRun()) {
             boolean changed = !tasksToCancel.isEmpty() || !tasksToAdd.isEmpty();
 
-            tasksToCancel.forEach(ICraftingTask::onCancelled);
-            tasks.removeAll(tasksToCancel);
-            tasksToCancel.clear();
+            this.tasksToCancel.forEach(ICraftingTask::onCancelled);
+            this.tasks.removeAll(tasksToCancel);
+            this.tasksToCancel.clear();
 
-            tasksToAdd.stream().filter(ICraftingTask::isValid).forEach(tasks::add);
-            tasksToAdd.clear();
+            this.tasksToAdd.stream().filter(ICraftingTask::isValid).forEach(tasks::add);
+            this.tasksToAdd.clear();
 
             boolean anyFinished = tasks.removeIf(ICraftingTask::update);
 
             if (changed || anyFinished) {
-                markCraftingMonitorForUpdate();
+                onTaskChanged();
             }
         }
-
-        if (updateRequested) {
-            updateRequested = false;
-
-            sendCraftingMonitorUpdate();
-        }
     }
 
     @Override
+    // TODO
     public void readFromNBT(NBTTagCompound tag) {
-        // TODO
     }
 
     @Override
+    // TODO
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        // TODO
         return tag;
+    }
+
+    @Override
+    public void addListener(ICraftingMonitorListener listener) {
+        listeners.add(listener);
+
+        listener.onAttached();
+    }
+
+    @Override
+    public void removeListener(ICraftingMonitorListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void onTaskChanged() {
+        listeners.forEach(ICraftingMonitorListener::onChanged);
     }
 
     @Override
@@ -135,9 +140,8 @@ public class CraftingManager implements ICraftingManager {
             if (task != null) {
                 task.calculate();
 
-                add(task);
-
-                markCraftingMonitorForUpdate();
+                this.add(task);
+                this.onTaskChanged();
 
                 return task;
             }
@@ -148,12 +152,18 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     public void track(ItemStack stack, int size) {
+        int initialSize = size;
+
         for (ICraftingTask task : tasks) {
             size = task.onTrackedItemInserted(stack, size);
 
             if (size == 0) {
-                return;
+                break;
             }
+        }
+
+        if (size != initialSize) {
+            this.onTaskChanged();
         }
     }
 
@@ -164,18 +174,18 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     public void rebuild() {
-        patterns.clear();
-        containerInventories.clear();
+        this.patterns.clear();
+        this.containerInventories.clear();
 
         for (INetworkNode node : network.getNodeGraph().all()) {
             if (node instanceof ICraftingPatternContainer && node.canUpdate()) {
                 ICraftingPatternContainer container = (ICraftingPatternContainer) node;
 
-                patterns.addAll(container.getPatterns());
+                this.patterns.addAll(container.getPatterns());
 
                 IItemHandlerModifiable handler = container.getPatternInventory();
                 if (handler != null) {
-                    containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
+                    this.containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
                 }
             }
         }
@@ -193,22 +203,5 @@ public class CraftingManager implements ICraftingManager {
         }
 
         return null;
-    }
-
-    @Override
-    public void markCraftingMonitorForUpdate() {
-        this.updateRequested = true;
-    }
-
-    @Override
-    public void sendCraftingMonitorUpdate() {
-        network.world().getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> player.openContainer instanceof ContainerCraftingMonitor && network.getPosition().equals(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().getNetworkPosition()))
-            .forEach(player -> RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player));
-    }
-
-    @Override
-    public void sendCraftingMonitorUpdate(EntityPlayerMP player) {
-        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()), player);
     }
 }

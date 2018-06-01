@@ -1,18 +1,24 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorElements;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
-public class ContainerCraftingMonitor extends ContainerBase {
+public class ContainerCraftingMonitor extends ContainerBase implements ICraftingMonitorListener {
     private ICraftingMonitor craftingMonitor;
     private IResizableDisplay resizableDisplay;
+    private boolean addedListener;
 
     public ContainerCraftingMonitor(ICraftingMonitor craftingMonitor, @Nullable TileCraftingMonitor craftingMonitorTile, EntityPlayer player, IResizableDisplay resizableDisplay) {
         super(craftingMonitorTile, player);
@@ -31,11 +37,30 @@ public class ContainerCraftingMonitor extends ContainerBase {
     }
 
     @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+
+        ICraftingManager manager = craftingMonitor.getCraftingManager();
+        if (!getPlayer().world.isRemote) {
+            if (manager != null && !addedListener) {
+                System.out.println("Added");
+                manager.addListener(this);
+
+                this.addedListener = true;
+            } else if (manager == null && addedListener) {
+                this.addedListener = false;
+            }
+        }
+    }
+
+    @Override
     public void onContainerClosed(EntityPlayer player) {
         super.onContainerClosed(player);
 
-        if (!player.getEntityWorld().isRemote) {
-            craftingMonitor.onClosed(player);
+        ICraftingManager manager = craftingMonitor.getCraftingManager();
+        if (!player.getEntityWorld().isRemote && manager != null && addedListener) {
+            System.out.println("Removed");
+            manager.removeListener(this);
         }
     }
 
@@ -73,5 +98,16 @@ public class ContainerCraftingMonitor extends ContainerBase {
     @Override
     protected boolean isHeldItemDisabled() {
         return craftingMonitor instanceof WirelessCraftingMonitor;
+    }
+
+    @Override
+    public void onAttached() {
+        onChanged();
+    }
+
+    @Override
+    public void onChanged() {
+        System.out.println("Changed");
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingMonitor), (EntityPlayerMP) getPlayer());
     }
 }

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,11 +55,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public BlockPos getNetworkPosition() {
-        return network;
-    }
-
-    @Override
     public List<ICraftingTask> getTasks() {
         INetwork network = getNetwork();
 
@@ -66,6 +63,18 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         }
 
         return Collections.emptyList();
+    }
+
+    @Nullable
+    @Override
+    public ICraftingManager getCraftingManager() {
+        INetwork network = getNetwork();
+
+        if (network != null) {
+            return network.getCraftingManager();
+        }
+
+        return null;
     }
 
     @Override

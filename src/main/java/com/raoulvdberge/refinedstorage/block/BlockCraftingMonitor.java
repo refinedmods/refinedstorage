@@ -23,8 +23,8 @@ public class BlockCraftingMonitor extends BlockNode {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote && tryOpenNetworkGui(RSGui.CRAFTING_MONITOR, player, world, pos, side, Permission.MODIFY, Permission.AUTOCRAFTING)) {
-            ((TileCraftingMonitor) world.getTileEntity(pos)).getNode().onOpened(player);
+        if (!world.isRemote) {
+            tryOpenNetworkGui(RSGui.CRAFTING_MONITOR, player, world, pos, side, Permission.MODIFY, Permission.AUTOCRAFTING);
         }
 
         return true;

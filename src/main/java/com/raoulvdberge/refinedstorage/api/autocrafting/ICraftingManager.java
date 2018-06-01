@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -98,24 +98,17 @@ public interface ICraftingManager {
     NBTTagCompound writeToNBT(NBTTagCompound tag);
 
     /**
-     * Makes the network send a crafting monitor update to all players as soon as it can.
+     * @param listener the listener
      */
-    // TODO: rework system to be subscribed-based
-    void markCraftingMonitorForUpdate();
+    void addListener(ICraftingMonitorListener listener);
 
     /**
-     * Sends a crafting monitor update to all players that are watching a crafting monitor.
-     * <p>
-     * WARNING: In most cases, you should just use {@link ICraftingManager#markCraftingMonitorForUpdate()}, if not, you can get high bandwidth usage.
+     * @param listener the listener
      */
-    // TODO: rework system to be subscribed-based
-    void sendCraftingMonitorUpdate();
+    void removeListener(ICraftingMonitorListener listener);
 
     /**
-     * Sends a crafting monitor update to a specific player.
-     *
-     * @param player the player
+     * Calls all {@link ICraftingMonitorListener}s.
      */
-    // TODO: rework system to be subscribed-based
-    void sendCraftingMonitorUpdate(EntityPlayerMP player);
+    void onTaskChanged();
 }

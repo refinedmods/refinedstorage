@@ -179,12 +179,12 @@ public class CraftingTask implements ICraftingTask {
                 if (ticks % getTickInterval(step.getPattern().getContainer().getSpeedUpgradeCount()) == 0 && step.canExecute() && step.execute()) {
                     step.setCompleted();
 
-                    network.getCraftingManager().sendCraftingMonitorUpdate();
+                    network.getCraftingManager().onTaskChanged();
                 }
             }
         }
 
-        inserter.insertSingle();
+        inserter.insertOne();
 
         ticks++;
 
@@ -192,8 +192,8 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
+    // TODO
     public void onCancelled() {
-        // TODO
     }
 
     @Override
