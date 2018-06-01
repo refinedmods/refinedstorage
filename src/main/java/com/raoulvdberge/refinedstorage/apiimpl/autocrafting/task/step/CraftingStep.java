@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
+package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 

@@ -1,7 +1,9 @@
-package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
+package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingExtractor;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingInserter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 

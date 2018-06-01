@@ -2,7 +2,10 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class CraftingExtractor {
         return status;
     }
 
+    // TODO: send crafting monitor update when this changes
     public void updateStatus() {
         for (int i = 0; i < items.size(); ++i) {
             if (status.get(i) != CraftingExtractorItemStatus.EXTRACTED) {
@@ -52,15 +56,43 @@ public class CraftingExtractor {
         return !items.isEmpty() && status.stream().allMatch(s -> s == CraftingExtractorItemStatus.EXTRACTED);
     }
 
+    // TODO: send crafting monitor update when this changes
     public void extractOne() {
         for (int i = 0; i < items.size(); ++i) {
             if (status.get(i) == CraftingExtractorItemStatus.AVAILABLE) {
                 ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), false);
                 if (extracted == null) {
-                    throw new IllegalStateException("Did not extract anything");
+                    throw new IllegalStateException("Did not extract anything while available");
                 }
 
                 status.set(i, CraftingExtractorItemStatus.EXTRACTED);
+
+                return;
+            }
+        }
+    }
+
+    // TODO: send crafting monitor update when this changes
+    public void extractOneAndInsert(@Nullable IItemHandler dest) {
+        for (int i = 0; i < items.size(); ++i) {
+            if (status.get(i) == CraftingExtractorItemStatus.AVAILABLE) {
+                ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), true);
+                if (extracted == null) {
+                    throw new IllegalStateException("Extraction simulation failed while available");
+                }
+
+                if (dest == null) {
+                    status.set(i, CraftingExtractorItemStatus.MACHINE_NONE);
+                } else if (ItemHandlerHelper.insertItem(dest, extracted, false).isEmpty()) {
+                    extracted = network.extractItem(items.get(i), items.get(i).getCount(), false);
+                    if (extracted == null) {
+                        throw new IllegalStateException("Did not extract anything while available");
+                    }
+
+                    status.set(i, CraftingExtractorItemStatus.EXTRACTED);
+                } else {
+                    status.set(i, CraftingExtractorItemStatus.MACHINE_DOES_NOT_ACCEPT);
+                }
 
                 return;
             }

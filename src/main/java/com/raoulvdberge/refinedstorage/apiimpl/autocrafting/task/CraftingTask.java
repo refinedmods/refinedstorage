@@ -14,6 +14,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craf
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingStep;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingStepCraft;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingStepProcess;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
@@ -136,15 +139,17 @@ public class CraftingTask implements ICraftingTask {
             for (ItemStack output : pattern.getOutputs()) {
                 results.add(output);
             }
+
+            return new CraftingStepProcess(pattern, network, new ArrayList<>(itemsToExtract.getStacks()));
         } else {
             results.add(pattern.getOutput(took));
 
             for (ItemStack byproduct : pattern.getByproducts(took)) {
                 results.add(byproduct);
             }
-        }
 
-        return new CraftingStepCraft(pattern, inserter, network, new ArrayList<>(itemsToExtract.getStacks()), took);
+            return new CraftingStepCraft(pattern, inserter, network, new ArrayList<>(itemsToExtract.getStacks()), took);
+        }
     }
 
     private int getQuantityPerCraft(ICraftingPattern pattern, ItemStack requested) {
@@ -199,6 +204,21 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public ItemStack getRequested() {
         return requested;
+    }
+
+    @Override
+    public int onTrackedItemInserted(ItemStack stack, int size) {
+        for (CraftingStep step : steps) {
+            if (step instanceof CraftingStepProcess) {
+                size = ((CraftingStepProcess) step).onTrackedItemInserted(stack, size);
+
+                if (size == 0) {
+                    break;
+                }
+            }
+        }
+
+        return size;
     }
 
     @Override
@@ -271,6 +291,40 @@ public class CraftingTask implements ICraftingTask {
 
                         if (status == CraftingExtractorItemStatus.MISSING) {
                             element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
+                        }
+
+                        elements.add(element);
+                    }
+                }
+            }
+
+            elements.commit();
+        }
+
+        if (steps.stream().anyMatch(s -> s instanceof CraftingStepProcess && !s.isCompleted())) {
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
+
+            for (CraftingStep step : steps) {
+                if (step instanceof CraftingStepProcess && !step.isCompleted()) {
+                    CraftingExtractor extractor = ((CraftingStepProcess) step).getExtractor();
+
+                    for (int i = 0; i < extractor.getItems().size(); ++i) {
+                        ItemStack item = extractor.getItems().get(i);
+                        CraftingExtractorItemStatus status = extractor.getStatus().get(i);
+
+                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
+                            -1,
+                            item,
+                            item.getCount(),
+                            32
+                        );
+
+                        if (status == CraftingExtractorItemStatus.MISSING) {
+                            element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
+                        } else if (status == CraftingExtractorItemStatus.MACHINE_DOES_NOT_ACCEPT) {
+                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept");
+                        } else if (status == CraftingExtractorItemStatus.MACHINE_NONE) {
+                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
                         }
 
                         elements.add(element);

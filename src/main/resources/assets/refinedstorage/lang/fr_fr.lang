@@ -29,7 +29,6 @@ gui.refinedstorage:crafting_monitor.items_crafting=Items en craft
 gui.refinedstorage:crafting_monitor.items_processing=Items en traitement
 gui.refinedstorage:crafting_monitor.items_inserting=Insertion d'items
 gui.refinedstorage:crafting_monitor.items_missing=Items manquants
-gui.refinedstorage:crafting_monitor.machine_in_use=Machine en cours d'utilisation
 gui.refinedstorage:crafting_monitor.machine_none=Pas de machine disponible
 gui.refinedstorage:crafting_monitor.waiting_for_items=En attente d'items
 gui.refinedstorage:wireless_transmitter=Emetteur sans-fil

@@ -64,8 +64,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
-    // Used to prevent infinite recursion on getRootContainer() when
-    // there's eg. two crafters facing each other.
+    // Used to prevent infinite recursion on getRootContainer() when there's eg. two crafters facing each other.
     private boolean visited = false;
 
     @Nullable
@@ -173,20 +172,24 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
+    @Nullable
     public IItemHandler getConnectedInventory() {
         ICraftingPatternContainer proxy = getRootContainer();
         if (proxy == null) {
             return null;
         }
+
         return WorldUtils.getItemHandler(proxy.getFacingTile(), proxy.getDirection().getOpposite());
     }
 
     @Override
+    @Nullable
     public TileEntity getConnectedTile() {
         ICraftingPatternContainer proxy = getRootContainer();
         if (proxy == null) {
             return null;
         }
+
         return proxy.getFacingTile();
     }
 

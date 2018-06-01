@@ -30,7 +30,6 @@ gui.refinedstorage:crafting_monitor.items_crafting=Предметы с возм�
 gui.refinedstorage:crafting_monitor.items_processing=Предметы с возможностью обработки
 gui.refinedstorage:crafting_monitor.items_inserting=Вставка предметов
 gui.refinedstorage:crafting_monitor.items_missing=Отсутствуют предметы
-gui.refinedstorage:crafting_monitor.machine_in_use=Машина используется
 gui.refinedstorage:crafting_monitor.machine_none=Машина не найдена
 gui.refinedstorage:crafting_monitor.waiting_for_items=Ожидание предметов
 gui.refinedstorage:wireless_transmitter=Передатчик

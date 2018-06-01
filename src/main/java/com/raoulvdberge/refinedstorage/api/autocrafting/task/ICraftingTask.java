@@ -42,6 +42,14 @@ public interface ICraftingTask {
     ItemStack getRequested();
 
     /**
+     * Called when a stack is inserted into the system through {@link com.raoulvdberge.refinedstorage.api.network.INetwork#insertItemTracked(ItemStack, int)}.
+     *
+     * @param stack the stack
+     * @return the size remaining, decremented by the crafting task when it was relevant to it
+     */
+    int onTrackedItemInserted(ItemStack stack, int size);
+
+    /**
      * Writes this task to NBT.
      *
      * @param tag the tag

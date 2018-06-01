@@ -148,7 +148,13 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     public void track(ItemStack stack, int size) {
-        // TODO
+        for (ICraftingTask task : tasks) {
+            size = task.onTrackedItemInserted(stack, size);
+
+            if (size == 0) {
+                return;
+            }
+        }
     }
 
     @Override

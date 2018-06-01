@@ -20,13 +20,15 @@ public interface ICraftingPatternContainer {
     int getSpeedUpgradeCount();
 
     /**
-     * @return the inventory that this container is connected to
+     * @return the inventory that this container is connected to, or null if no inventory is present
      */
+    @Nullable
     IItemHandler getConnectedInventory();
 
     /**
-     * @return the tile that this container is connected to
+     * @return the tile that this container is connected to, or null if no tile is present
      */
+    @Nullable
     TileEntity getConnectedTile();
 
     /**

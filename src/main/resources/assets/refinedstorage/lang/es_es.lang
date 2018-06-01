@@ -30,7 +30,6 @@ gui.refinedstorage:crafting_monitor.items_crafting=Fabrica Objetos
 gui.refinedstorage:crafting_monitor.items_processing=Procesamiento de objetos
 gui.refinedstorage:crafting_monitor.items_inserting=Inserta Objetos
 gui.refinedstorage:crafting_monitor.items_missing=Faltan objetos
-gui.refinedstorage:crafting_monitor.machine_in_use=Maquina en uso
 gui.refinedstorage:crafting_monitor.machine_none=Maquina no Hallada
 gui.refinedstorage:crafting_monitor.waiting_for_items=Esperando Objetos
 gui.refinedstorage:wireless_transmitter=Emisor inalámbrico

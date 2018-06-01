@@ -25,7 +25,6 @@ gui.refinedstorage:crafting_monitor.items_crafting=Teil herstellen
 gui.refinedstorage:crafting_monitor.items_processing=Teil verarbeiten
 gui.refinedstorage:crafting_monitor.items_inserting=Teil einfügen
 gui.refinedstorage:crafting_monitor.items_missing=Teil fehlt
-gui.refinedstorage:crafting_monitor.machine_in_use=Maschine in Gebrauch
 gui.refinedstorage:crafting_monitor.machine_none=keine Maschine gefunden
 gui.refinedstorage:crafting_monitor.waiting_for_items=Warte auf Teile
 gui.refinedstorage:wireless_transmitter=Funk-Sender
