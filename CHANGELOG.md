@@ -16,6 +16,7 @@
 - The Crafting Monitor is now resizable and its size can be configured (stretched, small, medium, large) (raoulvdberge)
 - Removed the Wrench (raoulvdberge)
 - Made all IO blocks have a blacklist instead of a whitelist by default (raoulvdberge)
+- Made item storage disks and blocks capacity a power of two (1k now means 1024 items instead of 1000, etc) (raoulvdberge)
 - An empty blacklist now means: accept any item. An empty whitelist now means: don't accept any item (an empty whitelist USED to mean: accept any item) (raoulvdberge)
 - Updated Russian translation (kellixon)
 
