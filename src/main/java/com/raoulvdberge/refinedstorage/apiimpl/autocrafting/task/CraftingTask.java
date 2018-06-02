@@ -192,8 +192,8 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    // TODO
     public void onCancelled() {
+        inserter.insertAll();
     }
 
     @Override

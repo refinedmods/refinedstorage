@@ -44,6 +44,16 @@ public class CraftingInserter {
         }
     }
 
+    public void insertAll() {
+        while (!items.isEmpty()) {
+            CraftingInserterItem item = items.pop();
+
+            network.insertItem(item.getStack(), item.getStack().getCount(), false);
+        }
+
+        network.getCraftingManager().onTaskChanged();
+    }
+
     public Collection<CraftingInserterItem> getItems() {
         return items;
     }
