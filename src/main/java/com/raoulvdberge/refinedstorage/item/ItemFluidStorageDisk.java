@@ -100,7 +100,7 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
             IStorageDisk disk = API.instance().getStorageDiskManager(world).getByStack(diskStack);
 
             if (disk != null && disk.getStored() == 0) {
-                ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, 1, diskStack.getMetadata());
+                ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, diskStack.getCount(), diskStack.getMetadata());
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);

@@ -6,7 +6,10 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
@@ -26,14 +29,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
+import java.util.UUID;
 
-public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
+public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType, IStorageDiskContainerContext {
     public static final String ID = "fluid_storage";
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
+    public static final String NBT_ID = "Id";
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
@@ -44,6 +49,9 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.BLACKLIST;
     private boolean voidExcess = false;
+
+    private UUID storageId;
+    private IStorageDisk<FluidStack> storage;
 
     public NetworkNodeFluidStorage(World world, BlockPos pos) {
         super(world, pos);
@@ -68,12 +76,57 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        // NO OP
+        storages.add(storage);
     }
 
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        tag.setUniqueId(NBT_ID, storageId);
+
+        return tag;
+    }
+
+    @Override
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
+
+        if (tag.hasUniqueId(NBT_ID)) {
+            storageId = tag.getUniqueId(NBT_ID);
+
+            loadStorage();
+        }
+    }
+
+    public void loadStorage() {
+        IStorageDisk disk = API.instance().getStorageDiskManager(world).get(storageId);
+
+        if (disk == null) {
+            API.instance().getStorageDiskManager(world).set(storageId, disk = API.instance().createDefaultFluidDisk(world, getType().getCapacity()));
+            API.instance().getStorageDiskManager(world).markForSaving();
+        }
+
+        this.storage = new StorageDiskFluidStorageWrapper(this, disk);
+    }
+
+    public void setStorageId(UUID id) {
+        this.storageId = id;
+
+        markDirty();
+    }
+
+    public UUID getStorageId() {
+        return storageId;
+    }
+
+    public IStorageDisk<FluidStack> getStorage() {
+        return storage;
     }
 
     @Override

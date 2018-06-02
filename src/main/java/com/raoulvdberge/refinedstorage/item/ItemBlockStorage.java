@@ -64,13 +64,13 @@ public class ItemBlockStorage extends ItemBlockBase {
 
             // Newly created storages won't have a tag yet, so allow invalid disks as well.
             if (disk == null || disk.getStored() == 0) {
-                ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, 1, storageStack.getMetadata());
+                ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, storageStack.getCount(), storageStack.getMetadata());
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
                 }
 
-                ItemStack processor = new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC);
+                ItemStack processor = new ItemStack(RSItems.PROCESSOR, storageStack.getCount(), ItemProcessor.TYPE_BASIC);
 
                 if (!player.inventory.addItemStackToInventory(processor.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), processor);
