@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.apiimpl.network.node;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.storage;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
@@ -6,7 +6,12 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
@@ -24,14 +29,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
+import java.util.UUID;
 
-public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
+public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType, IStorageDiskContainerContext {
     public static final String ID = "storage";
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_VOID_EXCESS = "VoidExcess";
+    public static final String NBT_ID = "Id";
 
     private ItemHandlerBase filters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
 
@@ -42,6 +49,9 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.BLACKLIST;
     private boolean voidExcess = false;
+
+    private UUID storageId;
+    private IStorageDisk<ItemStack> storage;
 
     public NetworkNodeStorage(World world, BlockPos pos) {
         super(world, pos);
@@ -61,7 +71,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
 
     @Override
     public void addItemStorages(List<IStorage<ItemStack>> storages) {
-        // NO OP
+        storages.add(storage);
     }
 
     @Override
@@ -72,6 +82,51 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        tag.setUniqueId(NBT_ID, storageId);
+
+        return tag;
+    }
+
+    @Override
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
+
+        if (tag.hasUniqueId(NBT_ID)) {
+            storageId = tag.getUniqueId(NBT_ID);
+
+            loadStorage();
+        }
+    }
+
+    public void loadStorage() {
+        IStorageDisk disk = API.instance().getStorageDiskManager(world).get(storageId);
+
+        if (disk == null) {
+            API.instance().getStorageDiskManager(world).set(storageId, disk = API.instance().createDefaultItemDisk(world, getType().getCapacity()));
+            API.instance().getStorageDiskManager(world).markForSaving();
+        }
+
+        this.storage = new StorageDiskItemStorageWrapper(this, disk);
+    }
+
+    public void setStorageId(UUID id) {
+        this.storageId = id;
+
+        markDirty();
+    }
+
+    public UUID getStorageId() {
+        return storageId;
+    }
+
+    public IStorageDisk<ItemStack> getStorage() {
+        return storage;
     }
 
     @Override
