@@ -36,6 +36,13 @@ public interface IStorageDiskManager {
     void set(UUID id, IStorageDisk disk);
 
     /**
+     * Removes a storage disk.
+     *
+     * @param id the id
+     */
+    void remove(UUID id);
+
+    /**
      * Marks this manager for saving.
      */
     void markForSaving();

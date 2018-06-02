@@ -17,6 +17,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
@@ -33,9 +34,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGri
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskManager;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskSync;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.QuantityFormatter;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
@@ -195,11 +194,13 @@ public class API implements IRSAPI {
         return gridRegistry;
     }
 
+    @Nonnull
     @Override
     public IStorageDiskRegistry getStorageDiskRegistry() {
         return storageDiskRegistry;
     }
 
+    @Nonnull
     @Override
     public IStorageDiskManager getStorageDiskManager(World world) {
         if (world.isRemote) {
@@ -220,9 +221,20 @@ public class API implements IRSAPI {
         return instance;
     }
 
+    @Nonnull
     @Override
     public IStorageDiskSync getStorageDiskSync() {
         return storageDiskSync;
+    }
+
+    @Override
+    public IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity) {
+        return new StorageDiskItem(world, capacity);
+    }
+
+    @Override
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity) {
+        return new StorageDiskFluid(world, capacity);
     }
 
     @Override

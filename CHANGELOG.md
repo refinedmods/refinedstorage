@@ -6,6 +6,7 @@
 - Removed Project E integration (raoulvdberge)
 - Removed Storage Drawers integration (you can still attach an External Storage to drawers, though) (raoulvdberge)
 - Removed blocking mode in autocrafting (raoulvdberge)
+- Added new storage disk system where the storage disk data (items, fluids) are stored off the disk itself, in another file (refinedstorage_disks.dat). The disk itself only stores its ID (raoulvdberge)
 - You can no longer put a Filter in filter slots to gain additional filter slots (raoulvdberge)
 - You can now re-insert Processing Patterns in the Pattern Grid and have the inputs and outputs be completed (raoulvdberge)
 - Fixed bug where pattern was recipe pattern was creatable when there was no recipe output (raoulvdberge)

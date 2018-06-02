@@ -58,11 +58,28 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
 
     @Override
     public void set(UUID id, IStorageDisk disk) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+
+        if (disk == null) {
+            throw new IllegalArgumentException("Disk cannot be null");
+        }
+
         if (disks.containsKey(id)) {
             throw new IllegalArgumentException("Disks already contains id '" + id + "'");
         }
 
         disks.put(id, disk);
+    }
+
+    @Override
+    public void remove(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+
+        disks.remove(id);
     }
 
     @Override

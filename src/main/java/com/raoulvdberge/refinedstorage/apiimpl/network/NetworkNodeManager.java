@@ -99,11 +99,23 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     @Override
     public void removeNode(BlockPos pos) {
+        if (pos == null) {
+            throw new IllegalArgumentException("Position cannot be null");
+        }
+
         nodes.remove(pos);
     }
 
     @Override
     public void setNode(BlockPos pos, INetworkNode node) {
+        if (pos == null) {
+            throw new IllegalArgumentException("Position cannot be null");
+        }
+
+        if (node == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
+
         nodes.put(pos, node);
     }
 
