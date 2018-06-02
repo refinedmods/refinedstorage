@@ -42,6 +42,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private boolean active;
 
     public NetworkNode(World world, BlockPos pos) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
         this.world = world;
         this.pos = pos;
     }

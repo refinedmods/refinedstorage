@@ -2,7 +2,12 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.storage.*;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
@@ -29,8 +34,8 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType {
-    public static final Predicate<ItemStack> VALIDATOR_STORAGE_DISK = s -> s.getItem() instanceof IStorageDiskProvider && ((IStorageDiskProvider) s.getItem()).create(s).isValid(s);
+public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType, IStorageDiskContainerContext {
+    public static final Predicate<ItemStack> VALIDATOR_STORAGE_DISK = s -> s.getItem() instanceof IStorageDiskProvider && ((IStorageDiskProvider) s.getItem()).isValid(s);
 
     public static final String ID = "disk_drive";
 
@@ -47,12 +52,13 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
                 StackUtils.createStorages(
+                    world,
                     getStackInSlot(slot),
                     slot,
-                    itemStorages,
-                    fluidStorages,
-                    s -> new StorageItemDiskDrive(NetworkNodeDiskDrive.this, s),
-                    s -> new StorageFluidDiskDrive(NetworkNodeDiskDrive.this, s)
+                    itemDisks,
+                    fluidDisks,
+                    s -> new StorageDiskItemDriveWrapper(NetworkNodeDiskDrive.this, s),
+                    s -> new StorageDiskFluidDriveWrapper(NetworkNodeDiskDrive.this, s)
                 );
 
                 if (network != null) {
@@ -63,26 +69,13 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
                 WorldUtils.updateBlock(world, pos);
             }
         }
-
-        @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (itemStorages[slot] != null) {
-                itemStorages[slot].writeToNBT();
-            }
-
-            if (fluidStorages[slot] != null) {
-                fluidStorages[slot].writeToNBT();
-            }
-
-            return super.extractItem(slot, amount, simulate);
-        }
     };
 
     private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
 
-    private IStorageDisk[] itemStorages = new IStorageDisk[8];
-    private IStorageDisk[] fluidStorages = new IStorageDisk[8];
+    private IStorageDisk[] itemDisks = new IStorageDisk[8];
+    private IStorageDisk[] fluidDisks = new IStorageDisk[8];
 
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
@@ -95,44 +88,30 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         super(world, pos);
     }
 
-    public IStorageDisk[] getItemStorages() {
-        return itemStorages;
+    public IStorageDisk[] getItemDisks() {
+        return itemDisks;
     }
 
-    public IStorageDisk[] getFluidStorages() {
-        return fluidStorages;
+    public IStorageDisk[] getFluidDisks() {
+        return fluidDisks;
     }
 
     @Override
     public int getEnergyUsage() {
         int usage = RS.INSTANCE.config.diskDriveUsage;
 
-        for (IStorage storage : itemStorages) {
+        for (IStorage storage : itemDisks) {
             if (storage != null) {
                 usage += RS.INSTANCE.config.diskDrivePerDiskUsage;
             }
         }
-        for (IStorage storage : fluidStorages) {
+        for (IStorage storage : fluidDisks) {
             if (storage != null) {
                 usage += RS.INSTANCE.config.diskDrivePerDiskUsage;
             }
         }
 
         return usage;
-    }
-
-    public void onBreak() {
-        for (IStorageDisk storage : this.itemStorages) {
-            if (storage != null) {
-                storage.writeToNBT();
-            }
-        }
-
-        for (IStorageDisk storage : this.fluidStorages) {
-            if (storage != null) {
-                storage.writeToNBT();
-            }
-        }
     }
 
     @Override
@@ -147,7 +126,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     @Override
     public void addItemStorages(List<IStorage<ItemStack>> storages) {
-        for (IStorage<ItemStack> storage : this.itemStorages) {
+        for (IStorage<ItemStack> storage : this.itemDisks) {
             if (storage != null) {
                 storages.add(storage);
             }
@@ -156,7 +135,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        for (IStorage<FluidStack> storage : this.fluidStorages) {
+        for (IStorage<FluidStack> storage : this.fluidDisks) {
             if (storage != null) {
                 storages.add(storage);
             }
@@ -178,16 +157,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
-
-        for (int i = 0; i < disks.getSlots(); ++i) {
-            if (itemStorages[i] != null) {
-                itemStorages[i].writeToNBT();
-            }
-
-            if (fluidStorages[i] != null) {
-                fluidStorages[i].writeToNBT();
-            }
-        }
 
         StackUtils.writeItems(disks, 0, tag);
 
@@ -360,7 +329,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public boolean getVoidExcess() {
+    public boolean isVoidExcess() {
         return voidExcess;
     }
 
@@ -388,11 +357,11 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
-    public ItemHandlerBase getItemFilters() {
+    ItemHandlerBase getItemFilters() {
         return itemFilters;
     }
 
-    public ItemHandlerFluid getFluidFilters() {
+    ItemHandlerFluid getFluidFilters() {
         return fluidFilters;
     }
 

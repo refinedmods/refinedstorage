@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -140,23 +141,27 @@ public final class StackUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static void createStorages(ItemStack disk, int slot, IStorageDisk<ItemStack>[] itemStorages, IStorageDisk<FluidStack>[] fluidStorages, Function<IStorageDisk<ItemStack>, IStorageDisk> itemStorageWrapper, Function<IStorageDisk<FluidStack>, IStorageDisk> fluidStorageWrapper) {
-        if (disk.isEmpty()) {
-            itemStorages[slot] = null;
-            fluidStorages[slot] = null;
+    public static void createStorages(World world, ItemStack diskStack, int slot, IStorageDisk<ItemStack>[] itemDisks, IStorageDisk<FluidStack>[] fluidDisks, Function<IStorageDisk<ItemStack>, IStorageDisk> itemDiskWrapper, Function<IStorageDisk<FluidStack>, IStorageDisk> fluidDiskWrapper) {
+        if (diskStack.isEmpty()) {
+            itemDisks[slot] = null;
+            fluidDisks[slot] = null;
         } else {
-            IStorageDiskProvider provider = (IStorageDiskProvider) disk.getItem();
-            IStorageDisk storage = provider.create(disk);
+            IStorageDisk disk = API.instance().getStorageDiskManager(world).getByStack(diskStack);
 
-            storage.readFromNBT();
-
-            switch (storage.getType()) {
-                case ITEMS:
-                    itemStorages[slot] = itemStorageWrapper.apply(storage);
-                    break;
-                case FLUIDS:
-                    fluidStorages[slot] = fluidStorageWrapper.apply(storage);
-                    break;
+            if (disk != null) {
+                switch (((IStorageDiskProvider) diskStack.getItem()).getType()) {
+                    case ITEM: {
+                        itemDisks[slot] = itemDiskWrapper.apply(disk);
+                        break;
+                    }
+                    case FLUID: {
+                        fluidDisks[slot] = fluidDiskWrapper.apply(disk);
+                        break;
+                    }
+                }
+            } else {
+                itemDisks[slot] = null;
+                fluidDisks[slot] = null;
             }
         }
     }

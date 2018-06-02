@@ -8,7 +8,6 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -24,41 +23,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType {
     public static final String ID = "fluid_storage";
-
-    class StorageFluid extends StorageDiskFluid {
-        StorageFluid(NBTTagCompound tag) {
-            super(tag, NetworkNodeFluidStorage.this.getCapacity());
-
-            this.onPassContainerContext(
-                NetworkNodeFluidStorage.this::markDirty,
-                NetworkNodeFluidStorage.this::getVoidExcess,
-                NetworkNodeFluidStorage.this::getAccessType
-            );
-        }
-
-        @Override
-        public int getPriority() {
-            return priority;
-        }
-
-        @Override
-        @Nullable
-        public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
-            if (!IFilterable.canTakeFluids(filters, mode, compare, stack)) {
-                return StackUtils.copy(stack, size);
-            }
-
-            return super.insert(stack, size, simulate);
-        }
-    }
-
-    public static final String NBT_STORAGE = "Storage";
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
@@ -66,9 +34,6 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     private static final String NBT_VOID_EXCESS = "VoidExcess";
 
     private ItemHandlerFluid filters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
-
-    private StorageFluid storage = new StorageFluid(StorageDiskFluid.getTag());
-    private NBTTagCompound storageTagToRead;
 
     private FluidStorageType type;
 
@@ -88,33 +53,6 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     @Override
-    public void update() {
-        super.update();
-
-        if (storageTagToRead != null) {
-            storage = new StorageFluid(storageTagToRead);
-
-            storage.readFromNBT();
-
-            if (network != null) {
-                network.getFluidStorageCache().invalidate();
-            }
-
-            storageTagToRead = null;
-        }
-    }
-
-    public void onPlacedWithStorage(NBTTagCompound tag) {
-        storageTagToRead = tag;
-    }
-
-    public void onBreak() {
-        if (storage != null) {
-            storage.writeToNBT();
-        }
-    }
-
-    @Override
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
@@ -128,34 +66,12 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        if (storage != null) {
-            storages.add(storage);
-        }
-    }
-
-    @Override
-    public void read(NBTTagCompound tag) {
-        super.read(tag);
-
-        if (tag.hasKey(NBT_STORAGE)) {
-            storageTagToRead = tag.getCompoundTag(NBT_STORAGE);
-        }
+        // NO OP
     }
 
     @Override
     public String getId() {
         return ID;
-    }
-
-    @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
-        super.write(tag);
-
-        storage.writeToNBT();
-
-        tag.setTag(NBT_STORAGE, storage.getStorageTag());
-
-        return tag;
     }
 
     @Override
@@ -229,10 +145,6 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         this.mode = mode;
 
         markDirty();
-    }
-
-    public StorageDiskFluid getStorage() {
-        return storage;
     }
 
     public ItemHandlerFluid getFilters() {
@@ -327,7 +239,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     @Override
-    public boolean getVoidExcess() {
+    public boolean isVoidExcess() {
         return voidExcess;
     }
 

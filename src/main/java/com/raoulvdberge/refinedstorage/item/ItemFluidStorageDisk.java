@@ -1,40 +1,32 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
-import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
+import com.raoulvdberge.refinedstorage.api.storage.disk.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.block.FluidStorageType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
-public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvider<FluidStack> {
+public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvider {
+    private static final String NBT_ID = "Id";
+
     public static final int TYPE_64K = 0;
     public static final int TYPE_128K = 1;
     public static final int TYPE_256K = 2;
     public static final int TYPE_512K = 3;
     public static final int TYPE_CREATIVE = 4;
-    public static final int TYPE_DEBUG = 5;
 
     public ItemFluidStorageDisk() {
         super("fluid_storage_disk");
@@ -51,77 +43,50 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
         }
 
         for (int i = 0; i < 5; ++i) {
-            items.add(API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, new ItemStack(this, 1, i)));
+            items.add(new ItemStack(this, 1, i));
         }
-    }
-
-    private void applyDebugDiskData(ItemStack stack) {
-        NBTTagCompound debugDiskTag = API.instance().getDefaultStorageDiskBehavior().getTag(StorageDiskType.FLUIDS);
-
-        StorageDiskFluid storage = new StorageDiskFluid(debugDiskTag, -1);
-
-        for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-            storage.insert(new FluidStack(fluid, 0), Fluid.BUCKET_VOLUME * 1000, false);
-        }
-
-        storage.writeToNBT();
-
-        stack.setTagCompound(debugDiskTag);
     }
 
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.onUpdate(stack, world, entity, slot, selected);
 
-        if (!stack.hasTagCompound()) {
-            if (stack.getMetadata() == TYPE_DEBUG) {
-                applyDebugDiskData(stack);
-            } else {
-                API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, stack);
-            }
+        if (!world.isRemote && !stack.hasTagCompound()) {
+            UUID id = UUID.randomUUID();
+
+            stack.setTagCompound(new NBTTagCompound());
+            stack.getTagCompound().setUniqueId(NBT_ID, id);
+
+            API.instance().getStorageDiskManager(world).set(id, new StorageDiskFluid(world, FluidStorageType.getById(stack.getItemDamage()).getCapacity()));
+            API.instance().getStorageDiskManager(world).markForSaving();
         }
-    }
-
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-        ItemStack disk = player.getHeldItem(hand);
-
-        IStorageDisk storage = create(disk);
-
-        if (!world.isRemote && player.isSneaking() && storage.isValid(disk) && storage.getStored() <= 0 && disk.getMetadata() != TYPE_CREATIVE) {
-            ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, 1, disk.getMetadata());
-
-            if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
-                InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
-            }
-
-            return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
-        }
-
-        return new ActionResult<>(EnumActionResult.PASS, disk);
     }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        IStorageDisk storage = create(stack);
+        if (isValid(stack)) {
+            UUID id = getId(stack);
 
-        if (storage.isValid(stack)) {
-            if (storage.getCapacity() == -1) {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored", API.instance().getQuantityFormatter().format(storage.getStored())));
-            } else {
-                tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", API.instance().getQuantityFormatter().format(storage.getStored()), API.instance().getQuantityFormatter().format(storage.getCapacity())));
+            API.instance().getStorageDiskSync().sendRequest(id);
+
+            IStorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
+            if (data != null) {
+                if (data.getCapacity() == -1) {
+                    tooltip.add(I18n.format("misc.refinedstorage:storage.stored", API.instance().getQuantityFormatter().format(data.getStored())));
+                } else {
+                    tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())));
+                }
+            }
+
+            if (flag.isAdvanced()) {
+                tooltip.add(id.toString());
             }
         }
     }
 
-    @Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
-        super.onCreated(stack, world, player);
-
-        API.instance().getDefaultStorageDiskBehavior().initDisk(StorageDiskType.FLUIDS, stack);
-    }
+    // TODO: onItemRightClick
 
     @Override
     public int getEntityLifespan(ItemStack stack, World world) {
@@ -129,13 +94,17 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     }
 
     @Override
-    public NBTTagCompound getNBTShareTag(ItemStack stack) {
-        return API.instance().getDefaultStorageDiskBehavior().getShareTag(StorageDiskType.FLUIDS, stack);
+    public UUID getId(ItemStack disk) {
+        return disk.getTagCompound().getUniqueId(NBT_ID);
     }
 
-    @Nonnull
     @Override
-    public IStorageDisk<FluidStack> create(ItemStack disk) {
-        return API.instance().getDefaultStorageDiskBehavior().createFluidStorage(disk.getTagCompound(), FluidStorageType.getById(disk.getItemDamage()).getCapacity());
+    public boolean isValid(ItemStack disk) {
+        return disk.hasTagCompound() && disk.getTagCompound().hasUniqueId(NBT_ID);
+    }
+
+    @Override
+    public StorageDiskType getType() {
+        return StorageDiskType.FLUID;
     }
 }

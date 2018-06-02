@@ -1,32 +1,30 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
-import com.raoulvdberge.refinedstorage.api.storage.StorageDiskType;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.function.Supplier;
 
-public class StorageFluidDiskManipulator implements IStorageDisk<FluidStack> {
+public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidStack> {
     private NetworkNodeDiskManipulator diskManipulator;
     private IStorageDisk<FluidStack> parent;
     private int lastState;
 
-    public StorageFluidDiskManipulator(NetworkNodeDiskManipulator diskManipulator, IStorageDisk<FluidStack> parent) {
+    public StorageDiskFluidManipulatorWrapper(NetworkNodeDiskManipulator diskManipulator, IStorageDisk<FluidStack> parent) {
         this.diskManipulator = diskManipulator;
         this.parent = parent;
-        this.onPassContainerContext(
+        this.setSettings(
             () -> {
-                diskManipulator.markDirty();
-
                 int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
 
                 if (lastState != currentState) {
@@ -35,8 +33,7 @@ public class StorageFluidDiskManipulator implements IStorageDisk<FluidStack> {
                     WorldUtils.updateBlock(diskManipulator.getWorld(), diskManipulator.getPos());
                 }
             },
-            () -> false,
-            () -> AccessType.INSERT_EXTRACT
+            diskManipulator
         );
         this.lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
     }
@@ -47,28 +44,18 @@ public class StorageFluidDiskManipulator implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    public boolean isValid(ItemStack stack) {
-        return parent.isValid(stack);
+    public void setSettings(@Nullable IStorageDiskListener listener, IStorageDiskContainerContext context) {
+        parent.setSettings(listener, context);
     }
 
     @Override
-    public void onPassContainerContext(Runnable listener, Supplier<Boolean> voidExcess, Supplier<AccessType> accessType) {
-        parent.onPassContainerContext(listener, voidExcess, accessType);
+    public NBTTagCompound writeToNbt() {
+        return parent.writeToNbt();
     }
 
     @Override
-    public void readFromNBT() {
-        parent.readFromNBT();
-    }
-
-    @Override
-    public void writeToNBT() {
-        parent.writeToNBT();
-    }
-
-    @Override
-    public StorageDiskType getType() {
-        return parent.getType();
+    public String getId() {
+        return parent.getId();
     }
 
     @Override
