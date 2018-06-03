@@ -53,7 +53,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public void setDirection(EnumFacing direction) {
         super.setDirection(direction);
 
-        getNode().resetDirection();
+        getNode().loadDirection();
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {

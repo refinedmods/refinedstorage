@@ -206,17 +206,18 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     public EnumFacing getDirection() {
         if (direction == null) {
-            resetDirection();
+            loadDirection();
         }
 
         return direction;
     }
 
-    // @todo: Move this data to the network node.
-    public void resetDirection() {
+    public void loadDirection() {
         EnumFacing direction = ((TileBase) world.getTileEntity(pos)).getDirection();
+
         if (!direction.equals(this.direction)) {
             this.direction = direction;
+
             onDirectionChanged();
         }
     }
