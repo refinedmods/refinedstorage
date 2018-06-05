@@ -18,6 +18,7 @@
 - Made all IO blocks have a blacklist instead of a whitelist by default (raoulvdberge)
 - An empty blacklist now means: accept any item. An empty whitelist now means: don't accept any item (an empty whitelist USED to mean: accept any item) (raoulvdberge)
 - Any mod can now add JSON Solderer recipes without requiring the API, by putting the JSONs in their assets directory in a "solderer_recipes" directory (raoulvdberge)
+- The Importer now skips over empty slots (raoulvdberge)
 - Updated Russian translation (kellixon)
 
 ### 1.5.34
