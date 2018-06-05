@@ -108,6 +108,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
                         if (remainder != null) {
                             toDrain.amount -= remainder.amount;
                         }
+
                         handler.drain(toDrain, true);
                     }
                 }

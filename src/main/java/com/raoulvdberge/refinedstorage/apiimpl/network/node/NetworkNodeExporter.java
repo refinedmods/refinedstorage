@@ -36,6 +36,8 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
 
+    private int filterSlot;
+
     public NetworkNodeExporter(World world, BlockPos pos) {
         super(world, pos);
     }
@@ -54,55 +56,81 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                 IItemHandler handler = WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
 
                 if (handler != null) {
-                    for (int i = 0; i < itemFilters.getSlots(); ++i) {
-                        ItemStack slot = itemFilters.getStackInSlot(i);
+                    while (filterSlot + 1 < itemFilters.getSlots() && itemFilters.getStackInSlot(filterSlot).isEmpty()) {
+                        filterSlot++;
+                    }
 
-                        if (!slot.isEmpty()) {
-                            int stackSize = upgrades.getItemInteractCount();
+                    // We jump out of the loop above if we reach the maximum slot. If the maximum slot is empty,
+                    // we waste a tick with doing nothing because it's empty. Hence this check. If we are at the last slot
+                    // and it's empty, go back to slot 0.
+                    // We also handle if we exceeded the maximum slot in general.
+                    if ((filterSlot == itemFilters.getSlots() - 1 && itemFilters.getStackInSlot(filterSlot).isEmpty()) || (filterSlot >= itemFilters.getSlots())) {
+                        filterSlot = 0;
+                    }
 
-                            ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
+                    ItemStack slot = itemFilters.getStackInSlot(filterSlot);
 
-                            if (took == null) {
-                                if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                    network.getCraftingManager().schedule(slot, stackSize, compare);
-                                }
-                            } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-                                took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, false);
+                    if (!slot.isEmpty()) {
+                        int stackSize = upgrades.getItemInteractCount();
 
-                                if (took != null) {
-                                    ItemHandlerHelper.insertItem(handler, took, false);
-                                }
+                        ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
+
+                        if (took == null) {
+                            if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                                network.getCraftingManager().schedule(slot, stackSize, compare);
+                            }
+                        } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
+                            took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, false);
+
+                            if (took != null) {
+                                ItemHandlerHelper.insertItem(handler, took, false);
                             }
                         }
                     }
+
+                    filterSlot++;
                 }
             } else if (type == IType.FLUIDS) {
+                FluidStack[] fluids = fluidFilters.getFluids();
+
+                while (filterSlot + 1 < fluids.length && fluids[filterSlot] == null) {
+                    filterSlot++;
+                }
+
+                // We jump out of the loop above if we reach the maximum slot. If the maximum slot is empty,
+                // we waste a tick with doing nothing because it's empty. Hence this check. If we are at the last slot
+                // and it's empty, go back to slot 0.
+                // We also handle if we exceeded the maximum slot in general.
+                if ((filterSlot == fluids.length - 1 && fluids[filterSlot] == null) || (filterSlot >= fluids.length)) {
+                    filterSlot = 0;
+                }
+
                 IFluidHandler handler = WorldUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
 
                 if (handler != null) {
-                    for (FluidStack stack : fluidFilters.getFluids()) {
-                        if (stack != null) {
-                            FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
+                    FluidStack stack = fluids[filterSlot];
 
-                            if (stackInStorage != null) {
-                                int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
+                    if (stack != null) {
+                        FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
 
-                                FluidStack took = network.extractFluid(stack, toExtract, compare, true);
+                        if (stackInStorage != null) {
+                            int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
 
-                                if (took != null) {
-                                    int filled = handler.fill(took, false);
+                            FluidStack took = network.extractFluid(stack, toExtract, compare, true);
 
-                                    if (filled > 0) {
-                                        took = network.extractFluid(stack, filled, compare, false);
+                            if (took != null) {
+                                int filled = handler.fill(took, false);
 
-                                        handler.fill(took, true);
+                                if (filled > 0) {
+                                    took = network.extractFluid(stack, filled, compare, false);
 
-                                        break;
-                                    }
+                                    handler.fill(took, true);
                                 }
                             }
                         }
                     }
+
+                    filterSlot++;
                 }
             }
         }

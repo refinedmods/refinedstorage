@@ -19,6 +19,7 @@
 - An empty blacklist now means: accept any item. An empty whitelist now means: don't accept any item (an empty whitelist USED to mean: accept any item) (raoulvdberge)
 - Any mod can now add JSON Solderer recipes without requiring the API, by putting the JSONs in their assets directory in a "solderer_recipes" directory (raoulvdberge)
 - The Importer now skips over empty slots (raoulvdberge)
+- The Exporter now round-robins over every configured item or fluid to export instead of exporting them all at once (raoulvdberge)
 - Updated Russian translation (kellixon)
 
 ### 1.5.34
