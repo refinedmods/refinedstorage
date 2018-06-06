@@ -15,7 +15,12 @@ public class CraftingStepProcess extends CraftingStep {
 
     public CraftingStepProcess(ICraftingPattern pattern, INetwork network, List<ItemStack> toExtract) {
         super(pattern);
-        this.extractor = new CraftingExtractor(network, toExtract);
+
+        if (!pattern.isProcessing()) {
+            throw new IllegalArgumentException("Cannot pass non-processing pattern to processing handler");
+        }
+
+        this.extractor = new CraftingExtractor(network, toExtract, true);
 
         for (ItemStack output : pattern.getOutputs()) {
             this.itemsToReceive.add(output);
@@ -24,9 +29,9 @@ public class CraftingStepProcess extends CraftingStep {
 
     @Override
     public boolean canExecute() {
-        extractor.updateStatus();
+        extractor.updateStatus(pattern.getContainer().getConnectedInventory());
 
-        return extractor.isAllAvailable() && extractor.isAllInsertable(pattern.getContainer().getConnectedInventory());
+        return extractor.isAllAvailable();
     }
 
     public int onTrackedItemInserted(ItemStack stack, int size) {
@@ -49,7 +54,7 @@ public class CraftingStepProcess extends CraftingStep {
     @Override
     public boolean execute() {
         if (!extractor.isAllExtracted()) {
-            extractor.extractOneAndInsert(pattern.getContainer().getConnectedInventory());
+            extractor.extractOne(pattern.getContainer().getConnectedInventory());
         }
 
         return itemsToReceive.isEmpty();
