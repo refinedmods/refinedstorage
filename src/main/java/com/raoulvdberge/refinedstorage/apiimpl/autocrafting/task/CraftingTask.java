@@ -9,8 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementInfo;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementColor;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
@@ -240,12 +239,12 @@ public class CraftingTask implements ICraftingTask {
         if (!missing.isEmpty()) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 16));
 
-            missing.getStacks().stream().map(stack -> new CraftingMonitorElementError(new CraftingMonitorElementItemRender(
+            missing.getStacks().stream().map(stack -> new CraftingMonitorElementColor(new CraftingMonitorElementItemRender(
                 -1,
                 stack,
                 stack.getCount(),
                 32
-            ), "")).forEach(elements::add);
+            ), "", CraftingMonitorElementColor.COLOR_ERROR)).forEach(elements::add);
 
             elements.commit();
         }
@@ -262,7 +261,7 @@ public class CraftingTask implements ICraftingTask {
                 );
 
                 if (item.getStatus() == CraftingInserterItemStatus.FULL) {
-                    element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.network_full");
+                    element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.network_full", CraftingMonitorElementColor.COLOR_ERROR);
                 }
 
                 elements.add(element);
@@ -290,7 +289,7 @@ public class CraftingTask implements ICraftingTask {
                         );
 
                         if (status == CraftingExtractorItemStatus.MISSING) {
-                            element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
                         }
 
                         elements.add(element);
@@ -320,11 +319,13 @@ public class CraftingTask implements ICraftingTask {
                         );
 
                         if (status == CraftingExtractorItemStatus.MISSING) {
-                            element = new CraftingMonitorElementInfo(element, "gui.refinedstorage:crafting_monitor.waiting_for_items");
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
                         } else if (status == CraftingExtractorItemStatus.MACHINE_DOES_NOT_ACCEPT) {
-                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept");
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept", CraftingMonitorElementColor.COLOR_ERROR);
                         } else if (status == CraftingExtractorItemStatus.MACHINE_NONE) {
-                            element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_none", CraftingMonitorElementColor.COLOR_ERROR);
+                        } else if (status == CraftingExtractorItemStatus.EXTRACTED) {
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.item_inserted_into_machine", CraftingMonitorElementColor.COLOR_SUCCESS);
                         }
 
                         elements.add(element);

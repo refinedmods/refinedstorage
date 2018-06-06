@@ -30,7 +30,7 @@ public interface IElementDrawers {
     }
 
     /**
-     * @return an overlay drawer, colour will be the element
+     * @return an overlay drawer, color will be the element
      */
     default IElementDrawer<Integer> getOverlayDrawer() {
         return getNullDrawer();

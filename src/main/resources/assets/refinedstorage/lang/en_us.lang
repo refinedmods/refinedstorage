@@ -34,6 +34,7 @@ gui.refinedstorage:crafting_monitor.machine_does_not_accept=Machine doesn't acce
 gui.refinedstorage:crafting_monitor.machine_none=No machine found
 gui.refinedstorage:crafting_monitor.waiting_for_items=Waiting for items
 gui.refinedstorage:crafting_monitor.network_full=Network is full
+gui.refinedstorage:crafting_monitor.item_inserted_into_machine=Item is inserted into machine, waiting for result
 gui.refinedstorage:wireless_transmitter=Wireless Transmitter
 gui.refinedstorage:wireless_transmitter.distance=%d block(s)
 gui.refinedstorage:crafter=Crafter

@@ -138,10 +138,6 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         }
 
         drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth, getBottomHeight());
-
-        if (itemSelectedX != -1 && itemSelectedY != -1 && itemSelected >= 0 && itemSelected < getElements().size() && getElements().get(itemSelected).canDrawSelection()) {
-            drawRect(x + itemSelectedX, y + itemSelectedY, x + itemSelectedX + ITEM_WIDTH, y + itemSelectedY + ITEM_HEIGHT - 1, 0xFFCCCCCC);
-        }
     }
 
     @Override
@@ -173,7 +169,7 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
                     itemSelectedTooltip = element.getTooltip();
                 }
 
-                element.draw(x, y, drawers);
+                element.draw(x, y, drawers, item == itemSelected);
 
                 y += ITEM_HEIGHT;
             }
