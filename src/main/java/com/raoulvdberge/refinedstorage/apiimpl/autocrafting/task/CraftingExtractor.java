@@ -107,12 +107,35 @@ public class CraftingExtractor {
                     status.set(i, CraftingExtractorItemStatus.MACHINE_DOES_NOT_ACCEPT);
                 }
 
-                if (previousStatus != status.get(i)) {
+                CraftingExtractorItemStatus currentStatus = status.get(i);
+
+                if (previousStatus != currentStatus) {
                     network.getCraftingManager().onTaskChanged();
                 }
 
-                return;
+                // We only need to extract one.
+                // If we didn't extract successfully, try the others.
+                if (currentStatus == CraftingExtractorItemStatus.EXTRACTED) {
+                    return;
+                }
             }
         }
+    }
+
+    public boolean isAllInsertable(@Nullable IItemHandler handler) {
+        // This method is called in the canExecute of CraftingStepProcess.
+        // If there is no handler, we still want to start executing so
+        // extractOneAndInsert can report the "no machine found" error.
+        if (handler == null) {
+            return true;
+        }
+
+        for (ItemStack item : items) {
+            if (!ItemHandlerHelper.insertItem(handler, item, true).isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

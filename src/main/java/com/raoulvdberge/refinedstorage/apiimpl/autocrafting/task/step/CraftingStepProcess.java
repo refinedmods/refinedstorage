@@ -26,7 +26,7 @@ public class CraftingStepProcess extends CraftingStep {
     public boolean canExecute() {
         extractor.updateStatus();
 
-        return extractor.isAllAvailable();
+        return extractor.isAllAvailable() && extractor.isAllInsertable(pattern.getContainer().getConnectedInventory());
     }
 
     public int onTrackedItemInserted(ItemStack stack, int size) {
