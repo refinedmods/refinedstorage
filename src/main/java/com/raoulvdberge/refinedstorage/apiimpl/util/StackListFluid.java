@@ -21,7 +21,11 @@ public class StackListFluid implements IStackList<FluidStack> {
         
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
-                otherStack.amount += size;
+                if ((long) otherStack.amount + (long) size > Integer.MAX_VALUE) {
+                    otherStack.amount = Integer.MAX_VALUE;
+                } else {
+                    otherStack.amount += size;
+                }
 
                 return;
             }
