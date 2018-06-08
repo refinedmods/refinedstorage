@@ -80,7 +80,30 @@ public class CraftingTask implements ICraftingTask {
                 continue;
             }
 
-            ItemStack possibleInput = possibleInputs.get(0); // TODO: Use first for now.
+            ItemStack possibleInput;
+
+            if (possibleInputs.size() == 1) {
+                possibleInput = possibleInputs.get(0);
+            } else {
+                NonNullList<ItemStack> sortedPossibleInputs = NonNullList.create();
+                sortedPossibleInputs.addAll(possibleInputs);
+
+                sortedPossibleInputs.sort((a, b) -> {
+                    ItemStack ar = mutatedStorage.get(a);
+                    ItemStack br = mutatedStorage.get(b);
+
+                    return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
+                });
+
+                sortedPossibleInputs.sort((a, b) -> {
+                    ItemStack ar = results.get(a);
+                    ItemStack br = results.get(b);
+
+                    return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
+                });
+
+                possibleInput = sortedPossibleInputs.get(0);
+            }
 
             took.add(possibleInput);
 

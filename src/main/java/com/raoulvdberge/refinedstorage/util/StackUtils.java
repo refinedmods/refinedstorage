@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.inventory.IInventory;
@@ -32,9 +33,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -46,22 +45,30 @@ public final class StackUtils {
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
 
-    private static final Map<Integer, List<ItemStack>> OREDICT_CACHE = new HashMap<>();
+    private static final Map<Integer, NonNullList<ItemStack>> OREDICT_CACHE = new HashMap<>();
     private static final Map<Integer, Boolean> OREDICT_EQUIVALENCY_CACHE = new HashMap<>();
 
     private static final NonNullList<Object> EMPTY_NON_NULL_LIST = NonNullList.create();
 
-    public static List<ItemStack> getEquivalentStacks(ItemStack stack) {
+    public static NonNullList<ItemStack> getEquivalentStacks(ItemStack stack) {
         int hash = API.instance().getItemStackHashCode(stack, false);
 
         if (OREDICT_CACHE.containsKey(hash)) {
             return OREDICT_CACHE.get(hash);
         }
 
-        List<ItemStack> ores = new ArrayList<>();
+        NonNullList<ItemStack> ores = NonNullList.create();
 
         for (int id : OreDictionary.getOreIDs(stack)) {
-            ores.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
+            String name = OreDictionary.getOreName(id);
+
+            for (ItemStack ore : OreDictionary.getOres(name)) {
+                if (ore.getMetadata() == OreDictionary.WILDCARD_VALUE) {
+                    ore.getItem().getSubItems(CreativeTabs.SEARCH, ores);
+                } else {
+                    ores.add(ore);
+                }
+            }
         }
 
         OREDICT_CACHE.put(hash, ores);

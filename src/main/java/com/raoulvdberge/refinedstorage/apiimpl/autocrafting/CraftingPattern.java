@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -34,15 +35,21 @@ public class CraftingPattern implements ICraftingPattern {
         this.oredict = ItemPattern.isOredict(stack);
 
         if (processing) {
-            this.valid = true;
-
             for (int i = 0; i < 9; ++i) {
                 ItemStack input = ItemPattern.getInputSlot(stack, i);
 
-                inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
+                if (input == null) {
+                    inputs.add(NonNullList.create());
+                } else if (processing) {
+                    inputs.add(StackUtils.getEquivalentStacks(input));
+                } else {
+                    inputs.add(NonNullList.from(ItemStack.EMPTY, input));
+                }
 
                 ItemStack output = ItemPattern.getOutputSlot(stack, i);
                 if (output != null) {
+                    this.valid = true; // As soon as we have one output, we are valid.
+
                     outputs.add(output);
                 }
             }
