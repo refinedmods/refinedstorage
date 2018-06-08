@@ -51,17 +51,21 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public void calculate() {
         int qty = this.quantity;
+        int qtyPerCraft = getQuantityPerCraft(pattern, requested);
+        int crafted = 0;
 
         IStackList<ItemStack> results = API.instance().createItemStackList();
         IStackList<ItemStack> storage = network.getItemStorageCache().getList().copy();
 
-        this.toCraft.add(requested, quantity);
-
         while (qty > 0) {
             this.steps.add(calculateInternal(storage, results, pattern));
 
-            qty -= getQuantityPerCraft(pattern, requested);
+            qty -= qtyPerCraft;
+
+            crafted += qtyPerCraft;
         }
+
+        this.toCraft.add(requested, crafted);
     }
 
     private CraftingStep calculateInternal(IStackList<ItemStack> mutatedStorage, IStackList<ItemStack> results, ICraftingPattern pattern) {
@@ -83,34 +87,11 @@ public class CraftingTask implements ICraftingTask {
             ItemStack fromSelf = results.get(possibleInput);
             ItemStack fromNetwork = mutatedStorage.get(possibleInput);
 
-            int available = (fromNetwork == null ? 0 : fromNetwork.getCount()) + (fromSelf == null ? 0 : fromSelf.getCount());
-
-            if (available < possibleInput.getCount()) {
-                ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
-
-                int needed = possibleInput.getCount() - available;
-
-                if (subPattern != null) {
-                    while ((fromSelf == null ? 0 : fromSelf.getCount()) < needed) {
-                        this.steps.add(calculateInternal(mutatedStorage, results, subPattern));
-
-                        fromSelf = results.get(possibleInput);
-                        if (fromSelf == null) {
-                            throw new IllegalStateException("Recursive calculation didn't yield anything");
-                        }
-                    }
-                }
-            }
-
-            fromNetwork = mutatedStorage.get(possibleInput);
-
             int remaining = possibleInput.getCount();
 
             while (remaining > 0) {
                 if (fromSelf != null) {
                     int toTake = Math.min(remaining, fromSelf.getCount());
-
-                    this.toCraft.add(possibleInput, toTake);
 
                     itemsToExtract.add(possibleInput, toTake);
 
@@ -132,9 +113,27 @@ public class CraftingTask implements ICraftingTask {
 
                     fromNetwork = mutatedStorage.get(possibleInput);
                 } else {
-                    this.missing.add(possibleInput, remaining);
+                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
 
-                    remaining = 0;
+                    if (subPattern != null) {
+                        while ((fromSelf == null ? 0 : fromSelf.getCount()) < remaining) {
+                            this.steps.add(calculateInternal(mutatedStorage, results, subPattern));
+
+                            fromSelf = results.get(possibleInput);
+                            if (fromSelf == null) {
+                                throw new IllegalStateException("Recursive calculation didn't yield anything");
+                            }
+
+                            fromNetwork = mutatedStorage.get(possibleInput);
+                        }
+
+                        // fromSelf contains the amount crafted after the loop.
+                        this.toCraft.add(possibleInput, fromSelf.getCount());
+                    } else {
+                        this.missing.add(possibleInput, remaining);
+
+                        remaining = 0;
+                    }
                 }
             }
         }
@@ -176,6 +175,10 @@ public class CraftingTask implements ICraftingTask {
     public boolean update() {
         boolean allCompleted = true;
 
+        if (ticks % getTickInterval(pattern.getContainer().getSpeedUpgradeCount()) == 0) {
+            inserter.insertOne();
+        }
+
         for (CraftingStep step : steps) {
             if (!step.isCompleted()) {
                 allCompleted = false;
@@ -187,8 +190,6 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
         }
-
-        inserter.insertOne();
 
         ticks++;
 
@@ -412,16 +413,16 @@ public class CraftingTask implements ICraftingTask {
     private int getTickInterval(int speedUpgrades) {
         switch (speedUpgrades) {
             case 1:
-                return 10;
-            case 2:
                 return 8;
-            case 3:
+            case 2:
                 return 6;
-            case 4:
+            case 3:
                 return 4;
+            case 4:
+                return 2;
             case 0:
             default:
-                return 20;
+                return 10;
         }
     }
 }
