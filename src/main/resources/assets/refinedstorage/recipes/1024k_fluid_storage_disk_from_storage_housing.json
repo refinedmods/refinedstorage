@@ -6,11 +6,11 @@
     },
     {
       "item": "refinedstorage:fluid_storage_part",
-      "data": 1
+      "data": 2
     }
   ],
   "result": {
     "item": "refinedstorage:fluid_storage_disk",
-    "data": 1
+    "data": 2
   }
 }

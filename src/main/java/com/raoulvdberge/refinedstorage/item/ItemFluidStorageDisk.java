@@ -29,9 +29,9 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     private static final String NBT_ID = "Id";
 
     public static final int TYPE_64K = 0;
-    public static final int TYPE_128K = 1;
-    public static final int TYPE_256K = 2;
-    public static final int TYPE_512K = 3;
+    public static final int TYPE_256K = 1;
+    public static final int TYPE_1024K = 2;
+    public static final int TYPE_4096K = 3;
     public static final int TYPE_CREATIVE = 4;
 
     public ItemFluidStorageDisk() {

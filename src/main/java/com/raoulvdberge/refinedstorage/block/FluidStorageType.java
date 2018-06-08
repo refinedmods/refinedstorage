@@ -4,9 +4,9 @@ import net.minecraft.util.IStringSerializable;
 
 public enum FluidStorageType implements IStringSerializable {
     TYPE_64K(0, 64_000, "64k"),
-    TYPE_128K(1, 128_000, "128k"),
-    TYPE_256K(2, 256_000, "256k"),
-    TYPE_512K(3, 512_000, "512k"),
+    TYPE_256K(1, 256_000, "256k"),
+    TYPE_1024K(2, 1024_000, "1024k"),
+    TYPE_4096K(3, 4096_000, "4096k"),
     TYPE_CREATIVE(4, -1, "creative");
 
     private int id;
