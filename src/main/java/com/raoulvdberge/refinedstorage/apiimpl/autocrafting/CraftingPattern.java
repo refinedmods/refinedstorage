@@ -40,7 +40,7 @@ public class CraftingPattern implements ICraftingPattern {
 
                 if (input == null) {
                     inputs.add(NonNullList.create());
-                } else if (processing) {
+                } else if (oredict) {
                     inputs.add(StackUtils.getEquivalentStacks(input));
                 } else {
                     inputs.add(NonNullList.from(ItemStack.EMPTY, input));
