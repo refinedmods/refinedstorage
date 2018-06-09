@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -138,12 +139,13 @@ public class CraftingManager implements ICraftingManager {
             ICraftingTask task = create(stack, toSchedule);
 
             if (task != null) {
-                task.calculate();
+                ICraftingTaskError error = task.calculate();
 
-                this.add(task);
-                this.onTaskChanged();
+                if (error == null) {
+                    this.add(task);
 
-                return task;
+                    return task;
+                }
             }
         }
 

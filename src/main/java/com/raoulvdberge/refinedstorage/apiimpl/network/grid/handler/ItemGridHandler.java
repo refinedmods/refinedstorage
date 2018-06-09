@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
@@ -11,6 +12,7 @@ import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStartResponse;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -20,6 +22,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.Collections;
 
 public class ItemGridHandler implements IItemGridHandler {
     private INetwork network;
@@ -187,9 +191,11 @@ public class ItemGridHandler implements IItemGridHandler {
                     return;
                 }
 
-                task.calculate();
+                ICraftingTaskError error = task.calculate();
 
-                if (noPreview && task.getMissing().isEmpty()) {
+                if (error != null) {
+                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity), player);
+                } else if (noPreview && task.getMissing().isEmpty()) {
                     network.getCraftingManager().add(task);
 
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
@@ -230,9 +236,10 @@ public class ItemGridHandler implements IItemGridHandler {
                 return;
             }
 
-            task.calculate();
-
-            network.getCraftingManager().add(task);
+            ICraftingTaskError error = task.calculate();
+            if (error == null) {
+                network.getCraftingManager().add(task);
+            }
         }
     }
 

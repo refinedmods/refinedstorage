@@ -4,7 +4,9 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -24,17 +26,23 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingSt
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
+import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class CraftingTask implements ICraftingTask {
+    private static final long CALCULATION_TIMEOUT_MS = 5000;
+
     private INetwork network;
     private ItemStack requested;
     private int quantity;
     private ICraftingPattern pattern;
     private List<CraftingStep> steps = new LinkedList<>();
     private CraftingInserter inserter;
+    private Set<ICraftingPattern> patternsUsed = new HashSet<>();
     private int ticks = 0;
+    private long calculationStarted;
 
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
@@ -49,7 +57,10 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public void calculate() {
+    @Nullable
+    public ICraftingTaskError calculate() {
+        this.calculationStarted = System.currentTimeMillis();
+
         int qty = this.quantity;
         int qtyPerCraft = getQuantityPerCraft(pattern, requested);
         int crafted = 0;
@@ -58,7 +69,13 @@ public class CraftingTask implements ICraftingTask {
         IStackList<ItemStack> storage = network.getItemStorageCache().getList().copy();
 
         while (qty > 0) {
-            this.steps.add(calculateInternal(storage, results, pattern));
+            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(storage, results, pattern);
+
+            if (result.getRight() != null) {
+                return result.getRight();
+            }
+
+            this.steps.add(result.getLeft());
 
             qty -= qtyPerCraft;
 
@@ -66,9 +83,19 @@ public class CraftingTask implements ICraftingTask {
         }
 
         this.toCraft.add(requested, crafted);
+
+        return null;
     }
 
-    private CraftingStep calculateInternal(IStackList<ItemStack> mutatedStorage, IStackList<ItemStack> results, ICraftingPattern pattern) {
+    private Pair<CraftingStep, ICraftingTaskError> calculateInternal(IStackList<ItemStack> mutatedStorage, IStackList<ItemStack> results, ICraftingPattern pattern) {
+        if (System.currentTimeMillis() - calculationStarted > CALCULATION_TIMEOUT_MS) {
+            return Pair.of(null, new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX));
+        }
+
+        if (!patternsUsed.add(pattern)) {
+            return Pair.of(null, new CraftingTaskError(CraftingTaskErrorType.RECURSIVE, pattern));
+        }
+
         IStackList<ItemStack> itemsToExtract = API.instance().createItemStackList();
 
         NonNullList<ItemStack> took = NonNullList.create();
@@ -140,7 +167,13 @@ public class CraftingTask implements ICraftingTask {
 
                     if (subPattern != null) {
                         while ((fromSelf == null ? 0 : fromSelf.getCount()) < remaining) {
-                            this.steps.add(calculateInternal(mutatedStorage, results, subPattern));
+                            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(mutatedStorage, results, subPattern);
+
+                            if (result.getRight() != null) {
+                                return Pair.of(null, result.getRight());
+                            }
+
+                            this.steps.add(result.getLeft());
 
                             fromSelf = results.get(possibleInput);
                             if (fromSelf == null) {
@@ -161,12 +194,14 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
+        patternsUsed.remove(pattern);
+
         if (pattern.isProcessing()) {
             for (ItemStack output : pattern.getOutputs()) {
                 results.add(output);
             }
 
-            return new CraftingStepProcess(pattern, network, new ArrayList<>(itemsToExtract.getStacks()));
+            return Pair.of(new CraftingStepProcess(pattern, network, new ArrayList<>(itemsToExtract.getStacks())), null);
         } else {
             results.add(pattern.getOutput(took));
 
@@ -174,7 +209,7 @@ public class CraftingTask implements ICraftingTask {
                 results.add(byproduct);
             }
 
-            return new CraftingStepCraft(pattern, inserter, network, new ArrayList<>(itemsToExtract.getStacks()), took);
+            return Pair.of(new CraftingStepCraft(pattern, inserter, network, new ArrayList<>(itemsToExtract.getStacks()), took), null);
         }
     }
 

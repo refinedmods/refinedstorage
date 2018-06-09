@@ -7,6 +7,8 @@
 - Removed Storage Drawers integration (you can still attach an External Storage to drawers, though) (raoulvdberge)
 - Removed blocking mode in autocrafting (raoulvdberge)
 - Removed the Wrench (raoulvdberge)
+- Rewrote autocrafting (raoulvdberge)
+- Autocrafting tasks that take longer than 5 seconds to calculate are automatically stopped to avoid server strain (raoulvdberge)
 - Added new storage disk system where the storage disk data (items, fluids) are stored off the disk itself, in another file (refinedstorage_disks.dat). The disk itself only stores its ID (raoulvdberge)
 - Changed fluid storage progression to be 64k - 256k - 1024k - 4096k (raoulvdberge)
 - You can no longer put a Filter in filter slots to gain additional filter slots (raoulvdberge)

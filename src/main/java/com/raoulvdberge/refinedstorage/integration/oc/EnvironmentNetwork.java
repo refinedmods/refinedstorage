@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.integration.oc;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -129,9 +130,11 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
             throw new IllegalArgumentException("Could not create crafting task");
         }
 
-        task.calculate();
+        ICraftingTaskError error = task.calculate();
 
-        node.getNetwork().getCraftingManager().add(task);
+        if (error == null) {
+            node.getNetwork().getCraftingManager().add(task);
+        }
 
         return new Object[]{};
     }

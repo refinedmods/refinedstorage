@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -15,8 +16,11 @@ import java.util.List;
 public interface ICraftingTask {
     /**
      * Calculates what this task will do, but doesn't run the task yet.
+     *
+     * @return the error, or null if there was no error
      */
-    void calculate();
+    @Nullable
+    ICraftingTaskError calculate();
 
     /**
      * Updates this task.
