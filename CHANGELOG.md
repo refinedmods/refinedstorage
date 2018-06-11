@@ -1,10 +1,45 @@
 # Refined Storage Changelog
 
+### 1.6
+- Removed Regulator mode in the Exporter (raoulvdberge)
+- Removed MCMultiPart integration (raoulvdberge)
+- Removed Project E integration (raoulvdberge)
+- Removed Storage Drawers integration (you can still attach an External Storage to drawers, though) (raoulvdberge)
+- Removed blocking mode in autocrafting (raoulvdberge)
+- Removed the Wrench (raoulvdberge)
+- Added new storage disk system where the storage disk data (items, fluids) are stored off the disk itself, in another file (refinedstorage_disks.dat). The disk itself only stores its ID (raoulvdberge)
+- Changed fluid storage progression to be 64k - 256k - 1024k - 4096k (raoulvdberge)
+- You can no longer put a Filter in filter slots to gain additional filter slots (raoulvdberge)
+- You can now re-insert Processing Patterns in the Pattern Grid and have the inputs and outputs be completed (raoulvdberge)
+- Fixed bug where pattern was recipe pattern was creatable when there was no recipe output (raoulvdberge)
+- Added a missing config option for Crafter Manager energy usage (raoulvdberge)
+- If an Interface is configured to expose the entire network storage (by configuring no export slots), it will no longer expose the entire RS storage, due to performance issues (raoulvdberge)
+- The Portable Grid no longer exposes a inventory for crossmod interaction, due to performance issues (raoulvdberge)
+- The Crafting Monitor is now resizable and its size can be configured (stretched, small, medium, large) (raoulvdberge)
+- Made all IO blocks have a blacklist instead of a whitelist by default (raoulvdberge)
+- An empty blacklist now means: accept any item. An empty whitelist now means: don't accept any item (an empty whitelist USED to mean: accept any item) (raoulvdberge)
+- Any mod can now add JSON Solderer recipes without requiring the API, by putting the JSONs in their assets directory in a "solderer_recipes" directory (raoulvdberge)
+- The Importer now skips over empty slots (raoulvdberge)
+- The Exporter now round-robins over every configured item or fluid to export instead of exporting them all at once (raoulvdberge)
+- Updated Russian translation (kellixon)
+
+### 1.5.34
+- Allow crafters to be daisy-chained (tomKPZ)
+- Empty patterns can no longer be inserted in the pattern result slot in the Pattern Grid with hoppers (raoulvdberge)
+- Added OR search operator to the Grid with "|" (raoulvdberge)
+- getPatterns() now only returns all the outputs, this to limit memory usage in OpenComputers (only affects OC integration). (fspijkerman)
+- Added new getPattern(stack:table) function for OpenComputers integration (fspijkerman)
+- Fixed repeated key events not getting handled in some cases (tomKPZ)
+
 ### 1.5.33
 - Added Crafter Manager (raoulvdberge)
 - Patterns in the Crafter slots now automatically render the output without pressing shift (raoulvdberge)
 - Fixed Disk Manipulator not extracting items (ineternet)
 - Fixed filter slots not caring about max stack size (raoulvdberge)
+- Fixed model warning about Portable Grid (raoulvdberge)
+- Fixed crash when autocompleting Ender IO recipes from JEI (raoulvdberge)
+- Fixed Grid not always using all combinations when using JEI autocompletion (raoulvdberge)
+- Increased Grid performance (raoulvdberge)
 - Various internal refactors (raoulvdberge)
 
 ### 1.5.32

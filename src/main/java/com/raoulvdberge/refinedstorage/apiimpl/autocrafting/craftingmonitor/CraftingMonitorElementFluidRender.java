@@ -26,7 +26,11 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void draw(int x, int y, IElementDrawers drawers) {
+    public void draw(int x, int y, IElementDrawers drawers, boolean selected) {
+        if (selected) {
+            drawers.getOverlayDrawer().draw(x, y, 0xFFCCCCCC);
+        }
+
         drawers.getFluidDrawer().draw(x + 2 + offset, y + 1, stack);
 
         float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
@@ -37,11 +41,6 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
         drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 21 + offset, scale), RenderUtils.getOffsetOnScale(y + 7, scale), API.instance().getQuantityFormatter().format(stack.amount) + " mB " + stack.getLocalizedName());
 
         GlStateManager.popMatrix();
-    }
-
-    @Override
-    public boolean canDrawSelection() {
-        return true;
     }
 
     @Override

@@ -21,6 +21,7 @@ public final class RSConfig {
     public int crafterUsage;
     public int crafterPerPatternUsage;
     public int craftingMonitorUsage;
+    public int crafterManagerUsage;
     public int destructorUsage;
     public int detectorUsage;
     public int diskDriveUsage;
@@ -144,6 +145,7 @@ public final class RSConfig {
         crafterUsage = config.getInt("crafter", ENERGY, 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");
         crafterPerPatternUsage = config.getInt("crafterPerPattern", ENERGY, 1, 0, Integer.MAX_VALUE, "The additional energy used per Pattern in a Crafter");
         craftingMonitorUsage = config.getInt("craftingMonitor", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");
+        crafterManagerUsage = config.getInt("crafterManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafter Managers");
         destructorUsage = config.getInt("destructor", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Destructors");
         detectorUsage = config.getInt("detector", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Detectors");
         diskDriveUsage = config.getInt("diskDrive", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by Disk Drives");

@@ -12,17 +12,13 @@ import javax.annotation.Nullable;
  */
 public interface ICraftingMonitorElement {
     /**
-     * @param x       position on the x axis to render
-     * @param y       position on the y axis to render
-     * @param drawers the drawers that this element can use
+     * @param x        position on the x axis to render
+     * @param y        position on the y axis to render
+     * @param drawers  the drawers that this element can use
+     * @param selected whether the element is selected
      */
     @SideOnly(Side.CLIENT)
-    void draw(int x, int y, IElementDrawers drawers);
-
-    /**
-     * @return whether the crafting monitor can draw a selection background behind the element when selected
-     */
-    boolean canDrawSelection();
+    void draw(int x, int y, IElementDrawers drawers, boolean selected);
 
     /**
      * Returns the position of the corresponding task in the crafting task list.

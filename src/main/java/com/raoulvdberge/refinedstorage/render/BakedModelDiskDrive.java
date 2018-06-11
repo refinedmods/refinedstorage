@@ -70,7 +70,7 @@ public class BakedModelDiskDrive implements IBakedModel {
 
     private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
-        public List<BakedQuad> load(CacheKey key) throws Exception {
+        public List<BakedQuad> load(CacheKey key) {
             EnumFacing facing = key.state.getValue(RSBlocks.DISK_DRIVE.getDirection().getProperty());
 
             List<BakedQuad> quads = models.get(facing).getQuads(key.state, key.side, 0);

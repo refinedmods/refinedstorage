@@ -55,7 +55,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     private TextFieldSearch searchField;
     private GuiCheckBox oredictPattern;
     private GuiCheckBox processingPattern;
-    private GuiCheckBox blockingPattern;
     private GuiButton tabPageLeft;
     private GuiButton tabPageRight;
 
@@ -129,10 +128,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         if (grid.getType() == GridType.PATTERN) {
             processingPattern = addCheckBox(x + 7, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
             oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
-
-            if (((NetworkNodeGrid) grid).isProcessingPattern()) {
-                blockingPattern = addCheckBox(oredictPattern.x + oredictPattern.width + 5, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:blocking"), TileGrid.BLOCKING_PATTERN.getValue());
-            }
         }
 
         if (grid.getType() != GridType.FLUID && grid.getViewType() != -1) {
@@ -620,11 +615,10 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
         if (button == oredictPattern) {
             TileDataManager.setParameter(TileGrid.OREDICT_PATTERN, oredictPattern.isChecked());
-        } else if (button == blockingPattern) {
-            TileDataManager.setParameter(TileGrid.BLOCKING_PATTERN, blockingPattern.isChecked());
         } else if (button == processingPattern) {
-            // Rebuild the inventory slots before the slot change packet arrives
+            // Rebuild the inventory slots before the slot change packet arrives.
             TileGrid.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
+            ((NetworkNodeGrid) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
             ((ContainerGrid) this.inventorySlots).initSlots();
 
             TileDataManager.setParameter(TileGrid.PROCESSING_PATTERN, processingPattern.isChecked());
@@ -743,12 +737,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         }
     }
 
-    public void updateBlockingPattern(boolean checked) {
-        if (blockingPattern != null) {
-            blockingPattern.setIsChecked(checked);
-        }
-    }
-
     public void updateScrollbarAndTabs() {
         if (scrollbar != null) {
             scrollbar.setEnabled(getRows() > getVisibleRows());
@@ -762,13 +750,5 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         if (tabPageRight != null) {
             tabPageRight.visible = grid.getTotalTabPages() > 0;
         }
-    }
-
-    public GuiButton getTabPageLeft() {
-        return tabPageLeft;
-    }
-
-    public GuiButton getTabPageRight() {
-        return tabPageRight;
     }
 }

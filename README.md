@@ -1,11 +1,7 @@
-# Refined Storage [![Build Status](https://travis-ci.org/raoulvdberge/refinedstorage.svg?branch=mc1.12)](https://travis-ci.org/raoulvdberge/refinedstorage) [![Download](https://api.bintray.com/packages/raoulvdberge/dev/refinedstorage/images/download.svg)](https://bintray.com/raoulvdberge/dev/refinedstorage/_latestVersion) [![CurseForge](http://cf.way2muchnoise.eu/full_243076_downloads.svg)](http://minecraft.curseforge.com/projects/refined-storage)
+# Refined Storage [![Build Status](https://jenkins.raoulvdberge.com/buildStatus/icon?job=refinedstorage)](https://jenkins.raoulvdberge.com/job/refinedstorage/) [![CurseForge](http://cf.way2muchnoise.eu/full_243076_downloads.svg)](http://minecraft.curseforge.com/projects/refined-storage)
 
-An elegant solution to your hoarding problem.
+**Refined Storage is a mass storage mod for Minecraft that offers the player a network-based storage system, allowing them to store items and fluids on a massively expandable device network.**
 
-This project is available on [CurseForge](http://minecraft.curseforge.com/projects/refined-storage).
+Items and fluids can be stored in one of the many storage capabilities that the mod offers. Any storage devices connected to the same network are accessible to the player through one simple Grid interface, allowing the player to access the inventories of many devices through a single unified GUI.
 
-## What are you interested in?
-
-- [How this mod works and how to use it](https://refinedstorage.raoulvdberge.com/wiki)
-- [Reporting a bug](https://github.com/raoulvdberge/refinedstorage/issues)
-- [Sending a feature request](https://github.com/raoulvdberge/refinedstorage/issues)
+This mod not only adds storage solutions, but also devices that can be used to manipulate items and blocks in the world and from within the system, such as importers, exporters, constructors, destructors, and more! There are also devices in this mod that allow the player to setup auto-crafting, allowing the crafting of complex recipes in a few simple clicks.

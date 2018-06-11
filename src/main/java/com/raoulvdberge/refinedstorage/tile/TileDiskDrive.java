@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -26,13 +26,13 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public static final TileDataParameter<Integer, TileDiskDrive> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
         int stored = 0;
 
-        for (IStorageDisk storage : t.getNode().getItemStorages()) {
+        for (IStorageDisk storage : t.getNode().getItemDisks()) {
             if (storage != null) {
                 stored += storage.getStored();
             }
         }
 
-        for (IStorageDisk storage : t.getNode().getFluidStorages()) {
+        for (IStorageDisk storage : t.getNode().getFluidDisks()) {
             if (storage != null) {
                 stored += storage.getStored();
             }
@@ -43,7 +43,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public static final TileDataParameter<Integer, TileDiskDrive> CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
         int capacity = 0;
 
-        for (IStorageDisk storage : t.getNode().getItemStorages()) {
+        for (IStorageDisk storage : t.getNode().getItemDisks()) {
             if (storage != null) {
                 if (storage.getCapacity() == -1) {
                     return -1;
@@ -53,7 +53,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
             }
         }
 
-        for (IStorageDisk storage : t.getNode().getFluidStorages()) {
+        for (IStorageDisk storage : t.getNode().getFluidDisks()) {
             if (storage != null) {
                 if (storage.getCapacity() == -1) {
                     return -1;
@@ -93,7 +93,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        writeDiskState(tag, 8, getNode().getNetwork() != null, getNode().getItemStorages(), getNode().getFluidStorages());
+        writeDiskState(tag, 8, getNode().getNetwork() != null, getNode().getItemDisks(), getNode().getFluidDisks());
 
         return tag;
     }

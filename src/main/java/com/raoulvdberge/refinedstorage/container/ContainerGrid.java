@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandle
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
@@ -245,7 +245,7 @@ public class ContainerGrid extends ContainerBase {
 
                             return ItemStack.EMPTY;
                         }
-                    } else if ((grid.getType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof IPortableGrid && stack.getItem() instanceof IStorageDiskProvider)) {
+                    } else if ((grid.getType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof IPortableGrid && stack.getItem() instanceof IStorageDiskFactory)) {
                         int startIndex = 4;
                         int endIndex = startIndex + 1;
 

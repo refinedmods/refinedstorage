@@ -4,10 +4,9 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCraftingMonitor;
 import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
@@ -53,7 +52,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.INTERFACE:
                 return new ContainerInterface((TileInterface) tile, player);
             case RSGui.CRAFTING_MONITOR:
-                return new ContainerCraftingMonitor(((TileCraftingMonitor) tile).getNode(), (TileCraftingMonitor) tile, player);
+                return new ContainerCraftingMonitor(((TileCraftingMonitor) tile).getNode(), (TileCraftingMonitor) tile, player, new ResizableDisplayDummy());
             case RSGui.WIRELESS_TRANSMITTER:
                 return new ContainerWirelessTransmitter((TileWirelessTransmitter) tile, player);
             case RSGui.CRAFTER:
@@ -89,22 +88,23 @@ public class GuiHandler implements IGuiHandler {
             return getCraftingMonitorContainer(player, x, y);
         }
 
-        return getContainer(ID, player, IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, new BlockPos(x, y, z)) : world.getTileEntity(new BlockPos(x, y, z)));
+        return getContainer(ID, player, world.getTileEntity(new BlockPos(x, y, z)));
     }
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, new BlockPos(x, y, z)) : world.getTileEntity(new BlockPos(x, y, z));
+        TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 
         switch (ID) {
             case RSGui.CONTROLLER:
                 return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile);
             case RSGui.GRID:
-            case RSGui.PORTABLE_GRID:
+            case RSGui.PORTABLE_GRID: {
                 IGrid grid = ID == RSGui.GRID ? ((TileGrid) tile).getNode() : (TilePortableGrid) tile;
                 GuiGrid gui = new GuiGrid(null, grid);
                 gui.inventorySlots = new ContainerGrid(grid, gui, null, player);
                 return gui;
+            }
             case RSGui.WIRELESS_GRID:
                 return getGridGui(player, x, y, z);
             case RSGui.DISK_DRIVE:
@@ -129,8 +129,12 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiRelay((ContainerRelay) getContainer(ID, player, tile));
             case RSGui.INTERFACE:
                 return new GuiInterface((ContainerInterface) getContainer(ID, player, tile));
-            case RSGui.CRAFTING_MONITOR:
-                return new GuiCraftingMonitor((ContainerCraftingMonitor) getContainer(ID, player, tile), ((TileCraftingMonitor) tile).getNode());
+            case RSGui.CRAFTING_MONITOR: {
+                NetworkNodeCraftingMonitor node = ((TileCraftingMonitor) tile).getNode();
+                GuiCraftingMonitor gui = new GuiCraftingMonitor(null, node);
+                gui.inventorySlots = new ContainerCraftingMonitor(node, (TileCraftingMonitor) tile, player, gui);
+                return gui;
+            }
             case RSGui.WIRELESS_TRANSMITTER:
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile));
             case RSGui.CRAFTER:
@@ -185,11 +189,13 @@ public class GuiHandler implements IGuiHandler {
     private GuiCraftingMonitor getCraftingMonitorGui(EntityPlayer player, int hand, int networkDimension) {
         WirelessCraftingMonitor craftingMonitor = getCraftingMonitor(player, hand, networkDimension);
 
-        return new GuiCraftingMonitor(new ContainerCraftingMonitor(craftingMonitor, null, player), craftingMonitor);
+        GuiCraftingMonitor gui = new GuiCraftingMonitor(null, craftingMonitor);
+        gui.inventorySlots = new ContainerCraftingMonitor(craftingMonitor, null, player, gui);
+        return gui;
     }
 
     private ContainerCraftingMonitor getCraftingMonitorContainer(EntityPlayer player, int hand, int networkDimension) {
-        return new ContainerCraftingMonitor(getCraftingMonitor(player, hand, networkDimension), null, player);
+        return new ContainerCraftingMonitor(getCraftingMonitor(player, hand, networkDimension), null, player, new ResizableDisplayDummy());
     }
 
     private ContainerFilter getFilterContainer(EntityPlayer player, int hand) {

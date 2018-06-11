@@ -21,11 +21,7 @@ public class TileInterface extends TileNode<NetworkNodeInterface> {
 
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getItemsOrStorage());
-        }
-
-        return super.getCapability(capability, facing);
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getItems()) : super.getCapability(capability, facing);
     }
 
     @Override

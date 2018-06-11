@@ -37,7 +37,7 @@ public class SoldererRegistry implements ISoldererRegistry {
                 }
 
                 for (ItemStack possibility : possibilities) {
-                    if (API.instance().getComparer().isEqual(possibility, ingredients.getStackInSlot(i), IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE | IComparer.COMPARE_STRIP_NBT)) {
+                    if (API.instance().getComparer().isEqual(possibility, ingredients.getStackInSlot(i), IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE)) {
                         if (ingredients.getStackInSlot(i).getCount() >= possibility.getCount()) {
                             rowsFound++;
 

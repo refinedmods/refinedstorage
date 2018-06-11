@@ -6,8 +6,6 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -89,7 +87,7 @@ public abstract class BlockBase extends Block {
     @SuppressWarnings("deprecation")
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (getDirection() != null) {
-            TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
+            TileEntity tile = world.getTileEntity(pos);
 
             if (tile instanceof TileBase) {
                 return state.withProperty(getDirection().getProperty(), ((TileBase) tile).getDirection());
@@ -138,7 +136,7 @@ public abstract class BlockBase extends Block {
     }
 
     protected void dropContents(World world, BlockPos pos) {
-        TileEntity tile = IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos);
+        TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
             IItemHandler handler = ((TileBase) tile).getDrops();

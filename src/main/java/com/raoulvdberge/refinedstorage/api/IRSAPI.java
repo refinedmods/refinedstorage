@@ -13,7 +13,10 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskBehavior;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -58,12 +61,6 @@ public interface IRSAPI {
      * @return the network node manager for the given world
      */
     INetworkNodeManager getNetworkNodeManager(World world);
-
-    /**
-     * @return the default storage disk behavior
-     */
-    @Nonnull
-    IStorageDiskBehavior getDefaultStorageDiskBehavior();
 
     /**
      * @return the solderer registry
@@ -126,6 +123,39 @@ public interface IRSAPI {
      */
     @Nonnull
     IWirelessGridRegistry getWirelessGridRegistry();
+
+    /**
+     * @return the storage disk registry
+     */
+    @Nonnull
+    IStorageDiskRegistry getStorageDiskRegistry();
+
+    /**
+     * @param world the world
+     * @return the storage disk manager
+     */
+    @Nonnull
+    IStorageDiskManager getStorageDiskManager(World world);
+
+    /**
+     * @return the storage disk sync manager
+     */
+    @Nonnull
+    IStorageDiskSync getStorageDiskSync();
+
+    /**
+     * @param world    the world
+     * @param capacity the capacity
+     * @return a storage disk
+     */
+    IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity);
+
+    /**
+     * @param world    the world
+     * @param capacity the capacity in mB
+     * @return a fluid storage disk
+     */
+    IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity);
 
     /**
      * Opens a wireless grid for the given player.

@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -45,8 +44,6 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
         }
 
         player.openGui(RS.INSTANCE, RSGui.WIRELESS_CRAFTING_MONITOR, player.getEntityWorld(), hand.ordinal(), network.world().provider.getDimension(), 0);
-
-        network.getCraftingManager().sendCraftingMonitorUpdate((EntityPlayerMP) player);
 
         drainEnergy(RS.INSTANCE.config.wirelessCraftingMonitorOpenUsage);
 

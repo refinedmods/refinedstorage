@@ -17,7 +17,10 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDiskBehavior;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -28,11 +31,10 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTas
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskBehavior;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.QuantityFormatter;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
@@ -62,13 +64,14 @@ public class API implements IRSAPI {
     private IComparer comparer = new Comparer();
     private IQuantityFormatter quantityFormatter = new QuantityFormatter();
     private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
-    private IStorageDiskBehavior storageDiskBehavior = new StorageDiskBehavior();
     private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
     private IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
     private IWirelessGridRegistry gridRegistry = new WirelessGridRegistry();
+    private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
+    private IStorageDiskSync storageDiskSync = new StorageDiskSync();
 
     public static IRSAPI instance() {
         return INSTANCE;
@@ -114,7 +117,7 @@ public class API implements IRSAPI {
     @Override
     public INetworkNodeManager getNetworkNodeManager(World world) {
         if (world.isRemote) {
-            throw new IllegalStateException("Attempting to access network node manager on the client");
+            throw new IllegalArgumentException("Attempting to access network node manager on the client");
         }
 
         MapStorage storage = world.getPerWorldStorage();
@@ -129,12 +132,6 @@ public class API implements IRSAPI {
         }
 
         return instance;
-    }
-
-    @Override
-    @Nonnull
-    public IStorageDiskBehavior getDefaultStorageDiskBehavior() {
-        return storageDiskBehavior;
     }
 
     @Override
@@ -195,6 +192,49 @@ public class API implements IRSAPI {
     @Override
     public IWirelessGridRegistry getWirelessGridRegistry() {
         return gridRegistry;
+    }
+
+    @Nonnull
+    @Override
+    public IStorageDiskRegistry getStorageDiskRegistry() {
+        return storageDiskRegistry;
+    }
+
+    @Nonnull
+    @Override
+    public IStorageDiskManager getStorageDiskManager(World world) {
+        if (world.isRemote) {
+            throw new IllegalArgumentException("Attempting to access storage disk manager on the client");
+        }
+
+        MapStorage storage = world.getMapStorage();
+        StorageDiskManager instance = (StorageDiskManager) storage.getOrLoadData(StorageDiskManager.class, StorageDiskManager.NAME);
+
+        if (instance == null) {
+            instance = new StorageDiskManager(StorageDiskManager.NAME);
+
+            storage.setData(StorageDiskManager.NAME, instance);
+        } else {
+            instance.tryReadDisks(world);
+        }
+
+        return instance;
+    }
+
+    @Nonnull
+    @Override
+    public IStorageDiskSync getStorageDiskSync() {
+        return storageDiskSync;
+    }
+
+    @Override
+    public IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity) {
+        return new StorageDiskItem(world, capacity);
+    }
+
+    @Override
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity) {
+        return new StorageDiskFluid(world, capacity);
     }
 
     @Override
@@ -290,7 +330,7 @@ public class API implements IRSAPI {
             return true;
         }
 
-        NetworkNode rightNode = (NetworkNode) right;
+        INetworkNode rightNode = (INetworkNode) right;
 
         if (left.getWorld().provider.getDimension() != rightNode.getWorld().provider.getDimension()) {
             return false;

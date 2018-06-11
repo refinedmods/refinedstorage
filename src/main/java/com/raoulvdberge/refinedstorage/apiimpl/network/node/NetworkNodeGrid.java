@@ -21,6 +21,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
+import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -46,6 +47,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
     public static final String NBT_TAB_PAGE = "TabPage";
     public static final String NBT_SIZE = "Size";
     public static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
-    public static final String NBT_BLOCKING_PATTERN = "BlockingPattern";
 
     private Container craftingContainer = new Container() {
         @Override
@@ -85,16 +86,46 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (slot == 1 && !processingPattern && !getStackInSlot(slot).isEmpty()) {
-                for (int i = 0; i < 9; ++i) {
-                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(ItemPattern.getSlot(getStackInSlot(slot), i)));
+            ItemStack pattern = getStackInSlot(slot);
+            if (slot == 1 && !pattern.isEmpty()) {
+                boolean isPatternProcessing = ItemPattern.isProcessing(pattern);
+
+                if (isPatternProcessing && processingPattern) {
+                    for (int i = 0; i < 9; ++i) {
+                        matrixProcessing.setStackInSlot(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
+                    }
+
+                    for (int i = 0; i < 9; ++i) {
+                        matrixProcessing.setStackInSlot(9 + i, StackUtils.nullToEmpty(ItemPattern.getOutputSlot(pattern, i)));
+                    }
+                } else if (!isPatternProcessing && !processingPattern) {
+                    for (int i = 0; i < 9; ++i) {
+                        matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
+                    }
                 }
+
+                sendSlotUpdate(false);
             }
         }
 
         @Override
         public int getSlotLimit(int slot) {
             return slot == 1 ? 1 : super.getSlotLimit(slot);
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+            // Allow in slot 0
+            // Disallow in slot 1
+            // Only allow in slot 1 when it isn't a blank pattern
+            // This makes it so that written patterns can be re-inserted in slot 1 to be overwritten again
+            // This makes it so that blank patterns can't be inserted in slot 1 through hoppers.
+            if (slot == 0 || stack.getTagCompound() != null) {
+                return super.insertItem(slot, stack, simulate);
+            }
+
+            return stack;
         }
     };
     private List<IFilter> filters = new ArrayList<>();
@@ -114,7 +145,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
     private boolean oredictPattern = false;
     private boolean processingPattern = false;
-    private boolean blockingPattern = false;
 
     public NetworkNodeGrid(World world, BlockPos pos) {
         super(world, pos);
@@ -178,14 +208,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
     public void setProcessingPattern(boolean processingPattern) {
         this.processingPattern = processingPattern;
-    }
-
-    public boolean isBlockingPattern() {
-        return blockingPattern;
-    }
-
-    public void setBlockingPattern(boolean blockingPattern) {
-        this.blockingPattern = blockingPattern;
     }
 
     public GridType getType() {
@@ -333,7 +355,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                     // If we are connected, first try to get the possibilities from the network
                     if (network != null) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), false);
+                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), false);
 
                             if (took != null) {
                                 grid.getCraftingMatrix().setInventorySlotContents(i, StackUtils.nullToEmpty(took));
@@ -349,7 +371,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                     if (!found) {
                         for (ItemStack possibility : possibilities) {
                             for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
-                                if (API.instance().getComparer().isEqual(possibility, player.inventory.getStackInSlot(j), IComparer.COMPARE_NBT | IComparer.COMPARE_STRIP_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE))) {
+                                if (API.instance().getComparer().isEqual(possibility, player.inventory.getStackInSlot(j), IComparer.COMPARE_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE))) {
                                     grid.getCraftingMatrix().setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
 
                                     player.inventory.decrStackSize(j, 1);
@@ -367,19 +389,36 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                     }
                 } else if (grid.getType() == GridType.PATTERN) {
                     // If we are a pattern grid we can just set the slot
-                    grid.getCraftingMatrix().setInventorySlotContents(i, possibilities[0]);
+                    grid.getCraftingMatrix().setInventorySlotContents(i, possibilities.length == 0 ? ItemStack.EMPTY : possibilities[0]);
                 }
             }
         }
     }
 
-    public void onPatternMatrixClear() {
+    public void clearMatrix() {
         for (int i = 0; i < matrixProcessing.getSlots(); ++i) {
             matrixProcessing.setStackInSlot(i, ItemStack.EMPTY);
         }
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             matrix.setInventorySlotContents(i, ItemStack.EMPTY);
+        }
+    }
+
+    public void sendSlotUpdate(boolean initSlots) {
+        if (!world.isRemote) {
+            world.getMinecraftServer()
+                .getPlayerList()
+                .getPlayers()
+                .stream()
+                .filter(player -> player.openContainer instanceof ContainerGrid && ((ContainerGrid) player.openContainer).getTile() != null && ((ContainerGrid) player.openContainer).getTile().getPos().equals(pos))
+                .forEach(player -> {
+                    if (initSlots) {
+                        ((ContainerGrid) player.openContainer).initSlots();
+                    }
+
+                    ((ContainerGrid) player.openContainer).sendAllSlots();
+                });
         }
     }
 
@@ -483,19 +522,16 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
-            if (processingPattern) {
-                ItemPattern.setBlocking(pattern, blockingPattern);
-            }
-
             ItemPattern.setOredict(pattern, oredictPattern);
+            ItemPattern.setProcessing(pattern, processingPattern);
 
             if (processingPattern) {
                 for (int i = 0; i < 18; ++i) {
                     if (!matrixProcessing.getStackInSlot(i).isEmpty()) {
                         if (i >= 9) {
-                            ItemPattern.addOutput(pattern, matrixProcessing.getStackInSlot(i));
+                            ItemPattern.setOutputSlot(pattern, i - 9, matrixProcessing.getStackInSlot(i));
                         } else {
-                            ItemPattern.setSlot(pattern, i, matrixProcessing.getStackInSlot(i));
+                            ItemPattern.setInputSlot(pattern, i, matrixProcessing.getStackInSlot(i));
                         }
                     }
                 }
@@ -504,7 +540,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                     ItemStack ingredient = matrix.getStackInSlot(i);
 
                     if (!ingredient.isEmpty()) {
-                        ItemPattern.setSlot(pattern, i, ingredient);
+                        ItemPattern.setInputSlot(pattern, i, ingredient);
                     }
                 }
             }
@@ -540,7 +576,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
             return inputsFilled > 0 && outputsFilled > 0;
         } else {
-            return isPatternAvailable();
+            return !result.getStackInSlot(0).isEmpty() && isPatternAvailable();
         }
     }
 
@@ -676,7 +712,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
         tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
         tag.setBoolean(NBT_PROCESSING_PATTERN, processingPattern);
-        tag.setBoolean(NBT_BLOCKING_PATTERN, blockingPattern);
 
         return tag;
     }
@@ -711,10 +746,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
         if (tag.hasKey(NBT_PROCESSING_PATTERN)) {
             processingPattern = tag.getBoolean(NBT_PROCESSING_PATTERN);
-        }
-
-        if (tag.hasKey(NBT_BLOCKING_PATTERN)) {
-            blockingPattern = tag.getBoolean(NBT_BLOCKING_PATTERN);
         }
     }
 

@@ -40,7 +40,7 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        TileDiskDrive.writeDiskState(tag, 6, getNode().getNetwork() != null, getNode().getItemStorages(), getNode().getFluidStorages());
+        TileDiskDrive.writeDiskState(tag, 6, getNode().getNetwork() != null, getNode().getItemDisks(), getNode().getFluidDisks());
 
         return tag;
     }

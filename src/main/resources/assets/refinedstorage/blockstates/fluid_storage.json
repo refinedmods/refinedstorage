@@ -11,19 +11,19 @@
           "all": "refinedstorage:blocks/64k_fluid_storage_block"
         }
       },
-      "128k": {
-        "textures": {
-          "all": "refinedstorage:blocks/128k_fluid_storage_block"
-        }
-      },
       "256k": {
         "textures": {
           "all": "refinedstorage:blocks/256k_fluid_storage_block"
         }
       },
-      "512k": {
+      "1024k": {
         "textures": {
-          "all": "refinedstorage:blocks/512k_fluid_storage_block"
+          "all": "refinedstorage:blocks/1024k_fluid_storage_block"
+        }
+      },
+      "4096k": {
+        "textures": {
+          "all": "refinedstorage:blocks/4096k_fluid_storage_block"
         }
       },
       "creative": {

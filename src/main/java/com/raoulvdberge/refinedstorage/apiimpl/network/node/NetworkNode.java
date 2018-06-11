@@ -3,10 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -24,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, IWrenchable {
+public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
 
     @Nullable
@@ -45,6 +42,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
     private boolean active;
 
     public NetworkNode(World world, BlockPos pos) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
         this.world = world;
         this.pos = pos;
     }
@@ -143,7 +144,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         if (owner != null) {
-            tag.setString(NBT_OWNER, owner.toString()); // @todo: Use proper NBT UUID methods
+            tag.setUniqueId(NBT_OWNER, owner);
         }
 
         writeConfiguration(tag);
@@ -151,7 +152,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
         return tag;
     }
 
-    @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         redstoneMode.write(tag);
 
@@ -159,14 +159,13 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
     }
 
     public void read(NBTTagCompound tag) {
-        if (tag.hasKey(NBT_OWNER)) {
-            owner = UUID.fromString(tag.getString(NBT_OWNER)); // @todo: Use proper NBT UUID methods
+        if (tag.hasUniqueId(NBT_OWNER)) {
+            owner = tag.getUniqueId(NBT_OWNER);
         }
 
         readConfiguration(tag);
     }
 
-    @Override
     public void readConfiguration(NBTTagCompound tag) {
         redstoneMode = RedstoneMode.read(tag);
     }
@@ -207,15 +206,24 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor, 
 
     public EnumFacing getDirection() {
         if (direction == null) {
-            resetDirection();
+            loadDirection();
         }
 
         return direction;
     }
 
-    // @todo: Move this data to the network node.
-    public void resetDirection() {
-        this.direction = ((TileBase) (IntegrationMCMP.isLoaded() ? RSMCMPAddon.unwrapTile(world, pos) : world.getTileEntity(pos))).getDirection();
+    public void loadDirection() {
+        EnumFacing direction = ((TileBase) world.getTileEntity(pos)).getDirection();
+
+        if (!direction.equals(this.direction)) {
+            this.direction = direction;
+
+            onDirectionChanged();
+        }
+    }
+
+    protected void onDirectionChanged() {
+        // NO OP
     }
 
     @Nullable

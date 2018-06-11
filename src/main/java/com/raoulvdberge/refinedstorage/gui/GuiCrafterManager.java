@@ -15,10 +15,12 @@ import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Slot;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.io.IOException;
 import java.util.Map;
 
+@MouseTweaksDisableWheelTweak
 public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
     private ContainerCrafterManager container;
     private NetworkNodeCrafterManager crafterManager;

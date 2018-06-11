@@ -28,27 +28,23 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
-    public NetworkNodeManager(String s) {
-        super(s);
+    public NetworkNodeManager(String name) {
+        super(name);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        ConcurrentHashMap<BlockPos, INetworkNode> newNodes = new ConcurrentHashMap<>();
-
         if (tag.hasKey(NBT_NODES)) {
             this.nodesTag = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
             this.canReadNodes = true;
         }
-
-        this.nodes = newNodes;
     }
 
     public void tryReadNodes(World world) {
-        if (canReadNodes) {
-            canReadNodes = false;
+        if (this.canReadNodes) {
+            this.canReadNodes = false;
 
-            nodes.clear();
+            this.nodes.clear();
 
             for (int i = 0; i < nodesTag.tagCount(); ++i) {
                 NBTTagCompound nodeTag = nodesTag.getCompoundTagAt(i);
@@ -69,7 +65,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                     }
 
                     if (node != null) {
-                        nodes.put(pos, node);
+                        this.nodes.put(pos, node);
                     }
                 }
             }
@@ -103,11 +99,23 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     @Override
     public void removeNode(BlockPos pos) {
+        if (pos == null) {
+            throw new IllegalArgumentException("Position cannot be null");
+        }
+
         nodes.remove(pos);
     }
 
     @Override
     public void setNode(BlockPos pos, INetworkNode node) {
+        if (pos == null) {
+            throw new IllegalArgumentException("Position cannot be null");
+        }
+
+        if (node == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
+
         nodes.put(pos, node);
     }
 

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GRG",
+    "RPR",
+    "EEE"
+  ],
+  "key": {
+    "G": {
+      "type": "forge:ore_dict",
+      "ore": "blockGlass"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "P": {
+      "item": "refinedstorage:fluid_storage_part",
+      "data": 3
+    },
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:fluid_storage_disk",
+    "data": 3
+  }
+}

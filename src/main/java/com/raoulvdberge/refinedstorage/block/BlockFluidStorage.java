@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidStorage;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.item.ItemBlockFluidStorage;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import net.minecraft.block.properties.PropertyEnum;
@@ -23,6 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class BlockFluidStorage extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", FluidStorageType.class);
@@ -36,7 +37,7 @@ public class BlockFluidStorage extends BlockNode {
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
         for (int i = 0; i <= 4; ++i) {
-            items.add(ItemBlockFluidStorage.initNBT(new ItemStack(this, 1, i)));
+            items.add(new ItemStack(this, 1, i));
         }
     }
 
@@ -72,36 +73,6 @@ public class BlockFluidStorage extends BlockNode {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, player, stack);
-
-        if (!world.isRemote && stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeFluidStorage.NBT_STORAGE)) {
-            ((TileFluidStorage) world.getTileEntity(pos)).getNode().onPlacedWithStorage(stack.getTagCompound().getCompoundTag(NetworkNodeFluidStorage.NBT_STORAGE));
-        }
-    }
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        ((TileFluidStorage) world.getTileEntity(pos)).getNode().onBreak();
-
-        super.breakBlock(world, pos, state);
-    }
-
-    @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        TileFluidStorage storage = (TileFluidStorage) world.getTileEntity(pos);
-
-        ItemStack stack = new ItemStack(RSBlocks.FLUID_STORAGE, 1, getMetaFromState(state));
-        stack.setTagCompound(new NBTTagCompound());
-
-        storage.getNode().getStorage().writeToNBT();
-
-        stack.getTagCompound().setTag(NetworkNodeFluidStorage.NBT_STORAGE, storage.getNode().getStorage().getStorageTag());
-
-        drops.add(stack);
-    }
-
-    @Override
     public Item createItem() {
         return new ItemBlockFluidStorage();
     }
@@ -110,5 +81,35 @@ public class BlockFluidStorage extends BlockNode {
     @Nullable
     public Direction getDirection() {
         return null;
+    }
+
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
+        if (!world.isRemote) {
+            NetworkNodeFluidStorage storage = ((TileFluidStorage) world.getTileEntity(pos)).getNode();
+
+            if (stack.hasTagCompound() && stack.getTagCompound().hasUniqueId(NetworkNodeFluidStorage.NBT_ID)) {
+                storage.setStorageId(stack.getTagCompound().getUniqueId(NetworkNodeFluidStorage.NBT_ID));
+            } else {
+                storage.setStorageId(UUID.randomUUID());
+            }
+
+            storage.loadStorage();
+        }
+
+        // Call this after loading the storage, so the network discovery can use the loaded storage.
+        super.onBlockPlacedBy(world, pos, state, player, stack);
+    }
+
+    @Override
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        TileFluidStorage storage = (TileFluidStorage) world.getTileEntity(pos);
+
+        ItemStack stack = new ItemStack(RSBlocks.FLUID_STORAGE, 1, getMetaFromState(state));
+
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setUniqueId(NetworkNodeFluidStorage.NBT_ID, storage.getNode().getStorageId());
+
+        drops.add(stack);
     }
 }
