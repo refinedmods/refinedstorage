@@ -1,25 +1,23 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.gui.GuiCraftingMonitor;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
-import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorViewAutomated;
+import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorSize;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,38 +26,13 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
     private int networkDimension;
     private BlockPos network;
-
-    private boolean viewAutomated;
-
-    private List<IFilter> filters = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, new ArrayList<>(), null) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
-            }
-
-            StackUtils.writeItems(this, 0, stack.getTagCompound());
-
-            INetwork network = getNetwork();
-
-            if (network != null) {
-                network.getCraftingManager().sendCraftingMonitorUpdate();
-            }
-        }
-    };
+    private int size;
 
     public WirelessCraftingMonitor(int networkDimension, ItemStack stack) {
         this.stack = stack;
         this.networkDimension = networkDimension;
         this.network = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
-        this.viewAutomated = ItemWirelessCraftingMonitor.canViewAutomated(stack);
-
-        if (stack.hasTagCompound()) {
-            StackUtils.readItems(filter, 0, stack.getTagCompound());
-        }
+        this.size = ItemWirelessCraftingMonitor.getSize(stack);
     }
 
     @Override
@@ -82,11 +55,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public BlockPos getNetworkPosition() {
-        return network;
-    }
-
-    @Override
     public List<ICraftingTask> getTasks() {
         INetwork network = getNetwork();
 
@@ -97,26 +65,30 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         return Collections.emptyList();
     }
 
+    @Nullable
     @Override
-    public List<IFilter> getFilters() {
-        return filters;
+    public ICraftingManager getCraftingManager() {
+        INetwork network = getNetwork();
+
+        if (network != null) {
+            return network.getCraftingManager();
+        }
+
+        return null;
     }
 
     @Override
-    public ItemHandlerBase getFilter() {
-        return filter;
+    public int getSize() {
+        return size;
     }
 
     @Override
-    public boolean canViewAutomated() {
-        return viewAutomated;
-    }
+    public void onSizeChanged(int size) {
+        this.size = size;
 
-    @Override
-    public void onViewAutomatedChanged(boolean viewAutomated) {
-        RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorViewAutomated(viewAutomated));
+        GuiBase.executeLater(GuiCraftingMonitor.class, GuiBase::initGui);
 
-        this.viewAutomated = viewAutomated;
+        RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSize(size));
     }
 
     private INetwork getNetwork() {

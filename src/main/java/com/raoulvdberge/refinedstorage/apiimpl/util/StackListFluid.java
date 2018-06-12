@@ -9,18 +9,23 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 public class StackListFluid implements IStackList<FluidStack> {
     private ArrayListMultimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
-    private List<FluidStack> removeTracker = new LinkedList<>();
 
     @Override
     public void add(@Nonnull FluidStack stack, int size) {
+        if (stack == null || size < 0) {
+            throw new IllegalArgumentException("Cannot accept empty stack");
+        }
+        
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
-                otherStack.amount += size;
+                if ((long) otherStack.amount + (long) size > Integer.MAX_VALUE) {
+                    otherStack.amount = Integer.MAX_VALUE;
+                } else {
+                    otherStack.amount += size;
+                }
 
                 return;
             }
@@ -48,37 +53,6 @@ public class StackListFluid implements IStackList<FluidStack> {
         }
 
         return false;
-    }
-
-    @Override
-    public boolean trackedRemove(@Nonnull FluidStack stack, int size) {
-        for (FluidStack otherStack : stacks.get(stack.getFluid())) {
-            if (stack.isFluidEqual(otherStack)) {
-                FluidStack removed = new FluidStack(otherStack.getFluid(), Math.min(size, otherStack.amount));
-                this.removeTracker.add(removed);
-                otherStack.amount -= size;
-                boolean success = otherStack.amount >= 0;
-
-                if (otherStack.amount <= 0) {
-                    stacks.remove(otherStack.getFluid(), otherStack);
-                }
-
-                return success;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public void undo() {
-        removeTracker.forEach(s -> add(s, s.amount));
-        removeTracker.clear();
-    }
-
-    @Override
-    public List<FluidStack> getRemoveTracker() {
-        return removeTracker;
     }
 
     @Override
@@ -136,15 +110,5 @@ public class StackListFluid implements IStackList<FluidStack> {
         }
 
         return list;
-    }
-
-    @Override
-    public IStackList<FluidStack> getOredicted() {
-        throw new UnsupportedOperationException("Fluid lists have no oredicted version!");
-    }
-
-    @Override
-    public String toString() {
-        return stacks.toString();
     }
 }

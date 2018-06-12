@@ -1,7 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
@@ -24,11 +26,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IFilterable, IType {
+public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IFilterable, IType, IStorageDiskContainerContext {
     public static final String ID = "disk_manipulator";
 
     public static final int IO_MODE_INSERT = 0;
@@ -40,12 +41,12 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private static final String NBT_IO_MODE = "IOMode";
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int mode = IFilterable.WHITELIST;
+    private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
 
-    private IStorageDisk<ItemStack>[] itemStorages = new IStorageDisk[6];
-    private IStorageDisk<FluidStack>[] fluidStorages = new IStorageDisk[6];
+    private IStorageDisk<ItemStack>[] itemDisks = new IStorageDisk[6];
+    private IStorageDisk<FluidStack>[] fluidDisks = new IStorageDisk[6];
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK) {
         @Override
@@ -67,30 +68,17 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
                 StackUtils.createStorages(
+                    world,
                     getStackInSlot(slot),
                     slot,
-                    itemStorages,
-                    fluidStorages,
-                    s -> new StorageItemDiskManipulator(NetworkNodeDiskManipulator.this, s),
-                    s -> new StorageFluidDiskManipulator(NetworkNodeDiskManipulator.this, s)
+                    itemDisks,
+                    fluidDisks,
+                    s -> new StorageDiskItemManipulatorWrapper(NetworkNodeDiskManipulator.this, s),
+                    s -> new StorageDiskFluidManipulatorWrapper(NetworkNodeDiskManipulator.this, s)
                 );
 
                 WorldUtils.updateBlock(world, pos);
             }
-        }
-
-        @Override
-        @Nonnull
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (itemStorages[slot] != null) {
-                itemStorages[slot].writeToNBT();
-            }
-
-            if (fluidStorages[slot] != null) {
-                fluidStorages[slot].writeToNBT();
-            }
-
-            return super.extractItem(slot, amount, simulate);
         }
     };
 
@@ -101,12 +89,13 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
                 StackUtils.createStorages(
+                    world,
                     getStackInSlot(slot),
                     3 + slot,
-                    itemStorages,
-                    fluidStorages,
-                    s -> new StorageItemDiskManipulator(NetworkNodeDiskManipulator.this, s),
-                    s -> new StorageFluidDiskManipulator(NetworkNodeDiskManipulator.this, s)
+                    itemDisks,
+                    fluidDisks,
+                    s -> new StorageDiskItemManipulatorWrapper(NetworkNodeDiskManipulator.this, s),
+                    s -> new StorageDiskFluidManipulatorWrapper(NetworkNodeDiskManipulator.this, s)
                 );
 
                 WorldUtils.updateBlock(world, pos);
@@ -143,7 +132,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         int slot = 0;
         if (type == IType.ITEMS) {
-            while (slot < 3 && (itemStorages[slot] == null || checkItemDiskDone(itemStorages[slot], slot))) {
+            while (slot < 3 && (itemDisks[slot] == null || checkItemDiskDone(itemDisks[slot], slot))) {
                 slot++;
             }
 
@@ -151,7 +140,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 return;
             }
 
-            IStorageDisk<ItemStack> storage = itemStorages[slot];
+            IStorageDisk<ItemStack> storage = itemDisks[slot];
 
             if (ioMode == IO_MODE_INSERT) {
                 insertItemIntoNetwork(storage, slot);
@@ -159,7 +148,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 extractItemFromNetwork(storage, slot);
             }
         } else if (type == IType.FLUIDS) {
-            while (slot < 3 && (fluidStorages[slot] == null || checkFluidDiskDone(fluidStorages[slot], slot))) {
+            while (slot < 3 && (fluidDisks[slot] == null || checkFluidDiskDone(fluidDisks[slot], slot))) {
                 slot++;
             }
 
@@ -167,7 +156,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 return;
             }
 
-            IStorageDisk<FluidStack> storage = fluidStorages[slot];
+            IStorageDisk<FluidStack> storage = fluidDisks[slot];
 
             if (ioMode == IO_MODE_INSERT) {
                 insertFluidIntoNetwork(storage, slot);
@@ -384,17 +373,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 return;
             }
 
-            if (slot < 3) {
-                if (itemStorages[slot] != null) {
-                    itemStorages[slot].writeToNBT();
-                    itemStorages[slot] = null;
-                }
-
-                if (fluidStorages[slot] != null) {
-                    fluidStorages[slot].writeToNBT();
-                    fluidStorages[slot] = null;
-                }
-            }
             inputDisks.extractItem(slot, 1, false);
             outputDisks.insertItem(i, disk, false);
         }
@@ -467,12 +445,12 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         return upgrades;
     }
 
-    public IStorageDisk[] getItemStorages() {
-        return itemStorages;
+    public IStorageDisk[] getItemDisks() {
+        return itemDisks;
     }
 
-    public IStorageDisk[] getFluidStorages() {
-        return fluidStorages;
+    public IStorageDisk[] getFluidDisks() {
+        return fluidDisks;
     }
 
     @Override
@@ -492,8 +470,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     @Override
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
-
-        onBreak();
 
         StackUtils.writeItems(upgrades, 3, tag);
         StackUtils.writeItems(inputDisks, 4, tag);
@@ -541,22 +517,18 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     }
 
-    public void onBreak() {
-        for (IStorageDisk storage : itemStorages) {
-            if (storage != null) {
-                storage.writeToNBT();
-            }
-        }
-
-        for (IStorageDisk storage : fluidStorages) {
-            if (storage != null) {
-                storage.writeToNBT();
-            }
-        }
-    }
-
     @Override
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(inputDisks, outputDisks, upgrades);
+    }
+
+    @Override
+    public boolean isVoidExcess() {
+        return false;
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return AccessType.INSERT_EXTRACT;
     }
 }

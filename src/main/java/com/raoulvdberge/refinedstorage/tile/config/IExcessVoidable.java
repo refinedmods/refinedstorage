@@ -7,10 +7,10 @@ import net.minecraft.tileentity.TileEntity;
 
 public interface IExcessVoidable {
     static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Boolean, T> createParameter() {
-        return new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> ((IExcessVoidable) t.getNode()).getVoidExcess(), (t, v) -> ((IExcessVoidable) t.getNode()).setVoidExcess(v));
+        return new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> ((IExcessVoidable) t.getNode()).isVoidExcess(), (t, v) -> ((IExcessVoidable) t.getNode()).setVoidExcess(v));
     }
 
-    boolean getVoidExcess();
+    boolean isVoidExcess();
 
     void setVoidExcess(boolean voidExcess);
 }

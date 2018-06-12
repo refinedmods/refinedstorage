@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "refinedstorage:fluid_storage",
+    "data": 3
+  },
+  "duration": 200,
+  "rows": [
+    {
+      "item": "refinedstorage:processor",
+      "data": 3
+    },
+    {
+      "item": "refinedstorage:fluid_storage_part",
+      "data": 3
+    },
+    {
+      "item": "refinedstorage:machine_casing"
+    }
+  ]
+}

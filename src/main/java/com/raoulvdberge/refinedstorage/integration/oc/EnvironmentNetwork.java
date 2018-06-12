@@ -3,11 +3,8 @@ package com.raoulvdberge.refinedstorage.integration.oc;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.storage.IStorage;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -25,8 +22,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_DAMAGE;
@@ -64,13 +61,28 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getCraftingManager().getTasks()};
     }
 
+    @Callback(doc = "function(stack:table):table -- Get one pattern of this network.")
+    public Object[] getPattern(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{null, "not connected"};
+        }
+
+        ItemStack stack = args.checkItemStack(0);
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT)};
+    }
+
     @Callback(doc = "function():table -- Gets the patterns of this network.")
     public Object[] getPatterns(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
         }
 
-        return new Object[]{node.getNetwork().getCraftingManager().getPatterns()};
+        List<ItemStack> patterns = new LinkedList<>();
+        for (ICraftingPattern pattern : node.getNetwork().getCraftingManager().getPatterns()) {
+            patterns.addAll(pattern.getOutputs());
+        }
+
+        return new Object[]{patterns};
     }
 
     @Callback(doc = "function(stack:table):boolean -- Whether a crafting pattern exists for this item.")
@@ -81,7 +93,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         ItemStack stack = args.checkItemStack(0);
 
-        return new Object[]{node.getNetwork().getCraftingManager().hasPattern(stack)};
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT) != null};
     }
 
     @Callback(doc = "function(stack:table[, count: number]):table -- Gets a list of missing items for a crafting task.")
@@ -91,15 +103,13 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         ItemStack stack = args.checkItemStack(0);
+        int count = args.optInteger(1, 1);
 
-        if (!node.getNetwork().getCraftingManager().hasPattern(stack)) {
-            throw new IllegalArgumentException("No pattern for this item exists");
+        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, count);
+        if (task == null) {
+            throw new IllegalArgumentException("Could not create crafting task");
         }
 
-        int count = args.optInteger(1, 1);
-        ICraftingPattern pattern = node.getNetwork().getCraftingManager().getPattern(stack);
-
-        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, pattern, count, true);
         task.calculate();
 
         return new Object[]{task.getMissing().getStacks()};
@@ -112,15 +122,13 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         ItemStack stack = args.checkItemStack(0);
+        int amount = args.optInteger(1, 1);
 
-        if (!node.getNetwork().getCraftingManager().hasPattern(stack)) {
-            throw new IllegalArgumentException("No pattern for this item stack exists");
+        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, amount);
+        if (task == null) {
+            throw new IllegalArgumentException("Could not create crafting task");
         }
 
-        int amount = args.optInteger(1, 1);
-        ICraftingPattern pattern = node.getNetwork().getCraftingManager().getPattern(stack);
-
-        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, pattern, amount, true);
         task.calculate();
 
         node.getNetwork().getCraftingManager().add(task);
@@ -316,35 +324,5 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         return new Object[]{node.getNetwork().getItemStorageCache().getList().getStacks()};
-    }
-
-    @Callback(doc = "function():table -- Gets a list of all connected Storage Disks / Blocks in this network.")
-    public Object[] getStorage(final Context context, final Arguments args) {
-        int t_stored = 0;
-        int t_capacity = 0;
-        ArrayList<HashMap<String, Integer>> storages = new ArrayList<HashMap<String, Integer>>();
-
-        int idd_index = 0;
-        for (IStorage s : node.getNetwork().getItemStorageCache().getStorages()) {
-            if (s instanceof IStorageDisk) {
-                IStorageDisk sd = (IStorageDisk) s;
-                HashMap<String, Integer> data = new HashMap();
-                data.put("stored", sd.getStored());
-                data.put("capacity", sd.getCapacity());
-                t_stored += sd.getStored();
-                t_capacity += sd.getCapacity();
-                storages.add(data);
-                idd_index++;
-            }
-        }
-        HashMap<String, Integer> totals = new HashMap<>();
-        totals.put("stored", t_stored);
-        totals.put("capacity", t_capacity);
-
-        HashMap<String, Object> response = new HashMap<>();
-        response.put("total", totals);
-        response.put("storages", storages);
-
-        return new Object[]{response};
     }
 }

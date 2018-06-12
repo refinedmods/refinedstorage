@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,14 +15,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ItemFilter extends ItemBase {
     private static final String NBT_COMPARE = "Compare";
@@ -30,22 +28,10 @@ public class ItemFilter extends ItemBase {
     private static final String NBT_NAME = "Name";
     private static final String NBT_ICON = "Icon";
 
-    private static Map<ItemStack, NonNullList<ItemStack>> FILTER_CACHE = new HashMap<>();
-
     public ItemFilter() {
         super("filter");
 
         setMaxStackSize(1);
-    }
-
-    public static NonNullList<ItemStack> getFilterItemsFromCache(ItemStack stack) {
-        if (!FILTER_CACHE.containsKey(stack)) {
-            ItemHandlerFilterItems items = new ItemHandlerFilterItems(stack);
-
-            FILTER_CACHE.put(stack, items.getFilteredItems());
-        }
-
-        return FILTER_CACHE.get(stack);
     }
 
     @Override
@@ -88,7 +74,7 @@ public class ItemFilter extends ItemBase {
 
         ItemHandlerFilterItems items = new ItemHandlerFilterItems(stack);
 
-        ItemPattern.combineItems(tooltip, false, items.getFilteredItems());
+        RenderUtils.addCombinedItemsToTooltip(tooltip, false, items.getFilteredItems());
     }
 
     public static int getCompare(ItemStack stack) {

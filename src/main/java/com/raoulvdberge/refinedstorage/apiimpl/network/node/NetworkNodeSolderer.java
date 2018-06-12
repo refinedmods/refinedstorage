@@ -33,7 +33,7 @@ public class NetworkNodeSolderer extends NetworkNode {
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             for (ISoldererRecipe recipe : API.instance().getSoldererRegistry().getRecipes()) {
                 for (ItemStack possibility : recipe.getRow(slot)) {
-                    if (API.instance().getComparer().isEqual(possibility, stack, IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE | IComparer.COMPARE_STRIP_NBT)) {
+                    if (API.instance().getComparer().isEqual(possibility, stack, IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE)) {
                         return super.insertItem(slot, stack, simulate);
                     }
                 }

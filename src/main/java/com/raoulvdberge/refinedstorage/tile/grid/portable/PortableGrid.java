@@ -6,14 +6,19 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.storage.*;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridPortable;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageDiskItemPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPortable;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -36,12 +41,11 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PortableGrid implements IGrid, IPortableGrid {
+public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainerContext {
     public static int ID;
 
     public static final String NBT_STORAGE_TRACKER = "StorageTracker";
@@ -61,9 +65,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
     private int tabPage;
     private int size;
 
-    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> {
-        stack.getTagCompound().setTag(NBT_STORAGE_TRACKER, getStorageTracker().serializeNBT());
-    });
+    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> stack.getTagCompound().setTag(NBT_STORAGE_TRACKER, getStorageTracker().serializeNBT()));
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
@@ -79,23 +81,24 @@ public class PortableGrid implements IGrid, IPortableGrid {
             StackUtils.writeItems(this, 0, stack.getTagCompound());
         }
     };
-    private ItemHandlerBase disk = new ItemHandlerBase(1, s -> NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK.test(s) && ((IStorageDiskProvider) s.getItem()).create(s).getType() == StorageDiskType.ITEMS) {
+    private ItemHandlerBase disk = new ItemHandlerBase(1, s -> NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK.test(s) && true) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
             if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER || (player == null && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)) {
-                if (getStackInSlot(slot).isEmpty()) {
+                ItemStack diskStack = getStackInSlot(slot);
+
+                if (diskStack.isEmpty()) {
                     storage = null;
                 } else {
-                    IStorageDiskProvider provider = (IStorageDiskProvider) getStackInSlot(slot).getItem();
+                    IStorageDisk disk = API.instance().getStorageDiskManager(player.getEntityWorld()).getByStack(diskStack);
 
-                    storage = new StorageDiskItemPortable(provider.create(getStackInSlot(slot)), PortableGrid.this);
-
-                    if (player != null) {
-                        storage.readFromNBT();
-                        storage.onPassContainerContext(() -> {
-                        }, () -> false, () -> AccessType.INSERT_EXTRACT);
+                    if (disk != null) {
+                        storage = new StorageDiskItemPortable(disk, PortableGrid.this);
+                        storage.setSettings(null, PortableGrid.this);
+                    } else {
+                        storage = null;
                     }
                 }
 
@@ -105,16 +108,6 @@ public class PortableGrid implements IGrid, IPortableGrid {
                     StackUtils.writeItems(this, 4, stack.getTagCompound());
                 }
             }
-        }
-
-        @Nonnull
-        @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (storage != null) {
-                storage.writeToNBT();
-            }
-
-            return super.extractItem(slot, amount, simulate);
         }
     };
 
@@ -140,12 +133,9 @@ public class PortableGrid implements IGrid, IPortableGrid {
         }
 
         if (player != null) {
+            StackUtils.readItems(disk, 4, stack.getTagCompound());
             StackUtils.readItems(filter, 0, stack.getTagCompound());
-        }
 
-        StackUtils.readItems(disk, 4, stack.getTagCompound());
-
-        if (player != null) {
             drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
 
             // If there is no disk onContentsChanged isn't called and the update isn't sent, thus items from the previous grid view would remain clientside
@@ -379,9 +369,7 @@ public class PortableGrid implements IGrid, IPortableGrid {
 
     @Override
     public void onClosed(EntityPlayer player) {
-        if (!player.getEntityWorld().isRemote && storage != null) {
-            storage.writeToNBT();
-
+        if (!player.getEntityWorld().isRemote) {
             StackUtils.writeItems(disk, 4, stack.getTagCompound());
         }
     }
@@ -397,5 +385,15 @@ public class PortableGrid implements IGrid, IPortableGrid {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean isVoidExcess() {
+        return false;
+    }
+
+    @Override
+    public AccessType getAccessType() {
+        return AccessType.INSERT_EXTRACT;
     }
 }

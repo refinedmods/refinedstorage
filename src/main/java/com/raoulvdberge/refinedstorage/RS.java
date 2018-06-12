@@ -16,15 +16,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-@Mod(modid = RS.ID, version = RS.VERSION, dependencies = RS.DEPENDENCIES, acceptedMinecraftVersions = "[1.12.2,1.13)", guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON, certificateFingerprint = RS.FINGERPRINT)
+@Mod(modid = RS.ID, version = RS.VERSION, acceptedMinecraftVersions = "[1.12.2,1.13)", guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON, certificateFingerprint = RS.FINGERPRINT)
 public final class RS {
     static {
         FluidRegistry.enableUniversalBucket();
     }
 
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "1.5.33";
-    public static final String DEPENDENCIES = "required-after:forge@[14.23.1.2555,);after:mcmultipart@[2.4.1,);after:storagedrawers@[1.12-5.2.2,);";
+    public static final String VERSION = "1.6";
     public static final String GUI_FACTORY = "com.raoulvdberge.refinedstorage.gui.config.ModGuiFactory";
     public static final String UPDATE_JSON = "https://refinedstorage.raoulvdberge.com/update";
     public static final String FINGERPRINT = "57893d5b90a7336e8c63fe1c1e1ce472c3d59578";

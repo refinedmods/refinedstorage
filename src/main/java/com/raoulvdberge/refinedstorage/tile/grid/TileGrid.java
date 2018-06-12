@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
@@ -69,21 +68,10 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateOredictPattern(p)));
     public static final TileDataParameter<Boolean, TileGrid> PROCESSING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isProcessingPattern(), (t, v) -> {
         t.getNode().setProcessingPattern(v);
+        t.getNode().clearMatrix();
         t.getNode().markDirty();
-
-        t.getNode().onPatternMatrixClear();
-
-        t.world.getMinecraftServer().getPlayerList().getPlayers().stream()
-            .filter(player -> player.openContainer instanceof ContainerGrid && ((ContainerGrid) player.openContainer).getTile() != null && ((ContainerGrid) player.openContainer).getTile().getPos().equals(t.getPos()))
-            .forEach(player -> {
-                ((ContainerGrid) player.openContainer).initSlots();
-                ((ContainerGrid) player.openContainer).sendAllSlots();
-            });
+        t.getNode().sendSlotUpdate(true);
     }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
-    public static final TileDataParameter<Boolean, TileGrid> BLOCKING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isBlockingPattern(), (t, v) -> {
-        t.getNode().setBlockingPattern(v);
-        t.getNode().markDirty();
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateBlockingPattern(p)));
 
     public static void trySortGrid(boolean initial) {
         if (!initial) {
@@ -101,7 +89,6 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         dataManager.addWatchedParameter(TAB_PAGE);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
         dataManager.addWatchedParameter(PROCESSING_PATTERN);
-        dataManager.addWatchedParameter(BLOCKING_PATTERN);
     }
 
     @Override

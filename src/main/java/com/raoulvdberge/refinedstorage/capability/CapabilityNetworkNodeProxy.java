@@ -38,7 +38,7 @@ public class CapabilityNetworkNodeProxy {
 
     private static class Factory implements Callable<INetworkNodeProxy> {
         @Override
-        public INetworkNodeProxy call() throws Exception {
+        public INetworkNodeProxy call() {
             return new INetworkNodeProxy() {
                 @Nonnull
                 @Override

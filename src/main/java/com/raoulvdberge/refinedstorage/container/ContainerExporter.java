@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,17 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerExporter extends ContainerBase {
-    private TileExporter exporter;
-
     public ContainerExporter(TileExporter exporter, EntityPlayer player) {
         super(exporter, player);
 
-        this.exporter = exporter;
-
-        initSlots();
-    }
-
-    public void initSlots() {
         this.inventorySlots.clear();
         this.inventoryItemStacks.clear();
 
@@ -28,7 +19,7 @@ public class ContainerExporter extends ContainerBase {
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType(exporter.getNode(), i, 8 + (18 * i), 20, exporter.getNode().isRegulator() ? SlotFilter.FILTER_ALLOW_SIZE : 0));
+            addSlotToContainer(new SlotFilterType(exporter.getNode(), i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 55);

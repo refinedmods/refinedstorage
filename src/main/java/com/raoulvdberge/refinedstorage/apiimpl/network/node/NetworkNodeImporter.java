@@ -37,7 +37,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int mode = IFilterable.WHITELIST;
+    private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
 
     private int currentSlot;
@@ -72,9 +72,13 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
             }
 
             if (handler.getSlots() > 0) {
+                while (currentSlot + 1 < handler.getSlots() && handler.getStackInSlot(currentSlot).isEmpty()) {
+                    currentSlot++;
+                }
+
                 ItemStack stack = handler.getStackInSlot(currentSlot);
 
-                if (stack.isEmpty() || !IFilterable.canTake(itemFilters, mode, compare, stack)) {
+                if (!IFilterable.canTake(itemFilters, mode, compare, stack)) {
                     currentSlot++;
                 } else if (ticks % upgrades.getSpeed() == 0) {
                     ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
@@ -104,6 +108,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
                         if (remainder != null) {
                             toDrain.amount -= remainder.amount;
                         }
+
                         handler.drain(toDrain, true);
                     }
                 }

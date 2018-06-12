@@ -4,8 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -134,18 +132,8 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         }
     }
 
-    private WorldServer getWorldServer() {
-        World world = this.world;
-
-        if (IntegrationMCMP.isLoaded()) {
-            world = RSMCMPAddon.unwrapWorld(world);
-        }
-
-        return (WorldServer) world;
-    }
-
     private boolean canPlace(BlockPos pos, IBlockState state) {
-        BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(world, pos, state), world.getBlockState(pos), FakePlayerFactory.getMinecraft(getWorldServer()), EnumHand.MAIN_HAND);
+        BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(world, pos, state), world.getBlockState(pos), FakePlayerFactory.getMinecraft((WorldServer) world), EnumHand.MAIN_HAND);
 
         return !MinecraftForge.EVENT_BUS.post(e);
     }
@@ -161,7 +149,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             IBlockState state = SlotFilter.getBlockState(world, front, took);
 
             if (state != null && world.isAirBlock(front) && state.getBlock().canPlaceBlockAt(world, front)) {
-                state = state.getBlock().getStateForPlacement(world, front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft(getWorldServer()), EnumHand.MAIN_HAND);
+                state = state.getBlock().getStateForPlacement(world, front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) world), EnumHand.MAIN_HAND);
 
                 if (!canPlace(front, state)) {
                     return;
@@ -173,7 +161,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                     if (item.getItem() instanceof ItemBlock) {
                         ((ItemBlock) item.getItem()).placeBlockAt(
                             took,
-                            FakePlayerFactory.getMinecraft(getWorldServer()),
+                            FakePlayerFactory.getMinecraft((WorldServer) world),
                             world,
                             front,
                             getDirection(),
@@ -185,7 +173,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                     } else {
                         world.setBlockState(front, state, 1 | 2);
 
-                        state.getBlock().onBlockPlacedBy(world, front, state, FakePlayerFactory.getMinecraft(getWorldServer()), took);
+                        state.getBlock().onBlockPlacedBy(world, front, state, FakePlayerFactory.getMinecraft((WorldServer) world), took);
                     }
 
                     // From ItemBlock#onItemUse

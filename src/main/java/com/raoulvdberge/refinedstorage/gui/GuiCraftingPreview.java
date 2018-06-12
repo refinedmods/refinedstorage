@@ -77,7 +77,7 @@ public class GuiCraftingPreview extends GuiBase {
     public void init(int x, int y) {
         cancelButton = addButton(x + 16, y + 144, 50, 20, t("gui.cancel"));
         startButton = addButton(x + 85, y + 144, 50, 20, t("misc.refinedstorage:start"));
-        startButton.enabled = stacks.stream().filter(ICraftingPreviewElement::hasMissing).count() == 0;
+        startButton.enabled = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing);
     }
 
     @Override

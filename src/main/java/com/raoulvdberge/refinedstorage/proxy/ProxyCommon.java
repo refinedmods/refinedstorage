@@ -6,7 +6,10 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.*;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementColor;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
@@ -20,6 +23,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipeLoader;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
@@ -30,7 +35,6 @@ import com.raoulvdberge.refinedstorage.integration.funkylocomotion.MoveFactoryRe
 import com.raoulvdberge.refinedstorage.integration.inventorysorter.IntegrationInventorySorter;
 import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
-import com.raoulvdberge.refinedstorage.integration.projecte.IntegrationProjectE;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
@@ -87,17 +91,12 @@ public class ProxyCommon {
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementItemRender.ID, buf -> new CraftingMonitorElementItemRender(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementFluidRender.ID, buf -> new CraftingMonitorElementFluidRender(buf.readInt(), StackUtils.readFluidStack(buf).getRight(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementText.ID, buf -> new CraftingMonitorElementText(ByteBufUtils.readUTF8String(buf), buf.readInt()));
-        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementError.ID, buf -> {
+        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementColor.ID, buf -> {
+            int color = buf.readInt();
             String id = ByteBufUtils.readUTF8String(buf);
             String tooltip = ByteBufUtils.readUTF8String(buf);
 
-            return new CraftingMonitorElementError(API.instance().getCraftingMonitorElementRegistry().get(id).apply(buf), tooltip);
-        });
-        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementInfo.ID, buf -> {
-            String id = ByteBufUtils.readUTF8String(buf);
-            String tooltip = ByteBufUtils.readUTF8String(buf);
-
-            return new CraftingMonitorElementInfo(API.instance().getCraftingMonitorElementRegistry().get(id).apply(buf), tooltip);
+            return new CraftingMonitorElementColor(API.instance().getCraftingMonitorElementRegistry().get(id).apply(buf), tooltip, color);
         });
 
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementItemStack.ID, CraftingPreviewElementItemStack::fromByteBuf);
@@ -108,6 +107,9 @@ public class ProxyCommon {
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerFluids.ID, ReaderWriterHandlerFluids::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerForgeEnergy.ID, ReaderWriterHandlerForgeEnergy::new);
+
+        API.instance().getStorageDiskRegistry().add(StorageDiskFactoryItem.ID, new StorageDiskFactoryItem());
+        API.instance().getStorageDiskRegistry().add(StorageDiskFactoryFluid.ID, new StorageDiskFactoryFluid());
 
         int id = 0;
 
@@ -138,9 +140,11 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageReaderWriterChannelRemove.class, MessageReaderWriterChannelRemove.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageSecurityManagerUpdate.class, MessageSecurityManagerUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageWirelessFluidGridSettingsUpdate.class, MessageWirelessFluidGridSettingsUpdate.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageWirelessCraftingMonitorViewAutomated.class, MessageWirelessCraftingMonitorViewAutomated.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageCrafterManagerSlotSizes.class, MessageCrafterManagerSlotSizes.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageCrafterManagerRequestSlotData.class, MessageCrafterManagerRequestSlotData.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageWirelessCraftingMonitorSize.class, MessageWirelessCraftingMonitorSize.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeRequest.class, MessageStorageDiskSizeRequest.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeResponse.class, MessageStorageDiskSizeResponse.class, id++, Side.CLIENT);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
@@ -222,7 +226,6 @@ public class ProxyCommon {
         registerItem(RSItems.UPGRADE);
         registerItem(RSItems.FILTER);
         registerItem(RSItems.NETWORK_CARD);
-        registerItem(RSItems.WRENCH);
         registerItem(RSItems.SECURITY_CARD);
 
         IntegrationInventorySorter.register();
@@ -263,10 +266,6 @@ public class ProxyCommon {
         if (IntegrationCraftingTweaks.isLoaded()) {
             IntegrationCraftingTweaks.register();
         }
-
-        if (IntegrationProjectE.isLoaded()) {
-            IntegrationProjectE.register();
-        }
     }
 
     public void postInit(FMLPostInitializationEvent e) {
@@ -288,28 +287,6 @@ public class ProxyCommon {
     }
 
     @SubscribeEvent
-    public void fixItemMappings(RegistryEvent.MissingMappings<Item> e) {
-        for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
-            if (missing.key.getResourceDomain().equals(RS.ID)) {
-                if (missing.key.getResourcePath().equals("grid_filter")) {
-                    missing.remap(RSItems.FILTER);
-                } else if (missing.key.getResourcePath().equals("processing_pattern_encoder")) {
-                    missing.ignore();
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void fixBlockMappings(RegistryEvent.MissingMappings<Block> e) {
-        for (RegistryEvent.MissingMappings.Mapping<Block> missing : e.getMappings()) {
-            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("processing_pattern_encoder")) {
-                missing.ignore();
-            }
-        }
-    }
-
-    @SubscribeEvent
     public void onHarvestCheck(PlayerEvent.HarvestCheck e) {
         if (e.getTargetBlock().getBlock() instanceof BlockBase) {
             e.setCanHarvest(true); // Allow break without tool
@@ -327,7 +304,7 @@ public class ProxyCommon {
     }
 
     private void registerTile(Class<? extends TileBase> tile, String id) {
-        GameRegistry.registerTileEntity(tile, RS.ID + ":" + id);
+        GameRegistry.registerTileEntity(tile, new ResourceLocation(RS.ID, id));
 
         try {
             TileBase tileInstance = tile.newInstance();

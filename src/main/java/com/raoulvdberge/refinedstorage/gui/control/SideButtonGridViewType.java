@@ -33,8 +33,6 @@ public class SideButtonGridViewType extends SideButton {
             type = IGrid.VIEW_TYPE_CRAFTABLES;
         } else if (type == IGrid.VIEW_TYPE_CRAFTABLES) {
             type = IGrid.VIEW_TYPE_NORMAL;
-        } else {
-            type = IGrid.VIEW_TYPE_NORMAL; // @todo: Remove in 1.13 (1.5.24 -> 1.5.26 conversion, removed detailed grid view type)
         }
 
         grid.onViewTypeChanged(type);

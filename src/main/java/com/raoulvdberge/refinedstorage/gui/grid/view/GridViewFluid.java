@@ -23,6 +23,10 @@ public class GridViewFluid extends GridViewBase {
 
     @Override
     public void postChange(IGridStack stack, int delta) {
+        if (!(stack instanceof GridStackFluid)) {
+            return;
+        }
+
         GridStackFluid existing = (GridStackFluid) map.get(stack.getHash());
 
         if (existing == null) {

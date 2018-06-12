@@ -71,7 +71,7 @@ public class BakedModelDiskManipulator implements IBakedModel {
 
     private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
-        public List<BakedQuad> load(CacheKey key) throws Exception {
+        public List<BakedQuad> load(CacheKey key) {
             EnumFacing facing = key.state.getValue(RSBlocks.DISK_MANIPULATOR.getDirection().getProperty());
 
             List<BakedQuad> quads = (key.state.getValue(BlockDiskManipulator.CONNECTED) ? modelsConnected : modelsDisconnected).get(facing).getQuads(key.state, key.side, 0);

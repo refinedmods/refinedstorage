@@ -31,7 +31,11 @@ public class CraftingMonitorElementText implements ICraftingMonitorElement {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void draw(int x, int y, IElementDrawers drawers) {
+    public void draw(int x, int y, IElementDrawers drawers, boolean selected) {
+        if (selected) {
+            drawers.getOverlayDrawer().draw(x, y, 0xFFCCCCCC);
+        }
+
         float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
 
         GlStateManager.pushMatrix();
@@ -40,11 +44,6 @@ public class CraftingMonitorElementText implements ICraftingMonitorElement {
         drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + offset, scale), RenderUtils.getOffsetOnScale(y + 7, scale), I18n.format(text));
 
         GlStateManager.popMatrix();
-    }
-
-    @Override
-    public boolean canDrawSelection() {
-        return true;
     }
 
     @Override

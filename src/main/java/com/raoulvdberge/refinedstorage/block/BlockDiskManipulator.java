@@ -53,13 +53,6 @@ public class BlockDiskManipulator extends BlockNode {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        ((TileDiskManipulator) world.getTileEntity(pos)).getNode().onBreak();
-
-        super.breakBlock(world, pos, state);
-    }
-
-    @Override
     public boolean hasConnectivityState() {
         return true;
     }

@@ -11,17 +11,14 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 public class StackListItem implements IStackList<ItemStack> {
     private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
-    private List<ItemStack> removeTracker = new LinkedList<>();
 
     @Override
     public void add(@Nonnull ItemStack stack, int size) {
-        if (stack.isEmpty() || size <= 0) {
-            return;
+        if (stack == null || stack.isEmpty() || size <= 0) {
+            throw new IllegalArgumentException("Cannot accept empty stack");
         }
 
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
@@ -56,39 +53,6 @@ public class StackListItem implements IStackList<ItemStack> {
         }
 
         return false;
-    }
-
-    @Override
-    public boolean trackedRemove(@Nonnull ItemStack stack, int size) {
-        for (ItemStack otherStack : stacks.get(stack.getItem())) {
-            if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
-                ItemStack removed = ItemHandlerHelper.copyStackWithSize(otherStack, Math.min(size, otherStack.getCount()));
-                this.removeTracker.add(removed);
-
-                boolean success = otherStack.getCount() - size >= 0;
-
-                if (otherStack.getCount() - size <= 0) {
-                    stacks.remove(otherStack.getItem(), otherStack);
-                } else {
-                    otherStack.shrink(size);
-                }
-
-                return success;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public List<ItemStack> getRemoveTracker() {
-        return removeTracker;
-    }
-
-    @Override
-    public void undo() {
-        removeTracker.forEach(s -> add(s, s.getCount()));
-        removeTracker.clear();
     }
 
     @Override
@@ -147,44 +111,5 @@ public class StackListItem implements IStackList<ItemStack> {
         }
 
         return list;
-    }
-
-    @Nonnull
-    public StackListItemOredicted getOredicted() {
-        return new StackListItemOredicted(this);
-    }
-
-    @Override
-    public String toString() {
-        return stacks.toString();
-    }
-
-    public static ItemStack[] toCraftingGrid(IStackList<ItemStack> list, List<ItemStack> grid, int compare) {
-        ItemStack[] took = new ItemStack[Math.max(9, grid.size())];
-
-        for (int i = 0; i < grid.size(); i++) {
-            ItemStack input = grid.get(i);
-
-            if (input != null) {
-                // This will be a tool, like a hammer
-                if (input.isItemStackDamageable()) {
-                    compare &= ~IComparer.COMPARE_DAMAGE;
-                } else {
-                    compare |= IComparer.COMPARE_DAMAGE;
-                }
-
-                ItemStack actualInput = list.get(input, compare);
-
-                if (actualInput != null) {
-                    ItemStack taken = ItemHandlerHelper.copyStackWithSize(actualInput, input.getCount());
-
-                    took[i] = taken;
-
-                    list.remove(taken, taken.getCount());
-                }
-            }
-        }
-
-        return took;
     }
 }

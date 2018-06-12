@@ -17,7 +17,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageGridItemUpdate, IMessage> {
@@ -33,7 +32,7 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
             int size = network.getItemStorageCache().getList().getStacks().size();
 
             for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-                size += pattern.getOutputs().stream().filter(Objects::nonNull).count();
+                size += pattern.getOutputs().size();
             }
 
             buf.writeInt(size);
@@ -51,15 +50,13 @@ public class MessageGridItemUpdate implements IMessage, IMessageHandler<MessageG
 
             for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
                 for (ItemStack output : pattern.getOutputs()) {
-                    if (output != null) {
-                        StackUtils.writeItemStack(buf, output, network, true);
+                    StackUtils.writeItemStack(buf, output, network, true);
 
-                        IStorageTracker.IStorageTrackerEntry entry = network.getItemStorageTracker().get(output);
-                        buf.writeBoolean(entry != null);
-                        if (entry != null) {
-                            buf.writeLong(entry.getTime());
-                            ByteBufUtils.writeUTF8String(buf, entry.getName());
-                        }
+                    IStorageTracker.IStorageTrackerEntry entry = network.getItemStorageTracker().get(output);
+                    buf.writeBoolean(entry != null);
+                    if (entry != null) {
+                        buf.writeLong(entry.getTime());
+                        ByteBufUtils.writeUTF8String(buf, entry.getName());
                     }
                 }
             }

@@ -28,6 +28,10 @@ public class GridViewItem extends GridViewBase {
 
     @Override
     public void postChange(IGridStack stack, int delta) {
+        if (!(stack instanceof GridStackItem)) {
+            return;
+        }
+
         GridStackItem existing = (GridStackItem) map.get(stack.getHash());
 
         if (existing == null) {

@@ -2,8 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.integration.mcmp.IntegrationMCMP;
-import com.raoulvdberge.refinedstorage.integration.mcmp.RSMCMPAddon;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -61,7 +59,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH, ItemUpgrade.TYPE_FORTUNE_1, ItemUpgrade.TYPE_FORTUNE_2, ItemUpgrade.TYPE_FORTUNE_3);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int mode = IFilterable.WHITELIST;
+    private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
 
@@ -72,16 +70,6 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     @Override
     public int getEnergyUsage() {
         return RS.INSTANCE.config.destructorUsage + upgrades.getEnergyUsage();
-    }
-
-    private WorldServer getWorldServer() {
-        World world = this.world;
-
-        if (IntegrationMCMP.isLoaded()) {
-            world = RSMCMPAddon.unwrapWorld(world);
-        }
-
-        return (WorldServer) world;
     }
 
     @Override
@@ -142,7 +130,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                             }
                         }
 
-                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(world, front, frontBlockState, FakePlayerFactory.getMinecraft(getWorldServer()));
+                        BlockEvent.BreakEvent e = new BlockEvent.BreakEvent(world, front, frontBlockState, FakePlayerFactory.getMinecraft((WorldServer) world));
 
                         if (!MinecraftForge.EVENT_BUS.post(e)) {
                             world.playEvent(null, 2001, front, Block.getStateId(frontBlockState));

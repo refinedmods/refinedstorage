@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.api.util.IWrenchable;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
@@ -20,7 +19,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, IRedstoneConfigurable, IWrenchable {
+public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, IRedstoneConfigurable {
     public static final TileDataParameter<Integer, TileNode> REDSTONE_MODE = RedstoneMode.createParameter();
 
     protected static final String NBT_ACTIVE = "Active";
@@ -41,22 +40,20 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         getNode().setRedstoneMode(mode);
     }
 
-    @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         return getNode().writeConfiguration(tag);
+    }
+
+    public void readConfiguration(NBTTagCompound tag) {
+        getNode().readConfiguration(tag);
+        getNode().markDirty();
     }
 
     @Override
     public void setDirection(EnumFacing direction) {
         super.setDirection(direction);
 
-        getNode().resetDirection();
-    }
-
-    @Override
-    public void readConfiguration(NBTTagCompound tag) {
-        getNode().readConfiguration(tag);
-        getNode().markDirty();
+        getNode().loadDirection();
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {

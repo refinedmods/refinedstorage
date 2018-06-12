@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.api.util;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * A stack list.
@@ -44,37 +43,6 @@ public interface IStackList<T> {
     default boolean remove(@Nonnull T stack) {
         return remove(stack, getSizeFromStack(stack));
     }
-
-    /**
-     * Decrements the count of that stack in the list.
-     * Keeps track of removed stacks and can be undone by calling {@link #undo()}.
-     *
-     * @param stack the stack
-     * @param size  the size to remove
-     * @return true if the remove was successful for the full amount, false otherwise
-     */
-    boolean trackedRemove(@Nonnull T stack, int size);
-
-    /**
-     * Decrements the count of that stack in the list.
-     * Keeps track of removed stacks and can be undone by calling {@link #undo()}.
-     *
-     * @param stack the stack
-     * @return true if the remove was successful for the full amount, false otherwise
-     */
-    default boolean trackedRemove(@Nonnull T stack) {
-        return trackedRemove(stack, getSizeFromStack(stack));
-    }
-
-    /**
-     * Restore all tracked removes.
-     */
-    void undo();
-
-    /**
-     * @return the remove tracker
-     */
-    List<T> getRemoveTracker();
 
     /**
      * Returns a stack.
@@ -133,9 +101,4 @@ public interface IStackList<T> {
      */
     @Nonnull
     IStackList<T> copy();
-
-    /**
-     * @return an oredict stack list
-     */
-    IStackList<T> getOredicted();
 }

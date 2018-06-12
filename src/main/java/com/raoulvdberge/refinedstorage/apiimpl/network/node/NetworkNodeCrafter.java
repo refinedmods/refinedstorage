@@ -5,6 +5,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -24,16 +26,17 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternContainer {
     public static final String ID = "crafter";
 
     public static final String DEFAULT_NAME = "gui.refinedstorage:crafter";
 
-    private static final String NBT_BLOCKED = "Blocked";
     private static final String NBT_DISPLAY_NAME = "DisplayName";
+    private static final String NBT_UUID = "CrafterUuid";
 
-    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> s.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) s.getItem()).create(world, s, this).isValid()) {
+    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> isValidPatternInSlot(world, s)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -53,14 +56,22 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         }
     };
 
+    public static boolean isValidPatternInSlot(World world, ItemStack stack) {
+        return stack.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) stack.getItem()).create(world, stack, null).isValid();
+    }
+
     private List<ICraftingPattern> actualPatterns = new ArrayList<>();
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
-    private boolean blocked = false;
+    // Used to prevent infinite recursion on getRootContainer() when there's eg. two crafters facing each other.
+    private boolean visited = false;
 
     @Nullable
     private String displayName;
+
+    @Nullable
+    private UUID uuid = null;
 
     public NetworkNodeCrafter(World world, BlockPos pos) {
         super(world, pos);
@@ -110,18 +121,25 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
+    protected void onDirectionChanged() {
+        if (network != null) {
+            network.getCraftingManager().rebuild();
+        }
+    }
+
+    @Override
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
         StackUtils.readItems(patterns, 0, tag);
         StackUtils.readItems(upgrades, 1, tag);
 
-        if (tag.hasKey(NBT_BLOCKED)) {
-            blocked = tag.getBoolean(NBT_BLOCKED);
-        }
-
         if (tag.hasKey(NBT_DISPLAY_NAME)) {
             displayName = tag.getString(NBT_DISPLAY_NAME);
+        }
+
+        if (tag.hasUniqueId(NBT_UUID)) {
+            uuid = tag.getUniqueId(NBT_UUID);
         }
     }
 
@@ -137,23 +155,42 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         StackUtils.writeItems(patterns, 0, tag);
         StackUtils.writeItems(upgrades, 1, tag);
 
-        tag.setBoolean(NBT_BLOCKED, blocked);
-
         if (displayName != null) {
             tag.setString(NBT_DISPLAY_NAME, displayName);
+        }
+
+        if (uuid != null) {
+            tag.setUniqueId(NBT_UUID, uuid);
         }
 
         return tag;
     }
 
     @Override
-    public int getSpeedUpdateCount() {
+    public int getSpeedUpgradeCount() {
         return upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED);
     }
 
     @Override
-    public IItemHandler getFacingInventory() {
-        return WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite());
+    @Nullable
+    public IItemHandler getConnectedInventory() {
+        ICraftingPatternContainer proxy = getRootContainer();
+        if (proxy == null) {
+            return null;
+        }
+
+        return WorldUtils.getItemHandler(proxy.getFacingTile(), proxy.getDirection().getOpposite());
+    }
+
+    @Override
+    @Nullable
+    public TileEntity getConnectedTile() {
+        ICraftingPatternContainer proxy = getRootContainer();
+        if (proxy == null) {
+            return null;
+        }
+
+        return proxy.getFacingTile();
     }
 
     @Override
@@ -173,10 +210,14 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             return displayName;
         }
 
-        TileEntity facing = getFacingTile();
+        TileEntity facing = getConnectedTile();
 
         if (facing instanceof IWorldNameable) {
             return ((IWorldNameable) facing).getName();
+        }
+
+        if (facing != null) {
+            return world.getBlockState(pos.offset(getDirection())).getBlock().getUnlocalizedName() + ".name";
         }
 
         return DEFAULT_NAME;
@@ -215,14 +256,31 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public boolean isBlocked() {
-        return blocked;
+    @Nullable
+    public ICraftingPatternContainer getRootContainer() {
+        if (visited) {
+            return null;
+        }
+
+        INetworkNode facing = API.instance().getNetworkNodeManager(world).getNode(pos.offset(getDirection()));
+        if (!(facing instanceof ICraftingPatternContainer) || facing.getNetwork() != network) {
+            return this;
+        }
+
+        visited = true;
+        ICraftingPatternContainer facingContainer = ((ICraftingPatternContainer) facing).getRootContainer();
+        visited = false;
+
+        return facingContainer;
     }
 
     @Override
-    public void setBlocked(boolean blocked) {
-        this.blocked = blocked;
+    public UUID getUuid() {
+        if (uuid == null) {
+            uuid = UUID.randomUUID();
+            markDirty();
+        }
 
-        markDirty();
+        return uuid;
     }
 }
