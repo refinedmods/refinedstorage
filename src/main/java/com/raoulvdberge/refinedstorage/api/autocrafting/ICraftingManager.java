@@ -40,6 +40,13 @@ public interface ICraftingManager {
      */
     void cancel(@Nonnull ICraftingTask task);
 
+    /**
+     * Creates a crafting task for a given stack.
+     *
+     * @param stack    the stack to craft
+     * @param quantity the quantity to craft
+     * @return the crafting task, or null if no pattern was found for the given stack
+     */
     @Nullable
     ICraftingTask create(ItemStack stack, int quantity);
 
