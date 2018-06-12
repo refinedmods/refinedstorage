@@ -86,7 +86,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
             super.onContentsChanged(slot);
 
             ItemStack pattern = getStackInSlot(slot);
-            if (slot == 1 && !pattern.isEmpty() && world != null) {
+            if (slot == 1 && !pattern.isEmpty()) {
                 boolean isPatternProcessing = ItemPattern.isProcessing(pattern);
 
                 if (isPatternProcessing && isProcessingPattern()) {
