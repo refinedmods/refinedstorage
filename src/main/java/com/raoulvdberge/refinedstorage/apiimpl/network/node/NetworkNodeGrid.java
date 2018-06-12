@@ -21,7 +21,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -87,10 +86,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
             super.onContentsChanged(slot);
 
             ItemStack pattern = getStackInSlot(slot);
-            if (slot == 1 && !pattern.isEmpty()) {
+            if (slot == 1 && !pattern.isEmpty() && world != null) {
                 boolean isPatternProcessing = ItemPattern.isProcessing(pattern);
 
-                if (isPatternProcessing && processingPattern) {
+                if (isPatternProcessing && isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
                         matrixProcessing.setStackInSlot(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
                     }
@@ -98,13 +97,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                     for (int i = 0; i < 9; ++i) {
                         matrixProcessing.setStackInSlot(9 + i, StackUtils.nullToEmpty(ItemPattern.getOutputSlot(pattern, i)));
                     }
-                } else if (!isPatternProcessing && !processingPattern) {
+                } else if (!isPatternProcessing && !isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
                         matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
                     }
                 }
-
-                sendSlotUpdate(false);
             }
         }
 
@@ -402,23 +399,6 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             matrix.setInventorySlotContents(i, ItemStack.EMPTY);
-        }
-    }
-
-    public void sendSlotUpdate(boolean initSlots) {
-        if (!world.isRemote) {
-            world.getMinecraftServer()
-                .getPlayerList()
-                .getPlayers()
-                .stream()
-                .filter(player -> player.openContainer instanceof ContainerGrid && ((ContainerGrid) player.openContainer).getTile() != null && ((ContainerGrid) player.openContainer).getTile().getPos().equals(pos))
-                .forEach(player -> {
-                    if (initSlots) {
-                        ((ContainerGrid) player.openContainer).initSlots();
-                    }
-
-                    ((ContainerGrid) player.openContainer).sendAllSlots();
-                });
         }
     }
 
