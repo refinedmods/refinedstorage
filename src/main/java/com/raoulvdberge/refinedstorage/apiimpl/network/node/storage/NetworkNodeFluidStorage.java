@@ -77,9 +77,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        if (storage != null) {
-            storages.add(storage);
-        }
+        storages.add(storage);
     }
 
     @Override
@@ -91,9 +89,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        if (storageId != null) {
-            tag.setUniqueId(NBT_ID, storageId);
-        }
+        tag.setUniqueId(NBT_ID, storageId);
 
         return tag;
     }
@@ -107,6 +103,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
             loadStorage();
         }
+
+        OneSixMigrationHelper.migrateFluidStorageBlock(this, tag);
     }
 
     public void loadStorage() {
@@ -173,7 +171,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         }
 
         accessType = AccessTypeUtils.readAccessType(tag);
-        
+
         OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, null, filters);
     }
 

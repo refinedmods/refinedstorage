@@ -99,6 +99,7 @@ public class BlockCable extends BlockNode {
         return getActualState(stateForRendering, world, pos);
     }
 
+    // TODO: investigate connection issue
     public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos, BlockBase block, TileEntity tile, EnumFacing direction) {
         if (!(tile instanceof TileNode)) {
             return false;

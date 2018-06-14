@@ -279,7 +279,7 @@ public class ProxyClient extends ProxyCommon {
 
         ModelLoader.setCustomStateMapper(RSBlocks.PORTABLE_GRID, new StateMap.Builder().ignore(BlockPortableGrid.TYPE).build());
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), stack -> {
-            PortableGrid portableGrid = new PortableGrid(null, stack);
+            PortableGrid portableGrid = new PortableGrid(null, stack); // TODO: pass fullness?
 
             return new ModelResourceLocation("refinedstorage:portable_grid", "connected=" + Boolean.toString(portableGrid.getEnergy() != 0 && !portableGrid.getDisk().getStackInSlot(0).isEmpty()) + ",direction=north,disk_state=" + TilePortableGrid.getDiskState(portableGrid));
         });

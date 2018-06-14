@@ -5,6 +5,10 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeFluidStorage;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeStorage;
+import com.raoulvdberge.refinedstorage.block.FluidStorageType;
+import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.Item;
@@ -31,6 +35,57 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
 
     private static final String NBT_FLUIDS = "Fluids";
 
+    private static UUID createItemDisk(World world, int capacity, NBTTagCompound legacyTag) {
+        UUID id = UUID.randomUUID();
+
+        IStorageDisk<ItemStack> newDisk = API.instance().createDefaultItemDisk(world, capacity);
+
+        NBTTagList list = (NBTTagList) legacyTag.getTag(NBT_ITEMS);
+
+        for (int i = 0; i < list.tagCount(); ++i) {
+            NBTTagCompound tag = list.getCompoundTagAt(i);
+
+            ItemStack stack = new ItemStack(
+                Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
+                tag.getInteger(NBT_ITEM_QUANTITY),
+                tag.getInteger(NBT_ITEM_DAMAGE),
+                tag.hasKey(NBT_ITEM_CAPS) ? tag.getCompoundTag(NBT_ITEM_CAPS) : null
+            );
+
+            stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
+
+            if (!stack.isEmpty()) {
+                newDisk.insert(stack, stack.getCount(), false);
+            }
+        }
+
+        API.instance().getStorageDiskManager(world).set(id, newDisk);
+        API.instance().getStorageDiskManager(world).markForSaving();
+
+        return id;
+    }
+
+    private static UUID createFluidDisk(World world, int capacity, NBTTagCompound legacyTag) {
+        UUID id = UUID.randomUUID();
+
+        IStorageDisk<FluidStack> newDisk = API.instance().createDefaultFluidDisk(world, capacity);
+
+        NBTTagList list = (NBTTagList) legacyTag.getTag(NBT_FLUIDS);
+
+        for (int i = 0; i < list.tagCount(); ++i) {
+            FluidStack stack = FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i));
+
+            if (stack != null) {
+                newDisk.insert(stack, stack.amount, false);
+            }
+        }
+
+        API.instance().getStorageDiskManager(world).set(id, newDisk);
+        API.instance().getStorageDiskManager(world).markForSaving();
+
+        return id;
+    }
+
     @Override
     public boolean migrateDisk(World world, ItemStack disk) {
         IStorageDiskProvider provider = (IStorageDiskProvider) disk.getItem();
@@ -38,33 +93,7 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
         switch (provider.getType()) {
             case ITEM:
                 if (disk.hasTagCompound() && disk.getTagCompound().hasKey(NBT_ITEMS)) {
-                    UUID id = UUID.randomUUID();
-
-                    IStorageDisk<ItemStack> newDisk = API.instance().createDefaultItemDisk(world, provider.getCapacity(disk));
-
-                    NBTTagList list = (NBTTagList) disk.getTagCompound().getTag(NBT_ITEMS);
-
-                    for (int i = 0; i < list.tagCount(); ++i) {
-                        NBTTagCompound tag = list.getCompoundTagAt(i);
-
-                        ItemStack stack = new ItemStack(
-                            Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
-                            tag.getInteger(NBT_ITEM_QUANTITY),
-                            tag.getInteger(NBT_ITEM_DAMAGE),
-                            tag.hasKey(NBT_ITEM_CAPS) ? tag.getCompoundTag(NBT_ITEM_CAPS) : null
-                        );
-
-                        stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
-
-                        if (!stack.isEmpty()) {
-                            newDisk.insert(stack, stack.getCount(), false);
-                        }
-                    }
-
-                    API.instance().getStorageDiskManager(world).set(id, newDisk);
-                    API.instance().getStorageDiskManager(world).markForSaving();
-
-                    provider.setId(disk, id);
+                    provider.setId(disk, createItemDisk(world, provider.getCapacity(disk), disk.getTagCompound()));
 
                     return true;
                 }
@@ -72,24 +101,7 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
                 break;
             case FLUID:
                 if (disk.hasTagCompound() && disk.getTagCompound().hasKey(NBT_FLUIDS)) {
-                    UUID id = UUID.randomUUID();
-
-                    IStorageDisk<FluidStack> newDisk = API.instance().createDefaultFluidDisk(world, provider.getCapacity(disk));
-
-                    NBTTagList list = (NBTTagList) disk.getTagCompound().getTag(NBT_FLUIDS);
-
-                    for (int i = 0; i < list.tagCount(); ++i) {
-                        FluidStack stack = FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i));
-
-                        if (stack != null) {
-                            newDisk.insert(stack, stack.amount, false);
-                        }
-                    }
-
-                    API.instance().getStorageDiskManager(world).set(id, newDisk);
-                    API.instance().getStorageDiskManager(world).markForSaving();
-
-                    provider.setId(disk, id);
+                    provider.setId(disk, createFluidDisk(world, provider.getCapacity(disk), disk.getTagCompound()));
 
                     return true;
                 }
@@ -195,6 +207,44 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
         // Otherwise, we would constantly migrate empty whitelists to empty blacklists...
         if (version == null && filterable.getMode() == IFilterable.WHITELIST && IFilterable.isEmpty(itemFilterInv) && IFilterable.isEmpty(fluidFilterInv)) {
             filterable.setMode(IFilter.MODE_BLACKLIST);
+        }
+    }
+
+    private static final String NBT_STORAGE = "Storage";
+
+    public static void migrateItemStorageBlock(NetworkNodeStorage storage, NBTTagCompound tag) {
+        if (tag.hasKey(NBT_STORAGE)) {
+            NBTTagCompound storageTag = tag.getCompoundTag(NBT_STORAGE);
+
+            storage.setStorageId(createItemDisk(storage.getWorld(), storage.getType().getCapacity(), storageTag));
+            storage.loadStorage();
+        }
+    }
+
+    public static void migrateItemStorageBlockItem(World world, ItemStack stack) {
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_STORAGE)) {
+            NBTTagCompound storageTag = stack.getTagCompound().getCompoundTag(NBT_STORAGE);
+
+            stack.setTagCompound(new NBTTagCompound());
+            stack.getTagCompound().setUniqueId(NetworkNodeStorage.NBT_ID, createItemDisk(world, ItemStorageType.getById(stack.getItemDamage()).getCapacity(), storageTag));
+        }
+    }
+
+    public static void migrateFluidStorageBlock(NetworkNodeFluidStorage storage, NBTTagCompound tag) {
+        if (tag.hasKey(NBT_STORAGE)) {
+            NBTTagCompound storageTag = tag.getCompoundTag(NBT_STORAGE);
+
+            storage.setStorageId(createFluidDisk(storage.getWorld(), storage.getType().getCapacity(), storageTag));
+            storage.loadStorage();
+        }
+    }
+
+    public static void migrateFluidStorageBlockItem(World world, ItemStack stack) {
+        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_STORAGE)) {
+            NBTTagCompound storageTag = stack.getTagCompound().getCompoundTag(NBT_STORAGE);
+
+            stack.setTagCompound(new NBTTagCompound());
+            stack.getTagCompound().setUniqueId(NetworkNodeStorage.NBT_ID, createFluidDisk(world, FluidStorageType.getById(stack.getItemDamage()).getCapacity(), storageTag));
         }
     }
 }
