@@ -49,6 +49,9 @@ public interface ICraftingManager {
     @Nullable
     ICraftingTask create(ItemStack stack, int quantity);
 
+    /**
+     * @return a new pattern chain list
+     */
     ICraftingPatternChainList createPatternChainList();
 
     /**
