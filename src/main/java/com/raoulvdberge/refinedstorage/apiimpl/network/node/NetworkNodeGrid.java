@@ -502,6 +502,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
+            ItemPattern.setVersion(pattern);
             ItemPattern.setOredict(pattern, oredictPattern);
             ItemPattern.setProcessing(pattern, processingPattern);
 

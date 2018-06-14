@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     private static Map<ItemStack, CraftingPattern> PATTERN_CACHE = new HashMap<>();
 
+    private static final String NBT_VERSION = "Version";
     public static final String NBT_INPUT_SLOT = "Input_%d";
     public static final String NBT_OUTPUT_SLOT = "Output_%d";
     private static final String NBT_OREDICT = "Oredict";
@@ -150,6 +152,14 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         }
 
         pattern.getTagCompound().setBoolean(NBT_OREDICT, oredict);
+    }
+
+    public static void setVersion(ItemStack pattern) {
+        if (!pattern.hasTagCompound()) {
+            pattern.setTagCompound(new NBTTagCompound());
+        }
+
+        pattern.getTagCompound().setString(NBT_VERSION, RS.VERSION);
     }
 
     @Override
