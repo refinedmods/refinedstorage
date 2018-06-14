@@ -4,12 +4,15 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.UUID;
@@ -111,5 +114,72 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
         }
 
         return migrated;
+    }
+
+    private static final String NBT_OUTPUTS = "Outputs";
+    private static final String NBT_SLOT = "Slot_%d";
+
+    public static boolean migratePattern(ItemStack pattern) {
+        NBTTagCompound tag = pattern.getTagCompound();
+
+        if (pattern.hasTagCompound() && !tag.hasKey(ItemPattern.NBT_PROCESSING)) {
+            boolean isProcessing = tag.hasKey(NBT_OUTPUTS);
+
+            // Add "processing" tag
+            tag.setBoolean(ItemPattern.NBT_PROCESSING, isProcessing);
+
+            // Convert "slot_%d" to "input_%d"
+            for (int i = 0; i < 9; ++i) {
+                String id = String.format(NBT_SLOT, i);
+
+                if (tag.hasKey(id)) {
+                    ItemStack slot = new ItemStack(pattern.getTagCompound().getCompoundTag(id));
+
+                    if (!slot.isEmpty()) {
+                        tag.setTag(String.format(ItemPattern.NBT_INPUT_SLOT, i), slot.serializeNBT());
+                    }
+
+                    tag.removeTag(id);
+                }
+            }
+
+            // Convert "outputs" to "output_%d"
+            if (isProcessing) {
+                NBTTagList list = tag.getTagList(NBT_OUTPUTS, Constants.NBT.TAG_COMPOUND);
+
+                for (int i = 0; i < list.tagCount(); ++i) {
+                    ItemStack output = new ItemStack(list.getCompoundTagAt(i));
+
+                    if (!output.isEmpty()) {
+                        tag.setTag(String.format(ItemPattern.NBT_OUTPUT_SLOT, i), output.serializeNBT());
+                    }
+                }
+
+                tag.removeTag(NBT_OUTPUTS);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean migratePatternInventory(IItemHandler handler) {
+        boolean migrated = false;
+
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            ItemStack pattern = handler.getStackInSlot(i);
+
+            if (!pattern.isEmpty() && migratePattern(pattern)) {
+                migrated = true;
+            }
+        }
+
+        return migrated;
+    }
+
+    // We check on NBT_PROCESSING, so it needs to be there for sure to be a valid pattern.
+    public static boolean isValidOneSixPattern(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(ItemPattern.NBT_PROCESSING);
     }
 }

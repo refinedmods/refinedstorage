@@ -5,10 +5,12 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,10 +30,10 @@ import java.util.stream.Collectors;
 public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     private static Map<ItemStack, CraftingPattern> PATTERN_CACHE = new HashMap<>();
 
-    private static final String NBT_INPUT_SLOT = "Input_%d";
-    private static final String NBT_OUTPUT_SLOT = "Output_%d";
+    public static final String NBT_INPUT_SLOT = "Input_%d";
+    public static final String NBT_OUTPUT_SLOT = "Output_%d";
     private static final String NBT_OREDICT = "Oredict";
-    private static final String NBT_PROCESSING = "Processing";
+    public static final String NBT_PROCESSING = "Processing";
 
     public ItemPattern() {
         super("pattern");
@@ -163,5 +165,14 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     @Nonnull
     public ICraftingPattern create(World world, ItemStack stack, ICraftingPatternContainer container) {
         return new CraftingPattern(world, container, stack);
+    }
+
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isSelected) {
+        super.onUpdate(stack, world, entity, slot, isSelected);
+
+        if (!world.isRemote) {
+            OneSixMigrationHelper.migratePattern(stack);
+        }
     }
 }

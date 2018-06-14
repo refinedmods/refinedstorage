@@ -76,7 +76,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        storages.add(storage);
+        if (storage != null)
+            storages.add(storage);
     }
 
     @Override

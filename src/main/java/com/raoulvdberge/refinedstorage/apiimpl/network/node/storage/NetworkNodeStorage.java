@@ -71,7 +71,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
 
     @Override
     public void addItemStorages(List<IStorage<ItemStack>> storages) {
-        storages.add(storage);
+        if (storage != null) storages.add(storage);
     }
 
     @Override
