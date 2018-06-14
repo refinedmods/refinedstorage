@@ -22,6 +22,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
@@ -35,10 +36,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
-import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
-import com.raoulvdberge.refinedstorage.apiimpl.util.QuantityFormatter;
-import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
+import com.raoulvdberge.refinedstorage.apiimpl.util.*;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -72,6 +70,7 @@ public class API implements IRSAPI {
     private IWirelessGridRegistry gridRegistry = new WirelessGridRegistry();
     private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
     private IStorageDiskSync storageDiskSync = new StorageDiskSync();
+    private IOneSixMigrationHelper oneSixMigrationHelper = new OneSixMigrationHelper();
 
     public static IRSAPI instance() {
         return INSTANCE;
@@ -228,13 +227,20 @@ public class API implements IRSAPI {
     }
 
     @Override
+    @Nonnull
     public IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity) {
         return new StorageDiskItem(world, capacity);
     }
 
     @Override
+    @Nonnull
     public IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity) {
         return new StorageDiskFluid(world, capacity);
+    }
+
+    @Override
+    public IOneSixMigrationHelper getOneSixMigrationHelper() {
+        return oneSixMigrationHelper;
     }
 
     @Override

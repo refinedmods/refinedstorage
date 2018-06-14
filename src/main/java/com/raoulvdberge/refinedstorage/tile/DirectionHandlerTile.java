@@ -6,7 +6,7 @@ import net.minecraft.util.EnumFacing;
 public class DirectionHandlerTile implements IDirectionHandler {
     public static final String NBT_DIRECTION = "Direction";
 
-    private EnumFacing direction;
+    private EnumFacing direction = EnumFacing.NORTH;
 
     @Override
     public void setDirection(EnumFacing direction) {

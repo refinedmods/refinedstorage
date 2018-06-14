@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
@@ -147,6 +148,10 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         super.read(tag);
 
         StackUtils.readItems(disks, 0, tag);
+
+        if (API.instance().getOneSixMigrationHelper().migrateDiskInventory(world, disks)) {
+            markDirty();
+        }
     }
 
     @Override

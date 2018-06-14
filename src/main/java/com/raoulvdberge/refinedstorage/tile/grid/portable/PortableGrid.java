@@ -134,6 +134,11 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
         if (player != null) {
             StackUtils.readItems(disk, 4, stack.getTagCompound());
+
+            if (!player.getEntityWorld().isRemote) {
+                API.instance().getOneSixMigrationHelper().migrateDiskInventory(player.getEntityWorld(), disk);
+            }
+
             StackUtils.readItems(filter, 0, stack.getTagCompound());
 
             drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);

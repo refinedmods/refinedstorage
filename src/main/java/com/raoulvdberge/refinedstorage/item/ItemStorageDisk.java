@@ -57,14 +57,19 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider {
     public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.onUpdate(stack, world, entity, slot, selected);
 
-        if (!world.isRemote && !stack.hasTagCompound()) {
-            UUID id = UUID.randomUUID();
+        if (!world.isRemote) {
+            if (!isValid(stack)) {
+                API.instance().getOneSixMigrationHelper().migrateDisk(world, stack);
+            }
 
-            stack.setTagCompound(new NBTTagCompound());
-            stack.getTagCompound().setUniqueId(NBT_ID, id);
+            if (!stack.hasTagCompound()) {
+                UUID id = UUID.randomUUID();
 
-            API.instance().getStorageDiskManager(world).set(id, API.instance().createDefaultItemDisk(world, ItemStorageType.getById(stack.getItemDamage()).getCapacity()));
-            API.instance().getStorageDiskManager(world).markForSaving();
+                API.instance().getStorageDiskManager(world).set(id, API.instance().createDefaultItemDisk(world, getCapacity(stack)));
+                API.instance().getStorageDiskManager(world).markForSaving();
+
+                setId(stack, id);
+            }
         }
     }
 
@@ -127,8 +132,19 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider {
     }
 
     @Override
+    public void setId(ItemStack disk, UUID id) {
+        disk.setTagCompound(new NBTTagCompound());
+        disk.getTagCompound().setUniqueId(NBT_ID, id);
+    }
+
+    @Override
     public boolean isValid(ItemStack disk) {
         return disk.hasTagCompound() && disk.getTagCompound().hasUniqueId(NBT_ID);
+    }
+
+    @Override
+    public int getCapacity(ItemStack disk) {
+        return ItemStorageType.getById(disk.getItemDamage()).getCapacity();
     }
 
     @Override

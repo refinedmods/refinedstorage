@@ -18,6 +18,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -148,6 +149,7 @@ public interface IRSAPI {
      * @param capacity the capacity
      * @return a storage disk
      */
+    @Nonnull
     IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity);
 
     /**
@@ -155,7 +157,14 @@ public interface IRSAPI {
      * @param capacity the capacity in mB
      * @return a fluid storage disk
      */
+    @Nonnull
     IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity);
+
+    /**
+     * @return the 1.6.x migration helper
+     */
+    @Nonnull
+    IOneSixMigrationHelper getOneSixMigrationHelper();
 
     /**
      * Opens a wireless grid for the given player.
