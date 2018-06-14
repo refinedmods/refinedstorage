@@ -134,7 +134,7 @@ public class CraftingManager implements ICraftingManager {
     public ICraftingTask schedule(ItemStack stack, int toSchedule) {
         for (ICraftingTask task : getTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
-                if (API.instance().getComparer().isEqual(output, stack)) {
+                if (API.instance().getComparer().isEqualNoQuantity(output, stack)) {
                     toSchedule -= output.getCount() * task.getQuantity();
                 }
             }
@@ -203,7 +203,7 @@ public class CraftingManager implements ICraftingManager {
     public ICraftingPattern getPattern(ItemStack pattern) {
         for (ICraftingPattern patternInList : patterns) {
             for (ItemStack output : patternInList.getOutputs()) {
-                if (API.instance().getComparer().isEqual(output, pattern)) {
+                if (API.instance().getComparer().isEqualNoQuantity(output, pattern)) {
                     return patternInList;
                 }
             }
