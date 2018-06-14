@@ -43,15 +43,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         getNode().setRedstoneMode(mode);
     }
 
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
-        return getNode().writeConfiguration(tag);
-    }
-
-    public void readConfiguration(NBTTagCompound tag) {
-        getNode().readConfiguration(tag);
-        getNode().markDirty();
-    }
-
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 

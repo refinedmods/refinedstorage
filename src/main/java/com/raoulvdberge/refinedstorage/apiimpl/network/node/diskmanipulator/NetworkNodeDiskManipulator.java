@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
@@ -524,6 +525,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         if (tag.hasKey(NBT_IO_MODE)) {
             ioMode = tag.getInteger(NBT_IO_MODE);
         }
+
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters, fluidFilters);
     }
 
     @Override

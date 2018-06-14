@@ -2,9 +2,11 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
+import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class OneSixMigrationHelper implements IOneSixMigrationHelper {
@@ -185,5 +188,13 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
 
     // If we remove the OneSixMigrationHelper we know where to remove other migration hooks by removing this method.
     public static void removalHook() {
+    }
+
+    public static void migrateEmptyWhitelistToEmptyBlacklist(String version, IFilterable filterable, @Nullable IItemHandler itemFilterInv, @Nullable IItemHandler fluidFilterInv) {
+        // Only migrate if we come from a version where the RS version tag stuff in NetworkNode wasn't added yet.
+        // Otherwise, we would constantly migrate empty whitelists to empty blacklists...
+        if (version == null && filterable.getMode() == IFilterable.WHITELIST && IFilterable.isEmpty(itemFilterInv) && IFilterable.isEmpty(fluidFilterInv)) {
+            filterable.setMode(IFilter.MODE_BLACKLIST);
+        }
     }
 }

@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -172,6 +173,8 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
         }
 
         accessType = AccessTypeUtils.readAccessType(tag);
+
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, filters, null);
     }
 
     public ItemStorageType getType() {

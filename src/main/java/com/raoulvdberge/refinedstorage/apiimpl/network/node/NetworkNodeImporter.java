@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -193,6 +194,8 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
         StackUtils.readItems(itemFilters, 0, tag);
         StackUtils.readItems(fluidFilters, 2, tag);
+
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters, fluidFilters);
     }
 
     public IItemHandler getUpgrades() {
