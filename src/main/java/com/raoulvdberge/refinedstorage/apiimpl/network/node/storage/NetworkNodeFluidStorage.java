@@ -76,8 +76,9 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
-        if (storage != null)
+        if (storage != null) {
             storages.add(storage);
+        }
     }
 
     @Override
@@ -89,7 +90,9 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        tag.setUniqueId(NBT_ID, storageId);
+        if (storageId != null) {
+            tag.setUniqueId(NBT_ID, storageId);
+        }
 
         return tag;
     }

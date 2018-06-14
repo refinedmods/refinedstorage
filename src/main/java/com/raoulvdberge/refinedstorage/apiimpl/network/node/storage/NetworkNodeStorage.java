@@ -71,7 +71,9 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
 
     @Override
     public void addItemStorages(List<IStorage<ItemStack>> storages) {
-        if (storage != null) storages.add(storage);
+        if (storage != null) {
+            storages.add(storage);
+        }
     }
 
     @Override
@@ -88,7 +90,9 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        tag.setUniqueId(NBT_ID, storageId);
+        if (storageId != null) {
+            tag.setUniqueId(NBT_ID, storageId);
+        }
 
         return tag;
     }

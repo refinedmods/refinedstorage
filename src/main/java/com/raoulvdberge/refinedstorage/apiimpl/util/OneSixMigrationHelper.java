@@ -182,4 +182,8 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
     public static boolean isValidOneSixPattern(ItemStack stack) {
         return stack.hasTagCompound() && stack.getTagCompound().hasKey(ItemPattern.NBT_PROCESSING);
     }
+
+    // If we remove the OneSixMigrationHelper we know where to remove other migration hooks by removing this method.
+    public static void removalHook() {
+    }
 }

@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
@@ -65,6 +66,18 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         getNode().setActive(tag.getBoolean(NBT_ACTIVE));
     }
 
+    private EnumFacing directionToMigrate;
+
+    @Override
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
+
+        OneSixMigrationHelper.removalHook();
+        if (tag.hasKey(NBT_DIRECTION)) {
+            directionToMigrate = EnumFacing.getFront(tag.getInteger("Direction"));
+        }
+    }
+
     @Override
     @Nullable
     public IItemHandler getDrops() {
@@ -90,6 +103,15 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         if (node == null || !node.getId().equals(getNodeId())) {
             manager.setNode(pos, node = createNode(world, pos));
             manager.markForSaving();
+        }
+
+        OneSixMigrationHelper.removalHook();
+        if (directionToMigrate != null) {
+            ((NetworkNode) node).setDirection(directionToMigrate);
+
+            directionToMigrate = null;
+
+            markDirty();
         }
 
         return (N) node;
