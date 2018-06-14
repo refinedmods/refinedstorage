@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
@@ -8,7 +10,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorTy
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementColor;
@@ -68,8 +69,12 @@ public class CraftingTask implements ICraftingTask {
         IStackList<ItemStack> results = API.instance().createItemStackList();
         IStackList<ItemStack> storage = network.getItemStorageCache().getList().copy();
 
+        ICraftingPatternChainList patternChainList = network.getCraftingManager().createPatternChainList();
+
+        ICraftingPatternChain patternChain = patternChainList.getChain(pattern);
+
         while (qty > 0) {
-            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(storage, results, pattern);
+            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(storage, results, patternChainList, patternChain.current());
 
             if (result.getRight() != null) {
                 return result.getRight();
@@ -80,6 +85,8 @@ public class CraftingTask implements ICraftingTask {
             qty -= qtyPerCraft;
 
             crafted += qtyPerCraft;
+
+            patternChain.cycle();
         }
 
         this.toCraft.add(requested, crafted);
@@ -87,7 +94,7 @@ public class CraftingTask implements ICraftingTask {
         return null;
     }
 
-    private Pair<CraftingStep, ICraftingTaskError> calculateInternal(IStackList<ItemStack> mutatedStorage, IStackList<ItemStack> results, ICraftingPattern pattern) {
+    private Pair<CraftingStep, ICraftingTaskError> calculateInternal(IStackList<ItemStack> mutatedStorage, IStackList<ItemStack> results, ICraftingPatternChainList patternChainList, ICraftingPattern pattern) {
         if (System.currentTimeMillis() - calculationStarted > CALCULATION_TIMEOUT_MS) {
             return Pair.of(null, new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX));
         }
@@ -163,11 +170,13 @@ public class CraftingTask implements ICraftingTask {
 
                     fromNetwork = mutatedStorage.get(possibleInput);
                 } else {
-                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
 
                     if (subPattern != null) {
+                        ICraftingPatternChain subPatternChain = patternChainList.getChain(subPattern);
+
                         while ((fromSelf == null ? 0 : fromSelf.getCount()) < remaining) {
-                            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(mutatedStorage, results, subPattern);
+                            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(mutatedStorage, results, patternChainList, subPatternChain.current());
 
                             if (result.getRight() != null) {
                                 return Pair.of(null, result.getRight());
@@ -181,6 +190,8 @@ public class CraftingTask implements ICraftingTask {
                             }
 
                             fromNetwork = mutatedStorage.get(possibleInput);
+
+                            subPatternChain.cycle();
                         }
 
                         // fromSelf contains the amount crafted after the loop.

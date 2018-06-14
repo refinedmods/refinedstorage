@@ -69,7 +69,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         ItemStack stack = args.checkItemStack(0);
-        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT)};
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack)};
     }
 
     @Callback(doc = "function():table -- Gets the patterns of this network.")
@@ -94,7 +94,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         ItemStack stack = args.checkItemStack(0);
 
-        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT) != null};
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack) != null};
     }
 
     @Callback(doc = "function(stack:table[, count: number]):table -- Gets a list of missing items for a crafting task.")

@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -50,16 +49,17 @@ public interface ICraftingManager {
     @Nullable
     ICraftingTask create(ItemStack stack, int quantity);
 
+    ICraftingPatternChainList createPatternChainList();
+
     /**
      * Schedules a crafting task if the task isn't scheduled yet.
      *
      * @param stack      the stack
      * @param toSchedule the amount of tasks to schedule
-     * @param compare    the compare value to find patterns, see {@link IComparer}
      * @return the crafting task created, or null if no task is created
      */
     @Nullable
-    ICraftingTask schedule(ItemStack stack, int toSchedule, int compare);
+    ICraftingTask schedule(ItemStack stack, int toSchedule);
 
     /**
      * Tracks an incoming stack.
@@ -82,11 +82,10 @@ public interface ICraftingManager {
      * Return a crafting pattern from an item stack.
      *
      * @param pattern the stack to get a pattern for
-     * @param flags   the flags to compare on, see {@link IComparer}
      * @return the crafting pattern, or null if none is found
      */
     @Nullable
-    ICraftingPattern getPattern(ItemStack pattern, int flags);
+    ICraftingPattern getPattern(ItemStack pattern);
 
     /**
      * Updates the tasks in this manager.

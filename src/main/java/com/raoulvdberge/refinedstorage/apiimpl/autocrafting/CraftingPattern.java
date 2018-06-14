@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -41,7 +42,7 @@ public class CraftingPattern implements ICraftingPattern {
                 if (input == null) {
                     inputs.add(NonNullList.create());
                 } else if (oredict) {
-                    inputs.add(StackUtils.getEquivalentStacks(input));
+                    inputs.add(StackUtils.getEquivalentStacks(input)); // TODO: set stacksize?
                 } else {
                     inputs.add(NonNullList.from(ItemStack.EMPTY, input));
                 }
@@ -196,6 +197,76 @@ public class CraftingPattern implements ICraftingPattern {
     @Override
     public String getId() {
         return CraftingTaskFactory.ID;
+    }
+
+    @Override
+    public boolean canBeInChainWith(ICraftingPattern other) {
+        if (other.isProcessing() != processing || other.isOredict() != oredict) {
+            return false;
+        }
+
+        if ((other.getInputs().size() != inputs.size()) || (other.getOutputs().size() != outputs.size())) {
+            return false;
+        }
+
+        if (!processing && other.getByproducts().size() != byproducts.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < inputs.size(); ++i) {
+            List<ItemStack> inputs = this.inputs.get(i);
+            List<ItemStack> otherInputs = other.getInputs().get(i);
+
+            if (inputs.size() != otherInputs.size()) {
+                return false;
+            }
+
+            for (int j = 0; j < inputs.size(); ++j) {
+                if (!API.instance().getComparer().isEqual(inputs.get(j), otherInputs.get(j))) {
+                    return false;
+                }
+            }
+        }
+
+        for (int i = 0; i < outputs.size(); ++i) {
+            if (!API.instance().getComparer().isEqual(outputs.get(i), other.getOutputs().get(i))) {
+                return false;
+            }
+        }
+
+        if (!processing) {
+            for (int i = 0; i < byproducts.size(); ++i) {
+                if (!API.instance().getComparer().isEqual(byproducts.get(i), other.getByproducts().get(i))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int getChainHashCode() {
+        int result = 0;
+
+        result = 31 * result + (processing ? 1 : 0);
+        result = 31 * result + (oredict ? 1 : 0);
+
+        for (List<ItemStack> inputs : this.inputs) {
+            for (ItemStack input : inputs) {
+                result = 31 * result + API.instance().getItemStackHashCode(input, true);
+            }
+        }
+
+        for (ItemStack output : this.outputs) {
+            result = 31 * result + API.instance().getItemStackHashCode(output, true);
+        }
+
+        for (ItemStack byproduct : this.byproducts) {
+            result = 31 * result + API.instance().getItemStackHashCode(byproduct, true);
+        }
+
+        return result;
     }
 
     private class InventoryCraftingDummy extends InventoryCrafting {

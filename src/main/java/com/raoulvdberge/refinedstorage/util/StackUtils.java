@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.util;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import io.netty.buffer.ByteBuf;
@@ -119,7 +118,7 @@ public final class StackUtils {
         buf.writeInt(API.instance().getItemStackHashCode(stack));
 
         if (network != null) {
-            buf.writeBoolean(network.getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT) != null);
+            buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
             buf.writeBoolean(displayCraftText);
         } else {
             buf.writeBoolean(false);

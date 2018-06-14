@@ -2,13 +2,13 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.item.ItemStack;
@@ -63,7 +63,7 @@ public class CraftingManager implements ICraftingManager {
     @Override
     @Nullable
     public ICraftingTask create(ItemStack stack, int quantity) {
-        ICraftingPattern pattern = getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+        ICraftingPattern pattern = getPattern(stack);
         if (pattern == null) {
             return null;
         }
@@ -74,6 +74,11 @@ public class CraftingManager implements ICraftingManager {
         }
 
         return factory.create(network, stack, quantity, pattern, null);
+    }
+
+    @Override
+    public ICraftingPatternChainList createPatternChainList() {
+        return new CraftingPatternChainList(patterns);
     }
 
     @Override
@@ -126,10 +131,10 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     @Nullable
-    public ICraftingTask schedule(ItemStack stack, int toSchedule, int compare) {
+    public ICraftingTask schedule(ItemStack stack, int toSchedule) {
         for (ICraftingTask task : getTasks()) {
             for (ItemStack output : task.getPattern().getOutputs()) {
-                if (API.instance().getComparer().isEqual(output, stack, compare)) {
+                if (API.instance().getComparer().isEqual(output, stack)) {
                     toSchedule -= output.getCount() * task.getQuantity();
                 }
             }
@@ -195,10 +200,10 @@ public class CraftingManager implements ICraftingManager {
 
     @Nullable
     @Override
-    public ICraftingPattern getPattern(ItemStack pattern, int flags) {
+    public ICraftingPattern getPattern(ItemStack pattern) {
         for (ICraftingPattern patternInList : patterns) {
             for (ItemStack output : patternInList.getOutputs()) {
-                if (API.instance().getComparer().isEqual(output, pattern, flags)) {
+                if (API.instance().getComparer().isEqual(output, pattern)) {
                     return patternInList;
                 }
             }
