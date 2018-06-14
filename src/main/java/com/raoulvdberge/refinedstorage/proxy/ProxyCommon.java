@@ -25,6 +25,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipeLoader;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
@@ -290,6 +291,17 @@ public class ProxyCommon {
     public void onHarvestCheck(PlayerEvent.HarvestCheck e) {
         if (e.getTargetBlock().getBlock() instanceof BlockBase) {
             e.setCanHarvest(true); // Allow break without tool
+        }
+    }
+
+    @SubscribeEvent
+    public void fixItemMappings(RegistryEvent.MissingMappings<Item> e) {
+        OneSixMigrationHelper.removalHook();
+
+        for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
+            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("wrench")) {
+                missing.ignore();
+            }
         }
     }
 
