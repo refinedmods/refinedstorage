@@ -14,6 +14,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,13 @@ public class CraftingPattern implements ICraftingPattern {
                 if (input == null) {
                     inputs.add(NonNullList.create());
                 } else if (oredict) {
-                    inputs.add(StackUtils.getEquivalentStacks(input)); // TODO: set stacksize?
+                    NonNullList<ItemStack> equivalent = NonNullList.create();
+
+                    for (ItemStack equivalentStack : StackUtils.getEquivalentStacks(input)) {
+                        equivalent.add(ItemHandlerHelper.copyStackWithSize(equivalentStack, input.getCount()));
+                    }
+
+                    inputs.add(equivalent);
                 } else {
                     inputs.add(NonNullList.from(ItemStack.EMPTY, input));
                 }
