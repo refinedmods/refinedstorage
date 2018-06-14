@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
@@ -23,6 +22,7 @@ import java.util.UUID;
 
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
+    private static final String NBT_DIRECTION = "Direction";
 
     @Nullable
     protected INetwork network;
@@ -33,7 +33,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nullable
     protected UUID owner;
 
-    private EnumFacing direction;
+    private EnumFacing direction = EnumFacing.NORTH;
 
     private boolean throttlingDisabled;
     private boolean couldUpdate;
@@ -147,6 +147,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             tag.setUniqueId(NBT_OWNER, owner);
         }
 
+        tag.setInteger(NBT_DIRECTION, direction.ordinal());
+
         writeConfiguration(tag);
 
         return tag;
@@ -161,6 +163,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     public void read(NBTTagCompound tag) {
         if (tag.hasUniqueId(NBT_OWNER)) {
             owner = tag.getUniqueId(NBT_OWNER);
+        }
+
+        if (tag.hasKey(NBT_DIRECTION)) {
+            direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
         }
 
         readConfiguration(tag);
@@ -205,22 +211,15 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     public EnumFacing getDirection() {
-        if (direction == null) {
-            loadDirection();
-        }
-
         return direction;
     }
 
-    // TODO: Move to network node.
-    public void loadDirection() {
-        EnumFacing direction = ((TileBase) world.getTileEntity(pos)).getDirection();
+    public void setDirection(EnumFacing direction) {
+        this.direction = direction;
 
-        if (!direction.equals(this.direction)) {
-            this.direction = direction;
+        onDirectionChanged();
 
-            onDirectionChanged();
-        }
+        markDirty();
     }
 
     protected void onDirectionChanged() {

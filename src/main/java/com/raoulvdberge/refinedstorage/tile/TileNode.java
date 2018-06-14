@@ -27,6 +27,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     private N clientNode;
 
     public TileNode() {
+        directionHandler = new DirectionHandlerNetworkNode(this);
+
         dataManager.addWatchedParameter(REDSTONE_MODE);
     }
 
@@ -47,13 +49,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public void readConfiguration(NBTTagCompound tag) {
         getNode().readConfiguration(tag);
         getNode().markDirty();
-    }
-
-    @Override
-    public void setDirection(EnumFacing direction) {
-        super.setDirection(direction);
-
-        getNode().loadDirection();
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {

@@ -64,7 +64,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
-    // Used to prevent infinite recursion on getRootContainer() when there's eg. two crafters facing each other.
+    // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
     private boolean visited = false;
 
     @Nullable
