@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
@@ -29,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Represents a Refined Storage API implementation.
@@ -165,6 +167,16 @@ public interface IRSAPI {
      */
     @Nonnull
     IOneSixMigrationHelper getOneSixMigrationHelper();
+
+    /**
+     * @param renderHandler the render handler to add
+     */
+    void addPatternRenderHandler(ICraftingPatternRenderHandler renderHandler);
+
+    /**
+     * @return a list of pattern render handlers
+     */
+    List<ICraftingPatternRenderHandler> getPatternRenderHandlers();
 
     /**
      * Opens a wireless grid for the given player.

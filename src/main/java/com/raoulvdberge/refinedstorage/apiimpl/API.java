@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.IRSAPI;
 import com.raoulvdberge.refinedstorage.api.RSAPIInject;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
@@ -54,6 +55,8 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class API implements IRSAPI {
@@ -71,6 +74,7 @@ public class API implements IRSAPI {
     private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
     private IStorageDiskSync storageDiskSync = new StorageDiskSync();
     private IOneSixMigrationHelper oneSixMigrationHelper = new OneSixMigrationHelper();
+    private List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
 
     public static IRSAPI instance() {
         return INSTANCE;
@@ -239,8 +243,19 @@ public class API implements IRSAPI {
     }
 
     @Override
+    @Nonnull
     public IOneSixMigrationHelper getOneSixMigrationHelper() {
         return oneSixMigrationHelper;
+    }
+
+    @Override
+    public void addPatternRenderHandler(ICraftingPatternRenderHandler renderHandler) {
+        patternRenderHandlers.add(renderHandler);
+    }
+
+    @Override
+    public List<ICraftingPatternRenderHandler> getPatternRenderHandlers() {
+        return patternRenderHandlers;
     }
 
     @Override

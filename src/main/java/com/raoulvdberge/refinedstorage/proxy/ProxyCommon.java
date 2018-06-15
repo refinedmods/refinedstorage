@@ -28,6 +28,10 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryIt
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
+import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
+import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
@@ -47,9 +51,12 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
@@ -103,6 +110,34 @@ public class ProxyCommon {
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementItemStack.ID, CraftingPreviewElementItemStack::fromByteBuf);
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementFluidStack.ID, CraftingPreviewElementFluidStack::fromByteBuf);
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementError.ID, CraftingPreviewElementError::fromByteBuf);
+
+        API.instance().addPatternRenderHandler(pattern -> GuiBase.isShiftKeyDown());
+        API.instance().addPatternRenderHandler(pattern -> {
+            Container container = Minecraft.getMinecraft().player.openContainer;
+
+            if (container instanceof ContainerCrafterManager) {
+                for (Slot slot : container.inventorySlots) {
+                    if (slot instanceof SlotCrafterManager && slot.getStack() == pattern) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
+        API.instance().addPatternRenderHandler(pattern -> {
+            Container container = Minecraft.getMinecraft().player.openContainer;
+
+            if (container instanceof ContainerCrafter) {
+                for (int i = 0; i < 9; ++i) {
+                    if (container.getSlot(i).getStack() == pattern) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
 
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerItems.ID, ReaderWriterHandlerItems::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerFluids.ID, ReaderWriterHandlerFluids::new);
