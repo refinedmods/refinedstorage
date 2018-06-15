@@ -297,6 +297,11 @@ item.refinedstorage:network_card.name=Network Card
 item.refinedstorage:security_card.name=Security Card
 item.refinedstorage:security_card.owner=Bound to: %s
 
+commands.refinedstorage.createdisk.usage=/createdisk <player> <item> <metadata> <id>
+commands.refinedstorage.createdisk.error.notADisk=The given disk item is not a disk.
+commands.refinedstorage.createdisk.error.diskNotFound=Disk %s was not found.
+commands.refinedstorage.createdisk.success=Successfully gave disk %s to %s.
+
 advancements.refinedstorage:controlling.description=Craft a Controller
 advancements.refinedstorage:connecting=Connecting
 advancements.refinedstorage:connecting.description=You can place all the devices next to each other to connect them up, or, use Cable

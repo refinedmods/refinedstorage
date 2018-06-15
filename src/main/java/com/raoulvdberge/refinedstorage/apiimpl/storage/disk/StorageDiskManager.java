@@ -57,6 +57,11 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     }
 
     @Override
+    public Map<UUID, IStorageDisk> getAll() {
+        return disks;
+    }
+
+    @Override
     public void set(UUID id, IStorageDisk disk) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
