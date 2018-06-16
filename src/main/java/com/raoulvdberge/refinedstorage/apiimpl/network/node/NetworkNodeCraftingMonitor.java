@@ -70,7 +70,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public void onCancelled(EntityPlayerMP player, UUID id) {
+    public void onCancelled(EntityPlayerMP player, @Nullable UUID id) {
         if (network != null) {
             network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }

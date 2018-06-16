@@ -47,7 +47,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public void onCancelled(EntityPlayerMP player, UUID id) {
+    public void onCancelled(EntityPlayerMP player, @Nullable UUID id) {
         INetwork network = getNetwork();
 
         if (network != null) {
