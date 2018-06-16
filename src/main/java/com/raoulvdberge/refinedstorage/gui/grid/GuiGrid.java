@@ -18,6 +18,7 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
 import com.raoulvdberge.refinedstorage.gui.grid.view.IGridView;
+import com.raoulvdberge.refinedstorage.gui.tab.TabList;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
 import com.raoulvdberge.refinedstorage.network.*;
@@ -55,15 +56,11 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     private TextFieldSearch searchField;
     private GuiCheckBox oredictPattern;
     private GuiCheckBox processingPattern;
-    private GuiButton tabPageLeft;
-    private GuiButton tabPageRight;
 
     private IGrid grid;
+    private TabList tabs;
 
     private boolean wasConnected;
-    private boolean hadTabs = false;
-
-    private int tabHovering = -1;
 
     private int slotNumber;
 
@@ -82,16 +79,23 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         this.grid = grid;
         this.view = grid.getType() == GridType.FLUID ? new GridViewFluid(this, defaultSorter, sorters) : new GridViewItem(this, defaultSorter, sorters);
         this.wasConnected = this.grid.isActive();
+        this.tabs = new TabList(this, grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
+        this.tabs.addListener(new TabList.ITabListListener() {
+            @Override
+            public void onSelectionChanged(int tab) {
+                grid.onTabSelectionChanged(tab);
+            }
+
+            @Override
+            public void onPageChanged(int page) {
+                grid.onTabPageChanged(page);
+            }
+        });
     }
 
     @Override
     protected void calcHeight() {
-        this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
-
-        if (hadTabs) {
-            this.ySize += ContainerGrid.TAB_HEIGHT;
-        }
-
+        this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18) + tabs.getHeight();
         this.screenHeight = ySize;
     }
 
@@ -99,17 +103,16 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     public void init(int x, int y) {
         ((ContainerGrid) this.inventorySlots).initSlots();
 
-        this.scrollbar = new Scrollbar(174, getTabHeight() + getTopHeight(), 12, (getVisibleRows() * 18) - 2);
+        this.tabs.init();
+
+        this.scrollbar = new Scrollbar(174, tabs.getHeight() + getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
         if (grid instanceof NetworkNodeGrid || grid instanceof TilePortableGrid) {
             addSideButton(new SideButtonRedstoneMode(this, grid instanceof NetworkNodeGrid ? TileGrid.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
         }
 
-        tabPageLeft = addButton(getGuiLeft(), getGuiTop() - 22, 20, 20, "<", true, grid.getTotalTabPages() > 0);
-        tabPageRight = addButton(getGuiLeft() + getXSize() - 22 - 32, getGuiTop() - 22, 20, 20, ">", true, grid.getTotalTabPages() > 0);
-
         int sx = x + 80 + 1;
-        int sy = y + 6 + 1 + getTabHeight();
+        int sy = y + 6 + 1 + tabs.getHeight();
 
         if (searchField == null) {
             searchField = new TextFieldSearch(0, fontRenderer, sx, sy, 88 - 6);
@@ -126,8 +129,8 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         }
 
         if (grid.getType() == GridType.PATTERN) {
-            processingPattern = addCheckBox(x + 7, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
-            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            processingPattern = addCheckBox(x + 7, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
+            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
         }
 
         if (grid.getType() != GridType.FLUID && grid.getViewType() != -1) {
@@ -139,12 +142,12 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         addSideButton(new SideButtonGridSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
 
-        updateScrollbarAndTabs();
+        updateScrollbar();
     }
 
     @Override
     protected int getSideButtonYStart() {
-        return super.getSideButtonYStart() + (!grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT - 3 : 0);
+        return super.getSideButtonYStart() + (!grid.getTabs().isEmpty() ? IGridTab.TAB_HEIGHT - 3 : 0);
     }
 
     public IGrid getGrid() {
@@ -163,13 +166,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             view.sort();
         }
 
-        boolean hasTabs = !getGrid().getTabs().isEmpty();
-
-        if (hadTabs != hasTabs) {
-            hadTabs = hasTabs;
-
-            initGui();
-        }
+        tabs.update();
     }
 
     @Override
@@ -190,7 +187,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
     @Override
     public int getYPlayerInventory() {
-        int yp = getTabHeight() + getTopHeight() + (getVisibleRows() * 18);
+        int yp = tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18);
 
         if (grid.getType() == GridType.NORMAL || grid.getType() == GridType.FLUID) {
             yp += 16;
@@ -222,7 +219,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     public int getVisibleRows() {
         switch (grid.getSize()) {
             case IGrid.SIZE_STRETCH:
-                int screenSpaceAvailable = height - getTopHeight() - getBottomHeight() - (hadTabs ? ContainerGrid.TAB_HEIGHT : 0);
+                int screenSpaceAvailable = height - getTopHeight() - getBottomHeight() - tabs.getHeight();
 
                 return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRowsStretch));
             case IGrid.SIZE_SMALL:
@@ -245,7 +242,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     }
 
     public boolean isOverSlotArea(int mouseX, int mouseY) {
-        return inBounds(7, 19 + getTabHeight(), 162, 18 * getVisibleRows(), mouseX, mouseY);
+        return inBounds(7, 19 + tabs.getHeight(), 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
     public int getSlotNumber() {
@@ -253,7 +250,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     }
 
     private boolean isOverClear(int mouseX, int mouseY) {
-        int y = getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 4;
+        int y = tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 4;
 
         switch (grid.getType()) {
             case CRAFTING:
@@ -270,68 +267,12 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == GridType.PATTERN && inBounds(172, getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
-    }
-
-    private int getTabHeight() {
-        return !grid.getTabs().isEmpty() ? ContainerGrid.TAB_HEIGHT - 4 : 0;
-    }
-
-    private void drawTab(IGridTab tab, boolean foregroundLayer, int x, int y, int mouseX, int mouseY, int index, int num) {
-        boolean selected = index == grid.getTabSelected();
-
-        if ((foregroundLayer && !selected) || (!foregroundLayer && selected)) {
-            return;
-        }
-
-        int tx = x + ((ContainerGrid.TAB_WIDTH + 1) * num);
-        int ty = y;
-
-        bindTexture("icons.png");
-
-        if (!selected) {
-            ty += 3;
-        }
-
-        int uvx;
-        int uvy = 225;
-        int tbw = ContainerGrid.TAB_WIDTH;
-        int otx = tx;
-
-        if (selected) {
-            uvx = 227;
-
-            if (num > 0) {
-                uvx = 226;
-                uvy = 194;
-                tbw++;
-                tx--;
-            }
-        } else {
-            uvx = 199;
-        }
-
-        drawTexture(tx, ty, uvx, uvy, tbw, ContainerGrid.TAB_HEIGHT);
-
-        RenderHelper.enableGUIStandardItemLighting();
-
-        drawItem(otx + 6, ty + 9 - (!selected ? 3 : 0), tab.getIcon());
-
-        if (inBounds(tx, ty, ContainerGrid.TAB_WIDTH, ContainerGrid.TAB_HEIGHT - (selected ? 2 : 7), mouseX, mouseY)) {
-            tabHovering = index;
-        }
+        return grid.getType() == GridType.PATTERN && inBounds(172, tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
     }
 
     @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
-        tabHovering = -1;
-
-        int j = 0;
-        for (int i = grid.getTabPage() * IGrid.TABS_PER_PAGE; i < (grid.getTabPage() * IGrid.TABS_PER_PAGE) + IGrid.TABS_PER_PAGE; ++i) {
-            if (i < grid.getTabs().size()) {
-                drawTab(grid.getTabs().get(i), false, x, y, mouseX, mouseY, i, j++);
-            }
-        }
+        tabs.drawBackground(x, y);
 
         if (grid.getType() == GridType.CRAFTING) {
             bindTexture("gui/crafting_grid.png");
@@ -343,12 +284,12 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             bindTexture("gui/grid.png");
         }
 
-        int yy = y + getTabHeight();
+        int yy = y + tabs.getHeight();
 
         drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getTopHeight());
 
         if (grid.getType() != GridType.FLUID) {
-            drawTexture(x + screenWidth - 34 + 4, y + getTabHeight(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
+            drawTexture(x + screenWidth - 34 + 4, y + tabs.getHeight(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
         }
 
         int rows = getVisibleRows();
@@ -374,15 +315,10 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
                 ty = 2;
             }
 
-            drawTexture(x + 172, y + getTabHeight() + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
+            drawTexture(x + 172, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
-        j = 0;
-        for (int i = grid.getTabPage() * IGrid.TABS_PER_PAGE; i < (grid.getTabPage() * IGrid.TABS_PER_PAGE) + IGrid.TABS_PER_PAGE; ++i) {
-            if (i < grid.getTabs().size()) {
-                drawTab(grid.getTabs().get(i), true, x, y, mouseX, mouseY, i, j++);
-            }
-        }
+        tabs.drawForeground(x, y, mouseX, mouseY);
 
         if (searchField != null) {
             searchField.drawTextBox();
@@ -391,17 +327,11 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7 + getTabHeight(), t(grid.getGuiTitle()));
+        drawString(7, 7 + tabs.getHeight(), t(grid.getGuiTitle()));
         drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
 
-        if (grid.getTotalTabPages() > 0) {
-            String text = (grid.getTabPage() + 1) + " / " + (grid.getTotalTabPages() + 1);
-
-            drawString((int) ((193F - (float) fontRenderer.getStringWidth(text)) / 2F), -16, text, 0xFFFFFF);
-        }
-
         int x = 8;
-        int y = 19 + getTabHeight();
+        int y = 19 + tabs.getHeight();
 
         this.slotNumber = -1;
 
@@ -454,9 +384,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
         }
 
-        if (tabHovering >= 0 && tabHovering < grid.getTabs().size() && !grid.getTabs().get(tabHovering).getName().equalsIgnoreCase("")) {
-            drawTooltip(mouseX, mouseY, grid.getTabs().get(tabHovering).getName());
-        }
+        tabs.drawTooltip(fontRenderer, mouseX, mouseY);
     }
 
     // Copied with some tweaks from GuiUtils#drawHoveringText(@Nonnull final ItemStack stack, List<String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font)
@@ -613,6 +541,8 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
 
+        tabs.actionPerformed(button);
+
         if (button == oredictPattern) {
             TileDataManager.setParameter(TileGrid.OREDICT_PATTERN, oredictPattern.isChecked());
         } else if (button == processingPattern) {
@@ -622,10 +552,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             ((ContainerGrid) this.inventorySlots).initSlots();
 
             TileDataManager.setParameter(TileGrid.PROCESSING_PATTERN, processingPattern.isChecked());
-        } else if (button == tabPageLeft) {
-            grid.onTabPageChanged(grid.getTabPage() - 1);
-        } else if (button == tabPageRight) {
-            grid.onTabPageChanged(grid.getTabPage() + 1);
         }
     }
 
@@ -633,9 +559,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, clickedButton);
 
-        if (tabHovering >= 0 && tabHovering < grid.getTabs().size()) {
-            grid.onTabSelectionChanged(tabHovering);
-        }
+        tabs.mouseClicked();
 
         if (searchField != null) {
             searchField.mouseClicked(mouseX, mouseY, clickedButton);
@@ -737,18 +661,10 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         }
     }
 
-    public void updateScrollbarAndTabs() {
+    public void updateScrollbar() {
         if (scrollbar != null) {
             scrollbar.setEnabled(getRows() > getVisibleRows());
             scrollbar.setMaxOffset(getRows() - getVisibleRows());
-        }
-
-        if (tabPageLeft != null) {
-            tabPageLeft.visible = grid.getTotalTabPages() > 0;
-        }
-
-        if (tabPageRight != null) {
-            tabPageRight.visible = grid.getTotalTabPages() > 0;
         }
     }
 }

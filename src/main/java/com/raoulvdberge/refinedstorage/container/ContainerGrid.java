@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
@@ -25,9 +26,6 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nullable;
 
 public class ContainerGrid extends ContainerBase {
-    public static final int TAB_WIDTH = 28;
-    public static final int TAB_HEIGHT = 31;
-
     private IGrid grid;
     private IStorageCache cache;
     private IStorageCacheListener listener;
@@ -133,7 +131,7 @@ public class ContainerGrid extends ContainerBase {
     }
 
     private int getTabDelta() {
-        return !grid.getTabs().isEmpty() ? TAB_HEIGHT - 4 : 0;
+        return !grid.getTabs().isEmpty() ? IGridTab.TAB_HEIGHT - 4 : 0;
     }
 
     public IGrid getGrid() {

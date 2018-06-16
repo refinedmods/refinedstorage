@@ -73,7 +73,7 @@ public abstract class GridViewBase implements IGridView {
 
         this.stacks = stacks;
 
-        this.gui.updateScrollbarAndTabs();
+        this.gui.updateScrollbar();
     }
 
     @Override
