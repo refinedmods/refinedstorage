@@ -101,11 +101,14 @@ public class CraftingManager implements ICraftingManager {
 
             boolean anyFinished = false;
 
-            for (ICraftingTask task : tasks.values()) {
+            Iterator<Map.Entry<UUID, ICraftingTask>> it = tasks.entrySet().iterator();
+            while (it.hasNext()) {
+                ICraftingTask task = it.next().getValue();
+
                 if (task.update()) {
                     anyFinished = true;
 
-                    tasks.remove(task.getId());
+                    it.remove();
                 }
             }
 
