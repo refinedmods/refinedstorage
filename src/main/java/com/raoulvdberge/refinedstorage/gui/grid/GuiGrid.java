@@ -18,7 +18,6 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
 import com.raoulvdberge.refinedstorage.gui.grid.view.IGridView;
-import com.raoulvdberge.refinedstorage.gui.tab.TabList;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
 import com.raoulvdberge.refinedstorage.network.*;

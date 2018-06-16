@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.gui.tab;
+package com.raoulvdberge.refinedstorage.gui.control;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
