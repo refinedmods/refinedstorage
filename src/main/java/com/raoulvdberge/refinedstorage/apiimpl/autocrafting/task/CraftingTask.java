@@ -44,6 +44,7 @@ public class CraftingTask implements ICraftingTask {
     private Set<ICraftingPattern> patternsUsed = new HashSet<>();
     private int ticks = 0;
     private long calculationStarted;
+    private UUID id = UUID.randomUUID();
 
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
@@ -304,35 +305,26 @@ public class CraftingTask implements ICraftingTask {
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
-        elements.directAdd(new CraftingMonitorElementItemRender(
-            network.getCraftingManager().getTasks().indexOf(this),
-            requested,
-            quantity,
-            0
-        ));
-
         if (!missing.isEmpty()) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 16));
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 5));
 
             missing.getStacks().stream().map(stack -> new CraftingMonitorElementColor(new CraftingMonitorElementItemRender(
-                -1,
                 stack,
                 stack.getCount(),
-                32
+                16
             ), "", CraftingMonitorElementColor.COLOR_ERROR)).forEach(elements::add);
 
             elements.commit();
         }
 
         if (!inserter.getItems().isEmpty()) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 16));
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 5));
 
             for (CraftingInserterItem item : inserter.getItems()) {
                 ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                    -1,
                     item.getStack(),
                     item.getStack().getCount(),
-                    32
+                    16
                 );
 
                 if (item.getStatus() == CraftingInserterItemStatus.FULL) {
@@ -345,8 +337,8 @@ public class CraftingTask implements ICraftingTask {
             elements.commit();
         }
 
-        if (steps.stream().anyMatch(s -> s instanceof CraftingStepCraft && !s.isCompleted())) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 16));
+        if (steps.stream().anyMatch(s -> s instanceof CraftingStepCraft && !s.isCompleted() && !((CraftingStepCraft) s).getExtractor().getItems().isEmpty())) {
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 5));
 
             for (CraftingStep step : steps) {
                 if (step instanceof CraftingStepCraft && !step.isCompleted()) {
@@ -357,10 +349,9 @@ public class CraftingTask implements ICraftingTask {
                         CraftingExtractorItemStatus status = extractor.getStatus().get(i);
 
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                            -1,
                             item,
                             item.getCount(),
-                            32
+                            16
                         );
 
                         if (status == CraftingExtractorItemStatus.MISSING) {
@@ -376,7 +367,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (steps.stream().anyMatch(s -> s instanceof CraftingStepProcess && !s.isCompleted())) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 16));
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 5));
 
             for (CraftingStep step : steps) {
                 if (step instanceof CraftingStepProcess && !step.isCompleted()) {
@@ -387,10 +378,9 @@ public class CraftingTask implements ICraftingTask {
                         CraftingExtractorItemStatus status = extractor.getStatus().get(i);
 
                         ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                            -1,
                             item,
                             item.getCount(),
-                            32
+                            16
                         );
 
                         if (status == CraftingExtractorItemStatus.MISSING) {
@@ -477,6 +467,11 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public IStackList<ItemStack> getMissing() {
         return missing;
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
     }
 
     private int getTickInterval(int speedUpgrades) {

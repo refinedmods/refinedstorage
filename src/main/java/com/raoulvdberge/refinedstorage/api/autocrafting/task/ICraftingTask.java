@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents a crafting task.
@@ -92,4 +93,9 @@ public interface ICraftingTask {
      * @return the missing items
      */
     IStackList<ItemStack> getMissing();
+
+    /**
+     * @return the id of this task
+     */
+    UUID getId();
 }

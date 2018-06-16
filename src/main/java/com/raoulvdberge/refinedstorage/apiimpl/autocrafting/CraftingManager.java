@@ -26,9 +26,9 @@ public class CraftingManager implements ICraftingManager {
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
-    private List<ICraftingTask> tasks = new ArrayList<>();
+    private Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private List<ICraftingTask> tasksToAdd = new ArrayList<>();
-    private List<ICraftingTask> tasksToCancel = new ArrayList<>();
+    private List<UUID> tasksToCancel = new ArrayList<>();
 
     private Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
@@ -37,8 +37,8 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public List<ICraftingTask> getTasks() {
-        return tasks;
+    public Collection<ICraftingTask> getTasks() {
+        return tasks.values();
     }
 
     @Override
@@ -54,8 +54,12 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void cancel(@Nonnull ICraftingTask task) {
-        tasksToCancel.add(task);
+    public void cancel(@Nullable UUID id) {
+        if (id == null) {
+            tasksToCancel.addAll(tasks.keySet());
+        } else {
+            tasksToCancel.add(id);
+        }
 
         network.markDirty();
     }
@@ -86,14 +90,24 @@ public class CraftingManager implements ICraftingManager {
         if (network.canRun()) {
             boolean changed = !tasksToCancel.isEmpty() || !tasksToAdd.isEmpty();
 
-            this.tasksToCancel.forEach(ICraftingTask::onCancelled);
-            this.tasks.removeAll(tasksToCancel);
+            for (UUID idToCancel : tasksToCancel) {
+                this.tasks.get(idToCancel).onCancelled();
+                this.tasks.remove(idToCancel);
+            }
             this.tasksToCancel.clear();
 
-            this.tasksToAdd.stream().filter(ICraftingTask::isValid).forEach(tasks::add);
+            this.tasksToAdd.stream().filter(ICraftingTask::isValid).forEach(t -> tasks.put(t.getId(), t));
             this.tasksToAdd.clear();
 
-            boolean anyFinished = tasks.removeIf(ICraftingTask::update);
+            boolean anyFinished = false;
+
+            for (ICraftingTask task : tasks.values()) {
+                if (task.update()) {
+                    anyFinished = true;
+
+                    tasks.remove(task.getId());
+                }
+            }
 
             if (changed || anyFinished) {
                 onTaskChanged();
@@ -101,13 +115,11 @@ public class CraftingManager implements ICraftingManager {
         }
     }
 
-    @Override
-    // TODO
+    @Override // TODO
     public void readFromNBT(NBTTagCompound tag) {
     }
 
-    @Override
-    // TODO
+    @Override // TODO
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         return tag;
     }
@@ -161,7 +173,7 @@ public class CraftingManager implements ICraftingManager {
     public void track(ItemStack stack, int size) {
         int initialSize = size;
 
-        for (ICraftingTask task : tasks) {
+        for (ICraftingTask task : tasks.values()) {
             size = task.onTrackedItemInserted(stack, size);
 
             if (size == 0) {

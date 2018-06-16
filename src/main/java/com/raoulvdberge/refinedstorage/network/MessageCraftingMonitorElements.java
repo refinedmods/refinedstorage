@@ -2,25 +2,27 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class MessageCraftingMonitorElements implements IMessage, IMessageHandler<MessageCraftingMonitorElements, IMessage> {
     private ICraftingMonitor craftingMonitor;
 
-    private List<ICraftingMonitorElement> elements = new ArrayList<>();
+    private List<IGridTab> tasks = new ArrayList<>();
 
     public MessageCraftingMonitorElements() {
     }
@@ -34,34 +36,49 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            Function<ByteBuf, ICraftingMonitorElement> factory = API.instance().getCraftingMonitorElementRegistry().get(ByteBufUtils.readUTF8String(buf));
+            UUID id = UUID.fromString(ByteBufUtils.readUTF8String(buf));
+            ItemStack requested = ByteBufUtils.readItemStack(buf);
+            int qty = buf.readInt();
+            List<ICraftingMonitorElement> elements = new ArrayList<>();
 
-            if (factory != null) {
-                elements.add(factory.apply(buf));
+            int elementCount = buf.readInt();
+
+            for (int j = 0; j < elementCount; ++j) {
+                Function<ByteBuf, ICraftingMonitorElement> factory = API.instance().getCraftingMonitorElementRegistry().get(ByteBufUtils.readUTF8String(buf));
+
+                if (factory != null) {
+                    elements.add(factory.apply(buf));
+                }
             }
+
+            tasks.add(new GuiCraftingMonitor.CraftingMonitorTask(id, requested, qty, elements));
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        List<ICraftingMonitorElement> elements = new LinkedList<>();
+        buf.writeInt(craftingMonitor.getTasks().size());
 
         for (ICraftingTask task : craftingMonitor.getTasks()) {
-            elements.addAll(task.getCraftingMonitorElements());
-        }
+            ByteBufUtils.writeUTF8String(buf, task.getId().toString());
+            ByteBufUtils.writeItemStack(buf, task.getRequested());
+            buf.writeInt(task.getQuantity());
 
-        buf.writeInt(elements.size());
+            List<ICraftingMonitorElement> elements = task.getCraftingMonitorElements();
 
-        for (ICraftingMonitorElement element : elements) {
-            ByteBufUtils.writeUTF8String(buf, element.getId());
+            buf.writeInt(elements.size());
 
-            element.write(buf);
+            for (ICraftingMonitorElement element : elements) {
+                ByteBufUtils.writeUTF8String(buf, element.getId());
+
+                element.write(buf);
+            }
         }
     }
 
     @Override
     public IMessage onMessage(MessageCraftingMonitorElements message, MessageContext ctx) {
-        GuiBase.executeLater(GuiCraftingMonitor.class, craftingMonitor -> craftingMonitor.setElements(message.elements));
+        GuiBase.executeLater(GuiCraftingMonitor.class, craftingMonitor -> craftingMonitor.setTasks(message.tasks));
 
         return null;
     }

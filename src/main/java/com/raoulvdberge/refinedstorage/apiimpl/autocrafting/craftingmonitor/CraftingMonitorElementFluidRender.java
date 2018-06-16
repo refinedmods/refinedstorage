@@ -14,12 +14,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class CraftingMonitorElementFluidRender implements ICraftingMonitorElement {
     public static final String ID = "fluid_render";
 
-    private int taskId;
     private FluidStack stack;
     private int offset;
 
-    public CraftingMonitorElementFluidRender(int taskId, FluidStack stack, int offset) {
-        this.taskId = taskId;
+    public CraftingMonitorElementFluidRender(FluidStack stack, int offset) {
         this.stack = stack;
         this.offset = offset;
     }
@@ -44,18 +42,12 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
     }
 
     @Override
-    public int getTaskId() {
-        return taskId;
-    }
-
-    @Override
     public String getId() {
         return ID;
     }
 
     @Override
     public void write(ByteBuf buf) {
-        buf.writeInt(taskId);
         StackUtils.writeFluidStack(buf, stack);
         buf.writeInt(offset);
     }

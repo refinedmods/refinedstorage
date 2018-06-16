@@ -22,6 +22,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - If an Interface is configured to expose the entire network storage (by configuring no export slots), it will no longer expose the entire RS storage, due to performance issues (raoulvdberge)
 - The Portable Grid no longer exposes a inventory for crossmod interaction, due to performance issues (raoulvdberge)
 - The Crafting Monitor is now resizable and its size can be configured (stretched, small, medium, large) (raoulvdberge)
+- The Crafting Monitor now splits its tasks over tabs (raoulvdberge)
 - Made all IO blocks have a blacklist instead of a whitelist by default (raoulvdberge)
 - An empty blacklist now means: accept any item. An empty whitelist now means: don't accept any item (an empty whitelist USED to mean: accept any item) (raoulvdberge)
 - Any mod can now add JSON Solderer recipes without requiring the API, by putting the JSONs in their assets directory in a "solderer_recipes" directory (raoulvdberge)

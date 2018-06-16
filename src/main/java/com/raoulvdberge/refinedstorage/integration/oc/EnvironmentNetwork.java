@@ -150,7 +150,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         int count = 0;
         for (ICraftingTask task : node.getNetwork().getCraftingManager().getTasks()) {
             if (API.instance().getComparer().isEqual(task.getRequested(), stack, COMPARE_NBT | COMPARE_DAMAGE)) {
-                node.getNetwork().getCraftingManager().cancel(task);
+                node.getNetwork().getCraftingManager().cancel(task.getId());
 
                 count++;
             }

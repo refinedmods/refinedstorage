@@ -32,6 +32,8 @@ public class TabList {
     private GuiButton left;
     private GuiButton right;
 
+    private int width;
+
     public TabList(GuiBase gui, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
         this.gui = gui;
         this.tabs = tabs;
@@ -41,9 +43,10 @@ public class TabList {
         this.tabsPerPage = tabsPerPage;
     }
 
-    public void init() {
-        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 22, 20, 20, "<", true, pages.get() > 0);
-        this.right = gui.addButton(gui.getGuiLeft() + gui.getXSize() - 22 - 32, gui.getGuiTop() - 22, 20, 20, ">", true, pages.get() > 0);
+    public void init(int width) {
+        this.width = width;
+        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 20, 20, 20, "<", true, pages.get() > 0);
+        this.right = gui.addButton(gui.getGuiLeft() + width - 22, gui.getGuiTop() - 20, 20, 20, ">", true, pages.get() > 0);
     }
 
     public void addListener(ITabListListener listener) {
@@ -74,6 +77,10 @@ public class TabList {
             this.hadTabs = hasTabs;
 
             gui.initGui();
+        }
+
+        if (page.get() > pages.get()) {
+            listeners.forEach(t -> t.onPageChanged(pages.get()));
         }
 
         left.visible = pages.get() > 0;
@@ -144,7 +151,7 @@ public class TabList {
         if (pages.get() > 0) {
             String text = (page.get() + 1) + " / " + (pages.get() + 1);
 
-            gui.drawString((int) ((193F - (float) fontRenderer.getStringWidth(text)) / 2F), -16, text, 0xFFFFFF);
+            gui.drawString((int) ((width - (float) fontRenderer.getStringWidth(text)) / 2F), -14, text, 0xFFFFFF);
         }
     }
 

@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
@@ -23,7 +22,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.UUID;
 
 public class ItemGridHandler implements IItemGridHandler {
     private INetwork network;
@@ -244,25 +245,17 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingCancelRequested(EntityPlayerMP player, int id) {
+    public void onCraftingCancelRequested(EntityPlayerMP player, @Nullable UUID id) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
 
-        ICraftingManager manager = network.getCraftingManager();
-
-        if (id >= 0 && id < manager.getTasks().size()) {
-            manager.cancel(manager.getTasks().get(id));
-        } else if (id == -1) {
-            for (ICraftingTask task : manager.getTasks()) {
-                manager.cancel(task);
-            }
-        }
+        network.getCraftingManager().cancel(id);
 
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
         if (networkItem != null) {
-            networkItem.onAction(id == -1 ? NetworkItemAction.CRAFTING_TASK_ALL_CANCELLED : NetworkItemAction.CRAFTING_TASK_CANCELLED);
+            networkItem.onAction(id == null ? NetworkItemAction.CRAFTING_TASK_ALL_CANCELLED : NetworkItemAction.CRAFTING_TASK_CANCELLED);
         }
     }
 }

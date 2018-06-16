@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Defines the behavior of item grids.
@@ -73,7 +74,7 @@ public interface IItemGridHandler {
      * Called when a player wants to cancel a crafting task.
      *
      * @param player the player that requested the cancel
-     * @param id     the task id, or -1 to cancel all tasks that are in the network currently
+     * @param id     the task id, or null to cancel all tasks that are in the network currently
      */
-    void onCraftingCancelRequested(EntityPlayerMP player, int id);
+    void onCraftingCancelRequested(EntityPlayerMP player, @Nullable UUID id);
 }

@@ -8,17 +8,19 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * The crafting manager handles the storing, updating, adding and deleting of crafting tasks in a network.
  */
 public interface ICraftingManager {
     /**
-     * @return the crafting tasks in this network, do NOT modify this list
+     * @return the crafting tasks in this network, do NOT modify this
      */
-    List<ICraftingTask> getTasks();
+    Collection<ICraftingTask> getTasks();
 
     /**
      * @return named crafting pattern containers
@@ -35,9 +37,9 @@ public interface ICraftingManager {
     /**
      * Cancels a crafting task.
      *
-     * @param task the task to cancel
+     * @param id the id of the task to cancel, or null to cancel all
      */
-    void cancel(@Nonnull ICraftingTask task);
+    void cancel(@Nullable UUID id);
 
     /**
      * Creates a crafting task for a given stack.

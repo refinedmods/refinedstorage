@@ -14,13 +14,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class CraftingMonitorElementItemRender implements ICraftingMonitorElement {
     public static final String ID = "item_render";
 
-    private int taskId;
     private ItemStack stack;
     private int quantity;
     private int offset;
 
-    public CraftingMonitorElementItemRender(int taskId, ItemStack stack, int quantity, int offset) {
-        this.taskId = taskId;
+    public CraftingMonitorElementItemRender(ItemStack stack, int quantity, int offset) {
         this.stack = stack;
         this.quantity = quantity;
         this.offset = offset;
@@ -46,18 +44,12 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
     }
 
     @Override
-    public int getTaskId() {
-        return taskId;
-    }
-
-    @Override
     public String getId() {
         return ID;
     }
 
     @Override
     public void write(ByteBuf buf) {
-        buf.writeInt(taskId);
         ByteBufUtils.writeItemStack(buf, stack);
         buf.writeInt(quantity);
         buf.writeInt(offset);

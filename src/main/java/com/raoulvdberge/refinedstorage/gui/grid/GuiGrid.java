@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
@@ -102,7 +101,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     public void init(int x, int y) {
         ((ContainerGrid) this.inventorySlots).initSlots();
 
-        this.tabs.init();
+        this.tabs.init(xSize - 32);
 
         this.scrollbar = new Scrollbar(174, tabs.getHeight() + getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
@@ -146,7 +145,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
     @Override
     protected int getSideButtonYStart() {
-        return super.getSideButtonYStart() + (!grid.getTabs().isEmpty() ? IGridTab.TAB_HEIGHT - 3 : 0);
+        return super.getSideButtonYStart() + tabs.getHeight();
     }
 
     public IGrid getGrid() {
