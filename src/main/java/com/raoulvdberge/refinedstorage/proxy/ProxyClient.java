@@ -336,7 +336,7 @@ public class ProxyClient extends ProxyCommon {
 
         BlockCable cable = (BlockCable) block;
 
-        IBlockState state = cable.getActualStateForRendering(player.getEntityWorld(), pos);
+        IBlockState state = cable.getActualState(cable.getDefaultState(), player.getEntityWorld(), pos);
 
         if (cable.collisionRayTrace(state, player.getEntityWorld(), pos, RenderUtils.getStart(player), RenderUtils.getEnd(player)) == null) {
             return;
