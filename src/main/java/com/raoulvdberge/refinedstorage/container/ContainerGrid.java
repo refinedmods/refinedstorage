@@ -208,7 +208,9 @@ public class ContainerGrid extends ContainerBase {
             Slot slot = inventorySlots.get(slotIndex);
 
             if (slot.getHasStack()) {
-                if (slot == craftingResultSlot) {
+                if (grid instanceof IPortableGrid && slot.slotNumber == 4) { // Prevent moving disk slot into portable grid itself
+                    return ItemStack.EMPTY;
+                } else if (slot == craftingResultSlot) {
                     grid.onCraftedShift(player);
 
                     sendCraftingSlots();
