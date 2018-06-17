@@ -3,8 +3,14 @@ package com.raoulvdberge.refinedstorage.integration.oc;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.StorageDiskItemDriveWrapper;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskManager;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -12,6 +18,7 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -22,9 +29,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_DAMAGE;
 import static com.raoulvdberge.refinedstorage.api.util.IComparer.COMPARE_NBT;
@@ -324,5 +329,55 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         return new Object[]{node.getNetwork().getItemStorageCache().getList().getStacks()};
+    }
+
+    @Callback(doc = "function():table -- Gets a list of all connected Storage Disks / Blocks in this network.")
+    public Object[] getStorage(final Context context, final Arguments args) {
+        int totalItemStored = 0;
+        int totalItemCapacity = 0;
+        int totalFluidStored = 0;
+        int totalFluidCapacity = 0;
+
+        HashMap<String, HashMap<String, Object>> devices = new HashMap<String, HashMap<String, Object>>();
+
+        IStorageDiskManager sdm = API.instance().getStorageDiskManager(node.getWorld());
+
+        int idd_index = 0;
+        for (IStorage s : node.getNetwork().getItemStorageCache().getStorages()) {
+            if (s instanceof IStorageDisk) {
+                IStorageDisk sd = (IStorageDisk) s;
+                String id = sd.getId();
+                HashMap<String, Object> data = new HashMap();
+
+                data.put("type", "item");
+                data.put("usage", sd.getStored());
+                data.put("capacity", sd.getCapacity());
+
+                totalItemStored += sd.getStored();
+                totalItemCapacity += sd.getCapacity();
+
+                UUID uuid = sdm.getUuid(sd);
+                devices.put(uuid.toString(), data);
+                idd_index++;
+            }
+        }
+
+        HashMap<String, Integer> itemTotals = new HashMap<>();
+        itemTotals.put("usage", totalItemStored);
+        itemTotals.put("capacity", totalItemCapacity);
+
+        HashMap<String, Integer> fluidTotals = new HashMap<>();
+        fluidTotals.put("usage", totalFluidStored);
+        fluidTotals.put("capacity", totalFluidCapacity);
+
+        HashMap<String, Object> totals = new HashMap<>();
+        totals.put("item", itemTotals);
+        totals.put("fluid", fluidTotals);
+
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("total", totals);
+        response.put("devices", devices);
+
+        return new Object[]{response};
     }
 }
