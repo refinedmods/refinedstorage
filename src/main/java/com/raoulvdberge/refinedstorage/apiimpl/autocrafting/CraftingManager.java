@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainLis
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
@@ -14,6 +15,7 @@ import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -22,6 +24,8 @@ import java.util.*;
 
 public class CraftingManager implements ICraftingManager {
     private static final String NBT_TASKS = "Tasks";
+    private static final String NBT_TASK_TYPE = "Type";
+    private static final String NBT_TASK_DATA = "Task";
 
     private TileController network;
 
@@ -32,6 +36,7 @@ public class CraftingManager implements ICraftingManager {
     private Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private List<ICraftingTask> tasksToAdd = new ArrayList<>();
     private List<UUID> tasksToCancel = new ArrayList<>();
+    private NBTTagList tasksToRead;
 
     private Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
@@ -80,7 +85,7 @@ public class CraftingManager implements ICraftingManager {
             return null;
         }
 
-        return factory.create(network, stack, quantity, pattern, null);
+        return factory.create(network, stack, quantity, pattern);
     }
 
     @Override
@@ -91,6 +96,28 @@ public class CraftingManager implements ICraftingManager {
     @Override
     public void update() {
         if (network.canRun()) {
+            if (tasksToRead != null) {
+                for (int i = 0; i < tasksToRead.tagCount(); ++i) {
+                    NBTTagCompound taskTag = tasksToRead.getCompoundTagAt(i);
+
+                    String taskType = taskTag.getString(NBT_TASK_TYPE);
+                    NBTTagCompound taskData = taskTag.getCompoundTag(NBT_TASK_DATA);
+
+                    ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(taskType);
+                    if (factory != null) {
+                        try {
+                            ICraftingTask task = factory.createFromNbt(network, taskData);
+
+                            tasks.put(task.getId(), task);
+                        } catch (CraftingTaskReadException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                this.tasksToRead = null;
+            }
+
             boolean changed = !tasksToCancel.isEmpty() || !tasksToAdd.isEmpty();
 
             for (UUID idToCancel : tasksToCancel) {
@@ -125,8 +152,9 @@ public class CraftingManager implements ICraftingManager {
         }
     }
 
-    @Override // TODO
-    public void readFromNBT(NBTTagCompound tag) {
+    @Override
+    public void readFromNbt(NBTTagCompound tag) {
+        this.tasksToRead = tag.getTagList(NBT_TASKS, Constants.NBT.TAG_COMPOUND);
     }
 
     @Override
@@ -134,7 +162,12 @@ public class CraftingManager implements ICraftingManager {
         NBTTagList list = new NBTTagList();
 
         for (ICraftingTask task : tasks.values()) {
-            list.appendTag(task.writeToNbt(new NBTTagCompound()));
+            NBTTagCompound taskTag = new NBTTagCompound();
+
+            taskTag.setString(NBT_TASK_TYPE, task.getPattern().getId());
+            taskTag.setTag(NBT_TASK_DATA, task.writeToNbt(new NBTTagCompound()));
+
+            list.appendTag(taskTag);
         }
 
         tag.setTag(NBT_TASKS, list);

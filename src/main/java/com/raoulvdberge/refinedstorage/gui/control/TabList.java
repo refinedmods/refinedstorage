@@ -45,8 +45,8 @@ public class TabList {
 
     public void init(int width) {
         this.width = width;
-        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 20, 20, 20, "<", true, pages.get() > 0);
-        this.right = gui.addButton(gui.getGuiLeft() + width - 22, gui.getGuiTop() - 20, 20, 20, ">", true, pages.get() > 0);
+        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 22, 20, 20, "<", true, pages.get() > 0);
+        this.right = gui.addButton(gui.getGuiLeft() + width - 22, gui.getGuiTop() - 22, 20, 20, ">", true, pages.get() > 0);
     }
 
     public void addListener(ITabListListener listener) {
@@ -151,7 +151,7 @@ public class TabList {
         if (pages.get() > 0) {
             String text = (page.get() + 1) + " / " + (pages.get() + 1);
 
-            gui.drawString((int) ((width - (float) fontRenderer.getStringWidth(text)) / 2F), -14, text, 0xFFFFFF);
+            gui.drawString((int) ((width - (float) fontRenderer.getStringWidth(text)) / 2F), -16, text, 0xFFFFFF);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -30,7 +31,7 @@ public class CraftingExtractor {
         }
     }
 
-    public CraftingExtractor(INetwork network, NBTTagList tag, boolean processing) {
+    public CraftingExtractor(INetwork network, NBTTagList tag, boolean processing) throws CraftingTaskReadException {
         this.network = network;
         this.processing = processing;
 
@@ -40,6 +41,11 @@ public class CraftingExtractor {
             NBTTagCompound itemTag = tag.getCompoundTagAt(i);
 
             ItemStack stack = new ItemStack(itemTag.getCompoundTag(NBT_ITEM));
+
+            if (stack.isEmpty()) {
+                throw new CraftingTaskReadException("Extractor stack is empty");
+            }
+
             CraftingExtractorItemStatus status = CraftingExtractorItemStatus.values()[itemTag.getInteger(NBT_STATUS)];
 
             this.items.add(stack);

@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
@@ -29,6 +30,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -67,6 +69,39 @@ public class CraftingTask implements ICraftingTask {
         this.requested = requested;
         this.quantity = quantity;
         this.pattern = pattern;
+    }
+
+    public CraftingTask(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
+        this.network = network;
+
+        this.requested = new ItemStack(tag.getCompoundTag(NBT_REQUESTED));
+        if (requested.isEmpty()) {
+            throw new CraftingTaskReadException("Requested item doesn't exist anymore");
+        }
+
+        this.quantity = tag.getInteger(NBT_QUANTITY);
+        this.pattern = readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
+        this.inserter = new CraftingInserter(network, tag.getTagList(NBT_INSERTER, Constants.NBT.TAG_COMPOUND));
+        this.ticks = tag.getInteger(NBT_TICKS);
+        this.id = tag.getUniqueId(NBT_ID);
+
+        NBTTagList steps = tag.getTagList(NBT_STEPS, Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < steps.tagCount(); ++i) {
+            NBTTagCompound stepTag = steps.getCompoundTagAt(i);
+
+            this.steps.add(CraftingStep.readFromNbt(network, inserter, stepTag));
+        }
+
+        NBTTagList missing = tag.getTagList(NBT_MISSING, Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < missing.tagCount(); ++i) {
+            ItemStack missingItem = new ItemStack(missing.getCompoundTagAt(i));
+
+            if (missingItem.isEmpty()) {
+                throw new CraftingTaskReadException("Missing item is empty");
+            }
+
+            this.missing.add(missingItem);
+        }
     }
 
     @Override
@@ -534,8 +569,7 @@ public class CraftingTask implements ICraftingTask {
         return tag;
     }
 
-    @Nullable
-    public static ICraftingPattern readPatternFromNbt(NBTTagCompound tag, World world) {
+    public static ICraftingPattern readPatternFromNbt(NBTTagCompound tag, World world) throws CraftingTaskReadException {
         BlockPos containerPos = BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER_POS));
 
         INetworkNode node = API.instance().getNetworkNodeManager(world).getNode(containerPos);
@@ -545,9 +579,11 @@ public class CraftingTask implements ICraftingTask {
 
             if (stack.getItem() instanceof ICraftingPatternProvider) {
                 return ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) node);
+            } else {
+                throw new CraftingTaskReadException("Pattern stack is not a crafting pattern provider");
             }
+        } else {
+            throw new CraftingTaskReadException("Crafting pattern container doesn't exist anymore");
         }
-
-        return null;
     }
 }

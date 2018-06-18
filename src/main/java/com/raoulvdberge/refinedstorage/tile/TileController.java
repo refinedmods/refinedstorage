@@ -482,7 +482,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         redstoneMode = RedstoneMode.read(tag);
 
-        craftingManager.readFromNBT(tag);
+        craftingManager.readFromNbt(tag);
 
         readerWriterManager.readFromNBT(tag);
 

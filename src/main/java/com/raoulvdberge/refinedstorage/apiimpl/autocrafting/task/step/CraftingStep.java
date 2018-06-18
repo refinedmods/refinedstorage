@@ -1,7 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter.CraftingInserter;
 import net.minecraft.nbt.NBTTagCompound;
 
 public abstract class CraftingStep {
@@ -42,5 +45,30 @@ public abstract class CraftingStep {
         tag.setString(NBT_TYPE, getType());
 
         return tag;
+    }
+
+    public static CraftingStep readFromNbt(INetwork network, CraftingInserter inserter, NBTTagCompound tag) throws CraftingTaskReadException {
+        ICraftingPattern pattern = CraftingTask.readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
+        boolean completed = tag.getBoolean(NBT_COMPLETED);
+        String type = tag.getString(NBT_TYPE);
+
+        CraftingStep step;
+
+        switch (type) {
+            case CraftingStepCraft.TYPE:
+                step = new CraftingStepCraft(pattern, inserter, network, tag);
+                break;
+            case CraftingStepProcess.TYPE:
+                step = new CraftingStepProcess(pattern, network, tag);
+                break;
+            default:
+                throw new CraftingTaskReadException("Unknown crafting step type");
+        }
+
+        if (completed) {
+            step.setCompleted();
+        }
+
+        return step;
     }
 }
