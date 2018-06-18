@@ -90,7 +90,7 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
         tag.setInteger(NBT_ENERGY_STORED, storage.getEnergyStored());
 
         return tag;

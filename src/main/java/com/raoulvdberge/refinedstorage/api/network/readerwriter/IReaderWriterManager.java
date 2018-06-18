@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 /**
  * A manager for the reader writer.
@@ -36,24 +36,31 @@ public interface IReaderWriterManager {
     void removeChannel(String name);
 
     /**
-     * Sends a channel update to all players watching a reader or writer.
+     * @return a collection of channels
      */
-    void sendUpdate();
+    Collection<String> getChannels();
 
     /**
-     * Sends a channel update to a specific player.
+     * Adds a listener.
      *
-     * @param player the player to send to
+     * @param listener the listener
      */
-    void sendUpdateTo(EntityPlayerMP player);
+    void addListener(IReaderWriterListener listener);
+
+    /**
+     * Removes a listener.
+     *
+     * @param listener the listener
+     */
+    void removeListener(IReaderWriterListener listener);
 
     /**
      * @param tag the tag to write to
      */
-    void writeToNBT(NBTTagCompound tag);
+    void writeToNbt(NBTTagCompound tag);
 
     /**
      * @param tag the tag to read from
      */
-    void readFromNBT(NBTTagCompound tag);
+    void readFromNbt(NBTTagCompound tag);
 }

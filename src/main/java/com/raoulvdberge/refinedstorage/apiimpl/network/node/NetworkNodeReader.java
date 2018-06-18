@@ -4,8 +4,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -82,11 +80,5 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
         tag.setString(NBT_CHANNEL, channel);
 
         return tag;
-    }
-
-    public void onOpened(EntityPlayer entity) {
-        if (network != null) {
-            network.getReaderWriterManager().sendUpdateTo((EntityPlayerMP) entity);
-        }
     }
 }

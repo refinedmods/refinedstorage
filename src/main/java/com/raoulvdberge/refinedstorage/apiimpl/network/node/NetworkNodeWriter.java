@@ -7,8 +7,6 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHan
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -114,11 +112,5 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
         tag.setString(NBT_CHANNEL, channel);
 
         return tag;
-    }
-
-    public void onOpened(EntityPlayer entity) {
-        if (network != null) {
-            network.getReaderWriterManager().sendUpdateTo((EntityPlayerMP) entity);
-        }
     }
 }

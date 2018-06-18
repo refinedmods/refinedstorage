@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class MessageReaderWriterUpdate implements IMessage, IMessageHandler<MessageReaderWriterUpdate, IMessage> {
@@ -17,8 +18,8 @@ public class MessageReaderWriterUpdate implements IMessage, IMessageHandler<Mess
     public MessageReaderWriterUpdate() {
     }
 
-    public MessageReaderWriterUpdate(List<String> channels) {
-        this.channels = channels;
+    public MessageReaderWriterUpdate(Collection<String> channels) {
+        this.channels = new ArrayList<>(channels);
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterListener;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
@@ -131,7 +132,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
     private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
 
-    private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this, this::markDirty);
+    private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this);
 
     private EnergyForge energy = new EnergyForge(RS.INSTANCE.config.controllerCapacity);
 
@@ -150,6 +151,17 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         dataManager.addWatchedParameter(ENERGY_STORED);
         dataManager.addParameter(ENERGY_CAPACITY);
         dataManager.addParameter(NODES);
+
+        readerWriterManager.addListener(new IReaderWriterListener() {
+            @Override
+            public void onAttached() {
+            }
+
+            @Override
+            public void onChanged() {
+                markDirty();
+            }
+        });
     }
 
     public EnergyForge getEnergy() {
@@ -484,7 +496,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         craftingManager.readFromNbt(tag);
 
-        readerWriterManager.readFromNBT(tag);
+        readerWriterManager.readFromNbt(tag);
 
         if (tag.hasKey(NBT_ITEM_STORAGE_TRACKER)) {
             itemStorageTracker.readFromNBT(tag.getTagList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
@@ -505,7 +517,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         craftingManager.writeToNBT(tag);
 
-        readerWriterManager.writeToNBT(tag);
+        readerWriterManager.writeToNbt(tag);
 
         tag.setTag(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNBT());
         tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNBT());

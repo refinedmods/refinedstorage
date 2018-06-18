@@ -75,7 +75,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
         StackUtils.writeItems(items, 0, tag);
 
         return tag;

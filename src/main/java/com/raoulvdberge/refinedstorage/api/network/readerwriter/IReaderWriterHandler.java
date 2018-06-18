@@ -59,7 +59,7 @@ public interface IReaderWriterHandler {
      * @param tag the tag to write to
      * @return the written tag
      */
-    NBTTagCompound writeToNBT(NBTTagCompound tag);
+    NBTTagCompound writeToNbt(NBTTagCompound tag);
 
     /**
      * @return the id of this writer, as assigned to the {@link IReaderWriterHandlerRegistry}

@@ -74,7 +74,7 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
         tank.writeToNBT(tag);
 
         return tag;

@@ -27,7 +27,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
             ((IGuiReaderWriter) t.getNode()).setChannel(v);
 
             t.getNode().markDirty();
-        }, (initial, p) -> GuiBase.executeLater(GuiReaderWriter.class, readerWriter -> readerWriter.updateSelection(p)));
+        }, (initial, p) -> GuiBase.executeLater(GuiReaderWriter.class, readerWriter -> readerWriter.setCurrentChannel(p)));
     }
 
     public static final TileDataParameter<String, TileReader> CHANNEL = createChannelParameter();
