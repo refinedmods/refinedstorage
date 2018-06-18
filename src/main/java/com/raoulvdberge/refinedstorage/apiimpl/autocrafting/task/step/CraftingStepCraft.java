@@ -5,11 +5,16 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractor;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter.CraftingInserter;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 
 import java.util.List;
 
 public class CraftingStepCraft extends CraftingStep {
+    private static final String NBT_EXTRACTOR = "Extractor";
+    private static final String NBT_TOOK = "Took";
+
     private CraftingInserter inserter;
     private CraftingExtractor extractor;
 
@@ -49,6 +54,28 @@ public class CraftingStepCraft extends CraftingStep {
         }
 
         return allExtracted;
+    }
+
+    @Override
+    public String getType() {
+        return "craft";
+    }
+
+    @Override
+    public NBTTagCompound writeToNbt() {
+        NBTTagCompound tag = super.writeToNbt();
+
+        tag.setTag(NBT_EXTRACTOR, extractor.writeToNbt());
+
+        NBTTagList took = new NBTTagList();
+
+        for (ItemStack stack : this.took) {
+            took.appendTag(stack.serializeNBT());
+        }
+
+        tag.setTag(NBT_TOOK, took);
+
+        return tag;
     }
 
     public CraftingExtractor getExtractor() {

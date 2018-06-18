@@ -1,8 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainList;
+import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
@@ -10,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorTy
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementColor;
@@ -26,7 +25,10 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingSt
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingStepProcess;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -34,6 +36,15 @@ import java.util.*;
 
 public class CraftingTask implements ICraftingTask {
     private static final long CALCULATION_TIMEOUT_MS = 5000;
+
+    private static final String NBT_REQUESTED = "Requested";
+    private static final String NBT_QUANTITY = "Quantity";
+    private static final String NBT_PATTERN = "Pattern";
+    private static final String NBT_STEPS = "Steps";
+    private static final String NBT_INSERTER = "Inserter";
+    private static final String NBT_TICKS = "Ticks";
+    private static final String NBT_ID = "Id";
+    private static final String NBT_MISSING = "Missing";
 
     private INetwork network;
     private ItemStack requested;
@@ -297,11 +308,6 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        return tag;
-    }
-
-    @Override
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
@@ -474,6 +480,32 @@ public class CraftingTask implements ICraftingTask {
         return id;
     }
 
+    @Override
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
+        tag.setTag(NBT_REQUESTED, requested.serializeNBT());
+        tag.setInteger(NBT_QUANTITY, quantity);
+        tag.setTag(NBT_PATTERN, writePatternToNbt(pattern));
+        tag.setTag(NBT_INSERTER, inserter.writeToNbt());
+        tag.setInteger(NBT_TICKS, ticks);
+        tag.setUniqueId(NBT_ID, id);
+
+        NBTTagList steps = new NBTTagList();
+        for (CraftingStep step : this.steps) {
+            steps.appendTag(step.writeToNbt());
+        }
+
+        tag.setTag(NBT_STEPS, steps);
+
+        NBTTagList missing = new NBTTagList();
+        for (ItemStack missingItem : this.missing.getStacks()) {
+            missing.appendTag(missingItem.serializeNBT());
+        }
+
+        tag.setTag(NBT_MISSING, missing);
+
+        return tag;
+    }
+
     private int getTickInterval(int speedUpgrades) {
         switch (speedUpgrades) {
             case 1:
@@ -488,5 +520,34 @@ public class CraftingTask implements ICraftingTask {
             default:
                 return 10;
         }
+    }
+
+    private static final String NBT_PATTERN_STACK = "Stack";
+    private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
+
+    public static NBTTagCompound writePatternToNbt(ICraftingPattern pattern) {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        tag.setTag(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
+        tag.setLong(NBT_PATTERN_CONTAINER_POS, pattern.getContainer().getPosition().toLong());
+
+        return tag;
+    }
+
+    @Nullable
+    public static ICraftingPattern readPatternFromNbt(NBTTagCompound tag, World world) {
+        BlockPos containerPos = BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER_POS));
+
+        INetworkNode node = API.instance().getNetworkNodeManager(world).getNode(containerPos);
+
+        if (node instanceof ICraftingPatternContainer) {
+            ItemStack stack = new ItemStack(tag.getCompoundTag(NBT_PATTERN_STACK));
+
+            if (stack.getItem() instanceof ICraftingPatternProvider) {
+                return ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) node);
+            }
+        }
+
+        return null;
     }
 }

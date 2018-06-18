@@ -60,7 +60,7 @@ public interface ICraftingTask {
      * @param tag the tag
      * @return the written tag
      */
-    NBTTagCompound writeToNBT(NBTTagCompound tag);
+    NBTTagCompound writeToNbt(NBTTagCompound tag);
 
     /**
      * {@link ICraftingTask#calculate()} must be run before this!

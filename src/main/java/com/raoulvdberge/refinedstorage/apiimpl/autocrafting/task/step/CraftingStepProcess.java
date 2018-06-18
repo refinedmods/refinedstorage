@@ -6,10 +6,15 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 import java.util.List;
 
 public class CraftingStepProcess extends CraftingStep {
+    private static final String NBT_EXTRACTOR = "Extractor";
+    private static final String NBT_TO_RECEIVE = "ToReceive";
+
     private CraftingExtractor extractor;
     private IStackList<ItemStack> itemsToReceive = API.instance().createItemStackList();
 
@@ -58,6 +63,28 @@ public class CraftingStepProcess extends CraftingStep {
         }
 
         return itemsToReceive.isEmpty();
+    }
+
+    @Override
+    public String getType() {
+        return "process";
+    }
+
+    @Override
+    public NBTTagCompound writeToNbt() {
+        NBTTagCompound tag = super.writeToNbt();
+
+        tag.setTag(NBT_EXTRACTOR, extractor.writeToNbt());
+
+        NBTTagList toReceive = new NBTTagList();
+
+        for (ItemStack toReceiveStack : itemsToReceive.getStacks()) {
+            toReceive.appendTag(toReceiveStack.serializeNBT());
+        }
+
+        tag.setTag(NBT_TO_RECEIVE, toReceive);
+
+        return tag;
     }
 
     public CraftingExtractor getExtractor() {

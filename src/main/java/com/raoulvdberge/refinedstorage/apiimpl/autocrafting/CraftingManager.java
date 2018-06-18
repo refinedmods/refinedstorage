@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -20,6 +21,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class CraftingManager implements ICraftingManager {
+    private static final String NBT_TASKS = "Tasks";
+
     private TileController network;
 
     private Map<String, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
@@ -115,6 +118,10 @@ public class CraftingManager implements ICraftingManager {
             if (changed || anyFinished) {
                 onTaskChanged();
             }
+
+            if (!tasks.isEmpty()) {
+                network.markDirty();
+            }
         }
     }
 
@@ -122,8 +129,16 @@ public class CraftingManager implements ICraftingManager {
     public void readFromNBT(NBTTagCompound tag) {
     }
 
-    @Override // TODO
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        NBTTagList list = new NBTTagList();
+
+        for (ICraftingTask task : tasks.values()) {
+            list.appendTag(task.writeToNbt(new NBTTagCompound()));
+        }
+
+        tag.setTag(NBT_TASKS, list);
+
         return tag;
     }
 
