@@ -50,6 +50,7 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
+    @Nullable
     public ICraftingTask getTask(UUID id) {
         return tasks.get(id);
     }

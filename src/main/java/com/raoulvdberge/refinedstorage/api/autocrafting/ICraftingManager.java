@@ -28,6 +28,7 @@ public interface ICraftingManager {
      * @param id the id
      * @return the task, or null if no task was found for the given id
      */
+    @Nullable
     ICraftingTask getTask(UUID id);
 
     /**
