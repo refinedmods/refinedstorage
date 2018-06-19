@@ -196,12 +196,14 @@ public class CraftingManager implements ICraftingManager {
     @Nullable
     public ICraftingTask schedule(ItemStack stack, int toSchedule) {
         for (ICraftingTask task : getTasks()) {
-            for (ItemStack output : task.getPattern().getOutputs()) {
-                if (API.instance().getComparer().isEqualNoQuantity(output, stack)) {
-                    toSchedule -= output.getCount() * task.getQuantity();
-                }
+            if (API.instance().getComparer().isEqualNoQuantity(task.getRequested(), stack)) {
+                toSchedule -= task.getQuantity();
             }
         }
+
+        ItemStack existing = network.getItemStorageCache().getList().get(stack);
+
+        toSchedule -= existing == null ? 0 : existing.getCount();
 
         if (toSchedule > 0) {
             ICraftingTask task = create(stack, toSchedule);
