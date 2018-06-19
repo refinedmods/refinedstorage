@@ -22,11 +22,14 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public static final String ID = "interface";
 
     private static final String NBT_COMPARE = "Compare";
+    private static final int NUM_IMPORT_SLOTS = 9;
+    private static final int NUM_EXPORT_SLOTS = 9;
+    private static final int[] NUM_ITEMS_UPGRADE = new int[]{1, 2, 4, 8, 16};
 
-    private ItemHandlerBase importItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase importItems = new ItemHandlerBase(NUM_IMPORT_SLOTS, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerBase exportFilterItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerBase exportItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase exportFilterItems = new ItemHandlerBase(NUM_EXPORT_SLOTS, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase exportItems = new ItemHandlerBase(NUM_EXPORT_SLOTS, new ItemHandlerListenerNetworkNode(this));
 
     private IItemHandler items = new ItemHandlerProxy(importItems, exportItems);
 
@@ -45,6 +48,21 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         return RS.INSTANCE.config.interfaceUsage + upgrades.getEnergyUsage();
     }
 
+    private int importFromCurrentSlot(int maxSize) {
+        ItemStack slot = importItems.getStackInSlot(currentSlot);
+
+        if (slot.isEmpty()) {
+            return 0;
+        }
+
+        int size = Math.min(slot.getCount(), maxSize);
+        ItemStack remainder = network.insertItemTracked(slot, size);
+        int left = (remainder == null) ? 0 : remainder.getCount();
+        importItems.extractItem(currentSlot, size - left, false);
+
+        return size - left;
+    }
+
     @Override
     public void update() {
         super.update();
@@ -53,29 +71,35 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
             return;
         }
 
-        if (currentSlot >= importItems.getSlots()) {
-            currentSlot = 0;
+        int startSlot = currentSlot;
+
+        if (upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK)) {
+            // import entire stacks at once
+            // 0/1/2/3 speed upgrades = 1/4/7/9 stacks
+            int maxStacks = Math.min(upgrades.getSpeed(1, -3), 9);
+
+            // extract `maxStacks` stacks or until we've reached the starting slot
+            int stacks = 0;
+            do {
+                if (importFromCurrentSlot(Integer.MAX_VALUE) > 0) {
+                    stacks++;
+                }
+                currentSlot = (currentSlot + 1) % NUM_IMPORT_SLOTS;
+            } while (currentSlot != startSlot && stacks < maxStacks);
+        } else {
+            // import up to `numItems` items total
+            int numItems = NUM_ITEMS_UPGRADE[upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED)];
+
+            do {
+                numItems -= importFromCurrentSlot(numItems);
+                if (numItems == 0) {
+                  break;
+                }
+                currentSlot = (currentSlot + 1) % NUM_IMPORT_SLOTS;
+            } while (currentSlot != startSlot);
         }
 
-        ItemStack slot = importItems.getStackInSlot(currentSlot);
-
-        if (slot.isEmpty()) {
-            currentSlot++;
-        } else if (ticks % upgrades.getSpeed() == 0) {
-            int size = Math.min(slot.getCount(), upgrades.getItemInteractCount());
-
-            ItemStack remainder = network.insertItemTracked(slot, size);
-
-            if (remainder == null) {
-                importItems.extractItem(currentSlot, size, false);
-            } else if (size - remainder.getCount() > 0) {
-                importItems.extractItem(currentSlot, size - remainder.getCount(), false);
-
-                currentSlot++;
-            }
-        }
-
-        for (int i = 0; i < 9; ++i) {
+        for (int i = 0; i < NUM_EXPORT_SLOTS; ++i) {
             ItemStack wanted = exportFilterItems.getStackInSlot(i);
             ItemStack got = exportItems.getStackInSlot(i);
 
