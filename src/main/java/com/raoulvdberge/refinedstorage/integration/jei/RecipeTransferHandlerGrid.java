@@ -31,9 +31,9 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
 
     @Override
     public IRecipeTransferError transferRecipe(Container container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
-        LAST_TRANSFER = System.currentTimeMillis();
-
         if (doTransfer) {
+            LAST_TRANSFER = System.currentTimeMillis();
+
             IGrid grid = ((ContainerGrid) container).getGrid();
 
             if (grid.getType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
