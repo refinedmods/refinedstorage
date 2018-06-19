@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -38,6 +39,12 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     @Nullable
     public IStorageDisk get(UUID id) {
         return disks.get(id);
+    }
+
+    @Nullable
+    public UUID getUuid(IStorageDisk disk) {
+        // Return random UUID for now
+        return UUID.randomUUID();
     }
 
     @Nullable
