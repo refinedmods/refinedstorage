@@ -19,6 +19,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Fixed bug where pattern was recipe pattern was creatable when there was no recipe output (raoulvdberge)
 - Fixed a crash when breaking an Ender IO conduit with the Destructor (raoulvdberge)
 - Fixed bug where storage disks in Portable Grids could be moved into themselves (raoulvdberge)
+- Fixed the Crafter crashing when opening it while connected to a Primal Tech Grill or Kiln (raoulvdberge)
 - Added a missing config option for Crafter Manager energy usage (raoulvdberge)
 - If an Interface is configured to expose the entire network storage (by configuring no export slots), it will no longer expose the entire RS storage, due to performance issues (raoulvdberge)
 - The Portable Grid no longer exposes a inventory for crossmod interaction, due to performance issues (raoulvdberge)
