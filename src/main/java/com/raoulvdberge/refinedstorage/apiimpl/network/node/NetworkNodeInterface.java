@@ -76,7 +76,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         if (upgrades.hasUpgrade(ItemUpgrade.TYPE_STACK)) {
             // import entire stacks at once
             // 0/1/2/3 speed upgrades = 1/4/7/9 stacks
-            int maxStacks = Math.min(upgrades.getSpeed(2, -2), 9);
+            int maxStacks = Math.min(upgrades.getSpeed(1, -3), 9);
 
             // extract `maxStacks` stacks or until we've reached the starting slot
             int stacks = 0;
