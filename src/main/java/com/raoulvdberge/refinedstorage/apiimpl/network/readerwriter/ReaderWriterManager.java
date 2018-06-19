@@ -105,7 +105,7 @@ public class ReaderWriterManager implements IReaderWriterManager {
 
                 IReaderWriterChannel channel = API.instance().createReaderWriterChannel(name, network);
 
-                channel.readFromNBT(channelTag);
+                channel.readFromNbt(channelTag);
 
                 channels.put(name, channel);
             }

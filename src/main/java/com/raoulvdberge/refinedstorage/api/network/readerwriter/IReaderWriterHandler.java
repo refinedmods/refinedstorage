@@ -54,6 +54,11 @@ public interface IReaderWriterHandler {
     <T> T getCapabilityWriter(IWriter writer, Capability<T> capability);
 
     /**
+     * @return a dummy capability that does nothing, for use client side
+     */
+    Object getNullCapability();
+
+    /**
      * Writes this reader writer handler to NBT.
      *
      * @param tag the tag to write to

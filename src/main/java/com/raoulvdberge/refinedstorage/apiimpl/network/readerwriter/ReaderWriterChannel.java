@@ -54,7 +54,7 @@ public class ReaderWriterChannel implements IReaderWriterChannel {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
+    public void readFromNbt(NBTTagCompound tag) {
         for (IReaderWriterHandler handler : handlers) {
             String id = String.format(NBT_HANDLER, handler.getId());
 
