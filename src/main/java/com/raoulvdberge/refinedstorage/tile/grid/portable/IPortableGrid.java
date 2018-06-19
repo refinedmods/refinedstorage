@@ -10,6 +10,16 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 
 public interface IPortableGrid {
+    interface IPortableGridRenderInfo {
+        int getStored();
+
+        int getCapacity();
+
+        boolean hasStorage();
+
+        boolean isActive();
+    }
+
     IStorageCache<ItemStack> getCache();
 
     @Nullable

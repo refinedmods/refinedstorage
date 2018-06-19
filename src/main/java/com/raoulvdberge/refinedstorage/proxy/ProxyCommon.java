@@ -25,8 +25,13 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipeLoader;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
+import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
+import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiHandler;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
@@ -46,9 +51,12 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
@@ -88,8 +96,8 @@ public class ProxyCommon {
 
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
 
-        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementItemRender.ID, buf -> new CraftingMonitorElementItemRender(buf.readInt(), ByteBufUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
-        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementFluidRender.ID, buf -> new CraftingMonitorElementFluidRender(buf.readInt(), StackUtils.readFluidStack(buf).getRight(), buf.readInt()));
+        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementItemRender.ID, buf -> new CraftingMonitorElementItemRender(ByteBufUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
+        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementFluidRender.ID, buf -> new CraftingMonitorElementFluidRender(StackUtils.readFluidStack(buf).getRight(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementText.ID, buf -> new CraftingMonitorElementText(ByteBufUtils.readUTF8String(buf), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementColor.ID, buf -> {
             int color = buf.readInt();
@@ -102,6 +110,34 @@ public class ProxyCommon {
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementItemStack.ID, CraftingPreviewElementItemStack::fromByteBuf);
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementFluidStack.ID, CraftingPreviewElementFluidStack::fromByteBuf);
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementError.ID, CraftingPreviewElementError::fromByteBuf);
+
+        API.instance().addPatternRenderHandler(pattern -> GuiBase.isShiftKeyDown());
+        API.instance().addPatternRenderHandler(pattern -> {
+            Container container = Minecraft.getMinecraft().player.openContainer;
+
+            if (container instanceof ContainerCrafterManager) {
+                for (Slot slot : container.inventorySlots) {
+                    if (slot instanceof SlotCrafterManager && slot.getStack() == pattern) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
+        API.instance().addPatternRenderHandler(pattern -> {
+            Container container = Minecraft.getMinecraft().player.openContainer;
+
+            if (container instanceof ContainerCrafter) {
+                for (int i = 0; i < 9; ++i) {
+                    if (container.getSlot(i).getStack() == pattern) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
 
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerItems.ID, ReaderWriterHandlerItems::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerFluids.ID, ReaderWriterHandlerFluids::new);
@@ -142,7 +178,7 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageWirelessFluidGridSettingsUpdate.class, MessageWirelessFluidGridSettingsUpdate.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageCrafterManagerSlotSizes.class, MessageCrafterManagerSlotSizes.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageCrafterManagerRequestSlotData.class, MessageCrafterManagerRequestSlotData.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageWirelessCraftingMonitorSize.class, MessageWirelessCraftingMonitorSize.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageWirelessCraftingMonitorSettings.class, MessageWirelessCraftingMonitorSettings.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeRequest.class, MessageStorageDiskSizeRequest.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeResponse.class, MessageStorageDiskSizeResponse.class, id++, Side.CLIENT);
 
@@ -290,6 +326,17 @@ public class ProxyCommon {
     public void onHarvestCheck(PlayerEvent.HarvestCheck e) {
         if (e.getTargetBlock().getBlock() instanceof BlockBase) {
             e.setCanHarvest(true); // Allow break without tool
+        }
+    }
+
+    @SubscribeEvent
+    public void fixItemMappings(RegistryEvent.MissingMappings<Item> e) {
+        OneSixMigrationHelper.removalHook();
+
+        for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
+            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("wrench")) {
+                missing.ignore();
+            }
         }
     }
 

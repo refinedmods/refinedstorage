@@ -22,6 +22,30 @@ import java.util.List;
 public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     public static final String ID = "fluids";
 
+    private static final IFluidHandler NULL_CAP = new IFluidHandler() {
+        @Override
+        public IFluidTankProperties[] getTankProperties() {
+            return new IFluidTankProperties[0];
+        }
+
+        @Override
+        public int fill(FluidStack resource, boolean doFill) {
+            return 0;
+        }
+
+        @Nullable
+        @Override
+        public FluidStack drain(FluidStack resource, boolean doDrain) {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public FluidStack drain(int maxDrain, boolean doDrain) {
+            return null;
+        }
+    };
+
     private FluidTank tank;
     private FluidTankReaderWriter tankReader, tankWriter;
 
@@ -74,7 +98,12 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public Object getNullCapability() {
+        return NULL_CAP;
+    }
+
+    @Override
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
         tank.writeToNBT(tag);
 
         return tag;

@@ -61,7 +61,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext {
+public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext, IPortableGrid.IPortableGridRenderInfo {
     public static final TileDataParameter<Integer, TilePortableGrid> REDSTONE_MODE = RedstoneMode.createParameter();
     public static final TileDataParameter<Integer, TilePortableGrid> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energyStorage.getEnergyStored());
     public static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingDirection, (t, v) -> {
@@ -477,6 +477,21 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
+    public int getStored() {
+        return storage != null ? storage.getStored() : 0;
+    }
+
+    @Override
+    public int getCapacity() {
+        return storage != null ? storage.getCapacity() : 0;
+    }
+
+    @Override
+    public boolean hasStorage() {
+        return storage != null;
+    }
+
+    @Override
     public int getEnergy() {
         if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE) {
             return energyStorage.getEnergyStored();
@@ -628,21 +643,18 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         markDirty();
     }
 
-    public static PortableGridDiskState getDiskState(IPortableGrid portableGrid) {
-        if (portableGrid.getStorage() == null) {
+    public static PortableGridDiskState getDiskState(IPortableGridRenderInfo renderInfo) {
+        if (!renderInfo.hasStorage()) {
             return PortableGridDiskState.NONE;
         }
 
-        if (portableGrid.getEnergy() == 0) {
+        if (!renderInfo.isActive()) {
             return PortableGridDiskState.DISCONNECTED;
         }
 
-        int stored = portableGrid.getStorage().getStored();
-        int capacity = portableGrid.getStorage().getCapacity();
-
-        if (stored == capacity) {
+        if (renderInfo.getStored() == renderInfo.getCapacity()) {
             return PortableGridDiskState.FULL;
-        } else if ((int) ((float) stored / (float) capacity * 100F) >= 85) {
+        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= 85) {
             return PortableGridDiskState.NEAR_CAPACITY;
         } else {
             return PortableGridDiskState.NORMAL;

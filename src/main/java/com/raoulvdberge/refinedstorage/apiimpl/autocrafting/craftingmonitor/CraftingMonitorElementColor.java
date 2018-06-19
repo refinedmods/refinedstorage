@@ -41,11 +41,6 @@ public class CraftingMonitorElementColor implements ICraftingMonitorElement {
     }
 
     @Override
-    public int getTaskId() {
-        return base.getTaskId();
-    }
-
-    @Override
     public String getId() {
         return ID;
     }

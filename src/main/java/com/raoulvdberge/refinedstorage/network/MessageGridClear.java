@@ -47,8 +47,6 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
             } else if (grid.getType() == GridType.PATTERN) {
                 ((NetworkNodeGrid) grid).clearMatrix();
             }
-
-            ((NetworkNodeGrid) grid).sendSlotUpdate(false);
         }
     }
 }

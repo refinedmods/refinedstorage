@@ -60,7 +60,12 @@ public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public Object getNullCapability() {
+        return null;
+    }
+
+    @Override
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
         return tag;
     }
 

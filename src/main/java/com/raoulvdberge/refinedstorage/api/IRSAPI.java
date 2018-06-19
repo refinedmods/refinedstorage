@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
@@ -18,6 +19,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +30,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Represents a Refined Storage API implementation.
@@ -148,6 +151,7 @@ public interface IRSAPI {
      * @param capacity the capacity
      * @return a storage disk
      */
+    @Nonnull
     IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity);
 
     /**
@@ -155,7 +159,24 @@ public interface IRSAPI {
      * @param capacity the capacity in mB
      * @return a fluid storage disk
      */
+    @Nonnull
     IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity);
+
+    /**
+     * @return the 1.6.x migration helper
+     */
+    @Nonnull
+    IOneSixMigrationHelper getOneSixMigrationHelper();
+
+    /**
+     * @param renderHandler the render handler to add
+     */
+    void addPatternRenderHandler(ICraftingPatternRenderHandler renderHandler);
+
+    /**
+     * @return a list of pattern render handlers
+     */
+    List<ICraftingPatternRenderHandler> getPatternRenderHandlers();
 
     /**
      * Opens a wireless grid for the given player.

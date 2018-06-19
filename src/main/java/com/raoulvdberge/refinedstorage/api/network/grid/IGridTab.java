@@ -9,6 +9,9 @@ import java.util.List;
  * Represents a grid tab.
  */
 public interface IGridTab {
+    int TAB_WIDTH = 28;
+    int TAB_HEIGHT = 31;
+
     /**
      * @return the filters
      */

@@ -21,14 +21,6 @@ public interface ICraftingMonitorElement {
     void draw(int x, int y, IElementDrawers drawers, boolean selected);
 
     /**
-     * Returns the position of the corresponding task in the crafting task list.
-     * Used for cancelling tasks.
-     *
-     * @return the id, or -1 if no task is associated with this element
-     */
-    int getTaskId();
-
-    /**
      * Returns the id of this element, used for serialization and deserialization over the network.
      *
      * @return the id

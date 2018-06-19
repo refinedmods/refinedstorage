@@ -15,6 +15,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class ItemGridHandlerPortable implements IItemGridHandler {
     private IPortableGrid portableGrid;
@@ -165,7 +166,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingCancelRequested(EntityPlayerMP player, int id) {
+    public void onCraftingCancelRequested(EntityPlayerMP player, @Nullable UUID id) {
         // NO OP
     }
 }

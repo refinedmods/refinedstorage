@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -26,6 +27,8 @@ import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -102,7 +105,13 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 IBlockState frontBlockState = world.getBlockState(front);
                 Block frontBlock = frontBlockState.getBlock();
 
-                ItemStack frontStack = frontBlock.getPickBlock(frontBlockState, null, world, front, null);
+                ItemStack frontStack = frontBlock.getPickBlock(
+                    frontBlockState,
+                    new RayTraceResult(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), getDirection().getOpposite()),
+                    world,
+                    front,
+                    FakePlayerFactory.getMinecraft((WorldServer) world)
+                );
 
                 if (!frontStack.isEmpty()) {
                     if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(world, front) != -1.0) {
@@ -254,6 +263,8 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
         StackUtils.readItems(itemFilters, 0, tag);
         StackUtils.readItems(fluidFilters, 2, tag);
+
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters, fluidFilters);
     }
 
     public IItemHandler getUpgrades() {

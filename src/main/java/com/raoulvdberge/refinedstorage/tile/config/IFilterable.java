@@ -10,6 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
+
 public interface IFilterable {
     int WHITELIST = 0;
     int BLACKLIST = 1;
@@ -74,7 +76,11 @@ public interface IFilterable {
         return false;
     }
 
-    static boolean isEmpty(IItemHandler filter) {
+    static boolean isEmpty(@Nullable IItemHandler filter) {
+        if (filter == null) {
+            return true;
+        }
+
         for (int i = 0; i < filter.getSlots(); i++) {
             if (!filter.getStackInSlot(i).isEmpty()) {
                 return false;

@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.storage.disk;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -35,6 +36,11 @@ public interface IStorageDiskManager {
      */
     @Nullable
     IStorageDisk getByStack(ItemStack disk);
+
+    /**
+     * @return a map of all storage disks
+     */
+    Map<UUID, IStorageDisk> getAll();
 
     /**
      * Sets a storage disk.

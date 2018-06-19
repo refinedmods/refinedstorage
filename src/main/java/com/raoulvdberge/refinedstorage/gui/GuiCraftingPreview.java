@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
@@ -25,6 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +79,7 @@ public class GuiCraftingPreview extends GuiBase {
     public void init(int x, int y) {
         cancelButton = addButton(x + 16, y + 144, 50, 20, t("gui.cancel"));
         startButton = addButton(x + 85, y + 144, 50, 20, t("misc.refinedstorage:start"));
-        startButton.enabled = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing);
+        startButton.enabled = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null;
     }
 
     @Override
@@ -87,13 +89,18 @@ public class GuiCraftingPreview extends GuiBase {
             scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
         }
 
-        if (startButton != null && !startButton.enabled && isCtrlKeyDown() && isShiftKeyDown()) {
+        if (startButton != null && !startButton.enabled && isCtrlKeyDown() && isShiftKeyDown() && getErrorType() == null) {
             startButton.enabled = true;
         }
     }
 
-    private boolean hasErrored() {
-        return stacks.size() == 1 && stacks.get(0) instanceof CraftingPreviewElementError;
+    @Nullable
+    private CraftingTaskErrorType getErrorType() {
+        if (stacks.size() == 1 && stacks.get(0) instanceof CraftingPreviewElementError) {
+            return ((CraftingPreviewElementError) stacks.get(0)).getType();
+        }
+
+        return null;
     }
 
     @Override
@@ -102,7 +109,7 @@ public class GuiCraftingPreview extends GuiBase {
 
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
-        if (hasErrored()) {
+        if (getErrorType() != null) {
             drawRect(x + 7, y + 20, x + 142, y + 139, 0xFFDBDBDB);
         }
     }
@@ -116,36 +123,51 @@ public class GuiCraftingPreview extends GuiBase {
 
         float scale = fontRenderer.getUnicodeFlag() ? 1F : 0.5F;
 
-        if (hasErrored()) {
+        if (getErrorType() != null) {
             GlStateManager.pushMatrix();
             GlStateManager.scale(scale, scale, 1);
 
-            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 10, scale), t("gui.refinedstorage:crafting_preview.error.0"));
-            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 20, scale), t("gui.refinedstorage:crafting_preview.error.1"));
-            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 30, scale), t("gui.refinedstorage:crafting_preview.error.2"));
-            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 40, scale), t("gui.refinedstorage:crafting_preview.error.3"));
-            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 50, scale), t("gui.refinedstorage:crafting_preview.error.4"));
+            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), t("gui.refinedstorage:crafting_preview.error"));
 
-            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 60, scale), t("gui.refinedstorage:crafting_preview.error.5"));
+            switch (getErrorType()) {
+                case RECURSIVE: {
+                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), t("gui.refinedstorage:crafting_preview.error.recursive.0"));
+                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), t("gui.refinedstorage:crafting_preview.error.recursive.1"));
+                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 41, scale), t("gui.refinedstorage:crafting_preview.error.recursive.2"));
+                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 51, scale), t("gui.refinedstorage:crafting_preview.error.recursive.3"));
 
-            GlStateManager.popMatrix();
+                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), t("gui.refinedstorage:crafting_preview.error.recursive.4"));
 
-            ICraftingPattern pattern = ItemPattern.getPatternFromCache(parent.mc.world, (ItemStack) stacks.get(0).getElement());
-
-            int yy = 80;
-            for (ItemStack output : pattern.getOutputs()) {
-                if (output != null) {
-                    GlStateManager.pushMatrix();
-                    GlStateManager.scale(scale, scale, 1);
-                    drawString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 7, scale), output.getDisplayName());
                     GlStateManager.popMatrix();
 
-                    RenderHelper.enableGUIStandardItemLighting();
-                    GlStateManager.enableDepth();
-                    drawItem(x + 5, yy, output);
-                    RenderHelper.disableStandardItemLighting();
+                    ICraftingPattern pattern = ItemPattern.getPatternFromCache(parent.mc.world, (ItemStack) stacks.get(0).getElement());
 
-                    yy += 17;
+                    int yy = 83;
+                    for (ItemStack output : pattern.getOutputs()) {
+                        if (output != null) {
+                            GlStateManager.pushMatrix();
+                            GlStateManager.scale(scale, scale, 1);
+                            drawString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName());
+                            GlStateManager.popMatrix();
+
+                            RenderHelper.enableGUIStandardItemLighting();
+                            GlStateManager.enableDepth();
+                            drawItem(x + 5, yy, output);
+                            RenderHelper.disableStandardItemLighting();
+
+                            yy += 17;
+                        }
+                    }
+
+                    break;
+                }
+                case TOO_COMPLEX: {
+                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), t("gui.refinedstorage:crafting_preview.error.too_complex.0"));
+                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), t("gui.refinedstorage:crafting_preview.error.too_complex.1"));
+
+                    GlStateManager.popMatrix();
+
+                    break;
                 }
             }
         } else {

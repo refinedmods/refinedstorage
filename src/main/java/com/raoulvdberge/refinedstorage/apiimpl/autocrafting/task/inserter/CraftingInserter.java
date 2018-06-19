@@ -1,18 +1,42 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 
 public class CraftingInserter {
+    private static final String NBT_ITEM = "Item";
+    private static final String NBT_STATUS = "Status";
+
     private INetwork network;
     private Deque<CraftingInserterItem> items = new ArrayDeque<>();
 
     public CraftingInserter(INetwork network) {
         this.network = network;
+    }
+
+    public CraftingInserter(INetwork network, NBTTagList list) throws CraftingTaskReadException {
+        this(network);
+
+        for (int i = 0; i < list.tagCount(); ++i) {
+            NBTTagCompound itemTag = list.getCompoundTagAt(i);
+
+            ItemStack stack = new ItemStack(itemTag.getCompoundTag(NBT_ITEM));
+
+            if (stack.isEmpty()) {
+                throw new CraftingTaskReadException("Inserter has empty stack");
+            }
+
+            CraftingInserterItemStatus status = CraftingInserterItemStatus.values()[itemTag.getInteger(NBT_STATUS)];
+
+            items.push(new CraftingInserterItem(stack, status));
+        }
     }
 
     public void insert(ItemStack stack) {
@@ -56,5 +80,20 @@ public class CraftingInserter {
 
     public Collection<CraftingInserterItem> getItems() {
         return items;
+    }
+
+    public NBTTagList writeToNbt() {
+        NBTTagList list = new NBTTagList();
+
+        for (CraftingInserterItem item : items) {
+            NBTTagCompound tag = new NBTTagCompound();
+
+            tag.setTag(NBT_ITEM, item.getStack().serializeNBT());
+            tag.setInteger(NBT_STATUS, item.getStatus().ordinal());
+
+            list.appendTag(tag);
+        }
+
+        return list;
     }
 }

@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -64,7 +65,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
-    // Used to prevent infinite recursion on getRootContainer() when there's eg. two crafters facing each other.
+    // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
     private boolean visited = false;
 
     @Nullable
@@ -114,7 +115,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         if (!state) {
             network.getCraftingManager().getTasks().stream()
                 .filter(task -> task.getPattern().getContainer().getPosition().equals(pos))
-                .forEach(task -> network.getCraftingManager().cancel(task));
+                .forEach(task -> network.getCraftingManager().cancel(task.getId()));
         }
 
         network.getCraftingManager().rebuild();
@@ -132,6 +133,11 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         super.read(tag);
 
         StackUtils.readItems(patterns, 0, tag);
+
+        if (OneSixMigrationHelper.migratePatternInventory(patterns)) {
+            markDirty();
+        }
+
         StackUtils.readItems(upgrades, 1, tag);
 
         if (tag.hasKey(NBT_DISPLAY_NAME)) {
@@ -212,7 +218,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         TileEntity facing = getConnectedTile();
 
-        if (facing instanceof IWorldNameable) {
+        if (facing instanceof IWorldNameable && ((IWorldNameable) facing).getName() != null) {
             return ((IWorldNameable) facing).getName();
         }
 

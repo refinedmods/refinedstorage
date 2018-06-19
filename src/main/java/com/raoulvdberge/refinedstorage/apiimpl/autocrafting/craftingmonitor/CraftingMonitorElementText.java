@@ -47,11 +47,6 @@ public class CraftingMonitorElementText implements ICraftingMonitorElement {
     }
 
     @Override
-    public int getTaskId() {
-        return -1;
-    }
-
-    @Override
     public String getId() {
         return ID;
     }

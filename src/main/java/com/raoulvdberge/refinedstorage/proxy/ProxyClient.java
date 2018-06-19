@@ -5,18 +5,23 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
+import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.render.*;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -40,6 +45,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
@@ -49,6 +55,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ProxyClient extends ProxyCommon {
     @Override
@@ -279,9 +286,53 @@ public class ProxyClient extends ProxyCommon {
 
         ModelLoader.setCustomStateMapper(RSBlocks.PORTABLE_GRID, new StateMap.Builder().ignore(BlockPortableGrid.TYPE).build());
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), stack -> {
-            PortableGrid portableGrid = new PortableGrid(null, stack);
+            ItemHandlerBase disk = new ItemHandlerBase(1);
 
-            return new ModelResourceLocation("refinedstorage:portable_grid", "connected=" + Boolean.toString(portableGrid.getEnergy() != 0 && !portableGrid.getDisk().getStackInSlot(0).isEmpty()) + ",direction=north,disk_state=" + TilePortableGrid.getDiskState(portableGrid));
+            if (stack.hasTagCompound()) {
+                StackUtils.readItems(disk, 4, stack.getTagCompound());
+            }
+
+            UUID diskId = disk.getStackInSlot(0).isEmpty() ? null : ((IStorageDiskProvider) disk.getStackInSlot(0).getItem()).getId(disk.getStackInSlot(0));
+
+            IPortableGrid.IPortableGridRenderInfo renderInfo = new IPortableGrid.IPortableGridRenderInfo() {
+                @Override
+                public int getStored() {
+                    if (diskId == null) {
+                        return 0;
+                    }
+
+                    API.instance().getStorageDiskSync().sendRequest(diskId);
+
+                    IStorageDiskSyncData data = API.instance().getStorageDiskSync().getData(diskId);
+
+                    return data == null ? 0 : data.getStored();
+                }
+
+                @Override
+                public int getCapacity() {
+                    if (diskId == null) {
+                        return 0;
+                    }
+
+                    API.instance().getStorageDiskSync().sendRequest(diskId);
+
+                    IStorageDiskSyncData data = API.instance().getStorageDiskSync().getData(diskId);
+
+                    return data == null ? 0 : data.getCapacity();
+                }
+
+                @Override
+                public boolean hasStorage() {
+                    return diskId != null;
+                }
+
+                @Override
+                public boolean isActive() {
+                    return (stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() > 0 || stack.getMetadata() == ItemBlockPortableGrid.TYPE_CREATIVE) && hasStorage();
+                }
+            };
+
+            return new ModelResourceLocation("refinedstorage:portable_grid", "connected=" + Boolean.toString(renderInfo.isActive()) + ",direction=north,disk_state=" + TilePortableGrid.getDiskState(renderInfo));
         });
     }
 
@@ -336,7 +387,7 @@ public class ProxyClient extends ProxyCommon {
 
         BlockCable cable = (BlockCable) block;
 
-        IBlockState state = cable.getActualStateForRendering(player.getEntityWorld(), pos);
+        IBlockState state = cable.getActualState(cable.getDefaultState(), player.getEntityWorld(), pos);
 
         if (cable.collisionRayTrace(state, player.getEntityWorld(), pos, RenderUtils.getStart(player), RenderUtils.getEnd(player)) == null) {
             return;

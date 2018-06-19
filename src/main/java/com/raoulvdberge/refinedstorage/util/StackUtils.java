@@ -3,18 +3,16 @@ package com.raoulvdberge.refinedstorage.util;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
-import net.minecraft.init.PotionTypes;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.potion.PotionUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -32,36 +30,40 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 public final class StackUtils {
     public static final ItemStack EMPTY_BUCKET = new ItemStack(Items.BUCKET);
-    public static final ItemStack EMPTY_BOTTLE = new ItemStack(Items.GLASS_BOTTLE);
-    public static final ItemStack WATER_BOTTLE = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
 
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
 
-    private static final Map<Integer, List<ItemStack>> OREDICT_CACHE = new HashMap<>();
+    private static final Map<Integer, NonNullList<ItemStack>> OREDICT_CACHE = new HashMap<>();
     private static final Map<Integer, Boolean> OREDICT_EQUIVALENCY_CACHE = new HashMap<>();
 
     private static final NonNullList<Object> EMPTY_NON_NULL_LIST = NonNullList.create();
 
-    public static List<ItemStack> getEquivalentStacks(ItemStack stack) {
+    public static NonNullList<ItemStack> getEquivalentStacks(ItemStack stack) {
         int hash = API.instance().getItemStackHashCode(stack, false);
 
         if (OREDICT_CACHE.containsKey(hash)) {
             return OREDICT_CACHE.get(hash);
         }
 
-        List<ItemStack> ores = new ArrayList<>();
+        NonNullList<ItemStack> ores = NonNullList.create();
 
         for (int id : OreDictionary.getOreIDs(stack)) {
-            ores.addAll(OreDictionary.getOres(OreDictionary.getOreName(id)));
+            String name = OreDictionary.getOreName(id);
+
+            for (ItemStack ore : OreDictionary.getOres(name)) {
+                if (ore.getMetadata() == OreDictionary.WILDCARD_VALUE) {
+                    ore.getItem().getSubItems(CreativeTabs.SEARCH, ores);
+                } else {
+                    ores.add(ore);
+                }
+            }
         }
 
         OREDICT_CACHE.put(hash, ores);
@@ -112,7 +114,7 @@ public final class StackUtils {
         buf.writeInt(API.instance().getItemStackHashCode(stack));
 
         if (network != null) {
-            buf.writeBoolean(network.getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT) != null);
+            buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
             buf.writeBoolean(displayCraftText);
         } else {
             buf.writeBoolean(false);

@@ -29,12 +29,12 @@ public interface IReaderWriterChannel {
      * @param tag the tag to write to
      * @return the written tag
      */
-    NBTTagCompound writeToNBT(NBTTagCompound tag);
+    NBTTagCompound writeToNbt(NBTTagCompound tag);
 
     /**
      * Reads this channel from NBT.
      *
      * @param tag the tag to read from
      */
-    void readFromNBT(NBTTagCompound tag);
+    void readFromNbt(NBTTagCompound tag);
 }

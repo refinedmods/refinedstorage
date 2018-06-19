@@ -25,6 +25,7 @@ public class GuiReaderWriter extends GuiBase {
     private static final int ITEM_HEIGHT = 18;
 
     private List<String> channels = Collections.emptyList();
+    private String currentChannelToSet;
 
     private GuiButton add;
     private GuiButton remove;
@@ -54,8 +55,6 @@ public class GuiReaderWriter extends GuiBase {
         name.setTextColor(16777215);
         name.setCanLoseFocus(true);
         name.setFocused(false);
-
-        updateSelection(readerWriter.getChannelParameter().getValue());
     }
 
     private List<String> getChannels() {
@@ -64,6 +63,11 @@ public class GuiReaderWriter extends GuiBase {
 
     public void setChannels(List<String> channels) {
         this.channels = channels;
+
+        // In case we get the current channel packet earlier than our channel list.
+        if (currentChannelToSet != null) {
+            setCurrentChannel(currentChannelToSet);
+        }
     }
 
     @Override
@@ -197,8 +201,9 @@ public class GuiReaderWriter extends GuiBase {
         }
     }
 
-    public void updateSelection(String channel) {
+    public void setCurrentChannel(String channel) {
         this.itemSelected = getChannels().indexOf(channel);
         this.name.setText(itemSelected != -1 ? getChannels().get(itemSelected) : "");
+        this.currentChannelToSet = channel;
     }
 }

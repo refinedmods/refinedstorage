@@ -20,6 +20,38 @@ import java.util.List;
 public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     public static final String ID = "forgeenergy";
 
+    private static final IEnergyStorage NULL_CAP = new IEnergyStorage() {
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            return 0;
+        }
+
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate) {
+            return 0;
+        }
+
+        @Override
+        public int getEnergyStored() {
+            return 0;
+        }
+
+        @Override
+        public int getMaxEnergyStored() {
+            return 0;
+        }
+
+        @Override
+        public boolean canExtract() {
+            return false;
+        }
+
+        @Override
+        public boolean canReceive() {
+            return false;
+        }
+    };
+
     private static final String NBT_ENERGY_STORED = "EnergyStored";
 
     private EnergyStorage storage;
@@ -90,7 +122,12 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public Object getNullCapability() {
+        return NULL_CAP;
+    }
+
+    @Override
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
         tag.setInteger(NBT_ENERGY_STORED, storage.getEnergyStored());
 
         return tag;

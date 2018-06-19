@@ -77,7 +77,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
                         if (took == null) {
                             if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                network.getCraftingManager().schedule(slot, stackSize, compare);
+                                network.getCraftingManager().schedule(slot, stackSize);
                             }
                         } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                             took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, false);

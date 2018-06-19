@@ -104,7 +104,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                     delta -= result == null ? 0 : result.getCount();
 
                     if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                        network.getCraftingManager().schedule(wanted, delta, compare);
+                        network.getCraftingManager().schedule(wanted, delta);
                     }
                 } else if (delta < 0) {
                     ItemStack remainder = network.insertItemTracked(got, Math.abs(delta));

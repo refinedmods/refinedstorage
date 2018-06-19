@@ -1,10 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
@@ -23,6 +24,8 @@ import java.util.UUID;
 
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
+    private static final String NBT_DIRECTION = "Direction";
+    private static final String NBT_VERSION = "Version";
 
     @Nullable
     protected INetwork network;
@@ -32,8 +35,9 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     @Nullable
     protected UUID owner;
+    protected String version;
 
-    private EnumFacing direction;
+    private EnumFacing direction = EnumFacing.NORTH;
 
     private boolean throttlingDisabled;
     private boolean couldUpdate;
@@ -147,6 +151,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             tag.setUniqueId(NBT_OWNER, owner);
         }
 
+        tag.setString(NBT_VERSION, RS.VERSION);
+
+        tag.setInteger(NBT_DIRECTION, direction.ordinal());
+
         writeConfiguration(tag);
 
         return tag;
@@ -163,7 +171,21 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             owner = tag.getUniqueId(NBT_OWNER);
         }
 
+        if (tag.hasKey(NBT_DIRECTION)) {
+            direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+        }
+
+        if (tag.hasKey(NBT_VERSION)) {
+            version = tag.getString(NBT_VERSION);
+        }
+
         readConfiguration(tag);
+
+        // We do this after readConfiguration so the 1.6 migration calls see that version is null.
+        OneSixMigrationHelper.removalHook();
+        if (version == null) {
+            version = RS.VERSION;
+        }
     }
 
     public void readConfiguration(NBTTagCompound tag) {
@@ -205,21 +227,15 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     public EnumFacing getDirection() {
-        if (direction == null) {
-            loadDirection();
-        }
-
         return direction;
     }
 
-    public void loadDirection() {
-        EnumFacing direction = ((TileBase) world.getTileEntity(pos)).getDirection();
+    public void setDirection(EnumFacing direction) {
+        this.direction = direction;
 
-        if (!direction.equals(this.direction)) {
-            this.direction = direction;
+        onDirectionChanged();
 
-            onDirectionChanged();
-        }
+        markDirty();
     }
 
     protected void onDirectionChanged() {

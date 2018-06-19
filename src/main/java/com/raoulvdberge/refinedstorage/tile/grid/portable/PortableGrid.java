@@ -86,7 +86,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER || (player == null && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)) {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
                 ItemStack diskStack = getStackInSlot(slot);
 
                 if (diskStack.isEmpty()) {
@@ -102,16 +102,14 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     }
                 }
 
-                if (player != null) {
-                    cache.invalidate();
+                cache.invalidate();
 
-                    StackUtils.writeItems(this, 4, stack.getTagCompound());
-                }
+                StackUtils.writeItems(this, 4, stack.getTagCompound());
             }
         }
     };
 
-    public PortableGrid(@Nullable EntityPlayer player, ItemStack stack) {
+    public PortableGrid(EntityPlayer player, ItemStack stack) {
         this.player = player;
         this.stack = stack;
 
@@ -132,16 +130,19 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             storageTracker.readFromNBT(stack.getTagCompound().getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
-        if (player != null) {
-            StackUtils.readItems(disk, 4, stack.getTagCompound());
-            StackUtils.readItems(filter, 0, stack.getTagCompound());
+        StackUtils.readItems(disk, 4, stack.getTagCompound());
 
-            drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
+        if (!player.getEntityWorld().isRemote) {
+            API.instance().getOneSixMigrationHelper().migrateDiskInventory(player.getEntityWorld(), disk);
+        }
 
-            // If there is no disk onContentsChanged isn't called and the update isn't sent, thus items from the previous grid view would remain clientside
-            if (!player.getEntityWorld().isRemote && disk.getStackInSlot(0).isEmpty()) {
-                cache.invalidate();
-            }
+        StackUtils.readItems(filter, 0, stack.getTagCompound());
+
+        drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
+
+        // If there is no disk onContentsChanged isn't called and the update isn't sent, thus items from the previous grid view would remain clientside
+        if (!player.getEntityWorld().isRemote && disk.getStackInSlot(0).isEmpty()) {
+            cache.invalidate();
         }
     }
 

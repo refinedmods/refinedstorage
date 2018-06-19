@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -86,29 +87,17 @@ public class BlockCable extends BlockNode {
         return state;
     }
 
-    // This is used for rendering the box outlines in the client proxy.
-    // We use this because MCMP wraps the block in a MCMP wrapper block, creating issues where
-    // it cannot assign properties to the MCMP blockstate. Here, we make sure that it uses our block state.
-    private IBlockState stateForRendering;
-
-    public IBlockState getActualStateForRendering(IBlockAccess world, BlockPos pos) {
-        if (stateForRendering == null) {
-            stateForRendering = createBlockState().getBaseState();
-        }
-
-        return getActualState(stateForRendering, world, pos);
-    }
-
-    public static boolean hasConnectionWith(IBlockAccess world, BlockPos pos, BlockBase block, TileEntity tile, EnumFacing direction) {
+    private static boolean hasConnectionWith(IBlockAccess world, BlockPos pos, BlockBase block, TileEntity tile, EnumFacing direction) {
         if (!(tile instanceof TileNode)) {
             return false;
         }
 
         TileEntity otherTile = world.getTileEntity(pos.offset(direction));
-        EnumFacing otherTileSide = direction.getOpposite();
 
-        if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, otherTileSide)) {
-            if (block.getDirection() != null && ((TileNode) tile).getNode().getFacingTile() == otherTile) {
+        if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, direction.getOpposite())) {
+            // Prevent the block adding connections in itself
+            // For example: importer cable connection on the importer face
+            if (block.getDirection() != null && ((TileBase) tile).getDirection() == direction) {
                 return false;
             }
 

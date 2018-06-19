@@ -1,21 +1,30 @@
 # Refined Storage Changelog
 
 ### 1.6
+NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined Storage 1.6.x and are getting converted upon loading the world. It is however not possible to revert back to Refined Storage 1.5.x when a world has already been converted to Refined Storage 1.6.x.
+
 - Removed Regulator mode in the Exporter (raoulvdberge)
 - Removed MCMultiPart integration (raoulvdberge)
 - Removed Project E integration (raoulvdberge)
 - Removed Storage Drawers integration (you can still attach an External Storage to drawers, though) (raoulvdberge)
 - Removed blocking mode in autocrafting (raoulvdberge)
 - Removed the Wrench (raoulvdberge)
+- Rewrote autocrafting (raoulvdberge)
+- Autocrafting tasks that take longer than 5 seconds to calculate are automatically stopped to avoid server strain (raoulvdberge)
 - Added new storage disk system where the storage disk data (items, fluids) are stored off the disk itself, in another file (refinedstorage_disks.dat). The disk itself only stores its ID (raoulvdberge)
+- Added /createdisk command which creates a disk based on the disk ID. Turn on advanced tooltips to see the disk ID on a disk item (raoulvdberge)
 - Changed fluid storage progression to be 64k - 256k - 1024k - 4096k (raoulvdberge)
 - You can no longer put a Filter in filter slots to gain additional filter slots (raoulvdberge)
 - You can now re-insert Processing Patterns in the Pattern Grid and have the inputs and outputs be completed (raoulvdberge)
 - Fixed bug where pattern was recipe pattern was creatable when there was no recipe output (raoulvdberge)
+- Fixed a crash when breaking an Ender IO conduit with the Destructor (raoulvdberge)
+- Fixed bug where storage disks in Portable Grids could be moved into themselves (raoulvdberge)
+- Fixed the Crafter crashing when opening it while connected to a Primal Tech Grill or Kiln (raoulvdberge)
 - Added a missing config option for Crafter Manager energy usage (raoulvdberge)
 - If an Interface is configured to expose the entire network storage (by configuring no export slots), it will no longer expose the entire RS storage, due to performance issues (raoulvdberge)
 - The Portable Grid no longer exposes a inventory for crossmod interaction, due to performance issues (raoulvdberge)
 - The Crafting Monitor is now resizable and its size can be configured (stretched, small, medium, large) (raoulvdberge)
+- The Crafting Monitor now splits its tasks over tabs (raoulvdberge)
 - Made all IO blocks have a blacklist instead of a whitelist by default (raoulvdberge)
 - An empty blacklist now means: accept any item. An empty whitelist now means: don't accept any item (an empty whitelist USED to mean: accept any item) (raoulvdberge)
 - Any mod can now add JSON Solderer recipes without requiring the API, by putting the JSONs in their assets directory in a "solderer_recipes" directory (raoulvdberge)

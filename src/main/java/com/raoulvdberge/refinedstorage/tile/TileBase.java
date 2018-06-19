@@ -17,12 +17,14 @@ import javax.annotation.Nullable;
 public abstract class TileBase extends TileEntity {
     protected static final String NBT_DIRECTION = "Direction";
 
-    private EnumFacing direction = EnumFacing.NORTH;
-
+    private EnumFacing clientDirection = EnumFacing.NORTH;
+    protected IDirectionHandler directionHandler = new DirectionHandlerTile();
     protected TileDataManager dataManager = new TileDataManager(this);
 
     public void setDirection(EnumFacing direction) {
-        this.direction = direction;
+        clientDirection = direction;
+
+        directionHandler.setDirection(direction);
 
         world.notifyNeighborsOfStateChange(pos, world.getBlockState(pos).getBlock(), true);
 
@@ -30,7 +32,7 @@ public abstract class TileBase extends TileEntity {
     }
 
     public EnumFacing getDirection() {
-        return direction;
+        return world.isRemote ? clientDirection : directionHandler.getDirection();
     }
 
     public TileDataManager getDataManager() {
@@ -38,25 +40,25 @@ public abstract class TileBase extends TileEntity {
     }
 
     public NBTTagCompound write(NBTTagCompound tag) {
-        tag.setInteger(NBT_DIRECTION, direction.ordinal());
+        directionHandler.writeToTileNbt(tag);
 
         return tag;
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
-        tag.setInteger(NBT_DIRECTION, direction.ordinal());
+        tag.setInteger(NBT_DIRECTION, directionHandler.getDirection().ordinal());
 
         return tag;
     }
 
     public void read(NBTTagCompound tag) {
-        direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+        directionHandler.readFromTileNbt(tag);
     }
 
     public void readUpdate(NBTTagCompound tag) {
         boolean doRender = canCauseRenderUpdate(tag);
 
-        direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+        clientDirection = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
 
         if (doRender) {
             WorldUtils.updateBlock(world, pos);

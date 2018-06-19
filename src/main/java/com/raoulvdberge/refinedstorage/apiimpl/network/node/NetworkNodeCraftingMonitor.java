@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
+import com.google.common.base.Optional;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -15,15 +16,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.UUID;
 
 public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
     public static final String ID = "crafting_monitor";
 
     private static final String NBT_SIZE = "Size";
+    private static final String NBT_TAB_SELECTED = "TabSelected";
+    private static final String NBT_TAB_PAGE = "TabPage";
 
     private int size = IGrid.SIZE_STRETCH;
+    private Optional<UUID> tabSelected = Optional.absent();
+    private int tabPage;
 
     public NetworkNodeCraftingMonitor(World world, BlockPos pos) {
         super(world, pos);
@@ -64,7 +70,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public void onCancelled(EntityPlayerMP player, int id) {
+    public void onCancelled(EntityPlayerMP player, @Nullable UUID id) {
         if (network != null) {
             network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
@@ -76,7 +82,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public List<ICraftingTask> getTasks() {
+    public Collection<ICraftingTask> getTasks() {
         return network != null ? network.getCraftingManager().getTasks() : Collections.emptyList();
     }
 
@@ -105,7 +111,63 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        tag.setInteger(NBT_TAB_PAGE, tabPage);
+
+        if (tabSelected.isPresent()) {
+            tag.setUniqueId(NBT_TAB_SELECTED, tabSelected.get());
+        }
+
+        return tag;
+    }
+
+    @Override
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
+
+        if (tag.hasKey(NBT_TAB_PAGE)) {
+            tabPage = tag.getInteger(NBT_TAB_PAGE);
+        }
+
+        if (tag.hasUniqueId(NBT_TAB_SELECTED)) {
+            tabSelected = Optional.of(tag.getUniqueId(NBT_TAB_SELECTED));
+        }
+    }
+
+    public void setTabSelected(Optional<UUID> tabSelected) {
+        this.tabSelected = tabSelected;
+    }
+
+    public void setTabPage(int tabPage) {
+        this.tabPage = tabPage;
+    }
+
+    @Override
     public void onClosed(EntityPlayer player) {
         // NO OP
+    }
+
+    @Override
+    public Optional<UUID> getTabSelected() {
+        return world.isRemote ? TileCraftingMonitor.TAB_SELECTED.getValue() : tabSelected;
+    }
+
+    @Override
+    public int getTabPage() {
+        return world.isRemote ? TileCraftingMonitor.TAB_PAGE.getValue() : tabPage;
+    }
+
+    @Override
+    public void onTabSelectionChanged(Optional<UUID> tab) {
+        TileDataManager.setParameter(TileCraftingMonitor.TAB_SELECTED, tab);
+    }
+
+    @Override
+    public void onTabPageChanged(int page) {
+        if (page >= 0) {
+            TileDataManager.setParameter(TileCraftingMonitor.TAB_PAGE, page);
+        }
     }
 }

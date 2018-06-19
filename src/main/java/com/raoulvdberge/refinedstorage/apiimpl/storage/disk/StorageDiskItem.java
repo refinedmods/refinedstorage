@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage.disk;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class StorageDiskItem implements IStorageDisk<ItemStack> {
+    static final String NBT_VERSION = "Version";
     static final String NBT_CAPACITY = "Capacity";
     static final String NBT_ITEMS = "Items";
 
@@ -79,6 +81,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
             list.appendTag(itemTag);
         }
 
+        tag.setString(NBT_VERSION, RS.VERSION);
         tag.setTag(NBT_ITEMS, list);
         tag.setInteger(NBT_CAPACITY, capacity);
 

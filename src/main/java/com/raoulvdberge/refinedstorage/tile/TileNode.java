@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
@@ -27,6 +28,8 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     private N clientNode;
 
     public TileNode() {
+        directionHandler = new DirectionHandlerNetworkNode(this);
+
         dataManager.addWatchedParameter(REDSTONE_MODE);
     }
 
@@ -38,22 +41,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     @Override
     public void setRedstoneMode(RedstoneMode mode) {
         getNode().setRedstoneMode(mode);
-    }
-
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
-        return getNode().writeConfiguration(tag);
-    }
-
-    public void readConfiguration(NBTTagCompound tag) {
-        getNode().readConfiguration(tag);
-        getNode().markDirty();
-    }
-
-    @Override
-    public void setDirection(EnumFacing direction) {
-        super.setDirection(direction);
-
-        getNode().loadDirection();
     }
 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
@@ -68,6 +55,18 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         super.readUpdate(tag);
 
         getNode().setActive(tag.getBoolean(NBT_ACTIVE));
+    }
+
+    private EnumFacing directionToMigrate;
+
+    @Override
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
+
+        OneSixMigrationHelper.removalHook();
+        if (tag.hasKey(NBT_DIRECTION)) {
+            directionToMigrate = EnumFacing.getFront(tag.getInteger("Direction"));
+        }
     }
 
     @Override
@@ -95,6 +94,15 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         if (node == null || !node.getId().equals(getNodeId())) {
             manager.setNode(pos, node = createNode(world, pos));
             manager.markForSaving();
+        }
+
+        OneSixMigrationHelper.removalHook();
+        if (directionToMigrate != null) {
+            ((NetworkNode) node).setDirection(directionToMigrate);
+
+            directionToMigrate = null;
+
+            markDirty();
         }
 
         return (N) node;

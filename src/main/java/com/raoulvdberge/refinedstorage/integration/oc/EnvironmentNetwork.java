@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.integration.oc;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
@@ -73,7 +74,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         ItemStack stack = args.checkItemStack(0);
-        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT)};
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack)};
     }
 
     @Callback(doc = "function():table -- Gets the patterns of this network.")
@@ -98,7 +99,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         ItemStack stack = args.checkItemStack(0);
 
-        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT) != null};
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack) != null};
     }
 
     @Callback(doc = "function(stack:table[, count: number]):table -- Gets a list of missing items for a crafting task.")
@@ -134,9 +135,11 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
             throw new IllegalArgumentException("Could not create crafting task");
         }
 
-        task.calculate();
+        ICraftingTaskError error = task.calculate();
 
-        node.getNetwork().getCraftingManager().add(task);
+        if (error == null) {
+            node.getNetwork().getCraftingManager().add(task);
+        }
 
         return new Object[]{};
     }
@@ -152,7 +155,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         int count = 0;
         for (ICraftingTask task : node.getNetwork().getCraftingManager().getTasks()) {
             if (API.instance().getComparer().isEqual(task.getRequested(), stack, COMPARE_NBT | COMPARE_DAMAGE)) {
-                node.getNetwork().getCraftingManager().cancel(task);
+                node.getNetwork().getCraftingManager().cancel(task.getId());
 
                 count++;
             }
