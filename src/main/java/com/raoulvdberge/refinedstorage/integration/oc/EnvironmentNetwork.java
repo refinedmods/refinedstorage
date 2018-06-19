@@ -342,7 +342,6 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         IStorageDiskManager sdm = API.instance().getStorageDiskManager(node.getWorld());
 
-        int idd_index = 0;
         for (IStorage s : node.getNetwork().getItemStorageCache().getStorages()) {
             if (s instanceof IStorageDisk) {
                 IStorageDisk sd = (IStorageDisk) s;
@@ -358,7 +357,24 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
                 UUID uuid = sdm.getUuid(sd);
                 devices.put(uuid.toString(), data);
-                idd_index++;
+            }
+        }
+
+        for (IStorage s : node.getNetwork().getFluidStorageCache().getStorages()) {
+            if (s instanceof IStorageDisk) {
+                IStorageDisk sd = (IStorageDisk) s;
+                String id = sd.getId();
+                HashMap<String, Object> data = new HashMap();
+
+                data.put("type", "fluid");
+                data.put("usage", sd.getStored());
+                data.put("capacity", sd.getCapacity());
+
+                totalFluidStored += sd.getStored();
+                totalFluidCapacity += sd.getCapacity();
+
+                UUID uuid = sdm.getUuid(sd);
+                devices.put(uuid.toString(), data);
             }
         }
 
