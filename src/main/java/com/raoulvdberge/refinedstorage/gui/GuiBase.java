@@ -5,6 +5,8 @@ import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButton;
+import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
+import com.raoulvdberge.refinedstorage.integration.jei.RecipeTransferHandlerGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
@@ -154,7 +156,8 @@ public abstract class GuiBase extends GuiContainer {
 
         renderHoveredToolTip(mouseX, mouseY);
 
-        if (scrollbar != null) {
+        // Prevent accidental scrollbar click after clicking recipe transfer button
+        if (scrollbar != null && (!IntegrationJEI.isLoaded() || System.currentTimeMillis() - RecipeTransferHandlerGrid.LAST_TRANSFER > RecipeTransferHandlerGrid.TRANSFER_SCROLL_DELAY_MS)) {
             scrollbar.update(this, mouseX - guiLeft, mouseY - guiTop);
         }
     }
