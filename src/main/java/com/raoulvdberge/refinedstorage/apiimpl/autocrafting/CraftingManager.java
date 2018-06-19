@@ -50,6 +50,11 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
+    public ICraftingTask getTask(UUID id) {
+        return tasks.get(id);
+    }
+
+    @Override
     public Map<String, List<IItemHandlerModifiable>> getNamedContainers() {
         return containerInventories;
     }
