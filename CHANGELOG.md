@@ -6,7 +6,6 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Removed Regulator mode in the Exporter (raoulvdberge)
 - Removed MCMultiPart integration (raoulvdberge)
 - Removed Project E integration (raoulvdberge)
-- Removed Storage Drawers integration (you can still attach an External Storage to drawers, though) (raoulvdberge)
 - Removed blocking mode in autocrafting (raoulvdberge)
 - Removed the Wrench (raoulvdberge)
 - Rewrote autocrafting (raoulvdberge)
