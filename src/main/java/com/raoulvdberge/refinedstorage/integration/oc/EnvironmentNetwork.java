@@ -50,7 +50,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
             return new Object[]{null, "not connected"};
         }
 
-        return new Object[]{node.getNetwork().getEnergyUsage()};
+        return new Object[]{node.getNetwork().getNetworkEnergyUsage()};
     }
 
     @Callback(doc = "function():table -- Gets the crafting tasks of this network.")
