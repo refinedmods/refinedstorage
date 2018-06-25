@@ -3,17 +3,17 @@ package com.raoulvdberge.refinedstorage.api.energy;
 import java.util.UUID;
 
 public interface IEnergy {
-	void decreaseCapacity(UUID id, int amount);
+    void decreaseCapacity(UUID id, int amount);
 
-	int extract(int amount, boolean simulate);
+    int extract(int amount, boolean simulate);
 
-	int getCapacity();
+    int getCapacity();
 
-	int getStored();
+    int getStored();
 
-	void increaseCapacity(UUID id, int amount);
+    void increaseCapacity(UUID id, int amount);
 
-	int insert(int amount, boolean simulate);
+    int insert(int amount, boolean simulate);
 
-	void setStored(int energyAmount);
+    void setStored(int energyAmount);
 }
