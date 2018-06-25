@@ -41,6 +41,12 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     }
 
     @Nullable
+    public UUID getUuid(IStorageDisk disk) {
+        // Return random UUID for now
+        return UUID.randomUUID();
+    }
+
+    @Nullable
     @Override
     public IStorageDisk getByStack(ItemStack disk) {
         if (!(disk.getItem() instanceof IStorageDiskProvider)) {
