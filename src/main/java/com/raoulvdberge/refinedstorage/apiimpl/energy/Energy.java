@@ -8,80 +8,80 @@ import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public final class Energy implements IEnergy {
-	private static final UUID UUID_EMPTY = new UUID(0l, 0l);
+    private static final UUID UUID_EMPTY = new UUID(0l, 0l);
 
-	protected int capacity;
-	protected int energy;
+    protected int capacity;
+    protected int energy;
 
-	private final Map<UUID, Integer> energyStorages;
+    private final Map<UUID, Integer> energyStorages;
 
-	public Energy(int controllerCapacity) {
-		this.energyStorages = new Object2ObjectOpenHashMap<UUID, Integer>();
-		this.energyStorages.put(UUID_EMPTY, controllerCapacity);
-		calculateCapacity();
-	}
+    public Energy(int controllerCapacity) {
+        this.energyStorages = new Object2ObjectOpenHashMap<UUID, Integer>();
+        this.energyStorages.put(UUID_EMPTY, controllerCapacity);
+        calculateCapacity();
+    }
 
-	private void calculateCapacity() {
-		long newCapacity = energyStorages.values().stream().mapToLong(Long::valueOf).sum();
-		this.capacity = (int) Math.min(newCapacity, Integer.MAX_VALUE);
-	}
+    private void calculateCapacity() {
+        long newCapacity = energyStorages.values().stream().mapToLong(Long::valueOf).sum();
+        this.capacity = (int) Math.min(newCapacity, Integer.MAX_VALUE);
+    }
 
-	@Override
-	public void decreaseCapacity(UUID id, int amount) {
-		if (id.equals(UUID_EMPTY)) {
-			return;
-		}
-		this.energyStorages.remove(id);
-		calculateCapacity();
-	}
+    @Override
+    public void decreaseCapacity(UUID id, int amount) {
+        if (id.equals(UUID_EMPTY)) {
+            return;
+        }
+        this.energyStorages.remove(id);
+        calculateCapacity();
+    }
 
-	@Override
-	public int extract(int maxExtract, boolean simulate) {
-		if (maxExtract <= 0) {
-			return 0;
-		}
+    @Override
+    public int extract(int maxExtract, boolean simulate) {
+        if (maxExtract <= 0) {
+            return 0;
+        }
 
-		int energyExtracted = Math.min(energy, maxExtract);
-		if (!simulate) {
-			energy -= energyExtracted;
-		}
-		return energyExtracted;
-	}
+        int energyExtracted = Math.min(energy, maxExtract);
+        if (!simulate) {
+            energy -= energyExtracted;
+        }
+        return energyExtracted;
+    }
 
-	@Override
-	public int getCapacity() {
-		return this.capacity;
-	}
+    @Override
+    public int getCapacity() {
+        return this.capacity;
+    }
 
-	@Override
-	public int getStored() {
-		return this.energy;
-	}
+    @Override
+    public int getStored() {
+        return this.energy;
+    }
 
-	@Override
-	public void increaseCapacity(UUID id, int amount) {
-		if (id.equals(UUID_EMPTY) || amount <= 0) {
-			return;
-		}
-		this.energyStorages.merge(id, amount, (k, v) -> amount);
-		calculateCapacity();
-	}
+    @Override
+    public void increaseCapacity(UUID id, int amount) {
+        if (id.equals(UUID_EMPTY) || amount <= 0) {
+            return;
+        }
+        this.energyStorages.merge(id, amount, (k, v) -> amount);
+        calculateCapacity();
+    }
 
-	@Override
-	public int insert (int maxReceive, boolean simulate) {
-		if (maxReceive <= 0) {
-			return 0;
-		}
+    @Override
+    public int insert (int maxReceive, boolean simulate) {
+        if (maxReceive <= 0) {
+            return 0;
+        }
 
-		int energyReceived = Math.min(capacity - energy, maxReceive);
-		if (!simulate) {
-			energy += energyReceived;
-		}
-		return energyReceived;
-	}
+        int energyReceived = Math.min(capacity - energy, maxReceive);
+        if (!simulate) {
+            energy += energyReceived;
+        }
+        return energyReceived;
+    }
 
-	@Override
-	public void setStored(int energy) {
-		this.energy = Math.min(energy, this.capacity);
-	}
+    @Override
+    public void setStored(int energy) {
+        this.energy = Math.min(energy, this.capacity);
+    }
 }
