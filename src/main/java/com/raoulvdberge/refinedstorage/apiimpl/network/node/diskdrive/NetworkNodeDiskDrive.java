@@ -36,7 +36,7 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IExcessVoidable, IAccessType, IStorageDiskContainerContext {
+public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IAccessType, IStorageDiskContainerContext {
     public static final Predicate<ItemStack> VALIDATOR_STORAGE_DISK = s -> s.getItem() instanceof IStorageDiskProvider && ((IStorageDiskProvider) s.getItem()).isValid(s);
 
     public static final String ID = "disk_drive";
@@ -45,7 +45,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
-    private static final String NBT_VOID_EXCESS = "VoidExcess";
 
     private ItemHandlerBase disks = new ItemHandlerBase(8, new ItemHandlerListenerNetworkNode(this), VALIDATOR_STORAGE_DISK) {
         @Override
@@ -84,7 +83,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
-    private boolean voidExcess = false;
 
     public NetworkNodeDiskDrive(World world, BlockPos pos) {
         super(world, pos);
@@ -180,7 +178,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
-        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
 
         AccessTypeUtils.writeAccessType(tag, accessType);
 
@@ -208,10 +205,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
         if (tag.hasKey(NBT_TYPE)) {
             type = tag.getInteger(NBT_TYPE);
-        }
-
-        if (tag.hasKey(NBT_VOID_EXCESS)) {
-            voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
 
         accessType = AccessTypeUtils.readAccessType(tag);
@@ -274,11 +267,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public TileDataParameter<Boolean, ?> getVoidExcessParameter() {
-        return TileDiskDrive.VOID_EXCESS;
-    }
-
-    @Override
     public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
         return TileDiskDrive.ACCESS_TYPE;
     }
@@ -334,18 +322,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     public IItemHandler getDisks() {
         return disks;
-    }
-
-    @Override
-    public boolean isVoidExcess() {
-        return voidExcess;
-    }
-
-    @Override
-    public void setVoidExcess(boolean voidExcess) {
-        this.voidExcess = voidExcess;
-
-        markDirty();
     }
 
     @Override

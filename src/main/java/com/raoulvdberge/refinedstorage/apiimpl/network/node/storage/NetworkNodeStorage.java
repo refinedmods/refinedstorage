@@ -19,7 +19,10 @@ import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
-import com.raoulvdberge.refinedstorage.tile.config.*;
+import com.raoulvdberge.refinedstorage.tile.config.IAccessType;
+import com.raoulvdberge.refinedstorage.tile.config.IComparable;
+import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.tile.config.IPrioritizable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -32,13 +35,12 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.List;
 import java.util.UUID;
 
-public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IExcessVoidable, IAccessType, IStorageDiskContainerContext {
+public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IAccessType, IStorageDiskContainerContext {
     public static final String ID = "storage";
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
-    private static final String NBT_VOID_EXCESS = "VoidExcess";
     public static final String NBT_ID = "Id";
 
     private ItemHandlerBase filters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
@@ -49,7 +51,6 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.BLACKLIST;
-    private boolean voidExcess = false;
 
     private UUID storageId;
     private IStorageDisk<ItemStack> storage;
@@ -141,7 +142,6 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
-        tag.setBoolean(NBT_VOID_EXCESS, voidExcess);
 
         AccessTypeUtils.writeAccessType(tag, accessType);
 
@@ -164,10 +164,6 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
 
         if (tag.hasKey(NBT_MODE)) {
             mode = tag.getInteger(NBT_MODE);
-        }
-
-        if (tag.hasKey(NBT_VOID_EXCESS)) {
-            voidExcess = tag.getBoolean(NBT_VOID_EXCESS);
         }
 
         accessType = AccessTypeUtils.readAccessType(tag);
@@ -207,18 +203,6 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
         markDirty();
     }
 
-    @Override
-    public boolean isVoidExcess() {
-        return voidExcess;
-    }
-
-    @Override
-    public void setVoidExcess(boolean voidExcess) {
-        this.voidExcess = voidExcess;
-
-        markDirty();
-    }
-
     public ItemHandlerBase getFilters() {
         return filters;
     }
@@ -251,11 +235,6 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     @Override
     public TileDataParameter<Integer, ?> getPriorityParameter() {
         return TileStorage.PRIORITY;
-    }
-
-    @Override
-    public TileDataParameter<Boolean, ?> getVoidExcessParameter() {
-        return TileStorage.VOID_EXCESS;
     }
 
     @Override

@@ -72,10 +72,6 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        if (context.isVoidExcess()) {
-                            return null;
-                        }
-
                         return StackUtils.copy(stack, size);
                     }
 
@@ -85,7 +81,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                         onChanged();
                     }
 
-                    return context.isVoidExcess() ? null : StackUtils.copy(otherStack, size - remainingSpace);
+                    return StackUtils.copy(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         otherStack.amount += size;
@@ -102,10 +98,6 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
-                if (context.isVoidExcess()) {
-                    return null;
-                }
-
                 return StackUtils.copy(stack, size);
             }
 
@@ -115,7 +107,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                 onChanged();
             }
 
-            return context.isVoidExcess() ? null : StackUtils.copy(stack, size - remainingSpace);
+            return StackUtils.copy(stack, size - remainingSpace);
         } else {
             if (!simulate) {
                 stacks.put(stack.getFluid(), StackUtils.copy(stack, size));
@@ -179,13 +171,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
             return 0;
         }
 
-        int inserted = remainder == null ? size : (size - remainder.amount);
-
-        if (context.isVoidExcess() && storedPreInsertion + inserted > getCapacity()) {
-            inserted = getCapacity() - storedPreInsertion;
-        }
-
-        return inserted;
+        return remainder == null ? size : (size - remainder.amount);
     }
 
     @Override

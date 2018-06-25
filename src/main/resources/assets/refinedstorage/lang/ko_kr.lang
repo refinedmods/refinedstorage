@@ -153,10 +153,6 @@ sidebutton.refinedstorage:detector.mode.1=수량과 일치할 때 신호 출력
 sidebutton.refinedstorage:detector.mode.2=수량 이상일 때 신호 출력
 sidebutton.refinedstorage:detector.mode.3=자동 조합 시 신호 출력
 
-sidebutton.refinedstorage:void_excess.items=수량 초과 아이템 자동 제거
-sidebutton.refinedstorage:void_excess.fluids=용량 초과 액체 자동 제거
-sidebutton.refinedstorage:void_excess.items_fluids=용량 초과 아이템/액체 자동 제거
-
 sidebutton.refinedstorage:constructor.drop=블럭을 설치하지 않고 떨어트림
 
 sidebutton.refinedstorage:destructor.pickup=블럭을 파괴하지 않고 주움

@@ -8,6 +8,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Removed Project E integration (raoulvdberge)
 - Removed blocking mode in autocrafting (raoulvdberge)
 - Removed the Wrench (raoulvdberge)
+- Removed "void excess items or fluids" functionality on storages (raoulvdberge)
 - Rewrote autocrafting (raoulvdberge)
 - Autocrafting tasks that take longer than 5 seconds to calculate are automatically stopped to avoid server strain (raoulvdberge)
 - Added new storage disk system where the storage disk data (items, fluids) are stored off the disk itself, in another file (refinedstorage_disks.dat). The disk itself only stores its ID (raoulvdberge)

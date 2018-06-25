@@ -252,11 +252,6 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public TileDataParameter<Boolean, ?> getVoidExcessParameter() {
-        return null;
-    }
-
-    @Override
     public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
         return TileExternalStorage.ACCESS_TYPE;
     }

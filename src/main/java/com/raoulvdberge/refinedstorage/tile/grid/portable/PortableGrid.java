@@ -389,11 +389,6 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public boolean isVoidExcess() {
-        return false;
-    }
-
-    @Override
     public AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
     }

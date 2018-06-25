@@ -21,7 +21,6 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public static final TileDataParameter<Integer, TileDiskDrive> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileDiskDrive> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer, TileDiskDrive> TYPE = IType.createParameter();
-    public static final TileDataParameter<Boolean, TileDiskDrive> VOID_EXCESS = IExcessVoidable.createParameter();
     public static final TileDataParameter<AccessType, TileDiskDrive> ACCESS_TYPE = IAccessType.createParameter();
     public static final TileDataParameter<Integer, TileDiskDrive> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
         int stored = 0;
@@ -81,7 +80,6 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(VOID_EXCESS);
         dataManager.addWatchedParameter(ACCESS_TYPE);
         dataManager.addWatchedParameter(STORED);
         dataManager.addWatchedParameter(CAPACITY);

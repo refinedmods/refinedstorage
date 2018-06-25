@@ -184,10 +184,6 @@ sidebutton.refinedstorage:detector.mode.1=Emit signal when on the amount
 sidebutton.refinedstorage:detector.mode.2=Emit signal when above the amount
 sidebutton.refinedstorage:detector.mode.3=Emit signal when item is being autocrafted
 
-sidebutton.refinedstorage:void_excess.items=Void excess items
-sidebutton.refinedstorage:void_excess.fluids=Void excess fluids
-sidebutton.refinedstorage:void_excess.items_fluids=Void excess items and fluids
-
 sidebutton.refinedstorage:constructor.drop=Drop blocks instead of placing
 
 sidebutton.refinedstorage:destructor.pickup=Pickup items instead of breaking

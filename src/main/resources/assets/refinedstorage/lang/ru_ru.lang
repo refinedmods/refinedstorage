@@ -179,10 +179,6 @@ sidebutton.refinedstorage:detector.mode.1=Выдача сигнала, если 
 sidebutton.refinedstorage:detector.mode.2=Выдача сигнала, если количество больше
 sidebutton.refinedstorage:detector.mode.3=Излучать сигнал, когда предмет начинает автосоздание
 
-sidebutton.refinedstorage:void_excess.items=Избыток предметов
-sidebutton.refinedstorage:void_excess.fluids=Избыток жидкости
-sidebutton.refinedstorage:void_excess.items_fluids=Избыток предметов и жидкости
-
 sidebutton.refinedstorage:constructor.drop=Выкидывать блоки вместо размещения
 
 sidebutton.refinedstorage:destructor.pickup=Подбирать предметы, а не ломать

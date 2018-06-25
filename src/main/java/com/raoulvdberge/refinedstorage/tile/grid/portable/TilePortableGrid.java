@@ -662,11 +662,6 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public boolean isVoidExcess() {
-        return false;
-    }
-
-    @Override
     public AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
     }

@@ -154,9 +154,6 @@ sidebutton.refinedstorage:detector.mode.0=Emet un signal quand la quantité est 
 guidebutton.refinedstorage:detector.mode.1=Emet un signal quand la quantité est égale
 sidebutton.refinedstorage:detector.mode.2=Emet un signal quand la quantité est supérieure
 sidebutton.refinedstorage:detector.mode.3=Emet un signal quand l'item est crafté auto
-sidebutton.refinedstorage:void_excess.items=Supprime les items en surplus
-sidebutton.refinedstorage:void_excess.fluids=Supprime les fluides en surplus
-sidebutton.refinedstorage:void_excess.items_fluids=Supprime les items et liquides en surplus
 
 sidebutton.refinedstorage:constructor.drop=Laisse tomber les blocs au lieu de les placer
 

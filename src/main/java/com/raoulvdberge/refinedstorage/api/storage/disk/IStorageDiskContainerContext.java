@@ -7,11 +7,6 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
  */
 public interface IStorageDiskContainerContext {
     /**
-     * @return true if excess stacks can be voided, false otherwise
-     */
-    boolean isVoidExcess();
-
-    /**
      * @return the access type
      */
     AccessType getAccessType();
