@@ -178,10 +178,6 @@ sidebutton.refinedstorage:detector.mode.1=Emitir señal si la cantidad se alcanz
 sidebutton.refinedstorage:detector.mode.2=Emitir señal si esta más de lo indicado
 sidebutton.refinedstorage:detector.mode.3=Emitir señal si se esta fabricando esto
 
-sidebutton.refinedstorage:void_excess.items=Vaciar objetos excedentes
-sidebutton.refinedstorage:void_excess.fluids=Vaciar fluidos excedentes
-sidebutton.refinedstorage:void_excess.items_fluids=Vaciar objetos y fluidos excedentes
-
 sidebutton.refinedstorage:constructor.drop=Soltar bloques en lugar de colocar
 
 sidebutton.refinedstorage:destructor.pickup=Recoger objetos en lugar de romper

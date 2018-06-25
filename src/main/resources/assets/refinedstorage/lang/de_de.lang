@@ -124,10 +124,6 @@ sidebutton.refinedstorage:detector.mode.3=Signal bei automatischer Herstellung
 
 sidebutton.refinedstorage:crafter.triggered_autocrafting=Automatische Herstellung mit Signal einschalten
 
-sidebutton.refinedstorage:void_excess.items=Überlauf löschen (Teile)
-sidebutton.refinedstorage:void_excess.fluids=Überlauf löschen (Flüssigkeiten)
-sidebutton.refinedstorage:void_excess.items_fluids=Überlauf löschen (Teile und Flüssigkeiten)
-
 sidebutton.refinedstorage:constructor.drop=Teil fallen lassen anstatt platzieren
 sidebutton.refinedstorage:destructor.pickup=Teil aufheben anstatt abbauen
 

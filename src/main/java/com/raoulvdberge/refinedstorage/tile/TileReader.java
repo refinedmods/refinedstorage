@@ -15,8 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,18 +34,6 @@ public class TileReader extends TileNode<NetworkNodeReader> {
         dataManager.addWatchedParameter(CHANNEL);
     }
 
-    private <T> T getDummyCapabilityForClient(IReader reader, Capability<T> capability) {
-        for (IReaderWriterHandlerFactory factory : API.instance().getReaderWriterHandlerRegistry().all()) {
-            T dummy = factory.create(null).getCapabilityReader(reader, capability);
-
-            if (dummy != null) {
-                return dummy;
-            }
-        }
-
-        return null;
-    }
-
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
         if (super.hasCapability(capability, facing)) {
@@ -60,22 +46,8 @@ public class TileReader extends TileNode<NetworkNodeReader> {
             return false;
         }
 
-        if (reader.getNetwork() == null || !reader.canUpdate()) {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                return getDummyCapabilityForClient(reader, capability) != null;
-            }
-
-            return false;
-        }
-
-        IReaderWriterChannel channel = reader.getNetwork().getReaderWriterManager().getChannel(reader.getChannel());
-
-        if (channel == null) {
-            return false;
-        }
-
-        for (IReaderWriterHandler handler : channel.getHandlers()) {
-            if (handler.hasCapabilityReader(reader, capability)) {
+        for (IReaderWriterHandlerFactory handlerFactory : API.instance().getReaderWriterHandlerRegistry().all()) {
+            if (handlerFactory.create(null).hasCapabilityReader(reader, capability)) {
                 return true;
             }
         }
@@ -94,18 +66,21 @@ public class TileReader extends TileNode<NetworkNodeReader> {
                 return null;
             }
 
-            if (reader.getNetwork() == null || !reader.canUpdate()) {
-                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    return getDummyCapabilityForClient(reader, capability);
+            Object dummyCap = null;
+            for (IReaderWriterHandlerFactory handlerFactory : API.instance().getReaderWriterHandlerRegistry().all()) {
+                if (handlerFactory.create(null).hasCapabilityReader(reader, capability)) {
+                    dummyCap = handlerFactory.create(null).getNullCapability();
                 }
+            }
 
-                return null;
+            if (reader.getNetwork() == null || !reader.canUpdate()) {
+                return (T) dummyCap;
             }
 
             IReaderWriterChannel channel = reader.getNetwork().getReaderWriterManager().getChannel(reader.getChannel());
 
             if (channel == null) {
-                return null;
+                return (T) dummyCap;
             }
 
             for (IReaderWriterHandler handler : channel.getHandlers()) {

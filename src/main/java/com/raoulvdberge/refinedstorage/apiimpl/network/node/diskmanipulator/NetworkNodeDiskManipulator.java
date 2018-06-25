@@ -535,11 +535,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     @Override
-    public boolean isVoidExcess() {
-        return false;
-    }
-
-    @Override
     public AccessType getAccessType() {
         return AccessType.INSERT_EXTRACT;
     }
