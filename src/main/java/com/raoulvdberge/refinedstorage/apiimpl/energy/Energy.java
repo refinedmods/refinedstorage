@@ -8,7 +8,6 @@ import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 public final class Energy implements IEnergy {
-
 	private static final UUID UUID_EMPTY = new UUID(0l, 0l);
 
 	protected int capacity;
@@ -50,7 +49,7 @@ public final class Energy implements IEnergy {
 	}
 
 	@Override
-	public int getMaxEnergy() {
+	public int getCapacity() {
 		return this.capacity;
 	}
 
@@ -69,7 +68,7 @@ public final class Energy implements IEnergy {
 	}
 
 	@Override
-	public int receive(int maxReceive, boolean simulate) {
+	public int insert (int maxReceive, boolean simulate) {
 		if (maxReceive <= 0) {
 			return 0;
 		}
@@ -82,7 +81,7 @@ public final class Energy implements IEnergy {
 	}
 
 	@Override
-	public void setStored(int energyAmount) {
-		this.energy = Math.min(energyAmount, this.capacity);
+	public void setStored(int energy) {
+		this.energy = Math.min(energy, this.capacity);
 	}
 }

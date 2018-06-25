@@ -20,7 +20,7 @@ public class NetworkNodeListener {
                 e.world.profiler.startSection("network node ticking");
 
                 for (INetworkNode node : API.instance().getNetworkNodeManager(e.world).all()) {
-                	node.update();    
+                	node.update();
                 }
 
                 e.world.profiler.endSection();

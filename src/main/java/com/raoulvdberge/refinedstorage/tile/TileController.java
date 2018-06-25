@@ -78,7 +78,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public static final TileDataParameter<Integer, TileController> REDSTONE_MODE = RedstoneMode.createParameter();
     public static final TileDataParameter<Integer, TileController> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TileController::getEnergyUsage);
     public static final TileDataParameter<Integer, TileController> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getStored());
-    public static final TileDataParameter<Integer, TileController> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getMaxEnergy());
+    public static final TileDataParameter<Integer, TileController> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getCapacity());
     public static final TileDataParameter<List<ClientNode>, TileController> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), t -> {
         List<ClientNode> nodes = new ArrayList<>();
 
@@ -167,10 +167,10 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         });
     }
     
-	@Override
-	public IEnergy getEnergy() {
-		return this.energy;
-	}
+    @Override
+    public IEnergy getEnergy() {
+    	return this.energy;
+    }
 
     @Override
     public BlockPos getPosition() {
@@ -212,14 +212,14 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             if (getType() == ControllerType.NORMAL) {
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
-                	this.energy.setStored(this.energy.getMaxEnergy());
+                	this.energy.setStored(this.energy.getCapacity());
                 } else if (this.energy.extract(getEnergyUsage(), true) >= 0) {
                 	this.energy.extract(getEnergyUsage(), false);
                 } else {
                 	this.energy.setStored(0);
                 }
             } else if (getType() == ControllerType.CREATIVE) {
-            	this.energy.setStored(this.energy.getMaxEnergy());
+            	this.energy.setStored(this.energy.getCapacity());
             }
 
             boolean canRun = canRun();
@@ -570,7 +570,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             return energyType;
         }
 
-        return getEnergyType(this.energy.getStored(), this.energy.getMaxEnergy());
+        return getEnergyType(this.energy.getStored(), this.energy.getCapacity());
     }
 
     @Override
@@ -586,7 +586,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
     
 	@Override
-	public int getEnergyUsage() {        
+	public int getEnergyUsage() {
 		int usage = RS.INSTANCE.config.controllerBaseUsage;
 		usage += nodeGraph.all().stream().mapToInt(x-> x.getEnergyUsage()).sum();
 		return usage;

@@ -7,13 +7,13 @@ public interface IEnergy {
 
 	int extract(int amount, boolean simulate);
 
-	int getMaxEnergy();
+	int getCapacity();
 
 	int getStored();
 
 	void increaseCapacity(UUID id, int amount);
 
-	int receive(int amount, boolean simulate);
+	int insert(int amount, boolean simulate);
 
 	void setStored(int energyAmount);
 }

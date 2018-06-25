@@ -102,7 +102,7 @@ public class BlockController extends BlockBase {
 
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergy().getStored());
-        stack.getTagCompound().setInteger(TileController.NBT_ENERGY_CAPACITY, ((TileController) world.getTileEntity(pos)).getEnergy().getMaxEnergy());
+        stack.getTagCompound().setInteger(TileController.NBT_ENERGY_CAPACITY, ((TileController) world.getTileEntity(pos)).getEnergy().getCapacity());
 
         drops.add(stack);
     }

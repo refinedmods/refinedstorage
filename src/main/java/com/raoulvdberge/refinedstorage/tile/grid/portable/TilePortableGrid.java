@@ -224,8 +224,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private EnergyStorage recreateEnergyStorage(int energyStored) {
     	return new EnergyStorage(ItemEnergyItem.CAPACITY, ItemEnergyItem.CAPACITY, 0, energyStored);
 	}
-
-	public ItemStack getAsItem() {
+    
+    public ItemStack getAsItem() {
         ItemStack stack = new ItemStack(RSBlocks.PORTABLE_GRID, 1, getPortableType() == PortableGridType.NORMAL ? ItemBlockPortableGrid.TYPE_NORMAL : ItemBlockPortableGrid.TYPE_CREATIVE);
 
         stack.setTagCompound(new NBTTagCompound());

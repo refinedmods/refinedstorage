@@ -7,19 +7,19 @@ public final class EnergyProxy implements IEnergyStorage {
 	private final int maxExtract;
 	private final IEnergy energy;
 
-	public EnergyProxy(IEnergy energyCore, int maxTransfer) {
-		this(energyCore, maxTransfer, maxTransfer);
+	public EnergyProxy(IEnergy energy, int maxTransfer) {
+		this(energy, maxTransfer, maxTransfer);
 	}
 
-	public EnergyProxy(IEnergy energyCore, int maxReceive, int maxExtract) {
-		this.energy = energyCore;
+	public EnergyProxy(IEnergy energy, int maxReceive, int maxExtract) {
+		this.energy = energy;
 		this.maxReceive = maxReceive;
 		this.maxExtract = maxExtract;
 	}
 
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
-		return !canReceive() ? 0 : this.energy.receive(Math.min(this.maxReceive, maxReceive), simulate);
+		return !canReceive() ? 0 : this.energy.insert(Math.min(this.maxReceive, maxReceive), simulate);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public final class EnergyProxy implements IEnergyStorage {
 
 	@Override
 	public int getMaxEnergyStored() {
-		return this.energy.getMaxEnergy();
+		return this.energy.getCapacity();
 	}
 
 	@Override
