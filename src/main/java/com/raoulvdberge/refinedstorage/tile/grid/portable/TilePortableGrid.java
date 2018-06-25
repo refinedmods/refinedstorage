@@ -584,7 +584,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         StackUtils.readItems(filter, 1, tag);
 
         if (tag.hasKey(NBT_ENERGY)) {
-        	energyStorage = recreateEnergyStorage(tag.getInteger(NBT_ENERGY));
+            energyStorage = recreateEnergyStorage(tag.getInteger(NBT_ENERGY));
         }
 
         redstoneMode = RedstoneMode.read(tag);
