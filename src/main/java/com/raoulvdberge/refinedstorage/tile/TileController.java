@@ -587,9 +587,9 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 	
     @Override
     public int getEnergyUsage() {
-	    int usage = RS.INSTANCE.config.controllerBaseUsage;
-	    usage += nodeGraph.all().stream().mapToInt(x-> x.getEnergyUsage()).sum();
-	    return usage;
+        int usage = RS.INSTANCE.config.controllerBaseUsage;
+        usage += nodeGraph.all().stream().mapToInt(x-> x.getEnergyUsage()).sum();
+        return usage;
     }
 
     @Nonnull
