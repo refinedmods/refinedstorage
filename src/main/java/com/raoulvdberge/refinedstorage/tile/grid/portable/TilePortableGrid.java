@@ -222,7 +222,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     private EnergyStorage recreateEnergyStorage(int energyStored) {
-    	return new EnergyStorage(ItemEnergyItem.CAPACITY, ItemEnergyItem.CAPACITY, 0, energyStored);
+        return new EnergyStorage(ItemEnergyItem.CAPACITY, ItemEnergyItem.CAPACITY, 0, energyStored);
     }
     
     public ItemStack getAsItem() {
