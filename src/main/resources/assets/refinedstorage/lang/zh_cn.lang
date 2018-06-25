@@ -157,10 +157,6 @@ sidebutton.refinedstorage:detector.mode.1=物品数量等于输入数量时输�
 sidebutton.refinedstorage:detector.mode.2=物品数量大于于输入数量时输出信号
 sidebutton.refinedstorage:detector.mode.3=当正在自动合成的时候输出红石信号
 
-sidebutton.refinedstorage:void_excess.items=销毁多余的物品
-sidebutton.refinedstorage:void_excess.fluids=销毁多余的流体
-sidebutton.refinedstorage:void_excess.items_fluids=销毁多余的物品和流体
-
 sidebutton.refinedstorage:constructor.drop=将物品以掉落物形式抛出
 
 sidebutton.refinedstorage:destructor.pickup=拾取物品模式

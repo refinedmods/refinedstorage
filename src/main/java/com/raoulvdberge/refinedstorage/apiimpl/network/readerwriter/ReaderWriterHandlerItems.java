@@ -23,6 +23,36 @@ import java.util.List;
 public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     public static final String ID = "items";
 
+    private static final IItemHandler NULL_CAP = new IItemHandler() {
+        @Override
+        public int getSlots() {
+            return 0;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return ItemStack.EMPTY;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+            return stack;
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return 0;
+        }
+    };
+
     private ItemStackHandler items;
     private ItemHandlerReaderWriter itemsReader, itemsWriter;
 
@@ -72,6 +102,11 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
         }
 
         return null;
+    }
+
+    @Override
+    public Object getNullCapability() {
+        return NULL_CAP;
     }
 
     @Override

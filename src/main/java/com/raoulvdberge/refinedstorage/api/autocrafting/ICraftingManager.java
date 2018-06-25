@@ -23,6 +23,15 @@ public interface ICraftingManager {
     Collection<ICraftingTask> getTasks();
 
     /**
+     * Returns a crafting task by id.
+     *
+     * @param id the id
+     * @return the task, or null if no task was found for the given id
+     */
+    @Nullable
+    ICraftingTask getTask(UUID id);
+
+    /**
      * @return named crafting pattern containers
      */
     Map<String, List<IItemHandlerModifiable>> getNamedContainers();
@@ -42,7 +51,7 @@ public interface ICraftingManager {
     void cancel(@Nullable UUID id);
 
     /**
-     * Creates a crafting task for a given stack.
+     * Creates a crafting task for a given stack, but doesn't add it to the list.
      *
      * @param stack    the stack to craft
      * @param quantity the quantity to craft

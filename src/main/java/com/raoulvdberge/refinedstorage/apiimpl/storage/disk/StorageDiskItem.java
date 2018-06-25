@@ -107,10 +107,6 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                     int remainingSpace = getCapacity() - getStored();
 
                     if (remainingSpace <= 0) {
-                        if (context.isVoidExcess()) {
-                            return null;
-                        }
-
                         return ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
@@ -120,7 +116,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                         onChanged();
                     }
 
-                    return context.isVoidExcess() ? null : ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
+                    return ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
                     if (!simulate) {
                         otherStack.grow(size);
@@ -137,10 +133,6 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
             int remainingSpace = getCapacity() - getStored();
 
             if (remainingSpace <= 0) {
-                if (context.isVoidExcess()) {
-                    return null;
-                }
-
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
@@ -150,7 +142,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                 onChanged();
             }
 
-            return context.isVoidExcess() ? null : ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
+            return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
         } else {
             if (!simulate) {
                 stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, size));
@@ -236,13 +228,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
             return 0;
         }
 
-        int inserted = remainder == null ? size : (size - remainder.getCount());
-
-        if (context.isVoidExcess() && storedPreInsertion + inserted > getCapacity()) {
-            inserted = getCapacity() - storedPreInsertion;
-        }
-
-        return inserted;
+        return remainder == null ? size : (size - remainder.getCount());
     }
 
     Multimap<Item, ItemStack> getRawStacks() {

@@ -11,8 +11,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,18 +20,6 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
 
     public TileWriter() {
         dataManager.addWatchedParameter(CHANNEL);
-    }
-
-    private <T> T getDummyCapabilityForClient(IWriter writer, Capability<T> capability) {
-        for (IReaderWriterHandlerFactory factory : API.instance().getReaderWriterHandlerRegistry().all()) {
-            T dummy = factory.create(null).getCapabilityWriter(writer, capability);
-
-            if (dummy != null) {
-                return dummy;
-            }
-        }
-
-        return null;
     }
 
     @Override
@@ -48,22 +34,8 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
             return false;
         }
 
-        if (writer.getNetwork() == null || !writer.canUpdate()) {
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                return getDummyCapabilityForClient(writer, capability) != null;
-            }
-
-            return false;
-        }
-
-        IReaderWriterChannel channel = writer.getNetwork().getReaderWriterManager().getChannel(writer.getChannel());
-
-        if (channel == null) {
-            return false;
-        }
-
-        for (IReaderWriterHandler handler : channel.getHandlers()) {
-            if (handler.hasCapabilityWriter(writer, capability)) {
+        for (IReaderWriterHandlerFactory handlerFactory : API.instance().getReaderWriterHandlerRegistry().all()) {
+            if (handlerFactory.create(null).hasCapabilityWriter(writer, capability)) {
                 return true;
             }
         }
@@ -82,18 +54,21 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
                 return null;
             }
 
-            if (writer.getNetwork() == null || !writer.canUpdate()) {
-                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-                    return getDummyCapabilityForClient(writer, capability);
+            Object dummyCap = null;
+            for (IReaderWriterHandlerFactory handlerFactory : API.instance().getReaderWriterHandlerRegistry().all()) {
+                if (handlerFactory.create(null).hasCapabilityWriter(writer, capability)) {
+                    dummyCap = handlerFactory.create(null).getNullCapability();
                 }
+            }
 
-                return null;
+            if (writer.getNetwork() == null || !writer.canUpdate()) {
+                return (T) dummyCap;
             }
 
             IReaderWriterChannel channel = writer.getNetwork().getReaderWriterManager().getChannel(writer.getChannel());
 
             if (channel == null) {
-                return null;
+                return (T) dummyCap;
             }
 
             for (IReaderWriterHandler handler : channel.getHandlers()) {

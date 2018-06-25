@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
+    public static final long TRANSFER_SCROLL_DELAY_MS = 200;
+    public static long LAST_TRANSFER;
+
     @Override
     public Class<? extends Container> getContainerClass() {
         return ContainerGrid.class;
@@ -29,6 +32,8 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
     @Override
     public IRecipeTransferError transferRecipe(Container container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
         if (doTransfer) {
+            LAST_TRANSFER = System.currentTimeMillis();
+
             IGrid grid = ((ContainerGrid) container).getGrid();
 
             if (grid.getType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {

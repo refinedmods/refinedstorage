@@ -36,5 +36,5 @@ public interface IReaderWriterChannel {
      *
      * @param tag the tag to read from
      */
-    void readFromNBT(NBTTagCompound tag);
+    void readFromNbt(NBTTagCompound tag);
 }

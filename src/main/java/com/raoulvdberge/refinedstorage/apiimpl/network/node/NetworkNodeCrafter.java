@@ -218,7 +218,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         TileEntity facing = getConnectedTile();
 
-        if (facing instanceof IWorldNameable) {
+        if (facing instanceof IWorldNameable && ((IWorldNameable) facing).getName() != null) {
             return ((IWorldNameable) facing).getName();
         }
 
