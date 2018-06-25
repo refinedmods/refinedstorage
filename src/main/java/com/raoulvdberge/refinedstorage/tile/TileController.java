@@ -4,6 +4,8 @@ import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
+import com.raoulvdberge.refinedstorage.api.energy.EnergyProxy;
+import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
@@ -19,6 +21,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
+import com.raoulvdberge.refinedstorage.apiimpl.energy.Energy;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandler;
@@ -35,7 +38,6 @@ import com.raoulvdberge.refinedstorage.block.BlockController;
 import com.raoulvdberge.refinedstorage.block.ControllerEnergyType;
 import com.raoulvdberge.refinedstorage.block.ControllerType;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
@@ -75,8 +77,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     public static final TileDataParameter<Integer, TileController> REDSTONE_MODE = RedstoneMode.createParameter();
     public static final TileDataParameter<Integer, TileController> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TileController::getEnergyUsage);
-    public static final TileDataParameter<Integer, TileController> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getEnergyStored());
-    public static final TileDataParameter<Integer, TileController> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getMaxEnergyStored());
+    public static final TileDataParameter<Integer, TileController> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getStored());
+    public static final TileDataParameter<Integer, TileController> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getCapacity());
     public static final TileDataParameter<List<ClientNode>, TileController> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), t -> {
         List<ClientNode> nodes = new ArrayList<>();
 
@@ -134,7 +136,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this);
 
-    private EnergyForge energy = new EnergyForge(RS.INSTANCE.config.controllerCapacity);
+    private final IEnergy energy = new Energy(RS.INSTANCE.config.controllerCapacity);
+    private final EnergyProxy energyProxy = new EnergyProxy(this.energy, RS.INSTANCE.config.controllerMaxReceive, 0);
 
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
@@ -163,9 +166,10 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
         });
     }
-
-    public EnergyForge getEnergy() {
-        return energy;
+    
+    @Override
+    public IEnergy getEnergy() {
+        return this.energy;
     }
 
     @Override
@@ -175,7 +179,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public boolean canRun() {
-        return energy.getEnergyStored() > 0 && redstoneMode.isEnabled(world, pos);
+        return this.energy.getStored() > 0 && redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -208,14 +212,14 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             if (getType() == ControllerType.NORMAL) {
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
-                    energy.setEnergyStored(energy.getMaxEnergyStored());
-                } else if (energy.getEnergyStored() - getEnergyUsage() >= 0) {
-                    energy.extractEnergyInternal(getEnergyUsage());
+                    this.energy.setStored(this.energy.getCapacity());
+                } else if (this.energy.extract(getEnergyUsage(), true) >= 0) {
+                    this.energy.extract(getEnergyUsage(), false);
                 } else {
-                    energy.setEnergyStored(0);
+                    this.energy.setStored(0);
                 }
             } else if (getType() == ControllerType.CREATIVE) {
-                energy.setEnergyStored(energy.getMaxEnergyStored());
+            	this.energy.setStored(this.energy.getCapacity());
             }
 
             boolean canRun = canRun();
@@ -489,7 +493,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         super.read(tag);
 
         if (tag.hasKey(NBT_ENERGY)) {
-            energy.setEnergyStored(tag.getInteger(NBT_ENERGY));
+            this.energy.setStored(tag.getInteger(NBT_ENERGY));
         }
 
         redstoneMode = RedstoneMode.read(tag);
@@ -511,7 +515,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        tag.setInteger(NBT_ENERGY, energy.getEnergyStored());
+        tag.setInteger(NBT_ENERGY, this.energy.getStored());
 
         redstoneMode.write(tag);
 
@@ -566,7 +570,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             return energyType;
         }
 
-        return getEnergyType(energy.getEnergyStored(), energy.getMaxEnergyStored());
+        return getEnergyType(this.energy.getStored(), this.energy.getCapacity());
     }
 
     @Override
@@ -580,17 +584,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         markDirty();
     }
-
+	
     @Override
     public int getEnergyUsage() {
         int usage = RS.INSTANCE.config.controllerBaseUsage;
-
-        for (INetworkNode node : nodeGraph.all()) {
-            if (node.canUpdate()) {
-                usage += node.getEnergyUsage();
-            }
-        }
-
+        usage += nodeGraph.all().stream().mapToInt(x-> x.getEnergyUsage()).sum();
         return usage;
     }
 
@@ -635,7 +633,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(energy);
+            return CapabilityEnergy.ENERGY.cast(energyProxy);
         }
 
         if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {

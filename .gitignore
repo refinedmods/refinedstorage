@@ -13,3 +13,4 @@ run/
 *.iws
 .idea/
 out/
+/bin/

@@ -28,7 +28,6 @@ import com.raoulvdberge.refinedstorage.block.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.PortableGridType;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyForge;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
@@ -54,6 +53,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -108,7 +108,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private static final String NBT_CONNECTED = "Connected";
     private static final String NBT_STORAGE_TRACKER = "StorageTracker";
 
-    private EnergyForge energyStorage = new EnergyForge(ItemEnergyItem.CAPACITY);
+    private EnergyStorage energyStorage = recreateEnergyStorage(0);
     private PortableGridType type;
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
@@ -200,7 +200,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         this.tabPage = ItemWirelessGrid.getTabPage(stack);
         this.size = ItemWirelessGrid.getSize(stack);
 
-        this.energyStorage.setEnergyStored(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored());
+        this.energyStorage = recreateEnergyStorage(stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored());
 
         if (stack.hasTagCompound()) {
             for (int i = 0; i < 4; ++i) {
@@ -221,6 +221,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         markDirty();
     }
 
+    private EnergyStorage recreateEnergyStorage(int energyStored) {
+        return new EnergyStorage(ItemEnergyItem.CAPACITY, ItemEnergyItem.CAPACITY, 0, energyStored);
+    }
+    
     public ItemStack getAsItem() {
         ItemStack stack = new ItemStack(RSBlocks.PORTABLE_GRID, 1, getPortableType() == PortableGridType.NORMAL ? ItemBlockPortableGrid.TYPE_NORMAL : ItemBlockPortableGrid.TYPE_CREATIVE);
 
@@ -468,7 +472,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     @Override
     public void drainEnergy(int energy) {
         if (RS.INSTANCE.config.portableGridUsesEnergy && getPortableType() != PortableGridType.CREATIVE && redstoneMode.isEnabled(world, pos)) {
-            energyStorage.extractEnergyInternal(energy);
+            energyStorage.extractEnergy(energy, false);
 
             checkIfDiskStateChanged();
         }
@@ -580,7 +584,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         StackUtils.readItems(filter, 1, tag);
 
         if (tag.hasKey(NBT_ENERGY)) {
-            energyStorage.setEnergyStored(tag.getInteger(NBT_ENERGY));
+            energyStorage = recreateEnergyStorage(tag.getInteger(NBT_ENERGY));
         }
 
         redstoneMode = RedstoneMode.read(tag);
