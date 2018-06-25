@@ -169,7 +169,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     
     @Override
     public IEnergy getEnergy() {
-    	return this.energy;
+        return this.energy;
     }
 
     @Override
@@ -212,11 +212,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             if (getType() == ControllerType.NORMAL) {
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
-                	this.energy.setStored(this.energy.getCapacity());
+                    this.energy.setStored(this.energy.getCapacity());
                 } else if (this.energy.extract(getEnergyUsage(), true) >= 0) {
-                	this.energy.extract(getEnergyUsage(), false);
+                    this.energy.extract(getEnergyUsage(), false);
                 } else {
-                	this.energy.setStored(0);
+                    this.energy.setStored(0);
                 }
             } else if (getType() == ControllerType.CREATIVE) {
             	this.energy.setStored(this.energy.getCapacity());
@@ -584,13 +584,13 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         markDirty();
     }
-    
-	@Override
-	public int getEnergyUsage() {
-		int usage = RS.INSTANCE.config.controllerBaseUsage;
-		usage += nodeGraph.all().stream().mapToInt(x-> x.getEnergyUsage()).sum();
-		return usage;
-	}
+	
+    @Override
+    public int getEnergyUsage() {
+	    int usage = RS.INSTANCE.config.controllerBaseUsage;
+	    usage += nodeGraph.all().stream().mapToInt(x-> x.getEnergyUsage()).sum();
+	    return usage;
+    }
 
     @Nonnull
     @Override
