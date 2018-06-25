@@ -89,7 +89,7 @@ public class BlockController extends BlockBase {
             NBTTagCompound tag = stack.getTagCompound();
 
             if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
-                controller.setEnergyStored(tag.getInteger(TileController.NBT_ENERGY));
+                controller.getEnergy().setStored(tag.getInteger(TileController.NBT_ENERGY));
             }
         }
 
@@ -101,8 +101,8 @@ public class BlockController extends BlockBase {
         ItemStack stack = new ItemStack(RSBlocks.CONTROLLER, 1, RSBlocks.CONTROLLER.getMetaFromState(state));
 
         stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergyCore().getStoredEnergy());
-        stack.getTagCompound().setInteger(TileController.NBT_ENERGY_CAPACITY, ((TileController) world.getTileEntity(pos)).getEnergyCore().getMaxEnergy());
+        stack.getTagCompound().setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergy().getStored());
+        stack.getTagCompound().setInteger(TileController.NBT_ENERGY_CAPACITY, ((TileController) world.getTileEntity(pos)).getEnergy().getMaxEnergy());
 
         drops.add(stack);
     }

@@ -141,7 +141,7 @@ public final class RSConfig {
     private void loadConfig() {
         //region Energy
         controllerBaseUsage = config.getInt("controllerBase", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
-        controllerMaxReceive = config.getInt("controllerMaxReceive", ENERGY, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, "The maximum RF the controller receives per Tick");
+        controllerMaxReceive = config.getInt("controllerMaxReceive", ENERGY, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, "The maximum energy the controller receives per tick");
         cableUsage = config.getInt("cable", ENERGY, 0, 0, Integer.MAX_VALUE, "The energy used by Cables");
         constructorUsage = config.getInt("constructor", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Constructors");
         crafterUsage = config.getInt("crafter", ENERGY, 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");

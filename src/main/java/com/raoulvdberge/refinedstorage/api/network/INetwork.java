@@ -1,11 +1,10 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
-import com.raoulvdberge.refinedstorage.api.energy.IEnergyCore;
+import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -28,7 +27,7 @@ public interface INetwork {
     /**
      * @return the energy usage per tick of this network
      */
-    int getNetworkEnergyUsage();
+    int getEnergyUsage();
 
     /**
      * @return the position of this network in the world
@@ -56,9 +55,9 @@ public interface INetwork {
     ICraftingManager getCraftingManager();
     
     /**
-     * @return the {@link IEnergyCore} of this network
+     * @return the {@link IEnergy} of this network
      */
-    IEnergyCore getEnergyCore();
+    IEnergy getEnergy();
 
     /**
      * @return the {@link IItemGridHandler} of this network
@@ -205,8 +204,4 @@ public interface INetwork {
      * @return the world where this network is in
      */
     World world();
-
-	boolean canUpdate(INetworkNode node);
-	
-	void consumeEnergy(INetworkNode node);
 }

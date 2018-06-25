@@ -13,5 +13,4 @@ run/
 *.iws
 .idea/
 out/
-translation-diff.diff
 /bin/
