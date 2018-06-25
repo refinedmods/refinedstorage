@@ -272,11 +272,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public String getVoidExcessType() {
-        return "items_fluids";
-    }
-
-    @Override
     public int getStored() {
         return TileDiskDrive.STORED.getValue();
     }

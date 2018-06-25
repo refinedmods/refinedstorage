@@ -243,11 +243,6 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public String getVoidExcessType() {
-        return "items";
-    }
-
-    @Override
     public int getStored() {
         return TileStorage.STORED.getValue();
     }

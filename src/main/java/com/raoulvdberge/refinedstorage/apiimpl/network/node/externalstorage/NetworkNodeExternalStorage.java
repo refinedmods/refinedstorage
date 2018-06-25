@@ -257,11 +257,6 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public String getVoidExcessType() {
-        return null;
-    }
-
-    @Override
     public int getStored() {
         return TileExternalStorage.STORED.getValue();
     }
