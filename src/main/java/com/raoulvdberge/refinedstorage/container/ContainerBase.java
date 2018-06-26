@@ -49,7 +49,7 @@ public abstract class ContainerBase extends Container {
             int x = xInventory + i * 18;
             int y = yInventory + 4 + (3 * 18);
 
-            if (i == player.inventory.currentItem && isHeldItemDisabled()) {
+            if (isHeldItemDisabled() && i == player.inventory.currentItem) {
                 addSlotToContainer(new SlotDisabled(player.inventory, id, x, y));
             } else {
                 addSlotToContainer(new Slot(player.inventory, id, x, y));
@@ -70,6 +70,12 @@ public abstract class ContainerBase extends Container {
     @Override
     public ItemStack slotClick(int id, int dragType, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
+
+        // Prevent swapping disabled held item with the number keys
+        // (dragType is the slot we're swapping with)
+        if (isHeldItemDisabled() && clickType == ClickType.SWAP && dragType == player.inventory.currentItem) {
+            return ItemStack.EMPTY;
+        }
 
         if (slot instanceof SlotFilter) {
             if (slot.getStack().getItem() == RSItems.FILTER) {
