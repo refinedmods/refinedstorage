@@ -6,12 +6,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.StorageDiskItemDriveWrapper;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskManager;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -19,7 +15,6 @@ import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.Visibility;
 import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -334,50 +329,49 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getItemStorageCache().getList().getStacks()};
     }
 
-    @Callback(doc = "function():table -- Gets a list of all connected Storage Disks / Blocks in this network.")
-    public Object[] getStorage(final Context context, final Arguments args) {
+    @Callback(doc = "function():table -- Gets a list of all connected storage disks and blocks in this network.")
+    public Object[] getStorages(final Context context, final Arguments args) {
         int totalItemStored = 0;
         int totalItemCapacity = 0;
+
         int totalFluidStored = 0;
         int totalFluidCapacity = 0;
 
-        HashMap<String, HashMap<String, Object>> devices = new HashMap<String, HashMap<String, Object>>();
+        List<HashMap<String, Object>> devices = new ArrayList<>();
 
-        IStorageDiskManager sdm = API.instance().getStorageDiskManager(node.getWorld());
+        if (node.getNetwork() != null) {
+            for (IStorage s : node.getNetwork().getItemStorageCache().getStorages()) {
+                if (s instanceof IStorageDisk) {
+                    IStorageDisk disk = (IStorageDisk) s;
 
-        for (IStorage s : node.getNetwork().getItemStorageCache().getStorages()) {
-            if (s instanceof IStorageDisk) {
-                IStorageDisk sd = (IStorageDisk) s;
-                String id = sd.getId();
-                HashMap<String, Object> data = new HashMap();
+                    HashMap<String, Object> data = new HashMap<>();
 
-                data.put("type", "item");
-                data.put("usage", sd.getStored());
-                data.put("capacity", sd.getCapacity());
+                    data.put("type", "item");
+                    data.put("usage", disk.getStored());
+                    data.put("capacity", disk.getCapacity());
 
-                totalItemStored += sd.getStored();
-                totalItemCapacity += sd.getCapacity();
+                    totalItemStored += disk.getStored();
+                    totalItemCapacity += disk.getCapacity();
 
-                UUID uuid = sdm.getUuid(sd);
-                devices.put(uuid.toString(), data);
+                    devices.add(data);
+                }
             }
-        }
 
-        for (IStorage s : node.getNetwork().getFluidStorageCache().getStorages()) {
-            if (s instanceof IStorageDisk) {
-                IStorageDisk sd = (IStorageDisk) s;
-                String id = sd.getId();
-                HashMap<String, Object> data = new HashMap();
+            for (IStorage s : node.getNetwork().getFluidStorageCache().getStorages()) {
+                if (s instanceof IStorageDisk) {
+                    IStorageDisk disk = (IStorageDisk) s;
 
-                data.put("type", "fluid");
-                data.put("usage", sd.getStored());
-                data.put("capacity", sd.getCapacity());
+                    HashMap<String, Object> data = new HashMap<>();
 
-                totalFluidStored += sd.getStored();
-                totalFluidCapacity += sd.getCapacity();
+                    data.put("type", "fluid");
+                    data.put("usage", disk.getStored());
+                    data.put("capacity", disk.getCapacity());
 
-                UUID uuid = sdm.getUuid(sd);
-                devices.put(uuid.toString(), data);
+                    totalFluidStored += disk.getStored();
+                    totalFluidCapacity += disk.getCapacity();
+
+                    devices.add(data);
+                }
             }
         }
 

@@ -20,15 +20,6 @@ public interface IStorageDiskManager {
     IStorageDisk get(UUID id);
 
     /**
-     * Gets the UUID of the given Storage Disk
-     *
-     * @param disk the storage disk
-     * @return the storage disk's UUID, or null if no UUID is found
-     */
-    @Nullable
-    UUID getUuid(IStorageDisk disk);
-
-    /**
      * Gets a storage disk by disk stack (a {@link IStorageDiskProvider}).
      *
      * @param disk the disk stack

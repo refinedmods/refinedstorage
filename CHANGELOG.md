@@ -24,6 +24,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Fixed bug where External Storage could only handle 1 fluid inventory per block (raoulvdberge)
 - Prevent accidental Grid scrollbar click after clicking JEI recipe transfer button (raoulvdberge)
 - Added a missing config option for Crafter Manager energy usage (raoulvdberge)
+- Added support for Disk Drive / Storage Block storage and capacity to OC integration (zangai)
 - If an Interface is configured to expose the entire network storage (by configuring no export slots), it will no longer expose the entire RS storage, due to performance issues (raoulvdberge)
 - The Portable Grid no longer exposes a inventory for crossmod interaction, due to performance issues (raoulvdberge)
 - The Crafting Monitor is now resizable and its size can be configured (stretched, small, medium, large) (raoulvdberge)
