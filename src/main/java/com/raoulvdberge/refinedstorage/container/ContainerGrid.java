@@ -210,6 +210,19 @@ public class ContainerGrid extends ContainerBase {
             if (slot.getHasStack()) {
                 if (grid instanceof IPortableGrid && slot.slotNumber == 4) { // Prevent moving disk slot into portable grid itself
                     return ItemStack.EMPTY;
+                } else if (grid.getType() == GridType.PATTERN && slot.slotNumber == 5) { // From output slot to inventory
+                    ItemStack stack = slot.getStack();
+
+                    int startIndex = 5;
+                    int endIndex = startIndex + (9 * 4);
+
+                    if (mergeItemStack(stack, startIndex, endIndex, false)) {
+                        slot.onSlotChanged();
+
+                        detectAndSendChanges();
+                    }
+
+                    return ItemStack.EMPTY;
                 } else if (slot == craftingResultSlot) {
                     grid.onCraftedShift(player);
 

@@ -22,6 +22,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Fixed the Crafter crashing when opening it while connected to a Primal Tech Grill or Kiln (raoulvdberge)
 - Fixed bug where Crafting Upgrade on Interface kept too many items in stock (raoulvdberge)
 - Fixed bug where External Storage could only handle 1 fluid inventory per block (raoulvdberge)
+- Fixed shift clicking a created pattern going into Grid inventory (raoulvdberge)
 - Prevent accidental Grid scrollbar click after clicking JEI recipe transfer button (raoulvdberge)
 - Added a missing config option for Crafter Manager energy usage (raoulvdberge)
 - Added support for Disk Drive / Storage Block storage and capacity to OC integration (zangai)
