@@ -5,10 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
-import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonGridSize;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.gui.control.TextFieldSearch;
+import com.raoulvdberge.refinedstorage.gui.control.*;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -31,6 +28,10 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
         super(null, 193, 0);
 
         this.crafterManager = crafterManager;
+    }
+
+    public NetworkNodeCrafterManager getCrafterManager() {
+        return crafterManager;
     }
 
     public void setContainer(ContainerCrafterManager container) {
@@ -95,6 +96,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileCrafterManager.REDSTONE_MODE));
+        addSideButton(new SideButtonCrafterManagerSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, () -> crafterManager.getSize(), size -> TileDataManager.setParameter(TileCrafterManager.SIZE, size)));
 
         this.scrollbar = new Scrollbar(174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
@@ -112,6 +114,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
         if (searchField == null) {
             searchField = new TextFieldSearch(0, fontRenderer, sx, sy, 88 - 6);
             searchField.addListener(() -> container.initSlots(null));
+            searchField.setMode(crafterManager.getSearchBoxMode());
         } else {
             searchField.x = sx;
             searchField.y = sy;
@@ -202,5 +205,9 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
                 }
             }
         }
+    }
+
+    public TextFieldSearch getSearchField() {
+        return searchField;
     }
 }

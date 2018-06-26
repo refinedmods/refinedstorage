@@ -81,7 +81,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             t.setSearchBoxMode(v);
             t.markDirty();
         }
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateSearchFieldFocus(p)));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getSearchField().setMode(p)));
     public static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);

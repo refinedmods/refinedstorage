@@ -16,9 +16,16 @@ public class TileCrafterManager extends TileNode<NetworkNodeCrafterManager> {
             t.getNode().markDirty();
         }
     }, (initial, p) -> GuiBase.executeLater(GuiCrafterManager.class, GuiBase::initGui));
+    public static final TileDataParameter<Integer, TileCrafterManager> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
+        if (IGrid.isValidSearchBoxMode(v)) {
+            t.getNode().setSearchBoxMode(v);
+            t.getNode().markDirty();
+        }
+    }, (initial, p) -> GuiBase.executeLater(GuiCrafterManager.class, crafterManager -> crafterManager.getSearchField().setMode(p)));
 
     public TileCrafterManager() {
         dataManager.addWatchedParameter(SIZE);
+        dataManager.addWatchedParameter(SEARCH_BOX_MODE);
     }
 
     @Override

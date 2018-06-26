@@ -17,8 +17,6 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
 import com.raoulvdberge.refinedstorage.gui.grid.view.IGridView;
-import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
-import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
@@ -30,7 +28,6 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -114,13 +111,8 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
         if (searchField == null) {
             searchField = new TextFieldSearch(0, fontRenderer, sx, sy, 88 - 6);
-            searchField.addListener(() -> {
-                view.sort();
-
-                updateJEI();
-            });
-
-            updateSearchFieldFocus(grid.getSearchBoxMode());
+            searchField.addListener(view::sort);
+            searchField.setMode(grid.getSearchBoxMode());
         } else {
             searchField.x = sx;
             searchField.y = sy;
@@ -624,10 +616,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         if (checkHotbarKeys(keyCode)) {
             // NO OP
         } else if (searchField.textboxKeyTyped(character, keyCode)) {
-            updateJEI();
-
-            view.sort();
-
             keyHandled = true;
         } else if (keyCode == RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX.getKeyCode()) {
             RS.INSTANCE.network.sendToServer(new MessageGridClear());
@@ -636,20 +624,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         }
     }
 
-    private void updateJEI() {
-        if (IntegrationJEI.isLoaded() && (grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || grid.getSearchBoxMode() == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-            RSJEIPlugin.INSTANCE.getRuntime().getIngredientFilter().setFilterText(searchField.getText());
-        }
-    }
-
-    public void updateSearchFieldFocus(int mode) {
-        if (searchField != null) {
-            searchField.setCanLoseFocus(!IGrid.isSearchBoxModeWithAutoselection(mode));
-            searchField.setFocused(IGrid.isSearchBoxModeWithAutoselection(mode));
-        }
-    }
-
-    public GuiTextField getSearchField() {
+    public TextFieldSearch getSearchField() {
         return searchField;
     }
 

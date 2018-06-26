@@ -42,7 +42,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
             t.getNode().setSearchBoxMode(v);
             t.getNode().markDirty();
         }
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.updateSearchFieldFocus(p)));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getSearchField().setMode(p)));
     public static final TileDataParameter<Integer, TileGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSize(), (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);

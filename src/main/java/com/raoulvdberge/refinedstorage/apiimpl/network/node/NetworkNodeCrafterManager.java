@@ -13,8 +13,10 @@ public class NetworkNodeCrafterManager extends NetworkNode {
     public static final String ID = "crafter_manager";
 
     private static final String NBT_SIZE = "Size";
+    private static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
 
     private int size = IGrid.SIZE_STRETCH;
+    private int searchBoxMode = IGrid.SEARCH_BOX_MODE_NORMAL;
 
     public NetworkNodeCrafterManager(World world, BlockPos pos) {
         super(world, pos);
@@ -49,6 +51,7 @@ public class NetworkNodeCrafterManager extends NetworkNode {
         super.writeConfiguration(tag);
 
         tag.setInteger(NBT_SIZE, size);
+        tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
 
         return tag;
     }
@@ -60,6 +63,18 @@ public class NetworkNodeCrafterManager extends NetworkNode {
         if (tag.hasKey(NBT_SIZE)) {
             size = tag.getInteger(NBT_SIZE);
         }
+
+        if (tag.hasKey(NBT_SEARCH_BOX_MODE)) {
+            searchBoxMode = tag.getInteger(NBT_SEARCH_BOX_MODE);
+        }
+    }
+
+    public int getSearchBoxMode() {
+        return world.isRemote ? TileCrafterManager.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+    }
+
+    public void setSearchBoxMode(int searchBoxMode) {
+        this.searchBoxMode = searchBoxMode;
     }
 
     @Override

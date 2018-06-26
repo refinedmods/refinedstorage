@@ -1,6 +1,9 @@
 package com.raoulvdberge.refinedstorage.gui.control;
 
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
+import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -11,18 +14,25 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TextFieldSearch extends GuiTextField {
-    private static final List<String> SEARCH_HISTORY = new ArrayList<>();
+    private static final List<String> HISTORY = new ArrayList<>();
 
-    private int searchHistoryIndex = -1;
+    private int mode;
+    private int historyIndex = -1;
 
     private List<Runnable> listeners = new LinkedList<>();
 
     public TextFieldSearch(int componentId, FontRenderer fontRenderer, int x, int y, int width) {
         super(componentId, fontRenderer, x, y, width, fontRenderer.FONT_HEIGHT);
 
-        setEnableBackgroundDrawing(false);
-        setVisible(true);
-        setTextColor(16777215);
+        this.setEnableBackgroundDrawing(false);
+        this.setVisible(true);
+        this.setTextColor(16777215);
+
+        this.listeners.add(() -> {
+            if (IntegrationJEI.isLoaded() && (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
+                RSJEIPlugin.INSTANCE.getRuntime().getIngredientFilter().setFilterText(getText());
+            }
+        });
     }
 
     public void addListener(Runnable listener) {
@@ -83,24 +93,28 @@ public class TextFieldSearch extends GuiTextField {
             result = true;
         }
 
+        if (result) {
+            listeners.forEach(Runnable::run);
+        }
+
         return result;
     }
 
     private void updateSearchHistory(int delta) {
-        if (SEARCH_HISTORY.isEmpty()) {
+        if (HISTORY.isEmpty()) {
             return;
         }
 
-        if (searchHistoryIndex == -1) {
-            searchHistoryIndex = SEARCH_HISTORY.size();
+        if (historyIndex == -1) {
+            historyIndex = HISTORY.size();
         }
 
-        searchHistoryIndex += delta;
+        historyIndex += delta;
 
-        if (searchHistoryIndex < 0) {
-            searchHistoryIndex = 0;
-        } else if (searchHistoryIndex > SEARCH_HISTORY.size() - 1) {
-            searchHistoryIndex = SEARCH_HISTORY.size() - 1;
+        if (historyIndex < 0) {
+            historyIndex = 0;
+        } else if (historyIndex > HISTORY.size() - 1) {
+            historyIndex = HISTORY.size() - 1;
 
             if (delta == 1) {
                 setText("");
@@ -111,18 +125,25 @@ public class TextFieldSearch extends GuiTextField {
             }
         }
 
-        setText(SEARCH_HISTORY.get(searchHistoryIndex));
+        setText(HISTORY.get(historyIndex));
 
         listeners.forEach(Runnable::run);
     }
 
     private void saveHistory() {
-        if (!SEARCH_HISTORY.isEmpty() && SEARCH_HISTORY.get(SEARCH_HISTORY.size() - 1).equals(getText())) {
+        if (!HISTORY.isEmpty() && HISTORY.get(HISTORY.size() - 1).equals(getText())) {
             return;
         }
 
         if (!getText().trim().isEmpty()) {
-            SEARCH_HISTORY.add(getText());
+            HISTORY.add(getText());
         }
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+
+        this.setCanLoseFocus(!IGrid.isSearchBoxModeWithAutoselection(mode));
+        this.setFocused(IGrid.isSearchBoxModeWithAutoselection(mode));
     }
 }
