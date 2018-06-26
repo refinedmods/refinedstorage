@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.storage.disk;
 
+import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
@@ -36,5 +37,5 @@ public interface IStorageDiskProvider {
     /**
      * @return the storage type
      */
-    StorageDiskType getType();
+    StorageType getType();
 }

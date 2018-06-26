@@ -41,7 +41,7 @@ public class StorageDiskItemStorageWrapper implements IStorageDisk<ItemStack> {
     @Override
     @Nullable
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if (!IFilterable.canTake(storage.getFilters(), storage.getMode(), storage.getCompare(), stack)) {
+        if (!IFilterable.acceptsItem(storage.getFilters(), storage.getMode(), storage.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 

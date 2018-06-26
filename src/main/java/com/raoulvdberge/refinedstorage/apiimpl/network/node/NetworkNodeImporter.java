@@ -79,7 +79,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
                 ItemStack stack = handler.getStackInSlot(currentSlot);
 
-                if (!IFilterable.canTake(itemFilters, mode, compare, stack)) {
+                if (!IFilterable.acceptsItem(itemFilters, mode, compare, stack)) {
                     currentSlot++;
                 } else if (ticks % upgrades.getSpeed() == 0) {
                     ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
@@ -101,7 +101,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
             if (handler != null) {
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
-                if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
+                if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
                     FluidStack toDrain = handler.drain(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), false);
 
                     if (toDrain != null) {

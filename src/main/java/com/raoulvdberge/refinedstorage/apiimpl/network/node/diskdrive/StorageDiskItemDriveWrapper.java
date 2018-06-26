@@ -56,7 +56,7 @@ public class StorageDiskItemDriveWrapper implements IStorageDisk<ItemStack> {
     @Override
     @Nullable
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if (!IFilterable.canTake(diskDrive.getItemFilters(), diskDrive.getMode(), diskDrive.getCompare(), stack)) {
+        if (!IFilterable.acceptsItem(diskDrive.getItemFilters(), diskDrive.getMode(), diskDrive.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 

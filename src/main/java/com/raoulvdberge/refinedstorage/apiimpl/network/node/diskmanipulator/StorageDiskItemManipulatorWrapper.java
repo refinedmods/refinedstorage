@@ -61,7 +61,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     @Override
     @Nullable
     public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
-        if (!IFilterable.canTake(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IFilterable.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
@@ -71,7 +71,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     @Override
     @Nullable
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        if (!IFilterable.canTake(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IFilterable.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
             return null;
         }
 

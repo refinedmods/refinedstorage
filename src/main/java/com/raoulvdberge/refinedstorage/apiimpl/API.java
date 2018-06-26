@@ -18,10 +18,12 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
@@ -55,9 +57,7 @@ import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class API implements IRSAPI {
     private static final IRSAPI INSTANCE = new API();
@@ -74,6 +74,7 @@ public class API implements IRSAPI {
     private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
     private IStorageDiskSync storageDiskSync = new StorageDiskSync();
     private IOneSixMigrationHelper oneSixMigrationHelper = new OneSixMigrationHelper();
+    private Map<StorageType, List<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
     private List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
 
     public static IRSAPI instance() {
@@ -228,6 +229,18 @@ public class API implements IRSAPI {
     @Override
     public IStorageDiskSync getStorageDiskSync() {
         return storageDiskSync;
+    }
+
+    @Override
+    public void addExternalStorageProvider(StorageType type, IExternalStorageProvider provider) {
+        externalStorageProviders.computeIfAbsent(type, k -> new ArrayList<>()).add(provider);
+    }
+
+    @Override
+    public List<IExternalStorageProvider> getExternalStorageProviders(StorageType type) {
+        List<IExternalStorageProvider> providers = externalStorageProviders.get(type);
+
+        return providers == null ? Collections.emptyList() : providers;
     }
 
     @Override

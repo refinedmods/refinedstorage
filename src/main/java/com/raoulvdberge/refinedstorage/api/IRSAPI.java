@@ -14,10 +14,12 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
+import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
@@ -145,6 +147,20 @@ public interface IRSAPI {
      */
     @Nonnull
     IStorageDiskSync getStorageDiskSync();
+
+    /**
+     * Adds an external storage provider for the given storage type.
+     *
+     * @param type     the storage type
+     * @param provider the external storage provider
+     */
+    void addExternalStorageProvider(StorageType type, IExternalStorageProvider provider);
+
+    /**
+     * @param type the type
+     * @return a list of external storage providers
+     */
+    List<IExternalStorageProvider> getExternalStorageProviders(StorageType type);
 
     /**
      * @param world    the world

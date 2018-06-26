@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
-import com.raoulvdberge.refinedstorage.api.storage.disk.StorageDiskType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.ItemStorageType;
 import net.minecraft.client.resources.I18n;
@@ -148,7 +148,7 @@ public class ItemStorageDisk extends ItemBase implements IStorageDiskProvider {
     }
 
     @Override
-    public StorageDiskType getType() {
-        return StorageDiskType.ITEM;
+    public StorageType getType() {
+        return StorageType.ITEM;
     }
 }

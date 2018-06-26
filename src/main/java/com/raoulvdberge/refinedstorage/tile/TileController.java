@@ -20,14 +20,13 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.energy.Energy;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageFluidExternal;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage.StorageItemExternal;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
@@ -319,8 +318,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             if (remainder == null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof StorageItemExternal && !simulate) {
-                    ((StorageItemExternal) storage).detectChanges(this);
+                if (storage instanceof IStorageExternal && !simulate) {
+                    ((IStorageExternal) storage).update(this);
 
                     insertedExternally += size;
                 }
@@ -328,8 +327,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 break;
             } else {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (size != remainder.getCount() && storage instanceof StorageItemExternal && !simulate) {
-                    ((StorageItemExternal) storage).detectChanges(this);
+                if (size != remainder.getCount() && storage instanceof IStorageExternal && !simulate) {
+                    ((IStorageExternal) storage).update(this);
 
                     insertedExternally += size - remainder.getCount();
                 }
@@ -363,8 +362,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             if (took != null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof StorageItemExternal && !simulate) {
-                    ((StorageItemExternal) storage).detectChanges(this);
+                if (storage instanceof IStorageExternal && !simulate) {
+                    ((IStorageExternal) storage).update(this);
 
                     extractedExternally += took.getCount();
                 }
@@ -390,16 +389,17 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         return newStack;
     }
 
-    @Nullable
+
     @Override
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
-        if (fluidStorage.getStorages().isEmpty()) {
+        if (stack == null || fluidStorage.getStorages().isEmpty()) {
             return StackUtils.copy(stack, size);
         }
 
         FluidStack remainder = stack;
 
         int inserted = 0;
+        int insertedExternally = 0;
 
         for (IStorage<FluidStack> storage : this.fluidStorage.getStorages()) {
             if (storage.getAccessType() == AccessType.EXTRACT) {
@@ -414,29 +414,40 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
-            if (storage instanceof StorageFluidExternal && !simulate) {
-                ((StorageFluidExternal) storage).updateCacheForcefully();
-            }
-
             if (remainder == null) {
+                // The external storage is responsible for sending changes, we don't need to anymore
+                if (storage instanceof IStorageExternal && !simulate) {
+                    ((IStorageExternal) storage).update(this);
+
+                    insertedExternally += size;
+                }
+
                 break;
             } else {
+                // The external storage is responsible for sending changes, we don't need to anymore
+                if (size != remainder.amount && storage instanceof IStorageExternal && !simulate) {
+                    ((IStorageExternal) storage).update(this);
+
+                    insertedExternally += size - remainder.amount;
+                }
+
                 size = remainder.amount;
             }
         }
 
-        if (inserted > 0) {
-            fluidStorage.add(stack, inserted, false, false);
+        if (!simulate && inserted - insertedExternally > 0) {
+            fluidStorage.add(stack, inserted - insertedExternally, false, false);
         }
 
         return remainder;
     }
 
-    @Nullable
     @Override
     public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
         int requested = size;
         int received = 0;
+
+        int extractedExternally = 0;
 
         FluidStack newStack = null;
 
@@ -448,8 +459,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
 
             if (took != null) {
-                if (storage instanceof StorageFluidExternal && !simulate) {
-                    ((StorageFluidExternal) storage).updateCacheForcefully();
+                // The external storage is responsible for sending changes, we don't need to anymore
+                if (storage instanceof IStorageExternal && !simulate) {
+                    ((IStorageExternal) storage).update(this);
+
+                    extractedExternally += took.amount;
                 }
 
                 if (newStack == null) {
@@ -466,8 +480,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
         }
 
-        if (newStack != null && !simulate) {
-            fluidStorage.remove(newStack, newStack.amount, false);
+        if (newStack != null && newStack.amount - extractedExternally > 0 && !simulate) {
+            fluidStorage.remove(newStack, newStack.amount - extractedExternally, false);
         }
 
         return newStack;

@@ -56,7 +56,7 @@ public class StorageDiskFluidDriveWrapper implements IStorageDisk<FluidStack> {
     @Override
     @Nullable
     public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
-        if (!IFilterable.canTakeFluids(diskDrive.getFluidFilters(), diskDrive.getMode(), diskDrive.getCompare(), stack)) {
+        if (!IFilterable.acceptsFluid(diskDrive.getFluidFilters(), diskDrive.getMode(), diskDrive.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 

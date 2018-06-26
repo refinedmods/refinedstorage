@@ -92,7 +92,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                     if (entity instanceof EntityItem) {
                         ItemStack droppedItem = ((EntityItem) entity).getItem();
 
-                        if (IFilterable.canTake(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), true) == null) {
+                        if (IFilterable.acceptsItem(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), true) == null) {
                             network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
 
                             world.removeEntity(entity);
@@ -114,7 +114,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 );
 
                 if (!frontStack.isEmpty()) {
-                    if (IFilterable.canTake(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(world, front) != -1.0) {
+                    if (IFilterable.acceptsItem(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(world, front) != -1.0) {
                         NonNullList<ItemStack> drops = NonNullList.create();
 
                         if (frontBlock instanceof BlockShulkerBox) {
@@ -171,7 +171,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 if (handler != null) {
                     FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
-                    if (stack != null && IFilterable.canTakeFluids(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
+                    if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
                         FluidStack drained = handler.drain(Fluid.BUCKET_VOLUME, true);
 
                         network.insertFluid(drained, drained.amount, false);

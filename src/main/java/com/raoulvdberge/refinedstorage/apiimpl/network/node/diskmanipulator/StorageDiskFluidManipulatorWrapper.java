@@ -66,7 +66,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     @Override
     @Nullable
     public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
-        if (!IFilterable.canTakeFluids(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IFilterable.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 
@@ -76,7 +76,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     @Override
     @Nullable
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
-        if (!IFilterable.canTakeFluids(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IFilterable.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
             return null;
         }
 

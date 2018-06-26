@@ -1,17 +1,19 @@
-package com.raoulvdberge.refinedstorage.apiimpl.network.node.externalstorage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.StorageType;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
-import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -20,20 +22,18 @@ import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType {
+public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType, IExternalStorageContext {
     public static final String ID = "external_storage";
 
     private static final String NBT_PRIORITY = "Priority";
@@ -51,8 +51,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
 
-    private List<StorageItemExternal> itemStorages = new CopyOnWriteArrayList<>();
-    private List<StorageFluidExternal> fluidStorages = new CopyOnWriteArrayList<>();
+    private List<IStorageExternal<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
+    private List<IStorageExternal<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
 
     public NetworkNodeExternalStorage(World world, BlockPos pos) {
         super(world, pos);
@@ -81,20 +81,12 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
                 return;
             }
 
-            for (StorageItemExternal storage : itemStorages) {
-                storage.detectChanges(network);
+            for (IStorageExternal<ItemStack> storage : itemStorages) {
+                storage.update(network);
             }
 
-            boolean fluidChangeDetected = false;
-
-            for (StorageFluidExternal storage : fluidStorages) {
-                if (storage.updateCache()) {
-                    fluidChangeDetected = true;
-                }
-            }
-
-            if (fluidChangeDetected) {
-                network.getFluidStorageCache().invalidate();
+            for (IStorageExternal<FluidStack> storage : fluidStorages) {
+                storage.update(network);
             }
         }
     }
@@ -145,7 +137,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         }
 
         accessType = AccessTypeUtils.readAccessType(tag);
-        
+
         OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters, fluidFilters);
     }
 
@@ -196,19 +188,19 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
         TileEntity facing = getFacingTile();
 
-        if (type == IType.ITEMS) {
-            if (facing != null && !(facing.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()) && facing.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, getDirection().getOpposite()).getNode() instanceof IStorageProvider)) {
-                IItemHandler itemHandler = WorldUtils.getItemHandler(facing, getDirection().getOpposite());
-
-                if (itemHandler != null) {
-                    itemStorages.add(new StorageItemItemHandler(this, () -> WorldUtils.getItemHandler(getFacingTile(), getDirection().getOpposite())));
+        if (facing != null) {
+            if (type == IType.ITEMS) {
+                for (IExternalStorageProvider provider : API.instance().getExternalStorageProviders(StorageType.ITEM)) {
+                    if (provider.canProvide(facing, getDirection())) {
+                        itemStorages.add(provider.provide(this, () -> getFacingTile(), getDirection()));
+                    }
                 }
-            }
-        } else if (type == IType.FLUIDS) {
-            IFluidHandler fluidHandler = WorldUtils.getFluidHandler(facing, getDirection().getOpposite());
-
-            if (fluidHandler != null) {
-                fluidStorages.add(new StorageFluidExternal(this, () -> WorldUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite())));
+            } else if (type == IType.FLUIDS) {
+                for (IExternalStorageProvider provider : API.instance().getExternalStorageProviders(StorageType.FLUID)) {
+                    if (provider.canProvide(facing, getDirection())) {
+                        fluidStorages.add(provider.provide(this, () -> getFacingTile(), getDirection()));
+                    }
+                }
             }
         }
 
@@ -272,6 +264,16 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
+    public boolean acceptsItem(ItemStack stack) {
+        return IFilterable.acceptsItem(itemFilters, mode, compare, stack);
+    }
+
+    @Override
+    public boolean acceptsFluid(FluidStack stack) {
+        return IFilterable.acceptsFluid(fluidFilters, mode, compare, stack);
+    }
+
+    @Override
     public void setAccessType(AccessType type) {
         this.accessType = type;
 
@@ -309,19 +311,11 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
-    public ItemHandlerBase getItemFilters() {
-        return itemFilters;
-    }
-
-    public ItemHandlerFluid getFluidFilters() {
-        return fluidFilters;
-    }
-
-    public List<StorageItemExternal> getItemStorages() {
+    public List<IStorageExternal<ItemStack>> getItemStorages() {
         return itemStorages;
     }
 
-    public List<StorageFluidExternal> getFluidStorages() {
+    public List<IStorageExternal<FluidStack>> getFluidStorages() {
         return fluidStorages;
     }
 }

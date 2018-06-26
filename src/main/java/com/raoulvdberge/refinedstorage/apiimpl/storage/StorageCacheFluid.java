@@ -5,8 +5,10 @@ import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,6 +21,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     private CopyOnWriteArrayList<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<FluidStack> list = API.instance().createFluidStackList();
     private List<IStorageCacheListener<FluidStack>> listeners = new LinkedList<>();
+    private List<Pair<FluidStack, Integer>> batchedChanges = new ArrayList<>();
 
     public StorageCacheFluid(INetwork network) {
         this.network = network;
@@ -54,20 +57,31 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
         list.add(stack, size);
 
         if (!rebuilding) {
-            listeners.forEach(l -> l.onChanged(stack, size));
+            if (!batched) {
+                listeners.forEach(l -> l.onChanged(stack, size));
+            } else {
+                batchedChanges.add(Pair.of(stack, size));
+            }
         }
     }
 
     @Override
     public synchronized void remove(@Nonnull FluidStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
-            listeners.forEach(l -> l.onChanged(stack, -size));
+            if (!batched) {
+                listeners.forEach(l -> l.onChanged(stack, -size));
+            } else {
+                batchedChanges.add(Pair.of(stack, -size));
+            }
         }
     }
 
     @Override
     public void flush() {
-        throw new UnsupportedOperationException("Cannot flush fluid storage cache");
+        if (!batchedChanges.isEmpty()) {
+            batchedChanges.forEach(c -> listeners.forEach(l -> l.onChanged(c.getKey(), c.getValue())));
+            batchedChanges.clear();
+        }
     }
 
     @Override

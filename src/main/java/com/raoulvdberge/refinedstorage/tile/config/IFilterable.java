@@ -24,7 +24,7 @@ public interface IFilterable {
         });
     }
 
-    static boolean canTake(IItemHandler filters, int mode, int compare, ItemStack stack) {
+    static boolean acceptsItem(IItemHandler filters, int mode, int compare, ItemStack stack) {
         if (mode == WHITELIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 ItemStack slot = filters.getStackInSlot(i);
@@ -50,7 +50,7 @@ public interface IFilterable {
         return false;
     }
 
-    static boolean canTakeFluids(ItemHandlerFluid filters, int mode, int compare, FluidStack stack) {
+    static boolean acceptsFluid(ItemHandlerFluid filters, int mode, int compare, FluidStack stack) {
         if (mode == WHITELIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 FluidStack slot = filters.getFluidStackInSlot(i);
