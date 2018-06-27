@@ -139,7 +139,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 if (tile instanceof TileController) {
                     removeOtherController(world, pos);
                 } else if (tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, side)) {
-                    INetworkNodeProxy otherNodeProxy = tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side);
+                    INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
                     INetworkNode otherNode = otherNodeProxy.getNode();
 
                     if (foundNodes.add(otherNode)) {
@@ -181,7 +181,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             } else {
                 for (EnumFacing checkSide : EnumFacing.VALUES) {
                     if (checkSide != side) { // Avoid going backward
-                        INetworkNodeProxy nodeOnSideProxy = tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, checkSide);
+                        INetworkNodeProxy nodeOnSideProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, checkSide));
 
                         if (nodeOnSideProxy != null) {
                             INetworkNode nodeOnSide = nodeOnSideProxy.getNode();
