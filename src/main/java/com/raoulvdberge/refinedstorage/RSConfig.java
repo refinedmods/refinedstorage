@@ -279,6 +279,7 @@ public class RSConfig {
         list.add(new ConfigElement(config.getCategory(WIRELESS_FLUID_GRID)));
         list.add(new ConfigElement(config.getCategory(WIRELESS_CRAFTING_MONITOR)));
         list.add(new ConfigElement(config.getCategory(PORTABLE_GRID)));
+        list.add(new ConfigElement(config.getCategory(READER_WRITER)));
 
         return list;
     }
