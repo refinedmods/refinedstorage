@@ -169,7 +169,7 @@ public abstract class BlockBase extends Block {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing)) {
-            INetworkNodeProxy nodeProxy = CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing));
+            INetworkNodeProxy nodeProxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing);
             INetworkNode node = nodeProxy.getNode();
 
             if (node.getNetwork() != null) {
