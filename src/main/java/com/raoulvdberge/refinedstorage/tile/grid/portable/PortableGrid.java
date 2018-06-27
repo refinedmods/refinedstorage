@@ -24,7 +24,6 @@ import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
-import com.raoulvdberge.refinedstorage.item.ItemEnergyItem;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -174,7 +173,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             return stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
         }
 
-        return ItemEnergyItem.CAPACITY;
+        return RS.INSTANCE.config.portableGridCapacity;
     }
 
     @Override

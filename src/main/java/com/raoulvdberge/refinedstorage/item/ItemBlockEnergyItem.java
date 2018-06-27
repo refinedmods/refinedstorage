@@ -21,16 +21,20 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
-    public ItemBlockEnergyItem(Block block, Direction direction) {
+    private int energyCapacity;
+
+    public ItemBlockEnergyItem(Block block, Direction direction, int energyCapacity) {
         super(block, direction, true);
 
-        setMaxDamage(ItemEnergyItem.CAPACITY);
+        this.energyCapacity = energyCapacity;
+
+        setMaxDamage(energyCapacity);
         setMaxStackSize(1);
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound tag) {
-        return new CapabilityProviderEnergy(stack);
+        return new CapabilityProviderEnergy(stack, energyCapacity);
     }
 
     @Override

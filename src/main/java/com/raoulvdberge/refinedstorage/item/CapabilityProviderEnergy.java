@@ -12,9 +12,11 @@ import javax.annotation.Nullable;
 
 public class CapabilityProviderEnergy implements ICapabilityProvider {
     private ItemStack stack;
+    private int energyCapacity;
 
-    public CapabilityProviderEnergy(ItemStack stack) {
+    public CapabilityProviderEnergy(ItemStack stack, int energyCapacity) {
         this.stack = stack;
+        this.energyCapacity = energyCapacity;
     }
 
     @Override
@@ -24,6 +26,6 @@ public class CapabilityProviderEnergy implements ICapabilityProvider {
 
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(new ItemEnergyForge(stack, ItemEnergyItem.CAPACITY)) : null;
+        return capability == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(new ItemEnergyForge(stack, energyCapacity)) : null;
     }
 }

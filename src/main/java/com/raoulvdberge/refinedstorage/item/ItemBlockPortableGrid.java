@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
     public ItemBlockPortableGrid() {
-        super(RSBlocks.PORTABLE_GRID, RSBlocks.PORTABLE_GRID.getDirection());
+        super(RSBlocks.PORTABLE_GRID, RSBlocks.PORTABLE_GRID.getDirection(), RS.INSTANCE.config.portableGridCapacity);
     }
 
     @Override

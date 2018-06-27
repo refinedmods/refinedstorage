@@ -13,6 +13,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Autocrafting tasks that take longer than 5 seconds to calculate are automatically stopped to avoid server strain (raoulvdberge)
 - Added new storage disk system where the storage disk data (items, fluids) are stored off the disk itself, in another file (refinedstorage_disks.dat). The disk itself only stores its ID (raoulvdberge)
 - Added /createdisk command which creates a disk based on the disk ID. Turn on advanced tooltips to see the disk ID on a disk item (raoulvdberge)
+- Added config option to configure energy capacity of Refined Storage items (raoulvdberge)
 - Changed fluid storage progression to be 64k - 256k - 1024k - 4096k (raoulvdberge)
 - You can no longer put a Filter in filter slots to gain additional filter slots (raoulvdberge)
 - You can now re-insert Processing Patterns in the Pattern Grid and have the inputs and outputs be completed (raoulvdberge)

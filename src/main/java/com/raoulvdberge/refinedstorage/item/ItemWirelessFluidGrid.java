@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -12,7 +13,7 @@ import javax.annotation.Nonnull;
 
 public class ItemWirelessFluidGrid extends ItemNetworkItem {
     public ItemWirelessFluidGrid() {
-        super("wireless_fluid_grid");
+        super("wireless_fluid_grid", RS.INSTANCE.config.wirelessFluidGridCapacity);
     }
 
     @Override

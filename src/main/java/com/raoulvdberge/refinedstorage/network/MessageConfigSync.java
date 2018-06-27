@@ -13,6 +13,10 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
         RSConfig serverVersion = new RSConfig(RS.INSTANCE.config, RS.INSTANCE.config.getConfig());
 
         serverVersion.controllerCapacity = buf.readInt();
+        serverVersion.wirelessGridCapacity = buf.readInt();
+        serverVersion.portableGridCapacity = buf.readInt();
+        serverVersion.wirelessFluidGridCapacity = buf.readInt();
+        serverVersion.wirelessCraftingMonitorCapacity = buf.readInt();
 
         RS.INSTANCE.config = serverVersion;
     }
@@ -20,6 +24,10 @@ public class MessageConfigSync implements IMessage, IMessageHandler<MessageConfi
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(RS.INSTANCE.config.controllerCapacity);
+        buf.writeInt(RS.INSTANCE.config.wirelessGridCapacity);
+        buf.writeInt(RS.INSTANCE.config.portableGridCapacity);
+        buf.writeInt(RS.INSTANCE.config.wirelessFluidGridCapacity);
+        buf.writeInt(RS.INSTANCE.config.wirelessCraftingMonitorCapacity);
     }
 
     @Override

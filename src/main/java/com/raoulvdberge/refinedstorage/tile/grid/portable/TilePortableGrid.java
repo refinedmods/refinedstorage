@@ -32,7 +32,6 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
-import com.raoulvdberge.refinedstorage.item.ItemEnergyItem;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
@@ -222,7 +221,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     private EnergyStorage recreateEnergyStorage(int energyStored) {
-        return new EnergyStorage(ItemEnergyItem.CAPACITY, ItemEnergyItem.CAPACITY, 0, energyStored);
+        return new EnergyStorage(RS.INSTANCE.config.portableGridCapacity, RS.INSTANCE.config.portableGridCapacity, 0, energyStored);
     }
     
     public ItemStack getAsItem() {

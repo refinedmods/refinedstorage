@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -12,11 +13,11 @@ import javax.annotation.Nonnull;
 
 public class ItemWirelessGrid extends ItemNetworkItem {
     public ItemWirelessGrid(String name) {
-        super(name);
+        super(name, RS.INSTANCE.config.wirelessGridCapacity);
     }
 
     public ItemWirelessGrid() {
-        super("wireless_grid");
+        super("wireless_grid", RS.INSTANCE.config.wirelessGridCapacity);
     }
 
     @Override

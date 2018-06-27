@@ -16,22 +16,24 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class ItemEnergyItem extends ItemBase {
-    public static final int CAPACITY = 3200;
-
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_CREATIVE = 1;
 
-    public ItemEnergyItem(String name) {
+    private int energyCapacity;
+
+    public ItemEnergyItem(String name, int energyCapacity) {
         super(name);
 
-        setMaxDamage(CAPACITY);
+        this.energyCapacity = energyCapacity;
+
+        setMaxDamage(energyCapacity);
         setMaxStackSize(1);
         setHasSubtypes(true);
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound tag) {
-        return new CapabilityProviderEnergy(stack);
+        return new CapabilityProviderEnergy(stack, energyCapacity);
     }
 
     @Override

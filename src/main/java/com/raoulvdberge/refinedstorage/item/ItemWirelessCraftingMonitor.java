@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.google.common.base.Optional;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -18,7 +19,7 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     public static final String NBT_TAB_PAGE = "TabPage";
 
     public ItemWirelessCraftingMonitor() {
-        super("wireless_crafting_monitor");
+        super("wireless_crafting_monitor", RS.INSTANCE.config.wirelessCraftingMonitorCapacity);
     }
 
     @Override

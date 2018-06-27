@@ -26,8 +26,8 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
     private static final String NBT_CONTROLLER_Z = "ControllerZ";
     private static final String NBT_DIMENSION_ID = "DimensionID";
 
-    public ItemNetworkItem(String name) {
-        super(name);
+    public ItemNetworkItem(String name, int energyCapacity) {
+        super(name, energyCapacity);
 
         addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
