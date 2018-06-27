@@ -26,6 +26,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IPrioritizable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -172,8 +173,11 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     public FluidStorageType getType() {
-        if (type == null && world != null && world.getBlockState(pos).getBlock() == RSBlocks.FLUID_STORAGE) {
-            type = (FluidStorageType) world.getBlockState(pos).getValue(BlockFluidStorage.TYPE);
+        if (type == null && world != null) {
+            IBlockState state = world.getBlockState(pos);
+            if (state.getBlock() == RSBlocks.FLUID_STORAGE) {
+                type = (FluidStorageType) state.getValue(BlockFluidStorage.TYPE);                
+            }
         }
 
         return type == null ? FluidStorageType.TYPE_64K : type;

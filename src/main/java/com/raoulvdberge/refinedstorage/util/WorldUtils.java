@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.util;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -22,7 +23,8 @@ import javax.annotation.Nullable;
 public final class WorldUtils {
     public static void updateBlock(@Nullable World world, BlockPos pos) {
         if (world != null) {
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 1 | 2);
+            IBlockState state = world.getBlockState(pos);
+            world.notifyBlockUpdate(pos, state, state, 1 | 2);
         }
     }
 

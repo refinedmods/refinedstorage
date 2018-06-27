@@ -41,6 +41,7 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -184,8 +185,11 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     public PortableGridType getPortableType() {
-        if (type == null && world.getBlockState(pos).getBlock() == RSBlocks.PORTABLE_GRID) {
-            this.type = (PortableGridType) world.getBlockState(pos).getValue(BlockPortableGrid.TYPE);
+        if (type == null) {
+            IBlockState state = world.getBlockState(pos);
+            if (state.getBlock() == RSBlocks.PORTABLE_GRID) {
+                this.type = (PortableGridType) state.getValue(BlockPortableGrid.TYPE);                
+            }
         }
 
         return type == null ? PortableGridType.NORMAL : type;

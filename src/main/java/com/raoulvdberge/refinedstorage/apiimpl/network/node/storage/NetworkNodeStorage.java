@@ -26,6 +26,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IPrioritizable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
@@ -172,8 +173,11 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     public ItemStorageType getType() {
-        if (type == null && world != null && world.getBlockState(pos).getBlock() == RSBlocks.STORAGE) {
-            type = (ItemStorageType) world.getBlockState(pos).getValue(BlockStorage.TYPE);
+        if (type == null && world != null) {
+            IBlockState state = world.getBlockState(pos);
+            if (state.getBlock() == RSBlocks.STORAGE) {
+                type = (ItemStorageType) state.getValue(BlockStorage.TYPE);
+            }
         }
 
         return type == null ? ItemStorageType.TYPE_1K : type;
