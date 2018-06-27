@@ -29,6 +29,7 @@ import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.*;
@@ -208,8 +209,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
     }
 
     public GridType getType() {
-        if (type == null && world.getBlockState(pos).getBlock() == RSBlocks.GRID) {
-            type = (GridType) world.getBlockState(pos).getValue(BlockGrid.TYPE);
+        if (type == null) {
+            IBlockState state = world.getBlockState(pos);
+            if (state.getBlock() == RSBlocks.GRID) {
+                type = (GridType) state.getValue(BlockGrid.TYPE);                
+            }
         }
 
         return type == null ? GridType.NORMAL : type;

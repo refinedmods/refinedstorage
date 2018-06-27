@@ -638,8 +638,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     public ControllerType getType() {
-        if (type == null && world.getBlockState(pos).getBlock() == RSBlocks.CONTROLLER) {
-            this.type = (ControllerType) world.getBlockState(pos).getValue(BlockController.TYPE);
+        if (type == null) {
+            IBlockState state = world.getBlockState(pos);
+            if (state.getBlock() == RSBlocks.CONTROLLER) {
+                this.type = (ControllerType) state.getValue(BlockController.TYPE);                
+            }
         }
 
         return type == null ? ControllerType.NORMAL : type;
