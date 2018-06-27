@@ -24,7 +24,7 @@ public class ItemBlockController extends ItemBlockBase {
         super.addInformation(stack, world, tooltip, flag);
 
         if (stack.getMetadata() != ControllerType.CREATIVE.getId()) {
-            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), getEnergyCapacity(stack)));
+            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), RS.INSTANCE.config.controllerCapacity));
         }
     }
 
@@ -32,18 +32,14 @@ public class ItemBlockController extends ItemBlockBase {
         return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileController.NBT_ENERGY)) ? stack.getTagCompound().getInteger(TileController.NBT_ENERGY) : 0;
     }
 
-    public static int getEnergyCapacity(ItemStack stack) {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(TileController.NBT_ENERGY_CAPACITY)) ? stack.getTagCompound().getInteger(TileController.NBT_ENERGY_CAPACITY) : RS.INSTANCE.config.controllerCapacity;
-    }
-
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        createStackWithNBT(stack);
+        createStack(stack);
     }
 
-    public static ItemStack createStackWithNBT(ItemStack stack) {
+    public static ItemStack createStack(ItemStack stack) {
         NBTTagCompound tag = stack.getTagCompound();
 
         if (tag == null) {

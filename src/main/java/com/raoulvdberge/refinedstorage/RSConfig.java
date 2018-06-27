@@ -7,12 +7,14 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class RSConfig {
+public class RSConfig {
     private Configuration config;
+    private RSConfig originalClientVersion;
 
     //region Energy
     public int controllerBaseUsage;
@@ -119,16 +121,26 @@ public final class RSConfig {
     private static final String UPGRADES = "upgrades";
     //endregion
 
-    public RSConfig(File configFile) {
-        config = new Configuration(configFile);
+    public RSConfig(@Nullable RSConfig originalClientVersion, File configFile) {
+        this(originalClientVersion, new Configuration(configFile));
+    }
+
+    public RSConfig(@Nullable RSConfig originalClientVersion, Configuration config) {
+        this.originalClientVersion = originalClientVersion;
+        this.config = config;
 
         MinecraftForge.EVENT_BUS.register(this);
 
-        loadConfig();
+        this.loadConfig();
     }
 
     public Configuration getConfig() {
         return config;
+    }
+
+    @Nullable
+    public RSConfig getOriginalClientVersion() {
+        return originalClientVersion;
     }
 
     @SubscribeEvent

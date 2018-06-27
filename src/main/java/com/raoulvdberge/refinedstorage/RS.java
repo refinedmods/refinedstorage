@@ -43,7 +43,7 @@ public final class RS {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
-        config = new RSConfig(e.getSuggestedConfigurationFile());
+        config = new RSConfig(null, e.getSuggestedConfigurationFile());
 
         PROXY.preInit(e);
     }

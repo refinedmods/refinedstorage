@@ -34,7 +34,7 @@ public class BlockController extends BlockBase {
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
         for (int i = 0; i <= 1; i++) {
-            items.add(ItemBlockController.createStackWithNBT(new ItemStack(this, 1, i)));
+            items.add(ItemBlockController.createStack(new ItemStack(this, 1, i)));
         }
     }
 
@@ -102,7 +102,6 @@ public class BlockController extends BlockBase {
 
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergy().getStored());
-        stack.getTagCompound().setInteger(TileController.NBT_ENERGY_CAPACITY, ((TileController) world.getTileEntity(pos)).getEnergy().getCapacity());
 
         drops.add(stack);
     }

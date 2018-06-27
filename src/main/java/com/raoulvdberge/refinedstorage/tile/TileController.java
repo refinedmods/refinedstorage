@@ -110,7 +110,6 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private static final int THROTTLE_ACTIVE_TO_INACTIVE = 4;
 
     public static final String NBT_ENERGY = "Energy";
-    public static final String NBT_ENERGY_CAPACITY = "EnergyCapacity";
     public static final String NBT_ENERGY_TYPE = "EnergyType";
 
     private static final String NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker";
@@ -165,7 +164,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
         });
     }
-    
+
     @Override
     public IEnergy getEnergy() {
         return this.energy;
@@ -218,7 +217,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                     this.energy.setStored(0);
                 }
             } else if (getType() == ControllerType.CREATIVE) {
-            	this.energy.setStored(this.energy.getCapacity());
+                this.energy.setStored(this.energy.getCapacity());
             }
 
             boolean canRun = canRun();
@@ -598,11 +597,13 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         markDirty();
     }
-	
+
     @Override
     public int getEnergyUsage() {
         int usage = RS.INSTANCE.config.controllerBaseUsage;
-        usage += nodeGraph.all().stream().mapToInt(x-> x.getEnergyUsage()).sum();
+
+        usage += nodeGraph.all().stream().mapToInt(INetworkNode::getEnergyUsage).sum();
+
         return usage;
     }
 
