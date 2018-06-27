@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.forgeenergy;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
@@ -7,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
@@ -58,7 +59,7 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     private EnergyStorageReaderWriter storageReader, storageWriter;
 
     public ReaderWriterHandlerForgeEnergy(@Nullable NBTTagCompound tag) {
-        this.storage = new EnergyStorage(16000);
+        this.storage = new EnergyStorage(RS.INSTANCE.config.readerWriterChannelEnergyCapacity);
         this.storageReader = new EnergyStorageReaderWriter(storage, false, true);
         this.storageWriter = new EnergyStorageReaderWriter(storage, true, false);
 
@@ -153,7 +154,7 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
             return Collections.emptyList();
         }
 
-        return Collections.singletonList(new TextComponentString(storage.getEnergyStored() + " FE / " + storage.getMaxEnergyStored() + " FE"));
+        return Collections.singletonList(new TextComponentTranslation("misc.refinedstorage:energy_stored", storage.getEnergyStored(), storage.getMaxEnergyStored()));
     }
 
     private class EnergyStorageReaderWriter implements IEnergyStorage {

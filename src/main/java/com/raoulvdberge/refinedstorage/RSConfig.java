@@ -48,8 +48,6 @@ public class RSConfig {
     public float networkTransmitterPerBlockUsage;
     public int networkReceiverUsage;
     public int diskManipulatorUsage;
-    public int readerUsage;
-    public int writerUsage;
     public int securityManagerUsage;
     public int securityManagerPerSecurityCardUsage;
     //endregion
@@ -113,6 +111,12 @@ public class RSConfig {
     public int fortuneUpgradeUsagePerFortune;
     //endregion
 
+    //region Readers and Writers
+    public int readerUsage;
+    public int writerUsage;
+    public int readerWriterChannelEnergyCapacity;
+    //endregion
+
     //region Categories
     private static final String ENERGY = "energy";
     private static final String CONTROLLER = "controller";
@@ -123,6 +127,7 @@ public class RSConfig {
     private static final String WIRELESS_FLUID_GRID = "wirelessFluidGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String UPGRADES = "upgrades";
+    private static final String READER_WRITER = "readerWriter";
     //endregion
 
     public RSConfig(@Nullable RSConfig originalClientVersion, File configFile) {
@@ -187,8 +192,6 @@ public class RSConfig {
         networkTransmitterPerBlockUsage = config.getFloat("networkTransmitterPerBlock", ENERGY, 1, 0, Float.MAX_VALUE, "The additional energy per block that the Network Transmitter uses, gets rounded up");
         networkReceiverUsage = config.getInt("networkReceiver", ENERGY, 0, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
-        readerUsage = config.getInt("reader", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Readers");
-        writerUsage = config.getInt("writer", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Writers");
         securityManagerUsage = config.getInt("securityManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The base energy used by Security Managers");
         securityManagerPerSecurityCardUsage = config.getInt("securityManagerPerSecurityCard", ENERGY, 10, 0, Integer.MAX_VALUE, "The additional energy used by Security Cards in Security Managers");
         //endregion
@@ -250,6 +253,12 @@ public class RSConfig {
         interdimensionalUpgradeUsage = config.getInt("interdimensional", UPGRADES, 1000, 0, Integer.MAX_VALUE, "The additional energy used by the Interdimensional Upgrade");
         silkTouchUpgradeUsage = config.getInt("silkTouch", UPGRADES, 15, 0, Integer.MAX_VALUE, "The additional energy used by the Silk Touch Upgrade");
         fortuneUpgradeUsagePerFortune = config.getInt("fortune", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune Upgrade, multiplied by the level of the enchantment");
+        //endregion
+
+        //region Readers and Writers
+        readerUsage = config.getInt("reader", READER_WRITER, 2, 0, Integer.MAX_VALUE, "The energy used by Readers");
+        writerUsage = config.getInt("writer", READER_WRITER, 2, 0, Integer.MAX_VALUE, "The energy used by Writers");
+        readerWriterChannelEnergyCapacity = config.getInt("channelEnergyCapacity", READER_WRITER, 16000, 0, Integer.MAX_VALUE, "The energy capacity of energy channels");
         //endregion
 
         if (config.hasChanged()) {
