@@ -139,7 +139,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 if (tile instanceof TileController) {
                     removeOtherController(world, pos);
                 } else if (tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, side)) {
-                    INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
+                    INetworkNodeProxy otherNodeProxy = tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side);
                     INetworkNode otherNode = otherNodeProxy.getNode();
 
                     if (foundNodes.add(otherNode)) {
