@@ -1,9 +1,9 @@
 {
   "type": "forge:ore_shaped",
   "pattern": [
-    "E  ",
+    "  E",
     " S ",
-    "  S"
+    "S  "
   ],
   "key": {
     "S": {
