@@ -12,7 +12,7 @@
   },
   "parent": "refinedstorage:wireless",
   "criteria": {
-    "grid_in_inventory": {
+    "network_transmitter_receiver_card_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

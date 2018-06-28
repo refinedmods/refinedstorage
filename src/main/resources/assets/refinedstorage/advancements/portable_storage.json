@@ -13,7 +13,7 @@
   },
   "parent": "refinedstorage:viewing_items",
   "criteria": {
-    "grid_in_inventory": {
+    "portable_grid_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

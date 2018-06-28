@@ -12,7 +12,7 @@
   },
   "parent": "refinedstorage:autocrafting",
   "criteria": {
-    "grid_in_inventory": {
+    "pattern_and_pattern_grid_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

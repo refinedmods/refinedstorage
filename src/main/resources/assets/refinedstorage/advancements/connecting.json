@@ -10,7 +10,7 @@
       "translate": "advancements.refinedstorage:connecting.description"
     }
   },
-  "parent": "refinedstorage:root",
+  "parent": "refinedstorage:cutting",
   "criteria": {
     "cable_in_inventory": {
       "trigger": "minecraft:inventory_changed",

@@ -1,23 +1,23 @@
 {
   "display": {
     "icon": {
-      "item": "refinedstorage:crafting_monitor"
+      "item": "refinedstorage:crafter_manager"
     },
     "title": {
-      "translate": "advancements.refinedstorage:monitoring"
+      "translate": "advancements.refinedstorage:managing_patterns"
     },
     "description": {
-      "translate": "advancements.refinedstorage:monitoring.description"
+      "translate": "advancements.refinedstorage:managing_patterns.description"
     }
   },
   "parent": "refinedstorage:autocrafting",
   "criteria": {
-    "crafting_monitor_in_inventory": {
+    "crafter_manager_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:crafting_monitor"
+            "item": "refinedstorage:crafter_manager"
           }
         ]
       }

@@ -12,7 +12,7 @@
   },
   "parent": "refinedstorage:drives",
   "criteria": {
-    "storage_disk_in_inventory": {
+    "disk_manipulator_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

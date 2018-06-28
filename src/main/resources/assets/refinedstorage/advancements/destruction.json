@@ -12,7 +12,7 @@
   },
   "parent": "refinedstorage:importing",
   "criteria": {
-    "disk_drive_in_inventory": {
+    "destructor_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

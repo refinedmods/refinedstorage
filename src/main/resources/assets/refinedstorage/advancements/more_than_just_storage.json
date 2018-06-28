@@ -12,7 +12,7 @@
   },
   "parent": "refinedstorage:cutting",
   "criteria": {
-    "grid_in_inventory": {
+    "reader_writer_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

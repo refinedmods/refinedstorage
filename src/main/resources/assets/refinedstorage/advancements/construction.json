@@ -12,7 +12,7 @@
   },
   "parent": "refinedstorage:exporting",
   "criteria": {
-    "disk_drive_in_inventory": {
+    "constructor_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

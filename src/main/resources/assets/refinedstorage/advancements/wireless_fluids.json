@@ -13,7 +13,7 @@
   },
   "parent": "refinedstorage:wireless",
   "criteria": {
-    "grid_in_inventory": {
+    "wireless_fluid_grid_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
