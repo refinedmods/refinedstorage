@@ -602,7 +602,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public int getEnergyUsage() {
         int usage = RS.INSTANCE.config.controllerBaseUsage;
 
-        usage += nodeGraph.all().stream().mapToInt(INetworkNode::getEnergyUsage).sum();
+        for (INetworkNode node : nodeGraph.all()) {
+            if (node.canUpdate()) {
+                usage += node.getEnergyUsage();
+            }
+        }
 
         return usage;
     }
@@ -641,7 +645,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         if (type == null) {
             IBlockState state = world.getBlockState(pos);
             if (state.getBlock() == RSBlocks.CONTROLLER) {
-                this.type = (ControllerType) state.getValue(BlockController.TYPE);                
+                this.type = (ControllerType) state.getValue(BlockController.TYPE);
             }
         }
 
