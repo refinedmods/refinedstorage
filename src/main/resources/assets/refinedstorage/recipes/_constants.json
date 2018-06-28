@@ -21,6 +21,13 @@
     }
   },
   {
+    "name": "cut_silicon",
+    "ingredient": {
+      "item": "refinedstorage:processor",
+      "data": 6
+    }
+  },
+  {
     "name": "construction_core",
     "ingredient": {
       "item": "refinedstorage:core",

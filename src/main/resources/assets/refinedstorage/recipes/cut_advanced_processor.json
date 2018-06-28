@@ -6,6 +6,12 @@
     },
     {
       "item": "minecraft:diamond"
+    },
+    {
+      "item": "#cut_silicon"
+    },
+    {
+      "item": "minecraft:redstone"
     }
   ],
   "result": {
