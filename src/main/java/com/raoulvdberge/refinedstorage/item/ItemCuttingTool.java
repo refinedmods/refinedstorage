@@ -6,7 +6,7 @@ public class ItemCuttingTool extends ItemBase {
     public ItemCuttingTool() {
         super("cutting_tool");
 
-        setMaxDamage(50);
+        setMaxDamage(50 - 1);
         setMaxStackSize(1);
     }
 
