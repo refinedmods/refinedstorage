@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -68,7 +69,7 @@ public class CraftingExtractor {
             if (status.get(i) != CraftingExtractorItemStatus.EXTRACTED) {
                 ItemStack stack = items.get(i);
 
-                ItemStack inNetwork = network.extractItem(stack, stack.getCount(), true);
+                ItemStack inNetwork = network.extractItem(stack, stack.getCount(), CraftingTask.getFlags(stack), true);
 
                 CraftingExtractorItemStatus previousStatus = status.get(i);
 
@@ -108,7 +109,7 @@ public class CraftingExtractor {
     public void extractOne(@Nullable IItemHandler processingInventory) {
         for (int i = 0; i < items.size(); ++i) {
             if (status.get(i) == CraftingExtractorItemStatus.AVAILABLE) {
-                ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), false);
+                ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), CraftingTask.getFlags(items.get(i)), false);
                 if (extracted == null) {
                     throw new IllegalStateException("Did not extract anything while available");
                 }

@@ -17,7 +17,6 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
-import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
@@ -37,7 +36,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.wireless.WirelessGridRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
 import com.raoulvdberge.refinedstorage.apiimpl.util.*;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
@@ -65,7 +63,6 @@ public class API implements IRSAPI {
     private IComparer comparer = new Comparer();
     private IQuantityFormatter quantityFormatter = new QuantityFormatter();
     private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
-    private ISoldererRegistry soldererRegistry = new SoldererRegistry();
     private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
@@ -136,12 +133,6 @@ public class API implements IRSAPI {
         }
 
         return instance;
-    }
-
-    @Override
-    @Nonnull
-    public ISoldererRegistry getSoldererRegistry() {
-        return soldererRegistry;
     }
 
     @Override

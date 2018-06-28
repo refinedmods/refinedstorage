@@ -10,7 +10,7 @@
       "translate": "advancements.refinedstorage:detecting.description"
     }
   },
-  "parent": "refinedstorage:soldering",
+  "parent": "refinedstorage:cutting",
   "criteria": {
     "disk_drive_in_inventory": {
       "trigger": "minecraft:inventory_changed",

@@ -12,7 +12,7 @@
   },
   "parent": "refinedstorage:root",
   "criteria": {
-    "solderer_in_inventory": {
+    "cable_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "refinedstorage:grid",
+      "data": 0
+    },
+    {
+      "item": "#advanced_processor"
+    },
+    {
+      "item": "refinedstorage:pattern"
+    }
+  ],
+  "result": {
+    "item": "refinedstorage:grid",
+    "data": 2
+  }
+}

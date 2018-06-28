@@ -13,7 +13,6 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
-import com.raoulvdberge.refinedstorage.api.solderer.ISoldererRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
@@ -66,12 +65,6 @@ public interface IRSAPI {
      * @return the network node manager for the given world
      */
     INetworkNodeManager getNetworkNodeManager(World world);
-
-    /**
-     * @return the solderer registry
-     */
-    @Nonnull
-    ISoldererRegistry getSoldererRegistry();
 
     /**
      * @return the crafting task registry

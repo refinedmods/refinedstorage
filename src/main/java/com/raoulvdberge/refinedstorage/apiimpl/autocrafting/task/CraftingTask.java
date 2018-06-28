@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementColor;
@@ -31,6 +32,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -188,8 +190,10 @@ public class CraftingTask implements ICraftingTask {
 
             took.add(possibleInput);
 
-            ItemStack fromSelf = results.get(possibleInput);
-            ItemStack fromNetwork = mutatedStorage.get(possibleInput);
+            int flags = getFlags(possibleInput);
+
+            ItemStack fromSelf = results.get(possibleInput, flags);
+            ItemStack fromNetwork = mutatedStorage.get(possibleInput, flags);
 
             int remaining = possibleInput.getCount();
 
@@ -199,11 +203,13 @@ public class CraftingTask implements ICraftingTask {
 
                     itemsToExtract.add(possibleInput, toTake);
 
-                    results.remove(possibleInput, toTake);
+                    results.remove(fromSelf, toTake);
 
                     remaining -= toTake;
 
-                    fromSelf = results.get(possibleInput);
+                    took.set(took.size() - 1, ItemHandlerHelper.copyStackWithSize(fromSelf, possibleInput.getCount()));
+
+                    fromSelf = results.get(possibleInput, flags);
                 } else if (fromNetwork != null) {
                     int toTake = Math.min(remaining, fromNetwork.getCount());
 
@@ -211,11 +217,13 @@ public class CraftingTask implements ICraftingTask {
 
                     itemsToExtract.add(possibleInput, toTake);
 
-                    mutatedStorage.remove(possibleInput, toTake);
+                    mutatedStorage.remove(fromNetwork, toTake);
 
                     remaining -= toTake;
 
-                    fromNetwork = mutatedStorage.get(possibleInput);
+                    took.set(took.size() - 1, ItemHandlerHelper.copyStackWithSize(fromNetwork, possibleInput.getCount()));
+
+                    fromNetwork = mutatedStorage.get(possibleInput, flags);
                 } else {
                     ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
 
@@ -231,12 +239,12 @@ public class CraftingTask implements ICraftingTask {
 
                             this.steps.add(result.getLeft());
 
-                            fromSelf = results.get(possibleInput);
+                            fromSelf = results.get(possibleInput, flags);
                             if (fromSelf == null) {
                                 throw new IllegalStateException("Recursive calculation didn't yield anything");
                             }
 
-                            fromNetwork = mutatedStorage.get(possibleInput);
+                            fromNetwork = mutatedStorage.get(possibleInput, flags);
 
                             subPatternChain.cycle();
                         }
@@ -585,5 +593,13 @@ public class CraftingTask implements ICraftingTask {
         } else {
             throw new CraftingTaskReadException("Crafting pattern container doesn't exist anymore");
         }
+    }
+
+    public static int getFlags(ItemStack stack) {
+        if (stack.getItem().isDamageable()) {
+            return IComparer.COMPARE_NBT;
+        }
+
+        return IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     }
 }

@@ -37,8 +37,6 @@ public class GuiHandler implements IGuiHandler {
                 return new ContainerExporter((TileExporter) tile, player);
             case RSGui.DETECTOR:
                 return new ContainerDetector((TileDetector) tile, player);
-            case RSGui.SOLDERER:
-                return new ContainerSolderer((TileSolderer) tile, player);
             case RSGui.DESTRUCTOR:
                 return new ContainerDestructor((TileDestructor) tile, player);
             case RSGui.CONSTRUCTOR:
@@ -115,8 +113,6 @@ public class GuiHandler implements IGuiHandler {
                 return new GuiExporter((ContainerExporter) getContainer(ID, player, tile));
             case RSGui.DETECTOR:
                 return new GuiDetector((ContainerDetector) getContainer(ID, player, tile));
-            case RSGui.SOLDERER:
-                return new GuiSolderer((ContainerSolderer) getContainer(ID, player, tile));
             case RSGui.DESTRUCTOR:
                 return new GuiDestructor((ContainerDestructor) getContainer(ID, player, tile));
             case RSGui.CONSTRUCTOR:

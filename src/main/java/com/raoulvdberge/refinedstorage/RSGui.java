@@ -7,7 +7,6 @@ public final class RSGui {
     public static final int IMPORTER = 3;
     public static final int EXPORTER = 4;
     public static final int DETECTOR = 5;
-    public static final int SOLDERER = 6;
     public static final int DESTRUCTOR = 7;
     public static final int CONSTRUCTOR = 8;
     public static final int STORAGE = 9;

@@ -1,0 +1,20 @@
+{
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "refinedstorage:grid",
+      "data": 0
+    },
+    {
+      "item": "#advanced_processor"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "workbench"
+    }
+  ],
+  "result": {
+    "item": "refinedstorage:grid",
+    "data": 1
+  }
+}

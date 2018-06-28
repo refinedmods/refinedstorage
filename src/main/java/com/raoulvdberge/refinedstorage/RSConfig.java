@@ -36,7 +36,6 @@ public class RSConfig {
     public int interfaceUsage;
     public int fluidInterfaceUsage;
     public int relayUsage;
-    public int soldererUsage;
     public int storageUsage;
     public int fluidStorageUsage;
     public int wirelessTransmitterUsage;
@@ -103,7 +102,6 @@ public class RSConfig {
     //region Upgrades
     public int rangeUpgradeUsage;
     public int speedUpgradeUsage;
-    public float soldererSpeedIncreasePerSpeedUpgrade;
     public int craftingUpgradeUsage;
     public int stackUpgradeUsage;
     public int interdimensionalUpgradeUsage;
@@ -180,7 +178,6 @@ public class RSConfig {
         interfaceUsage = config.getInt("interface", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Interfaces");
         fluidInterfaceUsage = config.getInt("fluidInterface", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Fluid Interfaces");
         relayUsage = config.getInt("relay", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Relays");
-        soldererUsage = config.getInt("solderer", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Solderers");
         storageUsage = config.getInt("storage", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Storage Blocks");
         fluidStorageUsage = config.getInt("fluidStorage", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Storage Blocks");
         wirelessTransmitterUsage = config.getInt("wirelessTransmitter", ENERGY, 8, 0, Integer.MAX_VALUE, "The energy used by Wireless Transmitters");
@@ -247,7 +244,6 @@ public class RSConfig {
         //region Upgrades
         rangeUpgradeUsage = config.getInt("range", UPGRADES, 8, 0, Integer.MAX_VALUE, "The additional energy used per Range Upgrade");
         speedUpgradeUsage = config.getInt("speed", UPGRADES, 2, 0, Integer.MAX_VALUE, "The additional energy used per Speed Upgrade");
-        soldererSpeedIncreasePerSpeedUpgrade = config.getFloat("soldererSpeedIncreasePerSpeedUpgrade", UPGRADES, 22.5F, 0F, 25F, "The speed increase percentage in the Solderer per Speed Upgrade");
         craftingUpgradeUsage = config.getInt("crafting", UPGRADES, 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
         stackUpgradeUsage = config.getInt("stack", UPGRADES, 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
         interdimensionalUpgradeUsage = config.getInt("interdimensional", UPGRADES, 1000, 0, Integer.MAX_VALUE, "The additional energy used by the Interdimensional Upgrade");

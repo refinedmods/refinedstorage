@@ -10,7 +10,7 @@
       "translate": "advancements.refinedstorage:more_than_just_storage.description"
     }
   },
-  "parent": "refinedstorage:soldering",
+  "parent": "refinedstorage:cutting",
   "criteria": {
     "grid_in_inventory": {
       "trigger": "minecraft:inventory_changed",

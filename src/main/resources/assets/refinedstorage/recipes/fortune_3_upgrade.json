@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EFE",
+    "BUB",
+    "EEE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "F": {
+      "type": "refinedstorage:enchanted_book",
+      "id": "fortune",
+      "level": 3
+    },
+    "B": {
+      "item": "minecraft:bookshelf"
+    },
+    "U": {
+      "item": "refinedstorage:upgrade",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "refinedstorage:upgrade",
+    "data": 9
+  }
+}

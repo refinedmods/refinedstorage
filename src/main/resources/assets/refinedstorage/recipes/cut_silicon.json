@@ -1,0 +1,16 @@
+{
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "item": "#cutting_tool"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "itemSilicon"
+    }
+  ],
+  "result": {
+    "item": "refinedstorage:processor",
+    "data": 6
+  }
+}

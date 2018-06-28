@@ -10,7 +10,7 @@
       "translate": "advancements.refinedstorage:autocrafting.description"
     }
   },
-  "parent": "refinedstorage:soldering",
+  "parent": "refinedstorage:cutting",
   "criteria": {
     "grid_in_inventory": {
       "trigger": "minecraft:inventory_changed",

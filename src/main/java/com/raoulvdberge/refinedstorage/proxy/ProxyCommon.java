@@ -1,7 +1,5 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
@@ -23,7 +21,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerFluids;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
-import com.raoulvdberge.refinedstorage.apiimpl.solderer.SoldererRecipeLoader;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.ExternalStorageProviderFluid;
@@ -43,6 +40,7 @@ import com.raoulvdberge.refinedstorage.integration.funkylocomotion.MoveFactoryRe
 import com.raoulvdberge.refinedstorage.integration.inventorysorter.IntegrationInventorySorter;
 import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
+import com.raoulvdberge.refinedstorage.item.ItemProcessor;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
@@ -55,22 +53,14 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.IIngredientFactory;
-import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -84,7 +74,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 
-import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -202,7 +191,6 @@ public class ProxyCommon {
         registerTile(TileImporter.class, "importer");
         registerTile(TileExporter.class, "exporter");
         registerTile(TileDetector.class, "detector");
-        registerTile(TileSolderer.class, "solderer");
         registerTile(TileDestructor.class, "destructor");
         registerTile(TileConstructor.class, "constructor");
         registerTile(TileStorage.class, "storage");
@@ -234,7 +222,6 @@ public class ProxyCommon {
         registerBlock(RSBlocks.DISK_DRIVE);
         registerBlock(RSBlocks.STORAGE);
         registerBlock(RSBlocks.FLUID_STORAGE);
-        registerBlock(RSBlocks.SOLDERER);
         registerBlock(RSBlocks.CABLE);
         registerBlock(RSBlocks.IMPORTER);
         registerBlock(RSBlocks.EXPORTER);
@@ -256,6 +243,7 @@ public class ProxyCommon {
         registerBlock(RSBlocks.CRAFTER_MANAGER);
 
         registerItem(RSItems.QUARTZ_ENRICHED_IRON);
+        registerItem(RSItems.CUTTING_TOOL);
         registerItem(RSItems.STORAGE_DISK);
         registerItem(RSItems.FLUID_STORAGE_DISK);
         registerItem(RSItems.STORAGE_HOUSING);
@@ -279,30 +267,15 @@ public class ProxyCommon {
     public void init(FMLInitializationEvent e) {
         OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
 
-        GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5f);
+        GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5F);
+
+        GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_BASIC), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC), 0.5F);
+        GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_IMPROVED), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED), 0.5F);
+        GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_ADVANCED), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED), 0.5F);
 
         WirelessGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryWirelessGrid());
         WirelessFluidGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryWirelessFluidGrid());
         PortableGrid.ID = API.instance().getWirelessGridRegistry().add(new WirelessGridFactoryPortableGrid());
-
-        CraftingHelper.register(new ResourceLocation(RS.ID + ":enchanted_book"), new IIngredientFactory() {
-            @Nonnull
-            @Override
-            public Ingredient parse(JsonContext context, JsonObject json) {
-                String id = JsonUtils.getString(json, "id");
-                int level = JsonUtils.getInt(json, "level", 1);
-
-                Enchantment enchantment = Enchantment.getEnchantmentByLocation(id);
-
-                if (enchantment == null) {
-                    throw new JsonSyntaxException("Couldn't find enchantment with id '" + id + "'");
-                }
-
-                return Ingredient.fromStacks(ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(enchantment, level)));
-            }
-        });
-
-        SoldererRecipeLoader.load();
 
         if (IntegrationOC.isLoaded()) {
             DriverNetwork.register();
@@ -357,7 +330,18 @@ public class ProxyCommon {
         OneSixMigrationHelper.removalHook();
 
         for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
-            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("wrench")) {
+            if (missing.key.getResourceDomain().equals(RS.ID) && (missing.key.getResourcePath().equals("wrench") || missing.key.getResourcePath().equals("solderer"))) {
+                missing.ignore();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void fixBlockMappings(RegistryEvent.MissingMappings<Block> e) {
+        OneSixMigrationHelper.removalHook();
+
+        for (RegistryEvent.MissingMappings.Mapping<Block> missing : e.getMappings()) {
+            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("solderer")) {
                 missing.ignore();
             }
         }

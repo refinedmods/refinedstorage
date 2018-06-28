@@ -12,7 +12,7 @@
   },
   "parent": "refinedstorage:connecting",
   "criteria": {
-    "solderer_in_inventory": {
+    "relay_in_inventory": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

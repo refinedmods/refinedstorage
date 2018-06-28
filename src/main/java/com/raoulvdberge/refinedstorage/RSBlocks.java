@@ -12,7 +12,6 @@ public final class RSBlocks {
     public static final BlockExporter EXPORTER = new BlockExporter();
     public static final BlockDetector DETECTOR = new BlockDetector();
     public static final BlockMachineCasing MACHINE_CASING = new BlockMachineCasing();
-    public static final BlockSolderer SOLDERER = new BlockSolderer();
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
     public static final BlockStorage STORAGE = new BlockStorage();
