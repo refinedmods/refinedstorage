@@ -87,7 +87,7 @@ public class CraftingStepProcess extends CraftingStep {
             extractor.extractOne(pattern.getContainer().getConnectedInventory());
         }
 
-        return itemsToReceive.isEmpty();
+        return extractor.isAllExtracted() && itemsToReceive.isEmpty();
     }
 
     @Override
