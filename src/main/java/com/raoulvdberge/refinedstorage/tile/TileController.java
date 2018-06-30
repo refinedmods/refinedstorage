@@ -583,6 +583,10 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             return energyType;
         }
 
+        if (!redstoneMode.isEnabled(world, pos)) {
+            return ControllerEnergyType.OFF;
+        }
+
         return getEnergyType(this.energy.getStored(), this.energy.getCapacity());
     }
 
