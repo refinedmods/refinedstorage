@@ -134,6 +134,8 @@ public class CraftingExtractor {
                 // For processing patterns we want to insert all items at once to avoid conflicts with other crafting steps.
                 if (!processing) {
                     return;
+                } else {
+                    updateStatus(processingInventory);
                 }
             }
         }
