@@ -107,6 +107,8 @@ public class CraftingExtractor {
     }
 
     public void extractOne(@Nullable IItemHandler processingInventory) {
+        boolean changed = false;
+
         for (int i = 0; i < items.size(); ++i) {
             if (status.get(i) == CraftingExtractorItemStatus.AVAILABLE) {
                 ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), CraftingTask.getFlags(items.get(i)), false);
@@ -116,7 +118,7 @@ public class CraftingExtractor {
 
                 if (processing) {
                     if (processingInventory == null) {
-                        throw new IllegalStateException("Processing inventory is suddenly null");
+                        throw new IllegalStateException("Processing inventory is null");
                     }
 
                     ItemStack remainder = ItemHandlerHelper.insertItem(processingInventory, extracted, false);
@@ -127,10 +129,17 @@ public class CraftingExtractor {
 
                 status.set(i, CraftingExtractorItemStatus.EXTRACTED);
 
-                network.getCraftingManager().onTaskChanged();
+                changed = true;
 
-                return;
+                // For processing patterns we want to insert all items at once to avoid conflicts with other crafting steps.
+                if (!processing) {
+                    return;
+                }
             }
+        }
+
+        if (changed) {
+            network.getCraftingManager().onTaskChanged();
         }
     }
 
