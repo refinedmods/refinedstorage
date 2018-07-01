@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -55,7 +56,7 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
             stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
 
             if (!stack.isEmpty()) {
-                newDisk.insert(stack, stack.getCount(), false);
+                newDisk.insert(stack, stack.getCount(), Action.PERFORM);
             }
         }
 
@@ -76,7 +77,7 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
             FluidStack stack = FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i));
 
             if (stack != null) {
-                newDisk.insert(stack, stack.amount, false);
+                newDisk.insert(stack, stack.amount, Action.PERFORM);
             }
         }
 

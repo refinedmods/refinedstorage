@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import li.cil.oc.api.Network;
@@ -191,7 +192,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
             throw new IllegalArgumentException("No fluid tank on the given side");
         }
 
-        FluidStack extractedSim = node.getNetwork().extractFluid(stack, amount, true);
+        FluidStack extractedSim = node.getNetwork().extractFluid(stack, amount, Action.SIMULATE);
         if (extractedSim == null || extractedSim.amount <= 0) {
             return new Object[]{null, "could not extract the specified fluid"};
         }
@@ -204,7 +205,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         // Actually do it and return how much fluid we've inserted
-        FluidStack extracted = node.getNetwork().extractFluid(stack, amount, false);
+        FluidStack extracted = node.getNetwork().extractFluid(stack, amount, Action.PERFORM);
         handler.fill(extracted, true);
 
         return new Object[]{filledAmountSim};
@@ -266,7 +267,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         // Simulate extracting the item and get the amount of items that can be extracted
-        ItemStack extractedSim = node.getNetwork().extractItem(stack, count, true);
+        ItemStack extractedSim = node.getNetwork().extractItem(stack, count, Action.SIMULATE);
         if (extractedSim.isEmpty() || extractedSim.getCount() == 0) {
             return new Object[]{null, "could not extract the specified item"};
         }
@@ -286,7 +287,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         // Actually do it and return how many items we've inserted
-        ItemStack extracted = node.getNetwork().extractItem(stack, count, false);
+        ItemStack extracted = node.getNetwork().extractItem(stack, count, Action.PERFORM);
         ItemHandlerHelper.insertItemStacked(handler, extracted, false);
 
         return new Object[]{transferableAmount};

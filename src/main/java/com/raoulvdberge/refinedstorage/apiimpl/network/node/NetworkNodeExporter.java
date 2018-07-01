@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -73,14 +74,14 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     if (!slot.isEmpty()) {
                         int stackSize = upgrades.getItemInteractCount();
 
-                        ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, true);
+                        ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, Action.SIMULATE);
 
                         if (took == null) {
                             if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                                 network.getCraftingManager().schedule(slot, stackSize);
                             }
                         } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-                            took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, false);
+                            took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, Action.PERFORM);
 
                             if (took != null) {
                                 ItemHandlerHelper.insertItem(handler, took, false);
@@ -116,13 +117,13 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                         if (stackInStorage != null) {
                             int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
 
-                            FluidStack took = network.extractFluid(stack, toExtract, compare, true);
+                            FluidStack took = network.extractFluid(stack, toExtract, compare, Action.SIMULATE);
 
                             if (took != null) {
                                 int filled = handler.fill(took, false);
 
                                 if (filled > 0) {
-                                    took = network.extractFluid(stack, filled, compare, false);
+                                    took = network.extractFluid(stack, filled, compare, Action.PERFORM);
 
                                     handler.fill(took, true);
                                 }

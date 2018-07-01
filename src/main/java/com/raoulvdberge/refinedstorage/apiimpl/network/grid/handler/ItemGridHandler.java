@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
@@ -80,19 +81,19 @@ public class ItemGridHandler implements IItemGridHandler {
         // Do this before actually extracting, since external storage sends updates as soon as a change happens (so before the storage tracker used to track)
         network.getItemStorageTracker().changed(player, item.copy());
 
-        ItemStack took = network.extractItem(item, size, true);
+        ItemStack took = network.extractItem(item, size, Action.SIMULATE);
 
         if (took != null) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
                 if (ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
-                    took = network.extractItem(item, size, false);
+                    took = network.extractItem(item, size, Action.PERFORM);
 
                     ItemHandlerHelper.insertItem(playerInventory, took, false);
                 }
             } else {
-                took = network.extractItem(item, size, false);
+                took = network.extractItem(item, size, Action.PERFORM);
 
                 if (single && !held.isEmpty()) {
                     held.grow(1);
@@ -119,7 +120,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         network.getItemStorageTracker().changed(player, stack.copy());
 
-        ItemStack remainder = network.insertItem(stack, stack.getCount(), false);
+        ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
 
         INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 
@@ -142,8 +143,8 @@ public class ItemGridHandler implements IItemGridHandler {
         network.getItemStorageTracker().changed(player, stack.copy());
 
         if (single) {
-            if (network.insertItem(stack, size, true) == null) {
-                network.insertItem(stack, size, false);
+            if (network.insertItem(stack, size, Action.SIMULATE) == null) {
+                network.insertItem(stack, size, Action.PERFORM);
 
                 stack.shrink(size);
 
@@ -152,7 +153,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 }
             }
         } else {
-            player.inventory.setItemStack(StackUtils.nullToEmpty(network.insertItem(stack, size, false)));
+            player.inventory.setItemStack(StackUtils.nullToEmpty(network.insertItem(stack, size, Action.PERFORM)));
         }
 
         player.updateHeldItem();

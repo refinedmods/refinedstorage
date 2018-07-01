@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
@@ -134,7 +135,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         int slot = 0;
         if (type == IType.ITEMS) {
-            while (slot < 3 && (itemDisks[slot] == null || checkItemDiskDone(itemDisks[slot], slot))) {
+            while (slot < 3 && (itemDisks[slot] == null || isItemDiskDone(itemDisks[slot], slot))) {
                 slot++;
             }
 
@@ -150,7 +151,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 extractItemFromNetwork(storage, slot);
             }
         } else if (type == IType.FLUIDS) {
-            while (slot < 3 && (fluidDisks[slot] == null || checkFluidDiskDone(fluidDisks[slot], slot))) {
+            while (slot < 3 && (fluidDisks[slot] == null || isFluidDiskDone(fluidDisks[slot], slot))) {
                 slot++;
             }
 
@@ -173,29 +174,29 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack stack = stacks.get(i);
 
-            ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
+            ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, Action.PERFORM);
             if (extracted == null) {
                 continue;
             }
 
-            ItemStack remainder = network.insertItem(extracted, extracted.getCount(), false);
+            ItemStack remainder = network.insertItem(extracted, extracted.getCount(), Action.PERFORM);
             if (remainder == null) {
                 break;
             }
 
             // We need to check if the stack was inserted
-            storage.insert(((extracted == remainder) ? remainder.copy() : remainder), remainder.getCount(), false);
+            storage.insert(((extracted == remainder) ? remainder.copy() : remainder), remainder.getCount(), Action.PERFORM);
         }
     }
 
-    //Iterate through disk stacks, if none can be inserted, return that it is done processing and can be output.
-    private boolean checkItemDiskDone(IStorageDisk<ItemStack> storage, int slot) {
+    // Iterate through disk stacks, if none can be inserted, return that it is done processing and can be output.
+    private boolean isItemDiskDone(IStorageDisk<ItemStack> storage, int slot) {
         if (ioMode == IO_MODE_INSERT && storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return true;
         }
 
-        //In Extract mode, we just need to check if the disk is full or not.
+        // In Extract mode, we just need to check if the disk is full or not.
         if (ioMode == IO_MODE_EXTRACT)
             if (storage.getStored() == storage.getCapacity()) {
                 moveDriveToOutput(slot);
@@ -208,12 +209,12 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack stack = stacks.get(i);
 
-            ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, true);
+            ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, Action.SIMULATE);
             if (extracted == null) {
                 continue;
             }
 
-            ItemStack remainder = network.insertItem(extracted, extracted.getCount(), true);
+            ItemStack remainder = network.insertItem(extracted, extracted.getCount(), Action.SIMULATE);
             if (remainder == null) { //An item could be inserted (no remainders when trying to). This disk isn't done.
                 return false;
             }
@@ -236,7 +237,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
 
             if (toExtract != null) {
-                extracted = network.extractItem(toExtract, upgrades.getItemInteractCount(), compare, false);
+                extracted = network.extractItem(toExtract, upgrades.getItemInteractCount(), compare, Action.PERFORM);
             }
         } else {
             while (itemFilters.getSlots() > i && extracted == null) {
@@ -247,7 +248,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 }
 
                 if (!filterStack.isEmpty()) {
-                    extracted = network.extractItem(filterStack, upgrades.getItemInteractCount(), compare, false);
+                    extracted = network.extractItem(filterStack, upgrades.getItemInteractCount(), compare, Action.PERFORM);
                 }
             }
         }
@@ -257,10 +258,10 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             return;
         }
 
-        ItemStack remainder = storage.insert(extracted, extracted.getCount(), false);
+        ItemStack remainder = storage.insert(extracted, extracted.getCount(), Action.PERFORM);
 
         if (remainder != null) {
-            network.insertItem(remainder, remainder.getCount(), false);
+            network.insertItem(remainder, remainder.getCount(), Action.PERFORM);
         }
     }
 
@@ -273,7 +274,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         while (extracted == null && stacks.size() > i) {
             FluidStack stack = stacks.get(i++);
 
-            extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, false);
+            extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, Action.PERFORM);
         }
 
         if (extracted == null) {
@@ -281,14 +282,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             return;
         }
 
-        FluidStack remainder = network.insertFluid(extracted, extracted.amount, false);
+        FluidStack remainder = network.insertFluid(extracted, extracted.amount, Action.PERFORM);
 
         if (remainder != null) {
-            storage.insert(remainder, remainder.amount, false);
+            storage.insert(remainder, remainder.amount, Action.PERFORM);
         }
     }
 
-    private boolean checkFluidDiskDone(IStorageDisk<FluidStack> storage, int slot) {
+    private boolean isFluidDiskDone(IStorageDisk<FluidStack> storage, int slot) {
         if (ioMode == IO_MODE_INSERT && storage.getStored() == 0) {
             moveDriveToOutput(slot);
             return true;
@@ -307,13 +308,13 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         for (int i = 0; i < stacks.size(); ++i) {
             FluidStack stack = stacks.get(i);
 
-            FluidStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, true);
+            FluidStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, Action.SIMULATE);
             if (extracted == null) {
                 continue;
             }
 
-            FluidStack remainder = network.insertFluid(extracted, extracted.amount, true);
-            if (remainder == null) { //A fluid could be inserted (no remainders when trying to). This disk isn't done.
+            FluidStack remainder = network.insertFluid(extracted, extracted.amount, Action.SIMULATE);
+            if (remainder == null) { // A fluid could be inserted (no remainders when trying to). This disk isn't done.
                 return false;
             }
         }
@@ -335,7 +336,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
 
             if (toExtract != null) {
-                extracted = network.extractFluid(toExtract, upgrades.getItemInteractCount(), compare, false);
+                extracted = network.extractFluid(toExtract, upgrades.getItemInteractCount(), compare, Action.PERFORM);
             }
         } else {
             while (fluidFilters.getSlots() > i && extracted == null) {
@@ -346,7 +347,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 }
 
                 if (filterStack != null) {
-                    extracted = network.extractFluid(filterStack, upgrades.getItemInteractCount(), compare, false);
+                    extracted = network.extractFluid(filterStack, upgrades.getItemInteractCount(), compare, Action.PERFORM);
                 }
             }
         }
@@ -356,10 +357,10 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             return;
         }
 
-        FluidStack remainder = storage.insert(extracted, extracted.amount, false);
+        FluidStack remainder = storage.insert(extracted, extracted.amount, Action.PERFORM);
 
         if (remainder != null) {
-            network.insertFluid(remainder, remainder.amount, false);
+            network.insertFluid(remainder, remainder.amount, Action.PERFORM);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -84,7 +85,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
                 } else if (ticks % upgrades.getSpeed() == 0) {
                     ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
 
-                    if (!result.isEmpty() && network.insertItem(result, result.getCount(), true) == null) {
+                    if (!result.isEmpty() && network.insertItem(result, result.getCount(), Action.SIMULATE) == null) {
                         result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);
 
                         if (!result.isEmpty()) {
@@ -101,11 +102,11 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
             if (handler != null) {
                 FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
-                if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
+                if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, Action.SIMULATE) == null) {
                     FluidStack toDrain = handler.drain(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), false);
 
                     if (toDrain != null) {
-                        FluidStack remainder = network.insertFluid(toDrain, toDrain.amount, false);
+                        FluidStack remainder = network.insertFluid(toDrain, toDrain.amount, Action.PERFORM);
                         if (remainder != null) {
                             toDrain.amount -= remainder.amount;
                         }

@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -156,9 +157,9 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
 
     @Nullable
     @Override
-    public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
+    public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
         if (context.acceptsFluid(stack)) {
-            int filled = handlerSupplier.get().fill(StackUtils.copy(stack, size), !simulate);
+            int filled = handlerSupplier.get().fill(StackUtils.copy(stack, size), action == Action.PERFORM);
 
             if (filled == size) {
                 return null;
@@ -172,14 +173,14 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
 
     @Nullable
     @Override
-    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
+    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
         IFluidHandler handler = handlerSupplier.get();
 
         if (handler == null) {
             return null;
         }
 
-        return handler.drain(StackUtils.copy(stack, size), !simulate);
+        return handler.drain(StackUtils.copy(stack, size), action == Action.PERFORM);
     }
 
     @Override

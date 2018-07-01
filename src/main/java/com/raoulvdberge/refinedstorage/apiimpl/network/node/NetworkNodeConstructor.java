@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.mojang.authlib.GameProfile;
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -87,7 +88,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                     }
                 } else {
                     if (item.getItem() == Items.FIREWORKS && !drop) {
-                        ItemStack took = network.extractItem(item, 1, false);
+                        ItemStack took = network.extractItem(item, 1, Action.PERFORM);
 
                         if (took != null) {
                             world.spawnEntity(new EntityFireworkRocket(world, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
@@ -108,7 +109,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                         FluidStack stored = network.getFluidStorageCache().getList().get(stack, compare);
 
                         if (stored != null && stored.amount >= Fluid.BUCKET_VOLUME) {
-                            FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare, false);
+                            FluidStack took = network.extractFluid(stack, Fluid.BUCKET_VOLUME, compare, Action.PERFORM);
 
                             if (took != null) {
                                 IBlockState state = block.getDefaultState();
@@ -143,7 +144,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
         ItemStack item = itemFilters.getStackInSlot(0);
 
-        ItemStack took = network.extractItem(item, 1, compare, true);
+        ItemStack took = network.extractItem(item, 1, compare, Action.SIMULATE);
 
         if (took != null) {
             IBlockState state = SlotFilter.getBlockState(world, front, took);
@@ -155,7 +156,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                     return;
                 }
 
-                took = network.extractItem(item, 1, compare, false);
+                took = network.extractItem(item, 1, compare, Action.PERFORM);
 
                 if (took != null) {
                     if (item.getItem() instanceof ItemBlock) {
@@ -219,7 +220,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     private void dropItem() {
-        ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), upgrades.getItemInteractCount(), false);
+        ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), upgrades.getItemInteractCount(), Action.PERFORM);
 
         if (took != null) {
             BehaviorDefaultDispenseItem.doDispense(world, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));

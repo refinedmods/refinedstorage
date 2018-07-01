@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -143,11 +144,11 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
 
     @Nullable
     @Override
-    public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         IItemHandler handler = handlerSupplier.get();
 
         if (handler != null && context.acceptsItem(stack)) {
-            return StackUtils.emptyToNull(ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), simulate));
+            return StackUtils.emptyToNull(ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), action == Action.SIMULATE));
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);
@@ -155,7 +156,7 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
 
     @Nullable
     @Override
-    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
         int remaining = size;
 
         ItemStack received = null;
@@ -170,7 +171,7 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
             ItemStack slot = handler.getStackInSlot(i);
 
             if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, flags)) {
-                ItemStack got = handler.extractItem(i, remaining, simulate);
+                ItemStack got = handler.extractItem(i, remaining, action == Action.SIMULATE);
 
                 if (!got.isEmpty()) {
                     if (received == null) {

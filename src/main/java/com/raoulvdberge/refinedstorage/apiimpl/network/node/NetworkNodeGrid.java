@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -212,7 +213,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
         if (type == null) {
             IBlockState state = world.getBlockState(pos);
             if (state.getBlock() == RSBlocks.GRID) {
-                type = (GridType) state.getValue(BlockGrid.TYPE);                
+                type = (GridType) state.getValue(BlockGrid.TYPE);
             }
         }
 
@@ -327,10 +328,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                 if (grid.getType() == GridType.CRAFTING) {
                     // If we are connected, try to insert into network. If it fails, stop.
                     if (network != null) {
-                        if (network.insertItem(slot, slot.getCount(), true) != null) {
+                        if (network.insertItem(slot, slot.getCount(), Action.SIMULATE) != null) {
                             return;
                         } else {
-                            network.insertItem(slot, slot.getCount(), false);
+                            network.insertItem(slot, slot.getCount(), Action.PERFORM);
                         }
                     } else {
                         // If we aren't connected, try to insert into player inventory. If it fails, stop.
@@ -356,7 +357,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                     // If we are connected, first try to get the possibilities from the network
                     if (network != null) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), false);
+                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), Action.PERFORM);
 
                             if (took != null) {
                                 grid.getCraftingMatrix().setInventorySlotContents(i, StackUtils.nullToEmpty(took));
@@ -430,7 +431,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                 // If there is no space for the remainder, dump it in the player inventory
                 if (!slot.isEmpty() && slot.getCount() > 1) {
                     if (!player.inventory.addItemStackToInventory(remainder.get(i).copy())) {
-                        ItemStack remainderStack = network == null ? remainder.get(i).copy() : network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), false);
+                        ItemStack remainderStack = network == null ? remainder.get(i).copy() : network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), Action.PERFORM);
 
                         if (remainderStack != null) {
                             InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
@@ -443,7 +444,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
                 }
             } else if (!slot.isEmpty()) {
                 if (slot.getCount() == 1 && network != null) {
-                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(network.extractItem(slot, 1, false)));
+                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(network.extractItem(slot, 1, Action.PERFORM)));
                 } else {
                     matrix.decrStackSize(i, 1);
                 }
@@ -487,7 +488,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware {
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                ItemStack remainder = network == null ? craftedItem : network.insertItem(craftedItem, craftedItem.getCount(), false);
+                ItemStack remainder = network == null ? craftedItem : network.insertItem(craftedItem, craftedItem.getCount(), Action.PERFORM);
 
                 if (remainder != null) {
                     InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);

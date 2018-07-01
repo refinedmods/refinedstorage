@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,18 +41,18 @@ public class StorageDiskFluidStorageWrapper implements IStorageDisk<FluidStack> 
 
     @Override
     @Nullable
-    public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
+    public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
         if (!IFilterable.acceptsFluid(storage.getFilters(), storage.getMode(), storage.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 
-        return parent.insert(stack, size, simulate);
+        return parent.insert(stack, size, action);
     }
 
     @Nullable
     @Override
-    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
-        return parent.extract(stack, size, flags, simulate);
+    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
+        return parent.extract(stack, size, flags, action);
     }
 
     @Override

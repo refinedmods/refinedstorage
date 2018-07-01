@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -70,7 +71,7 @@ public class CraftingExtractor {
             if (status.get(i) != CraftingExtractorItemStatus.EXTRACTED) {
                 ItemStack stack = items.get(i);
 
-                ItemStack inNetwork = network.extractItem(stack, stack.getCount(), CraftingTask.getFlags(stack), true);
+                ItemStack inNetwork = network.extractItem(stack, stack.getCount(), CraftingTask.getFlags(stack), Action.SIMULATE);
 
                 CraftingExtractorItemStatus previousStatus = status.get(i);
 
@@ -112,7 +113,7 @@ public class CraftingExtractor {
 
         for (int i = 0; i < items.size(); ++i) {
             if (status.get(i) == CraftingExtractorItemStatus.AVAILABLE) {
-                ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), CraftingTask.getFlags(items.get(i)), false);
+                ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), CraftingTask.getFlags(items.get(i)), Action.PERFORM);
                 if (extracted == null) {
                     throw new IllegalStateException("Did not extract anything while available");
                 }

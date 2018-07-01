@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -92,7 +93,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                     if (entity instanceof EntityItem) {
                         ItemStack droppedItem = ((EntityItem) entity).getItem();
 
-                        if (IFilterable.acceptsItem(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), true) == null) {
+                        if (IFilterable.acceptsItem(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE) == null) {
                             network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
 
                             world.removeEntity(entity);
@@ -134,7 +135,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                         }
 
                         for (ItemStack drop : drops) {
-                            if (network.insertItem(drop, drop.getCount(), true) != null) {
+                            if (network.insertItem(drop, drop.getCount(), Action.SIMULATE) != null) {
                                 return;
                             }
                         }
@@ -171,10 +172,10 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 if (handler != null) {
                     FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
-                    if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, true) == null) {
+                    if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, Action.SIMULATE) == null) {
                         FluidStack drained = handler.drain(Fluid.BUCKET_VOLUME, true);
 
-                        network.insertFluid(drained, drained.amount, false);
+                        network.insertFluid(drained, drained.amount, Action.PERFORM);
                     }
                 }
             }

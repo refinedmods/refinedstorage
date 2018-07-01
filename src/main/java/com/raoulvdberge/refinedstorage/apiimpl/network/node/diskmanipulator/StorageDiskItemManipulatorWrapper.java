@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -60,22 +61,22 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
 
     @Override
     @Nullable
-    public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         if (!IFilterable.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
-        return parent.insert(stack, size, simulate);
+        return parent.insert(stack, size, action);
     }
 
     @Override
     @Nullable
-    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
         if (!IFilterable.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
             return null;
         }
 
-        return parent.extract(stack, size, flags, simulate);
+        return parent.extract(stack, size, flags, action);
     }
 
     @Override

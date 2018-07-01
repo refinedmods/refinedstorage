@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
@@ -95,7 +96,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
             // Drain in tank
             if (drained != null) {
-                FluidStack remainder = network.insertFluid(drained, drained.amount, false);
+                FluidStack remainder = network.insertFluid(drained, drained.amount, Action.PERFORM);
 
                 if (remainder != null) {
                     tankIn.fillInternal(remainder, true);
@@ -111,7 +112,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
                 FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
 
                 if (remainder != null) {
-                    network.insertFluid(remainder, remainder.amount, false);
+                    network.insertFluid(remainder, remainder.amount, Action.PERFORM);
                 }
             } else if (stack != null) {
                 // Fill the out fluid
@@ -128,10 +129,10 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
                         return;
                     }
 
-                    FluidStack took = network.extractFluid(stack, toExtract, compare, true);
+                    FluidStack took = network.extractFluid(stack, toExtract, compare, Action.SIMULATE);
 
                     if (took != null && (toExtract - tankOut.fillInternal(took, false)) == 0) {
-                        took = network.extractFluid(stack, toExtract, compare, false);
+                        took = network.extractFluid(stack, toExtract, compare, Action.PERFORM);
 
                         tankOut.fillInternal(took, true);
                     }

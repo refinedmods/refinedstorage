@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -65,22 +66,22 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
 
     @Override
     @Nullable
-    public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
+    public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
         if (!IFilterable.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 
-        return parent.insert(stack, size, simulate);
+        return parent.insert(stack, size, action);
     }
 
     @Override
     @Nullable
-    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
+    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
         if (!IFilterable.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
             return null;
         }
 
-        return parent.extract(stack, size, flags, simulate);
+        return parent.extract(stack, size, flags, action);
     }
 
     @Override

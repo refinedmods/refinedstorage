@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -41,7 +42,7 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
                     ItemStack slot = matrix.getStackInSlot(i);
 
                     if (!slot.isEmpty()) {
-                        matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(grid.getNetwork().insertItem(slot, slot.getCount(), false)));
+                        matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(grid.getNetwork().insertItem(slot, slot.getCount(), Action.PERFORM)));
                     }
                 }
             } else if (grid.getType() == GridType.PATTERN) {

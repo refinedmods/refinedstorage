@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -43,12 +44,12 @@ public class StorageDiskItemPortable implements IStorageDisk<ItemStack> {
 
     @Nullable
     @Override
-    public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         int storedPre = parent.getStored();
 
-        ItemStack remainder = parent.insert(stack, size, simulate);
+        ItemStack remainder = parent.insert(stack, size, action);
 
-        if (!simulate) {
+        if (action == Action.PERFORM) {
             int inserted = parent.getCacheDelta(storedPre, size, remainder);
 
             if (inserted > 0) {
@@ -61,10 +62,10 @@ public class StorageDiskItemPortable implements IStorageDisk<ItemStack> {
 
     @Nullable
     @Override
-    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        ItemStack extracted = parent.extract(stack, size, flags, simulate);
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
+        ItemStack extracted = parent.extract(stack, size, flags, action);
 
-        if (!simulate && extracted != null) {
+        if (action == Action.PERFORM && extracted != null) {
             portableGrid.getCache().remove(extracted, extracted.getCount(), false);
         }
 

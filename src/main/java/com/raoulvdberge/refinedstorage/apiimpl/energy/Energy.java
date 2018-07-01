@@ -1,14 +1,14 @@
 package com.raoulvdberge.refinedstorage.apiimpl.energy;
 
+import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
+import com.raoulvdberge.refinedstorage.api.util.Action;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import java.util.Map;
 import java.util.UUID;
 
-import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
-
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
 public final class Energy implements IEnergy {
-    private static final UUID UUID_EMPTY = new UUID(0l, 0l);
+    private static final UUID DEFAULT_UUID = new UUID(0L, 0L);
 
     protected int capacity;
     protected int energy;
@@ -16,35 +16,41 @@ public final class Energy implements IEnergy {
     private final Map<UUID, Integer> energyStorages;
 
     public Energy(int controllerCapacity) {
-        this.energyStorages = new Object2ObjectOpenHashMap<UUID, Integer>();
-        this.energyStorages.put(UUID_EMPTY, controllerCapacity);
+        this.energyStorages = new Object2ObjectOpenHashMap<>();
+        this.energyStorages.put(DEFAULT_UUID, controllerCapacity);
+
         calculateCapacity();
     }
 
     private void calculateCapacity() {
         long newCapacity = energyStorages.values().stream().mapToLong(Long::valueOf).sum();
+
         this.capacity = (int) Math.min(newCapacity, Integer.MAX_VALUE);
     }
 
     @Override
     public void decreaseCapacity(UUID id, int amount) {
-        if (id.equals(UUID_EMPTY)) {
+        if (id.equals(DEFAULT_UUID)) {
             return;
         }
+
         this.energyStorages.remove(id);
+
         calculateCapacity();
     }
 
     @Override
-    public int extract(int maxExtract, boolean simulate) {
+    public int extract(int maxExtract, Action action) {
         if (maxExtract <= 0) {
             return 0;
         }
 
         int energyExtracted = Math.min(energy, maxExtract);
-        if (!simulate) {
+
+        if (action == Action.PERFORM) {
             energy -= energyExtracted;
         }
+
         return energyExtracted;
     }
 
@@ -60,23 +66,27 @@ public final class Energy implements IEnergy {
 
     @Override
     public void increaseCapacity(UUID id, int amount) {
-        if (id.equals(UUID_EMPTY) || amount <= 0) {
+        if (id.equals(DEFAULT_UUID) || amount <= 0) {
             return;
         }
+
         this.energyStorages.merge(id, amount, (k, v) -> amount);
+
         calculateCapacity();
     }
 
     @Override
-    public int insert (int maxReceive, boolean simulate) {
+    public int insert(int maxReceive, Action action) {
         if (maxReceive <= 0) {
             return 0;
         }
 
         int energyReceived = Math.min(capacity - energy, maxReceive);
-        if (!simulate) {
+
+        if (action == Action.PERFORM) {
             energy += energyReceived;
         }
+
         return energyReceived;
     }
 

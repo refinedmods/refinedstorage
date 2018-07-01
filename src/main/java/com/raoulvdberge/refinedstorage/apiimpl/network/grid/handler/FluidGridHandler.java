@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandle
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.NetworkItemAction;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -49,7 +50,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             if (bucket == null) {
-                bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, false);
+                bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM);
             }
 
             if (bucket != null) {
@@ -57,7 +58,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
                 network.getFluidStorageTracker().changed(player, stack.copy());
 
-                fluidHandler.fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME, false), true);
+                fluidHandler.fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME, Action.PERFORM), true);
 
                 if (shift) {
                     if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
@@ -86,12 +87,12 @@ public class FluidGridHandler implements IFluidGridHandler {
 
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
-        if (result.getValue() != null && network.insertFluid(result.getValue(), result.getValue().amount, true) == null) {
+        if (result.getValue() != null && network.insertFluid(result.getValue(), result.getValue().amount, Action.SIMULATE) == null) {
             network.getFluidStorageTracker().changed(player, result.getValue().copy());
 
             result = StackUtils.getFluid(container, false);
 
-            network.insertFluid(result.getValue(), result.getValue().amount, false);
+            network.insertFluid(result.getValue(), result.getValue().amount, Action.PERFORM);
 
             INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
 

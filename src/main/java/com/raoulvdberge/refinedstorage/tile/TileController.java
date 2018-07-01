@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
-import com.raoulvdberge.refinedstorage.api.energy.EnergyProxy;
 import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
@@ -21,6 +20,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.energy.Energy;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
@@ -37,6 +37,7 @@ import com.raoulvdberge.refinedstorage.block.BlockController;
 import com.raoulvdberge.refinedstorage.block.ControllerEnergyType;
 import com.raoulvdberge.refinedstorage.block.ControllerType;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
@@ -211,8 +212,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             if (getType() == ControllerType.NORMAL) {
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
                     this.energy.setStored(this.energy.getCapacity());
-                } else if (this.energy.extract(getEnergyUsage(), true) >= 0) {
-                    this.energy.extract(getEnergyUsage(), false);
+                } else if (this.energy.extract(getEnergyUsage(), Action.SIMULATE) >= 0) {
+                    this.energy.extract(getEnergyUsage(), Action.PERFORM);
                 } else {
                     this.energy.setStored(0);
                 }
@@ -292,7 +293,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insertItem(@Nonnull ItemStack stack, int size, Action action) {
         if (stack.isEmpty() || itemStorage.getStorages().isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
@@ -309,15 +310,15 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             int storedPre = storage.getStored();
 
-            remainder = storage.insert(remainder, size, simulate);
+            remainder = storage.insert(remainder, size, action);
 
-            if (!simulate) {
+            if (action == Action.PERFORM) {
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
             if (remainder == null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof IStorageExternal && !simulate) {
+                if (storage instanceof IStorageExternal && action == Action.PERFORM) {
                     ((IStorageExternal) storage).update(this);
 
                     insertedExternally += size;
@@ -326,7 +327,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 break;
             } else {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (size != remainder.getCount() && storage instanceof IStorageExternal && !simulate) {
+                if (size != remainder.getCount() && storage instanceof IStorageExternal && action == Action.PERFORM) {
                     ((IStorageExternal) storage).update(this);
 
                     insertedExternally += size - remainder.getCount();
@@ -336,7 +337,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
         }
 
-        if (!simulate && inserted - insertedExternally > 0) {
+        if (action == Action.PERFORM && inserted - insertedExternally > 0) {
             itemStorage.add(stack, inserted - insertedExternally, false, false);
         }
 
@@ -344,7 +345,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate, Predicate<IStorage<ItemStack>> filter) {
+    public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, Action action, Predicate<IStorage<ItemStack>> filter) {
         int requested = size;
         int received = 0;
 
@@ -356,12 +357,12 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             ItemStack took = null;
 
             if (filter.test(storage) && storage.getAccessType() != AccessType.INSERT) {
-                took = storage.extract(stack, requested - received, flags, simulate);
+                took = storage.extract(stack, requested - received, flags, action);
             }
 
             if (took != null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof IStorageExternal && !simulate) {
+                if (storage instanceof IStorageExternal && action == Action.PERFORM) {
                     ((IStorageExternal) storage).update(this);
 
                     extractedExternally += took.getCount();
@@ -381,7 +382,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
         }
 
-        if (newStack != null && newStack.getCount() - extractedExternally > 0 && !simulate) {
+        if (newStack != null && newStack.getCount() - extractedExternally > 0 && action == Action.PERFORM) {
             itemStorage.remove(newStack, newStack.getCount() - extractedExternally, false);
         }
 
@@ -390,7 +391,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
 
     @Override
-    public FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate) {
+    public FluidStack insertFluid(@Nonnull FluidStack stack, int size, Action action) {
         if (stack == null || fluidStorage.getStorages().isEmpty()) {
             return StackUtils.copy(stack, size);
         }
@@ -407,15 +408,15 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             int storedPre = storage.getStored();
 
-            remainder = storage.insert(remainder, size, simulate);
+            remainder = storage.insert(remainder, size, action);
 
-            if (!simulate) {
+            if (action == Action.PERFORM) {
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
             if (remainder == null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof IStorageExternal && !simulate) {
+                if (storage instanceof IStorageExternal && action == Action.PERFORM) {
                     ((IStorageExternal) storage).update(this);
 
                     insertedExternally += size;
@@ -424,7 +425,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 break;
             } else {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (size != remainder.amount && storage instanceof IStorageExternal && !simulate) {
+                if (size != remainder.amount && storage instanceof IStorageExternal && action == Action.PERFORM) {
                     ((IStorageExternal) storage).update(this);
 
                     insertedExternally += size - remainder.amount;
@@ -434,7 +435,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
         }
 
-        if (!simulate && inserted - insertedExternally > 0) {
+        if (action == Action.PERFORM && inserted - insertedExternally > 0) {
             fluidStorage.add(stack, inserted - insertedExternally, false, false);
         }
 
@@ -442,7 +443,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
+    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, Action action) {
         int requested = size;
         int received = 0;
 
@@ -454,12 +455,12 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             FluidStack took = null;
 
             if (storage.getAccessType() != AccessType.INSERT) {
-                took = storage.extract(stack, requested - received, flags, simulate);
+                took = storage.extract(stack, requested - received, flags, action);
             }
 
             if (took != null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof IStorageExternal && !simulate) {
+                if (storage instanceof IStorageExternal && action == Action.PERFORM) {
                     ((IStorageExternal) storage).update(this);
 
                     extractedExternally += took.amount;
@@ -479,7 +480,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
         }
 
-        if (newStack != null && newStack.amount - extractedExternally > 0 && !simulate) {
+        if (newStack != null && newStack.amount - extractedExternally > 0 && action == Action.PERFORM) {
             fluidStorage.remove(newStack, newStack.amount - extractedExternally, false);
         }
 

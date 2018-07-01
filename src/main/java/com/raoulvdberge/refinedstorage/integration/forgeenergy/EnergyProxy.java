@@ -1,5 +1,7 @@
-package com.raoulvdberge.refinedstorage.api.energy;
+package com.raoulvdberge.refinedstorage.integration.forgeenergy;
 
+import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public final class EnergyProxy implements IEnergyStorage {
@@ -19,12 +21,12 @@ public final class EnergyProxy implements IEnergyStorage {
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        return !canReceive() ? 0 : this.energy.insert(Math.min(this.maxReceive, maxReceive), simulate);
+        return !canReceive() ? 0 : this.energy.insert(Math.min(this.maxReceive, maxReceive), simulate ? Action.SIMULATE : Action.PERFORM);
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        return !canExtract() ? 0 : this.energy.extract(Math.min(this.maxExtract, maxExtract), simulate);
+        return !canExtract() ? 0 : this.energy.extract(Math.min(this.maxExtract, maxExtract), simulate ? Action.SIMULATE : Action.PERFORM);
     }
 
     @Override

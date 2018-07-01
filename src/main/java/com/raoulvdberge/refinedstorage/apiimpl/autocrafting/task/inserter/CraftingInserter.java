@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,8 +53,8 @@ public class CraftingInserter {
         if (item != null) {
             CraftingInserterItemStatus currentStatus = item.getStatus();
 
-            if (network.insertItem(item.getStack(), item.getStack().getCount(), true) == null) {
-                ItemStack inserted = network.insertItem(item.getStack(), item.getStack().getCount(), false);
+            if (network.insertItem(item.getStack(), item.getStack().getCount(), Action.SIMULATE) == null) {
+                ItemStack inserted = network.insertItem(item.getStack(), item.getStack().getCount(), Action.PERFORM);
                 if (inserted != null) {
                     throw new IllegalStateException("Could not insert item");
                 }
@@ -73,7 +74,7 @@ public class CraftingInserter {
         while (!items.isEmpty()) {
             CraftingInserterItem item = items.pop();
 
-            network.insertItem(item.getStack(), item.getStack().getCount(), false);
+            network.insertItem(item.getStack(), item.getStack().getCount(), Action.PERFORM);
         }
 
         network.getCraftingManager().onTaskChanged();

@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -53,7 +54,7 @@ public interface INetwork {
      * @return the {@link ICraftingManager} of this network
      */
     ICraftingManager getCraftingManager();
-    
+
     /**
      * @return the {@link IEnergy} of this network
      */
@@ -92,13 +93,13 @@ public interface INetwork {
     /**
      * Inserts an item in this network.
      *
-     * @param stack    the stack prototype to insert, do NOT modify
-     * @param size     the amount of that prototype that has to be inserted
-     * @param simulate true if we are simulating, false otherwise
+     * @param stack  the stack prototype to insert, do NOT modify
+     * @param size   the amount of that prototype that has to be inserted
+     * @param action the action
      * @return null if the insert was successful, or a stack with the remainder
      */
     @Nullable
-    ItemStack insertItem(@Nonnull ItemStack stack, int size, boolean simulate);
+    ItemStack insertItem(@Nonnull ItemStack stack, int size, Action action);
 
     /**
      * Inserts an item and notifies the crafting manager of the incoming item.
@@ -108,7 +109,7 @@ public interface INetwork {
      * @return null if the insert was successful, or a stack with the remainder
      */
     default ItemStack insertItemTracked(@Nonnull ItemStack stack, int size) {
-        ItemStack remainder = insertItem(stack, size, false);
+        ItemStack remainder = insertItem(stack, size, Action.PERFORM);
 
         int inserted = remainder == null ? size : (size - remainder.getCount());
 
@@ -120,74 +121,74 @@ public interface INetwork {
     /**
      * Extracts an item from this network.
      *
-     * @param stack    the prototype of the stack to extract, do NOT modify
-     * @param size     the amount of that prototype that has to be extracted
-     * @param flags    the flags to compare on, see {@link IComparer}
-     * @param simulate true if we are simulating, false otherwise
-     * @param filter   a filter for the storage
+     * @param stack  the prototype of the stack to extract, do NOT modify
+     * @param size   the amount of that prototype that has to be extracted
+     * @param flags  the flags to compare on, see {@link IComparer}
+     * @param action the action
+     * @param filter a filter for the storage
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
-    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate, Predicate<IStorage<ItemStack>> filter);
+    ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, Action action, Predicate<IStorage<ItemStack>> filter);
 
     /**
      * Extracts an item from this network.
      *
-     * @param stack    the prototype of the stack to extract, do NOT modify
-     * @param size     the amount of that prototype that has to be extracted
-     * @param flags    the flags to compare on, see {@link IComparer}
-     * @param simulate true if we are simulating, false otherwise
+     * @param stack  the prototype of the stack to extract, do NOT modify
+     * @param size   the amount of that prototype that has to be extracted
+     * @param flags  the flags to compare on, see {@link IComparer}
+     * @param action the action
      * @return null if we didn't extract anything, or a stack with the result
      */
-    default ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        return extractItem(stack, size, flags, simulate, s -> true);
+    default ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, Action action) {
+        return extractItem(stack, size, flags, action, s -> true);
     }
 
     /**
      * Extracts an item from this network.
      *
-     * @param stack    the prototype of the stack to extract, do NOT modify
-     * @param size     the amount of that prototype that has to be extracted
-     * @param simulate true if we are simulating, false otherwise
+     * @param stack  the prototype of the stack to extract, do NOT modify
+     * @param size   the amount of that prototype that has to be extracted
+     * @param action the action
      * @return null if we didn't extract anything, or a stack with the result
      */
-    default ItemStack extractItem(@Nonnull ItemStack stack, int size, boolean simulate) {
-        return extractItem(stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, simulate);
+    default ItemStack extractItem(@Nonnull ItemStack stack, int size, Action action) {
+        return extractItem(stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, action);
     }
 
     /**
      * Inserts a fluid in this network.
      *
-     * @param stack    the stack prototype to insert, do NOT modify
-     * @param size     the amount of that prototype that has to be inserted
-     * @param simulate true if we are simulating, false otherwise
+     * @param stack  the stack prototype to insert, do NOT modify
+     * @param size   the amount of that prototype that has to be inserted
+     * @param action the action
      * @return null if the insert was successful, or a stack with the remainder
      */
     @Nullable
-    FluidStack insertFluid(@Nonnull FluidStack stack, int size, boolean simulate);
+    FluidStack insertFluid(@Nonnull FluidStack stack, int size, Action action);
 
     /**
      * Extracts a fluid from this network.
      *
-     * @param stack    the prototype of the stack to extract, do NOT modify
-     * @param size     the amount of that prototype that has to be extracted
-     * @param flags    the flags to compare on, see {@link IComparer}
-     * @param simulate true if we are simulating, false otherwise
+     * @param stack  the prototype of the stack to extract, do NOT modify
+     * @param size   the amount of that prototype that has to be extracted
+     * @param flags  the flags to compare on, see {@link IComparer}
+     * @param action the action
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
-    FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, boolean simulate);
+    FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, Action action);
 
     /**
      * Extracts a fluid from this network.
      *
-     * @param stack    the prototype of the stack to extract, do NOT modify
-     * @param size     the amount of that prototype that has to be extracted
-     * @param simulate true if we are simulating, false otherwise
+     * @param stack  the prototype of the stack to extract, do NOT modify
+     * @param size   the amount of that prototype that has to be extracted
+     * @param action the action
      * @return null if we didn't extract anything, or a stack with the result
      */
-    default FluidStack extractFluid(FluidStack stack, int size, boolean simulate) {
-        return extractFluid(stack, size, IComparer.COMPARE_NBT, simulate);
+    default FluidStack extractFluid(FluidStack stack, int size, Action action) {
+        return extractFluid(stack, size, IComparer.COMPARE_NBT, action);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
@@ -144,7 +145,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         int toExtract = player.isSneaking() ? 1 : 64;
 
         if (!filter.isEmpty()) {
-            ItemStack result = network.extractItem(filter, toExtract, compare, false);
+            ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);
 
             if (result != null) {
                 if (!player.inventory.addItemStackToInventory(result.copy())) {

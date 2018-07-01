@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.NBTTagCompound;
@@ -65,7 +66,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
     @Override
     @Nullable
-    public FluidStack insert(@Nonnull FluidStack stack, int size, boolean simulate) {
+    public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (otherStack.isFluidEqual(stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -75,7 +76,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                         return StackUtils.copy(stack, size);
                     }
 
-                    if (!simulate) {
+                    if (action == Action.PERFORM) {
                         otherStack.amount += remainingSpace;
 
                         onChanged();
@@ -83,7 +84,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
                     return StackUtils.copy(otherStack, size - remainingSpace);
                 } else {
-                    if (!simulate) {
+                    if (action == Action.PERFORM) {
                         otherStack.amount += size;
 
                         onChanged();
@@ -101,7 +102,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
                 return StackUtils.copy(stack, size);
             }
 
-            if (!simulate) {
+            if (action == Action.PERFORM) {
                 stacks.put(stack.getFluid(), StackUtils.copy(stack, remainingSpace));
 
                 onChanged();
@@ -109,7 +110,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
             return StackUtils.copy(stack, size - remainingSpace);
         } else {
-            if (!simulate) {
+            if (action == Action.PERFORM) {
                 stacks.put(stack.getFluid(), StackUtils.copy(stack, size));
 
                 onChanged();
@@ -121,14 +122,14 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
 
     @Override
     @Nullable
-    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, boolean simulate) {
+    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.amount) {
                     size = otherStack.amount;
                 }
 
-                if (!simulate) {
+                if (action == Action.PERFORM) {
                     if (otherStack.amount - size == 0) {
                         stacks.remove(otherStack.getFluid(), otherStack);
                     } else {

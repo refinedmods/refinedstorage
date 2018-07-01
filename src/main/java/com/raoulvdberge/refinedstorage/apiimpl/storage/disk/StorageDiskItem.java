@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -73,7 +74,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
     @Override
     @Nullable
-    public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -83,7 +84,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                         return ItemHandlerHelper.copyStackWithSize(stack, size);
                     }
 
-                    if (!simulate) {
+                    if (action == Action.PERFORM) {
                         otherStack.grow(remainingSpace);
 
                         onChanged();
@@ -91,7 +92,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
                     return ItemHandlerHelper.copyStackWithSize(otherStack, size - remainingSpace);
                 } else {
-                    if (!simulate) {
+                    if (action == Action.PERFORM) {
                         otherStack.grow(size);
 
                         onChanged();
@@ -109,7 +110,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                 return ItemHandlerHelper.copyStackWithSize(stack, size);
             }
 
-            if (!simulate) {
+            if (action == Action.PERFORM) {
                 stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, remainingSpace));
 
                 onChanged();
@@ -117,7 +118,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
             return ItemHandlerHelper.copyStackWithSize(stack, size - remainingSpace);
         } else {
-            if (!simulate) {
+            if (action == Action.PERFORM) {
                 stacks.put(stack.getItem(), ItemHandlerHelper.copyStackWithSize(stack, size));
 
                 onChanged();
@@ -129,7 +130,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
     @Override
     @Nullable
-    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
         Collection<ItemStack> toAttempt = null;
 
         if ((flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT) {
@@ -152,7 +153,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
                     size = otherStack.getCount();
                 }
 
-                if (!simulate) {
+                if (action == Action.PERFORM) {
                     if (otherStack.getCount() - size == 0) {
                         stacks.remove(otherStack.getItem(), otherStack);
                     } else {

@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -40,18 +41,18 @@ public class StorageDiskItemStorageWrapper implements IStorageDisk<ItemStack> {
 
     @Override
     @Nullable
-    public ItemStack insert(@Nonnull ItemStack stack, int size, boolean simulate) {
+    public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         if (!IFilterable.acceptsItem(storage.getFilters(), storage.getMode(), storage.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
-        return parent.insert(stack, size, simulate);
+        return parent.insert(stack, size, action);
     }
 
     @Nullable
     @Override
-    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, boolean simulate) {
-        return parent.extract(stack, size, flags, simulate);
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
+        return parent.extract(stack, size, flags, action);
     }
 
     @Override
