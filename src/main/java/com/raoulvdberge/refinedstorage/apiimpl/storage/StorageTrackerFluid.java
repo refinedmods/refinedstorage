@@ -48,7 +48,7 @@ public class StorageTrackerFluid implements IStorageTracker<FluidStack> {
         return changes.get(stack);
     }
 
-    public void readFromNBT(NBTTagList list) {
+    public void readFromNbt(NBTTagList list) {
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
 
@@ -63,7 +63,7 @@ public class StorageTrackerFluid implements IStorageTracker<FluidStack> {
         }
     }
 
-    public NBTTagList serializeNBT() {
+    public NBTTagList serializeNbt() {
         NBTTagList list = new NBTTagList();
 
         for (Map.Entry<FluidStack, IStorageTrackerEntry> entry : changes.entrySet()) {

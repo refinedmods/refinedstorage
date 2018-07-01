@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import gnu.trove.map.hash.TCustomHashMap;
 import gnu.trove.strategy.HashingStrategy;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,11 +48,11 @@ public class StorageTrackerItem implements IStorageTracker<ItemStack> {
         return changes.get(stack);
     }
 
-    public void readFromNBT(NBTTagList list) {
+    public void readFromNbt(NBTTagList list) {
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
 
-            ItemStack stack = new ItemStack(tag.getCompoundTag(NBT_STACK));
+            ItemStack stack = StackUtils.deserializeStackFromNbt(tag.getCompoundTag(NBT_STACK));
 
             if (!stack.isEmpty()) {
                 changes.put(
@@ -62,7 +63,7 @@ public class StorageTrackerItem implements IStorageTracker<ItemStack> {
         }
     }
 
-    public NBTTagList serializeNBT() {
+    public NBTTagList serializeNbt() {
         NBTTagList list = new NBTTagList();
 
         for (Map.Entry<ItemStack, IStorageTrackerEntry> entry : changes.entrySet()) {
@@ -70,7 +71,7 @@ public class StorageTrackerItem implements IStorageTracker<ItemStack> {
 
             tag.setLong(NBT_TIME, entry.getValue().getTime());
             tag.setString(NBT_NAME, entry.getValue().getName());
-            tag.setTag(NBT_STACK, entry.getKey().serializeNBT());
+            tag.setTag(NBT_STACK, StackUtils.serializeStackToNbt(entry.getKey()));
 
             list.appendTag(tag);
         }

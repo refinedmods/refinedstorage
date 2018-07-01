@@ -516,11 +516,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         readerWriterManager.readFromNbt(tag);
 
         if (tag.hasKey(NBT_ITEM_STORAGE_TRACKER)) {
-            itemStorageTracker.readFromNBT(tag.getTagList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            itemStorageTracker.readFromNbt(tag.getTagList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
         if (tag.hasKey(NBT_FLUID_STORAGE_TRACKER)) {
-            fluidStorageTracker.readFromNBT(tag.getTagList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            fluidStorageTracker.readFromNbt(tag.getTagList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
     }
 
@@ -536,8 +536,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         readerWriterManager.writeToNbt(tag);
 
-        tag.setTag(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNBT());
-        tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNBT());
+        tag.setTag(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNbt());
+        tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
         return tag;
     }

@@ -64,7 +64,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     private int tabPage;
     private int size;
 
-    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> stack.getTagCompound().setTag(NBT_STORAGE_TRACKER, getStorageTracker().serializeNBT()));
+    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> stack.getTagCompound().setTag(NBT_STORAGE_TRACKER, getStorageTracker().serializeNbt()));
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
@@ -126,7 +126,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         }
 
         if (stack.getTagCompound().hasKey(NBT_STORAGE_TRACKER)) {
-            storageTracker.readFromNBT(stack.getTagCompound().getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            storageTracker.readFromNbt(stack.getTagCompound().getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
         StackUtils.readItems(disk, 4, stack.getTagCompound());

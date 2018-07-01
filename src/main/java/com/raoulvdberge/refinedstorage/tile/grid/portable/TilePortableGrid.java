@@ -215,7 +215,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
 
             if (stack.getTagCompound().hasKey(PortableGrid.NBT_STORAGE_TRACKER)) {
-                storageTracker.readFromNBT(stack.getTagCompound().getTagList(PortableGrid.NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                storageTracker.readFromNbt(stack.getTagCompound().getTagList(PortableGrid.NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
             }
         }
 
@@ -240,7 +240,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
 
-        stack.getTagCompound().setTag(PortableGrid.NBT_STORAGE_TRACKER, storageTracker.serializeNBT());
+        stack.getTagCompound().setTag(PortableGrid.NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
 
         stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(energyStorage.getEnergyStored(), false);
 
@@ -550,7 +550,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         redstoneMode.write(tag);
 
-        tag.setTag(NBT_STORAGE_TRACKER, storageTracker.serializeNBT());
+        tag.setTag(NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
 
         return tag;
     }
@@ -593,7 +593,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         redstoneMode = RedstoneMode.read(tag);
 
         if (tag.hasKey(NBT_STORAGE_TRACKER)) {
-            storageTracker.readFromNBT(tag.getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            storageTracker.readFromNbt(tag.getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
     }
 
