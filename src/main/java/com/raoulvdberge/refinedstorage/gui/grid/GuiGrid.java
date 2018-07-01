@@ -25,7 +25,6 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.TimeUtils;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -34,11 +33,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.io.IOException;
@@ -377,154 +372,21 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         tabs.drawTooltip(fontRenderer, mouseX, mouseY);
     }
 
-    // Copied with some tweaks from GuiUtils#drawHoveringText(@Nonnull final ItemStack stack, List<String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font)
-    public void drawGridTooltip(IGridStack gridStack, int mouseX, int mouseY) {
-        // RS BEGIN
+    private void drawGridTooltip(IGridStack gridStack, int mouseX, int mouseY) {
         List<String> textLines = Lists.newArrayList(gridStack.getTooltip().split("\n"));
+        List<String> smallTextLines = Lists.newArrayList();
 
-        if (RS.INSTANCE.config.detailedTooltip) {
-            if (!(gridStack instanceof GridStackItem) || !((GridStackItem) gridStack).doesDisplayCraftText()) {
-                textLines.add("");
-            }
+        if (!(gridStack instanceof GridStackItem) || !((GridStackItem) gridStack).doesDisplayCraftText()) {
+            smallTextLines.add(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity()));
+        }
 
-            if (gridStack.getTrackerEntry() != null) {
-                textLines.add("");
-            }
+        if (gridStack.getTrackerEntry() != null) {
+            smallTextLines.add(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()));
         }
 
         ItemStack stack = gridStack instanceof GridStackItem ? ((GridStackItem) gridStack).getStack() : ItemStack.EMPTY;
-        // RS END
 
-        if (!textLines.isEmpty()) {
-            RenderTooltipEvent.Pre event = new RenderTooltipEvent.Pre(stack, textLines, mouseX, mouseY, screenWidth, screenHeight, -1, fontRenderer);
-            if (MinecraftForge.EVENT_BUS.post(event)) {
-                return;
-            }
-            mouseX = event.getX();
-            mouseY = event.getY();
-            screenWidth = event.getScreenWidth();
-            screenHeight = event.getScreenHeight();
-            FontRenderer font = event.getFontRenderer();
-
-            // RS BEGIN
-            float textScale = font.getUnicodeFlag() ? 1F : 0.7F;
-            // RS END
-
-            GlStateManager.disableRescaleNormal();
-            RenderHelper.disableStandardItemLighting();
-            GlStateManager.disableLighting();
-            GlStateManager.disableDepth();
-            int tooltipTextWidth = 0;
-
-            for (String textLine : textLines) {
-                int textLineWidth = font.getStringWidth(textLine);
-
-                if (textLineWidth > tooltipTextWidth) {
-                    tooltipTextWidth = textLineWidth;
-                }
-            }
-
-            // RS BEGIN
-            if (RS.INSTANCE.config.detailedTooltip) {
-                int size;
-
-                if (!(gridStack instanceof GridStackItem) || !((GridStackItem) gridStack).doesDisplayCraftText()) {
-                    size = (int) (font.getStringWidth(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity())) * textScale);
-
-                    if (size > tooltipTextWidth) {
-                        tooltipTextWidth = size;
-                    }
-                }
-
-                if (gridStack.getTrackerEntry() != null) {
-                    size = (int) (font.getStringWidth(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName())) * textScale);
-
-                    if (size > tooltipTextWidth) {
-                        tooltipTextWidth = size;
-                    }
-                }
-            }
-            // RS END
-
-            int titleLinesCount = 1;
-            int tooltipX = mouseX + 12;
-
-            int tooltipY = mouseY - 12;
-            int tooltipHeight = 8;
-
-            if (textLines.size() > 1) {
-                tooltipHeight += (textLines.size() - 1) * 10;
-                if (textLines.size() > titleLinesCount) {
-                    tooltipHeight += 2;
-                }
-            }
-
-            if (tooltipY + tooltipHeight + 6 > screenHeight) {
-                tooltipY = screenHeight - tooltipHeight - 6;
-            }
-
-            final int zLevel = 300;
-            final int backgroundColor = 0xF0100010;
-            GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY - 4, tooltipX + tooltipTextWidth + 3, tooltipY - 3, backgroundColor, backgroundColor);
-            GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY + tooltipHeight + 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 4, backgroundColor, backgroundColor);
-            GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-            GuiUtils.drawGradientRect(zLevel, tooltipX - 4, tooltipY - 3, tooltipX - 3, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-            GuiUtils.drawGradientRect(zLevel, tooltipX + tooltipTextWidth + 3, tooltipY - 3, tooltipX + tooltipTextWidth + 4, tooltipY + tooltipHeight + 3, backgroundColor, backgroundColor);
-            final int borderColorStart = 0x505000FF;
-            final int borderColorEnd = (borderColorStart & 0xFEFEFE) >> 1 | borderColorStart & 0xFF000000;
-            GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3 + 1, tooltipX - 3 + 1, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-            GuiUtils.drawGradientRect(zLevel, tooltipX + tooltipTextWidth + 2, tooltipY - 3 + 1, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3 - 1, borderColorStart, borderColorEnd);
-            GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY - 3, tooltipX + tooltipTextWidth + 3, tooltipY - 3 + 1, borderColorStart, borderColorStart);
-            GuiUtils.drawGradientRect(zLevel, tooltipX - 3, tooltipY + tooltipHeight + 2, tooltipX + tooltipTextWidth + 3, tooltipY + tooltipHeight + 3, borderColorEnd, borderColorEnd);
-
-            MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostBackground(stack, textLines, tooltipX, tooltipY, font, tooltipTextWidth, tooltipHeight));
-            int tooltipTop = tooltipY;
-
-            for (int lineNumber = 0; lineNumber < textLines.size(); ++lineNumber) {
-                String line = textLines.get(lineNumber);
-                font.drawStringWithShadow(line, (float) tooltipX, (float) tooltipY, -1);
-
-                if (lineNumber + 1 == titleLinesCount) {
-                    tooltipY += 2;
-                }
-
-                tooltipY += 10;
-            }
-
-            MinecraftForge.EVENT_BUS.post(new RenderTooltipEvent.PostText(stack, textLines, tooltipX, tooltipTop, font, tooltipTextWidth, tooltipHeight));
-
-            // RS BEGIN
-            if (RS.INSTANCE.config.detailedTooltip) {
-                GlStateManager.pushMatrix();
-                GlStateManager.scale(textScale, textScale, 1);
-
-                if (!(gridStack instanceof GridStackItem) || !((GridStackItem) gridStack).doesDisplayCraftText()) {
-                    font.drawStringWithShadow(
-                        TextFormatting.GRAY + I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity()),
-                        RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                        RenderUtils.getOffsetOnScale(tooltipTop + tooltipHeight - (gridStack.getTrackerEntry() != null ? 15 : 6) - (font.getUnicodeFlag() ? 2 : 0), textScale),
-                        -1
-                    );
-                }
-
-                if (gridStack.getTrackerEntry() != null) {
-                    font.drawStringWithShadow(
-                        TextFormatting.GRAY + TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()),
-                        RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                        RenderUtils.getOffsetOnScale(tooltipTop + tooltipHeight - 6 - (font.getUnicodeFlag() ? 2 : 0), textScale),
-                        -1
-                    );
-                }
-
-                GlStateManager.popMatrix();
-            }
-            // RS END
-
-            GlStateManager.enableLighting();
-            GlStateManager.enableDepth();
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.enableRescaleNormal();
-        }
+        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, RS.INSTANCE.config.detailedTooltip, stack, mouseX, mouseY, screenWidth, screenHeight, fontRenderer);
     }
 
     @Override

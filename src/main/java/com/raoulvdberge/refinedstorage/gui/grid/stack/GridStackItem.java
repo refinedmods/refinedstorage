@@ -6,16 +6,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class GridStackItem implements IGridStack {
@@ -103,18 +99,7 @@ public class GridStackItem implements IGridStack {
     @Override
     public String getTooltip() {
         try {
-            List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
-
-            // From GuiScreen#renderToolTip
-            for (int i = 0; i < lines.size(); ++i) {
-                if (i == 0) {
-                    lines.set(i, stack.getRarity().rarityColor + lines.get(i));
-                } else {
-                    lines.set(i, TextFormatting.GRAY + lines.get(i));
-                }
-            }
-
-            return lines.stream().collect(Collectors.joining("\n"));
+            return StackUtils.getItemTooltip(stack).stream().collect(Collectors.joining("\n"));
         } catch (Throwable t) {
             return "";
         }

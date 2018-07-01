@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
@@ -18,9 +19,15 @@ public interface IGridTab {
     List<IFilter> getFilters();
 
     /**
-     * @return the name
+     * Draws the tooltip of this tab at the given position.
+     *
+     * @param x            the x position
+     * @param y            the y position
+     * @param screenWidth  the screen width
+     * @param screenHeight the screen height
+     * @param fontRenderer the font renderer
      */
-    String getName();
+    void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer);
 
     /**
      * @return the icon

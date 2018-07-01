@@ -55,7 +55,7 @@ public class ItemFilter extends ItemBase {
     public String getItemStackDisplayName(ItemStack stack) {
         String name = getName(stack);
 
-        if (!name.equalsIgnoreCase("")) {
+        if (!name.trim().equals("")) {
             return name;
         }
 

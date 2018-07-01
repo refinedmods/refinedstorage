@@ -92,6 +92,14 @@ public abstract class GuiBase extends GuiContainer {
         }
     }
 
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
     public Scrollbar getScrollbar() {
         return scrollbar;
     }
@@ -374,7 +382,7 @@ public abstract class GuiBase extends GuiContainer {
 
     public void drawTooltip(@Nonnull ItemStack stack, int x, int y, List<String> lines) {
         GlStateManager.disableLighting();
-        GuiUtils.drawHoveringText(stack, lines, x, y, width - guiLeft, height, -1, fontRenderer);
+        GuiUtils.drawHoveringText(stack, lines, x, y, screenWidth, screenHeight, -1, fontRenderer);
         GlStateManager.enableLighting();
     }
 

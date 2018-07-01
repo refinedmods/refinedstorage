@@ -90,6 +90,11 @@ public interface ICraftingTask {
     boolean isValid();
 
     /**
+     * @return the time in ms when this task has started
+     */
+    long getExecutionStarted();
+
+    /**
      * @return the missing items
      */
     IStackList<ItemStack> getMissing();

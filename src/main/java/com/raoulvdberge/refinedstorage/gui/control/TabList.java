@@ -144,8 +144,8 @@ public class TabList {
     }
 
     public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY) {
-        if (tabHovering >= 0 && tabHovering < tabs.get().size() && !tabs.get().get(tabHovering).getName().equalsIgnoreCase("")) {
-            gui.drawTooltip(mouseX, mouseY, tabs.get().get(tabHovering).getName());
+        if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
+            tabs.get().get(tabHovering).drawTooltip(mouseX, mouseY, gui.getScreenWidth(), gui.getScreenHeight(), fontRenderer);
         }
 
         if (pages.get() > 0) {

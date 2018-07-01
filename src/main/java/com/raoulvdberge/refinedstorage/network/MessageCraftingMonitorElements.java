@@ -39,6 +39,8 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
             UUID id = UUID.fromString(ByteBufUtils.readUTF8String(buf));
             ItemStack requested = ByteBufUtils.readItemStack(buf);
             int qty = buf.readInt();
+            long executionStarted = buf.readLong();
+
             List<ICraftingMonitorElement> elements = new ArrayList<>();
 
             int elementCount = buf.readInt();
@@ -51,7 +53,7 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
                 }
             }
 
-            tasks.add(new GuiCraftingMonitor.CraftingMonitorTask(id, requested, qty, elements));
+            tasks.add(new GuiCraftingMonitor.CraftingMonitorTask(id, requested, qty, executionStarted, elements));
         }
     }
 
@@ -63,6 +65,7 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
             ByteBufUtils.writeUTF8String(buf, task.getId().toString());
             ByteBufUtils.writeItemStack(buf, task.getRequested());
             buf.writeInt(task.getQuantity());
+            buf.writeLong(task.getExecutionStarted());
 
             List<ICraftingMonitorElement> elements = task.getCraftingMonitorElements();
 

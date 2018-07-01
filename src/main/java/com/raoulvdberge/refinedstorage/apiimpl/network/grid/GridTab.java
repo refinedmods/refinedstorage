@@ -2,8 +2,11 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 public class GridTab implements IGridTab {
@@ -23,8 +26,10 @@ public class GridTab implements IGridTab {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
+        if (!name.trim().equals("")) {
+            GuiUtils.drawHoveringText(Collections.singletonList(name), x, y, screenWidth, screenHeight, -1, fontRenderer);
+        }
     }
 
     @Override

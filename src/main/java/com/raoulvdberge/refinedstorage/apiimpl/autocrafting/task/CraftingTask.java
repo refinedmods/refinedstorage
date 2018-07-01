@@ -49,6 +49,7 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_TICKS = "Ticks";
     private static final String NBT_ID = "Id";
     private static final String NBT_MISSING = "Missing";
+    private static final String NBT_EXECUTION_STARTED = "ExecutionStarted";
 
     private INetwork network;
     private ItemStack requested;
@@ -59,6 +60,7 @@ public class CraftingTask implements ICraftingTask {
     private Set<ICraftingPattern> patternsUsed = new HashSet<>();
     private int ticks = 0;
     private long calculationStarted;
+    private long executionStarted = -1;
     private UUID id = UUID.randomUUID();
 
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
@@ -103,6 +105,10 @@ public class CraftingTask implements ICraftingTask {
             }
 
             this.missing.add(missingItem);
+        }
+
+        if (tag.hasKey(NBT_EXECUTION_STARTED)) {
+            this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
         }
     }
 
@@ -297,6 +303,10 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean update() {
+        if (executionStarted == -1) {
+            executionStarted = System.currentTimeMillis();
+        }
+
         boolean allCompleted = true;
 
         if (ticks % getTickInterval(pattern.getContainer().getSpeedUpgradeCount()) == 0) {
@@ -514,6 +524,11 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
+    public long getExecutionStarted() {
+        return executionStarted;
+    }
+
+    @Override
     public IStackList<ItemStack> getMissing() {
         return missing;
     }
@@ -531,6 +546,7 @@ public class CraftingTask implements ICraftingTask {
         tag.setTag(NBT_INSERTER, inserter.writeToNbt());
         tag.setInteger(NBT_TICKS, ticks);
         tag.setUniqueId(NBT_ID, id);
+        tag.setLong(NBT_EXECUTION_STARTED, executionStarted);
 
         NBTTagList steps = new NBTTagList();
         for (CraftingStep step : this.steps) {

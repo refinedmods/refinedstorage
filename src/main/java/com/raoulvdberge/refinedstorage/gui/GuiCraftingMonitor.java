@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
@@ -15,6 +16,8 @@ import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.gui.control.TabList;
 import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorCancel;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -45,12 +48,14 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         private UUID id;
         private ItemStack requested;
         private int qty;
+        private long executionStarted;
         private List<ICraftingMonitorElement> elements;
 
-        public CraftingMonitorTask(UUID id, ItemStack requested, int qty, List<ICraftingMonitorElement> elements) {
+        public CraftingMonitorTask(UUID id, ItemStack requested, int qty, long executionStarted, List<ICraftingMonitorElement> elements) {
             this.id = id;
             this.requested = requested;
             this.qty = qty;
+            this.executionStarted = executionStarted;
             this.elements = elements;
         }
 
@@ -60,8 +65,18 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         }
 
         @Override
-        public String getName() {
-            return qty + "x " + requested.getDisplayName();
+        public void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
+            List<String> textLines = Lists.newArrayList(requested.getDisplayName());
+            List<String> smallTextLines = Lists.newArrayList();
+
+            int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
+            int minutes = (totalSecs % 3600) / 60;
+            int seconds = totalSecs % 60;
+
+            smallTextLines.add(I18n.format("gui.refinedstorage:crafting_monitor.tooltip.requested", qty));
+            smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
+
+            RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
         }
 
         @Override
@@ -89,6 +104,7 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         super(container, 176, 230);
 
         this.craftingMonitor = craftingMonitor;
+
         this.tabs = new TabList(this, () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
             IGridTab tab = getCurrentTab();
 
@@ -98,6 +114,7 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
 
             return tasks.indexOf(tab);
         }, ICraftingMonitor.TABS_PER_PAGE);
+
         this.tabs.addListener(new TabList.ITabListListener() {
             @Override
             public void onSelectionChanged(int tab) {
