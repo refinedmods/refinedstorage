@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage.disk;
 
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskFactory;
-import net.minecraft.item.Item;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -18,16 +18,7 @@ public class StorageDiskFactoryItem implements IStorageDiskFactory<ItemStack> {
         NBTTagList list = (NBTTagList) tag.getTag(StorageDiskItem.NBT_ITEMS);
 
         for (int i = 0; i < list.tagCount(); ++i) {
-            NBTTagCompound item = list.getCompoundTagAt(i);
-
-            ItemStack stack = new ItemStack(
-                Item.getItemById(item.getInteger(StorageDiskItem.NBT_ITEM_TYPE)),
-                item.getInteger(StorageDiskItem.NBT_ITEM_QUANTITY),
-                item.getInteger(StorageDiskItem.NBT_ITEM_DAMAGE),
-                item.hasKey(StorageDiskItem.NBT_ITEM_CAPS) ? item.getCompoundTag(StorageDiskItem.NBT_ITEM_CAPS) : null
-            );
-
-            stack.setTagCompound(item.hasKey(StorageDiskItem.NBT_ITEM_NBT) ? item.getCompoundTag(StorageDiskItem.NBT_ITEM_NBT) : null);
+            ItemStack stack = StackUtils.deserializeStackFromNbt(list.getCompoundTagAt(i));
 
             if (!stack.isEmpty()) {
                 disk.getRawStacks().put(stack.getItem(), stack);

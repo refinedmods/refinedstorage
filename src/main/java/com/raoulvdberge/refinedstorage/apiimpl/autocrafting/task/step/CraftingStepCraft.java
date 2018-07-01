@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadExc
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractor;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter.CraftingInserter;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -50,7 +51,7 @@ public class CraftingStepCraft extends CraftingStep {
 
         NBTTagList tookList = tag.getTagList(NBT_TOOK, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tookList.tagCount(); ++i) {
-            took.add(new ItemStack(tookList.getCompoundTagAt(i)));
+            took.add(StackUtils.deserializeStackFromNbt(tookList.getCompoundTagAt(i))); // Took stack can be empty
         }
     }
 
@@ -92,7 +93,7 @@ public class CraftingStepCraft extends CraftingStep {
         NBTTagList took = new NBTTagList();
 
         for (ItemStack stack : this.took) {
-            took.appendTag(stack.serializeNBT());
+            took.appendTag(StackUtils.serializeStackToNbt(stack));
         }
 
         tag.setTag(NBT_TOOK, took);

@@ -311,4 +311,48 @@ public final class StackUtils {
 
         return lines;
     }
+
+    private static final String NBT_ITEM_TYPE = "Type";
+    private static final String NBT_ITEM_QUANTITY = "Quantity";
+    private static final String NBT_ITEM_DAMAGE = "Damage";
+    private static final String NBT_ITEM_NBT = "NBT";
+    private static final String NBT_ITEM_CAPS = "Caps";
+
+    public static NBTTagCompound serializeStackToNbt(@Nonnull ItemStack stack) {
+        NBTTagCompound dummy = new NBTTagCompound();
+
+        NBTTagCompound itemTag = new NBTTagCompound();
+
+        itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
+        itemTag.setInteger(NBT_ITEM_QUANTITY, stack.getCount());
+        itemTag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
+
+        if (stack.hasTagCompound()) {
+            itemTag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
+        }
+
+        stack.writeToNBT(dummy);
+
+        if (dummy.hasKey("ForgeCaps")) {
+            itemTag.setTag(NBT_ITEM_CAPS, dummy.getTag("ForgeCaps"));
+        }
+
+        dummy.removeTag("ForgeCaps");
+
+        return itemTag;
+    }
+
+    @Nonnull
+    public static ItemStack deserializeStackFromNbt(NBTTagCompound tag) {
+        ItemStack stack = new ItemStack(
+            Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
+            tag.getInteger(NBT_ITEM_QUANTITY),
+            tag.getInteger(NBT_ITEM_DAMAGE),
+            tag.hasKey(NBT_ITEM_CAPS) ? tag.getCompoundTag(NBT_ITEM_CAPS) : null
+        );
+
+        stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
+
+        return stack;
+    }
 }

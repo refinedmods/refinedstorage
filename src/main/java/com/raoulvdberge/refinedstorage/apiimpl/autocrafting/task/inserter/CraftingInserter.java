@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -27,7 +28,7 @@ public class CraftingInserter {
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound itemTag = list.getCompoundTagAt(i);
 
-            ItemStack stack = new ItemStack(itemTag.getCompoundTag(NBT_ITEM));
+            ItemStack stack = StackUtils.deserializeStackFromNbt(itemTag.getCompoundTag(NBT_ITEM));
 
             if (stack.isEmpty()) {
                 throw new CraftingTaskReadException("Inserter has empty stack");
@@ -88,7 +89,7 @@ public class CraftingInserter {
         for (CraftingInserterItem item : items) {
             NBTTagCompound tag = new NBTTagCompound();
 
-            tag.setTag(NBT_ITEM, item.getStack().serializeNBT());
+            tag.setTag(NBT_ITEM, StackUtils.serializeStackToNbt(item.getStack()));
             tag.setInteger(NBT_STATUS, item.getStatus().ordinal());
 
             list.appendTag(tag);

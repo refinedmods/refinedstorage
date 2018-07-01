@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractor;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -47,7 +48,7 @@ public class CraftingStepProcess extends CraftingStep {
 
         NBTTagList toReceiveList = tag.getTagList(NBT_TO_RECEIVE, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < toReceiveList.tagCount(); ++i) {
-            ItemStack toReceive = new ItemStack(toReceiveList.getCompoundTagAt(i));
+            ItemStack toReceive = StackUtils.deserializeStackFromNbt(toReceiveList.getCompoundTagAt(i));
 
             if (toReceive.isEmpty()) {
                 throw new CraftingTaskReadException("Item to receive is empty");
@@ -104,7 +105,7 @@ public class CraftingStepProcess extends CraftingStep {
         NBTTagList toReceive = new NBTTagList();
 
         for (ItemStack toReceiveStack : itemsToReceive.getStacks()) {
-            toReceive.appendTag(toReceiveStack.serializeNBT());
+            toReceive.appendTag(StackUtils.serializeStackToNbt(toReceiveStack));
         }
 
         tag.setTag(NBT_TO_RECEIVE, toReceive);

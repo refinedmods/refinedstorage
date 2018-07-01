@@ -27,12 +27,6 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     static final String NBT_CAPACITY = "Capacity";
     static final String NBT_ITEMS = "Items";
 
-    static final String NBT_ITEM_TYPE = "Type";
-    static final String NBT_ITEM_QUANTITY = "Quantity";
-    static final String NBT_ITEM_DAMAGE = "Damage";
-    static final String NBT_ITEM_NBT = "NBT";
-    static final String NBT_ITEM_CAPS = "Caps";
-
     private World world;
     private int capacity;
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
@@ -56,29 +50,8 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
 
         NBTTagList list = new NBTTagList();
 
-        // Dummy value for extracting ForgeCaps
-        NBTTagCompound dummy = new NBTTagCompound();
-
         for (ItemStack stack : stacks.values()) {
-            NBTTagCompound itemTag = new NBTTagCompound();
-
-            itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
-            itemTag.setInteger(NBT_ITEM_QUANTITY, stack.getCount());
-            itemTag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
-
-            if (stack.hasTagCompound()) {
-                itemTag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
-            }
-
-            stack.writeToNBT(dummy);
-
-            if (dummy.hasKey("ForgeCaps")) {
-                itemTag.setTag(NBT_ITEM_CAPS, dummy.getTag("ForgeCaps"));
-            }
-
-            dummy.removeTag("ForgeCaps");
-
-            list.appendTag(itemTag);
+            list.appendTag(StackUtils.serializeStackToNbt(stack));
         }
 
         tag.setString(NBT_VERSION, RS.VERSION);

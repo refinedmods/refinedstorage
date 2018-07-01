@@ -4,10 +4,10 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,7 +50,7 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
 
     @Override
     public void write(ByteBuf buf) {
-        ByteBufUtils.writeItemStack(buf, stack);
+        StackUtils.writeItemStack(buf, stack);
         buf.writeInt(quantity);
         buf.writeInt(offset);
     }

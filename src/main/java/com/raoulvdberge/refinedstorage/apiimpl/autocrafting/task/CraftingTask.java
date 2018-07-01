@@ -25,6 +25,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter.Crafti
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingStep;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingStepCraft;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.step.CraftingStepProcess;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -98,7 +99,7 @@ public class CraftingTask implements ICraftingTask {
 
         NBTTagList missing = tag.getTagList(NBT_MISSING, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < missing.tagCount(); ++i) {
-            ItemStack missingItem = new ItemStack(missing.getCompoundTagAt(i));
+            ItemStack missingItem = StackUtils.deserializeStackFromNbt(missing.getCompoundTagAt(i));
 
             if (missingItem.isEmpty()) {
                 throw new CraftingTaskReadException("Missing item is empty");
@@ -557,7 +558,7 @@ public class CraftingTask implements ICraftingTask {
 
         NBTTagList missing = new NBTTagList();
         for (ItemStack missingItem : this.missing.getStacks()) {
-            missing.appendTag(missingItem.serializeNBT());
+            missing.appendTag(StackUtils.serializeStackToNbt(missingItem));
         }
 
         tag.setTag(NBT_MISSING, missing);
