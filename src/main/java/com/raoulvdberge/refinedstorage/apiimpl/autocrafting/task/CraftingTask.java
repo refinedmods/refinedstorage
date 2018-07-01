@@ -260,6 +260,8 @@ public class CraftingTask implements ICraftingTask {
                     } else {
                         this.missing.add(possibleInput, remaining);
 
+                        itemsToExtract.add(possibleInput, remaining);
+
                         remaining = 0;
                     }
                 }
@@ -367,11 +369,9 @@ public class CraftingTask implements ICraftingTask {
         if (!missing.isEmpty()) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 5));
 
-            missing.getStacks().stream().map(stack -> new CraftingMonitorElementColor(new CraftingMonitorElementItemRender(
-                stack,
-                stack.getCount(),
-                16
-            ), "", CraftingMonitorElementColor.COLOR_ERROR)).forEach(elements::add);
+            for (ItemStack missing : this.missing.getStacks()) {
+                elements.add(new CraftingMonitorElementColor(new CraftingMonitorElementItemRender(missing, missing.getCount(), 16), "", CraftingMonitorElementColor.COLOR_ERROR));
+            }
 
             elements.commit();
         }
