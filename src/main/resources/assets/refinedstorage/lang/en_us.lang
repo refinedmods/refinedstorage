@@ -133,8 +133,8 @@ misc.refinedstorage:last_modified.weeks=Last modified %d weeks ago by %s
 misc.refinedstorage:last_modified.year=Last modified %d year ago by %s
 misc.refinedstorage:last_modified.years=Last modified %d years ago by %s
 
-sidebutton.refinedstorage:compare.1=Damage sensitive
-sidebutton.refinedstorage:compare.2=NBT sensitive
+sidebutton.refinedstorage:compare.1=Use damage
+sidebutton.refinedstorage:compare.2=Use NBT
 sidebutton.refinedstorage:compare.8=Use ore dictionary
 
 sidebutton.refinedstorage:redstone_mode=Redstone mode
