@@ -1,8 +1,6 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
-import com.raoulvdberge.refinedstorage.RSItems;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
 import net.minecraft.util.math.BlockPos;
@@ -28,11 +26,6 @@ public class SlotFilter extends SlotItemHandler {
 
     public SlotFilter(IItemHandler handler, int id, int x, int y) {
         this(handler, id, x, y, 0);
-    }
-
-    @Override
-    public boolean canTakeStack(EntityPlayer player) {
-        return getStack().getItem() == RSItems.FILTER;
     }
 
     @Override
