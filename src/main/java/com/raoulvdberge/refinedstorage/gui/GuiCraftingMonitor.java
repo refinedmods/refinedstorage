@@ -208,7 +208,11 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
             return getTabById(currentTab.get());
         }
 
-        return null;
+        if (tasks.isEmpty()) {
+            return null;
+        }
+
+        return tasks.get(0);
     }
 
     @Nullable
