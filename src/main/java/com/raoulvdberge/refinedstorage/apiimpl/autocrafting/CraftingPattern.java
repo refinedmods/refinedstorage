@@ -52,6 +52,8 @@ public class CraftingPattern implements ICraftingPattern {
                 } else if (oredict) {
                     NonNullList<ItemStack> equivalent = NonNullList.create();
 
+                    equivalent.add(input.copy());
+
                     for (ItemStack equivalentStack : StackUtils.getEquivalentStacks(input)) {
                         equivalent.add(ItemHandlerHelper.copyStackWithSize(equivalentStack, input.getCount()));
                     }
