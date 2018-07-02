@@ -205,7 +205,11 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         Optional<UUID> currentTab = craftingMonitor.getTabSelected();
 
         if (currentTab.isPresent()) {
-            return getTabById(currentTab.get());
+            IGridTab tab = getTabById(currentTab.get());
+
+            if (tab != null) {
+                return tab;
+            }
         }
 
         if (tasks.isEmpty()) {
