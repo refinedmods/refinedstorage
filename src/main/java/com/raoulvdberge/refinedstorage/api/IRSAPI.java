@@ -172,6 +172,9 @@ public interface IRSAPI {
     IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity);
 
     /**
+     * Returns a helper for the 1.6.x migration.
+     * Will be removed in 1.7.x!
+     *
      * @return the 1.6.x migration helper
      */
     @Nonnull
