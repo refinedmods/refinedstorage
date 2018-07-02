@@ -115,7 +115,7 @@ public interface ICraftingManager {
      * @param tag the tag to write to
      * @return the written tag
      */
-    NBTTagCompound writeToNBT(NBTTagCompound tag);
+    NBTTagCompound writeToNbt(NBTTagCompound tag);
 
     /**
      * @param listener the listener

@@ -164,7 +164,7 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
 
         for (ICraftingTask task : tasks.values()) {
@@ -255,16 +255,22 @@ public class CraftingManager implements ICraftingManager {
         this.patterns.clear();
         this.containerInventories.clear();
 
+        List<ICraftingPatternContainer> containers = new ArrayList<>();
+
         for (INetworkNode node : network.getNodeGraph().all()) {
             if (node instanceof ICraftingPatternContainer && node.canUpdate()) {
-                ICraftingPatternContainer container = (ICraftingPatternContainer) node;
+                containers.add((ICraftingPatternContainer) node);
+            }
+        }
 
-                this.patterns.addAll(container.getPatterns());
+        containers.sort((a, b) -> b.getPosition().compareTo(a.getPosition()));
 
-                IItemHandlerModifiable handler = container.getPatternInventory();
-                if (handler != null) {
-                    this.containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
-                }
+        for (ICraftingPatternContainer container : containers) {
+            this.patterns.addAll(container.getPatterns());
+
+            IItemHandlerModifiable handler = container.getPatternInventory();
+            if (handler != null) {
+                this.containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
             }
         }
     }
