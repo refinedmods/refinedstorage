@@ -207,10 +207,6 @@ public class CraftingManager implements ICraftingManager {
             }
         }
 
-        ItemStack existing = network.getItemStorageCache().getList().get(stack);
-
-        toSchedule -= existing == null ? 0 : existing.getCount();
-
         if (toSchedule > 0) {
             ICraftingTask task = create(stack, toSchedule);
 
