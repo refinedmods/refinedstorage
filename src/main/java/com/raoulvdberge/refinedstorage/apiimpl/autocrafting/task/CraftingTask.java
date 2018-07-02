@@ -52,6 +52,9 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_MISSING = "Missing";
     private static final String NBT_EXECUTION_STARTED = "ExecutionStarted";
 
+    private static final String NBT_PATTERN_STACK = "Stack";
+    private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
+
     private INetwork network;
     private ItemStack requested;
     private int quantity;
@@ -60,7 +63,7 @@ public class CraftingTask implements ICraftingTask {
     private CraftingInserter inserter;
     private Set<ICraftingPattern> patternsUsed = new HashSet<>();
     private int ticks = 0;
-    private long calculationStarted;
+    private long calculationStarted = -1;
     private long executionStarted = -1;
     private UUID id = UUID.randomUUID();
 
@@ -116,6 +119,14 @@ public class CraftingTask implements ICraftingTask {
     @Override
     @Nullable
     public ICraftingTaskError calculate() {
+        if (calculationStarted != -1) {
+            throw new IllegalStateException("Task already calculated!");
+        }
+
+        if (executionStarted != -1) {
+            throw new IllegalStateException("Task already started!");
+        }
+
         this.calculationStarted = System.currentTimeMillis();
 
         int qty = this.quantity;
@@ -124,6 +135,27 @@ public class CraftingTask implements ICraftingTask {
 
         IStackList<ItemStack> results = API.instance().createItemStackList();
         IStackList<ItemStack> storage = network.getItemStorageCache().getList().copy();
+
+        // Items that are being handled in other tasks aren't available to us.
+        for (ICraftingTask task : network.getCraftingManager().getTasks()) {
+            if (task instanceof CraftingTask) {
+                for (CraftingStep step : ((CraftingTask) task).steps) {
+                    CraftingExtractor extractor = null;
+
+                    if (step instanceof CraftingStepCraft) {
+                        extractor = ((CraftingStepCraft) step).getExtractor();
+                    } else if (step instanceof CraftingStepProcess) {
+                        extractor = ((CraftingStepProcess) step).getExtractor();
+                    }
+
+                    if (extractor != null) {
+                        for (ItemStack inUse : extractor.getItems()) {
+                            storage.remove(inUse);
+                        }
+                    }
+                }
+            }
+        }
 
         ICraftingPatternChainList patternChainList = network.getCraftingManager().createPatternChainList();
 
@@ -371,7 +403,7 @@ public class CraftingTask implements ICraftingTask {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 5));
 
             for (ItemStack missing : this.missing.getStacks()) {
-                elements.add(new CraftingMonitorElementColor(new CraftingMonitorElementItemRender(missing, missing.getCount(), 16), "", CraftingMonitorElementColor.COLOR_ERROR));
+                elements.add(new CraftingMonitorElementColor(new CraftingMonitorElementItemRender(missing, missing.getCount(), 0), "", CraftingMonitorElementColor.COLOR_ERROR));
             }
 
             elements.commit();
@@ -381,11 +413,7 @@ public class CraftingTask implements ICraftingTask {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_inserting", 5));
 
             for (CraftingInserterItem item : inserter.getItems()) {
-                ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                    item.getStack(),
-                    item.getStack().getCount(),
-                    16
-                );
+                ICraftingMonitorElement element = new CraftingMonitorElementItemRender(item.getStack(), item.getStack().getCount(), 0);
 
                 if (item.getStatus() == CraftingInserterItemStatus.FULL) {
                     element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.network_full", CraftingMonitorElementColor.COLOR_ERROR);
@@ -408,11 +436,7 @@ public class CraftingTask implements ICraftingTask {
                         ItemStack item = extractor.getItems().get(i);
                         CraftingExtractorItemStatus status = extractor.getStatus().get(i);
 
-                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                            item,
-                            item.getCount(),
-                            16
-                        );
+                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(item, item.getCount(), 0);
 
                         if (status == CraftingExtractorItemStatus.MISSING) {
                             element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
@@ -437,11 +461,7 @@ public class CraftingTask implements ICraftingTask {
                         ItemStack item = extractor.getItems().get(i);
                         CraftingExtractorItemStatus status = extractor.getStatus().get(i);
 
-                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(
-                            item,
-                            item.getCount(),
-                            16
-                        );
+                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(item, item.getCount(), 0);
 
                         if (status == CraftingExtractorItemStatus.MISSING) {
                             element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
@@ -581,9 +601,6 @@ public class CraftingTask implements ICraftingTask {
                 return 10;
         }
     }
-
-    private static final String NBT_PATTERN_STACK = "Stack";
-    private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
 
     public static NBTTagCompound writePatternToNbt(ICraftingPattern pattern) {
         NBTTagCompound tag = new NBTTagCompound();
