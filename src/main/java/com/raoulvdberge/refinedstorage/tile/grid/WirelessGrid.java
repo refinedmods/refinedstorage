@@ -211,7 +211,7 @@ public class WirelessGrid implements IGridNetworkAware {
     public void onSearchBoxModeChanged(int searchBoxMode) {
         RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        this.searchBoxMode = searchBoxMode;
     }
 
     @Override
