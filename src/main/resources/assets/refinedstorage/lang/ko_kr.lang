@@ -35,7 +35,6 @@ gui.refinedstorage:crafter=조합기
 gui.refinedstorage:filter=필터
 gui.refinedstorage:filter.compare_damage=데미지
 gui.refinedstorage:filter.compare_nbt=NBT
-gui.refinedstorage:filter.compare_oredict=Ore Dictionary
 gui.refinedstorage:filter.mod_filter=모드 필터
 gui.refinedstorage:network_transmitter=네트워크 송신기
 gui.refinedstorage:network_transmitter.distance=%d블럭
@@ -105,7 +104,6 @@ misc.refinedstorage:reader_writer.redstone=레드스톤 강도: %d
 
 sidebutton.refinedstorage:compare.1=데미지 비교
 sidebutton.refinedstorage:compare.2=NBT 데이터 비교
-sidebutton.refinedstorage:compare.8=Ore Dictionary 비교
 
 sidebutton.refinedstorage:redstone_mode=레드스톤 모드
 sidebutton.refinedstorage:redstone_mode.0=신호와 상관 없이 작동

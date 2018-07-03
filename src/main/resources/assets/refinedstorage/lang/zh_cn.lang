@@ -37,7 +37,6 @@ gui.refinedstorage:crafter=装配室
 gui.refinedstorage:filter=终端过滤
 gui.refinedstorage:filter.compare_damage=耐久
 gui.refinedstorage:filter.compare_nbt=NBT
-gui.refinedstorage:filter.compare_oredict=矿物辞典
 gui.refinedstorage:filter.mod_filter=Mod过滤
 gui.refinedstorage:network_transmitter=网络变送器
 gui.refinedstorage:network_transmitter.distance=%d 个方块
@@ -108,7 +107,6 @@ misc.refinedstorage:reader_writer.redstone=红石强度：%d
 
 sidebutton.refinedstorage:compare.1=耐久匹配
 sidebutton.refinedstorage:compare.2=NBT匹配
-sidebutton.refinedstorage:compare.8=矿物辞典匹配
 
 sidebutton.refinedstorage:redstone_mode=红石模式
 sidebutton.refinedstorage:redstone_mode.0=忽略红石信号

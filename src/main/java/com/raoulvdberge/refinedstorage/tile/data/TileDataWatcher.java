@@ -14,6 +14,7 @@ public class TileDataWatcher {
     public TileDataWatcher(EntityPlayerMP player, TileDataManager manager) {
         this.player = player;
         this.manager = manager;
+
         if (manager != null) {
             this.manager.addWatcher(this);
             this.cache = new Object[manager.getWatchedParameters().size()];

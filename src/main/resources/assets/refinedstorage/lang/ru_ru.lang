@@ -37,7 +37,6 @@ gui.refinedstorage:crafter=Крафтер
 gui.refinedstorage:filter=Сортировка
 gui.refinedstorage:filter.compare_damage=Урон предмета
 gui.refinedstorage:filter.compare_nbt=NBT
-gui.refinedstorage:filter.compare_oredict=Словарь руды
 gui.refinedstorage:filter.mod_filter=Фильтр оп моду
 gui.refinedstorage:network_transmitter=Сетевой передатчик
 gui.refinedstorage:network_transmitter.distance=%d блоков
@@ -129,7 +128,6 @@ misc.refinedstorage:last_modified.years=Последнее изменение %d
 
 sidebutton.refinedstorage:compare.1=Сравнить урон
 sidebutton.refinedstorage:compare.2=Сравнить NBT
-sidebutton.refinedstorage:compare.8=Сравнить словарь руды
 
 sidebutton.refinedstorage:redstone_mode=Режим редстоуна
 sidebutton.refinedstorage:redstone_mode.0=Игнорировать редстоун сигнал

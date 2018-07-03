@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -15,7 +15,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,15 +50,23 @@ public class CraftingPattern implements ICraftingPattern {
                 if (input == null) {
                     inputs.add(NonNullList.create());
                 } else if (oredict) {
-                    NonNullList<ItemStack> equivalent = NonNullList.create();
+                    NonNullList<ItemStack> ores = NonNullList.create();
 
-                    equivalent.add(input.copy());
+                    ores.add(input.copy());
 
-                    for (ItemStack equivalentStack : StackUtils.getEquivalentStacks(input)) {
-                        equivalent.add(ItemHandlerHelper.copyStackWithSize(equivalentStack, input.getCount()));
+                    for (int id : OreDictionary.getOreIDs(stack)) {
+                        String name = OreDictionary.getOreName(id);
+
+                        for (ItemStack ore : OreDictionary.getOres(name)) {
+                            if (ore.getMetadata() == OreDictionary.WILDCARD_VALUE) {
+                                ore.getItem().getSubItems(CreativeTabs.SEARCH, ores);
+                            } else {
+                                ores.add(ore);
+                            }
+                        }
                     }
 
-                    inputs.add(equivalent);
+                    inputs.add(ores);
                 } else {
                     inputs.add(NonNullList.from(ItemStack.EMPTY, input));
                 }
@@ -270,16 +278,16 @@ public class CraftingPattern implements ICraftingPattern {
 
         for (List<ItemStack> inputs : this.inputs) {
             for (ItemStack input : inputs) {
-                result = 31 * result + API.instance().getItemStackHashCode(input, true);
+                result = 31 * result + API.instance().getItemStackHashCode(input);
             }
         }
 
         for (ItemStack output : this.outputs) {
-            result = 31 * result + API.instance().getItemStackHashCode(output, true);
+            result = 31 * result + API.instance().getItemStackHashCode(output);
         }
 
         for (ItemStack byproduct : this.byproducts) {
-            result = 31 * result + API.instance().getItemStackHashCode(byproduct, true);
+            result = 31 * result + API.instance().getItemStackHashCode(byproduct);
         }
 
         return result;

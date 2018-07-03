@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -12,16 +11,10 @@ import javax.annotation.Nullable;
 public class Comparer implements IComparer {
     @Override
     public boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right, int flags) {
-        EnumActionResult validity = validityCheck(left, right);
+        EnumActionResult validity = getResult(left, right);
 
         if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
             return validity == EnumActionResult.SUCCESS;
-        }
-
-        if ((flags & COMPARE_OREDICT) == COMPARE_OREDICT) {
-            if (isEqualOredict(left, right)) {
-                return true;
-            }
         }
 
         if (left.getItem() != right.getItem()) {
@@ -35,7 +28,7 @@ public class Comparer implements IComparer {
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (!isEqualNBT(left, right)) {
+            if (!isEqualNbt(left, right)) {
                 return false;
             }
         }
@@ -79,8 +72,8 @@ public class Comparer implements IComparer {
     }
 
     @Override
-    public boolean isEqualNBT(@Nullable ItemStack left, @Nullable ItemStack right) {
-        EnumActionResult validity = validityCheck(left, right);
+    public boolean isEqualNbt(@Nullable ItemStack left, @Nullable ItemStack right) {
+        EnumActionResult validity = getResult(left, right);
 
         if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
             return validity == EnumActionResult.SUCCESS;
@@ -101,18 +94,7 @@ public class Comparer implements IComparer {
         return true;
     }
 
-    @Override
-    public boolean isEqualOredict(@Nullable ItemStack left, @Nullable ItemStack right) {
-        EnumActionResult validity = validityCheck(left, right);
-
-        if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
-            return validity == EnumActionResult.SUCCESS;
-        }
-
-        return StackUtils.areStacksEquivalent(left, right);
-    }
-
-    private EnumActionResult validityCheck(@Nullable ItemStack left, @Nullable ItemStack right) {
+    private EnumActionResult getResult(@Nullable ItemStack left, @Nullable ItemStack right) {
         if (left == null && right == null) {
             return EnumActionResult.SUCCESS;
         }

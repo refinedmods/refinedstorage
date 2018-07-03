@@ -3,19 +3,16 @@ package com.raoulvdberge.refinedstorage.util;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -27,15 +24,11 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 
 public final class StackUtils {
@@ -43,61 +36,6 @@ public final class StackUtils {
 
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
-
-    private static final Map<Integer, NonNullList<ItemStack>> OREDICT_CACHE = new HashMap<>();
-    private static final Map<Integer, Boolean> OREDICT_EQUIVALENCY_CACHE = new HashMap<>();
-
-    private static final NonNullList<Object> EMPTY_NON_NULL_LIST = NonNullList.create();
-
-    public static NonNullList<ItemStack> getEquivalentStacks(ItemStack stack) {
-        int hash = API.instance().getItemStackHashCode(stack, false);
-
-        if (OREDICT_CACHE.containsKey(hash)) {
-            return OREDICT_CACHE.get(hash);
-        }
-
-        NonNullList<ItemStack> ores = NonNullList.create();
-
-        for (int id : OreDictionary.getOreIDs(stack)) {
-            String name = OreDictionary.getOreName(id);
-
-            for (ItemStack ore : OreDictionary.getOres(name)) {
-                if (ore.getMetadata() == OreDictionary.WILDCARD_VALUE) {
-                    ore.getItem().getSubItems(CreativeTabs.SEARCH, ores);
-                } else {
-                    ores.add(ore);
-                }
-            }
-        }
-
-        OREDICT_CACHE.put(hash, ores);
-
-        return ores;
-    }
-
-    public static boolean areStacksEquivalent(ItemStack left, ItemStack right) {
-        int code = API.instance().getItemStackHashCode(left, false);
-        code = 31 * code + API.instance().getItemStackHashCode(right, false);
-
-        if (OREDICT_EQUIVALENCY_CACHE.containsKey(code)) {
-            return OREDICT_EQUIVALENCY_CACHE.get(code);
-        }
-
-        int[] leftIds = OreDictionary.getOreIDs(left);
-        int[] rightIds = OreDictionary.getOreIDs(right);
-
-        for (int i : rightIds) {
-            if (ArrayUtils.contains(leftIds, i)) {
-                OREDICT_EQUIVALENCY_CACHE.put(code, true);
-
-                return true;
-            }
-        }
-
-        OREDICT_EQUIVALENCY_CACHE.put(code, false);
-
-        return false;
-    }
 
     public static void writeItemStack(ByteBuf buf, ItemStack stack) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
@@ -172,11 +110,6 @@ public final class StackUtils {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> NonNullList<T> emptyNonNullList() {
-        return (NonNullList<T>) EMPTY_NON_NULL_LIST;
-    }
-
     public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag) {
         NBTTagList tagList = new NBTTagList();
 
@@ -245,30 +178,6 @@ public final class StackUtils {
                 }
             }
         }
-    }
-
-    public static NBTTagList serializeFluidStackList(IStackList<FluidStack> list) {
-        NBTTagList tagList = new NBTTagList();
-
-        for (FluidStack stack : list.getStacks()) {
-            tagList.appendTag(stack.writeToNBT(new NBTTagCompound()));
-        }
-
-        return tagList;
-    }
-
-    public static IStackList<FluidStack> readFluidStackList(NBTTagList tagList) {
-        IStackList<FluidStack> list = API.instance().createFluidStackList();
-
-        for (int i = 0; i < tagList.tagCount(); ++i) {
-            FluidStack stack = FluidStack.loadFluidStackFromNBT(tagList.getCompoundTagAt(i));
-
-            if (stack != null) {
-                list.add(stack, stack.amount);
-            }
-        }
-
-        return list;
     }
 
     public static boolean hasFluidBucket(FluidStack stack) {

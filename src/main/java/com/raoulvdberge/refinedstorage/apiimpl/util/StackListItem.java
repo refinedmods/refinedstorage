@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.Item;
@@ -58,8 +57,7 @@ public class StackListItem implements IStackList<ItemStack> {
     @Override
     @Nullable
     public ItemStack get(@Nonnull ItemStack stack, int flags) {
-        // When the oredict flag is set all stacks need to be checked not just the ones matching the item
-        for (ItemStack otherStack : (flags & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT ? stacks.values() : stacks.get(stack.getItem())) {
+        for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 return otherStack;
             }

@@ -210,18 +210,9 @@ public interface IRSAPI {
 
     /**
      * @param stack the stack
-     * @param tag   whether the NBT tag of the stack should be calculated in the hashcode, used for performance reasons
      * @return a hashcode for the given stack
      */
-    int getItemStackHashCode(ItemStack stack, boolean tag);
-
-    /**
-     * @param stack the stack
-     * @return a hashcode for the given stack
-     */
-    default int getItemStackHashCode(ItemStack stack) {
-        return getItemStackHashCode(stack, true);
-    }
+    int getItemStackHashCode(ItemStack stack);
 
     /**
      * @param stack the stack

@@ -10,6 +10,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Removed the Wrench (raoulvdberge)
 - Removed "void excess items or fluids" functionality on storages (raoulvdberge)
 - Removed the Solderer (raoulvdberge)
+- Removed "compare oredict" buttons on Exporter, Importer, etc. (raoulvdberge)
 - Added the Cutting Tool (raoulvdberge)
 - Renamed "Printed Processors" to "Cut Processors" (raoulvdberge)
 - Rewrote autocrafting (raoulvdberge)

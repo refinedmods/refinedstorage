@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.tile.data;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.network.MessageTileDataParameterUpdate;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class TileDataManager {
     private List<TileDataParameter> watchedParameters = new ArrayList<>();
 
     private List<TileDataWatcher> watchers = new CopyOnWriteArrayList<>();
-    private List<EntityPlayer> playersWatching = new CopyOnWriteArrayList<>();
 
     public TileDataManager(TileEntity tile) {
         this.tile = tile;
@@ -49,18 +47,12 @@ public class TileDataManager {
         return watchedParameters;
     }
 
-    public List<EntityPlayer> getPlayersWatching() {
-        return playersWatching;
-    }
-
     public void addWatcher(TileDataWatcher listener) {
         watchers.add(listener);
-        playersWatching.add(listener.getPlayer());
     }
 
     public void removeWatcher(TileDataWatcher listener) {
         watchers.remove(listener);
-        playersWatching.remove(listener.getPlayer());
     }
 
     public void sendParameterToWatchers(TileDataParameter parameter) {

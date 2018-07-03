@@ -20,7 +20,6 @@ public class GuiFilter extends GuiBase {
 
     private GuiCheckBox compareDamage;
     private GuiCheckBox compareNBT;
-    private GuiCheckBox compareOredict;
     private GuiCheckBox toggleModFilter;
     private GuiButton toggleMode;
     private GuiTextField nameField;
@@ -38,7 +37,6 @@ public class GuiFilter extends GuiBase {
     public void init(int x, int y) {
         compareDamage = addCheckBox(x + 7, y + 77, t("gui.refinedstorage:filter.compare_damage"), (compare & IComparer.COMPARE_DAMAGE) == IComparer.COMPARE_DAMAGE);
         compareNBT = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4, y + 77, t("gui.refinedstorage:filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT);
-        compareOredict = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4 + compareNBT.getButtonWidth() + 4, y + 77, t("gui.refinedstorage:filter.compare_oredict"), (compare & IComparer.COMPARE_OREDICT) == IComparer.COMPARE_OREDICT);
         toggleModFilter = addCheckBox(0, y + 71 + 25, t("gui.refinedstorage:filter.mod_filter"), modFilter);
         toggleMode = addButton(x + 7, y + 71 + 21, 0, 20, "");
         updateModeButton(mode);
@@ -102,8 +100,6 @@ public class GuiFilter extends GuiBase {
             compare ^= IComparer.COMPARE_DAMAGE;
         } else if (button == compareNBT) {
             compare ^= IComparer.COMPARE_NBT;
-        } else if (button == compareOredict) {
-            compare ^= IComparer.COMPARE_OREDICT;
         } else if (button == toggleMode) {
             mode = mode == IFilter.MODE_WHITELIST ? IFilter.MODE_BLACKLIST : IFilter.MODE_WHITELIST;
 

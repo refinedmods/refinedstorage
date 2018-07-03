@@ -41,7 +41,6 @@ gui.refinedstorage:crafter=Crafter
 gui.refinedstorage:filter=Filter
 gui.refinedstorage:filter.compare_damage=Damage
 gui.refinedstorage:filter.compare_nbt=NBT
-gui.refinedstorage:filter.compare_oredict=Oredict
 gui.refinedstorage:filter.mod_filter=Mod filter
 gui.refinedstorage:network_transmitter=Network Transmitter
 gui.refinedstorage:network_transmitter.distance=%d block(s)
@@ -135,7 +134,6 @@ misc.refinedstorage:last_modified.years=Last modified %d years ago by %s
 
 sidebutton.refinedstorage:compare.1=Use damage
 sidebutton.refinedstorage:compare.2=Use NBT
-sidebutton.refinedstorage:compare.8=Use ore dictionary
 
 sidebutton.refinedstorage:redstone_mode=Redstone mode
 sidebutton.refinedstorage:redstone_mode.0=Ignore redstone signal

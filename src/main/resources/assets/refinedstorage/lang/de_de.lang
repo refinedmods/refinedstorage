@@ -80,7 +80,6 @@ misc.refinedstorage:oredict=Erzverzeichnis
 
 sidebutton.refinedstorage:compare.1=Vergleiche Schaden
 sidebutton.refinedstorage:compare.2=Vergleiche NBT
-sidebutton.refinedstorage:compare.8=Vergleiche Erzverzeichnis
 
 sidebutton.refinedstorage:redstone_mode=Redstone Modus
 sidebutton.refinedstorage:redstone_mode.0=Redstonesignal ignorieren

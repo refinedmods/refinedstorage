@@ -293,7 +293,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{transferableAmount};
     }
 
-    @Callback(doc = "function(stack:table[, compareMeta:boolean[, compareNBT:boolean[, compareOreDict:boolean]]]):table -- Gets an item from the network.")
+    @Callback(doc = "function(stack:table[, compareMeta:boolean[, compareNBT:boolean]]):table -- Gets an item from the network.")
     public Object[] getItem(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
@@ -302,7 +302,6 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         ItemStack stack = args.checkItemStack(0);
         boolean compareMeta = args.optBoolean(1, true);
         boolean compareNBT = args.optBoolean(2, true);
-        boolean compareOreDict = args.optBoolean(3, false);
 
         int flags = 0;
 
@@ -312,10 +311,6 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         if (compareNBT) {
             flags |= IComparer.COMPARE_NBT;
-        }
-
-        if (compareOreDict) {
-            flags |= IComparer.COMPARE_OREDICT;
         }
 
         return new Object[]{node.getNetwork().getItemStorageCache().getList().get(stack, flags)};
