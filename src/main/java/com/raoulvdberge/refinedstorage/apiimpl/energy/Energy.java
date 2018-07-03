@@ -13,28 +13,28 @@ public final class Energy implements IEnergy {
     protected int capacity;
     protected int energy;
 
-    private final Map<UUID, Integer> energyStorages;
+    private final Map<UUID, Integer> storages;
 
     public Energy(int controllerCapacity) {
-        this.energyStorages = new Object2ObjectOpenHashMap<>();
-        this.energyStorages.put(DEFAULT_UUID, controllerCapacity);
+        this.storages = new Object2ObjectOpenHashMap<>();
+        this.storages.put(DEFAULT_UUID, controllerCapacity);
 
         calculateCapacity();
     }
 
     private void calculateCapacity() {
-        long newCapacity = energyStorages.values().stream().mapToLong(Long::valueOf).sum();
+        long newCapacity = storages.values().stream().mapToLong(Long::valueOf).sum();
 
         this.capacity = (int) Math.min(newCapacity, Integer.MAX_VALUE);
     }
 
     @Override
-    public void decreaseCapacity(UUID id, int amount) {
+    public void removeCapacity(UUID id, int amount) {
         if (id.equals(DEFAULT_UUID)) {
             return;
         }
 
-        this.energyStorages.remove(id);
+        this.storages.remove(id);
 
         calculateCapacity();
     }
@@ -45,13 +45,13 @@ public final class Energy implements IEnergy {
             return 0;
         }
 
-        int energyExtracted = Math.min(energy, maxExtract);
+        int extracted = Math.min(energy, maxExtract);
 
         if (action == Action.PERFORM) {
-            energy -= energyExtracted;
+            energy -= extracted;
         }
 
-        return energyExtracted;
+        return extracted;
     }
 
     @Override
@@ -65,12 +65,12 @@ public final class Energy implements IEnergy {
     }
 
     @Override
-    public void increaseCapacity(UUID id, int amount) {
+    public void addCapacity(UUID id, int amount) {
         if (id.equals(DEFAULT_UUID) || amount <= 0) {
             return;
         }
 
-        this.energyStorages.merge(id, amount, (k, v) -> amount);
+        this.storages.merge(id, amount, (k, v) -> amount);
 
         calculateCapacity();
     }
@@ -81,17 +81,17 @@ public final class Energy implements IEnergy {
             return 0;
         }
 
-        int energyReceived = Math.min(capacity - energy, maxReceive);
+        int inserted = Math.min(capacity - energy, maxReceive);
 
         if (action == Action.PERFORM) {
-            energy += energyReceived;
+            energy += inserted;
         }
 
-        return energyReceived;
+        return inserted;
     }
 
     @Override
-    public void setStored(int energy) {
-        this.energy = Math.min(energy, this.capacity);
+    public void setStored(int amount) {
+        this.energy = Math.min(amount, this.capacity);
     }
 }
