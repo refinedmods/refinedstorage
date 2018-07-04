@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -34,6 +35,11 @@ public class NetworkNodeCable extends NetworkNode implements ICoverable {
     @Override
     public CoverManager getCoverManager() {
         return coverManager;
+    }
+
+    @Override
+    public boolean canConduct(@Nullable EnumFacing direction) {
+        return coverManager.canConduct(direction);
     }
 
     @Override

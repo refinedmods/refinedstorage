@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.cover;
 
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -30,16 +32,37 @@ public class CoverManager {
         this.node = node;
     }
 
+    public boolean canConduct(EnumFacing direction) {
+        if (hasCover(direction)) {
+            return false;
+        }
+
+        INetworkNode neighbor = API.instance().getNetworkNodeManager(node.getWorld()).getNode(node.getPos().offset(direction));
+        if (neighbor instanceof ICoverable && ((ICoverable) neighbor).getCoverManager().hasCover(direction.getOpposite())) {
+            return false;
+        }
+
+        return true;
+    }
+
     @Nullable
     public ItemStack getCover(EnumFacing facing) {
         return covers.get(facing);
     }
 
-    public boolean setCover(EnumFacing cover, ItemStack stack) {
-        if (isValidCover(stack) && !covers.containsKey(cover)) {
-            covers.put(cover, stack);
+    public boolean hasCover(EnumFacing facing) {
+        return covers.containsKey(facing);
+    }
+
+    public boolean setCover(EnumFacing facing, ItemStack stack) {
+        if (isValidCover(stack) && !hasCover(facing)) {
+            covers.put(facing, stack);
 
             node.markDirty();
+
+            if (node.getNetwork() != null) {
+                node.getNetwork().getNodeGraph().rebuild();
+            }
 
             return true;
         }
@@ -93,6 +116,7 @@ public class CoverManager {
         return handler;
     }
 
+    @SuppressWarnings("deprecation")
     public static boolean isValidCover(ItemStack item) {
         if (item.isEmpty()) {
             return false;
@@ -129,6 +153,7 @@ public class CoverManager {
     }
 
     @Nullable
+    @SuppressWarnings("deprecation")
     public static IBlockState getBlockState(@Nullable ItemStack item) {
         Block block = getBlock(item);
 

@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
@@ -133,7 +134,21 @@ public class BlockCable extends BlockNode {
             return false;
         }
 
+        INetworkNode node = ((TileNode) tile).getNode();
+
+        if (node instanceof ICoverable && ((ICoverable) node).getCoverManager().hasCover(direction)) {
+            return false;
+        }
+
         TileEntity otherTile = world.getTileEntity(pos.offset(direction));
+
+        if (otherTile instanceof TileNode) {
+            INetworkNode otherNode = ((TileNode) otherTile).getNode();
+
+            if (otherNode instanceof ICoverable && ((ICoverable) otherNode).getCoverManager().hasCover(direction.getOpposite())) {
+                return false;
+            }
+        }
 
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, direction.getOpposite())) {
             // Prevent the block adding connections in itself
@@ -198,13 +213,13 @@ public class BlockCable extends BlockNode {
         if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable) {
             CoverManager coverManager = ((ICoverable) ((TileNode) tile).getNode()).getCoverManager();
 
-            boolean hasUp = coverManager.getCover(EnumFacing.UP) != null;
-            boolean hasDown = coverManager.getCover(EnumFacing.DOWN) != null;
+            boolean hasUp = coverManager.hasCover(EnumFacing.UP);
+            boolean hasDown = coverManager.hasCover(EnumFacing.DOWN);
 
-            boolean hasEast = coverManager.getCover(EnumFacing.EAST) != null;
-            boolean hasWest = coverManager.getCover(EnumFacing.WEST) != null;
+            boolean hasEast = coverManager.hasCover(EnumFacing.EAST);
+            boolean hasWest = coverManager.hasCover(EnumFacing.WEST);
 
-            if (coverManager.getCover(EnumFacing.NORTH) != null) {
+            if (coverManager.hasCover(EnumFacing.NORTH)) {
                 boxes.add(RenderUtils.getBounds(
                     hasWest ? 2 : 0, hasDown ? 2 : 0, 0,
                     hasEast ? 14 : 16, hasUp ? 14 : 16, 2
@@ -222,7 +237,7 @@ public class BlockCable extends BlockNode {
                 boxes.add(HOLDER_EAST_AABB);
             }
 
-            if (coverManager.getCover(EnumFacing.SOUTH) != null) {
+            if (coverManager.hasCover(EnumFacing.SOUTH)) {
                 boxes.add(RenderUtils.getBounds(
                     hasEast ? 14 : 16, hasDown ? 2 : 0, 16,
                     hasWest ? 2 : 0, hasUp ? 14 : 16, 14
