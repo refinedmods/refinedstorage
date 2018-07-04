@@ -34,6 +34,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Fixed shift clicking a created pattern going into Grid inventory (raoulvdberge)
 - Fixed crash when moving a wireless item with the number keys (raoulvdberge)
 - Fixed bug where item storage tracker didn't save sometimes (raoulvdberge)
+- Fixed bug where External Storage doesn't detect new inventory when rotating (raoulvdberge)
 - Prevent accidental Grid scrollbar click after clicking JEI recipe transfer button (raoulvdberge)
 - Added a missing config option for Crafter Manager energy usage (raoulvdberge)
 - Added support for Disk Drive / Storage Block storage and capacity to OC integration (zangai)

@@ -97,6 +97,15 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
+    protected void onDirectionChanged() {
+        super.onDirectionChanged();
+
+        if (network != null) {
+            updateStorage(network);
+        }
+    }
+
+    @Override
     public String getId() {
         return ID;
     }
