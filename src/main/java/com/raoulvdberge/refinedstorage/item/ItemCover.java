@@ -1,18 +1,26 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -25,6 +33,8 @@ public class ItemCover extends ItemBase {
 
     public ItemCover() {
         super("cover");
+
+        setCreativeTab(RS.INSTANCE.coversTab);
     }
 
     public static void setItem(ItemStack cover, ItemStack item) {
@@ -52,6 +62,35 @@ public class ItemCover extends ItemBase {
 
         if (!item.isEmpty()) {
             tooltip.add(item.getItem().getItemStackDisplayName(item));
+        }
+    }
+
+    @Override
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (!isInCreativeTab(tab)) {
+            return;
+        }
+
+        for (Block block : Block.REGISTRY) {
+            Item item = Item.getItemFromBlock(block);
+
+            if (item == Items.AIR) {
+                continue;
+            }
+
+            NonNullList<ItemStack> subBlocks = NonNullList.create();
+
+            block.getSubBlocks(CreativeTabs.SEARCH, subBlocks);
+
+            for (ItemStack subBlock : subBlocks) {
+                if (CoverManager.isValidCover(subBlock)) {
+                    ItemStack stack = new ItemStack(RSItems.COVER);
+
+                    setItem(stack, subBlock);
+
+                    items.add(stack);
+                }
+            }
         }
     }
 

@@ -1,8 +1,10 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.command.CommandCreateDisk;
+import com.raoulvdberge.refinedstorage.item.ItemCover;
 import com.raoulvdberge.refinedstorage.proxy.ProxyCommon;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.FMLLog;
@@ -38,6 +40,16 @@ public final class RS {
         @Override
         public ItemStack getTabIconItem() {
             return new ItemStack(RSItems.STORAGE_HOUSING);
+        }
+    };
+    public final CreativeTabs coversTab = new CreativeTabs(ID + ".covers") {
+        @Override
+        public ItemStack getTabIconItem() {
+            ItemStack stack = new ItemStack(RSItems.COVER);
+
+            ItemCover.setItem(stack, new ItemStack(Blocks.STONE));
+
+            return stack;
         }
     };
 
