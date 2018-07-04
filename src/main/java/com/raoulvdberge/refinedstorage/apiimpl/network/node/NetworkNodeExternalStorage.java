@@ -32,6 +32,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -349,6 +350,12 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     public List<IStorageExternal<FluidStack>> getFluidStorages() {
         return fluidStorages;
+    }
+
+    @Nullable
+    @Override
+    public IItemHandler getDrops() {
+        return coverManager.getAsInventory();
     }
 
     @Override

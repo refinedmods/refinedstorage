@@ -24,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class NetworkNodeExporter extends NetworkNode implements IComparable, IType, ICoverable {
     public static final String ID = "exporter";
@@ -217,7 +218,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return new CombinedInvWrapper(upgrades, coverManager.getAsInventory());
     }
 
     @Override

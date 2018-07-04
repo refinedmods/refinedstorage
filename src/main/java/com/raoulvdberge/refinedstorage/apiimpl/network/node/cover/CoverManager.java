@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
@@ -112,7 +112,7 @@ public class CoverManager {
         return list;
     }
 
-    public IItemHandler getAsInventory() {
+    public IItemHandlerModifiable getAsInventory() {
         ItemStackHandler handler = new ItemStackHandler(covers.size());
 
         int i = 0;
