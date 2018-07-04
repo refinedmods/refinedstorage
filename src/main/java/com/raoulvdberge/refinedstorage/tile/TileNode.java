@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
@@ -15,6 +16,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -24,6 +26,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public static final TileDataParameter<Integer, TileNode> REDSTONE_MODE = RedstoneMode.createParameter();
 
     protected static final String NBT_ACTIVE = "Active";
+    private static final String NBT_COVERS = "Cover";
 
     private N clientNode;
 
@@ -46,6 +49,10 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
+        if (getNode() instanceof ICoverable) {
+            tag.setTag(NBT_COVERS, ((ICoverable) getNode()).getCoverManager().writeToNbt());
+        }
+
         tag.setBoolean(NBT_ACTIVE, getNode().getNetwork() != null && getNode().canUpdate());
 
         return tag;
@@ -53,6 +60,10 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
     public void readUpdate(NBTTagCompound tag) {
         super.readUpdate(tag);
+
+        if (getNode() instanceof ICoverable && tag.hasKey(NBT_COVERS)) {
+            ((ICoverable) getNode()).getCoverManager().readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+        }
 
         getNode().setActive(tag.getBoolean(NBT_ACTIVE));
     }

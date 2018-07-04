@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.render;
+package com.raoulvdberge.refinedstorage.render.model.baked;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.state.IBlockState;

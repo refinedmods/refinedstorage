@@ -21,4 +21,5 @@ public final class RSItems {
     public static final ItemFluidStoragePart FLUID_STORAGE_PART = new ItemFluidStoragePart();
     public static final ItemSecurityCard SECURITY_CARD = new ItemSecurityCard();
     public static final ItemCuttingTool CUTTING_TOOL = new ItemCuttingTool();
+    public static final ItemCover COVER = new ItemCover();
 }

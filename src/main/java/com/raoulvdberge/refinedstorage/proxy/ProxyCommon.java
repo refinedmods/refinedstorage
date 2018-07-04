@@ -42,6 +42,7 @@ import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
 import com.raoulvdberge.refinedstorage.network.*;
+import com.raoulvdberge.refinedstorage.recipe.RecipeCover;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -59,6 +60,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -260,6 +262,7 @@ public class ProxyCommon {
         registerItem(RSItems.FILTER);
         registerItem(RSItems.NETWORK_CARD);
         registerItem(RSItems.SECURITY_CARD);
+        registerItem(RSItems.COVER);
 
         IntegrationInventorySorter.register();
     }
@@ -302,6 +305,11 @@ public class ProxyCommon {
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> e) {
         itemsToRegister.forEach(e.getRegistry()::register);
+    }
+
+    @SubscribeEvent
+    public void registerRecipes(RegistryEvent.Register<IRecipe> e) {
+        e.getRegistry().register(new RecipeCover().setRegistryName(new ResourceLocation(RS.ID, "cover")));
     }
 
     @SubscribeEvent

@@ -1,10 +1,10 @@
-package com.raoulvdberge.refinedstorage.render;
+package com.raoulvdberge.refinedstorage.render.model.baked;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.block.BlockDiskManipulator;
+import com.raoulvdberge.refinedstorage.block.BlockDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 import java.util.*;
 
-public class BakedModelDiskManipulator implements IBakedModel {
+public class BakedModelDiskDrive implements IBakedModel {
     private class CacheKey {
         private IBlockState state;
         private EnumFacing side;
@@ -64,19 +64,18 @@ public class BakedModelDiskManipulator implements IBakedModel {
         }
     }
 
-    private IBakedModel baseDisconnected;
-    private Map<EnumFacing, IBakedModel> modelsConnected = new HashMap<>();
-    private Map<EnumFacing, IBakedModel> modelsDisconnected = new HashMap<>();
+    private IBakedModel base;
+    private Map<EnumFacing, IBakedModel> models = new HashMap<>();
     private Map<EnumFacing, Map<Integer, List<IBakedModel>>> disks = new HashMap<>();
 
     private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         public List<BakedQuad> load(CacheKey key) {
-            EnumFacing facing = key.state.getValue(RSBlocks.DISK_MANIPULATOR.getDirection().getProperty());
+            EnumFacing facing = key.state.getValue(RSBlocks.DISK_DRIVE.getDirection().getProperty());
 
-            List<BakedQuad> quads = (key.state.getValue(BlockDiskManipulator.CONNECTED) ? modelsConnected : modelsDisconnected).get(facing).getQuads(key.state, key.side, 0);
+            List<BakedQuad> quads = models.get(facing).getQuads(key.state, key.side, 0);
 
-            for (int i = 0; i < 6; ++i) {
+            for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != TileDiskDrive.DISK_STATE_NONE) {
                     quads.addAll(disks.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, 0));
                 }
@@ -86,12 +85,11 @@ public class BakedModelDiskManipulator implements IBakedModel {
         }
     });
 
-    public BakedModelDiskManipulator(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
-        this.baseDisconnected = baseDisconnected;
+    public BakedModelDiskDrive(IBakedModel base, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
+        this.base = base;
 
         for (EnumFacing facing : EnumFacing.HORIZONTALS) {
-            modelsConnected.put(facing, new BakedModelTRSR(baseConnected, facing));
-            modelsDisconnected.put(facing, new BakedModelTRSR(baseDisconnected, facing));
+            models.put(facing, new BakedModelTRSR(base, facing));
 
             disks.put(facing, new HashMap<>());
 
@@ -108,19 +106,19 @@ public class BakedModelDiskManipulator implements IBakedModel {
     }
 
     private void initDiskModels(IBakedModel disk, int type, EnumFacing facing) {
-        for (int x = 0; x < 2; ++x) {
-            for (int y = 0; y < 3; ++y) {
+        for (int y = 0; y < 4; ++y) {
+            for (int x = 0; x < 2; ++x) {
                 BakedModelTRSR model = new BakedModelTRSR(disk, facing);
 
                 Vector3f trans = model.transformation.getTranslation();
 
                 if (facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH) {
-                    trans.x += (2F / 16F + ((float) x * 7F) / 16F) * (facing == EnumFacing.NORTH ? -1 : 1);
+                    trans.x += ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == EnumFacing.NORTH ? -1 : 1);
                 } else if (facing == EnumFacing.EAST || facing == EnumFacing.WEST) {
-                    trans.z += (2F / 16F + ((float) x * 7F) / 16F) * (facing == EnumFacing.EAST ? -1 : 1);
+                    trans.z += ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == EnumFacing.EAST ? -1 : 1);
                 }
 
-                trans.y -= (6F / 16F) + (3F * y) / 16F;
+                trans.y -= (2F / 16F) + ((float) y * 3F) / 16F;
 
                 model.transformation = new TRSRTransformation(trans, model.transformation.getLeftRot(), model.transformation.getScale(), model.transformation.getRightRot());
 
@@ -132,13 +130,13 @@ public class BakedModelDiskManipulator implements IBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
         if (!(state instanceof IExtendedBlockState)) {
-            return baseDisconnected.getQuads(state, side, rand);
+            return base.getQuads(state, side, rand);
         }
 
-        Integer[] diskState = ((IExtendedBlockState) state).getValue(BlockDiskManipulator.DISK_STATE);
+        Integer[] diskState = ((IExtendedBlockState) state).getValue(BlockDiskDrive.DISK_STATE);
 
         if (diskState == null) {
-            return baseDisconnected.getQuads(state, side, rand);
+            return base.getQuads(state, side, rand);
         }
 
         CacheKey key = new CacheKey(((IExtendedBlockState) state).getClean(), side, diskState);
@@ -148,32 +146,32 @@ public class BakedModelDiskManipulator implements IBakedModel {
 
     @Override
     public boolean isAmbientOcclusion() {
-        return baseDisconnected.isAmbientOcclusion();
+        return base.isAmbientOcclusion();
     }
 
     @Override
     public boolean isGui3d() {
-        return baseDisconnected.isGui3d();
+        return base.isGui3d();
     }
 
     @Override
     public boolean isBuiltInRenderer() {
-        return baseDisconnected.isBuiltInRenderer();
+        return base.isBuiltInRenderer();
     }
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return baseDisconnected.getParticleTexture();
+        return base.getParticleTexture();
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public ItemCameraTransforms getItemCameraTransforms() {
-        return baseDisconnected.getItemCameraTransforms();
+        return base.getItemCameraTransforms();
     }
 
     @Override
     public ItemOverrideList getOverrides() {
-        return baseDisconnected.getOverrides();
+        return base.getOverrides();
     }
 }

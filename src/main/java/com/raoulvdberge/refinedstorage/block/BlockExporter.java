@@ -41,7 +41,7 @@ public class BlockExporter extends BlockCable {
     }
 
     @Override
-    public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
+    public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
         switch (state.getValue(getDirection().getProperty())) {

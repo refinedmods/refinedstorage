@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.render;
+package com.raoulvdberge.refinedstorage.render.model.loader;
 
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;

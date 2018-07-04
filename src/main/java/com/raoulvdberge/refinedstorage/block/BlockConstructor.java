@@ -17,13 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockConstructor extends BlockCable {
-    public static final AxisAlignedBB HOLDER_NORTH_AABB = RenderUtils.getBounds(7, 7, 2, 9, 9, 6);
-    public static final AxisAlignedBB HOLDER_EAST_AABB = RenderUtils.getBounds(10, 7, 7, 14, 9, 9);
-    public static final AxisAlignedBB HOLDER_SOUTH_AABB = RenderUtils.getBounds(7, 7, 10, 9, 9, 14);
-    public static final AxisAlignedBB HOLDER_WEST_AABB = RenderUtils.getBounds(2, 7, 7, 6, 9, 9);
-    public static final AxisAlignedBB HOLDER_UP_AABB = RenderUtils.getBounds(7, 10, 7, 9, 14, 9);
-    public static final AxisAlignedBB HOLDER_DOWN_AABB = RenderUtils.getBounds(7, 2, 7, 9, 6, 9);
-
     public static final AxisAlignedBB HEAD_NORTH_AABB = RenderUtils.getBounds(0, 0, 0, 16, 16, 2);
     public static final AxisAlignedBB HEAD_EAST_AABB = RenderUtils.getBounds(14, 0, 0, 16, 16, 16);
     public static final AxisAlignedBB HEAD_SOUTH_AABB = RenderUtils.getBounds(0, 0, 14, 16, 16, 16);
@@ -36,7 +29,7 @@ public class BlockConstructor extends BlockCable {
     }
 
     @Override
-    public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
+    public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
         switch (state.getValue(getDirection().getProperty())) {

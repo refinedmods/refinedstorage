@@ -15,7 +15,14 @@ import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
-import com.raoulvdberge.refinedstorage.render.*;
+import com.raoulvdberge.refinedstorage.render.model.ModelDiskDrive;
+import com.raoulvdberge.refinedstorage.render.model.ModelDiskManipulator;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCableCover;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCover;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelPattern;
+import com.raoulvdberge.refinedstorage.render.model.loader.CustomModelLoaderDefault;
+import com.raoulvdberge.refinedstorage.render.statemapper.StateMapperCTM;
+import com.raoulvdberge.refinedstorage.render.tesr.TileEntitySpecialRendererStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
@@ -76,7 +83,7 @@ public class ProxyClient extends ProxyCommon {
         itemColors.registerItemColorHandler((stack, tintIndex) -> {
             CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
 
-            if (BakedModelPattern.canDisplayPatternOutput(stack, pattern)) {
+            if (BakedModelPattern.canDisplayOutput(stack, pattern)) {
                 int color = itemColors.colorMultiplier(pattern.getOutputs().get(0), tintIndex);
 
                 if (color != -1) {
@@ -121,13 +128,13 @@ public class ProxyClient extends ProxyCommon {
         );
 
         ModelBakery.registerItemVariants(RSItems.PROCESSOR,
-            new ResourceLocation("refinedstorage:basic_printed_processor"),
-            new ResourceLocation("refinedstorage:improved_printed_processor"),
-            new ResourceLocation("refinedstorage:advanced_printed_processor"),
+            new ResourceLocation("refinedstorage:cut_basic_processor"),
+            new ResourceLocation("refinedstorage:cut_improved_processor"),
+            new ResourceLocation("refinedstorage:cut_advanced_processor"),
             new ResourceLocation("refinedstorage:basic_processor"),
             new ResourceLocation("refinedstorage:improved_processor"),
             new ResourceLocation("refinedstorage:advanced_processor"),
-            new ResourceLocation("refinedstorage:printed_silicon")
+            new ResourceLocation("refinedstorage:cut_silicon")
         );
 
         ModelBakery.registerItemVariants(RSItems.CORE,
@@ -223,6 +230,7 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DISK_MANIPULATOR), 0, new ModelResourceLocation("refinedstorage:disk_manipulator", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE_MONITOR), 0, new ModelResourceLocation("refinedstorage:storage_monitor", "connected=false,direction=north"));
+        ModelLoader.setCustomModelResourceLocation(RSItems.COVER, 0, new ModelResourceLocation("refinedstorage:cover", "inventory"));
 
         ModelLoaderRegistry.registerLoader(new CustomModelLoaderDefault(new ResourceLocation(RS.ID, "disk_drive"), ModelDiskDrive::new));
         ModelLoaderRegistry.registerLoader(new CustomModelLoaderDefault(new ResourceLocation(RS.ID, "disk_manipulator"), ModelDiskManipulator::new));
@@ -364,6 +372,10 @@ public class ProxyClient extends ProxyCommon {
             if (model.getResourceDomain().equals(RS.ID)) {
                 if (model.getResourcePath().equals("pattern")) {
                     e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
+                } else if (model.getResourcePath().equals("cable")) {
+                    e.getModelRegistry().putObject(model, new BakedModelCableCover(e.getModelRegistry().getObject(model)));
+                } else if (model.getResourcePath().equals("cover")) {
+                    e.getModelRegistry().putObject(model, new BakedModelCover(e.getModelRegistry().getObject(model), null));
                 }
             }
         }
@@ -393,8 +405,8 @@ public class ProxyClient extends ProxyCommon {
             return;
         }
 
-        List<AxisAlignedBB> unionized = cable.getUnionizedCollisionBoxes(state);
-        List<AxisAlignedBB> nonUnionized = cable.getNonUnionizedCollisionBoxes(state);
+        List<AxisAlignedBB> combinedBoxes = cable.getCombinedCollisionBoxes(state);
+        List<AxisAlignedBB> boxes = cable.getCollisionBoxes(player.world.getTileEntity(pos), state);
 
         e.setCanceled(true);
 
@@ -409,15 +421,15 @@ public class ProxyClient extends ProxyCommon {
         double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) e.getPartialTicks();
         double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * (double) e.getPartialTicks();
 
-        AxisAlignedBB unionizedAabb = unionized.get(0);
+        AxisAlignedBB combinedAabb = combinedBoxes.get(0);
 
-        for (int i = 1; i < unionized.size(); ++i) {
-            unionizedAabb = unionizedAabb.union(unionized.get(i));
+        for (int i = 1; i < combinedBoxes.size(); ++i) {
+            combinedAabb = combinedAabb.union(combinedBoxes.get(i));
         }
 
-        drawSelectionBoundingBox(unionizedAabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
+        drawSelectionBoundingBox(combinedAabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
 
-        for (AxisAlignedBB aabb : nonUnionized) {
+        for (AxisAlignedBB aabb : boxes) {
             drawSelectionBoundingBox(aabb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D).offset(-d0, -d1, -d2).offset(pos.getX(), pos.getY(), pos.getZ()));
         }
 

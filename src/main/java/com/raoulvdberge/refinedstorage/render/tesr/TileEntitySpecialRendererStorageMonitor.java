@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.render;
+package com.raoulvdberge.refinedstorage.render.tesr;
 
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;

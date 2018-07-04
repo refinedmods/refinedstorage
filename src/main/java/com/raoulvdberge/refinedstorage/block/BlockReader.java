@@ -24,8 +24,8 @@ public class BlockReader extends BlockCable {
     }
 
     @Override
-    public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
-        return RSBlocks.CONSTRUCTOR.getNonUnionizedCollisionBoxes(state);
+    public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
+        return RSBlocks.CONSTRUCTOR.getCollisionBoxes(tile, state);
     }
 
     @Override

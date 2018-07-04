@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.render;
+package com.raoulvdberge.refinedstorage.render.model.baked;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -75,7 +75,7 @@ public class BakedModelPattern implements IBakedModel {
             public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(world, stack);
 
-                if (canDisplayPatternOutput(stack, pattern)) {
+                if (canDisplayOutput(stack, pattern)) {
                     return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(pattern.getOutputs().get(0), world, entity);
                 }
 
@@ -84,7 +84,7 @@ public class BakedModelPattern implements IBakedModel {
         };
     }
 
-    public static boolean canDisplayPatternOutput(ItemStack patternStack, CraftingPattern pattern) {
+    public static boolean canDisplayOutput(ItemStack patternStack, CraftingPattern pattern) {
         if (pattern.isValid() && pattern.getOutputs().size() == 1) {
             for (ICraftingPatternRenderHandler renderHandler : API.instance().getPatternRenderHandlers()) {
                 if (renderHandler.canRenderOutput(patternStack)) {

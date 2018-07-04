@@ -290,6 +290,7 @@ item.refinedstorage:network_card.name=Network Card2
 item.refinedstorage:security_card.name=Security Card
 item.refinedstorage:security_card.owner=Bound to: %s
 item.refinedstorage:cutting_tool.name=Cutting Tool
+item.refinedstorage:cover.name=Cover
 
 commands.refinedstorage.createdisk.usage=/createdisk <player> <item> <metadata> <id>
 commands.refinedstorage.createdisk.error.notADisk=The given disk item is not a disk.

@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
@@ -11,6 +13,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -20,13 +23,27 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.property.IExtendedBlockState;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BlockCable extends BlockNode {
+    public static final PropertyObject<ItemStack> COVER_NORTH = new PropertyObject<>("cover_north", ItemStack.class);
+    public static final PropertyObject<ItemStack> COVER_EAST = new PropertyObject<>("cover_east", ItemStack.class);
+    public static final PropertyObject<ItemStack> COVER_SOUTH = new PropertyObject<>("cover_south", ItemStack.class);
+    public static final PropertyObject<ItemStack> COVER_WEST = new PropertyObject<>("cover_west", ItemStack.class);
+    public static final PropertyObject<ItemStack> COVER_UP = new PropertyObject<>("cover_up", ItemStack.class);
+    public static final PropertyObject<ItemStack> COVER_DOWN = new PropertyObject<>("cover_down", ItemStack.class);
+
+    public static final AxisAlignedBB HOLDER_NORTH_AABB = RenderUtils.getBounds(7, 7, 2, 9, 9, 6);
+    public static final AxisAlignedBB HOLDER_EAST_AABB = RenderUtils.getBounds(10, 7, 7, 14, 9, 9);
+    public static final AxisAlignedBB HOLDER_SOUTH_AABB = RenderUtils.getBounds(7, 7, 10, 9, 9, 14);
+    public static final AxisAlignedBB HOLDER_WEST_AABB = RenderUtils.getBounds(2, 7, 7, 6, 9, 9);
+    public static final AxisAlignedBB HOLDER_UP_AABB = RenderUtils.getBounds(7, 10, 7, 9, 14, 9);
+    public static final AxisAlignedBB HOLDER_DOWN_AABB = RenderUtils.getBounds(7, 2, 7, 9, 6, 9);
+
     public static final AxisAlignedBB CORE_AABB = RenderUtils.getBounds(6, 6, 6, 10, 10, 10);
     private static final AxisAlignedBB NORTH_AABB = RenderUtils.getBounds(6, 6, 0, 10, 10, 6);
     private static final AxisAlignedBB EAST_AABB = RenderUtils.getBounds(10, 6, 6, 16, 10, 10);
@@ -68,6 +85,12 @@ public class BlockCable extends BlockNode {
             .add(WEST)
             .add(UP)
             .add(DOWN)
+            .add(COVER_NORTH)
+            .add(COVER_EAST)
+            .add(COVER_SOUTH)
+            .add(COVER_WEST)
+            .add(COVER_UP)
+            .add(COVER_DOWN)
             .build();
     }
 
@@ -85,6 +108,24 @@ public class BlockCable extends BlockNode {
             .withProperty(DOWN, hasConnectionWith(world, pos, this, tile, EnumFacing.DOWN));
 
         return state;
+    }
+
+    @Override
+    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        IBlockState s = super.getExtendedState(state, world, pos);
+
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable) {
+            s = ((IExtendedBlockState) s).withProperty(COVER_NORTH, ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().getCover(EnumFacing.NORTH));
+            s = ((IExtendedBlockState) s).withProperty(COVER_EAST, ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().getCover(EnumFacing.EAST));
+            s = ((IExtendedBlockState) s).withProperty(COVER_SOUTH, ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().getCover(EnumFacing.SOUTH));
+            s = ((IExtendedBlockState) s).withProperty(COVER_WEST, ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().getCover(EnumFacing.WEST));
+            s = ((IExtendedBlockState) s).withProperty(COVER_UP, ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().getCover(EnumFacing.UP));
+            s = ((IExtendedBlockState) s).withProperty(COVER_DOWN, ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().getCover(EnumFacing.DOWN));
+        }
+
+        return s;
     }
 
     private static boolean hasConnectionWith(IBlockAccess world, BlockPos pos, BlockBase block, TileEntity tile, EnumFacing direction) {
@@ -119,7 +160,7 @@ public class BlockCable extends BlockNode {
             (state.getValue(DOWN) && RenderUtils.isInBounds(DOWN_AABB, hitX, hitY, hitZ));
     }
 
-    public List<AxisAlignedBB> getUnionizedCollisionBoxes(IBlockState state) {
+    public List<AxisAlignedBB> getCombinedCollisionBoxes(IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
         boxes.add(CORE_AABB);
@@ -151,15 +192,81 @@ public class BlockCable extends BlockNode {
         return boxes;
     }
 
-    public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
-        return Collections.emptyList();
-    }
-
-    public List<AxisAlignedBB> getCollisionBoxes(IBlockState state) {
+    public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
-        boxes.addAll(getUnionizedCollisionBoxes(state));
-        boxes.addAll(getNonUnionizedCollisionBoxes(state));
+        if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable) {
+            CoverManager coverManager = ((ICoverable) ((TileNode) tile).getNode()).getCoverManager();
+
+            boolean hasUp = coverManager.getCover(EnumFacing.UP) != null;
+            boolean hasDown = coverManager.getCover(EnumFacing.DOWN) != null;
+
+            boolean hasEast = coverManager.getCover(EnumFacing.EAST) != null;
+            boolean hasWest = coverManager.getCover(EnumFacing.WEST) != null;
+
+            if (coverManager.getCover(EnumFacing.NORTH) != null) {
+                boxes.add(RenderUtils.getBounds(
+                    hasWest ? 2 : 0, hasDown ? 2 : 0, 0,
+                    hasEast ? 14 : 16, hasUp ? 14 : 16, 2
+                ));
+
+                boxes.add(HOLDER_NORTH_AABB);
+            }
+
+            if (hasEast) {
+                boxes.add(RenderUtils.getBounds(
+                    14, hasDown ? 2 : 0, 0,
+                    16, hasUp ? 14 : 16, 16
+                ));
+
+                boxes.add(HOLDER_EAST_AABB);
+            }
+
+            if (coverManager.getCover(EnumFacing.SOUTH) != null) {
+                boxes.add(RenderUtils.getBounds(
+                    hasEast ? 14 : 16, hasDown ? 2 : 0, 16,
+                    hasWest ? 2 : 0, hasUp ? 14 : 16, 14
+                ));
+
+                boxes.add(HOLDER_SOUTH_AABB);
+            }
+
+            if (hasWest) {
+                boxes.add(RenderUtils.getBounds(
+                    0, hasDown ? 2 : 0, 0,
+                    2, hasUp ? 14 : 16, 16
+                ));
+
+                boxes.add(HOLDER_WEST_AABB);
+            }
+
+            if (hasUp) {
+                boxes.add(RenderUtils.getBounds(
+                    0, 14, 0,
+                    16, 16, 16
+                ));
+
+                boxes.add(HOLDER_UP_AABB);
+            }
+
+            if (hasDown) {
+                boxes.add(RenderUtils.getBounds(
+                    0, 0, 0,
+                    16, 2, 16
+                ));
+
+                boxes.add(HOLDER_DOWN_AABB);
+            }
+        }
+
+        return boxes;
+    }
+
+    private List<AxisAlignedBB> getAllCollisionBoxes(TileEntity tile, IBlockState state) {
+        List<AxisAlignedBB> boxes = new ArrayList<>();
+
+        boxes.addAll(getCombinedCollisionBoxes(state));
+        boxes.addAll(getCollisionBoxes(tile, state));
 
         return boxes;
     }
@@ -167,7 +274,7 @@ public class BlockCable extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_) {
-        for (AxisAlignedBB aabb : getCollisionBoxes(this.getActualState(state, world, pos))) {
+        for (AxisAlignedBB aabb : getAllCollisionBoxes(world.getTileEntity(pos), this.getActualState(state, world, pos))) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
         }
     }
@@ -175,7 +282,7 @@ public class BlockCable extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        RenderUtils.AdvancedRayTraceResult result = RenderUtils.collisionRayTrace(pos, start, end, getCollisionBoxes(this.getActualState(state, world, pos)));
+        RenderUtils.AdvancedRayTraceResult result = RenderUtils.collisionRayTrace(pos, start, end, getAllCollisionBoxes(world.getTileEntity(pos), this.getActualState(state, world, pos)));
 
         return result != null ? result.hit : null;
     }

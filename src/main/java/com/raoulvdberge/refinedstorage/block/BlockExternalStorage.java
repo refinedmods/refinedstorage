@@ -31,32 +31,32 @@ public class BlockExternalStorage extends BlockCable {
     }
 
     @Override
-    public List<AxisAlignedBB> getNonUnionizedCollisionBoxes(IBlockState state) {
+    public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
         switch (state.getValue(getDirection().getProperty())) {
             case NORTH:
-                boxes.add(BlockConstructor.HOLDER_NORTH_AABB);
+                boxes.add(HOLDER_NORTH_AABB);
                 boxes.add(HEAD_NORTH_AABB);
                 break;
             case EAST:
-                boxes.add(BlockConstructor.HOLDER_EAST_AABB);
+                boxes.add(HOLDER_EAST_AABB);
                 boxes.add(HEAD_EAST_AABB);
                 break;
             case SOUTH:
-                boxes.add(BlockConstructor.HOLDER_SOUTH_AABB);
+                boxes.add(HOLDER_SOUTH_AABB);
                 boxes.add(HEAD_SOUTH_AABB);
                 break;
             case WEST:
-                boxes.add(BlockConstructor.HOLDER_WEST_AABB);
+                boxes.add(HOLDER_WEST_AABB);
                 boxes.add(HEAD_WEST_AABB);
                 break;
             case UP:
-                boxes.add(BlockConstructor.HOLDER_UP_AABB);
+                boxes.add(HOLDER_UP_AABB);
                 boxes.add(HEAD_UP_AABB);
                 break;
             case DOWN:
-                boxes.add(BlockConstructor.HOLDER_DOWN_AABB);
+                boxes.add(HOLDER_DOWN_AABB);
                 boxes.add(HEAD_DOWN_AABB);
                 break;
         }
