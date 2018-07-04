@@ -175,6 +175,10 @@ public class CoverManager {
             return null;
         }
 
-        return block.getStateFromMeta(item.getItem().getMetadata(item));
+        try {
+            return block.getStateFromMeta(item.getItem().getMetadata(item));
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
