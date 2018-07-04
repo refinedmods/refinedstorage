@@ -1,5 +1,8 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import com.raoulvdberge.refinedstorage.render.QuadBuilder;
@@ -23,8 +26,83 @@ import javax.vecmath.Matrix4f;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class BakedModelCover implements IBakedModel {
+    private class CacheKey {
+        private IBakedModel base;
+        private IBlockState state;
+        private ItemStack stack;
+        private EnumFacing side;
+
+        CacheKey(IBakedModel base, IBlockState state, ItemStack stack, EnumFacing side) {
+            this.base = base;
+            this.state = state;
+            this.stack = stack;
+            this.side = side;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            BakedModelCover.CacheKey cacheKey = (BakedModelCover.CacheKey) o;
+
+            return cacheKey.stack.getItem() == stack.getItem() && cacheKey.stack.getItemDamage() == stack.getItemDamage() && cacheKey.side == side && Objects.equals(cacheKey.state, state);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = stack.getItem().hashCode();
+            result = 31 * result + stack.getItemDamage();
+            result = 31 * result + (side != null ? side.hashCode() : 0);
+            result = 31 * result + (state != null ? state.hashCode() : 0);
+            return result;
+        }
+    }
+
+    private static final LoadingCache<CacheKey, List<BakedQuad>> CACHE = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
+        @Override
+        public List<BakedQuad> load(CacheKey key) {
+            List<BakedQuad> quads = new ArrayList<>(key.base.getQuads(key.state, key.side, 0));
+
+            TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+
+            if (!key.stack.isEmpty()) {
+                IBlockState coverState = CoverManager.getBlockState(key.stack);
+
+                if (coverState != null) {
+                    IBakedModel coverModel = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(coverState);
+
+                    sprite = BakedModelCableCover.getSprite(coverModel, coverState, key.side, 0);
+                }
+            }
+
+            quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
+                .setFrom(0, 0, 0)
+                .setTo(16, 16, 2)
+
+                .addFace(EnumFacing.UP, 16, 0, 2, 0, sprite)
+                .addFace(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
+                .addFace(EnumFacing.EAST, 14, 16, 0, 16, sprite)
+                .addFace(EnumFacing.WEST, 0, 2, 0, 16, sprite)
+
+                .addFace(EnumFacing.NORTH, 0, 16, 0, 16, sprite)
+                .addFace(EnumFacing.SOUTH, 0, 16, 0, 16, sprite)
+
+                .bake()
+            );
+
+            return quads;
+        }
+    });
+
     @Nullable
     private ItemStack stack;
     private IBakedModel base;
@@ -36,40 +114,13 @@ public class BakedModelCover implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-        List<BakedQuad> quads = new ArrayList<>(base.getQuads(state, side, rand));
-
-        TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-
-        if (stack != null) {
-            ItemStack item = ItemCover.getItem(stack);
-
-            if (!item.isEmpty()) {
-                IBlockState coverState = CoverManager.getBlockState(item);
-
-                if (coverState != null) {
-                    IBakedModel coverModel = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(coverState);
-
-                    sprite = BakedModelCableCover.getSprite(coverModel, coverState, side, rand);
-                }
-            }
+        if (stack == null) {
+            return Collections.emptyList();
         }
 
-        quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-            .setFrom(0, 0, 0)
-            .setTo(16, 16, 2)
+        CacheKey key = new CacheKey(base, state, ItemCover.getItem(stack), side);
 
-            .addFace(EnumFacing.UP, 16, 0, 2, 0, sprite)
-            .addFace(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
-            .addFace(EnumFacing.EAST, 14, 16, 0, 16, sprite)
-            .addFace(EnumFacing.WEST, 0, 2, 0, 16, sprite)
-
-            .addFace(EnumFacing.NORTH, 0, 16, 0, 16, sprite)
-            .addFace(EnumFacing.SOUTH, 0, 16, 0, 16, sprite)
-
-            .bake()
-        );
-
-        return quads;
+        return CACHE.getUnchecked(key);
     }
 
     @Override
