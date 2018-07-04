@@ -166,13 +166,25 @@ public class BlockCable extends BlockNode {
     protected boolean hitCablePart(IBlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
         state = getActualState(state, world, pos);
 
-        return RenderUtils.isInBounds(CORE_AABB, hitX, hitY, hitZ) ||
+        if ((RenderUtils.isInBounds(CORE_AABB, hitX, hitY, hitZ)) ||
             (state.getValue(NORTH) && RenderUtils.isInBounds(NORTH_AABB, hitX, hitY, hitZ)) ||
             (state.getValue(EAST) && RenderUtils.isInBounds(EAST_AABB, hitX, hitY, hitZ)) ||
             (state.getValue(SOUTH) && RenderUtils.isInBounds(SOUTH_AABB, hitX, hitY, hitZ)) ||
             (state.getValue(WEST) && RenderUtils.isInBounds(WEST_AABB, hitX, hitY, hitZ)) ||
             (state.getValue(UP) && RenderUtils.isInBounds(UP_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(DOWN) && RenderUtils.isInBounds(DOWN_AABB, hitX, hitY, hitZ));
+            (state.getValue(DOWN) && RenderUtils.isInBounds(DOWN_AABB, hitX, hitY, hitZ))) {
+            return true;
+        }
+
+        List<AxisAlignedBB> coverAabbs = getCoverCollisions(world.getTileEntity(pos));
+
+        for (AxisAlignedBB coverAabb : coverAabbs) {
+            if (RenderUtils.isInBounds(coverAabb, hitX, hitY, hitZ)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public List<AxisAlignedBB> getCombinedCollisionBoxes(IBlockState state) {
@@ -208,6 +220,10 @@ public class BlockCable extends BlockNode {
     }
 
     public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
+        return getCoverCollisions(tile);
+    }
+
+    private List<AxisAlignedBB> getCoverCollisions(TileEntity tile) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
         if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable) {

@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStor
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
@@ -27,19 +28,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType, IExternalStorageContext {
+public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType, IExternalStorageContext, ICoverable {
     public static final String ID = "external_storage";
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_COVERS = "Covers";
 
     private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
@@ -50,6 +53,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private int type = IType.ITEMS;
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
+
+    private CoverManager coverManager = new CoverManager(this).setCanPlaceCoversOnFace(false);
 
     private List<IStorageExternal<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
     private List<IStorageExternal<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
@@ -94,6 +99,24 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     @Override
     public String getId() {
         return ID;
+    }
+
+    @Override
+    public void read(NBTTagCompound tag) {
+        super.read(tag);
+
+        if (tag.hasKey(NBT_COVERS)) {
+            coverManager.readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+        }
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound tag) {
+        super.write(tag);
+
+        tag.setTag(NBT_COVERS, coverManager.writeToNbt());
+
+        return tag;
     }
 
     @Override
@@ -317,5 +340,10 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     public List<IStorageExternal<FluidStack>> getFluidStorages() {
         return fluidStorages;
+    }
+
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
     }
 }

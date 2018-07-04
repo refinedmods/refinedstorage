@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -21,17 +22,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class NetworkNodeImporter extends NetworkNode implements IComparable, IFilterable, IType {
+public class NetworkNodeImporter extends NetworkNode implements IComparable, IFilterable, IType, ICoverable {
     public static final String ID = "importer";
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_COVERS = "Covers";
 
     private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
@@ -41,6 +44,8 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
+
+    private CoverManager coverManager = new CoverManager(this).setCanPlaceCoversOnFace(false);
 
     private int currentSlot;
 
@@ -147,6 +152,10 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
         super.read(tag);
 
         StackUtils.readItems(upgrades, 1, tag);
+
+        if (tag.hasKey(NBT_COVERS)) {
+            coverManager.readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+        }
     }
 
     @Override
@@ -159,6 +168,8 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
         super.write(tag);
 
         StackUtils.writeItems(upgrades, 1, tag);
+
+        tag.setTag(NBT_COVERS, coverManager.writeToNbt());
 
         return tag;
     }
@@ -223,5 +234,10 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     @Override
     public IItemHandler getFilterInventory() {
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    }
+
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
     }
 }

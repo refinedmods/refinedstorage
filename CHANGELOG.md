@@ -13,6 +13,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Removed "compare oredict" buttons on Exporter, Importer, etc. (raoulvdberge)
 - Added the Cutting Tool (raoulvdberge)
 - Renamed "Printed Processors" to "Cut Processors" (raoulvdberge)
+- Added covers (raoulvdberge)
 - Rewrote autocrafting (raoulvdberge)
 - Rewrote network energy storage (samtrion)
 - Autocrafting tasks that take longer than 5 seconds to CALCULATE (NOT execute) are automatically stopped to avoid server strain (raoulvdberge)

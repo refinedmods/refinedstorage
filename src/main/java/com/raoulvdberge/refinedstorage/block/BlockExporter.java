@@ -13,7 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BlockExporter extends BlockCable {
@@ -42,7 +41,7 @@ public class BlockExporter extends BlockCable {
 
     @Override
     public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
-        List<AxisAlignedBB> boxes = new ArrayList<>();
+        List<AxisAlignedBB> boxes = super.getCollisionBoxes(tile, state);
 
         switch (state.getValue(getDirection().getProperty())) {
             case NORTH:

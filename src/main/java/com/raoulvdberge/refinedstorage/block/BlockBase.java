@@ -4,10 +4,12 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -107,7 +109,13 @@ public abstract class BlockBase extends Block {
         if (!world.isRemote && getDirection() != null) {
             TileBase tile = (TileBase) world.getTileEntity(pos);
 
-            tile.setDirection(getDirection().cycle(tile.getDirection()));
+            EnumFacing newDirection = getDirection().cycle(tile.getDirection());
+
+            if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable && ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().hasCover(newDirection)) {
+                return false;
+            }
+
+            tile.setDirection(newDirection);
 
             WorldUtils.updateBlock(world, pos);
 

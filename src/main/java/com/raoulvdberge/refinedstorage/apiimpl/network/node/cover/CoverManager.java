@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -26,9 +27,10 @@ public class CoverManager {
     private static final String NBT_ITEM = "Item";
 
     private Map<EnumFacing, ItemStack> covers = new HashMap<>();
-    private INetworkNode node;
+    private NetworkNode node;
+    private boolean canPlaceCoversOnFace = true;
 
-    public CoverManager(INetworkNode node) {
+    public CoverManager(NetworkNode node) {
         this.node = node;
     }
 
@@ -56,6 +58,10 @@ public class CoverManager {
 
     public boolean setCover(EnumFacing facing, ItemStack stack) {
         if (isValidCover(stack) && !hasCover(facing)) {
+            if (facing == node.getDirection() && !canPlaceCoversOnFace) {
+                return false;
+            }
+
             covers.put(facing, stack);
 
             node.markDirty();
@@ -68,6 +74,12 @@ public class CoverManager {
         }
 
         return false;
+    }
+
+    public CoverManager setCanPlaceCoversOnFace(boolean canPlaceCoversOnFace) {
+        this.canPlaceCoversOnFace = canPlaceCoversOnFace;
+
+        return this;
     }
 
     public void readFromNbt(NBTTagList list) {
