@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
@@ -99,7 +100,7 @@ public class GridStackItem implements IGridStack {
     @Override
     public String getTooltip() {
         try {
-            return StackUtils.getItemTooltip(stack).stream().collect(Collectors.joining("\n"));
+            return RenderUtils.getItemTooltip(stack).stream().collect(Collectors.joining("\n"));
         } catch (Throwable t) {
             return "";
         }

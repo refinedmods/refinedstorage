@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -463,5 +464,20 @@ public final class RenderUtils {
             RenderHelper.enableStandardItemLighting();
             GlStateManager.enableRescaleNormal();
         }
+    }
+
+    public static List<String> getItemTooltip(ItemStack stack) {
+        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+
+        // From GuiScreen#getItemToolTip
+        for (int i = 0; i < lines.size(); ++i) {
+            if (i == 0) {
+                lines.set(i, stack.getRarity().rarityColor + lines.get(i));
+            } else {
+                lines.set(i, TextFormatting.GRAY + lines.get(i));
+            }
+        }
+
+        return lines;
     }
 }

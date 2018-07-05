@@ -5,15 +5,12 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
@@ -28,7 +25,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.function.Function;
 
 public final class StackUtils {
@@ -204,21 +200,6 @@ public final class StackUtils {
         }
 
         return Pair.of(null, null);
-    }
-
-    public static List<String> getItemTooltip(ItemStack stack) {
-        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
-
-        // From GuiScreen#getItemToolTip
-        for (int i = 0; i < lines.size(); ++i) {
-            if (i == 0) {
-                lines.set(i, stack.getRarity().rarityColor + lines.get(i));
-            } else {
-                lines.set(i, TextFormatting.GRAY + lines.get(i));
-            }
-        }
-
-        return lines;
     }
 
     private static final String NBT_ITEM_TYPE = "Type";
