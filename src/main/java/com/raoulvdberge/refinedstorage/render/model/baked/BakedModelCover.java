@@ -3,16 +3,12 @@ package com.raoulvdberge.refinedstorage.render.model.baked;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
-import com.raoulvdberge.refinedstorage.render.CubeBuilder;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -27,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class BakedModelCover implements IBakedModel {
+public class BakedModelCover extends BakedModelCableCover {
     private class CacheKey {
         private IBakedModel base;
         private IBlockState state;
@@ -71,32 +67,7 @@ public class BakedModelCover implements IBakedModel {
         public List<BakedQuad> load(CacheKey key) {
             List<BakedQuad> quads = new ArrayList<>(key.base.getQuads(key.state, key.side, 0));
 
-            TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-
-            if (!key.stack.isEmpty()) {
-                IBlockState coverState = CoverManager.getBlockState(key.stack);
-
-                if (coverState != null) {
-                    IBakedModel coverModel = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(coverState);
-
-                    sprite = BakedModelCableCover.getSprite(coverModel, coverState, key.side, 0);
-                }
-            }
-
-            quads.addAll(new CubeBuilder()
-                .from(0, 0, 0)
-                .to(16, 16, 2)
-
-                .face(EnumFacing.NORTH, 0, 16, 0, 16, sprite)
-                .face(EnumFacing.SOUTH, 0, 16, 0, 16, sprite)
-
-                .face(EnumFacing.UP, 0, 16, 0, 2, sprite)
-                .face(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
-                .face(EnumFacing.EAST, 14, 16, 0, 16, sprite)
-                .face(EnumFacing.WEST, 0, 2, 0, 16, sprite)
-
-                .bake()
-            );
+            addCover(quads, key.stack, EnumFacing.NORTH, key.side, 0, false, false, false, false);
 
             return quads;
         }
@@ -107,6 +78,8 @@ public class BakedModelCover implements IBakedModel {
     private IBakedModel base;
 
     public BakedModelCover(IBakedModel base, @Nullable ItemStack stack) {
+        super(base);
+
         this.base = base;
         this.stack = stack;
     }
@@ -120,12 +93,6 @@ public class BakedModelCover implements IBakedModel {
         CacheKey key = new CacheKey(base, state, ItemCover.getItem(stack), side);
 
         return CACHE.getUnchecked(key);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return base.getItemCameraTransforms();
     }
 
     @Override
@@ -143,35 +110,10 @@ public class BakedModelCover implements IBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion(IBlockState state) {
-        return base.isAmbientOcclusion(state);
-    }
-
-    @Override
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
         Pair<? extends IBakedModel, Matrix4f> matrix = base.handlePerspective(cameraTransformType);
         Pair<? extends IBakedModel, Matrix4f> bakedModel = ForgeHooksClient.handlePerspective(this, cameraTransformType);
 
         return Pair.of(bakedModel.getKey(), matrix.getRight());
-    }
-
-    @Override
-    public boolean isAmbientOcclusion() {
-        return base.isAmbientOcclusion();
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return base.isGui3d();
-    }
-
-    @Override
-    public boolean isBuiltInRenderer() {
-        return base.isBuiltInRenderer();
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return base.getParticleTexture();
     }
 }

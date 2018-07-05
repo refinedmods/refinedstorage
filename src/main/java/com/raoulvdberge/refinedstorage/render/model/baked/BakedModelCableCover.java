@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BakedModelCableCover implements IBakedModel {
+    private static TextureAtlasSprite GREY_SPRITE;
+
     private IBakedModel base;
-    private TextureAtlasSprite greySprite;
 
     public BakedModelCableCover(IBakedModel base) {
         this.base = base;
@@ -36,19 +37,25 @@ public class BakedModelCableCover implements IBakedModel {
         if (state != null) {
             IExtendedBlockState s = (IExtendedBlockState) state;
 
-            addCover(quads, s.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, s);
-            addCover(quads, s.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, s);
-            addCover(quads, s.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, s);
-            addCover(quads, s.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, s);
-            addCover(quads, s.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, s);
-            addCover(quads, s.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, s);
+            boolean hasUp = CoverManager.getBlockState(s.getValue(BlockCable.COVER_UP)) != null;
+            boolean hasDown = CoverManager.getBlockState(s.getValue(BlockCable.COVER_DOWN)) != null;
+
+            boolean hasEast = CoverManager.getBlockState(s.getValue(BlockCable.COVER_EAST)) != null;
+            boolean hasWest = CoverManager.getBlockState(s.getValue(BlockCable.COVER_WEST)) != null;
+
+            addCover(quads, s.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCover(quads, s.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCover(quads, s.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCover(quads, s.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCover(quads, s.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCover(quads, s.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, hasUp, hasDown, hasEast, hasWest);
         }
 
         return quads;
     }
 
-    private void addCover(List<BakedQuad> quads, @Nullable ItemStack coverStack, EnumFacing coverSide, EnumFacing side, long rand, IExtendedBlockState state) {
-        if (coverStack == null) {
+    protected static void addCover(List<BakedQuad> quads, @Nullable ItemStack coverStack, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
+        if (coverStack == null || coverStack.isEmpty()) {
             return;
         }
 
@@ -62,18 +69,14 @@ public class BakedModelCableCover implements IBakedModel {
 
         TextureAtlasSprite sprite = getSprite(coverModel, coverState, side, rand);
 
-        boolean hasUp = CoverManager.getBlockState(state.getValue(BlockCable.COVER_UP)) != null;
-        boolean hasDown = CoverManager.getBlockState(state.getValue(BlockCable.COVER_DOWN)) != null;
-
-        boolean hasEast = CoverManager.getBlockState(state.getValue(BlockCable.COVER_EAST)) != null;
-        boolean hasWest = CoverManager.getBlockState(state.getValue(BlockCable.COVER_WEST)) != null;
-
         ModelRotation modelRotation = ModelRotation.X0_Y0;
 
         int xStart = 0;
         int xEnd = 16;
         int xTexStart = 0;
         int xTexEnd = 16;
+        int xTexBackStart = 0;
+        int xTexBackEnd = 16;
 
         int yStart = 0;
         int yEnd = 16;
@@ -84,23 +87,27 @@ public class BakedModelCableCover implements IBakedModel {
             if (hasWest) {
                 xStart = 2;
                 xTexEnd = 14;
+                xTexBackStart = 2;
             }
 
             if (hasEast) {
                 xEnd = 14;
                 xTexStart = 2;
+                xTexBackEnd = 14;
             }
         } else if (coverSide == EnumFacing.SOUTH) {
             modelRotation = ModelRotation.X0_Y180;
 
             if (hasWest) {
-                xStart = 2;
+                xEnd = 14;
                 xTexStart = 2;
+                xTexBackEnd = 14;
             }
 
             if (hasEast) {
-                xEnd = 14;
+                xStart = 2;
                 xTexEnd = 14;
+                xTexBackStart = 2;
             }
         } else if (coverSide == EnumFacing.EAST) {
             modelRotation = ModelRotation.X0_Y90;
@@ -129,7 +136,7 @@ public class BakedModelCableCover implements IBakedModel {
             .to(xEnd, yEnd, 2)
 
             .face(EnumFacing.NORTH, xTexStart, xTexEnd, yTexStart, yTexEnd, sprite)
-            .face(EnumFacing.SOUTH, xTexStart, xTexEnd, yTexStart, yTexEnd, sprite)
+            .face(EnumFacing.SOUTH, xTexBackStart, xTexBackEnd, yTexStart, yTexEnd, sprite)
 
             .face(EnumFacing.UP, 0, 16, 0, 2, sprite)
             .face(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
@@ -141,20 +148,20 @@ public class BakedModelCableCover implements IBakedModel {
             .bake()
         );
 
-        if (this.greySprite == null) {
-            this.greySprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(RS.ID + ":blocks/generic_grey");
+        if (GREY_SPRITE == null) {
+            GREY_SPRITE = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(RS.ID + ":blocks/generic_grey");
         }
 
         quads.addAll(new CubeBuilder()
             .from(7, 7, 2)
             .to(9, 9, 6)
 
-            .face(EnumFacing.NORTH, 0, 0, 4, 4, greySprite)
-            .face(EnumFacing.EAST, 0, 0, 2, 4, greySprite)
-            .face(EnumFacing.SOUTH, 0, 0, 4, 4, greySprite)
-            .face(EnumFacing.WEST, 0, 0, 2, 4, greySprite)
-            .face(EnumFacing.UP, 0, 0, 4, 2, greySprite)
-            .face(EnumFacing.DOWN, 0, 0, 4, 2, greySprite)
+            .face(EnumFacing.NORTH, 0, 0, 4, 4, GREY_SPRITE)
+            .face(EnumFacing.EAST, 0, 0, 2, 4, GREY_SPRITE)
+            .face(EnumFacing.SOUTH, 0, 0, 4, 4, GREY_SPRITE)
+            .face(EnumFacing.WEST, 0, 0, 2, 4, GREY_SPRITE)
+            .face(EnumFacing.UP, 0, 0, 4, 2, GREY_SPRITE)
+            .face(EnumFacing.DOWN, 0, 0, 4, 2, GREY_SPRITE)
 
             .rotate(modelRotation)
 
@@ -164,7 +171,7 @@ public class BakedModelCableCover implements IBakedModel {
         );
     }
 
-    public static TextureAtlasSprite getSprite(IBakedModel coverModel, IBlockState coverState, EnumFacing facing, long rand) {
+    private static TextureAtlasSprite getSprite(IBakedModel coverModel, IBlockState coverState, EnumFacing facing, long rand) {
         TextureAtlasSprite sprite = null;
 
         BlockRenderLayer originalLayer = MinecraftForgeClient.getRenderLayer();

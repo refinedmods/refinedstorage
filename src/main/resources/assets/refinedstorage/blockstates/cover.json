@@ -11,7 +11,7 @@
   "variants": {
     "inventory": [
       {
-        "model": "refinedstorage:cover",
+        "model": "refinedstorage:cable_core",
         "transform": "forge:default-block"
       }
     ]
