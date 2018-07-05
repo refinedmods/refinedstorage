@@ -3,15 +3,11 @@ package com.raoulvdberge.refinedstorage.render.model.baked;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.block.BlockCable;
-import com.raoulvdberge.refinedstorage.render.QuadBuilder;
+import com.raoulvdberge.refinedstorage.render.CubeBuilder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -27,7 +23,7 @@ import java.util.List;
 
 public class BakedModelCableCover implements IBakedModel {
     private IBakedModel base;
-    private TextureAtlasSprite genericGreyTexture;
+    private TextureAtlasSprite greySprite;
 
     public BakedModelCableCover(IBakedModel base) {
         this.base = base;
@@ -72,127 +68,98 @@ public class BakedModelCableCover implements IBakedModel {
         boolean hasEast = CoverManager.getBlockState(state.getValue(BlockCable.COVER_EAST)) != null;
         boolean hasWest = CoverManager.getBlockState(state.getValue(BlockCable.COVER_WEST)) != null;
 
-        float handleAngle = 0;
-        EnumFacing.Axis handleAxis = EnumFacing.Axis.Y;
+        ModelRotation modelRotation = ModelRotation.X0_Y0;
+
+        int xStart = 0;
+        int xEnd = 16;
+        int xTexStart = 0;
+        int xTexEnd = 16;
+
+        int yStart = 0;
+        int yEnd = 16;
+        int yTexStart = 0;
+        int yTexEnd = 16;
 
         if (coverSide == EnumFacing.NORTH) {
-            quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-                .setFrom(hasWest ? 2 : 0, hasDown ? 2 : 0, 0)
-                .setTo(hasEast ? 14 : 16, hasUp ? 14 : 16, 2)
+            if (hasWest) {
+                xStart = 2;
+                xTexEnd = 14;
+            }
 
-                .addFace(EnumFacing.UP, 16, 0, 2, 0, sprite)
-                .addFace(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
-                .addFace(EnumFacing.EAST, 14, 16, 0, 16, sprite)
-                .addFace(EnumFacing.WEST, 0, 2, 0, 16, sprite)
-
-                .addFace(EnumFacing.NORTH, hasEast ? 2 : 0, hasWest ? 14 : 16, hasUp ? 2 : 0, hasDown ? 14 : 16, sprite)
-                .addFace(EnumFacing.SOUTH, hasEast ? 2 : 0, hasWest ? 14 : 16, hasUp ? 2 : 0, hasDown ? 14 : 16, sprite)
-
-                .bake()
-            );
+            if (hasEast) {
+                xEnd = 14;
+                xTexStart = 2;
+            }
         } else if (coverSide == EnumFacing.SOUTH) {
-            handleAngle = 180;
+            modelRotation = ModelRotation.X0_Y180;
 
-            quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-                .setFrom(hasEast ? 14 : 16, hasDown ? 2 : 0, 16)
-                .setTo(hasWest ? 2 : 0, hasUp ? 14 : 16, 14)
+            if (hasWest) {
+                xStart = 2;
+                xTexStart = 2;
+            }
 
-                .addFace(EnumFacing.UP, 0, 16, 14, 16, sprite)
-                .addFace(EnumFacing.DOWN, 16, 0, 2, 0, sprite)
-                .addFace(EnumFacing.EAST, 14, 16, 0, 16, sprite)
-                .addFace(EnumFacing.WEST, 0, 2, 0, 16, sprite)
-
-                .addFace(EnumFacing.NORTH, hasWest ? 2 : 0, hasEast ? 14 : 16, hasUp ? 2 : 0, hasDown ? 14 : 16, sprite)
-                .addFace(EnumFacing.SOUTH, hasWest ? 2 : 0, hasEast ? 14 : 16, hasUp ? 2 : 0, hasDown ? 14 : 16, sprite)
-
-                .bake()
-            );
+            if (hasEast) {
+                xEnd = 14;
+                xTexEnd = 14;
+            }
         } else if (coverSide == EnumFacing.EAST) {
-            handleAngle = 270;
-
-            quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-                .setFrom(14, hasDown ? 2 : 0, 0)
-                .setTo(16, hasUp ? 14 : 16, 16)
-
-                .addFace(EnumFacing.UP, 16, 14, 16, 0, sprite)
-                .addFace(EnumFacing.DOWN, 14, 16, 0, 16, sprite)
-                .addFace(EnumFacing.NORTH, 14, 16, 0, 16, sprite)
-                .addFace(EnumFacing.SOUTH, 0, 2, 0, 16, sprite)
-
-                .addFace(EnumFacing.EAST, 0, 16, hasUp ? 2 : 0, hasDown ? 14 : 16, sprite)
-                .addFace(EnumFacing.WEST, 0, 16, hasUp ? 2 : 0, hasDown ? 14 : 16, sprite)
-
-                .bake()
-            );
+            modelRotation = ModelRotation.X0_Y90;
         } else if (coverSide == EnumFacing.WEST) {
-            handleAngle = 90;
-
-            quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-                .setFrom(0, hasDown ? 2 : 0, 0)
-                .setTo(2, hasUp ? 14 : 16, 16)
-
-                .addFace(EnumFacing.UP, 2, 0, 16, 0, sprite)
-                .addFace(EnumFacing.DOWN, 0, 2, 0, 16, sprite)
-                .addFace(EnumFacing.NORTH, 0, 2, 0, 16, sprite)
-                .addFace(EnumFacing.SOUTH, 14, 16, 0, 16, sprite)
-
-                .addFace(EnumFacing.EAST, 0, 16, hasUp ? 2 : 0, hasDown ? 14 : 16, sprite)
-                .addFace(EnumFacing.WEST, 0, 16, hasUp ? 2 : 0, hasDown ? 14 : 16, sprite)
-
-                .bake()
-            );
+            modelRotation = ModelRotation.X0_Y270;
         } else if (coverSide == EnumFacing.DOWN) {
-            handleAxis = EnumFacing.Axis.Z;
-            handleAngle = 90;
-
-            quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-                .setFrom(0, 0, 0)
-                .setTo(16, 2, 16)
-
-                .addFace(EnumFacing.NORTH, 0, 16, 14, 16, sprite)
-                .addFace(EnumFacing.SOUTH, 0, 16, 14, 16, sprite)
-                .addFace(EnumFacing.EAST, 0, 16, 14, 16, sprite)
-                .addFace(EnumFacing.WEST, 0, 16, 14, 16, sprite)
-
-                .addFace(EnumFacing.UP, 16, 0, 16, 0, sprite)
-                .addFace(EnumFacing.DOWN, 0, 16, 0, 16, sprite)
-
-                .bake()
-            );
+            modelRotation = ModelRotation.X90_Y0;
         } else if (coverSide == EnumFacing.UP) {
-            handleAxis = EnumFacing.Axis.Z;
-            handleAngle = 270;
-
-            quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-                .setFrom(0, 14, 0)
-                .setTo(16, 16, 16)
-
-                .addFace(EnumFacing.NORTH, 0, 16, 0, 2, sprite)
-                .addFace(EnumFacing.SOUTH, 0, 16, 0, 2, sprite)
-                .addFace(EnumFacing.EAST, 0, 16, 0, 2, sprite)
-                .addFace(EnumFacing.WEST, 0, 16, 0, 2, sprite)
-
-                .addFace(EnumFacing.UP, 16, 0, 16, 0, sprite)
-                .addFace(EnumFacing.DOWN, 0, 16, 0, 16, sprite)
-
-                .bake()
-            );
+            modelRotation = ModelRotation.X270_Y0;
         }
 
-        if (this.genericGreyTexture == null) {
-            this.genericGreyTexture = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(RS.ID + ":blocks/generic_grey");
+        if (coverSide.getAxis() == EnumFacing.Axis.X || coverSide.getAxis() == EnumFacing.Axis.Z) {
+            if (hasDown) {
+                yStart = 2;
+                yTexEnd = 14;
+            }
+
+            if (hasUp) {
+                yEnd = 14;
+                yTexStart = 2;
+            }
         }
 
-        quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-            .setFrom(7, 7, 2)
-            .setTo(9, 9, 6)
-            .addFace(EnumFacing.NORTH, 0, 0, 4, 4, genericGreyTexture)
-            .addFace(EnumFacing.EAST, 0, 0, 2, 4, genericGreyTexture)
-            .addFace(EnumFacing.SOUTH, 0, 0, 4, 4, genericGreyTexture)
-            .addFace(EnumFacing.WEST, 0, 0, 2, 4, genericGreyTexture)
-            .addFace(EnumFacing.UP, 0, 0, 4, 2, genericGreyTexture)
-            .addFace(EnumFacing.DOWN, 0, 0, 4, 2, genericGreyTexture)
-            .rotate(handleAxis, handleAngle)
+        quads.addAll(new CubeBuilder()
+            .from(xStart, yStart, 0)
+            .to(xEnd, yEnd, 2)
+
+            .face(EnumFacing.NORTH, xTexStart, xTexEnd, yTexStart, yTexEnd, sprite)
+            .face(EnumFacing.SOUTH, xTexStart, xTexEnd, yTexStart, yTexEnd, sprite)
+
+            .face(EnumFacing.UP, 0, 16, 0, 2, sprite)
+            .face(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
+            .face(EnumFacing.EAST, 14, 16, 0, 16, sprite)
+            .face(EnumFacing.WEST, 0, 2, 0, 16, sprite)
+
+            .rotate(modelRotation)
+
+            .bake()
+        );
+
+        if (this.greySprite == null) {
+            this.greySprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(RS.ID + ":blocks/generic_grey");
+        }
+
+        quads.addAll(new CubeBuilder()
+            .from(7, 7, 2)
+            .to(9, 9, 6)
+
+            .face(EnumFacing.NORTH, 0, 0, 4, 4, greySprite)
+            .face(EnumFacing.EAST, 0, 0, 2, 4, greySprite)
+            .face(EnumFacing.SOUTH, 0, 0, 4, 4, greySprite)
+            .face(EnumFacing.WEST, 0, 0, 2, 4, greySprite)
+            .face(EnumFacing.UP, 0, 0, 4, 2, greySprite)
+            .face(EnumFacing.DOWN, 0, 0, 4, 2, greySprite)
+
+            .rotate(modelRotation)
+
+            .setUvLocked(false)
+
             .bake()
         );
     }

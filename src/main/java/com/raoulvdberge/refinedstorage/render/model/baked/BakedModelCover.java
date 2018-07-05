@@ -5,7 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
-import com.raoulvdberge.refinedstorage.render.QuadBuilder;
+import com.raoulvdberge.refinedstorage.render.CubeBuilder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -84,17 +83,17 @@ public class BakedModelCover implements IBakedModel {
                 }
             }
 
-            quads.addAll(QuadBuilder.withFormat(DefaultVertexFormats.ITEM)
-                .setFrom(0, 0, 0)
-                .setTo(16, 16, 2)
+            quads.addAll(new CubeBuilder()
+                .from(0, 0, 0)
+                .to(16, 16, 2)
 
-                .addFace(EnumFacing.UP, 16, 0, 2, 0, sprite)
-                .addFace(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
-                .addFace(EnumFacing.EAST, 14, 16, 0, 16, sprite)
-                .addFace(EnumFacing.WEST, 0, 2, 0, 16, sprite)
+                .face(EnumFacing.NORTH, 0, 16, 0, 16, sprite)
+                .face(EnumFacing.SOUTH, 0, 16, 0, 16, sprite)
 
-                .addFace(EnumFacing.NORTH, 0, 16, 0, 16, sprite)
-                .addFace(EnumFacing.SOUTH, 0, 16, 0, 16, sprite)
+                .face(EnumFacing.UP, 0, 16, 0, 2, sprite)
+                .face(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
+                .face(EnumFacing.EAST, 14, 16, 0, 16, sprite)
+                .face(EnumFacing.WEST, 0, 2, 0, 16, sprite)
 
                 .bake()
             );
