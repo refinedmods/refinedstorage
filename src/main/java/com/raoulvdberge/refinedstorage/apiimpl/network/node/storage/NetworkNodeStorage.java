@@ -53,7 +53,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.BLACKLIST;
 
-    private UUID storageId;
+    private UUID storageId = UUID.randomUUID();
     private IStorageDisk<ItemStack> storage;
 
     public NetworkNodeStorage(World world, BlockPos pos) {
@@ -74,6 +74,10 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
 
     @Override
     public void addItemStorages(List<IStorage<ItemStack>> storages) {
+        if (storage == null) {
+            loadStorage();
+        }
+
         storages.add(storage);
     }
 

@@ -23,7 +23,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class BlockFluidStorage extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", FluidStorageType.class);
@@ -90,8 +89,6 @@ public class BlockFluidStorage extends BlockNode {
 
             if (stack.hasTagCompound() && stack.getTagCompound().hasUniqueId(NetworkNodeFluidStorage.NBT_ID)) {
                 storage.setStorageId(stack.getTagCompound().getUniqueId(NetworkNodeFluidStorage.NBT_ID));
-            } else {
-                storage.setStorageId(UUID.randomUUID());
             }
 
             storage.loadStorage();

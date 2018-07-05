@@ -53,7 +53,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.BLACKLIST;
 
-    private UUID storageId;
+    private UUID storageId = UUID.randomUUID();
     private IStorageDisk<FluidStack> storage;
 
     public NetworkNodeFluidStorage(World world, BlockPos pos) {
@@ -79,6 +79,10 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
     @Override
     public void addFluidStorages(List<IStorage<FluidStack>> storages) {
+        if (storage == null) {
+            loadStorage();
+        }
+
         storages.add(storage);
     }
 
@@ -176,7 +180,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         if (type == null && world != null) {
             IBlockState state = world.getBlockState(pos);
             if (state.getBlock() == RSBlocks.FLUID_STORAGE) {
-                type = (FluidStorageType) state.getValue(BlockFluidStorage.TYPE);                
+                type = (FluidStorageType) state.getValue(BlockFluidStorage.TYPE);
             }
         }
 

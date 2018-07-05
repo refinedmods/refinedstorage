@@ -23,7 +23,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class BlockStorage extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", ItemStorageType.class);
@@ -90,8 +89,6 @@ public class BlockStorage extends BlockNode {
 
             if (stack.hasTagCompound() && stack.getTagCompound().hasUniqueId(NetworkNodeStorage.NBT_ID)) {
                 storage.setStorageId(stack.getTagCompound().getUniqueId(NetworkNodeStorage.NBT_ID));
-            } else {
-                storage.setStorageId(UUID.randomUUID());
             }
 
             storage.loadStorage();
