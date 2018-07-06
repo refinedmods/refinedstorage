@@ -135,7 +135,8 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
     private static final String NBT_OUTPUTS = "Outputs";
     private static final String NBT_SLOT = "Slot_%d";
 
-    public static boolean migratePattern(ItemStack pattern) {
+    @Override
+    public boolean migratePattern(ItemStack pattern) {
         NBTTagCompound tag = pattern.getTagCompound();
 
         if (pattern.hasTagCompound() && !tag.hasKey(ItemPattern.NBT_PROCESSING)) {
@@ -180,7 +181,8 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
         return false;
     }
 
-    public static boolean migratePatternInventory(IItemHandler handler) {
+    @Override
+    public boolean migratePatternInventory(IItemHandler handler) {
         boolean migrated = false;
 
         for (int i = 0; i < handler.getSlots(); ++i) {

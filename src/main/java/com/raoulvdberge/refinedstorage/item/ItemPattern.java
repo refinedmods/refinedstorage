@@ -5,8 +5,8 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -182,7 +182,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         super.onUpdate(stack, world, entity, slot, isSelected);
 
         if (!world.isRemote) {
-            OneSixMigrationHelper.migratePattern(stack);
+            API.instance().getOneSixMigrationHelper().migratePattern(stack);
         }
     }
 }

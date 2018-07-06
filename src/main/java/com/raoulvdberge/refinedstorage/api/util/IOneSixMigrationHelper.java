@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.api.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.UUID;
@@ -26,7 +27,7 @@ public interface IOneSixMigrationHelper {
     boolean migrateDisk(World world, ItemStack disk);
 
     /**
-     * Migrates an entire inventory.
+     * Migrates an entire disk inventory.
      * Loops over every slot in the inventory and calls {@link #migrateDisk(World, ItemStack)}.
      * All the docs from {@link #migrateDisk(World, ItemStack)} apply here as well!
      * Don't forget to mark your tile dirty if this call returns true!
@@ -36,4 +37,23 @@ public interface IOneSixMigrationHelper {
      * @return true if it migrated something in the inventory, false otherwise
      */
     boolean migrateDiskInventory(World world, IItemHandlerModifiable handler);
+
+    /**
+     * Migrates an entire pattern inventory.
+     * Returns true if there were changes, and the caller should then mark their inventory dirty.
+     *
+     * @param handler the pattern inventory
+     * @return true if a pattern has been converted, false otherwise
+     */
+    boolean migratePatternInventory(IItemHandler handler);
+
+    /**
+     * Migrates a single pattern stack.
+     * Returns true if the stack was modified, and the caller should then mark their inventory dirty.
+     * You most likely need {@link #migratePatternInventory(IItemHandler)}.
+     *
+     * @param pattern the pattern
+     * @return true if the pattern has been converted, false otherwise
+     */
+    boolean migratePattern(ItemStack pattern);
 }

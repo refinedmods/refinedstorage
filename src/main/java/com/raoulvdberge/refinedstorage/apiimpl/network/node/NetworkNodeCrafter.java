@@ -7,7 +7,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
@@ -134,7 +133,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         StackUtils.readItems(patterns, 0, tag);
 
-        if (OneSixMigrationHelper.migratePatternInventory(patterns)) {
+        if (API.instance().getOneSixMigrationHelper().migratePatternInventory(patterns)) {
             markDirty();
         }
 
