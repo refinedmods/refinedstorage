@@ -22,4 +22,5 @@ public final class RSItems {
     public static final ItemSecurityCard SECURITY_CARD = new ItemSecurityCard();
     public static final ItemCuttingTool CUTTING_TOOL = new ItemCuttingTool();
     public static final ItemCover COVER = new ItemCover();
+    public static final ItemHollowCover HOLLOW_COVER = new ItemHollowCover();
 }

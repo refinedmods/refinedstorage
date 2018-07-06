@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
@@ -14,7 +15,6 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
@@ -31,12 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockCable extends BlockNode {
-    public static final PropertyObject<ItemStack> COVER_NORTH = new PropertyObject<>("cover_north", ItemStack.class);
-    public static final PropertyObject<ItemStack> COVER_EAST = new PropertyObject<>("cover_east", ItemStack.class);
-    public static final PropertyObject<ItemStack> COVER_SOUTH = new PropertyObject<>("cover_south", ItemStack.class);
-    public static final PropertyObject<ItemStack> COVER_WEST = new PropertyObject<>("cover_west", ItemStack.class);
-    public static final PropertyObject<ItemStack> COVER_UP = new PropertyObject<>("cover_up", ItemStack.class);
-    public static final PropertyObject<ItemStack> COVER_DOWN = new PropertyObject<>("cover_down", ItemStack.class);
+    public static final PropertyObject<Cover> COVER_NORTH = new PropertyObject<>("cover_north", Cover.class);
+    public static final PropertyObject<Cover> COVER_EAST = new PropertyObject<>("cover_east", Cover.class);
+    public static final PropertyObject<Cover> COVER_SOUTH = new PropertyObject<>("cover_south", Cover.class);
+    public static final PropertyObject<Cover> COVER_WEST = new PropertyObject<>("cover_west", Cover.class);
+    public static final PropertyObject<Cover> COVER_UP = new PropertyObject<>("cover_up", Cover.class);
+    public static final PropertyObject<Cover> COVER_DOWN = new PropertyObject<>("cover_down", Cover.class);
 
     public static final AxisAlignedBB HOLDER_NORTH_AABB = RenderUtils.getBounds(7, 7, 2, 9, 9, 6);
     public static final AxisAlignedBB HOLDER_EAST_AABB = RenderUtils.getBounds(10, 7, 7, 14, 9, 9);
@@ -136,16 +136,20 @@ public class BlockCable extends BlockNode {
 
         INetworkNode node = ((TileNode) tile).getNode();
 
-        if (node instanceof ICoverable && ((ICoverable) node).getCoverManager().hasCover(direction)) {
-            return false;
+        if (node instanceof ICoverable) {
+            Cover cover = ((ICoverable) node).getCoverManager().getCover(direction);
+
+            if (cover != null && !cover.isHollow()) {
+                return false;
+            }
         }
 
         TileEntity otherTile = world.getTileEntity(pos.offset(direction));
 
-        if (otherTile instanceof TileNode) {
-            INetworkNode otherNode = ((TileNode) otherTile).getNode();
+        if (otherTile instanceof TileNode && ((TileNode) otherTile).getNode() instanceof ICoverable) {
+            Cover cover = ((ICoverable) ((TileNode) otherTile).getNode()).getCoverManager().getCover(direction.getOpposite());
 
-            if (otherNode instanceof ICoverable && ((ICoverable) otherNode).getCoverManager().hasCover(direction.getOpposite())) {
+            if (cover != null && !cover.isHollow()) {
                 return false;
             }
         }
@@ -229,64 +233,77 @@ public class BlockCable extends BlockNode {
         if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable) {
             CoverManager coverManager = ((ICoverable) ((TileNode) tile).getNode()).getCoverManager();
 
-            boolean hasUp = coverManager.hasCover(EnumFacing.UP);
-            boolean hasDown = coverManager.hasCover(EnumFacing.DOWN);
+            Cover coverNorth = coverManager.getCover(EnumFacing.NORTH);
+            Cover coverEast = coverManager.getCover(EnumFacing.EAST);
+            Cover coverSouth = coverManager.getCover(EnumFacing.SOUTH);
+            Cover coverWest = coverManager.getCover(EnumFacing.WEST);
+            Cover coverUp = coverManager.getCover(EnumFacing.UP);
+            Cover coverDown = coverManager.getCover(EnumFacing.DOWN);
 
-            boolean hasEast = coverManager.hasCover(EnumFacing.EAST);
-            boolean hasWest = coverManager.hasCover(EnumFacing.WEST);
-
-            if (coverManager.hasCover(EnumFacing.NORTH)) {
+            if (coverNorth != null) {
                 boxes.add(RenderUtils.getBounds(
-                    hasWest ? 2 : 0, hasDown ? 2 : 0, 0,
-                    hasEast ? 14 : 16, hasUp ? 14 : 16, 2
+                    coverWest != null ? 2 : 0, coverDown != null ? 2 : 0, 0,
+                    coverEast != null ? 14 : 16, coverUp != null ? 14 : 16, 2
                 ));
 
-                boxes.add(HOLDER_NORTH_AABB);
+                if (!coverNorth.isHollow()) {
+                    boxes.add(HOLDER_NORTH_AABB);
+                }
             }
 
-            if (hasEast) {
+            if (coverEast != null) {
                 boxes.add(RenderUtils.getBounds(
-                    14, hasDown ? 2 : 0, 0,
-                    16, hasUp ? 14 : 16, 16
+                    14, coverDown != null ? 2 : 0, 0,
+                    16, coverUp != null ? 14 : 16, 16
                 ));
 
-                boxes.add(HOLDER_EAST_AABB);
+                if (!coverEast.isHollow()) {
+                    boxes.add(HOLDER_EAST_AABB);
+                }
             }
 
-            if (coverManager.hasCover(EnumFacing.SOUTH)) {
+            if (coverSouth != null) {
                 boxes.add(RenderUtils.getBounds(
-                    hasEast ? 14 : 16, hasDown ? 2 : 0, 16,
-                    hasWest ? 2 : 0, hasUp ? 14 : 16, 14
+                    coverEast != null ? 14 : 16, coverDown != null ? 2 : 0, 16,
+                    coverWest != null ? 2 : 0, coverUp != null ? 14 : 16, 14
                 ));
 
-                boxes.add(HOLDER_SOUTH_AABB);
+                if (!coverSouth.isHollow()) {
+                    boxes.add(HOLDER_SOUTH_AABB);
+                }
             }
 
-            if (hasWest) {
+            if (coverWest != null) {
                 boxes.add(RenderUtils.getBounds(
-                    0, hasDown ? 2 : 0, 0,
-                    2, hasUp ? 14 : 16, 16
+                    0, coverDown != null ? 2 : 0, 0,
+                    2, coverUp != null ? 14 : 16, 16
                 ));
 
-                boxes.add(HOLDER_WEST_AABB);
+                if (!coverWest.isHollow()) {
+                    boxes.add(HOLDER_WEST_AABB);
+                }
             }
 
-            if (hasUp) {
+            if (coverUp != null) {
                 boxes.add(RenderUtils.getBounds(
                     0, 14, 0,
                     16, 16, 16
                 ));
 
-                boxes.add(HOLDER_UP_AABB);
+                if (!coverUp.isHollow()) {
+                    boxes.add(HOLDER_UP_AABB);
+                }
             }
 
-            if (hasDown) {
+            if (coverDown != null) {
                 boxes.add(RenderUtils.getBounds(
                     0, 0, 0,
                     16, 2, 16
                 ));
 
-                boxes.add(HOLDER_DOWN_AABB);
+                if (!coverDown.isHollow()) {
+                    boxes.add(HOLDER_DOWN_AABB);
+                }
             }
         }
 

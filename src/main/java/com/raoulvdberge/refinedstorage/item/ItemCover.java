@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -31,10 +31,14 @@ import java.util.List;
 public class ItemCover extends ItemBase {
     private static final String NBT_ITEM = "Item";
 
-    public ItemCover() {
-        super("cover");
+    public ItemCover(String name) {
+        super(name);
 
         setCreativeTab(RS.INSTANCE.coversTab);
+    }
+
+    public ItemCover() {
+        this("cover");
     }
 
     public static void setItem(ItemStack cover, ItemStack item) {
@@ -84,7 +88,7 @@ public class ItemCover extends ItemBase {
 
             for (ItemStack subBlock : subBlocks) {
                 if (CoverManager.isValidCover(subBlock)) {
-                    ItemStack stack = new ItemStack(RSItems.COVER);
+                    ItemStack stack = new ItemStack(this);
 
                     setItem(stack, subBlock);
 
@@ -120,7 +124,7 @@ public class ItemCover extends ItemBase {
                 return EnumActionResult.FAIL;
             }
 
-            if (((ICoverable) node).getCoverManager().setCover(facing, getItem(stack))) {
+            if (((ICoverable) node).getCoverManager().setCover(facing, createCover(getItem(stack)))) {
                 player.getHeldItem(hand).shrink(1);
 
                 WorldUtils.updateBlock(world, pos);
@@ -136,5 +140,9 @@ public class ItemCover extends ItemBase {
 
     private boolean canPlaceOn(TileEntity tile) {
         return tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable;
+    }
+
+    protected Cover createCover(ItemStack stack) {
+        return new Cover(stack, false);
     }
 }

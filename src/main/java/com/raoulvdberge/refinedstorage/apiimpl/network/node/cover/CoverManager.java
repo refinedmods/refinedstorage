@@ -27,8 +27,9 @@ import java.util.Map;
 public class CoverManager {
     private static final String NBT_DIRECTION = "Direction";
     private static final String NBT_ITEM = "Item";
+    private static final String NBT_HOLLOW = "Hollow";
 
-    private Map<EnumFacing, ItemStack> covers = new HashMap<>();
+    private Map<EnumFacing, Cover> covers = new HashMap<>();
     private NetworkNode node;
     private boolean canPlaceCoversOnFace = true;
 
@@ -37,20 +38,25 @@ public class CoverManager {
     }
 
     public boolean canConduct(EnumFacing direction) {
-        if (hasCover(direction)) {
+        Cover cover = getCover(direction);
+        if (cover != null && !cover.isHollow()) {
             return false;
         }
 
         INetworkNode neighbor = API.instance().getNetworkNodeManager(node.getWorld()).getNode(node.getPos().offset(direction));
-        if (neighbor instanceof ICoverable && ((ICoverable) neighbor).getCoverManager().hasCover(direction.getOpposite())) {
-            return false;
+        if (neighbor instanceof ICoverable) {
+            cover = ((ICoverable) neighbor).getCoverManager().getCover(direction.getOpposite());
+
+            if (cover != null && !cover.isHollow()) {
+                return false;
+            }
         }
 
         return true;
     }
 
     @Nullable
-    public ItemStack getCover(EnumFacing facing) {
+    public Cover getCover(EnumFacing facing) {
         return covers.get(facing);
     }
 
@@ -58,13 +64,13 @@ public class CoverManager {
         return covers.containsKey(facing);
     }
 
-    public boolean setCover(EnumFacing facing, ItemStack stack) {
-        if (isValidCover(stack) && !hasCover(facing)) {
-            if (facing == node.getDirection() && !canPlaceCoversOnFace) {
+    public boolean setCover(EnumFacing facing, Cover cover) {
+        if (isValidCover(cover.getStack()) && !hasCover(facing)) {
+            if (facing == node.getDirection() && !canPlaceCoversOnFace && !cover.isHollow()) {
                 return false;
             }
 
-            covers.put(facing, stack);
+            covers.put(facing, cover);
 
             node.markDirty();
 
@@ -78,12 +84,6 @@ public class CoverManager {
         return false;
     }
 
-    public CoverManager setCanPlaceCoversOnFace(boolean canPlaceCoversOnFace) {
-        this.canPlaceCoversOnFace = canPlaceCoversOnFace;
-
-        return this;
-    }
-
     public void readFromNbt(NBTTagList list) {
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
@@ -91,9 +91,10 @@ public class CoverManager {
             if (tag.hasKey(NBT_DIRECTION) && tag.hasKey(NBT_ITEM)) {
                 EnumFacing direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
                 ItemStack item = new ItemStack(tag.getCompoundTag(NBT_ITEM));
+                boolean hollow = tag.hasKey(NBT_HOLLOW) && tag.getBoolean(NBT_HOLLOW);
 
                 if (isValidCover(item)) {
-                    covers.put(direction, item);
+                    covers.put(direction, new Cover(item, hollow));
                 }
             }
         }
@@ -102,11 +103,12 @@ public class CoverManager {
     public NBTTagList writeToNbt() {
         NBTTagList list = new NBTTagList();
 
-        for (Map.Entry<EnumFacing, ItemStack> entry : covers.entrySet()) {
+        for (Map.Entry<EnumFacing, Cover> entry : covers.entrySet()) {
             NBTTagCompound tag = new NBTTagCompound();
 
             tag.setInteger(NBT_DIRECTION, entry.getKey().ordinal());
-            tag.setTag(NBT_ITEM, entry.getValue().serializeNBT());
+            tag.setTag(NBT_ITEM, entry.getValue().getStack().serializeNBT());
+            tag.setBoolean(NBT_HOLLOW, entry.getValue().isHollow());
 
             list.appendTag(tag);
         }
@@ -119,10 +121,10 @@ public class CoverManager {
 
         int i = 0;
 
-        for (Map.Entry<EnumFacing, ItemStack> entry : covers.entrySet()) {
-            ItemStack cover = new ItemStack(RSItems.COVER);
+        for (Map.Entry<EnumFacing, Cover> entry : covers.entrySet()) {
+            ItemStack cover = new ItemStack(entry.getValue().isHollow() ? RSItems.HOLLOW_COVER : RSItems.COVER);
 
-            ItemCover.setItem(cover, entry.getValue());
+            ItemCover.setItem(cover, entry.getValue().getStack());
 
             handler.setStackInSlot(i++, cover);
         }
@@ -180,5 +182,11 @@ public class CoverManager {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public CoverManager setCanPlaceCoversOnFace(boolean canPlaceCoversOnFace) {
+        this.canPlaceCoversOnFace = canPlaceCoversOnFace;
+
+        return this;
     }
 }

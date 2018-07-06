@@ -18,8 +18,8 @@ import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewRespons
 import com.raoulvdberge.refinedstorage.render.model.ModelDiskDrive;
 import com.raoulvdberge.refinedstorage.render.model.ModelDiskManipulator;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCableCover;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCover;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelPattern;
+import com.raoulvdberge.refinedstorage.render.model.loader.CustomModelLoaderCover;
 import com.raoulvdberge.refinedstorage.render.model.loader.CustomModelLoaderDefault;
 import com.raoulvdberge.refinedstorage.render.statemapper.StateMapperCTM;
 import com.raoulvdberge.refinedstorage.render.tesr.TileEntitySpecialRendererStorageMonitor;
@@ -231,6 +231,7 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE_MONITOR), 0, new ModelResourceLocation("refinedstorage:storage_monitor", "connected=false,direction=north"));
         ModelLoader.setCustomModelResourceLocation(RSItems.COVER, 0, new ModelResourceLocation("refinedstorage:cover", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RSItems.HOLLOW_COVER, 0, new ModelResourceLocation("refinedstorage:hollow_cover", "inventory"));
 
         ModelLoaderRegistry.registerLoader(new CustomModelLoaderDefault(new ResourceLocation(RS.ID, "disk_drive"), ModelDiskDrive::new));
         ModelLoaderRegistry.registerLoader(new CustomModelLoaderDefault(new ResourceLocation(RS.ID, "disk_manipulator"), ModelDiskManipulator::new));
@@ -291,6 +292,8 @@ public class ProxyClient extends ProxyCommon {
                 return new ModelResourceLocation("refinedstorage:controller" + (Loader.isModLoaded("ctm") ? "_glow" : ""), "energy_type=" + state.getValue(BlockController.ENERGY_TYPE));
             }
         });
+
+        ModelLoaderRegistry.registerLoader(new CustomModelLoaderCover());
 
         ModelLoader.setCustomStateMapper(RSBlocks.PORTABLE_GRID, new StateMap.Builder().ignore(BlockPortableGrid.TYPE).build());
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), stack -> {
@@ -374,8 +377,6 @@ public class ProxyClient extends ProxyCommon {
                     e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
                 } else if (model.getResourcePath().equals("cable") || model.getResourcePath().equals("exporter") || model.getResourcePath().equals("importer") || model.getResourcePath().equals("external_storage")) {
                     e.getModelRegistry().putObject(model, new BakedModelCableCover(e.getModelRegistry().getObject(model)));
-                } else if (model.getResourcePath().equals("cover")) {
-                    e.getModelRegistry().putObject(model, new BakedModelCover(e.getModelRegistry().getObject(model), null));
                 }
             }
         }

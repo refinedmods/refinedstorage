@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.block.BlockCable;
 import com.raoulvdberge.refinedstorage.render.CubeBuilder;
@@ -8,7 +9,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -37,29 +37,37 @@ public class BakedModelCableCover implements IBakedModel {
         if (state != null) {
             IExtendedBlockState s = (IExtendedBlockState) state;
 
-            boolean hasUp = CoverManager.getBlockState(s.getValue(BlockCable.COVER_UP)) != null;
-            boolean hasDown = CoverManager.getBlockState(s.getValue(BlockCable.COVER_DOWN)) != null;
+            boolean hasUp = s.getValue(BlockCable.COVER_UP) != null;
+            boolean hasDown = s.getValue(BlockCable.COVER_DOWN) != null;
 
-            boolean hasEast = CoverManager.getBlockState(s.getValue(BlockCable.COVER_EAST)) != null;
-            boolean hasWest = CoverManager.getBlockState(s.getValue(BlockCable.COVER_WEST)) != null;
+            boolean hasEast = s.getValue(BlockCable.COVER_EAST) != null;
+            boolean hasWest = s.getValue(BlockCable.COVER_WEST) != null;
 
-            addCover(quads, s.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCover(quads, s.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCover(quads, s.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCover(quads, s.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCover(quads, s.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCover(quads, s.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, hasUp, hasDown, hasEast, hasWest);
         }
 
         return quads;
     }
 
-    protected static void addCover(List<BakedQuad> quads, @Nullable ItemStack coverStack, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
-        if (coverStack == null || coverStack.isEmpty()) {
+    protected static void addCoverOrHollow(List<BakedQuad> quads, @Nullable Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
+        if (cover == null) {
             return;
         }
 
-        IBlockState coverState = CoverManager.getBlockState(coverStack);
+        if (cover.isHollow()) {
+            addHollowCover(quads, cover, coverSide, side, rand, hasUp, hasDown, hasEast, hasWest);
+        } else {
+            addCover(quads, cover, coverSide, side, rand, hasUp, hasDown, hasEast, hasWest);
+        }
+    }
+
+    private static void addCover(List<BakedQuad> quads, Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
+        IBlockState coverState = CoverManager.getBlockState(cover.getStack());
 
         if (coverState == null) {
             return;
@@ -69,17 +77,20 @@ public class BakedModelCableCover implements IBakedModel {
 
         TextureAtlasSprite sprite = getSprite(coverModel, coverState, side, rand);
 
-        ModelRotation modelRotation = ModelRotation.X0_Y0;
+        ModelRotation rotation = ModelRotation.X0_Y0;
 
         int xStart = 0;
         int xEnd = 16;
+
         int xTexStart = 0;
         int xTexEnd = 16;
+
         int xTexBackStart = 0;
         int xTexBackEnd = 16;
 
         int yStart = 0;
         int yEnd = 16;
+
         int yTexStart = 0;
         int yTexEnd = 16;
 
@@ -96,7 +107,7 @@ public class BakedModelCableCover implements IBakedModel {
                 xTexBackEnd = 14;
             }
         } else if (coverSide == EnumFacing.SOUTH) {
-            modelRotation = ModelRotation.X0_Y180;
+            rotation = ModelRotation.X0_Y180;
 
             if (hasWest) {
                 xEnd = 14;
@@ -110,16 +121,16 @@ public class BakedModelCableCover implements IBakedModel {
                 xTexBackStart = 2;
             }
         } else if (coverSide == EnumFacing.EAST) {
-            modelRotation = ModelRotation.X0_Y90;
+            rotation = ModelRotation.X0_Y90;
         } else if (coverSide == EnumFacing.WEST) {
-            modelRotation = ModelRotation.X0_Y270;
+            rotation = ModelRotation.X0_Y270;
         } else if (coverSide == EnumFacing.DOWN) {
-            modelRotation = ModelRotation.X90_Y0;
+            rotation = ModelRotation.X90_Y0;
         } else if (coverSide == EnumFacing.UP) {
-            modelRotation = ModelRotation.X270_Y0;
+            rotation = ModelRotation.X270_Y0;
         }
 
-        if (coverSide.getAxis() == EnumFacing.Axis.X || coverSide.getAxis() == EnumFacing.Axis.Z) {
+        if (coverSide.getAxis() != EnumFacing.Axis.Y) {
             if (hasDown) {
                 yStart = 2;
                 yTexEnd = 14;
@@ -140,14 +151,168 @@ public class BakedModelCableCover implements IBakedModel {
 
             .face(EnumFacing.UP, 0, 16, 0, 2, sprite)
             .face(EnumFacing.DOWN, 0, 16, 14, 16, sprite)
-            .face(EnumFacing.EAST, 14, 16, 0, 16, sprite)
-            .face(EnumFacing.WEST, 0, 2, 0, 16, sprite)
+            .face(EnumFacing.EAST, 14, 16, yTexStart, yTexEnd, sprite)
+            .face(EnumFacing.WEST, 0, 2, yTexStart, yTexEnd, sprite)
 
-            .rotate(modelRotation)
+            .rotate(rotation)
 
             .bake()
         );
 
+        addHolder(quads, rotation);
+    }
+
+    private static void addHollowCover(List<BakedQuad> quads, Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
+        IBlockState coverState = CoverManager.getBlockState(cover.getStack());
+
+        if (coverState == null) {
+            return;
+        }
+
+        IBakedModel coverModel = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(coverState);
+
+        TextureAtlasSprite sprite = getSprite(coverModel, coverState, side, rand);
+
+        ModelRotation rotation = ModelRotation.X0_Y0;
+
+        int xLeftStart = 13;
+        int xLeftEnd = 16;
+
+        int xLeftTexStart = 0;
+        int xLeftTexEnd = 3;
+
+        int xLeftTexBackStart = 13;
+        int xLeftTexBackEnd = 16;
+
+        int xRightStart = 0;
+        int xRightEnd = 3;
+
+        int xRightTexStart = 13;
+        int xRightTexEnd = 16;
+
+        int xRightTexBackStart = 0;
+        int xRightTexBackEnd = 3;
+
+        int yStart = 0;
+        int yEnd = 16;
+
+        int yTexStart = 0;
+        int yTexEnd = 16;
+
+        if (coverSide == EnumFacing.NORTH) {
+            if (hasEast) {
+                xLeftEnd = 14;
+                xLeftTexStart = 2;
+                xLeftTexBackEnd = 14;
+            }
+
+            if (hasWest) {
+                xRightStart = 2;
+                xRightTexEnd = 14;
+                xRightTexBackStart = 2;
+            }
+        } else if (coverSide == EnumFacing.SOUTH) {
+            rotation = ModelRotation.X0_Y180;
+
+            if (hasWest) {
+                xLeftEnd = 14;
+                xLeftTexStart = 2;
+                xLeftTexBackEnd = 14;
+            }
+
+            if (hasEast) {
+                xRightStart = 2;
+                xRightTexEnd = 14;
+                xRightTexBackStart = 2;
+            }
+        } else if (coverSide == EnumFacing.EAST) {
+            rotation = ModelRotation.X0_Y90;
+        } else if (coverSide == EnumFacing.WEST) {
+            rotation = ModelRotation.X0_Y270;
+        } else if (coverSide == EnumFacing.DOWN) {
+            rotation = ModelRotation.X90_Y0;
+        } else if (coverSide == EnumFacing.UP) {
+            rotation = ModelRotation.X270_Y0;
+        }
+
+        if (coverSide.getAxis() != EnumFacing.Axis.Y) {
+            if (hasDown) {
+                yStart = 2;
+                yTexEnd = 14;
+            }
+
+            if (hasUp) {
+                yEnd = 14;
+                yTexStart = 2;
+            }
+        }
+
+        quads.addAll(new CubeBuilder()
+            .from(xLeftStart, yStart, 0)
+            .to(xLeftEnd, yEnd, 2)
+
+            .face(EnumFacing.NORTH, xLeftTexStart, xLeftTexEnd, yTexStart, yTexEnd, sprite)
+            .face(EnumFacing.SOUTH, xLeftTexBackStart, xLeftTexBackEnd, yTexStart, yTexEnd, sprite)
+
+            .face(EnumFacing.UP, 13, 16, 0, 2, sprite)
+            .face(EnumFacing.DOWN, 13, 16, 14, 16, sprite)
+            .face(EnumFacing.EAST, 14, 16, yTexStart, yTexEnd, sprite)
+            .face(EnumFacing.WEST, 0, 2, yTexStart, yTexEnd, sprite)
+
+            .rotate(rotation)
+
+            .bake()
+        );
+
+        quads.addAll(new CubeBuilder()
+            .from(xRightStart, yStart, 0)
+            .to(xRightEnd, yEnd, 2)
+
+            .face(EnumFacing.NORTH, xRightTexStart, xRightTexEnd, yTexStart, yTexEnd, sprite)
+            .face(EnumFacing.SOUTH, xRightTexBackStart, xRightTexBackEnd, yTexStart, yTexEnd, sprite)
+
+            .face(EnumFacing.UP, 0, 3, 0, 2, sprite)
+            .face(EnumFacing.DOWN, 0, 3, 14, 16, sprite)
+            .face(EnumFacing.EAST, 14, 16, yTexStart, yTexEnd, sprite)
+            .face(EnumFacing.WEST, 0, 2, yTexStart, yTexEnd, sprite)
+
+            .rotate(rotation)
+
+            .bake()
+        );
+
+        quads.addAll(new CubeBuilder()
+            .from(3, yStart, 0)
+            .to(13, 3, 2)
+
+            .face(EnumFacing.NORTH, 3, 13, 13, yTexEnd, sprite)
+            .face(EnumFacing.SOUTH, 3, 13, 13, yTexEnd, sprite)
+
+            .face(EnumFacing.UP, 3, 13, 0, 2, sprite)
+            .face(EnumFacing.DOWN, 3, 13, 14, 16, sprite)
+
+            .rotate(rotation)
+
+            .bake()
+        );
+
+        quads.addAll(new CubeBuilder()
+            .from(3, 13, 0)
+            .to(13, yEnd, 2)
+
+            .face(EnumFacing.NORTH, 3, 13, yTexStart, 3, sprite)
+            .face(EnumFacing.SOUTH, 3, 13, yTexStart, 3, sprite)
+
+            .face(EnumFacing.UP, 3, 13, 0, 2, sprite)
+            .face(EnumFacing.DOWN, 3, 13, 14, 16, sprite)
+
+            .rotate(rotation)
+
+            .bake()
+        );
+    }
+
+    private static void addHolder(List<BakedQuad> quads, ModelRotation rotation) {
         if (GREY_SPRITE == null) {
             GREY_SPRITE = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(RS.ID + ":blocks/generic_grey");
         }
@@ -163,7 +328,7 @@ public class BakedModelCableCover implements IBakedModel {
             .face(EnumFacing.UP, 0, 0, 4, 2, GREY_SPRITE)
             .face(EnumFacing.DOWN, 0, 0, 4, 2, GREY_SPRITE)
 
-            .rotate(modelRotation)
+            .rotate(rotation)
 
             .setUvLocked(false)
 
