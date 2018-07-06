@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 
-public class GuiHandlerGrid implements IAdvancedGuiHandler<GuiGrid> {
+public class AdvancedGuiHandlerGrid implements IAdvancedGuiHandler<GuiGrid> {
     @Override
     public Class<GuiGrid> getGuiContainerClass() {
         return GuiGrid.class;
