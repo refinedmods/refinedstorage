@@ -26,6 +26,7 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -55,7 +56,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
 
-    private CoverManager coverManager = new CoverManager(this).setCanPlaceCoversOnFace(false);
+    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_ON_FACE);
 
     private List<IStorageExternal<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
     private List<IStorageExternal<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
@@ -350,6 +351,11 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     public List<IStorageExternal<FluidStack>> getFluidStorages() {
         return fluidStorages;
+    }
+
+    @Override
+    public boolean canConduct(@Nullable EnumFacing direction) {
+        return coverManager.canConduct(direction);
     }
 
     @Nullable

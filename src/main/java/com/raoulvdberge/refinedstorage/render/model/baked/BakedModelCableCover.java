@@ -43,18 +43,18 @@ public class BakedModelCableCover implements IBakedModel {
             boolean hasEast = s.getValue(BlockCable.COVER_EAST) != null;
             boolean hasWest = s.getValue(BlockCable.COVER_WEST) != null;
 
-            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, hasUp, hasDown, hasEast, hasWest);
-            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, hasUp, hasDown, hasEast, hasWest, true);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, hasUp, hasDown, hasEast, hasWest, true);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, hasUp, hasDown, hasEast, hasWest, true);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, hasUp, hasDown, hasEast, hasWest, true);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, hasUp, hasDown, hasEast, hasWest, true);
+            addCoverOrHollow(quads, s.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, hasUp, hasDown, hasEast, hasWest, true);
         }
 
         return quads;
     }
 
-    protected static void addCoverOrHollow(List<BakedQuad> quads, @Nullable Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
+    protected static void addCoverOrHollow(List<BakedQuad> quads, @Nullable Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle) {
         if (cover == null) {
             return;
         }
@@ -62,11 +62,11 @@ public class BakedModelCableCover implements IBakedModel {
         if (cover.isHollow()) {
             addHollowCover(quads, cover, coverSide, side, rand, hasUp, hasDown, hasEast, hasWest);
         } else {
-            addCover(quads, cover, coverSide, side, rand, hasUp, hasDown, hasEast, hasWest);
+            addCover(quads, cover, coverSide, side, rand, hasUp, hasDown, hasEast, hasWest, handle);
         }
     }
 
-    private static void addCover(List<BakedQuad> quads, Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
+    private static void addCover(List<BakedQuad> quads, Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle) {
         IBlockState coverState = CoverManager.getBlockState(cover.getStack());
 
         if (coverState == null) {
@@ -159,7 +159,9 @@ public class BakedModelCableCover implements IBakedModel {
             .bake()
         );
 
-        addHolder(quads, rotation);
+        if (handle) {
+            addHandle(quads, rotation);
+        }
     }
 
     private static void addHollowCover(List<BakedQuad> quads, Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
@@ -312,7 +314,7 @@ public class BakedModelCableCover implements IBakedModel {
         );
     }
 
-    private static void addHolder(List<BakedQuad> quads, ModelRotation rotation) {
+    private static void addHandle(List<BakedQuad> quads, ModelRotation rotation) {
         if (GREY_SPRITE == null) {
             GREY_SPRITE = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(RS.ID + ":blocks/generic_grey");
         }

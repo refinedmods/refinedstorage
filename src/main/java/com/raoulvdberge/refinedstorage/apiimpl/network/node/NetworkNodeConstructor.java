@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -37,18 +38,23 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class NetworkNodeConstructor extends NetworkNode implements IComparable, IType {
+import javax.annotation.Nullable;
+
+public class NetworkNodeConstructor extends NetworkNode implements IComparable, IType, ICoverable {
     public static final String ID = "constructor";
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_DROP = "Drop";
+    private static final String NBT_COVERS = "Covers";
 
     private static final int BASE_SPEED = 20;
 
@@ -60,6 +66,8 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
     private boolean drop = false;
+
+    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.NONE_ON_FACE);
 
     public NetworkNodeConstructor(World world, BlockPos pos) {
         super(world, pos);
@@ -276,6 +284,8 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
         StackUtils.writeItems(upgrades, 1, tag);
 
+        tag.setTag(NBT_COVERS, coverManager.writeToNbt());
+
         return tag;
     }
 
@@ -309,6 +319,10 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             drop = tag.getBoolean(NBT_DROP);
         }
 
+        if (tag.hasKey(NBT_COVERS)) {
+            coverManager.readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+        }
+
         StackUtils.readItems(itemFilters, 0, tag);
         StackUtils.readItems(fluidFilters, 2, tag);
     }
@@ -327,7 +341,12 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return new CombinedInvWrapper(upgrades, coverManager.getAsInventory());
+    }
+
+    @Override
+    public boolean canConduct(@Nullable EnumFacing direction) {
+        return coverManager.canConduct(direction);
     }
 
     @Override
@@ -350,5 +369,10 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     @Override
     public IItemHandler getFilterInventory() {
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    }
+
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
     }
 }

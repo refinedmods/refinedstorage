@@ -2,18 +2,26 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 
-public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReaderWriter {
+import javax.annotation.Nullable;
+
+public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReaderWriter, ICoverable {
     public static final String ID = "reader";
 
     private static final String NBT_CHANNEL = "Channel";
+    private static final String NBT_COVERS = "Covers";
 
     private String channel = "";
+
+    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_ON_FACE);
 
     public NetworkNodeReader(World world, BlockPos pos) {
         super(world, pos);
@@ -66,6 +74,10 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
         if (tag.hasKey(NBT_CHANNEL)) {
             channel = tag.getString(NBT_CHANNEL);
         }
+
+        if (tag.hasKey(NBT_COVERS)) {
+            coverManager.readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+        }
     }
 
     @Override
@@ -79,6 +91,18 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
 
         tag.setString(NBT_CHANNEL, channel);
 
+        tag.setTag(NBT_COVERS, coverManager.writeToNbt());
+
         return tag;
+    }
+
+    @Override
+    public boolean canConduct(@Nullable EnumFacing direction) {
+        return coverManager.canConduct(direction);
+    }
+
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
     }
 }

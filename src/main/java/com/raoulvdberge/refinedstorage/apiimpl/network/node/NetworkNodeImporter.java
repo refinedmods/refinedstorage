@@ -20,6 +20,7 @@ import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -28,6 +29,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+
+import javax.annotation.Nullable;
 
 public class NetworkNodeImporter extends NetworkNode implements IComparable, IFilterable, IType, ICoverable {
     public static final String ID = "importer";
@@ -46,7 +49,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
 
-    private CoverManager coverManager = new CoverManager(this).setCanPlaceCoversOnFace(false);
+    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_ON_FACE);
 
     private int currentSlot;
 
@@ -218,6 +221,11 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     @Override
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(upgrades, coverManager.getAsInventory());
+    }
+
+    @Override
+    public boolean canConduct(@Nullable EnumFacing direction) {
+        return coverManager.canConduct(direction);
     }
 
     @Override

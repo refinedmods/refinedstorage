@@ -375,7 +375,14 @@ public class ProxyClient extends ProxyCommon {
             if (model.getResourceDomain().equals(RS.ID)) {
                 if (model.getResourcePath().equals("pattern")) {
                     e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
-                } else if (model.getResourcePath().equals("cable") || model.getResourcePath().equals("exporter") || model.getResourcePath().equals("importer") || model.getResourcePath().equals("external_storage")) {
+                } else if (model.getResourcePath().equals("cable") ||
+                    model.getResourcePath().equals("exporter") ||
+                    model.getResourcePath().equals("importer") ||
+                    model.getResourcePath().equals("external_storage") ||
+                    model.getResourcePath().equals("constructor") ||
+                    model.getResourcePath().equals("destructor") ||
+                    model.getResourcePath().equals("reader") ||
+                    model.getResourcePath().equals("writer")) {
                     e.getModelRegistry().putObject(model, new BakedModelCableCover(e.getModelRegistry().getObject(model)));
                 }
             }

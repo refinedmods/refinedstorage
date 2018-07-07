@@ -25,16 +25,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CoverManager {
+    public enum CoverPlacementMode {
+        ALLOW_ALL,
+        NONE_ON_FACE,
+        HOLLOW_ON_FACE
+    }
+
     private static final String NBT_DIRECTION = "Direction";
     private static final String NBT_ITEM = "Item";
     private static final String NBT_HOLLOW = "Hollow";
 
     private Map<EnumFacing, Cover> covers = new HashMap<>();
     private NetworkNode node;
-    private boolean canPlaceCoversOnFace = true;
+    private CoverPlacementMode placementMode;
 
-    public CoverManager(NetworkNode node) {
+    public CoverManager(NetworkNode node, CoverPlacementMode placementMode) {
         this.node = node;
+        this.placementMode = placementMode;
     }
 
     public boolean canConduct(EnumFacing direction) {
@@ -66,8 +73,18 @@ public class CoverManager {
 
     public boolean setCover(EnumFacing facing, Cover cover) {
         if (isValidCover(cover.getStack()) && !hasCover(facing)) {
-            if (facing == node.getDirection() && !canPlaceCoversOnFace && !cover.isHollow()) {
-                return false;
+            if (facing == node.getDirection()) {
+                switch (placementMode) {
+                    case ALLOW_ALL:
+                        break;
+                    case NONE_ON_FACE:
+                        return false;
+                    case HOLLOW_ON_FACE:
+                        if (!cover.isHollow()) {
+                            return false;
+                        }
+                        break;
+                }
             }
 
             covers.put(facing, cover);
@@ -182,11 +199,5 @@ public class CoverManager {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public CoverManager setCanPlaceCoversOnFace(boolean canPlaceCoversOnFace) {
-        this.canPlaceCoversOnFace = canPlaceCoversOnFace;
-
-        return this;
     }
 }

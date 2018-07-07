@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
@@ -25,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityShulkerBox;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +36,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.Fluid;
@@ -43,17 +46,20 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.wrappers.BlockLiquidWrapper;
 import net.minecraftforge.fluids.capability.wrappers.FluidBlockWrapper;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkNodeDestructor extends NetworkNode implements IComparable, IFilterable, IType {
+public class NetworkNodeDestructor extends NetworkNode implements IComparable, IFilterable, IType, ICoverable {
     public static final String ID = "destructor";
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_PICKUP = "Pickup";
+    private static final String NBT_COVERS = "Covers";
 
     private static final int BASE_SPEED = 20;
 
@@ -66,6 +72,8 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
+
+    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.NONE_ON_FACE);
 
     public NetworkNodeDestructor(World world, BlockPos pos) {
         super(world, pos);
@@ -211,6 +219,10 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
         super.read(tag);
 
         StackUtils.readItems(upgrades, 1, tag);
+
+        if (tag.hasKey(NBT_COVERS)) {
+            coverManager.readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+        }
     }
 
     @Override
@@ -223,6 +235,8 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
         super.write(tag);
 
         StackUtils.writeItems(upgrades, 1, tag);
+
+        tag.setTag(NBT_COVERS, coverManager.writeToNbt());
 
         return tag;
     }
@@ -283,7 +297,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
     @Override
     public IItemHandler getDrops() {
-        return upgrades;
+        return new CombinedInvWrapper(upgrades, coverManager.getAsInventory());
     }
 
     @Override
@@ -303,11 +317,21 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
+    @Override
+    public boolean canConduct(@Nullable EnumFacing direction) {
+        return coverManager.canConduct(direction);
+    }
+
     public boolean isPickupItem() {
         return pickupItem;
     }
 
     public void setPickupItem(boolean pickupItem) {
         this.pickupItem = pickupItem;
+    }
+
+    @Override
+    public CoverManager getCoverManager() {
+        return coverManager;
     }
 }
