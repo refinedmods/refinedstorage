@@ -231,7 +231,7 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE_MONITOR), 0, new ModelResourceLocation("refinedstorage:storage_monitor", "connected=false,direction=north"));
         ModelLoader.setCustomModelResourceLocation(RSItems.COVER, 0, new ModelResourceLocation("refinedstorage:cover", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(RSItems.HOLLOW_COVER, 0, new ModelResourceLocation("refinedstorage:hollow_cover", "inventory"));
+        ModelLoader.setCustomModelResourceLocation(RSItems.HOLLOW_WIDE_COVER, 0, new ModelResourceLocation("refinedstorage:hollow_wide_cover", "inventory"));
 
         ModelLoaderRegistry.registerLoader(new CustomModelLoaderDefault(new ResourceLocation(RS.ID, "disk_drive"), ModelDiskDrive::new));
         ModelLoaderRegistry.registerLoader(new CustomModelLoaderDefault(new ResourceLocation(RS.ID, "disk_manipulator"), ModelDiskManipulator::new));

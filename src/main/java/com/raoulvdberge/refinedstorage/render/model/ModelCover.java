@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.model;
 
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCover;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -11,14 +12,14 @@ import net.minecraftforge.common.model.IModelState;
 import java.util.function.Function;
 
 public class ModelCover implements IModel {
-    private boolean hollow;
+    private CoverType coverType;
 
-    public ModelCover(boolean hollow) {
-        this.hollow = hollow;
+    public ModelCover(CoverType coverType) {
+        this.coverType = coverType;
     }
 
     @Override
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-        return new BakedModelCover(null, hollow);
+        return new BakedModelCover(null, coverType);
     }
 }

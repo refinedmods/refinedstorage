@@ -56,7 +56,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
 
-    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_ON_FACE);
+    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_WIDE_ON_FACE);
 
     private List<IStorageExternal<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
     private List<IStorageExternal<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();

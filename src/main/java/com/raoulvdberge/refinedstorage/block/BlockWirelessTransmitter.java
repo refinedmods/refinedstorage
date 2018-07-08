@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockFaceShape;
@@ -23,9 +24,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlockWirelessTransmitter extends BlockNode {
-    // From BlockTorch
-    private static final AxisAlignedBB WIRELESS_TRANSMITTER_AABB = new AxisAlignedBB(0.4000000059604645D, 0.0D, 0.4000000059604645D, 0.6000000238418579D, 0.6000000238418579D, 0.6000000238418579D);
-
     public BlockWirelessTransmitter() {
         super("wireless_transmitter");
     }
@@ -57,7 +55,7 @@ public class BlockWirelessTransmitter extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return WIRELESS_TRANSMITTER_AABB;
+        return ConstantsWirelessTransmitter.WIRELESS_TRANSMITTER_AABB;
     }
 
     @Override

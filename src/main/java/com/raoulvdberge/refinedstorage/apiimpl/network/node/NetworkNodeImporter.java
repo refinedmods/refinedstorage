@@ -49,7 +49,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
 
-    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_ON_FACE);
+    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_WIDE_ON_FACE);
 
     private int currentSlot;
 

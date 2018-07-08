@@ -2,31 +2,41 @@ package com.raoulvdberge.refinedstorage.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -47,6 +57,8 @@ public final class RenderUtils {
 
     private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_ITEM_TRANSFORM;
     private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_BLOCK_TRANSFORM;
+
+    private static final VertexFormat ITEM_FORMAT_WITH_LIGHTMAP = new VertexFormat(DefaultVertexFormats.ITEM).addElement(DefaultVertexFormats.TEX_2S);
 
     public static AxisAlignedBB getBounds(int fromX, int fromY, int fromZ, int toX, int toY, int toZ) {
         return new AxisAlignedBB((float) fromX / 16F, (float) fromY / 16F, (float) fromZ / 16F, (float) toX / 16F, (float) toY / 16F, (float) toZ / 16F);
@@ -482,5 +494,71 @@ public final class RenderUtils {
         }
 
         return lines;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static VertexFormat getFormatWithLightMap(VertexFormat format) {
+        if (FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled) {
+            return format;
+        }
+
+        if (format == DefaultVertexFormats.BLOCK) {
+            return DefaultVertexFormats.BLOCK;
+        } else if (format == DefaultVertexFormats.ITEM) {
+            return ITEM_FORMAT_WITH_LIGHTMAP;
+        } else if (!format.hasUvOffset(1)) {
+            VertexFormat result = new VertexFormat(format);
+
+            result.addElement(DefaultVertexFormats.TEX_2S);
+
+            return result;
+        }
+
+        return format;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static TextureAtlasSprite getSprite(IBakedModel coverModel, IBlockState coverState, EnumFacing facing, long rand) {
+        TextureAtlasSprite sprite = null;
+
+        BlockRenderLayer originalLayer = MinecraftForgeClient.getRenderLayer();
+
+        try {
+            for (BlockRenderLayer layer : BlockRenderLayer.values()) {
+                ForgeHooksClient.setRenderLayer(layer);
+
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
+                    return bakedQuad.getSprite();
+                }
+
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, rand)) {
+                    if (sprite == null) {
+                        sprite = bakedQuad.getSprite();
+                    }
+
+                    if (bakedQuad.getFace() == facing) {
+                        return bakedQuad.getSprite();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // NO OP
+        } finally {
+            ForgeHooksClient.setRenderLayer(originalLayer);
+        }
+
+        if (sprite == null) {
+            try {
+                sprite = coverModel.getParticleTexture();
+            } catch (Exception e) {
+                // NO OP
+            }
+        }
+
+        if (sprite == null) {
+            sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+        }
+
+        return sprite;
     }
 }

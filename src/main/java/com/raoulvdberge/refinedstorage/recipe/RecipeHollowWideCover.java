@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.recipe;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
-import com.raoulvdberge.refinedstorage.item.ItemHollowCover;
+import com.raoulvdberge.refinedstorage.item.ItemHollowWideCover;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -12,7 +12,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class RecipeHollowCover extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeHollowWideCover extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
     private boolean isValid(ItemStack slot, @Nullable ItemStack previousValidSlot) {
         ItemStack currentCover = ItemCover.getItem(slot);
 
@@ -54,9 +54,9 @@ public class RecipeHollowCover extends IForgeRegistryEntry.Impl<IRecipe> impleme
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
-        ItemStack stack = new ItemStack(RSItems.HOLLOW_COVER, 8);
+        ItemStack stack = new ItemStack(RSItems.HOLLOW_WIDE_COVER, 8);
 
-        ItemHollowCover.setItem(stack, ItemCover.getItem(inv.getStackInSlot(0)));
+        ItemHollowWideCover.setItem(stack, ItemCover.getItem(inv.getStackInSlot(0)));
 
         return stack;
     }

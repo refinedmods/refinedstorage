@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
@@ -143,6 +144,6 @@ public class ItemCover extends ItemBase {
     }
 
     protected Cover createCover(ItemStack stack) {
-        return new Cover(stack, false);
+        return new Cover(stack, CoverType.NORMAL);
     }
 }

@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
@@ -37,21 +38,6 @@ public class BlockCable extends BlockNode {
     public static final PropertyObject<Cover> COVER_WEST = new PropertyObject<>("cover_west", Cover.class);
     public static final PropertyObject<Cover> COVER_UP = new PropertyObject<>("cover_up", Cover.class);
     public static final PropertyObject<Cover> COVER_DOWN = new PropertyObject<>("cover_down", Cover.class);
-
-    public static final AxisAlignedBB HOLDER_NORTH_AABB = RenderUtils.getBounds(7, 7, 2, 9, 9, 6);
-    public static final AxisAlignedBB HOLDER_EAST_AABB = RenderUtils.getBounds(10, 7, 7, 14, 9, 9);
-    public static final AxisAlignedBB HOLDER_SOUTH_AABB = RenderUtils.getBounds(7, 7, 10, 9, 9, 14);
-    public static final AxisAlignedBB HOLDER_WEST_AABB = RenderUtils.getBounds(2, 7, 7, 6, 9, 9);
-    public static final AxisAlignedBB HOLDER_UP_AABB = RenderUtils.getBounds(7, 10, 7, 9, 14, 9);
-    public static final AxisAlignedBB HOLDER_DOWN_AABB = RenderUtils.getBounds(7, 2, 7, 9, 6, 9);
-
-    public static final AxisAlignedBB CORE_AABB = RenderUtils.getBounds(6, 6, 6, 10, 10, 10);
-    private static final AxisAlignedBB NORTH_AABB = RenderUtils.getBounds(6, 6, 0, 10, 10, 6);
-    private static final AxisAlignedBB EAST_AABB = RenderUtils.getBounds(10, 6, 6, 16, 10, 10);
-    private static final AxisAlignedBB SOUTH_AABB = RenderUtils.getBounds(6, 6, 10, 10, 10, 16);
-    private static final AxisAlignedBB WEST_AABB = RenderUtils.getBounds(0, 6, 6, 6, 10, 10);
-    private static final AxisAlignedBB UP_AABB = RenderUtils.getBounds(6, 10, 6, 10, 16, 10);
-    private static final AxisAlignedBB DOWN_AABB = RenderUtils.getBounds(6, 0, 6, 10, 6, 10);
 
     protected static final PropertyBool NORTH = PropertyBool.create("north");
     protected static final PropertyBool EAST = PropertyBool.create("east");
@@ -139,7 +125,7 @@ public class BlockCable extends BlockNode {
         if (node instanceof ICoverable) {
             Cover cover = ((ICoverable) node).getCoverManager().getCover(direction);
 
-            if (cover != null && !cover.isHollow()) {
+            if (cover != null && !cover.getType().isHollow()) {
                 return false;
             }
         }
@@ -149,7 +135,7 @@ public class BlockCable extends BlockNode {
         if (otherTile instanceof TileNode && ((TileNode) otherTile).getNode() instanceof ICoverable) {
             Cover cover = ((ICoverable) ((TileNode) otherTile).getNode()).getCoverManager().getCover(direction.getOpposite());
 
-            if (cover != null && !cover.isHollow()) {
+            if (cover != null && !cover.getType().isHollow()) {
                 return false;
             }
         }
@@ -170,13 +156,13 @@ public class BlockCable extends BlockNode {
     protected boolean hitCablePart(IBlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
         state = getActualState(state, world, pos);
 
-        if ((RenderUtils.isInBounds(CORE_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(NORTH) && RenderUtils.isInBounds(NORTH_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(EAST) && RenderUtils.isInBounds(EAST_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(SOUTH) && RenderUtils.isInBounds(SOUTH_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(WEST) && RenderUtils.isInBounds(WEST_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(UP) && RenderUtils.isInBounds(UP_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(DOWN) && RenderUtils.isInBounds(DOWN_AABB, hitX, hitY, hitZ))) {
+        if ((RenderUtils.isInBounds(ConstantsCable.CORE_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(NORTH) && RenderUtils.isInBounds(ConstantsCable.NORTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(EAST) && RenderUtils.isInBounds(ConstantsCable.EAST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(SOUTH) && RenderUtils.isInBounds(ConstantsCable.SOUTH_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(WEST) && RenderUtils.isInBounds(ConstantsCable.WEST_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(UP) && RenderUtils.isInBounds(ConstantsCable.UP_AABB, hitX, hitY, hitZ)) ||
+            (state.getValue(DOWN) && RenderUtils.isInBounds(ConstantsCable.DOWN_AABB, hitX, hitY, hitZ))) {
             return true;
         }
 
@@ -194,30 +180,30 @@ public class BlockCable extends BlockNode {
     public List<AxisAlignedBB> getCombinedCollisionBoxes(IBlockState state) {
         List<AxisAlignedBB> boxes = new ArrayList<>();
 
-        boxes.add(CORE_AABB);
+        boxes.add(ConstantsCable.CORE_AABB);
 
         if (state.getValue(NORTH)) {
-            boxes.add(NORTH_AABB);
+            boxes.add(ConstantsCable.NORTH_AABB);
         }
 
         if (state.getValue(EAST)) {
-            boxes.add(EAST_AABB);
+            boxes.add(ConstantsCable.EAST_AABB);
         }
 
         if (state.getValue(SOUTH)) {
-            boxes.add(SOUTH_AABB);
+            boxes.add(ConstantsCable.SOUTH_AABB);
         }
 
         if (state.getValue(WEST)) {
-            boxes.add(WEST_AABB);
+            boxes.add(ConstantsCable.WEST_AABB);
         }
 
         if (state.getValue(UP)) {
-            boxes.add(UP_AABB);
+            boxes.add(ConstantsCable.UP_AABB);
         }
 
         if (state.getValue(DOWN)) {
-            boxes.add(DOWN_AABB);
+            boxes.add(ConstantsCable.DOWN_AABB);
         }
 
         return boxes;
@@ -246,8 +232,8 @@ public class BlockCable extends BlockNode {
                     coverEast != null ? 14 : 16, coverUp != null ? 14 : 16, 2
                 ));
 
-                if (!coverNorth.isHollow()) {
-                    boxes.add(HOLDER_NORTH_AABB);
+                if (!coverNorth.getType().isHollow()) {
+                    boxes.add(ConstantsCable.HOLDER_NORTH_AABB);
                 }
             }
 
@@ -257,8 +243,8 @@ public class BlockCable extends BlockNode {
                     16, coverUp != null ? 14 : 16, 16
                 ));
 
-                if (!coverEast.isHollow()) {
-                    boxes.add(HOLDER_EAST_AABB);
+                if (!coverEast.getType().isHollow()) {
+                    boxes.add(ConstantsCable.HOLDER_EAST_AABB);
                 }
             }
 
@@ -268,8 +254,8 @@ public class BlockCable extends BlockNode {
                     coverWest != null ? 2 : 0, coverUp != null ? 14 : 16, 14
                 ));
 
-                if (!coverSouth.isHollow()) {
-                    boxes.add(HOLDER_SOUTH_AABB);
+                if (!coverSouth.getType().isHollow()) {
+                    boxes.add(ConstantsCable.HOLDER_SOUTH_AABB);
                 }
             }
 
@@ -279,8 +265,8 @@ public class BlockCable extends BlockNode {
                     2, coverUp != null ? 14 : 16, 16
                 ));
 
-                if (!coverWest.isHollow()) {
-                    boxes.add(HOLDER_WEST_AABB);
+                if (!coverWest.getType().isHollow()) {
+                    boxes.add(ConstantsCable.HOLDER_WEST_AABB);
                 }
             }
 
@@ -290,8 +276,8 @@ public class BlockCable extends BlockNode {
                     16, 16, 16
                 ));
 
-                if (!coverUp.isHollow()) {
-                    boxes.add(HOLDER_UP_AABB);
+                if (!coverUp.getType().isHollow()) {
+                    boxes.add(ConstantsCable.HOLDER_UP_AABB);
                 }
             }
 
@@ -301,8 +287,8 @@ public class BlockCable extends BlockNode {
                     16, 2, 16
                 ));
 
-                if (!coverDown.isHollow()) {
-                    boxes.add(HOLDER_DOWN_AABB);
+                if (!coverDown.getType().isHollow()) {
+                    boxes.add(ConstantsCable.HOLDER_DOWN_AABB);
                 }
             }
         }

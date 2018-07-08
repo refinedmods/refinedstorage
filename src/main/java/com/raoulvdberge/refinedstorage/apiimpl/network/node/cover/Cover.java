@@ -4,18 +4,18 @@ import net.minecraft.item.ItemStack;
 
 public class Cover {
     private ItemStack stack;
-    private boolean hollow;
+    private CoverType type;
 
-    public Cover(ItemStack stack, boolean hollow) {
+    public Cover(ItemStack stack, CoverType type) {
         this.stack = stack;
-        this.hollow = hollow;
+        this.type = type;
     }
 
     public ItemStack getStack() {
         return stack;
     }
 
-    public boolean isHollow() {
-        return hollow;
+    public CoverType getType() {
+        return type;
     }
 }

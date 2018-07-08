@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import java.util.Collections;
 import java.util.List;
 
-public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
+public class RecipeRegistryPluginHollowWideCover implements IRecipeRegistryPlugin {
     @Override
     public <V> List<String> getRecipeCategoryUids(IFocus<V> focus) {
         if (focus.getValue() instanceof ItemStack) {
@@ -20,7 +20,7 @@ public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
                     return Collections.singletonList(VanillaRecipeCategoryUid.CRAFTING);
                 }
             } else if (focus.getMode() == IFocus.Mode.OUTPUT) {
-                if (stack.getItem() == RSItems.HOLLOW_COVER) {
+                if (stack.getItem() == RSItems.HOLLOW_WIDE_COVER) {
                     return Collections.singletonList(VanillaRecipeCategoryUid.CRAFTING);
                 }
             }
@@ -36,19 +36,19 @@ public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
 
             if (focus.getMode() == IFocus.Mode.INPUT) {
                 if (stack.getItem() == RSItems.COVER && CoverManager.isValidCover(ItemCover.getItem(stack))) {
-                    ItemStack hollowCover = new ItemStack(RSItems.HOLLOW_COVER);
+                    ItemStack hollowWideCover = new ItemStack(RSItems.HOLLOW_WIDE_COVER);
 
-                    ItemCover.setItem(hollowCover, ItemCover.getItem(stack));
+                    ItemCover.setItem(hollowWideCover, ItemCover.getItem(stack));
 
-                    return Collections.singletonList((T) new RecipeWrapperHollowCover(stack, hollowCover));
+                    return Collections.singletonList((T) new RecipeWrapperHollowWideCover(stack, hollowWideCover));
                 }
             } else if (focus.getMode() == IFocus.Mode.OUTPUT) {
-                if (stack.getItem() == RSItems.HOLLOW_COVER) {
+                if (stack.getItem() == RSItems.HOLLOW_WIDE_COVER) {
                     ItemStack cover = new ItemStack(RSItems.COVER);
 
                     ItemCover.setItem(cover, ItemCover.getItem(stack));
 
-                    return Collections.singletonList((T) new RecipeWrapperHollowCover(cover, stack));
+                    return Collections.singletonList((T) new RecipeWrapperHollowWideCover(cover, stack));
                 }
             }
         }

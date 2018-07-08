@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsDetector;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
@@ -19,8 +20,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class BlockDetector extends BlockNode {
-    private static final AxisAlignedBB AABB_DETECTOR = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 5D / 16D, 1.0D);
-
     private static final PropertyBool POWERED = PropertyBool.create("powered");
 
     public BlockDetector() {
@@ -43,7 +42,7 @@ public class BlockDetector extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return AABB_DETECTOR;
+        return ConstantsDetector.DETECTOR_AABB;
     }
 
     @Override

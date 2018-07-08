@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.cover;
 
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
@@ -28,12 +27,12 @@ public class CoverManager {
     public enum CoverPlacementMode {
         ALLOW_ALL,
         NONE_ON_FACE,
-        HOLLOW_ON_FACE
+        HOLLOW_WIDE_ON_FACE
     }
 
     private static final String NBT_DIRECTION = "Direction";
     private static final String NBT_ITEM = "Item";
-    private static final String NBT_HOLLOW = "Hollow";
+    private static final String NBT_TYPE = "Type";
 
     private Map<EnumFacing, Cover> covers = new HashMap<>();
     private NetworkNode node;
@@ -46,7 +45,7 @@ public class CoverManager {
 
     public boolean canConduct(EnumFacing direction) {
         Cover cover = getCover(direction);
-        if (cover != null && !cover.isHollow()) {
+        if (cover != null && !cover.getType().isHollow()) {
             return false;
         }
 
@@ -54,7 +53,7 @@ public class CoverManager {
         if (neighbor instanceof ICoverable) {
             cover = ((ICoverable) neighbor).getCoverManager().getCover(direction.getOpposite());
 
-            if (cover != null && !cover.isHollow()) {
+            if (cover != null && !cover.getType().isHollow()) {
                 return false;
             }
         }
@@ -79,8 +78,8 @@ public class CoverManager {
                         break;
                     case NONE_ON_FACE:
                         return false;
-                    case HOLLOW_ON_FACE:
-                        if (!cover.isHollow()) {
+                    case HOLLOW_WIDE_ON_FACE:
+                        if (cover.getType() != CoverType.HOLLOW_WIDE) {
                             return false;
                         }
                         break;
@@ -108,10 +107,10 @@ public class CoverManager {
             if (tag.hasKey(NBT_DIRECTION) && tag.hasKey(NBT_ITEM)) {
                 EnumFacing direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
                 ItemStack item = new ItemStack(tag.getCompoundTag(NBT_ITEM));
-                boolean hollow = tag.hasKey(NBT_HOLLOW) && tag.getBoolean(NBT_HOLLOW);
+                int type = tag.hasKey(NBT_TYPE) ? tag.getInteger(NBT_TYPE) : 0;
 
                 if (isValidCover(item)) {
-                    covers.put(direction, new Cover(item, hollow));
+                    covers.put(direction, new Cover(item, CoverType.values()[type]));
                 }
             }
         }
@@ -125,7 +124,7 @@ public class CoverManager {
 
             tag.setInteger(NBT_DIRECTION, entry.getKey().ordinal());
             tag.setTag(NBT_ITEM, entry.getValue().getStack().serializeNBT());
-            tag.setBoolean(NBT_HOLLOW, entry.getValue().isHollow());
+            tag.setInteger(NBT_TYPE, entry.getValue().getType().ordinal());
 
             list.appendTag(tag);
         }
@@ -139,7 +138,7 @@ public class CoverManager {
         int i = 0;
 
         for (Map.Entry<EnumFacing, Cover> entry : covers.entrySet()) {
-            ItemStack cover = new ItemStack(entry.getValue().isHollow() ? RSItems.HOLLOW_COVER : RSItems.COVER);
+            ItemStack cover = entry.getValue().getType().createStack();
 
             ItemCover.setItem(cover, entry.getValue().getStack());
 

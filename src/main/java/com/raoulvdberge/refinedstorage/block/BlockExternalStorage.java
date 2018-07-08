@@ -2,8 +2,9 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExternalStorage;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,13 +19,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlockExternalStorage extends BlockCable {
-    private static final AxisAlignedBB HEAD_NORTH_AABB = RenderUtils.getBounds(3, 3, 0, 13, 13, 2);
-    private static final AxisAlignedBB HEAD_EAST_AABB = RenderUtils.getBounds(14, 3, 3, 16, 13, 13);
-    private static final AxisAlignedBB HEAD_SOUTH_AABB = RenderUtils.getBounds(3, 3, 14, 13, 13, 16);
-    private static final AxisAlignedBB HEAD_WEST_AABB = RenderUtils.getBounds(0, 3, 3, 2, 13, 13);
-    private static final AxisAlignedBB HEAD_UP_AABB = RenderUtils.getBounds(3, 14, 3, 13, 16, 13);
-    private static final AxisAlignedBB HEAD_DOWN_AABB = RenderUtils.getBounds(3, 0, 3, 13, 2, 13);
-
     public BlockExternalStorage() {
         super("external_storage");
     }
@@ -35,28 +29,28 @@ public class BlockExternalStorage extends BlockCable {
 
         switch (state.getValue(getDirection().getProperty())) {
             case NORTH:
-                boxes.add(HOLDER_NORTH_AABB);
-                boxes.add(HEAD_NORTH_AABB);
+                boxes.add(ConstantsCable.HOLDER_NORTH_AABB);
+                boxes.add(ConstantsExternalStorage.HEAD_NORTH_AABB);
                 break;
             case EAST:
-                boxes.add(HOLDER_EAST_AABB);
-                boxes.add(HEAD_EAST_AABB);
+                boxes.add(ConstantsCable.HOLDER_EAST_AABB);
+                boxes.add(ConstantsExternalStorage.HEAD_EAST_AABB);
                 break;
             case SOUTH:
-                boxes.add(HOLDER_SOUTH_AABB);
-                boxes.add(HEAD_SOUTH_AABB);
+                boxes.add(ConstantsCable.HOLDER_SOUTH_AABB);
+                boxes.add(ConstantsExternalStorage.HEAD_SOUTH_AABB);
                 break;
             case WEST:
-                boxes.add(HOLDER_WEST_AABB);
-                boxes.add(HEAD_WEST_AABB);
+                boxes.add(ConstantsCable.HOLDER_WEST_AABB);
+                boxes.add(ConstantsExternalStorage.HEAD_WEST_AABB);
                 break;
             case UP:
-                boxes.add(HOLDER_UP_AABB);
-                boxes.add(HEAD_UP_AABB);
+                boxes.add(ConstantsCable.HOLDER_UP_AABB);
+                boxes.add(ConstantsExternalStorage.HEAD_UP_AABB);
                 break;
             case DOWN:
-                boxes.add(HOLDER_DOWN_AABB);
-                boxes.add(HEAD_DOWN_AABB);
+                boxes.add(ConstantsCable.HOLDER_DOWN_AABB);
+                boxes.add(ConstantsExternalStorage.HEAD_DOWN_AABB);
                 break;
         }
 

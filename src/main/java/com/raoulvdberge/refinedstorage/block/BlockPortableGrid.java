@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
@@ -25,8 +26,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class BlockPortableGrid extends BlockBase {
-    private static final AxisAlignedBB PORTABLE_GRID_AABB = new AxisAlignedBB(0, 0, 0, 1, 13.2F / 16F, 1);
-
     public static final PropertyEnum TYPE = PropertyEnum.create("type", PortableGridType.class);
     public static final PropertyEnum DISK_STATE = PropertyEnum.create("disk_state", PortableGridDiskState.class);
     public static final PropertyBool CONNECTED = PropertyBool.create("connected");
@@ -59,7 +58,7 @@ public class BlockPortableGrid extends BlockBase {
     @Override
     @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return PORTABLE_GRID_AABB;
+        return ConstantsPortableGrid.PORTABLE_GRID_AABB;
     }
 
     @Override

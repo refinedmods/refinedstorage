@@ -8,13 +8,13 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeWrapperHollowCover implements IShapedCraftingRecipeWrapper {
+public class RecipeWrapperHollowWideCover implements IShapedCraftingRecipeWrapper {
     private ItemStack cover;
-    private ItemStack hollowCover;
+    private ItemStack hollowWideCover;
 
-    public RecipeWrapperHollowCover(ItemStack cover, ItemStack hollowCover) {
+    public RecipeWrapperHollowWideCover(ItemStack cover, ItemStack hollowWideCover) {
         this.cover = ItemHandlerHelper.copyStackWithSize(cover, 1);
-        this.hollowCover = ItemHandlerHelper.copyStackWithSize(hollowCover, 8);
+        this.hollowWideCover = ItemHandlerHelper.copyStackWithSize(hollowWideCover, 8);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class RecipeWrapperHollowCover implements IShapedCraftingRecipeWrapper {
         }
 
         ingredients.setInputs(ItemStack.class, inputs);
-        ingredients.setOutput(ItemStack.class, hollowCover);
+        ingredients.setOutput(ItemStack.class, hollowWideCover);
     }
 
     @Override
