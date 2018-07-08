@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsDetector;
+import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsDetector;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;

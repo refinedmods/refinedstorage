@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.render.constants;
+package com.raoulvdberge.refinedstorage.render.collision.constants;
 
 import net.minecraft.util.math.AxisAlignedBB;
 

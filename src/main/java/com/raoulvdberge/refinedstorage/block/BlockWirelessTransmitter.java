@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsWirelessTransmitter;
+import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockFaceShape;

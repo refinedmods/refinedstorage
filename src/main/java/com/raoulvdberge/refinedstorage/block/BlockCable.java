@@ -5,7 +5,10 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
+import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTraceResult;
+import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTracer;
+import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
+import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
@@ -39,12 +42,12 @@ public class BlockCable extends BlockNode {
     public static final PropertyObject<Cover> COVER_UP = new PropertyObject<>("cover_up", Cover.class);
     public static final PropertyObject<Cover> COVER_DOWN = new PropertyObject<>("cover_down", Cover.class);
 
-    protected static final PropertyBool NORTH = PropertyBool.create("north");
-    protected static final PropertyBool EAST = PropertyBool.create("east");
-    protected static final PropertyBool SOUTH = PropertyBool.create("south");
-    protected static final PropertyBool WEST = PropertyBool.create("west");
-    protected static final PropertyBool UP = PropertyBool.create("up");
-    protected static final PropertyBool DOWN = PropertyBool.create("down");
+    private static final PropertyBool NORTH = PropertyBool.create("north");
+    private static final PropertyBool EAST = PropertyBool.create("east");
+    private static final PropertyBool SOUTH = PropertyBool.create("south");
+    private static final PropertyBool WEST = PropertyBool.create("west");
+    private static final PropertyBool UP = PropertyBool.create("up");
+    private static final PropertyBool DOWN = PropertyBool.create("down");
 
     public BlockCable(String name) {
         super(name);
@@ -153,68 +156,56 @@ public class BlockCable extends BlockNode {
         return false;
     }
 
-    protected boolean hitCablePart(IBlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
+    protected boolean canAccessGui(IBlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
         state = getActualState(state, world, pos);
 
-        if ((RenderUtils.isInBounds(ConstantsCable.CORE_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(NORTH) && RenderUtils.isInBounds(ConstantsCable.NORTH_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(EAST) && RenderUtils.isInBounds(ConstantsCable.EAST_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(SOUTH) && RenderUtils.isInBounds(ConstantsCable.SOUTH_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(WEST) && RenderUtils.isInBounds(ConstantsCable.WEST_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(UP) && RenderUtils.isInBounds(ConstantsCable.UP_AABB, hitX, hitY, hitZ)) ||
-            (state.getValue(DOWN) && RenderUtils.isInBounds(ConstantsCable.DOWN_AABB, hitX, hitY, hitZ))) {
-            return true;
-        }
-
-        List<AxisAlignedBB> coverAabbs = getCoverCollisions(world.getTileEntity(pos));
-
-        for (AxisAlignedBB coverAabb : coverAabbs) {
-            if (RenderUtils.isInBounds(coverAabb, hitX, hitY, hitZ)) {
-                return true;
+        for (CollisionGroup group : getCollisions(world.getTileEntity(pos), state)) {
+            if (group.canAccessGui()) {
+                for (AxisAlignedBB aabb : group.getItems()) {
+                    if (RenderUtils.isInBounds(aabb, hitX, hitY, hitZ)) {
+                        return true;
+                    }
+                }
             }
         }
 
         return false;
     }
 
-    public List<AxisAlignedBB> getCombinedCollisionBoxes(IBlockState state) {
-        List<AxisAlignedBB> boxes = new ArrayList<>();
+    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+        List<CollisionGroup> groups = getCoverCollisions(tile);
 
-        boxes.add(ConstantsCable.CORE_AABB);
+        groups.add(ConstantsCable.CORE);
 
         if (state.getValue(NORTH)) {
-            boxes.add(ConstantsCable.NORTH_AABB);
+            groups.add(ConstantsCable.NORTH);
         }
 
         if (state.getValue(EAST)) {
-            boxes.add(ConstantsCable.EAST_AABB);
+            groups.add(ConstantsCable.EAST);
         }
 
         if (state.getValue(SOUTH)) {
-            boxes.add(ConstantsCable.SOUTH_AABB);
+            groups.add(ConstantsCable.SOUTH);
         }
 
         if (state.getValue(WEST)) {
-            boxes.add(ConstantsCable.WEST_AABB);
+            groups.add(ConstantsCable.WEST);
         }
 
         if (state.getValue(UP)) {
-            boxes.add(ConstantsCable.UP_AABB);
+            groups.add(ConstantsCable.UP);
         }
 
         if (state.getValue(DOWN)) {
-            boxes.add(ConstantsCable.DOWN_AABB);
+            groups.add(ConstantsCable.DOWN);
         }
 
-        return boxes;
+        return groups;
     }
 
-    public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
-        return getCoverCollisions(tile);
-    }
-
-    private List<AxisAlignedBB> getCoverCollisions(TileEntity tile) {
-        List<AxisAlignedBB> boxes = new ArrayList<>();
+    private List<CollisionGroup> getCoverCollisions(TileEntity tile) {
+        List<CollisionGroup> groups = new ArrayList<>();
 
         if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable) {
             CoverManager coverManager = ((ICoverable) ((TileNode) tile).getNode()).getCoverManager();
@@ -227,98 +218,91 @@ public class BlockCable extends BlockNode {
             Cover coverDown = coverManager.getCover(EnumFacing.DOWN);
 
             if (coverNorth != null) {
-                boxes.add(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
                     coverWest != null ? 2 : 0, coverDown != null ? 2 : 0, 0,
                     coverEast != null ? 14 : 16, coverUp != null ? 14 : 16, 2
-                ));
+                )));
 
                 if (!coverNorth.getType().isHollow()) {
-                    boxes.add(ConstantsCable.HOLDER_NORTH_AABB);
+                    groups.add(ConstantsCable.HOLDER_NORTH);
                 }
             }
 
             if (coverEast != null) {
-                boxes.add(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
                     14, coverDown != null ? 2 : 0, 0,
                     16, coverUp != null ? 14 : 16, 16
-                ));
+                )));
 
                 if (!coverEast.getType().isHollow()) {
-                    boxes.add(ConstantsCable.HOLDER_EAST_AABB);
+                    groups.add(ConstantsCable.HOLDER_EAST);
                 }
             }
 
             if (coverSouth != null) {
-                boxes.add(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
                     coverEast != null ? 14 : 16, coverDown != null ? 2 : 0, 16,
                     coverWest != null ? 2 : 0, coverUp != null ? 14 : 16, 14
-                ));
+                )));
 
                 if (!coverSouth.getType().isHollow()) {
-                    boxes.add(ConstantsCable.HOLDER_SOUTH_AABB);
+                    groups.add(ConstantsCable.HOLDER_SOUTH);
                 }
             }
 
             if (coverWest != null) {
-                boxes.add(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
                     0, coverDown != null ? 2 : 0, 0,
                     2, coverUp != null ? 14 : 16, 16
-                ));
+                )));
 
                 if (!coverWest.getType().isHollow()) {
-                    boxes.add(ConstantsCable.HOLDER_WEST_AABB);
+                    groups.add(ConstantsCable.HOLDER_WEST);
                 }
             }
 
             if (coverUp != null) {
-                boxes.add(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
                     0, 14, 0,
                     16, 16, 16
-                ));
+                )));
 
                 if (!coverUp.getType().isHollow()) {
-                    boxes.add(ConstantsCable.HOLDER_UP_AABB);
+                    groups.add(ConstantsCable.HOLDER_UP);
                 }
             }
 
             if (coverDown != null) {
-                boxes.add(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
                     0, 0, 0,
                     16, 2, 16
-                ));
+                )));
 
                 if (!coverDown.getType().isHollow()) {
-                    boxes.add(ConstantsCable.HOLDER_DOWN_AABB);
+                    groups.add(ConstantsCable.HOLDER_DOWN);
                 }
             }
         }
 
-        return boxes;
-    }
-
-    private List<AxisAlignedBB> getAllCollisionBoxes(TileEntity tile, IBlockState state) {
-        List<AxisAlignedBB> boxes = new ArrayList<>();
-
-        boxes.addAll(getCombinedCollisionBoxes(state));
-        boxes.addAll(getCollisionBoxes(tile, state));
-
-        return boxes;
+        return groups;
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_) {
-        for (AxisAlignedBB aabb : getAllCollisionBoxes(world.getTileEntity(pos), this.getActualState(state, world, pos))) {
-            addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
+        for (CollisionGroup group : getCollisions(world.getTileEntity(pos), this.getActualState(state, world, pos))) {
+            for (AxisAlignedBB aabb : group.getItems()) {
+                addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
+            }
         }
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        RenderUtils.AdvancedRayTraceResult result = RenderUtils.collisionRayTrace(pos, start, end, getAllCollisionBoxes(world.getTileEntity(pos), this.getActualState(state, world, pos)));
+        AdvancedRayTraceResult result = AdvancedRayTracer.rayTrace(pos, start, end, getCollisions(world.getTileEntity(pos), this.getActualState(state, world, pos)));
 
-        return result != null ? result.hit : null;
+        return result != null ? result.getHit() : null;
     }
 
     @Override

@@ -2,8 +2,9 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExternalStorage;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsExternalStorage;
+import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
+import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
+import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -11,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -24,37 +24,37 @@ public class BlockExternalStorage extends BlockCable {
     }
 
     @Override
-    public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
-        List<AxisAlignedBB> boxes = super.getCollisionBoxes(tile, state);
+    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+        List<CollisionGroup> groups = super.getCollisions(tile, state);
 
         switch (state.getValue(getDirection().getProperty())) {
             case NORTH:
-                boxes.add(ConstantsCable.HOLDER_NORTH_AABB);
-                boxes.add(ConstantsExternalStorage.HEAD_NORTH_AABB);
+                groups.add(ConstantsCable.HOLDER_NORTH);
+                groups.add(ConstantsExternalStorage.HEAD_NORTH);
                 break;
             case EAST:
-                boxes.add(ConstantsCable.HOLDER_EAST_AABB);
-                boxes.add(ConstantsExternalStorage.HEAD_EAST_AABB);
+                groups.add(ConstantsCable.HOLDER_EAST);
+                groups.add(ConstantsExternalStorage.HEAD_EAST);
                 break;
             case SOUTH:
-                boxes.add(ConstantsCable.HOLDER_SOUTH_AABB);
-                boxes.add(ConstantsExternalStorage.HEAD_SOUTH_AABB);
+                groups.add(ConstantsCable.HOLDER_SOUTH);
+                groups.add(ConstantsExternalStorage.HEAD_SOUTH);
                 break;
             case WEST:
-                boxes.add(ConstantsCable.HOLDER_WEST_AABB);
-                boxes.add(ConstantsExternalStorage.HEAD_WEST_AABB);
+                groups.add(ConstantsCable.HOLDER_WEST);
+                groups.add(ConstantsExternalStorage.HEAD_WEST);
                 break;
             case UP:
-                boxes.add(ConstantsCable.HOLDER_UP_AABB);
-                boxes.add(ConstantsExternalStorage.HEAD_UP_AABB);
+                groups.add(ConstantsCable.HOLDER_UP);
+                groups.add(ConstantsExternalStorage.HEAD_UP);
                 break;
             case DOWN:
-                boxes.add(ConstantsCable.HOLDER_DOWN_AABB);
-                boxes.add(ConstantsExternalStorage.HEAD_DOWN_AABB);
+                groups.add(ConstantsCable.HOLDER_DOWN);
+                groups.add(ConstantsExternalStorage.HEAD_DOWN);
                 break;
         }
 
-        return boxes;
+        return groups;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class BlockExternalStorage extends BlockCable {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (hitCablePart(state, world, pos, hitX, hitY, hitZ)) {
+        if (!canAccessGui(state, world, pos, hitX, hitY, hitZ)) {
             return false;
         }
 

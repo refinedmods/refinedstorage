@@ -17,16 +17,11 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -44,7 +39,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,60 +62,11 @@ public final class RenderUtils {
         return hitX >= aabb.minX && hitX <= aabb.maxX && hitY >= aabb.minY && hitY <= aabb.maxY && hitZ >= aabb.minZ && hitZ <= aabb.maxZ;
     }
 
-    public static Vec3d getStart(EntityPlayer player) {
-        return new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-    }
-
-    public static Vec3d getEnd(EntityPlayer player) {
-        double reachDistance = player instanceof EntityPlayerMP ? player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() : (player.capabilities.isCreativeMode ? 5.0D : 4.5D);
-
-        Vec3d lookVec = player.getLookVec();
-        Vec3d start = getStart(player);
-
-        return start.addVector(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
-    }
-
     public static String shorten(String text, int length) {
         if (text.length() > length) {
             text = text.substring(0, length) + "...";
         }
         return text;
-    }
-
-    public static AdvancedRayTraceResult collisionRayTrace(BlockPos pos, Vec3d start, Vec3d end, Collection<AxisAlignedBB> boxes) {
-        double minDistance = Double.POSITIVE_INFINITY;
-        AdvancedRayTraceResult hit = null;
-        int i = -1;
-
-        for (AxisAlignedBB aabb : boxes) {
-            AdvancedRayTraceResult result = aabb == null ? null : collisionRayTrace(pos, start, end, aabb, i, null);
-
-            if (result != null) {
-                double d = result.squareDistanceTo(start);
-                if (d < minDistance) {
-                    minDistance = d;
-                    hit = result;
-                }
-            }
-
-            i++;
-        }
-
-        return hit;
-    }
-
-    public static AdvancedRayTraceResult collisionRayTrace(BlockPos pos, Vec3d start, Vec3d end, AxisAlignedBB bounds, int subHit, Object hitInfo) {
-        RayTraceResult result = bounds.offset(pos).calculateIntercept(start, end);
-
-        if (result == null) {
-            return null;
-        }
-
-        result = new RayTraceResult(RayTraceResult.Type.BLOCK, result.hitVec, result.sideHit, pos);
-        result.subHit = subHit;
-        result.hitInfo = hitInfo;
-
-        return new AdvancedRayTraceResult(result, bounds);
     }
 
     private static void setGLColorFromInt(int color) {
@@ -201,31 +146,6 @@ public final class RenderUtils {
         float multiplier = (pos / scale);
 
         return (int) multiplier;
-    }
-
-    private static class AdvancedRayTraceResultBase<T extends RayTraceResult> {
-        public final AxisAlignedBB bounds;
-        public final T hit;
-
-        public AdvancedRayTraceResultBase(T mop, AxisAlignedBB bounds) {
-
-            this.hit = mop;
-            this.bounds = bounds;
-        }
-
-        public boolean valid() {
-            return hit != null && bounds != null;
-        }
-
-        public double squareDistanceTo(Vec3d vec) {
-            return hit.hitVec.squareDistanceTo(vec);
-        }
-    }
-
-    public static class AdvancedRayTraceResult extends AdvancedRayTraceResultBase<RayTraceResult> {
-        public AdvancedRayTraceResult(RayTraceResult mop, AxisAlignedBB bounds) {
-            super(mop, bounds);
-        }
     }
 
     public static class FluidRenderer {

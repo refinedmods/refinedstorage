@@ -5,13 +5,13 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
+import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -25,13 +25,13 @@ public class BlockWriter extends BlockCable {
     }
 
     @Override
-    public List<AxisAlignedBB> getCollisionBoxes(TileEntity tile, IBlockState state) {
-        return RSBlocks.CONSTRUCTOR.getCollisionBoxes(tile, state);
+    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+        return RSBlocks.CONSTRUCTOR.getCollisions(tile, state);
     }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (hitCablePart(state, world, pos, hitX, hitY, hitZ)) {
+        if (!canAccessGui(state, world, pos, hitX, hitY, hitZ)) {
             return false;
         }
 

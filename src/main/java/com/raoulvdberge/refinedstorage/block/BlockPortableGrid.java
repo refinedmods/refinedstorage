@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsPortableGrid;
+import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;

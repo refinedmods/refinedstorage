@@ -1,5 +1,6 @@
-package com.raoulvdberge.refinedstorage.render.constants;
+package com.raoulvdberge.refinedstorage.render.collision.constants;
 
+import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -7,20 +8,20 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.util.vector.Vector3f;
 
 public final class ConstantsCable {
-    public static final AxisAlignedBB CORE_AABB = RenderUtils.getBounds(6, 6, 6, 10, 10, 10);
-    public static final AxisAlignedBB NORTH_AABB = RenderUtils.getBounds(6, 6, 0, 10, 10, 6);
-    public static final AxisAlignedBB EAST_AABB = RenderUtils.getBounds(10, 6, 6, 16, 10, 10);
-    public static final AxisAlignedBB SOUTH_AABB = RenderUtils.getBounds(6, 6, 10, 10, 10, 16);
-    public static final AxisAlignedBB WEST_AABB = RenderUtils.getBounds(0, 6, 6, 6, 10, 10);
-    public static final AxisAlignedBB UP_AABB = RenderUtils.getBounds(6, 10, 6, 10, 16, 10);
-    public static final AxisAlignedBB DOWN_AABB = RenderUtils.getBounds(6, 0, 6, 10, 6, 10);
+    public static final CollisionGroup CORE = new CollisionGroup().addItem(RenderUtils.getBounds(6, 6, 6, 10, 10, 10));
+    public static final CollisionGroup NORTH = new CollisionGroup().addItem(RenderUtils.getBounds(6, 6, 0, 10, 10, 6));
+    public static final CollisionGroup EAST = new CollisionGroup().addItem(RenderUtils.getBounds(10, 6, 6, 16, 10, 10));
+    public static final CollisionGroup SOUTH = new CollisionGroup().addItem(RenderUtils.getBounds(6, 6, 10, 10, 10, 16));
+    public static final CollisionGroup WEST = new CollisionGroup().addItem(RenderUtils.getBounds(0, 6, 6, 6, 10, 10));
+    public static final CollisionGroup UP = new CollisionGroup().addItem(RenderUtils.getBounds(6, 10, 6, 10, 16, 10));
+    public static final CollisionGroup DOWN = new CollisionGroup().addItem(RenderUtils.getBounds(6, 0, 6, 10, 6, 10));
 
-    public static final AxisAlignedBB HOLDER_NORTH_AABB = getHolderBoundsAabb(EnumFacing.NORTH);
-    public static final AxisAlignedBB HOLDER_EAST_AABB = getHolderBoundsAabb(EnumFacing.EAST);
-    public static final AxisAlignedBB HOLDER_SOUTH_AABB = getHolderBoundsAabb(EnumFacing.SOUTH);
-    public static final AxisAlignedBB HOLDER_WEST_AABB = getHolderBoundsAabb(EnumFacing.WEST);
-    public static final AxisAlignedBB HOLDER_UP_AABB = getHolderBoundsAabb(EnumFacing.UP);
-    public static final AxisAlignedBB HOLDER_DOWN_AABB = getHolderBoundsAabb(EnumFacing.DOWN);
+    public static final CollisionGroup HOLDER_NORTH = new CollisionGroup().addItem(getHolderBoundsAabb(EnumFacing.NORTH));
+    public static final CollisionGroup HOLDER_EAST = new CollisionGroup().addItem(getHolderBoundsAabb(EnumFacing.EAST));
+    public static final CollisionGroup HOLDER_SOUTH = new CollisionGroup().addItem(getHolderBoundsAabb(EnumFacing.SOUTH));
+    public static final CollisionGroup HOLDER_WEST = new CollisionGroup().addItem(getHolderBoundsAabb(EnumFacing.WEST));
+    public static final CollisionGroup HOLDER_UP = new CollisionGroup().addItem(getHolderBoundsAabb(EnumFacing.UP));
+    public static final CollisionGroup HOLDER_DOWN = new CollisionGroup().addItem(getHolderBoundsAabb(EnumFacing.DOWN));
 
     public static Pair<Vector3f, Vector3f> getCoverBounds(EnumFacing side) {
         switch (side) {
