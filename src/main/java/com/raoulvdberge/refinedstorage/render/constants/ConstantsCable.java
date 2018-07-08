@@ -15,12 +15,12 @@ public final class ConstantsCable {
     public static final AxisAlignedBB UP_AABB = RenderUtils.getBounds(6, 10, 6, 10, 16, 10);
     public static final AxisAlignedBB DOWN_AABB = RenderUtils.getBounds(6, 0, 6, 10, 6, 10);
 
-    public static final AxisAlignedBB HOLDER_NORTH_AABB = RenderUtils.getBounds(7, 7, 2, 9, 9, 6);
-    public static final AxisAlignedBB HOLDER_EAST_AABB = RenderUtils.getBounds(10, 7, 7, 14, 9, 9);
-    public static final AxisAlignedBB HOLDER_SOUTH_AABB = RenderUtils.getBounds(7, 7, 10, 9, 9, 14);
-    public static final AxisAlignedBB HOLDER_WEST_AABB = RenderUtils.getBounds(2, 7, 7, 6, 9, 9);
-    public static final AxisAlignedBB HOLDER_UP_AABB = RenderUtils.getBounds(7, 10, 7, 9, 14, 9);
-    public static final AxisAlignedBB HOLDER_DOWN_AABB = RenderUtils.getBounds(7, 2, 7, 9, 6, 9);
+    public static final AxisAlignedBB HOLDER_NORTH_AABB = getHolderBoundsAabb(EnumFacing.NORTH);
+    public static final AxisAlignedBB HOLDER_EAST_AABB = getHolderBoundsAabb(EnumFacing.EAST);
+    public static final AxisAlignedBB HOLDER_SOUTH_AABB = getHolderBoundsAabb(EnumFacing.SOUTH);
+    public static final AxisAlignedBB HOLDER_WEST_AABB = getHolderBoundsAabb(EnumFacing.WEST);
+    public static final AxisAlignedBB HOLDER_UP_AABB = getHolderBoundsAabb(EnumFacing.UP);
+    public static final AxisAlignedBB HOLDER_DOWN_AABB = getHolderBoundsAabb(EnumFacing.DOWN);
 
     public static Pair<Vector3f, Vector3f> getCoverBounds(EnumFacing side) {
         switch (side) {
@@ -94,5 +94,14 @@ public final class ConstantsCable {
             default:
                 return null;
         }
+    }
+
+    private static AxisAlignedBB getHolderBoundsAabb(EnumFacing side) {
+        Pair<Vector3f, Vector3f> bounds = getHolderBounds(side);
+
+        return RenderUtils.getBounds(
+            (int) bounds.getLeft().getX(), (int) bounds.getLeft().getY(), (int) bounds.getLeft().getZ(),
+            (int) bounds.getRight().getX(), (int) bounds.getRight().getY(), (int) bounds.getRight().getZ()
+        );
     }
 }
