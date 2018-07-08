@@ -20,6 +20,7 @@ public class RSJEIPlugin implements IModPlugin {
         registry.addAdvancedGuiHandlers(new AdvancedGuiHandlerGrid());
 
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginCover());
+        registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowCover());
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowWideCover());
     }
 

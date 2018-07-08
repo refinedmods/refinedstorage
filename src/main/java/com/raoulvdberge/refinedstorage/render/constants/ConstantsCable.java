@@ -41,8 +41,8 @@ public final class ConstantsCable {
                 );
             case SOUTH:
                 return Pair.of(
-                    new Vector3f(16, 0, 16),
-                    new Vector3f(0, 16, 14)
+                    new Vector3f(0, 0, 14),
+                    new Vector3f(16, 16, 16)
                 );
             case WEST:
                 return Pair.of(

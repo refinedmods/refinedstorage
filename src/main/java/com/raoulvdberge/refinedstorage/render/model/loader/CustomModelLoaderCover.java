@@ -26,6 +26,8 @@ public class CustomModelLoaderCover implements ICustomModelLoader {
         switch (modelLocation.getResourcePath()) {
             case "cover":
                 return CoverType.NORMAL;
+            case "hollow_cover":
+                return CoverType.HOLLOW;
             case "hollow_wide_cover":
                 return CoverType.HOLLOW_WIDE;
             default:

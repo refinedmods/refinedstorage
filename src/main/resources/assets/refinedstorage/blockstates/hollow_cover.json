@@ -1,0 +1,18 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "cable": "refinedstorage:blocks/cable"
+    },
+    "model": "refinedstorage:cable_core",
+    "uvlock": true
+  },
+  "variants": {
+    "inventory": [
+      {
+        "model": "refinedstorage:cable_core",
+        "transform": "forge:default-block"
+      }
+    ]
+  }
+}

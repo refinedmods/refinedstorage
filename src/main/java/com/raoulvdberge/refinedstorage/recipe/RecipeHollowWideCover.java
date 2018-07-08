@@ -1,34 +1,13 @@
 package com.raoulvdberge.refinedstorage.recipe;
 
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import com.raoulvdberge.refinedstorage.item.ItemHollowWideCover;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-import javax.annotation.Nullable;
-
-public class RecipeHollowWideCover extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
-    private boolean isValid(ItemStack slot, @Nullable ItemStack previousValidSlot) {
-        ItemStack currentCover = ItemCover.getItem(slot);
-
-        if (slot.getItem() == RSItems.COVER && CoverManager.isValidCover(currentCover)) {
-            if (previousValidSlot == null) {
-                return true;
-            }
-
-            ItemStack previousCover = ItemCover.getItem(previousValidSlot);
-
-            return previousCover.getItem() == currentCover.getItem() && previousCover.getItemDamage() == currentCover.getItemDamage();
-        }
-
-        return false;
-    }
-
+public class RecipeHollowWideCover extends RecipeHollowCover {
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
         ItemStack previousValidSlot = null;
@@ -59,15 +38,5 @@ public class RecipeHollowWideCover extends IForgeRegistryEntry.Impl<IRecipe> imp
         ItemHollowWideCover.setItem(stack, ItemCover.getItem(inv.getStackInSlot(0)));
 
         return stack;
-    }
-
-    @Override
-    public boolean canFit(int width, int height) {
-        return width == 3 && height == 3;
-    }
-
-    @Override
-    public ItemStack getRecipeOutput() {
-        return ItemStack.EMPTY;
     }
 }
