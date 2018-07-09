@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.util.vector.Vector3f;
@@ -84,42 +85,40 @@ public class BakedModelCableCover implements IBakedModel {
     }
 
     private static void addNormalCover(List<BakedQuad> quads, TextureAtlasSprite sprite, EnumFacing coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle) {
-        Pair<Vector3f, Vector3f> bounds = ConstantsCable.getCoverBounds(coverSide);
+        AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
+
+        Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
+        Vector3f to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
 
         if (coverSide == EnumFacing.NORTH) {
             if (hasWest) {
-                bounds.getLeft().setX(2);
+                from.setX(2);
             }
 
             if (hasEast) {
-                bounds.getRight().setX(14);
+                to.setX(14);
             }
         } else if (coverSide == EnumFacing.SOUTH) {
             if (hasWest) {
-                bounds.getLeft().setX(2);
+                from.setX(2);
             }
 
             if (hasEast) {
-                bounds.getRight().setX(14);
+                to.setX(14);
             }
         }
 
         if (coverSide.getAxis() != EnumFacing.Axis.Y) {
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             }
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             }
         }
 
-        quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
-            .addFaces(face -> new CubeBuilder.Face(face, sprite))
-            .bake()
-        );
+        quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, sprite)).bake());
 
         if (handle) {
             if (GREY_SPRITE == null) {
@@ -128,61 +127,60 @@ public class BakedModelCableCover implements IBakedModel {
 
             bounds = ConstantsCable.getHolderBounds(coverSide);
 
-            quads.addAll(new CubeBuilder()
-                .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-                .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
+            to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
 
-                .addFaces(face -> new CubeBuilder.Face(face, GREY_SPRITE))
-
-                .bake()
-            );
+            quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, GREY_SPRITE)).bake());
         }
     }
 
     private static void addHollowCover(List<BakedQuad> quads, TextureAtlasSprite sprite, EnumFacing coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
-        Pair<Vector3f, Vector3f> bounds = ConstantsCable.getCoverBounds(coverSide);
+        AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
+
+        Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
+        Vector3f to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
 
         if (coverSide.getAxis() != EnumFacing.Axis.Y) {
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             }
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             }
         }
 
         // Right
         if (coverSide == EnumFacing.NORTH) {
             if (hasWest) {
-                bounds.getLeft().setX(2);
+                from.setX(2);
             } else {
-                bounds.getLeft().setX(0);
+                from.setX(0);
             }
 
-            bounds.getRight().setX(6);
+            to.setX(6);
         } else if (coverSide == EnumFacing.SOUTH) {
             if (hasEast) {
-                bounds.getRight().setX(14);
+                to.setX(14);
             } else {
-                bounds.getRight().setX(16);
+                to.setX(16);
             }
 
-            bounds.getLeft().setX(10);
+            from.setX(10);
         } else if (coverSide == EnumFacing.EAST) {
-            bounds.getLeft().setZ(0);
-            bounds.getRight().setZ(6);
+            from.setZ(0);
+            to.setZ(6);
         } else if (coverSide == EnumFacing.WEST) {
-            bounds.getLeft().setZ(10);
-            bounds.getRight().setZ(16);
+            from.setZ(10);
+            to.setZ(16);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            bounds.getLeft().setZ(10);
-            bounds.getRight().setZ(16);
+            from.setZ(10);
+            to.setZ(16);
         }
 
         quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            .from(from.getX(), from.getY(), from.getZ())
+            .to(to.getX(), to.getY(), to.getZ())
             .addFaces(face -> new CubeBuilder.Face(face, sprite))
             .bake()
         );
@@ -190,203 +188,206 @@ public class BakedModelCableCover implements IBakedModel {
         // Left
         if (coverSide == EnumFacing.NORTH) {
             if (hasEast) {
-                bounds.getRight().setX(14);
+                to.setX(14);
             } else {
-                bounds.getRight().setX(16);
+                to.setX(16);
             }
 
-            bounds.getLeft().setX(10);
+            from.setX(10);
         } else if (coverSide == EnumFacing.SOUTH) {
             if (hasWest) {
-                bounds.getLeft().setX(2);
+                from.setX(2);
             } else {
-                bounds.getLeft().setX(0);
+                from.setX(0);
             }
 
-            bounds.getRight().setX(6);
+            to.setX(6);
         } else if (coverSide == EnumFacing.EAST) {
-            bounds.getRight().setZ(16);
-            bounds.getLeft().setZ(10);
+            to.setZ(16);
+            from.setZ(10);
         } else if (coverSide == EnumFacing.WEST) {
-            bounds.getLeft().setZ(0);
-            bounds.getRight().setZ(6);
+            from.setZ(0);
+            to.setZ(6);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            bounds.getLeft().setZ(0);
-            bounds.getRight().setZ(6);
+            from.setZ(0);
+            to.setZ(6);
         }
 
         quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            .from(from.getX(), from.getY(), from.getZ())
+            .to(to.getX(), to.getY(), to.getZ())
             .addFaces(face -> new CubeBuilder.Face(face, sprite))
             .bake()
         );
 
         // Bottom
         if (coverSide == EnumFacing.NORTH) {
-            bounds.getLeft().setX(6);
-            bounds.getRight().setX(10);
+            from.setX(6);
+            to.setX(10);
 
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             } else {
-                bounds.getLeft().setY(0);
+                from.setY(0);
             }
 
-            bounds.getRight().setY(6);
+            to.setY(6);
         } else if (coverSide == EnumFacing.SOUTH) {
-            bounds.getLeft().setX(6);
-            bounds.getRight().setX(10);
+            from.setX(6);
+            to.setX(10);
 
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             } else {
-                bounds.getLeft().setY(0);
+                from.setY(0);
             }
 
-            bounds.getRight().setY(6);
+            to.setY(6);
         } else if (coverSide == EnumFacing.EAST) {
-            bounds.getLeft().setZ(6);
-            bounds.getRight().setZ(10);
+            from.setZ(6);
+            to.setZ(10);
 
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             } else {
-                bounds.getLeft().setY(0);
+                from.setY(0);
             }
 
-            bounds.getRight().setY(6);
+            to.setY(6);
         } else if (coverSide == EnumFacing.WEST) {
-            bounds.getLeft().setZ(6);
-            bounds.getRight().setZ(10);
+            from.setZ(6);
+            to.setZ(10);
 
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             } else {
-                bounds.getLeft().setY(0);
+                from.setY(0);
             }
 
-            bounds.getRight().setY(6);
+            to.setY(6);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            bounds.getLeft().setZ(6);
-            bounds.getRight().setZ(10);
+            from.setZ(6);
+            to.setZ(10);
 
-            bounds.getLeft().setX(0);
-            bounds.getRight().setX(6);
+            from.setX(0);
+            to.setX(6);
         }
 
         quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            .from(from.getX(), from.getY(), from.getZ())
+            .to(to.getX(), to.getY(), to.getZ())
             .addFaces(face -> new CubeBuilder.Face(face, sprite))
             .bake()
         );
 
         // Up
         if (coverSide == EnumFacing.NORTH) {
-            bounds.getLeft().setX(6);
-            bounds.getRight().setX(10);
+            from.setX(6);
+            to.setX(10);
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             } else {
-                bounds.getRight().setY(16);
+                to.setY(16);
             }
 
-            bounds.getLeft().setY(10);
+            from.setY(10);
         } else if (coverSide == EnumFacing.SOUTH) {
-            bounds.getLeft().setX(6);
-            bounds.getRight().setX(10);
+            from.setX(6);
+            to.setX(10);
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             } else {
-                bounds.getRight().setY(16);
+                to.setY(16);
             }
 
-            bounds.getLeft().setY(10);
+            from.setY(10);
         } else if (coverSide == EnumFacing.EAST) {
-            bounds.getLeft().setZ(6);
-            bounds.getRight().setZ(10);
+            from.setZ(6);
+            to.setZ(10);
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             } else {
-                bounds.getRight().setY(16);
+                to.setY(16);
             }
 
-            bounds.getLeft().setY(10);
+            from.setY(10);
         } else if (coverSide == EnumFacing.WEST) {
-            bounds.getLeft().setZ(6);
-            bounds.getRight().setZ(10);
+            from.setZ(6);
+            to.setZ(10);
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             } else {
-                bounds.getRight().setY(16);
+                to.setY(16);
             }
 
-            bounds.getLeft().setY(10);
+            from.setY(10);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            bounds.getLeft().setZ(6);
-            bounds.getRight().setZ(10);
+            from.setZ(6);
+            to.setZ(10);
 
-            bounds.getLeft().setX(10);
-            bounds.getRight().setX(16);
+            from.setX(10);
+            to.setX(16);
         }
 
         quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            .from(from.getX(), from.getY(), from.getZ())
+            .to(to.getX(), to.getY(), to.getZ())
             .addFaces(face -> new CubeBuilder.Face(face, sprite))
             .bake()
         );
     }
 
     private static void addHollowWideCover(List<BakedQuad> quads, TextureAtlasSprite sprite, EnumFacing coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
-        Pair<Vector3f, Vector3f> bounds = ConstantsCable.getCoverBounds(coverSide);
+        AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
+
+        Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
+        Vector3f to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
 
         if (coverSide.getAxis() != EnumFacing.Axis.Y) {
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             }
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             }
         }
 
         // Right
         if (coverSide == EnumFacing.NORTH) {
             if (hasWest) {
-                bounds.getLeft().setX(2);
+                from.setX(2);
             } else {
-                bounds.getLeft().setX(0);
+                from.setX(0);
             }
 
-            bounds.getRight().setX(3);
+            to.setX(3);
         } else if (coverSide == EnumFacing.SOUTH) {
             if (hasEast) {
-                bounds.getRight().setX(14);
+                to.setX(14);
             } else {
-                bounds.getRight().setX(16);
+                to.setX(16);
             }
 
-            bounds.getLeft().setX(13);
+            from.setX(13);
         } else if (coverSide == EnumFacing.EAST) {
-            bounds.getLeft().setZ(0);
-            bounds.getRight().setZ(3);
+            from.setZ(0);
+            to.setZ(3);
         } else if (coverSide == EnumFacing.WEST) {
-            bounds.getLeft().setZ(13);
-            bounds.getRight().setZ(16);
+            from.setZ(13);
+            to.setZ(16);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            bounds.getLeft().setZ(13);
-            bounds.getRight().setZ(16);
+            from.setZ(13);
+            to.setZ(16);
         }
 
         quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            .from(from.getX(), from.getY(), from.getZ())
+            .to(to.getX(), to.getY(), to.getZ())
             .addFaces(face -> new CubeBuilder.Face(face, sprite))
             .bake()
         );
@@ -394,154 +395,154 @@ public class BakedModelCableCover implements IBakedModel {
         // Left
         if (coverSide == EnumFacing.NORTH) {
             if (hasEast) {
-                bounds.getRight().setX(14);
+                to.setX(14);
             } else {
-                bounds.getRight().setX(16);
+                to.setX(16);
             }
 
-            bounds.getLeft().setX(13);
+            from.setX(13);
         } else if (coverSide == EnumFacing.SOUTH) {
             if (hasWest) {
-                bounds.getLeft().setX(2);
+                from.setX(2);
             } else {
-                bounds.getLeft().setX(0);
+                from.setX(0);
             }
 
-            bounds.getRight().setX(3);
+            to.setX(3);
         } else if (coverSide == EnumFacing.EAST) {
-            bounds.getRight().setZ(16);
-            bounds.getLeft().setZ(13);
+            to.setZ(16);
+            from.setZ(13);
         } else if (coverSide == EnumFacing.WEST) {
-            bounds.getLeft().setZ(0);
-            bounds.getRight().setZ(3);
+            from.setZ(0);
+            to.setZ(3);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            bounds.getLeft().setZ(0);
-            bounds.getRight().setZ(3);
+            from.setZ(0);
+            to.setZ(3);
         }
 
         quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            .from(from.getX(), from.getY(), from.getZ())
+            .to(to.getX(), to.getY(), to.getZ())
             .addFaces(face -> new CubeBuilder.Face(face, sprite))
             .bake()
         );
 
         // Bottom
         if (coverSide == EnumFacing.NORTH) {
-            bounds.getLeft().setX(3);
-            bounds.getRight().setX(13);
+            from.setX(3);
+            to.setX(13);
 
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             } else {
-                bounds.getLeft().setY(0);
+                from.setY(0);
             }
 
-            bounds.getRight().setY(3);
+            to.setY(3);
         } else if (coverSide == EnumFacing.SOUTH) {
-            bounds.getLeft().setX(3);
-            bounds.getRight().setX(13);
+            from.setX(3);
+            to.setX(13);
 
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             } else {
-                bounds.getLeft().setY(0);
+                from.setY(0);
             }
 
-            bounds.getRight().setY(3);
+            to.setY(3);
         } else if (coverSide == EnumFacing.EAST) {
-            bounds.getLeft().setZ(3);
-            bounds.getRight().setZ(13);
+            from.setZ(3);
+            to.setZ(13);
 
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             } else {
-                bounds.getLeft().setY(0);
+                from.setY(0);
             }
 
-            bounds.getRight().setY(3);
+            to.setY(3);
         } else if (coverSide == EnumFacing.WEST) {
-            bounds.getLeft().setZ(3);
-            bounds.getRight().setZ(13);
+            from.setZ(3);
+            to.setZ(13);
 
             if (hasDown) {
-                bounds.getLeft().setY(2);
+                from.setY(2);
             } else {
-                bounds.getLeft().setY(0);
+                from.setY(0);
             }
 
-            bounds.getRight().setY(3);
+            to.setY(3);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            bounds.getLeft().setZ(3);
-            bounds.getRight().setZ(13);
+            from.setZ(3);
+            to.setZ(13);
 
-            bounds.getLeft().setX(0);
-            bounds.getRight().setX(3);
+            from.setX(0);
+            to.setX(3);
         }
 
         quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            .from(from.getX(), from.getY(), from.getZ())
+            .to(to.getX(), to.getY(), to.getZ())
             .addFaces(face -> new CubeBuilder.Face(face, sprite))
             .bake()
         );
 
         // Up
         if (coverSide == EnumFacing.NORTH) {
-            bounds.getLeft().setX(3);
-            bounds.getRight().setX(13);
+            from.setX(3);
+            to.setX(13);
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             } else {
-                bounds.getRight().setY(16);
+                to.setY(16);
             }
 
-            bounds.getLeft().setY(13);
+            from.setY(13);
         } else if (coverSide == EnumFacing.SOUTH) {
-            bounds.getLeft().setX(3);
-            bounds.getRight().setX(13);
+            from.setX(3);
+            to.setX(13);
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             } else {
-                bounds.getRight().setY(16);
+                to.setY(16);
             }
 
-            bounds.getLeft().setY(13);
+            from.setY(13);
         } else if (coverSide == EnumFacing.EAST) {
-            bounds.getLeft().setZ(3);
-            bounds.getRight().setZ(13);
+            from.setZ(3);
+            to.setZ(13);
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             } else {
-                bounds.getRight().setY(16);
+                to.setY(16);
             }
 
-            bounds.getLeft().setY(13);
+            from.setY(13);
         } else if (coverSide == EnumFacing.WEST) {
-            bounds.getLeft().setZ(3);
-            bounds.getRight().setZ(13);
+            from.setZ(3);
+            to.setZ(13);
 
             if (hasUp) {
-                bounds.getRight().setY(14);
+                to.setY(14);
             } else {
-                bounds.getRight().setY(16);
+                to.setY(16);
             }
 
-            bounds.getLeft().setY(13);
+            from.setY(13);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            bounds.getLeft().setZ(3);
-            bounds.getRight().setZ(13);
+            from.setZ(3);
+            to.setZ(13);
 
-            bounds.getLeft().setX(13);
-            bounds.getRight().setX(16);
+            from.setX(13);
+            to.setX(16);
         }
 
         quads.addAll(new CubeBuilder()
-            .from(bounds.getLeft().getX(), bounds.getLeft().getY(), bounds.getLeft().getZ())
-            .to(bounds.getRight().getX(), bounds.getRight().getY(), bounds.getRight().getZ())
+            .from(from.getX(), from.getY(), from.getZ())
+            .to(to.getX(), to.getY(), to.getZ())
             .addFaces(face -> new CubeBuilder.Face(face, sprite))
             .bake()
         );

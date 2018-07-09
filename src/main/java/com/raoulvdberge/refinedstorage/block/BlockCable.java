@@ -15,7 +15,7 @@ import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.raoulvdberge.refinedstorage.util.CollisionUtils;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
@@ -165,7 +165,7 @@ public class BlockCable extends BlockNode {
         for (CollisionGroup group : getCollisions(world.getTileEntity(pos), state)) {
             if (group.canAccessGui()) {
                 for (AxisAlignedBB aabb : group.getItems()) {
-                    if (RenderUtils.isInBounds(aabb, hitX, hitY, hitZ)) {
+                    if (CollisionUtils.isInBounds(aabb, hitX, hitY, hitZ)) {
                         return true;
                     }
                 }
@@ -221,7 +221,7 @@ public class BlockCable extends BlockNode {
             Cover coverDown = coverManager.getCover(EnumFacing.DOWN);
 
             if (coverNorth != null) {
-                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     coverWest != null ? 2 : 0, coverDown != null ? 2 : 0, 0,
                     coverEast != null ? 14 : 16, coverUp != null ? 14 : 16, 2
                 )));
@@ -232,7 +232,7 @@ public class BlockCable extends BlockNode {
             }
 
             if (coverEast != null) {
-                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     14, coverDown != null ? 2 : 0, 0,
                     16, coverUp != null ? 14 : 16, 16
                 )));
@@ -243,7 +243,7 @@ public class BlockCable extends BlockNode {
             }
 
             if (coverSouth != null) {
-                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     coverEast != null ? 14 : 16, coverDown != null ? 2 : 0, 16,
                     coverWest != null ? 2 : 0, coverUp != null ? 14 : 16, 14
                 )));
@@ -254,7 +254,7 @@ public class BlockCable extends BlockNode {
             }
 
             if (coverWest != null) {
-                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     0, coverDown != null ? 2 : 0, 0,
                     2, coverUp != null ? 14 : 16, 16
                 )));
@@ -265,7 +265,7 @@ public class BlockCable extends BlockNode {
             }
 
             if (coverUp != null) {
-                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     0, 14, 0,
                     16, 16, 16
                 )));
@@ -276,7 +276,7 @@ public class BlockCable extends BlockNode {
             }
 
             if (coverDown != null) {
-                groups.add(new CollisionGroup().addItem(RenderUtils.getBounds(
+                groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     0, 0, 0,
                     16, 2, 16
                 )));
@@ -292,7 +292,7 @@ public class BlockCable extends BlockNode {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean p_185477_7_) {
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState) {
         for (CollisionGroup group : getCollisions(world.getTileEntity(pos), this.getActualState(state, world, pos))) {
             for (AxisAlignedBB aabb : group.getItems()) {
                 addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
