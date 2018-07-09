@@ -3,10 +3,8 @@ package com.raoulvdberge.refinedstorage.recipe;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
-import com.raoulvdberge.refinedstorage.item.ItemHollowWideCover;
-import net.minecraft.init.Blocks;
+import com.raoulvdberge.refinedstorage.item.ItemHollowCover;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
@@ -39,7 +37,7 @@ public class RecipeHollowCover extends IForgeRegistryEntry.Impl<IRecipe> impleme
             ItemStack slot = inv.getStackInSlot(i);
 
             if (i == 4) {
-                if (slot.getItem() != Item.getItemFromBlock(Blocks.WOOL)) {
+                if (!slot.isEmpty()) {
                     return false;
                 }
             } else {
@@ -58,7 +56,7 @@ public class RecipeHollowCover extends IForgeRegistryEntry.Impl<IRecipe> impleme
     public ItemStack getCraftingResult(InventoryCrafting inv) {
         ItemStack stack = new ItemStack(RSItems.HOLLOW_COVER, 8);
 
-        ItemHollowWideCover.setItem(stack, ItemCover.getItem(inv.getStackInSlot(0)));
+        ItemHollowCover.setItem(stack, ItemCover.getItem(inv.getStackInSlot(0)));
 
         return stack;
     }

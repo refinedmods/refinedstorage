@@ -293,7 +293,6 @@ item.refinedstorage:security_card.owner=Bound to: %s
 item.refinedstorage:cutting_tool.name=Cutting Tool
 item.refinedstorage:cover.name=Cover
 item.refinedstorage:hollow_cover.name=Hollow Cover
-item.refinedstorage:hollow_wide_cover.name=Hollow Wide Cover
 
 commands.refinedstorage.createdisk.usage=/createdisk <player> <item> <metadata> <id>
 commands.refinedstorage.createdisk.error.notADisk=The given disk item is not a disk.

@@ -28,8 +28,6 @@ public class CustomModelLoaderCover implements ICustomModelLoader {
                 return CoverType.NORMAL;
             case "hollow_cover":
                 return CoverType.HOLLOW;
-            case "hollow_wide_cover":
-                return CoverType.HOLLOW_WIDE;
             default:
                 return null;
         }

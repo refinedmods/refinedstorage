@@ -13,6 +13,6 @@ public enum CoverType {
     }
 
     public ItemStack createStack() {
-        return new ItemStack(this == NORMAL ? RSItems.COVER : (this == HOLLOW ? RSItems.HOLLOW_COVER : RSItems.HOLLOW_WIDE_COVER));
+        return new ItemStack(this == NORMAL ? RSItems.COVER : RSItems.HOLLOW_COVER);
     }
 }

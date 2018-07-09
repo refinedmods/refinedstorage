@@ -21,7 +21,6 @@ public class RSJEIPlugin implements IModPlugin {
 
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginCover());
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowCover());
-        registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowWideCover());
     }
 
     @Override

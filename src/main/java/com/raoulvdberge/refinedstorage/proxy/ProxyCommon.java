@@ -45,7 +45,6 @@ import com.raoulvdberge.refinedstorage.item.ItemProcessor;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.recipe.RecipeCover;
 import com.raoulvdberge.refinedstorage.recipe.RecipeHollowCover;
-import com.raoulvdberge.refinedstorage.recipe.RecipeHollowWideCover;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -237,7 +236,6 @@ public class ProxyCommon {
         registerItem(RSItems.SECURITY_CARD);
         registerItem(RSItems.COVER);
         registerItem(RSItems.HOLLOW_COVER);
-        registerItem(RSItems.HOLLOW_WIDE_COVER);
 
         IntegrationInventorySorter.register();
     }
@@ -286,7 +284,6 @@ public class ProxyCommon {
     public void registerRecipes(RegistryEvent.Register<IRecipe> e) {
         e.getRegistry().register(new RecipeCover().setRegistryName(new ResourceLocation(RS.ID, "cover")));
         e.getRegistry().register(new RecipeHollowCover().setRegistryName(new ResourceLocation(RS.ID, "hollow_cover")));
-        e.getRegistry().register(new RecipeHollowWideCover().setRegistryName(new ResourceLocation(RS.ID, "hollow_wide_cover")));
     }
 
     @SubscribeEvent

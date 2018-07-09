@@ -23,5 +23,4 @@ public final class RSItems {
     public static final ItemCuttingTool CUTTING_TOOL = new ItemCuttingTool();
     public static final ItemCover COVER = new ItemCover();
     public static final ItemHollowCover HOLLOW_COVER = new ItemHollowCover();
-    public static final ItemHollowWideCover HOLLOW_WIDE_COVER = new ItemHollowWideCover();
 }

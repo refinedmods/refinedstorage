@@ -79,9 +79,10 @@ public class CoverManager {
                     case NONE_ON_FACE:
                         return false;
                     case HOLLOW_WIDE_ON_FACE:
-                        if (cover.getType() != CoverType.HOLLOW_WIDE) {
+                        if (!cover.getType().isHollow()) {
                             return false;
                         }
+                        cover = new Cover(cover.getStack(), CoverType.HOLLOW_WIDE);
                         break;
                 }
             }

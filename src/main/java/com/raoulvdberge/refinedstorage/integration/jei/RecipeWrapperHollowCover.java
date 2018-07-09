@@ -2,13 +2,10 @@ package com.raoulvdberge.refinedstorage.integration.jei;
 
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class RecipeWrapperHollowCover implements IShapedCraftingRecipeWrapper {
@@ -22,23 +19,17 @@ public class RecipeWrapperHollowCover implements IShapedCraftingRecipeWrapper {
 
     @Override
     public void getIngredients(IIngredients ingredients) {
-        List<List<ItemStack>> inputs = new ArrayList<>();
+        List<ItemStack> inputs = new ArrayList<>();
 
         for (int i = 0; i < 9; ++i) {
             if (i == 4) {
-                List<ItemStack> wool = new ArrayList<>();
-
-                for (int j = 0; j < 16; ++j) {
-                    wool.add(new ItemStack(Item.getItemFromBlock(Blocks.WOOL), 1, j));
-                }
-
-                inputs.add(wool);
+                inputs.add(ItemStack.EMPTY);
             } else {
-                inputs.add(Collections.singletonList(cover));
+                inputs.add(cover);
             }
         }
 
-        ingredients.setInputLists(ItemStack.class, inputs);
+        ingredients.setInputs(ItemStack.class, inputs);
         ingredients.setOutput(ItemStack.class, hollowCover);
     }
 
