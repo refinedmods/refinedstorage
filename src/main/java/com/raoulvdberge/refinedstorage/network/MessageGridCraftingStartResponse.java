@@ -1,10 +1,14 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.proxy.ProxyClient;
+import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MessageGridCraftingStartResponse implements IMessage, IMessageHandler<MessageGridCraftingStartResponse, IMessage> {
     public MessageGridCraftingStartResponse() {
@@ -21,8 +25,15 @@ public class MessageGridCraftingStartResponse implements IMessage, IMessageHandl
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public IMessage onMessage(MessageGridCraftingStartResponse message, MessageContext ctx) {
-        ProxyClient.onReceiveCraftingStartResponse();
+        Minecraft.getMinecraft().addScheduledTask(() -> {
+            GuiScreen screen = Minecraft.getMinecraft().currentScreen;
+
+            if (screen instanceof GuiCraftingStart) {
+                ((GuiCraftingStart) screen).close();
+            }
+        });
 
         return null;
     }

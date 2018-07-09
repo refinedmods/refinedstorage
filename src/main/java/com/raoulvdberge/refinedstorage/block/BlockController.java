@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.block.enums.ControllerEnergyType;
 import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.item.ItemBlockController;
+import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockController;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.properties.PropertyEnum;
@@ -117,6 +117,6 @@ public class BlockController extends BlockNodeProxy {
 
     @Override
     public Item createItem() {
-        return new ItemBlockController(this, getDirection());
+        return new ItemBlockController(this);
     }
 }

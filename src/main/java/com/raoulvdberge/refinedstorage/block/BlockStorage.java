@@ -1,11 +1,10 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.block.enums.ItemStorageType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.item.ItemBlockStorage;
+import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockStorage;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import net.minecraft.block.properties.PropertyEnum;
@@ -75,7 +74,7 @@ public class BlockStorage extends BlockNode {
 
     @Override
     public Item createItem() {
-        return new ItemBlockStorage(this, getDirection());
+        return new ItemBlockStorage(this);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class BlockStorage extends BlockNode {
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         TileStorage storage = (TileStorage) world.getTileEntity(pos);
 
-        ItemStack stack = new ItemStack(RSBlocks.STORAGE, 1, getMetaFromState(state));
+        ItemStack stack = new ItemStack(this, 1, getMetaFromState(state));
 
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setUniqueId(NetworkNodeStorage.NBT_ID, storage.getNode().getStorageId());

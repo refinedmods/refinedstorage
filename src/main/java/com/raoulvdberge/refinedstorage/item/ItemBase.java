@@ -1,26 +1,30 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class ItemBase extends Item {
-    private final String name;
+    protected final IItemInfo info;
 
-    public ItemBase(String name) {
-        this.name = name;
+    public ItemBase(IItemInfo info) {
+        this.info = info;
 
-        setRegistryName(getDomain(), name);
+        setRegistryName(info.getId());
         setCreativeTab(RS.INSTANCE.tab);
     }
 
-    protected String getDomain() {
-        return RS.ID;
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "item." + getDomain() + ":" + name;
+        return "item." + info.getId().toString();
     }
 
     @Override

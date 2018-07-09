@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
-import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
+import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -64,7 +64,7 @@ public abstract class BlockBase extends Block {
     }
 
     public Item createItem() {
-        return new ItemBlockBase(this, getDirection(), false);
+        return new ItemBlockBase(this, false);
     }
 
     @Override

@@ -1,13 +1,25 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCuttingTool extends ItemBase {
     public ItemCuttingTool() {
-        super("cutting_tool");
+        super(new ItemInfo(RS.ID, "cutting_tool"));
 
         setMaxDamage(50 - 1);
         setMaxStackSize(1);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
     }
 
     @Override

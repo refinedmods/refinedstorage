@@ -6,9 +6,14 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessCraftingMonitor;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -19,7 +24,13 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     public static final String NBT_TAB_PAGE = "TabPage";
 
     public ItemWirelessCraftingMonitor() {
-        super("wireless_crafting_monitor", RS.INSTANCE.config.wirelessCraftingMonitorCapacity);
+        super(new ItemInfo(RS.ID, "wireless_crafting_monitor"), RS.INSTANCE.config.wirelessCraftingMonitorCapacity);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
     }
 
     @Override

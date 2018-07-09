@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.item.capprovider.CapabilityProviderEnergy;
+import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -21,8 +23,8 @@ public abstract class ItemEnergyItem extends ItemBase {
 
     private int energyCapacity;
 
-    public ItemEnergyItem(String name, int energyCapacity) {
-        super(name);
+    public ItemEnergyItem(IItemInfo info, int energyCapacity) {
+        super(info);
 
         this.energyCapacity = energyCapacity;
 

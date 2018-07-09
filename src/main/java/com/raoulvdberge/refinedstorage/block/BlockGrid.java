@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
+import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.statemapper.StateMapperCTM;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
@@ -85,6 +85,6 @@ public class BlockGrid extends BlockNode {
 
     @Override
     public Item createItem() {
-        return new ItemBlockBase(this, getDirection(), true);
+        return new ItemBlockBase(this, true);
     }
 }

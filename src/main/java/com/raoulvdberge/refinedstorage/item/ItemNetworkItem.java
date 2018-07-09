@@ -3,6 +3,8 @@ package com.raoulvdberge.refinedstorage.item;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
+import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -15,6 +17,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -26,10 +30,16 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
     private static final String NBT_CONTROLLER_Z = "ControllerZ";
     private static final String NBT_DIMENSION_ID = "DimensionID";
 
-    public ItemNetworkItem(String name, int energyCapacity) {
-        super(name, energyCapacity);
+    public ItemNetworkItem(IItemInfo info, int energyCapacity) {
+        super(info, energyCapacity);
 
         addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+
     }
 
     @Override

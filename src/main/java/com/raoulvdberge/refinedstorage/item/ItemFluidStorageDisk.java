@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
@@ -7,6 +8,9 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -15,11 +19,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,11 +38,30 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     public static final int TYPE_CREATIVE = 4;
 
     public ItemFluidStorageDisk() {
-        super("fluid_storage_disk");
+        super(new ItemInfo(RS.ID, "fluid_storage_disk"));
 
         setMaxStackSize(1);
         setHasSubtypes(true);
         setMaxDamage(0);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModelVariants(
+            this,
+            new ResourceLocation(RS.ID, "64k_fluid_storage_disk"),
+            new ResourceLocation(RS.ID, "256k_fluid_storage_disk"),
+            new ResourceLocation(RS.ID, "1024k_fluid_storage_disk"),
+            new ResourceLocation(RS.ID, "4096k_fluid_storage_disk"),
+            new ResourceLocation(RS.ID, "creative_fluid_storage_disk")
+        );
+
+        modelRegistration.setModel(this, TYPE_64K, new ModelResourceLocation(RS.ID + ":64k_fluid_storage_disk", "inventory"));
+        modelRegistration.setModel(this, TYPE_256K, new ModelResourceLocation(RS.ID + ":256k_fluid_storage_disk", "inventory"));
+        modelRegistration.setModel(this, TYPE_1024K, new ModelResourceLocation(RS.ID + ":1024k_fluid_storage_disk", "inventory"));
+        modelRegistration.setModel(this, TYPE_4096K, new ModelResourceLocation(RS.ID + ":4096k_fluid_storage_disk", "inventory"));
+        modelRegistration.setModel(this, TYPE_CREATIVE, new ModelResourceLocation(RS.ID + ":creative_fluid_storage_disk", "inventory"));
     }
 
     @Override

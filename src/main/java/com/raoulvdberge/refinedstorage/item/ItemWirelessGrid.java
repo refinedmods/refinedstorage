@@ -6,18 +6,30 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
 public class ItemWirelessGrid extends ItemNetworkItem {
-    public ItemWirelessGrid(String name) {
-        super(name, RS.INSTANCE.config.wirelessGridCapacity);
+    public ItemWirelessGrid(IItemInfo info) {
+        super(info, RS.INSTANCE.config.wirelessGridCapacity);
     }
 
     public ItemWirelessGrid() {
-        super("wireless_grid", RS.INSTANCE.config.wirelessGridCapacity);
+        this(new ItemInfo(RS.ID, "wireless_grid"));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
+import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsPortableGrid;
 import com.raoulvdberge.refinedstorage.render.meshdefinition.ItemMeshDefinitionPortableGrid;
@@ -57,7 +57,7 @@ public class BlockPortableGrid extends BlockBase {
 
     @Override
     public Item createItem() {
-        return new ItemBlockPortableGrid(this, getDirection());
+        return new ItemBlockPortableGrid(this);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.item;
+package com.raoulvdberge.refinedstorage.item.capprovider;
 
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ItemEnergyForge;
 import net.minecraft.item.ItemStack;

@@ -1,7 +1,7 @@
-package com.raoulvdberge.refinedstorage.item;
+package com.raoulvdberge.refinedstorage.item.itemblock;
 
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
-import net.minecraft.block.Block;
+import com.raoulvdberge.refinedstorage.block.BlockBase;
+import com.raoulvdberge.refinedstorage.item.capprovider.CapabilityProviderEnergy;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,8 +23,8 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
 
     private int energyCapacity;
 
-    public ItemBlockEnergyItem(Block block, BlockDirection direction, int energyCapacity) {
-        super(block, direction, true);
+    public ItemBlockEnergyItem(BlockBase block, int energyCapacity) {
+        super(block, true);
 
         this.energyCapacity = energyCapacity;
 

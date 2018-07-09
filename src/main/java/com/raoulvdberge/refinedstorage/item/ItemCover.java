@@ -7,9 +7,14 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
+import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.render.model.loader.CustomModelLoaderCover;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +29,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,14 +39,22 @@ import java.util.List;
 public class ItemCover extends ItemBase {
     private static final String NBT_ITEM = "Item";
 
-    public ItemCover(String name) {
-        super(name);
+    public ItemCover(IItemInfo info) {
+        super(info);
 
         setCreativeTab(RS.INSTANCE.coversTab);
     }
 
     public ItemCover() {
-        this("cover");
+        this(new ItemInfo(RS.ID, "cover"));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+
+        modelRegistration.addModelLoader(() -> new CustomModelLoaderCover()); // Don't use a method reference here, it crashes the server!
     }
 
     public static void setItem(ItemStack cover, ItemStack item) {

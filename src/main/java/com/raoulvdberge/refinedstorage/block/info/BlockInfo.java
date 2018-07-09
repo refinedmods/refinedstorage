@@ -12,8 +12,7 @@ public class BlockInfo implements IBlockInfo {
     private final Material material;
     private final SoundType soundType;
     private final float hardness;
-    private final String id;
-    private final String modId;
+    private final ResourceLocation id;
     private final Object modObject;
     @Nullable
     private final Supplier<TileBase> tileSupplier;
@@ -22,8 +21,7 @@ public class BlockInfo implements IBlockInfo {
         this.material = material;
         this.soundType = soundType;
         this.hardness = hardness;
-        this.id = id;
-        this.modId = modId;
+        this.id = new ResourceLocation(modId, id);
         this.modObject = modObject;
         this.tileSupplier = tileSupplier;
     }
@@ -40,7 +38,7 @@ public class BlockInfo implements IBlockInfo {
 
     @Override
     public ResourceLocation getId() {
-        return new ResourceLocation(modId, id);
+        return id;
     }
 
     @Override

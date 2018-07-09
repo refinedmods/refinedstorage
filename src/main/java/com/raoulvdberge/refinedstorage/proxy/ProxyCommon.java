@@ -80,7 +80,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ProxyCommon {
-    private List<Item> itemsToRegister = new LinkedList<>();
+    protected List<Item> itemsToRegister = new LinkedList<>();
     protected List<BlockBase> blocksToRegister = new LinkedList<>();
 
     public void preInit(FMLPreInitializationEvent e) {

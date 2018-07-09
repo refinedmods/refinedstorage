@@ -7,8 +7,13 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.render.color.ItemColorPattern;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelPattern;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -20,6 +25,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,7 +45,17 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     public static final String NBT_PROCESSING = "Processing";
 
     public ItemPattern() {
-        super("pattern");
+        super(new ItemInfo(RS.ID, "pattern"));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+
+        modelRegistration.addBakedModelOverride(info.getId(), BakedModelPattern::new);
+
+        modelRegistration.addItemColor(this, new ItemColorPattern());
     }
 
     public static CraftingPattern getPatternFromCache(World world, ItemStack stack) {

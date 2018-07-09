@@ -1,11 +1,10 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.item.ItemBlockFluidStorage;
+import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockFluidStorage;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import net.minecraft.block.properties.PropertyEnum;
@@ -75,7 +74,7 @@ public class BlockFluidStorage extends BlockNode {
 
     @Override
     public Item createItem() {
-        return new ItemBlockFluidStorage(this, getDirection());
+        return new ItemBlockFluidStorage(this);
     }
 
     @Override
@@ -98,7 +97,7 @@ public class BlockFluidStorage extends BlockNode {
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         TileFluidStorage storage = (TileFluidStorage) world.getTileEntity(pos);
 
-        ItemStack stack = new ItemStack(RSBlocks.FLUID_STORAGE, 1, getMetaFromState(state));
+        ItemStack stack = new ItemStack(this, 1, getMetaFromState(state));
 
         stack.setTagCompound(new NBTTagCompound());
         stack.getTagCompound().setUniqueId(NetworkNodeFluidStorage.NBT_ID, storage.getNode().getStorageId());
