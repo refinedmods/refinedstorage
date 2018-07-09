@@ -6,9 +6,12 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
+import com.raoulvdberge.refinedstorage.render.statemapper.StateMapperCTM;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,6 +19,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -23,6 +28,15 @@ import java.util.List;
 public class BlockWriter extends BlockCable {
     public BlockWriter() {
         super(createBuilder("writer").tileEntity(TileWriter::new).create());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+        modelRegistration.setStateMapper(this, new StateMapperCTM(info.getId()));
+
+        registerCover(modelRegistration);
     }
 
     @Override
@@ -89,7 +103,7 @@ public class BlockWriter extends BlockCable {
     }
 
     @Override
-    public boolean hasConnectivityState() {
+    public boolean hasConnectedState() {
         return true;
     }
 }

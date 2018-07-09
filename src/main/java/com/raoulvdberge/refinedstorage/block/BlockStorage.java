@@ -6,10 +6,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeS
 import com.raoulvdberge.refinedstorage.block.enums.ItemStorageType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.ItemBlockStorage;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,12 +24,24 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockStorage extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", ItemStorageType.class);
 
     public BlockStorage() {
         super(BlockInfoBuilder.forId("storage").tileEntity(TileStorage::new).hardness(5.8F).create());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, ItemStorageType.TYPE_1K.getId(), new ModelResourceLocation(info.getId(), "type=1k"));
+        modelRegistration.setModel(this, ItemStorageType.TYPE_4K.getId(), new ModelResourceLocation(info.getId(), "type=4k"));
+        modelRegistration.setModel(this, ItemStorageType.TYPE_16K.getId(), new ModelResourceLocation(info.getId(), "type=16k"));
+        modelRegistration.setModel(this, ItemStorageType.TYPE_64K.getId(), new ModelResourceLocation(info.getId(), "type=64k"));
+        modelRegistration.setModel(this, ItemStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation(info.getId(), "type=creative"));
     }
 
     @Override

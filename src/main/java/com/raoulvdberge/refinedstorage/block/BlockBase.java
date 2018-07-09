@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
@@ -18,6 +19,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -31,14 +34,18 @@ public abstract class BlockBase extends Block {
         this.info = info;
 
         setHardness(info.getHardness());
-        setRegistryName(info.getModId(), info.getId());
+        setRegistryName(info.getId());
         setCreativeTab(RS.INSTANCE.tab);
         setSoundType(info.getSoundType());
     }
 
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+    }
+
     @Override
     public String getUnlocalizedName() {
-        return "block." + info.getModId() + ":" + info.getId();
+        return "block." + info.getId().toString();
     }
 
     protected BlockStateContainer.Builder createBlockStateBuilder() {

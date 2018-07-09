@@ -6,10 +6,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeF
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.ItemBlockFluidStorage;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,12 +24,24 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockFluidStorage extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", FluidStorageType.class);
 
     public BlockFluidStorage() {
         super(BlockInfoBuilder.forId("fluid_storage").hardness(5.8F).tileEntity(TileFluidStorage::new).create());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, FluidStorageType.TYPE_64K.getId(), new ModelResourceLocation(info.getId(), "type=64k"));
+        modelRegistration.setModel(this, FluidStorageType.TYPE_256K.getId(), new ModelResourceLocation(info.getId(), "type=256k"));
+        modelRegistration.setModel(this, FluidStorageType.TYPE_1024K.getId(), new ModelResourceLocation(info.getId(), "type=1024k"));
+        modelRegistration.setModel(this, FluidStorageType.TYPE_4096K.getId(), new ModelResourceLocation(info.getId(), "type=4096k"));
+        modelRegistration.setModel(this, FluidStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation(info.getId(), "type=creative"));
     }
 
     @Override

@@ -1,56 +1,50 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
-import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
-import com.raoulvdberge.refinedstorage.block.BlockController;
-import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
-import com.raoulvdberge.refinedstorage.block.enums.ControllerEnergyType;
-import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
-import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
-import com.raoulvdberge.refinedstorage.block.enums.ItemStorageType;
+import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.BlockHighlightListener;
-import com.raoulvdberge.refinedstorage.render.meshdefinition.ItemMeshDefinitionPortableGrid;
-import com.raoulvdberge.refinedstorage.render.model.ModelDiskDrive;
-import com.raoulvdberge.refinedstorage.render.model.ModelDiskManipulator;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCableCover;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelPattern;
 import com.raoulvdberge.refinedstorage.render.model.loader.CustomModelLoaderCover;
-import com.raoulvdberge.refinedstorage.render.model.loader.CustomModelLoaderDefault;
-import com.raoulvdberge.refinedstorage.render.statemapper.StateMapperCTM;
 import com.raoulvdberge.refinedstorage.render.tesr.TileEntitySpecialRendererStorageMonitor;
-import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class ProxyClient extends ProxyCommon {
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
+public class ProxyClient extends ProxyCommon implements IModelRegistration {
+    private Map<ResourceLocation, Function<IBakedModel, IBakedModel>> bakedModelOverrides = new HashMap<>();
+
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
@@ -197,94 +191,16 @@ public class ProxyClient extends ProxyCommon {
         ModelLoader.setCustomModelResourceLocation(RSItems.UPGRADE, ItemUpgrade.TYPE_FORTUNE_2, new ModelResourceLocation("refinedstorage:fortune_upgrade", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RSItems.UPGRADE, ItemUpgrade.TYPE_FORTUNE_3, new ModelResourceLocation("refinedstorage:fortune_upgrade", "inventory"));
 
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CABLE), 0, new ModelResourceLocation("refinedstorage:cable", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.MACHINE_CASING), 0, new ModelResourceLocation("refinedstorage:machine_casing", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DISK_DRIVE), 0, new ModelResourceLocation("refinedstorage:disk_drive", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.EXPORTER), 0, new ModelResourceLocation("refinedstorage:exporter", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.IMPORTER), 0, new ModelResourceLocation("refinedstorage:importer", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.EXTERNAL_STORAGE), 0, new ModelResourceLocation("refinedstorage:external_storage", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.INTERFACE), 0, new ModelResourceLocation("refinedstorage:interface", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_INTERFACE), 0, new ModelResourceLocation("refinedstorage:fluid_interface", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE), ItemStorageType.TYPE_1K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=1k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE), ItemStorageType.TYPE_4K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=4k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE), ItemStorageType.TYPE_16K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=16k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE), ItemStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:storage", "type=64k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE), ItemStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:storage", "type=creative"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_STORAGE), FluidStorageType.TYPE_64K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=64k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_STORAGE), FluidStorageType.TYPE_256K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=256k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_STORAGE), FluidStorageType.TYPE_1024K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=1024k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_STORAGE), FluidStorageType.TYPE_4096K.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=4096k"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.FLUID_STORAGE), FluidStorageType.TYPE_CREATIVE.getId(), new ModelResourceLocation("refinedstorage:fluid_storage", "type=creative"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DISK_MANIPULATOR), 0, new ModelResourceLocation("refinedstorage:disk_manipulator", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.QUARTZ_ENRICHED_IRON), 0, new ModelResourceLocation("refinedstorage:quartz_enriched_iron_block", "inventory"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.STORAGE_MONITOR), 0, new ModelResourceLocation("refinedstorage:storage_monitor", "connected=false,direction=north"));
         ModelLoader.setCustomModelResourceLocation(RSItems.COVER, 0, new ModelResourceLocation("refinedstorage:cover", "inventory"));
         ModelLoader.setCustomModelResourceLocation(RSItems.HOLLOW_COVER, 0, new ModelResourceLocation("refinedstorage:hollow_cover", "inventory"));
 
-        ModelLoaderRegistry.registerLoader(new CustomModelLoaderDefault(new ResourceLocation(RS.ID, "disk_drive"), ModelDiskDrive::new));
-        ModelLoaderRegistry.registerLoader(new CustomModelLoaderDefault(new ResourceLocation(RS.ID, "disk_manipulator"), ModelDiskManipulator::new));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), GridType.NORMAL.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=normal"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), GridType.CRAFTING.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=crafting"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), GridType.PATTERN.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=pattern"));
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.GRID), GridType.FLUID.getId(), new ModelResourceLocation("refinedstorage:grid", "connected=false,direction=north,type=fluid"));
-        ModelLoader.setCustomStateMapper(RSBlocks.GRID, new StateMapperCTM("refinedstorage:grid"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CRAFTING_MONITOR), 0, new ModelResourceLocation("refinedstorage:crafting_monitor", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.CRAFTING_MONITOR, new StateMapperCTM("refinedstorage:crafting_monitor"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.WIRELESS_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:wireless_transmitter", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.WIRELESS_TRANSMITTER, new StateMapperCTM("refinedstorage:wireless_transmitter"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.NETWORK_TRANSMITTER), 0, new ModelResourceLocation("refinedstorage:network_transmitter", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.NETWORK_TRANSMITTER, new StateMapperCTM("refinedstorage:network_transmitter"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.NETWORK_RECEIVER), 0, new ModelResourceLocation("refinedstorage:network_receiver", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.NETWORK_RECEIVER, new StateMapperCTM("refinedstorage:network_receiver"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DETECTOR), 0, new ModelResourceLocation("refinedstorage:detector", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.DETECTOR, new StateMapperCTM("refinedstorage:detector"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.RELAY), 0, new ModelResourceLocation("refinedstorage:relay", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.RELAY, new StateMapperCTM("refinedstorage:relay"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.SECURITY_MANAGER), 0, new ModelResourceLocation("refinedstorage:security_manager", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.SECURITY_MANAGER, new StateMapperCTM("refinedstorage:security_manager"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.READER), 0, new ModelResourceLocation("refinedstorage:reader", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.READER, new StateMapperCTM("refinedstorage:reader"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.WRITER), 0, new ModelResourceLocation("refinedstorage:writer", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.WRITER, new StateMapperCTM("refinedstorage:writer"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CRAFTER), 0, new ModelResourceLocation("refinedstorage:crafter", "connected=false,direction=north"));
-        ModelLoader.setCustomStateMapper(RSBlocks.CRAFTER, new StateMapperCTM("refinedstorage:crafter"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CONSTRUCTOR), 0, new ModelResourceLocation("refinedstorage:constructor", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.CONSTRUCTOR, new StateMapperCTM("refinedstorage:constructor"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.DESTRUCTOR), 0, new ModelResourceLocation("refinedstorage:destructor", "inventory"));
-        ModelLoader.setCustomStateMapper(RSBlocks.DESTRUCTOR, new StateMapperCTM("refinedstorage:destructor"));
-
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(RSBlocks.CRAFTER_MANAGER), 0, new ModelResourceLocation("refinedstorage:crafter_manager", "connected=false,direction=north"));
-        ModelLoader.setCustomStateMapper(RSBlocks.CRAFTER_MANAGER, new StateMapperCTM("refinedstorage:crafter_manager"));
-
-        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.CONTROLLER), stack -> {
-            ControllerEnergyType energyType = stack.getItemDamage() == ControllerType.CREATIVE.getId() ? ControllerEnergyType.ON : TileController.getEnergyType(ItemBlockController.getEnergyStored(stack), RS.INSTANCE.config.controllerCapacity);
-
-            return new ModelResourceLocation("refinedstorage:controller" + (Loader.isModLoaded("ctm") ? "_glow" : ""), "energy_type=" + energyType);
-        });
-        ModelLoader.setCustomStateMapper(RSBlocks.CONTROLLER, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("refinedstorage:controller" + (Loader.isModLoaded("ctm") ? "_glow" : ""), "energy_type=" + state.getValue(BlockController.ENERGY_TYPE));
-            }
-        });
-
         ModelLoaderRegistry.registerLoader(new CustomModelLoaderCover());
 
-        ModelLoader.setCustomStateMapper(RSBlocks.PORTABLE_GRID, new StateMap.Builder().ignore(BlockPortableGrid.TYPE).build());
-        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(RSBlocks.PORTABLE_GRID), new ItemMeshDefinitionPortableGrid());
+        addBakedModelOverride(new ResourceLocation(RS.ID, "pattern"), BakedModelPattern::new);
+
+        for (BlockBase block : blocksToRegister) {
+            block.registerModels(this);
+        }
     }
 
     public static void onReceiveCraftingPreviewResponse(MessageGridCraftingPreviewResponse message) {
@@ -311,21 +227,37 @@ public class ProxyClient extends ProxyCommon {
 
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent e) {
-        for (ModelResourceLocation model : e.getModelRegistry().getKeys()) {
-            if (model.getResourceDomain().equals(RS.ID)) {
-                if (model.getResourcePath().equals("pattern")) {
-                    e.getModelRegistry().putObject(model, new BakedModelPattern(e.getModelRegistry().getObject(model)));
-                } else if (model.getResourcePath().equals("cable") ||
-                    model.getResourcePath().equals("exporter") ||
-                    model.getResourcePath().equals("importer") ||
-                    model.getResourcePath().equals("external_storage") ||
-                    model.getResourcePath().equals("constructor") ||
-                    model.getResourcePath().equals("destructor") ||
-                    model.getResourcePath().equals("reader") ||
-                    model.getResourcePath().equals("writer")) {
-                    e.getModelRegistry().putObject(model, new BakedModelCableCover(e.getModelRegistry().getObject(model)));
-                }
+        for (ModelResourceLocation resource : e.getModelRegistry().getKeys()) {
+            ResourceLocation key = new ResourceLocation(resource.getResourceDomain(), resource.getResourcePath());
+
+            if (bakedModelOverrides.containsKey(key)) {
+                e.getModelRegistry().putObject(resource, bakedModelOverrides.get(key).apply(e.getModelRegistry().getObject(resource)));
             }
         }
+    }
+
+    @Override
+    public void addBakedModelOverride(ResourceLocation resource, Function<IBakedModel, IBakedModel> override) {
+        bakedModelOverrides.put(resource, override);
+    }
+
+    @Override
+    public void setModel(Block block, int meta, ModelResourceLocation resource) {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, resource);
+    }
+
+    @Override
+    public void setModelMeshDefinition(Block block, ItemMeshDefinition meshDefinition) {
+        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(block), meshDefinition);
+    }
+
+    @Override
+    public void addModelLoader(ICustomModelLoader modelLoader) {
+        ModelLoaderRegistry.registerLoader(modelLoader);
+    }
+
+    @Override
+    public void setStateMapper(Block block, IStateMapper stateMapper) {
+        ModelLoader.setCustomStateMapper(block, stateMapper);
     }
 }

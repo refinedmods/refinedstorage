@@ -4,9 +4,13 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.block.property.PropertyObject;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.render.model.ModelDiskDrive;
+import com.raoulvdberge.refinedstorage.render.model.loader.CustomModelLoaderDefault;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -23,6 +29,14 @@ public class BlockDiskDrive extends BlockNode {
 
     public BlockDiskDrive() {
         super(BlockInfoBuilder.forId("disk_drive").tileEntity(TileDiskDrive::new).create());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+
+        modelRegistration.addModelLoader(new CustomModelLoaderDefault(info.getId(), ModelDiskDrive::new));
     }
 
     @Override

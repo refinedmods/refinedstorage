@@ -81,7 +81,7 @@ import java.util.List;
 
 public class ProxyCommon {
     private List<Item> itemsToRegister = new LinkedList<>();
-    private List<BlockBase> blocksToRegister = new LinkedList<>();
+    protected List<BlockBase> blocksToRegister = new LinkedList<>();
 
     public void preInit(FMLPreInitializationEvent e) {
         MinecraftForge.EVENT_BUS.register(this);
@@ -346,7 +346,7 @@ public class ProxyCommon {
     private void registerTile(IBlockInfo info) {
         Class<? extends TileBase> clazz = info.createTileEntity().getClass();
 
-        GameRegistry.registerTileEntity(clazz, new ResourceLocation(info.getModId(), info.getId()));
+        GameRegistry.registerTileEntity(clazz, info.getId());
 
         try {
             TileBase tileInstance = clazz.newInstance();

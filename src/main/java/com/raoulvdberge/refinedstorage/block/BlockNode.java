@@ -60,7 +60,7 @@ public abstract class BlockNode extends BlockNodeProxy {
     protected BlockStateContainer.Builder createBlockStateBuilder() {
         BlockStateContainer.Builder builder = super.createBlockStateBuilder();
 
-        if (hasConnectivityState()) {
+        if (hasConnectedState()) {
             builder.add(CONNECTED);
         }
 
@@ -76,7 +76,7 @@ public abstract class BlockNode extends BlockNodeProxy {
     public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
         state = super.getActualState(state, world, pos);
 
-        if (hasConnectivityState()) {
+        if (hasConnectedState()) {
             TileEntity tile = world.getTileEntity(pos);
 
             if (tile instanceof TileNode) {
@@ -87,7 +87,7 @@ public abstract class BlockNode extends BlockNodeProxy {
         return state;
     }
 
-    public boolean hasConnectivityState() {
+    public boolean hasConnectedState() {
         return false;
     }
 }

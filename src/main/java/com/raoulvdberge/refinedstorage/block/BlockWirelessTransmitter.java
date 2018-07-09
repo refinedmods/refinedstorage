@@ -2,11 +2,14 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
+import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsWirelessTransmitter;
+import com.raoulvdberge.refinedstorage.render.statemapper.StateMapperCTM;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,6 +22,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -26,6 +31,13 @@ import java.util.List;
 public class BlockWirelessTransmitter extends BlockNode {
     public BlockWirelessTransmitter() {
         super(BlockInfoBuilder.forId("wireless_transmitter").tileEntity(TileWirelessTransmitter::new).create());
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerModels(IModelRegistration modelRegistration) {
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+        modelRegistration.setStateMapper(this, new StateMapperCTM(info.getId()));
     }
 
     @Override
@@ -72,7 +84,7 @@ public class BlockWirelessTransmitter extends BlockNode {
     }
 
     @Override
-    public boolean hasConnectivityState() {
+    public boolean hasConnectedState() {
         return true;
     }
 

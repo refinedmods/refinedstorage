@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.block.info;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -38,13 +39,8 @@ public class BlockInfo implements IBlockInfo {
     }
 
     @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public String getModId() {
-        return modId;
+    public ResourceLocation getId() {
+        return new ResourceLocation(modId, id);
     }
 
     @Override

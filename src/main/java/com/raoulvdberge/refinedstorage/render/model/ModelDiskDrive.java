@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.model;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelDiskDrive;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -15,12 +16,12 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ModelDiskDrive implements IModel {
-    private static final ResourceLocation MODEL_BASE = new ResourceLocation("refinedstorage:block/disk_drive");
+    private static final ResourceLocation MODEL_BASE = new ResourceLocation(RS.ID + ":block/disk_drive");
 
-    private static final ResourceLocation MODEL_DISK = new ResourceLocation("refinedstorage:block/disk");
-    private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation("refinedstorage:block/disk_near_capacity");
-    private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation("refinedstorage:block/disk_full");
-    private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation("refinedstorage:block/disk_disconnected");
+    private static final ResourceLocation MODEL_DISK = new ResourceLocation(RS.ID + ":block/disk");
+    private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation(RS.ID + ":block/disk_near_capacity");
+    private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation(RS.ID + ":block/disk_full");
+    private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_disconnected");
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
