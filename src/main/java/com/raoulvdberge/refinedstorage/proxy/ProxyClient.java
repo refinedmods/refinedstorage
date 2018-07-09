@@ -41,6 +41,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ProxyClient extends ProxyCommon implements IModelRegistration {
     private Map<ResourceLocation, Function<IBakedModel, IBakedModel>> bakedModelOverrides = new HashMap<>();
@@ -252,8 +253,8 @@ public class ProxyClient extends ProxyCommon implements IModelRegistration {
     }
 
     @Override
-    public void addModelLoader(ICustomModelLoader modelLoader) {
-        ModelLoaderRegistry.registerLoader(modelLoader);
+    public void addModelLoader(Supplier<ICustomModelLoader> modelLoader) {
+        ModelLoaderRegistry.registerLoader(modelLoader.get());
     }
 
     @Override

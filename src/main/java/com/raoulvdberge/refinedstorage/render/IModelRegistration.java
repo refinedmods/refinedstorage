@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface IModelRegistration {
     void addBakedModelOverride(ResourceLocation resource, Function<IBakedModel, IBakedModel> override);
@@ -17,7 +18,7 @@ public interface IModelRegistration {
 
     void setModelMeshDefinition(Block block, ItemMeshDefinition meshDefinition);
 
-    void addModelLoader(ICustomModelLoader modelLoader);
+    void addModelLoader(Supplier<ICustomModelLoader> modelLoader);
 
     void setStateMapper(Block block, IStateMapper stateMapper);
 }

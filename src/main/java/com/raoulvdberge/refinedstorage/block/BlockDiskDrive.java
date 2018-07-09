@@ -36,7 +36,7 @@ public class BlockDiskDrive extends BlockNode {
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
 
-        modelRegistration.addModelLoader(new CustomModelLoaderDefault(info.getId(), ModelDiskDrive::new));
+        modelRegistration.addModelLoader(() -> new CustomModelLoaderDefault(info.getId(), ModelDiskDrive::new));
     }
 
     @Override

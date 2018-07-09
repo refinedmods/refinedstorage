@@ -36,7 +36,7 @@ public class BlockDiskManipulator extends BlockNode {
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
 
-        modelRegistration.addModelLoader(new CustomModelLoaderDefault(info.getId(), ModelDiskManipulator::new));
+        modelRegistration.addModelLoader(() -> new CustomModelLoaderDefault(info.getId(), ModelDiskManipulator::new));
     }
 
     @Override
