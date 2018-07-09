@@ -73,7 +73,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
 
-    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_LARGE_ON_FACE);
+    private CoverManager coverManager = new CoverManager(this);
 
     public NetworkNodeDestructor(World world, BlockPos pos) {
         super(world, pos);

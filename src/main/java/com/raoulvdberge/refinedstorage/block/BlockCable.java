@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.block.property.PropertyObject;
@@ -149,7 +150,7 @@ public class BlockCable extends BlockNode {
         if (node instanceof ICoverable) {
             Cover cover = ((ICoverable) node).getCoverManager().getCover(direction);
 
-            if (cover != null && !cover.getType().isHollow()) {
+            if (cover != null && cover.getType() != CoverType.HOLLOW) {
                 return false;
             }
         }
@@ -159,7 +160,7 @@ public class BlockCable extends BlockNode {
         if (otherTile instanceof TileNode && ((TileNode) otherTile).getNode() instanceof ICoverable) {
             Cover cover = ((ICoverable) ((TileNode) otherTile).getNode()).getCoverManager().getCover(direction.getOpposite());
 
-            if (cover != null && !cover.getType().isHollow()) {
+            if (cover != null && cover.getType() != CoverType.HOLLOW) {
                 return false;
             }
         }
@@ -244,7 +245,7 @@ public class BlockCable extends BlockNode {
                     coverEast != null ? 14 : 16, coverUp != null ? 14 : 16, 2
                 )));
 
-                if (!coverNorth.getType().isHollow()) {
+                if (coverNorth.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_NORTH);
                 }
             }
@@ -255,7 +256,7 @@ public class BlockCable extends BlockNode {
                     16, coverUp != null ? 14 : 16, 16
                 )));
 
-                if (!coverEast.getType().isHollow()) {
+                if (coverEast.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_EAST);
                 }
             }
@@ -266,7 +267,7 @@ public class BlockCable extends BlockNode {
                     coverWest != null ? 2 : 0, coverUp != null ? 14 : 16, 14
                 )));
 
-                if (!coverSouth.getType().isHollow()) {
+                if (coverSouth.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_SOUTH);
                 }
             }
@@ -277,7 +278,7 @@ public class BlockCable extends BlockNode {
                     2, coverUp != null ? 14 : 16, 16
                 )));
 
-                if (!coverWest.getType().isHollow()) {
+                if (coverWest.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_WEST);
                 }
             }
@@ -288,7 +289,7 @@ public class BlockCable extends BlockNode {
                     16, 16, 16
                 )));
 
-                if (!coverUp.getType().isHollow()) {
+                if (coverUp.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_UP);
                 }
             }
@@ -299,7 +300,7 @@ public class BlockCable extends BlockNode {
                     16, 2, 16
                 )));
 
-                if (!coverDown.getType().isHollow()) {
+                if (coverDown.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_DOWN);
                 }
             }

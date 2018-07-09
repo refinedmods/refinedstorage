@@ -44,7 +44,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
 
-    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_ON_FACE);
+    private CoverManager coverManager = new CoverManager(this);
 
     private int filterSlot;
 

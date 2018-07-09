@@ -72,7 +72,7 @@ public class BakedModelCover extends BakedModelCableCover {
         public List<BakedQuad> load(CacheKey key) {
             List<BakedQuad> quads = new ArrayList<>();
 
-            addCover(quads, new Cover(key.stack, key.type), EnumFacing.NORTH, key.side, 0, false, false, false, false, false);
+            addCover(quads, new Cover(key.stack, key.type), EnumFacing.NORTH, key.side, 0, null, false);
 
             return quads;
         }

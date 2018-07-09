@@ -1,8 +1,10 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.block.BlockCable;
 import com.raoulvdberge.refinedstorage.render.CubeBuilder;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
@@ -39,26 +41,40 @@ public class BakedModelCableCover implements IBakedModel {
         List<BakedQuad> quads = new ArrayList<>(base.getQuads(state, side, rand));
 
         if (state != null) {
-            IExtendedBlockState s = (IExtendedBlockState) state;
+            IExtendedBlockState extendedState = (IExtendedBlockState) state;
 
-            boolean hasUp = s.getValue(BlockCable.COVER_UP) != null;
-            boolean hasDown = s.getValue(BlockCable.COVER_DOWN) != null;
-
-            boolean hasEast = s.getValue(BlockCable.COVER_EAST) != null;
-            boolean hasWest = s.getValue(BlockCable.COVER_WEST) != null;
-
-            addCover(quads, s.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, hasUp, hasDown, hasEast, hasWest, true);
-            addCover(quads, s.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, hasUp, hasDown, hasEast, hasWest, true);
-            addCover(quads, s.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, hasUp, hasDown, hasEast, hasWest, true);
-            addCover(quads, s.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, hasUp, hasDown, hasEast, hasWest, true);
-            addCover(quads, s.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, hasUp, hasDown, hasEast, hasWest, true);
-            addCover(quads, s.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, hasUp, hasDown, hasEast, hasWest, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, extendedState, true);
         }
 
         return quads;
     }
 
-    protected static void addCover(List<BakedQuad> quads, @Nullable Cover cover, EnumFacing coverSide, EnumFacing side, long rand, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle) {
+    private static int getHollowCoverSize(@Nullable IBlockState state, EnumFacing coverSide) {
+        if (state == null) {
+            return 6;
+        }
+
+        BlockBase block = (BlockBase) state.getBlock();
+
+        if (block.getDirection() != null && state.getValue(block.getDirection().getProperty()) == coverSide) {
+            if (block == RSBlocks.CABLE || block == RSBlocks.EXPORTER) {
+                return 6;
+            } else if (block == RSBlocks.EXTERNAL_STORAGE || block == RSBlocks.IMPORTER) {
+                return 3;
+            } else if (block == RSBlocks.CONSTRUCTOR || block == RSBlocks.DESTRUCTOR || block == RSBlocks.READER || block == RSBlocks.WRITER) {
+                return 2;
+            }
+        }
+
+        return 6;
+    }
+
+    protected static void addCover(List<BakedQuad> quads, @Nullable Cover cover, EnumFacing coverSide, EnumFacing side, long rand, @Nullable IExtendedBlockState state, boolean handle) {
         if (cover == null) {
             return;
         }
@@ -69,6 +85,15 @@ public class BakedModelCableCover implements IBakedModel {
             return;
         }
 
+        boolean hasUp = false, hasDown = false, hasEast = false, hasWest = false;
+
+        if (state != null) {
+            hasUp = state.getValue(BlockCable.COVER_UP) != null;
+            hasDown = state.getValue(BlockCable.COVER_DOWN) != null;
+            hasEast = state.getValue(BlockCable.COVER_EAST) != null;
+            hasWest = state.getValue(BlockCable.COVER_WEST) != null;
+        }
+
         TextureAtlasSprite sprite = RenderUtils.getSprite(Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(coverState), coverState, side, rand);
 
         switch (cover.getType()) {
@@ -76,13 +101,7 @@ public class BakedModelCableCover implements IBakedModel {
                 addNormalCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, handle);
                 break;
             case HOLLOW:
-                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, 6);
-                break;
-            case HOLLOW_MEDIUM:
-                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, 3);
-                break;
-            case HOLLOW_LARGE:
-                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, 2);
+                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, getHollowCoverSize(state, coverSide));
                 break;
         }
     }

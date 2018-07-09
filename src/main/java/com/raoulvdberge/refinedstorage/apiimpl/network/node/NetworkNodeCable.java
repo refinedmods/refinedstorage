@@ -16,7 +16,7 @@ public class NetworkNodeCable extends NetworkNode implements ICoverable {
 
     private static final String NBT_COVERS = "Covers";
 
-    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.ANY);
+    private CoverManager coverManager = new CoverManager(this);
 
     public NetworkNodeCable(World world, BlockPos pos) {
         super(world, pos);

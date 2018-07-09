@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCable;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
@@ -24,29 +25,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CoverManager {
-    public enum CoverPlacementMode {
-        ANY,
-        HOLLOW_ON_FACE,
-        HOLLOW_MEDIUM_ON_FACE,
-        HOLLOW_LARGE_ON_FACE
-    }
-
     private static final String NBT_DIRECTION = "Direction";
     private static final String NBT_ITEM = "Item";
     private static final String NBT_TYPE = "Type";
 
     private Map<EnumFacing, Cover> covers = new HashMap<>();
     private NetworkNode node;
-    private CoverPlacementMode placementMode;
 
-    public CoverManager(NetworkNode node, CoverPlacementMode placementMode) {
+    public CoverManager(NetworkNode node) {
         this.node = node;
-        this.placementMode = placementMode;
     }
 
     public boolean canConduct(EnumFacing direction) {
         Cover cover = getCover(direction);
-        if (cover != null && !cover.getType().isHollow()) {
+        if (cover != null && cover.getType() != CoverType.HOLLOW) {
             return false;
         }
 
@@ -54,7 +46,7 @@ public class CoverManager {
         if (neighbor instanceof ICoverable) {
             cover = ((ICoverable) neighbor).getCoverManager().getCover(direction.getOpposite());
 
-            if (cover != null && !cover.getType().isHollow()) {
+            if (cover != null && cover.getType() != CoverType.HOLLOW) {
                 return false;
             }
         }
@@ -73,19 +65,8 @@ public class CoverManager {
 
     public boolean setCover(EnumFacing facing, Cover cover) {
         if (isValidCover(cover.getStack()) && !hasCover(facing)) {
-            if (facing == node.getDirection()) {
-                switch (placementMode) {
-                    case ANY:
-                        break;
-                    case HOLLOW_ON_FACE:
-                    case HOLLOW_MEDIUM_ON_FACE:
-                    case HOLLOW_LARGE_ON_FACE:
-                        if (!cover.getType().isHollow()) {
-                            return false;
-                        }
-                        cover = new Cover(cover.getStack(), placementMode == CoverPlacementMode.HOLLOW_ON_FACE ? CoverType.HOLLOW : (placementMode == CoverPlacementMode.HOLLOW_MEDIUM_ON_FACE ? CoverType.HOLLOW_MEDIUM : CoverType.HOLLOW_LARGE));
-                        break;
-                }
+            if (facing == node.getDirection() && !(node instanceof NetworkNodeCable) && cover.getType() != CoverType.HOLLOW) {
+                return false;
             }
 
             covers.put(facing, cover);

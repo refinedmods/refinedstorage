@@ -67,7 +67,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     private int type = IType.ITEMS;
     private boolean drop = false;
 
-    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_LARGE_ON_FACE);
+    private CoverManager coverManager = new CoverManager(this);
 
     public NetworkNodeConstructor(World world, BlockPos pos) {
         super(world, pos);
