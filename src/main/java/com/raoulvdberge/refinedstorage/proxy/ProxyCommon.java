@@ -349,7 +349,7 @@ public class ProxyCommon {
     private void registerTile(IBlockInfo info) {
         Class<? extends TileBase> clazz = info.createTileEntity().getClass();
 
-        GameRegistry.registerTileEntity(clazz, new ResourceLocation(RS.ID, info.getId()));
+        GameRegistry.registerTileEntity(clazz, new ResourceLocation(info.getModId(), info.getId()));
 
         try {
             TileBase tileInstance = clazz.newInstance();

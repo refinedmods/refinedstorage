@@ -41,7 +41,7 @@ public abstract class BlockBase extends Block {
         return "block." + info.getModId() + ":" + info.getId();
     }
 
-    protected BlockStateContainer.Builder createStateBuilder() {
+    protected BlockStateContainer.Builder createBlockStateBuilder() {
         BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
 
         if (getDirection() != null) {
@@ -53,7 +53,7 @@ public abstract class BlockBase extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createStateBuilder().build();
+        return createBlockStateBuilder().build();
     }
 
     public Item createItem() {

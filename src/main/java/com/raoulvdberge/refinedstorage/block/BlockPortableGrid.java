@@ -91,7 +91,7 @@ public class BlockPortableGrid extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createStateBuilder()
+        return createBlockStateBuilder()
             .add(TYPE)
             .add(DISK_STATE)
             .add(CONNECTED)

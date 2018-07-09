@@ -40,7 +40,7 @@ public class BlockController extends BlockNodeProxy {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createStateBuilder()
+        return createBlockStateBuilder()
             .add(TYPE)
             .add(ENERGY_TYPE)
             .build();

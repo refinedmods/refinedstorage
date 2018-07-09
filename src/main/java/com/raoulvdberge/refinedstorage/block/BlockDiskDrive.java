@@ -37,8 +37,8 @@ public class BlockDiskDrive extends BlockNode {
     }
 
     @Override
-    protected BlockStateContainer.Builder createStateBuilder() {
-        return super.createStateBuilder().add(DISK_STATE);
+    protected BlockStateContainer.Builder createBlockStateBuilder() {
+        return super.createBlockStateBuilder().add(DISK_STATE);
     }
 
     @Override

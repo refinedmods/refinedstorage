@@ -57,8 +57,8 @@ public abstract class BlockNode extends BlockNodeProxy {
     }
 
     @Override
-    protected BlockStateContainer.Builder createStateBuilder() {
-        BlockStateContainer.Builder builder = super.createStateBuilder();
+    protected BlockStateContainer.Builder createBlockStateBuilder() {
+        BlockStateContainer.Builder builder = super.createBlockStateBuilder();
 
         if (hasConnectivityState()) {
             builder.add(CONNECTED);
@@ -69,7 +69,7 @@ public abstract class BlockNode extends BlockNodeProxy {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createStateBuilder().build();
+        return createBlockStateBuilder().build();
     }
 
     @Override

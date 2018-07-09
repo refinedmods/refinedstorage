@@ -27,7 +27,7 @@ public class BlockDetector extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createStateBuilder()
+        return createBlockStateBuilder()
             .add(POWERED)
             .build();
     }

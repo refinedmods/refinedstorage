@@ -43,7 +43,7 @@ public class BlockGrid extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createStateBuilder()
+        return createBlockStateBuilder()
             .add(TYPE)
             .build();
     }
