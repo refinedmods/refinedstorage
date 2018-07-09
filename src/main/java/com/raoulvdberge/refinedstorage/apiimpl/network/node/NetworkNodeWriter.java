@@ -27,7 +27,7 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     private int redstoneStrength;
     private int lastRedstoneStrength;
 
-    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.NONE_ON_FACE);
+    private CoverManager coverManager = new CoverManager(this, CoverManager.CoverPlacementMode.HOLLOW_LARGE_ON_FACE);
 
     public NetworkNodeWriter(World world, BlockPos pos) {
         super(world, pos);

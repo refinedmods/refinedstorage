@@ -25,9 +25,10 @@ import java.util.Map;
 
 public class CoverManager {
     public enum CoverPlacementMode {
-        ALLOW_ALL,
-        NONE_ON_FACE,
-        HOLLOW_WIDE_ON_FACE
+        ANY,
+        HOLLOW_ON_FACE,
+        HOLLOW_MEDIUM_ON_FACE,
+        HOLLOW_LARGE_ON_FACE
     }
 
     private static final String NBT_DIRECTION = "Direction";
@@ -74,15 +75,15 @@ public class CoverManager {
         if (isValidCover(cover.getStack()) && !hasCover(facing)) {
             if (facing == node.getDirection()) {
                 switch (placementMode) {
-                    case ALLOW_ALL:
+                    case ANY:
                         break;
-                    case NONE_ON_FACE:
-                        return false;
-                    case HOLLOW_WIDE_ON_FACE:
+                    case HOLLOW_ON_FACE:
+                    case HOLLOW_MEDIUM_ON_FACE:
+                    case HOLLOW_LARGE_ON_FACE:
                         if (!cover.getType().isHollow()) {
                             return false;
                         }
-                        cover = new Cover(cover.getStack(), CoverType.HOLLOW_WIDE);
+                        cover = new Cover(cover.getStack(), placementMode == CoverPlacementMode.HOLLOW_ON_FACE ? CoverType.HOLLOW : (placementMode == CoverPlacementMode.HOLLOW_MEDIUM_ON_FACE ? CoverType.HOLLOW_MEDIUM : CoverType.HOLLOW_LARGE));
                         break;
                 }
             }

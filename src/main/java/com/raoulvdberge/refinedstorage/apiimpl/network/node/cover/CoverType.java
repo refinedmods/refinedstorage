@@ -6,10 +6,11 @@ import net.minecraft.item.ItemStack;
 public enum CoverType {
     NORMAL,
     HOLLOW,
-    HOLLOW_WIDE;
+    HOLLOW_MEDIUM,
+    HOLLOW_LARGE;
 
     public boolean isHollow() {
-        return this == HOLLOW || this == HOLLOW_WIDE;
+        return this == HOLLOW || this == HOLLOW_MEDIUM || this == HOLLOW_LARGE;
     }
 
     public ItemStack createStack() {

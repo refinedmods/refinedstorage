@@ -76,10 +76,13 @@ public class BakedModelCableCover implements IBakedModel {
                 addNormalCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, handle);
                 break;
             case HOLLOW:
-                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest);
+                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, 6);
                 break;
-            case HOLLOW_WIDE:
-                addHollowWideCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest);
+            case HOLLOW_MEDIUM:
+                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, 3);
+                break;
+            case HOLLOW_LARGE:
+                addHollowCover(quads, sprite, coverSide, hasUp, hasDown, hasEast, hasWest, 2);
                 break;
         }
     }
@@ -134,7 +137,7 @@ public class BakedModelCableCover implements IBakedModel {
         }
     }
 
-    private static void addHollowCover(List<BakedQuad> quads, TextureAtlasSprite sprite, EnumFacing coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
+    private static void addHollowCover(List<BakedQuad> quads, TextureAtlasSprite sprite, EnumFacing coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, int size) {
         AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
 
         Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
@@ -158,7 +161,7 @@ public class BakedModelCableCover implements IBakedModel {
                 from.setX(0);
             }
 
-            to.setX(6);
+            to.setX(size);
         } else if (coverSide == EnumFacing.SOUTH) {
             if (hasEast) {
                 to.setX(14);
@@ -166,15 +169,15 @@ public class BakedModelCableCover implements IBakedModel {
                 to.setX(16);
             }
 
-            from.setX(10);
+            from.setX(16 - size);
         } else if (coverSide == EnumFacing.EAST) {
             from.setZ(0);
-            to.setZ(6);
+            to.setZ(size);
         } else if (coverSide == EnumFacing.WEST) {
-            from.setZ(10);
+            from.setZ(16 - size);
             to.setZ(16);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            from.setZ(10);
+            from.setZ(16 - size);
             to.setZ(16);
         }
 
@@ -193,7 +196,7 @@ public class BakedModelCableCover implements IBakedModel {
                 to.setX(16);
             }
 
-            from.setX(10);
+            from.setX(16 - size);
         } else if (coverSide == EnumFacing.SOUTH) {
             if (hasWest) {
                 from.setX(2);
@@ -201,16 +204,16 @@ public class BakedModelCableCover implements IBakedModel {
                 from.setX(0);
             }
 
-            to.setX(6);
+            to.setX(size);
         } else if (coverSide == EnumFacing.EAST) {
+            from.setZ(16 - size);
             to.setZ(16);
-            from.setZ(10);
         } else if (coverSide == EnumFacing.WEST) {
             from.setZ(0);
-            to.setZ(6);
+            to.setZ(size);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
             from.setZ(0);
-            to.setZ(6);
+            to.setZ(size);
         }
 
         quads.addAll(new CubeBuilder()
@@ -222,8 +225,8 @@ public class BakedModelCableCover implements IBakedModel {
 
         // Bottom
         if (coverSide == EnumFacing.NORTH) {
-            from.setX(6);
-            to.setX(10);
+            from.setX(size);
+            to.setX(16 - size);
 
             if (hasDown) {
                 from.setY(2);
@@ -231,10 +234,10 @@ public class BakedModelCableCover implements IBakedModel {
                 from.setY(0);
             }
 
-            to.setY(6);
+            to.setY(size);
         } else if (coverSide == EnumFacing.SOUTH) {
-            from.setX(6);
-            to.setX(10);
+            from.setX(size);
+            to.setX(16 - size);
 
             if (hasDown) {
                 from.setY(2);
@@ -242,10 +245,10 @@ public class BakedModelCableCover implements IBakedModel {
                 from.setY(0);
             }
 
-            to.setY(6);
+            to.setY(size);
         } else if (coverSide == EnumFacing.EAST) {
-            from.setZ(6);
-            to.setZ(10);
+            from.setZ(size);
+            to.setZ(16 - size);
 
             if (hasDown) {
                 from.setY(2);
@@ -253,10 +256,10 @@ public class BakedModelCableCover implements IBakedModel {
                 from.setY(0);
             }
 
-            to.setY(6);
+            to.setY(size);
         } else if (coverSide == EnumFacing.WEST) {
-            from.setZ(6);
-            to.setZ(10);
+            from.setZ(size);
+            to.setZ(16 - size);
 
             if (hasDown) {
                 from.setY(2);
@@ -264,13 +267,13 @@ public class BakedModelCableCover implements IBakedModel {
                 from.setY(0);
             }
 
-            to.setY(6);
+            to.setY(size);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            from.setZ(6);
-            to.setZ(10);
+            from.setZ(size);
+            to.setZ(16 - size);
 
             from.setX(0);
-            to.setX(6);
+            to.setX(size);
         }
 
         quads.addAll(new CubeBuilder()
@@ -282,8 +285,8 @@ public class BakedModelCableCover implements IBakedModel {
 
         // Up
         if (coverSide == EnumFacing.NORTH) {
-            from.setX(6);
-            to.setX(10);
+            from.setX(size);
+            to.setX(16 - size);
 
             if (hasUp) {
                 to.setY(14);
@@ -291,10 +294,10 @@ public class BakedModelCableCover implements IBakedModel {
                 to.setY(16);
             }
 
-            from.setY(10);
+            from.setY(16 - size);
         } else if (coverSide == EnumFacing.SOUTH) {
-            from.setX(6);
-            to.setX(10);
+            from.setX(size);
+            to.setX(16 - size);
 
             if (hasUp) {
                 to.setY(14);
@@ -302,10 +305,10 @@ public class BakedModelCableCover implements IBakedModel {
                 to.setY(16);
             }
 
-            from.setY(10);
+            from.setY(16 - size);
         } else if (coverSide == EnumFacing.EAST) {
-            from.setZ(6);
-            to.setZ(10);
+            from.setZ(size);
+            to.setZ(16 - size);
 
             if (hasUp) {
                 to.setY(14);
@@ -313,10 +316,10 @@ public class BakedModelCableCover implements IBakedModel {
                 to.setY(16);
             }
 
-            from.setY(10);
+            from.setY(16 - size);
         } else if (coverSide == EnumFacing.WEST) {
-            from.setZ(6);
-            to.setZ(10);
+            from.setZ(size);
+            to.setZ(16 - size);
 
             if (hasUp) {
                 to.setY(14);
@@ -324,219 +327,12 @@ public class BakedModelCableCover implements IBakedModel {
                 to.setY(16);
             }
 
-            from.setY(10);
+            from.setY(16 - size);
         } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            from.setZ(6);
-            to.setZ(10);
+            from.setZ(size);
+            to.setZ(16 - size);
 
-            from.setX(10);
-            to.setX(16);
-        }
-
-        quads.addAll(new CubeBuilder()
-            .from(from.getX(), from.getY(), from.getZ())
-            .to(to.getX(), to.getY(), to.getZ())
-            .addFaces(face -> new CubeBuilder.Face(face, sprite))
-            .bake()
-        );
-    }
-
-    private static void addHollowWideCover(List<BakedQuad> quads, TextureAtlasSprite sprite, EnumFacing coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest) {
-        AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
-
-        Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
-        Vector3f to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
-
-        if (coverSide.getAxis() != EnumFacing.Axis.Y) {
-            if (hasDown) {
-                from.setY(2);
-            }
-
-            if (hasUp) {
-                to.setY(14);
-            }
-        }
-
-        // Right
-        if (coverSide == EnumFacing.NORTH) {
-            if (hasWest) {
-                from.setX(2);
-            } else {
-                from.setX(0);
-            }
-
-            to.setX(3);
-        } else if (coverSide == EnumFacing.SOUTH) {
-            if (hasEast) {
-                to.setX(14);
-            } else {
-                to.setX(16);
-            }
-
-            from.setX(13);
-        } else if (coverSide == EnumFacing.EAST) {
-            from.setZ(0);
-            to.setZ(3);
-        } else if (coverSide == EnumFacing.WEST) {
-            from.setZ(13);
-            to.setZ(16);
-        } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            from.setZ(13);
-            to.setZ(16);
-        }
-
-        quads.addAll(new CubeBuilder()
-            .from(from.getX(), from.getY(), from.getZ())
-            .to(to.getX(), to.getY(), to.getZ())
-            .addFaces(face -> new CubeBuilder.Face(face, sprite))
-            .bake()
-        );
-
-        // Left
-        if (coverSide == EnumFacing.NORTH) {
-            if (hasEast) {
-                to.setX(14);
-            } else {
-                to.setX(16);
-            }
-
-            from.setX(13);
-        } else if (coverSide == EnumFacing.SOUTH) {
-            if (hasWest) {
-                from.setX(2);
-            } else {
-                from.setX(0);
-            }
-
-            to.setX(3);
-        } else if (coverSide == EnumFacing.EAST) {
-            to.setZ(16);
-            from.setZ(13);
-        } else if (coverSide == EnumFacing.WEST) {
-            from.setZ(0);
-            to.setZ(3);
-        } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            from.setZ(0);
-            to.setZ(3);
-        }
-
-        quads.addAll(new CubeBuilder()
-            .from(from.getX(), from.getY(), from.getZ())
-            .to(to.getX(), to.getY(), to.getZ())
-            .addFaces(face -> new CubeBuilder.Face(face, sprite))
-            .bake()
-        );
-
-        // Bottom
-        if (coverSide == EnumFacing.NORTH) {
-            from.setX(3);
-            to.setX(13);
-
-            if (hasDown) {
-                from.setY(2);
-            } else {
-                from.setY(0);
-            }
-
-            to.setY(3);
-        } else if (coverSide == EnumFacing.SOUTH) {
-            from.setX(3);
-            to.setX(13);
-
-            if (hasDown) {
-                from.setY(2);
-            } else {
-                from.setY(0);
-            }
-
-            to.setY(3);
-        } else if (coverSide == EnumFacing.EAST) {
-            from.setZ(3);
-            to.setZ(13);
-
-            if (hasDown) {
-                from.setY(2);
-            } else {
-                from.setY(0);
-            }
-
-            to.setY(3);
-        } else if (coverSide == EnumFacing.WEST) {
-            from.setZ(3);
-            to.setZ(13);
-
-            if (hasDown) {
-                from.setY(2);
-            } else {
-                from.setY(0);
-            }
-
-            to.setY(3);
-        } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            from.setZ(3);
-            to.setZ(13);
-
-            from.setX(0);
-            to.setX(3);
-        }
-
-        quads.addAll(new CubeBuilder()
-            .from(from.getX(), from.getY(), from.getZ())
-            .to(to.getX(), to.getY(), to.getZ())
-            .addFaces(face -> new CubeBuilder.Face(face, sprite))
-            .bake()
-        );
-
-        // Up
-        if (coverSide == EnumFacing.NORTH) {
-            from.setX(3);
-            to.setX(13);
-
-            if (hasUp) {
-                to.setY(14);
-            } else {
-                to.setY(16);
-            }
-
-            from.setY(13);
-        } else if (coverSide == EnumFacing.SOUTH) {
-            from.setX(3);
-            to.setX(13);
-
-            if (hasUp) {
-                to.setY(14);
-            } else {
-                to.setY(16);
-            }
-
-            from.setY(13);
-        } else if (coverSide == EnumFacing.EAST) {
-            from.setZ(3);
-            to.setZ(13);
-
-            if (hasUp) {
-                to.setY(14);
-            } else {
-                to.setY(16);
-            }
-
-            from.setY(13);
-        } else if (coverSide == EnumFacing.WEST) {
-            from.setZ(3);
-            to.setZ(13);
-
-            if (hasUp) {
-                to.setY(14);
-            } else {
-                to.setY(16);
-            }
-
-            from.setY(13);
-        } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
-            from.setZ(3);
-            to.setZ(13);
-
-            from.setX(13);
+            from.setX(16 - size);
             to.setX(16);
         }
 
