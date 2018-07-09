@@ -1,6 +1,9 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
+import com.raoulvdberge.refinedstorage.block.property.PropertyObject;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -13,30 +16,29 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
+import javax.annotation.Nullable;
+
 public class BlockDiskManipulator extends BlockNode {
     public static final PropertyObject<Integer[]> DISK_STATE = new PropertyObject<>("disk_state", Integer[].class);
 
     public BlockDiskManipulator() {
-        super("disk_manipulator");
+        super(BlockInfoBuilder.forId("disk_manipulator").tileEntity(TileDiskManipulator::new).create());
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileDiskManipulator();
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.HORIZONTAL;
     }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.DISK_MANIPULATOR, player, world, pos, side);
-        }
-
-        return true;
+        return openNetworkGui(RSGui.DISK_MANIPULATOR, player, world, pos, side);
     }
 
     @Override
-    protected BlockStateContainer.Builder createBlockStateBuilder() {
-        return super.createBlockStateBuilder().add(DISK_STATE);
+    protected BlockStateContainer.Builder createStateBuilder() {
+        return super.createStateBuilder().add(DISK_STATE);
     }
 
     @Override

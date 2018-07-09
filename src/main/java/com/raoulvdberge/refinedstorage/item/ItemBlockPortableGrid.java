@@ -1,9 +1,10 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,8 +20,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
-    public ItemBlockPortableGrid() {
-        super(RSBlocks.PORTABLE_GRID, RSBlocks.PORTABLE_GRID.getDirection(), RS.INSTANCE.config.portableGridCapacity);
+    public ItemBlockPortableGrid(Block block, BlockDirection direction) {
+        super(block, direction, RS.INSTANCE.config.portableGridCapacity);
     }
 
     @Override

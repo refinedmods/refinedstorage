@@ -2,6 +2,9 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.enums.ControllerEnergyType;
+import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.ItemBlockController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.properties.PropertyEnum;
@@ -13,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -21,14 +23,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
-public class BlockController extends BlockBase {
+public class BlockController extends BlockNodeProxy {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", ControllerType.class);
     public static final PropertyEnum ENERGY_TYPE = PropertyEnum.create("energy_type", ControllerEnergyType.class);
 
     public BlockController() {
-        super("controller");
+        super(BlockInfoBuilder.forId("controller").tileEntity(TileController::new).create());
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BlockController extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder()
+        return createStateBuilder()
             .add(TYPE)
             .add(ENERGY_TYPE)
             .build();
@@ -63,22 +63,8 @@ public class BlockController extends BlockBase {
     }
 
     @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileController();
-    }
-
-    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.CONTROLLER, player, world, pos, side);
-        }
-
-        return true;
+        return openNetworkGui(RSGui.CONTROLLER, player, world, pos, side);
     }
 
     @Override
@@ -108,12 +94,6 @@ public class BlockController extends BlockBase {
 
     @Override
     public Item createItem() {
-        return new ItemBlockController();
-    }
-
-    @Nullable
-    @Override
-    public Direction getDirection() {
-        return null;
+        return new ItemBlockController(this, getDirection());
     }
 }

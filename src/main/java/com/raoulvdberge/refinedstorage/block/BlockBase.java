@@ -1,21 +1,14 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
-import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.container.ContainerBase;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
@@ -30,32 +23,25 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 
 public abstract class BlockBase extends Block {
-    private final String name;
+    protected final IBlockInfo info;
 
-    public BlockBase(String name) {
-        super(Material.ROCK);
+    public BlockBase(IBlockInfo info) {
+        super(info.getMaterial());
 
-        this.name = name;
+        this.info = info;
 
-        setHardness(1.9F);
-        setRegistryName(getDomain(), name);
+        setHardness(info.getHardness());
+        setRegistryName(info.getModId(), info.getId());
         setCreativeTab(RS.INSTANCE.tab);
-    }
-
-    protected String getDomain() {
-        return RS.ID;
-    }
-
-    protected Object getModObject() {
-        return RS.INSTANCE;
+        setSoundType(info.getSoundType());
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "block." + getDomain() + ":" + name;
+        return "block." + info.getModId() + ":" + info.getId();
     }
 
-    protected BlockStateContainer.Builder createBlockStateBuilder() {
+    protected BlockStateContainer.Builder createStateBuilder() {
         BlockStateContainer.Builder builder = new BlockStateContainer.Builder(this);
 
         if (getDirection() != null) {
@@ -67,7 +53,7 @@ public abstract class BlockBase extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder().build();
+        return createStateBuilder().build();
     }
 
     public Item createItem() {
@@ -111,10 +97,6 @@ public abstract class BlockBase extends Block {
 
             EnumFacing newDirection = getDirection().cycle(tile.getDirection());
 
-            if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable && ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().hasCover(newDirection)) {
-                return false;
-            }
-
             tile.setDirection(newDirection);
 
             WorldUtils.updateBlock(world, pos);
@@ -129,21 +111,15 @@ public abstract class BlockBase extends Block {
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
         dropContents(world, pos);
         removeTile(world, pos, state);
-
-        for (EntityPlayer player : world.playerEntities) {
-            if (player.openContainer instanceof ContainerBase && ((ContainerBase) player.openContainer).getTile() != null && ((ContainerBase) player.openContainer).getTile().getPos().equals(pos)) {
-                player.closeScreen();
-            }
-        }
     }
 
-    protected void removeTile(World world, BlockPos pos, IBlockState state) {
+    void removeTile(World world, BlockPos pos, IBlockState state) {
         if (hasTileEntity(state)) {
             world.removeTileEntity(pos);
         }
     }
 
-    protected void dropContents(World world, BlockPos pos) {
+    void dropContents(World world, BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
@@ -169,51 +145,22 @@ public abstract class BlockBase extends Block {
         world.setBlockToAir(pos);
     }
 
-    protected boolean tryOpenNetworkGui(int guiId, EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
-        return tryOpenNetworkGui(guiId, player, world, pos, facing, Permission.MODIFY);
-    }
-
-    protected boolean tryOpenNetworkGui(int guiId, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Permission... permissions) {
-        TileEntity tile = world.getTileEntity(pos);
-
-        if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing)) {
-            INetworkNodeProxy nodeProxy = CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing));
-            INetworkNode node = nodeProxy.getNode();
-
-            if (node.getNetwork() != null) {
-                for (Permission permission : permissions) {
-                    if (!node.getNetwork().getSecurityManager().hasPermission(permission, player)) {
-                        WorldUtils.sendNoPermissionMessage(player);
-
-                        return false;
-                    }
-                }
-            }
-        }
-
-        player.openGui(getModObject(), guiId, world, pos.getX(), pos.getY(), pos.getZ());
-
-        return true;
+    @Override
+    public final boolean hasTileEntity(IBlockState state) {
+        return info.hasTileEntity();
     }
 
     @Override
-    public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
-        TileEntity tile = world.getTileEntity(pos);
-
-        if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, null)) {
-            INetworkNodeProxy nodeProxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, null);
-            INetworkNode node = nodeProxy.getNode();
-
-            if (node.getNetwork() != null) {
-                return entity instanceof EntityPlayer && node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, (EntityPlayer) entity);
-            }
-        }
-
-        return super.canEntityDestroy(state, world, pos, entity);
+    public final TileEntity createTileEntity(World world, IBlockState state) {
+        return info.createTileEntity();
     }
 
     @Nullable
-    public Direction getDirection() {
-        return Direction.HORIZONTAL;
+    public BlockDirection getDirection() {
+        return null;
+    }
+
+    public final IBlockInfo getInfo() {
+        return info;
     }
 }

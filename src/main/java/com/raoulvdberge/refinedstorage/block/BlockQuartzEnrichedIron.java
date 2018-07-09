@@ -1,15 +1,9 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import javax.annotation.Nullable;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 
 public class BlockQuartzEnrichedIron extends BlockBase {
     public BlockQuartzEnrichedIron() {
-        super("quartz_enriched_iron_block");
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return null;
+        super(BlockInfoBuilder.forId("quartz_enriched_iron_block").create());
     }
 }

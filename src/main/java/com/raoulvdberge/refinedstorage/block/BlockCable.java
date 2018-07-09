@@ -4,6 +4,9 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
+import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
+import com.raoulvdberge.refinedstorage.block.property.PropertyObject;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTraceResult;
 import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTracer;
@@ -13,6 +16,8 @@ import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
@@ -30,7 +35,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,17 +53,16 @@ public class BlockCable extends BlockNode {
     private static final PropertyBool UP = PropertyBool.create("up");
     private static final PropertyBool DOWN = PropertyBool.create("down");
 
-    public BlockCable(String name) {
-        super(name);
+    public BlockCable(IBlockInfo info) {
+        super(info);
     }
 
     public BlockCable() {
-        this("cable");
+        super(createBuilder("cable").tileEntity(TileCable::new).create());
     }
 
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileCable();
+    static BlockInfoBuilder createBuilder(String id) {
+        return BlockInfoBuilder.forId(id).material(Material.GLASS).soundType(SoundType.GLASS).hardness(0.35F);
     }
 
     public boolean hasConnectivityState() {
@@ -68,7 +71,7 @@ public class BlockCable extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return super.createBlockStateBuilder()
+        return super.createStateBuilder()
             .add(NORTH)
             .add(EAST)
             .add(SOUTH)
@@ -338,11 +341,5 @@ public class BlockCable extends BlockNode {
     @SuppressWarnings("deprecation")
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return BlockFaceShape.UNDEFINED;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return null;
     }
 }

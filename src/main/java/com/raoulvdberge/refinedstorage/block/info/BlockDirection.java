@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.block;
+package com.raoulvdberge.refinedstorage.block.info;
 
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.entity.EntityLivingBase;
@@ -7,14 +7,14 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
 
-public enum Direction {
+public enum BlockDirection {
     ANY(EnumFacing.VALUES),
     ANY_FACE_PLAYER(EnumFacing.VALUES),
     HORIZONTAL(EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST);
 
     private final PropertyDirection property;
 
-    Direction(EnumFacing... allowed) {
+    BlockDirection(EnumFacing... allowed) {
         this.property = PropertyDirection.create("direction", Arrays.asList(allowed));
     }
 

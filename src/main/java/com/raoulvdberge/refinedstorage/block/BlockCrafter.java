@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,12 +22,13 @@ import javax.annotation.Nullable;
 
 public class BlockCrafter extends BlockNode {
     public BlockCrafter() {
-        super("crafter");
+        super(BlockInfoBuilder.forId("crafter").tileEntity(TileCrafter::new).create());
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileCrafter();
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.ANY_FACE_PLAYER;
     }
 
     @Override
@@ -44,21 +47,7 @@ public class BlockCrafter extends BlockNode {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.CRAFTER, player, world, pos, side);
-        }
-
-        return true;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return Direction.ANY_FACE_PLAYER;
-    }
-
-    public boolean hasConnectivityState() {
-        return true;
+        return openNetworkGui(RSGui.CRAFTER, player, world, pos, side);
     }
 
     @Override
@@ -74,5 +63,10 @@ public class BlockCrafter extends BlockNode {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hasConnectivityState() {
+        return true;
     }
 }

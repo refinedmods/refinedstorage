@@ -1,9 +1,10 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.block.ControllerType;
+import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.tile.TileController;
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,8 +16,8 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemBlockController extends ItemBlockBase {
-    public ItemBlockController() {
-        super(RSBlocks.CONTROLLER, RSBlocks.CONTROLLER.getDirection(), true);
+    public ItemBlockController(Block block, BlockDirection direction) {
+        super(block, direction, true);
     }
 
     @Override

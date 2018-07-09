@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExternalStorage;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsExternalStorage;
@@ -20,7 +21,13 @@ import java.util.List;
 
 public class BlockExternalStorage extends BlockCable {
     public BlockExternalStorage() {
-        super("external_storage");
+        super(createBuilder("external_storage").tileEntity(TileExternalStorage::new).create());
+    }
+
+    @Override
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.ANY;
     }
 
     @Override
@@ -58,21 +65,12 @@ public class BlockExternalStorage extends BlockCable {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileExternalStorage();
-    }
-
-    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!canAccessGui(state, world, pos, hitX, hitY, hitZ)) {
             return false;
         }
 
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.EXTERNAL_STORAGE, player, world, pos, side);
-        }
-
-        return true;
+        return openNetworkGui(RSGui.EXTERNAL_STORAGE, player, world, pos, side);
     }
 
     @Override
@@ -91,11 +89,5 @@ public class BlockExternalStorage extends BlockCable {
                 }
             }
         }
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return Direction.ANY;
     }
 }

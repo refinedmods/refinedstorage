@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.block.Direction;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -23,7 +23,7 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
 
     private int energyCapacity;
 
-    public ItemBlockEnergyItem(Block block, Direction direction, int energyCapacity) {
+    public ItemBlockEnergyItem(Block block, BlockDirection direction, int energyCapacity) {
         super(block, direction, true);
 
         this.energyCapacity = energyCapacity;

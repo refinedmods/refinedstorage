@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.block.Direction;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -13,9 +13,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class ItemBlockBase extends ItemBlock {
-    private Direction direction;
+    private BlockDirection direction;
 
-    public ItemBlockBase(Block block, Direction direction, boolean subtypes) {
+    public ItemBlockBase(Block block, BlockDirection direction, boolean subtypes) {
         super(block);
 
         setRegistryName(block.getRegistryName());

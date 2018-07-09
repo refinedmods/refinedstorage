@@ -3,6 +3,8 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeStorage;
+import com.raoulvdberge.refinedstorage.block.enums.ItemStorageType;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.ItemBlockStorage;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import net.minecraft.block.properties.PropertyEnum;
@@ -14,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -22,15 +23,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public class BlockStorage extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", ItemStorageType.class);
 
     public BlockStorage() {
-        super("storage");
-
-        setHardness(5.8F);
+        super(BlockInfoBuilder.forId("storage").tileEntity(TileStorage::new).hardness(5.8F).create());
     }
 
     @Override
@@ -42,7 +39,7 @@ public class BlockStorage extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder()
+        return createStateBuilder()
             .add(TYPE)
             .build();
     }
@@ -58,28 +55,13 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileStorage();
-    }
-
-    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.STORAGE, player, world, pos, side);
-        }
-
-        return true;
+        return openNetworkGui(RSGui.STORAGE, player, world, pos, side);
     }
 
     @Override
     public Item createItem() {
-        return new ItemBlockStorage();
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return null;
+        return new ItemBlockStorage(this, getDirection());
     }
 
     @Override

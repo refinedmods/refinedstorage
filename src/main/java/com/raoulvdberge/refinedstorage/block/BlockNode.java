@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -15,16 +16,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public abstract class BlockNode extends BlockBase {
+public abstract class BlockNode extends BlockNodeProxy {
     public static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
-    public BlockNode(String name) {
-        super(name);
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
+    public BlockNode(IBlockInfo info) {
+        super(info);
     }
 
     @Override
@@ -61,8 +57,8 @@ public abstract class BlockNode extends BlockBase {
     }
 
     @Override
-    protected BlockStateContainer.Builder createBlockStateBuilder() {
-        BlockStateContainer.Builder builder = super.createBlockStateBuilder();
+    protected BlockStateContainer.Builder createStateBuilder() {
+        BlockStateContainer.Builder builder = super.createStateBuilder();
 
         if (hasConnectivityState()) {
             builder.add(CONNECTED);
@@ -73,7 +69,7 @@ public abstract class BlockNode extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder().build();
+        return createStateBuilder().build();
     }
 
     @Override

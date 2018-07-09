@@ -3,23 +3,27 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BlockSecurityManager extends BlockNode {
     public BlockSecurityManager() {
-        super("security_manager");
+        super(BlockInfoBuilder.forId("security_manager").tileEntity(TileSecurityManager::new).create());
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileSecurityManager();
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.HORIZONTAL;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class BlockSecurityManager extends BlockNode {
             if (player.getGameProfile().getId().equals(((TileSecurityManager) world.getTileEntity(pos)).getNode().getOwner())) {
                 player.openGui(RS.INSTANCE, RSGui.SECURITY_MANAGER, world, pos.getX(), pos.getY(), pos.getZ());
             } else {
-                tryOpenNetworkGui(RSGui.SECURITY_MANAGER, player, world, pos, side, Permission.MODIFY, Permission.SECURITY);
+                openNetworkGui(RSGui.SECURITY_MANAGER, player, world, pos, side, Permission.MODIFY, Permission.SECURITY);
             }
         }
 

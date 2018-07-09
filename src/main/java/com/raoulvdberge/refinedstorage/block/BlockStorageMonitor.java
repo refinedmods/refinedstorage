@@ -2,11 +2,12 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorageMonitor;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -18,7 +19,13 @@ import javax.annotation.Nullable;
 
 public class BlockStorageMonitor extends BlockNode {
     public BlockStorageMonitor() {
-        super("storage_monitor");
+        super(BlockInfoBuilder.forId("storage_monitor").tileEntity(TileStorageMonitor::new).create());
+    }
+
+    @Override
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.HORIZONTAL;
     }
 
     @Override
@@ -27,7 +34,7 @@ public class BlockStorageMonitor extends BlockNode {
             ItemStack held = player.inventory.getCurrentItem();
 
             if (player.isSneaking()) {
-                tryOpenNetworkGui(RSGui.STORAGE_MONITOR, player, world, pos, side);
+                openNetworkGui(RSGui.STORAGE_MONITOR, player, world, pos, side);
             } else {
                 NetworkNodeStorageMonitor storageMonitor = ((TileStorageMonitor) world.getTileEntity(pos)).getNode();
 
@@ -55,12 +62,6 @@ public class BlockStorageMonitor extends BlockNode {
 
             ((TileStorageMonitor) world.getTileEntity(pos)).getNode().extract(player, rayResult.sideHit);
         }
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileStorageMonitor();
     }
 
     @Override

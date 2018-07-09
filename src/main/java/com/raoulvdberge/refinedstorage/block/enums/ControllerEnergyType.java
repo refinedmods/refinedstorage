@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.block;
+package com.raoulvdberge.refinedstorage.block.enums;
 
 import net.minecraft.util.IStringSerializable;
 

@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import net.minecraft.block.properties.PropertyEnum;
@@ -11,23 +13,25 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class BlockGrid extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", GridType.class);
 
     public BlockGrid() {
-        super("grid");
+        super(BlockInfoBuilder.forId("grid").tileEntity(TileGrid::new).create());
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileGrid();
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.HORIZONTAL;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class BlockGrid extends BlockNode {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder()
+        return createStateBuilder()
             .add(TYPE)
             .build();
     }
@@ -56,11 +60,7 @@ public class BlockGrid extends BlockNode {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.GRID, player, world, pos, side);
-        }
-
-        return true;
+        return openNetworkGui(RSGui.GRID, player, world, pos, side);
     }
 
     @Override

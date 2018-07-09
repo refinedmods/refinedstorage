@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsImporter;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
@@ -17,7 +18,13 @@ import java.util.List;
 
 public class BlockImporter extends BlockCable {
     public BlockImporter() {
-        super("importer");
+        super(createBuilder("importer").tileEntity(TileImporter::new).create());
+    }
+
+    @Override
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.ANY;
     }
 
     @Override
@@ -49,26 +56,11 @@ public class BlockImporter extends BlockCable {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileImporter();
-    }
-
-    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!canAccessGui(state, world, pos, hitX, hitY, hitZ)) {
             return false;
         }
 
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.IMPORTER, player, world, pos, side);
-        }
-
-        return true;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return Direction.ANY;
+        return openNetworkGui(RSGui.IMPORTER, player, world, pos, side);
     }
 }

@@ -24,8 +24,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridP
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPortable;
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
-import com.raoulvdberge.refinedstorage.block.PortableGridDiskState;
-import com.raoulvdberge.refinedstorage.block.PortableGridType;
+import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
+import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;

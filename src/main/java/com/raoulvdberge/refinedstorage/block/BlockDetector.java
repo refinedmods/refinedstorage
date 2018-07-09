@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsDetector;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import net.minecraft.block.properties.PropertyBool;
@@ -17,18 +18,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-
 public class BlockDetector extends BlockNode {
     private static final PropertyBool POWERED = PropertyBool.create("powered");
 
     public BlockDetector() {
-        super("detector");
+        super(BlockInfoBuilder.forId("detector").tileEntity(TileDetector::new).create());
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder()
+        return createStateBuilder()
             .add(POWERED)
             .build();
     }
@@ -46,8 +45,8 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileDetector();
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        return openNetworkGui(RSGui.DETECTOR, player, world, pos, side);
     }
 
     @Override
@@ -61,15 +60,6 @@ public class BlockDetector extends BlockNode {
     @Override
     @SuppressWarnings("deprecation")
     public boolean canProvidePower(IBlockState state) {
-        return true;
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.DETECTOR, player, world, pos, side);
-        }
-
         return true;
     }
 
@@ -88,12 +78,6 @@ public class BlockDetector extends BlockNode {
     @Override
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return null;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import net.minecraft.block.state.IBlockState;
@@ -21,7 +22,13 @@ import java.util.List;
 
 public class BlockWriter extends BlockCable {
     public BlockWriter() {
-        super("writer");
+        super(createBuilder("writer").tileEntity(TileWriter::new).create());
+    }
+
+    @Override
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.ANY;
     }
 
     @Override
@@ -47,16 +54,11 @@ public class BlockWriter extends BlockCable {
                     }
                 }
             } else {
-                tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side);
+                openNetworkGui(RSGui.READER_WRITER, player, world, pos, side);
             }
         }
 
         return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileWriter();
     }
 
     @Override
@@ -89,11 +91,5 @@ public class BlockWriter extends BlockCable {
     @Override
     public boolean hasConnectivityState() {
         return true;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return Direction.ANY;
     }
 }

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsConstructor;
@@ -18,7 +19,13 @@ import java.util.List;
 
 public class BlockConstructor extends BlockCable {
     public BlockConstructor() {
-        super("constructor");
+        super(createBuilder("constructor").tileEntity(TileConstructor::new).create());
+    }
+
+    @Override
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.ANY;
     }
 
     @Override
@@ -56,31 +63,16 @@ public class BlockConstructor extends BlockCable {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileConstructor();
-    }
-
-    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!canAccessGui(state, world, pos, hitX, hitY, hitZ)) {
             return false;
         }
 
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.CONSTRUCTOR, player, world, pos, side);
-        }
-
-        return true;
+        return openNetworkGui(RSGui.CONSTRUCTOR, player, world, pos, side);
     }
 
     @Override
     public boolean hasConnectivityState() {
         return true;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return Direction.ANY;
     }
 }

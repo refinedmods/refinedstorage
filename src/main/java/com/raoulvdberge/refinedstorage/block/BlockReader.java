@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import net.minecraft.block.state.IBlockState;
@@ -20,7 +21,13 @@ import java.util.List;
 
 public class BlockReader extends BlockCable {
     public BlockReader() {
-        super("reader");
+        super(createBuilder("reader").tileEntity(TileReader::new).create());
+    }
+
+    @Override
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.ANY;
     }
 
     @Override
@@ -46,7 +53,7 @@ public class BlockReader extends BlockCable {
                     }
                 }
             } else {
-                tryOpenNetworkGui(RSGui.READER_WRITER, player, world, pos, side);
+                openNetworkGui(RSGui.READER_WRITER, player, world, pos, side);
             }
         }
 
@@ -61,18 +68,7 @@ public class BlockReader extends BlockCable {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileReader();
-    }
-
-    @Override
     public boolean hasConnectivityState() {
         return true;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return Direction.ANY;
     }
 }

@@ -2,6 +2,10 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
+import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
@@ -14,7 +18,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -31,28 +34,18 @@ public class BlockPortableGrid extends BlockBase {
     public static final PropertyBool CONNECTED = PropertyBool.create("connected");
 
     public BlockPortableGrid() {
-        super("portable_grid");
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TilePortableGrid();
-    }
-
-    @Override
-    public Item createItem() {
-        return new ItemBlockPortableGrid();
+        super(BlockInfoBuilder.forId("portable_grid").tileEntity(TilePortableGrid::new).create());
     }
 
     @Override
     @Nullable
-    public Direction getDirection() {
-        return Direction.HORIZONTAL;
+    public BlockDirection getDirection() {
+        return BlockDirection.HORIZONTAL;
+    }
+
+    @Override
+    public Item createItem() {
+        return new ItemBlockPortableGrid(this, getDirection());
     }
 
     @Override
@@ -98,7 +91,7 @@ public class BlockPortableGrid extends BlockBase {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder()
+        return createStateBuilder()
             .add(TYPE)
             .add(DISK_STATE)
             .add(CONNECTED)

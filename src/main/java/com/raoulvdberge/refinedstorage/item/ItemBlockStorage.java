@@ -7,6 +7,8 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -23,8 +25,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class ItemBlockStorage extends ItemBlockBase {
-    public ItemBlockStorage() {
-        super(RSBlocks.STORAGE, RSBlocks.STORAGE.getDirection(), true);
+    public ItemBlockStorage(Block block, BlockDirection direction) {
+        super(block, direction, true);
     }
 
     @Override

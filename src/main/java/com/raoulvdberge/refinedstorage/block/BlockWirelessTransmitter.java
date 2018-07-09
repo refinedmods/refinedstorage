@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.block.Block;
@@ -10,7 +11,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -25,21 +25,12 @@ import java.util.List;
 
 public class BlockWirelessTransmitter extends BlockNode {
     public BlockWirelessTransmitter() {
-        super("wireless_transmitter");
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileWirelessTransmitter();
+        super(BlockInfoBuilder.forId("wireless_transmitter").tileEntity(TileWirelessTransmitter::new).create());
     }
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.WIRELESS_TRANSMITTER, player, world, pos, side);
-        }
-
-        return true;
+        return openNetworkGui(RSGui.WIRELESS_TRANSMITTER, player, world, pos, side);
     }
 
     @Override
@@ -83,12 +74,6 @@ public class BlockWirelessTransmitter extends BlockNode {
     @Override
     public boolean hasConnectivityState() {
         return true;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return null;
     }
 
     @Override

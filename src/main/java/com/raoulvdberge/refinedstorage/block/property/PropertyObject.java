@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.block;
+package com.raoulvdberge.refinedstorage.block.property;
 
 import net.minecraftforge.common.property.IUnlistedProperty;
 

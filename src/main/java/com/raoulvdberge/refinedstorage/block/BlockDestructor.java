@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import net.minecraft.block.state.IBlockState;
@@ -17,12 +18,13 @@ import java.util.List;
 
 public class BlockDestructor extends BlockCable {
     public BlockDestructor() {
-        super("destructor");
+        super(createBuilder("destructor").tileEntity(TileDestructor::new).create());
     }
 
     @Override
-    public TileEntity createTileEntity(World world, IBlockState state) {
-        return new TileDestructor();
+    @Nullable
+    public BlockDirection getDirection() {
+        return BlockDirection.ANY;
     }
 
     @Override
@@ -36,21 +38,11 @@ public class BlockDestructor extends BlockCable {
             return false;
         }
 
-        if (!world.isRemote) {
-            tryOpenNetworkGui(RSGui.DESTRUCTOR, player, world, pos, side);
-        }
-
-        return true;
+        return openNetworkGui(RSGui.DESTRUCTOR, player, world, pos, side);
     }
 
     @Override
     public boolean hasConnectivityState() {
         return true;
-    }
-
-    @Override
-    @Nullable
-    public Direction getDirection() {
-        return Direction.ANY;
     }
 }

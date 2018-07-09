@@ -27,6 +27,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.ExternalS
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.ExternalStorageProviderItem;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
+import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
@@ -45,14 +46,12 @@ import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.recipe.RecipeCover;
 import com.raoulvdberge.refinedstorage.recipe.RecipeHollowCover;
 import com.raoulvdberge.refinedstorage.recipe.RecipeHollowWideCover;
-import com.raoulvdberge.refinedstorage.tile.*;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -187,34 +186,6 @@ public class ProxyCommon {
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
         MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
-
-        registerTile(TileController.class, "controller");
-        registerTile(TileGrid.class, "grid");
-        registerTile(TileDiskDrive.class, "disk_drive");
-        registerTile(TileExternalStorage.class, "external_storage");
-        registerTile(TileImporter.class, "importer");
-        registerTile(TileExporter.class, "exporter");
-        registerTile(TileDetector.class, "detector");
-        registerTile(TileDestructor.class, "destructor");
-        registerTile(TileConstructor.class, "constructor");
-        registerTile(TileStorage.class, "storage");
-        registerTile(TileRelay.class, "relay");
-        registerTile(TileInterface.class, "interface");
-        registerTile(TileCraftingMonitor.class, "crafting_monitor");
-        registerTile(TileWirelessTransmitter.class, "wireless_transmitter");
-        registerTile(TileCrafter.class, "crafter");
-        registerTile(TileCable.class, "cable");
-        registerTile(TileNetworkReceiver.class, "network_receiver");
-        registerTile(TileNetworkTransmitter.class, "network_transmitter");
-        registerTile(TileFluidInterface.class, "fluid_interface");
-        registerTile(TileFluidStorage.class, "fluid_storage");
-        registerTile(TileDiskManipulator.class, "disk_manipulator");
-        registerTile(TileSecurityManager.class, "security_manager");
-        registerTile(TileReader.class, "reader");
-        registerTile(TileWriter.class, "writer");
-        registerTile(TileStorageMonitor.class, "storage_monitor");
-        registerTile(TilePortableGrid.class, "portable_grid");
-        registerTile(TileCrafterManager.class, "crafter_manager");
 
         registerBlock(RSBlocks.CONTROLLER);
         registerBlock(RSBlocks.GRID);
@@ -365,17 +336,23 @@ public class ProxyCommon {
         blocksToRegister.add(block);
 
         registerItem(block.createItem());
+
+        if (block.getInfo().hasTileEntity()) {
+            registerTile(block.getInfo());
+        }
     }
 
     private void registerItem(Item item) {
         itemsToRegister.add(item);
     }
 
-    private void registerTile(Class<? extends TileBase> tile, String id) {
-        GameRegistry.registerTileEntity(tile, new ResourceLocation(RS.ID, id));
+    private void registerTile(IBlockInfo info) {
+        Class<? extends TileBase> clazz = info.createTileEntity().getClass();
+
+        GameRegistry.registerTileEntity(clazz, new ResourceLocation(RS.ID, info.getId()));
 
         try {
-            TileBase tileInstance = tile.newInstance();
+            TileBase tileInstance = clazz.newInstance();
 
             if (tileInstance instanceof TileNode) {
                 API.instance().getNetworkNodeRegistry().add(((TileNode) tileInstance).getNodeId(), (tag, world, pos) -> {
