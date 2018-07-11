@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTracer;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCableCover;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
@@ -73,6 +74,10 @@ public class BlockCable extends BlockNode {
 
     void registerCover(IModelRegistration modelRegistration) {
         modelRegistration.addBakedModelOverride(info.getId(), BakedModelCableCover::new);
+    }
+
+    void registerCoverAndFullbright(IModelRegistration modelRegistration, String... textures) {
+        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelCableCover(new BakedModelFullbright(base, textures)));
     }
 
     @Override

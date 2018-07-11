@@ -4,7 +4,8 @@
     "textures": {
       "cable": "refinedstorage:blocks/cable",
       "particle": "refinedstorage:blocks/cable",
-      "front": "refinedstorage:blocks/constructor_disconnected",
+      "front": "refinedstorage:blocks/constructor/constructor",
+      "cutout": "refinedstorage:blocks/constructor/cutouts/disconnected",
       "line": "refinedstorage:blocks/generic_grey"
     },
     "model": "refinedstorage:cable_core",
@@ -20,7 +21,7 @@
     "connected": {
       "true": {
         "textures": {
-          "front": "refinedstorage:blocks/constructor_connected"
+          "cutout": "refinedstorage:blocks/constructor/cutouts/connected"
         }
       },
       "false": {

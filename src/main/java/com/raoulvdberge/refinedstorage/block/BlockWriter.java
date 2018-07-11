@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
@@ -34,7 +35,7 @@ public class BlockWriter extends BlockCable {
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
 
-        registerCover(modelRegistration);
+        registerCoverAndFullbright(modelRegistration, RS.ID + ":blocks/writer/cutouts/connected");
     }
 
     @Override

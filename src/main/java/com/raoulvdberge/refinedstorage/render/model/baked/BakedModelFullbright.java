@@ -16,6 +16,7 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +67,7 @@ public class BakedModelFullbright extends BakedModelDelegate {
     private static final LoadingCache<CacheKey, List<BakedQuad>> CACHE = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         public List<BakedQuad> load(CacheKey key) throws Exception {
-            List<BakedQuad> quads = key.base.getQuads(key.state, key.side, 0);
+            List<BakedQuad> quads = new ArrayList<>(key.base.getQuads(key.state, key.side, 0));
 
             for (int i = 0; i < quads.size(); ++i) {
                 BakedQuad quad = quads.get(i);
