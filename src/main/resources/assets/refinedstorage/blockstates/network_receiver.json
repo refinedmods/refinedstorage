@@ -1,9 +1,11 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "cube_all",
+    "model": "refinedstorage:cube_all_cutout",
     "textures": {
-      "all": "refinedstorage:blocks/network_receiver_disconnected"
+      "particle": "refinedstorage:blocks/network_receiver/network_receiver",
+      "all": "refinedstorage:blocks/network_receiver/network_receiver",
+      "cutout": "refinedstorage:blocks/network_receiver/cutouts/disconnected"
     }
   },
   "variants": {
@@ -15,7 +17,7 @@
     "connected": {
       "true": {
         "textures": {
-          "all": "refinedstorage:blocks/network_receiver_connected"
+          "cutout": "refinedstorage:blocks/network_receiver/cutouts/connected"
         }
       },
       "false": {
