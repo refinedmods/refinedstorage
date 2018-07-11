@@ -9,6 +9,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -17,6 +18,23 @@ import java.util.List;
 public class ItemBlockController extends ItemBlockBase {
     public ItemBlockController(BlockController block) {
         super(block, true);
+
+        setMaxStackSize(1);
+    }
+
+    @Override
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return 1D - ((double) getEnergyStored(stack) / (double) RS.INSTANCE.config.controllerCapacity);
+    }
+
+    @Override
+    public int getRGBDurabilityForDisplay(ItemStack stack) {
+        return MathHelper.hsvToRGB(Math.max(0.0F, (float) getEnergyStored(stack) / (float) RS.INSTANCE.config.controllerCapacity) / 3.0F, 1.0F, 1.0F);
+    }
+
+    @Override
+    public boolean showDurabilityBar(ItemStack stack) {
+        return stack.getMetadata() != ControllerType.CREATIVE.getId();
     }
 
     @Override
@@ -36,17 +54,19 @@ public class ItemBlockController extends ItemBlockBase {
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         super.onCreated(stack, world, player);
 
-        createStack(stack);
+        createStack(stack, 0);
     }
 
-    public static ItemStack createStack(ItemStack stack) {
+    public static ItemStack createStack(ItemStack stack, int energy) {
         NBTTagCompound tag = stack.getTagCompound();
 
         if (tag == null) {
             tag = new NBTTagCompound();
         }
 
-        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == ControllerType.CREATIVE.getId() ? RS.INSTANCE.config.controllerCapacity : 0);
+        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == ControllerType.CREATIVE.getId() ? RS.INSTANCE.config.controllerCapacity : energy);
+
+        stack.setTagCompound(tag);
 
         return stack;
     }

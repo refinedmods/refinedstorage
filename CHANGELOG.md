@@ -22,6 +22,8 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Added config option to configure controller max receive rate (samtrion)
 - Added config option to configure energy capacity of Refined Storage items (raoulvdberge)
 - Added config option to change Reader / Writer channel energy capacity (raoulvdberge)
+- Added a fully charged regular Controller to the creative menu (raoulvdberge)
+- The Controller item now shows a durability bar for the energy (raoulvdberge)
 - Changed fluid storage progression to be 64k - 256k - 1024k - 4096k (raoulvdberge)
 - You can no longer put a Filter in filter slots to gain additional filter slots (raoulvdberge)
 - You can now re-insert Processing Patterns in the Pattern Grid and have the inputs and outputs be completed (raoulvdberge)

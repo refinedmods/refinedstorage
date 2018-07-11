@@ -7,12 +7,12 @@ import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockController;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.render.meshdefinition.ItemMeshDefinitionController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,25 +39,16 @@ public class BlockController extends BlockNodeProxy {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModelMeshDefinition(this, stack -> {
-            ControllerEnergyType energyType = stack.getItemDamage() == ControllerType.CREATIVE.getId() ? ControllerEnergyType.ON : TileController.getEnergyType(ItemBlockController.getEnergyStored(stack), RS.INSTANCE.config.controllerCapacity);
+        modelRegistration.setModelMeshDefinition(this, new ItemMeshDefinitionController());
 
-            return new ModelResourceLocation(RS.ID + ":controller", "energy_type=" + energyType);
-        });
-
-        modelRegistration.setStateMapper(this, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation(RS.ID + ":controller", "energy_type=" + state.getValue(ENERGY_TYPE));
-            }
-        });
+        modelRegistration.setStateMapper(this, new StateMap.Builder().ignore(TYPE).build());
     }
 
     @Override
     public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> items) {
-        for (int i = 0; i <= 1; i++) {
-            items.add(ItemBlockController.createStack(new ItemStack(this, 1, i)));
-        }
+        items.add(ItemBlockController.createStack(new ItemStack(this, 1, 0), 0));
+        items.add(ItemBlockController.createStack(new ItemStack(this, 1, 0), RS.INSTANCE.config.controllerCapacity));
+        items.add(ItemBlockController.createStack(new ItemStack(this, 1, 1), 0));
     }
 
     @Override

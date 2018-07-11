@@ -109,7 +109,9 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         if (!controller.getPos().equals(otherControllerPos)) {
             IBlockState state = world.getBlockState(otherControllerPos);
 
-            ItemStack stackToSpawn = ItemBlockController.createStack(new ItemStack(RSBlocks.CONTROLLER, 1, state.getBlock().getMetaFromState(state)));
+            TileController otherController = (TileController) world.getTileEntity(otherControllerPos);
+
+            ItemStack stackToSpawn = ItemBlockController.createStack(new ItemStack(RSBlocks.CONTROLLER, 1, state.getBlock().getMetaFromState(state)), otherController.getEnergy().getStored());
 
             world.setBlockToAir(otherControllerPos);
 
