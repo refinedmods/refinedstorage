@@ -9,9 +9,6 @@ import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -20,7 +17,7 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 import java.util.*;
 
-public class BakedModelDiskManipulator implements IBakedModel {
+public class BakedModelDiskManipulator extends BakedModelDelegate {
     private class CacheKey {
         private IBlockState state;
         private EnumFacing side;
@@ -64,7 +61,6 @@ public class BakedModelDiskManipulator implements IBakedModel {
         }
     }
 
-    private IBakedModel baseDisconnected;
     private Map<EnumFacing, IBakedModel> modelsConnected = new HashMap<>();
     private Map<EnumFacing, IBakedModel> modelsDisconnected = new HashMap<>();
     private Map<EnumFacing, Map<Integer, List<IBakedModel>>> disks = new HashMap<>();
@@ -87,7 +83,7 @@ public class BakedModelDiskManipulator implements IBakedModel {
     });
 
     public BakedModelDiskManipulator(IBakedModel baseConnected, IBakedModel baseDisconnected, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
-        this.baseDisconnected = baseDisconnected;
+        super(baseDisconnected);
 
         for (EnumFacing facing : EnumFacing.HORIZONTALS) {
             modelsConnected.put(facing, new BakedModelTRSR(baseConnected, facing));
@@ -132,48 +128,17 @@ public class BakedModelDiskManipulator implements IBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
         if (!(state instanceof IExtendedBlockState)) {
-            return baseDisconnected.getQuads(state, side, rand);
+            return base.getQuads(state, side, rand);
         }
 
         Integer[] diskState = ((IExtendedBlockState) state).getValue(BlockDiskManipulator.DISK_STATE);
 
         if (diskState == null) {
-            return baseDisconnected.getQuads(state, side, rand);
+            return base.getQuads(state, side, rand);
         }
 
         CacheKey key = new CacheKey(((IExtendedBlockState) state).getClean(), side, diskState);
 
         return cache.getUnchecked(key);
-    }
-
-    @Override
-    public boolean isAmbientOcclusion() {
-        return baseDisconnected.isAmbientOcclusion();
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return baseDisconnected.isGui3d();
-    }
-
-    @Override
-    public boolean isBuiltInRenderer() {
-        return baseDisconnected.isBuiltInRenderer();
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return baseDisconnected.getParticleTexture();
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return baseDisconnected.getItemCameraTransforms();
-    }
-
-    @Override
-    public ItemOverrideList getOverrides() {
-        return baseDisconnected.getOverrides();
     }
 }

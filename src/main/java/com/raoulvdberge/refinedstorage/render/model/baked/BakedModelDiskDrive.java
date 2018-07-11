@@ -9,9 +9,6 @@ import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -20,7 +17,7 @@ import javax.annotation.Nullable;
 import javax.vecmath.Vector3f;
 import java.util.*;
 
-public class BakedModelDiskDrive implements IBakedModel {
+public class BakedModelDiskDrive extends BakedModelDelegate {
     private class CacheKey {
         private IBlockState state;
         private EnumFacing side;
@@ -64,7 +61,6 @@ public class BakedModelDiskDrive implements IBakedModel {
         }
     }
 
-    private IBakedModel base;
     private Map<EnumFacing, IBakedModel> models = new HashMap<>();
     private Map<EnumFacing, Map<Integer, List<IBakedModel>>> disks = new HashMap<>();
 
@@ -86,7 +82,7 @@ public class BakedModelDiskDrive implements IBakedModel {
     });
 
     public BakedModelDiskDrive(IBakedModel base, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
-        this.base = base;
+        super(base);
 
         for (EnumFacing facing : EnumFacing.HORIZONTALS) {
             models.put(facing, new BakedModelTRSR(base, facing));
@@ -142,36 +138,5 @@ public class BakedModelDiskDrive implements IBakedModel {
         CacheKey key = new CacheKey(((IExtendedBlockState) state).getClean(), side, diskState);
 
         return cache.getUnchecked(key);
-    }
-
-    @Override
-    public boolean isAmbientOcclusion() {
-        return base.isAmbientOcclusion();
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return base.isGui3d();
-    }
-
-    @Override
-    public boolean isBuiltInRenderer() {
-        return base.isBuiltInRenderer();
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return base.getParticleTexture();
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public ItemCameraTransforms getItemCameraTransforms() {
-        return base.getItemCameraTransforms();
-    }
-
-    @Override
-    public ItemOverrideList getOverrides() {
-        return base.getOverrides();
     }
 }

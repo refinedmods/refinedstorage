@@ -1,15 +1,20 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "cube",
+    "model": "refinedstorage:security_manager",
     "textures": {
-      "particle": "refinedstorage:blocks/security_manager_front_disconnected",
-      "down": "refinedstorage:blocks/security_manager_bottom",
-      "up": "refinedstorage:blocks/security_manager_top_disconnected",
-      "north": "refinedstorage:blocks/security_manager_front_disconnected",
-      "east": "refinedstorage:blocks/security_manager_left_disconnected",
-      "south": "refinedstorage:blocks/security_manager_back_disconnected",
-      "west": "refinedstorage:blocks/security_manager_right_disconnected"
+      "particle": "refinedstorage:blocks/security_manager/front",
+      "down": "refinedstorage:blocks/security_manager/bottom",
+      "up": "refinedstorage:blocks/security_manager/top",
+      "north": "refinedstorage:blocks/security_manager/front",
+      "east": "refinedstorage:blocks/security_manager/left",
+      "south": "refinedstorage:blocks/security_manager/back",
+      "west": "refinedstorage:blocks/security_manager/right",
+      "cutout_up": "refinedstorage:blocks/security_manager/cutouts/top_disconnected",
+      "cutout_north": "refinedstorage:blocks/security_manager/cutouts/front_disconnected",
+      "cutout_east": "refinedstorage:blocks/security_manager/cutouts/left_disconnected",
+      "cutout_south": "refinedstorage:blocks/security_manager/cutouts/back_disconnected",
+      "cutout_west": "refinedstorage:blocks/security_manager/cutouts/right_disconnected"
     }
   },
   "variants": {
@@ -21,11 +26,11 @@
     "connected": {
       "true": {
         "textures": {
-          "up": "refinedstorage:blocks/security_manager_top_connected",
-          "north": "refinedstorage:blocks/security_manager_front_connected",
-          "east": "refinedstorage:blocks/security_manager_left_connected",
-          "south": "refinedstorage:blocks/security_manager_back_connected",
-          "west": "refinedstorage:blocks/security_manager_right_connected"
+          "cutout_up": "refinedstorage:blocks/security_manager/cutouts/top_connected",
+          "cutout_north": "refinedstorage:blocks/security_manager/cutouts/front_connected",
+          "cutout_east": "refinedstorage:blocks/security_manager/cutouts/left_connected",
+          "cutout_south": "refinedstorage:blocks/security_manager/cutouts/back_connected",
+          "cutout_west": "refinedstorage:blocks/security_manager/cutouts/right_connected"
         }
       },
       "false": {
