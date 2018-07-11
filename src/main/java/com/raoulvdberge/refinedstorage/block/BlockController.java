@@ -25,7 +25,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -43,13 +42,13 @@ public class BlockController extends BlockNodeProxy {
         modelRegistration.setModelMeshDefinition(this, stack -> {
             ControllerEnergyType energyType = stack.getItemDamage() == ControllerType.CREATIVE.getId() ? ControllerEnergyType.ON : TileController.getEnergyType(ItemBlockController.getEnergyStored(stack), RS.INSTANCE.config.controllerCapacity);
 
-            return new ModelResourceLocation(RS.ID + ":controller" + (Loader.isModLoaded("ctm") ? "_glow" : ""), "energy_type=" + energyType);
+            return new ModelResourceLocation(RS.ID + ":controller", "energy_type=" + energyType);
         });
 
         modelRegistration.setStateMapper(this, new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation(RS.ID + ":controller" + (Loader.isModLoaded("ctm") ? "_glow" : ""), "energy_type=" + state.getValue(ENERGY_TYPE));
+                return new ModelResourceLocation(RS.ID + ":controller", "energy_type=" + state.getValue(ENERGY_TYPE));
             }
         });
     }

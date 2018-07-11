@@ -9,7 +9,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
-import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ModelDiskManipulator implements IModel {
-    private static final ResourceLocation MODEL_BASE_CONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_connected" + (Loader.isModLoaded("ctm") ? "_glow" : ""));
+    private static final ResourceLocation MODEL_BASE_CONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_connected");
     private static final ResourceLocation MODEL_BASE_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected");
 
     private static final ResourceLocation MODEL_DISK = new ResourceLocation(RS.ID + ":block/disk");
@@ -26,6 +25,7 @@ public class ModelDiskManipulator implements IModel {
     private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation(RS.ID + ":block/disk_full");
     private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_disconnected");
 
+    // TODO: Remove?
     private static final ResourceLocation TEXTURE_BASE_CONNECTED_GLOW = new ResourceLocation(RS.ID + ":blocks/disk_manipulator_connected_glow");
 
     @Override
