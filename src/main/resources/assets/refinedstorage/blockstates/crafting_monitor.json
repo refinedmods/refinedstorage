@@ -1,15 +1,16 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "cube",
+    "model": "refinedstorage:cube_cutout_north",
     "textures": {
-      "particle": "refinedstorage:blocks/crafting_monitor_front",
-      "north": "refinedstorage:blocks/crafting_monitor_front",
-      "east": "refinedstorage:blocks/crafting_monitor_left",
-      "south": "refinedstorage:blocks/crafting_monitor_back",
-      "west": "refinedstorage:blocks/crafting_monitor_right",
-      "up": "refinedstorage:blocks/crafting_monitor_top",
-      "down": "refinedstorage:blocks/bottom"
+      "particle": "refinedstorage:blocks/crafting_monitor/front",
+      "north": "refinedstorage:blocks/crafting_monitor/front",
+      "east": "refinedstorage:blocks/crafting_monitor/left",
+      "south": "refinedstorage:blocks/crafting_monitor/back",
+      "west": "refinedstorage:blocks/crafting_monitor/right",
+      "up": "refinedstorage:blocks/crafting_monitor/top",
+      "down": "refinedstorage:blocks/bottom",
+      "cutout": "refinedstorage:blocks/crafting_monitor/cutouts/front_disconnected"
     }
   },
   "variants": {
@@ -22,7 +23,7 @@
     "connected": {
       "true": {
         "textures": {
-          "north": "refinedstorage:blocks/crafting_monitor_front_connected"
+          "cutout": "refinedstorage:blocks/crafting_monitor/cutouts/front_connected"
         }
       },
       "false": {
