@@ -1,10 +1,11 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "cube_all",
+    "model": "refinedstorage:cube_all_cutout",
     "textures": {
-      "particle": "refinedstorage:blocks/controller_off",
-      "all": "refinedstorage:blocks/controller_off"
+      "particle": "refinedstorage:blocks/controller/controller_off",
+      "all": "refinedstorage:blocks/controller/controller_off",
+      "cutout": "refinedstorage:blocks/controller/cutouts/off"
     }
   },
   "variants": {
@@ -17,18 +18,25 @@
       "off": {
       },
       "nearly_off": {
+        "model": "refinedstorage:controller_nearly_on_off",
         "textures": {
-          "all": "refinedstorage:blocks/controller_nearly_off"
+          "all": "refinedstorage:blocks/controller/controller",
+          "cutout": "refinedstorage:blocks/controller/cutouts/nearly_off",
+          "cutout_gray": "refinedstorage:blocks/controller/cutouts/nearly_off_gray"
         }
       },
       "nearly_on": {
+        "model": "refinedstorage:controller_nearly_on_off",
         "textures": {
-          "all": "refinedstorage:blocks/controller_nearly_on"
+          "all": "refinedstorage:blocks/controller/controller",
+          "cutout": "refinedstorage:blocks/controller/cutouts/nearly_on",
+          "cutout_gray": "refinedstorage:blocks/controller/cutouts/nearly_on_gray"
         }
       },
       "on": {
         "textures": {
-          "all": "refinedstorage:blocks/controller_on"
+          "all": "refinedstorage:blocks/controller/controller",
+          "cutout": "refinedstorage:blocks/controller/cutouts/on"
         }
       }
     }

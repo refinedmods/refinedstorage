@@ -33,11 +33,11 @@ public class BlockSecurityManager extends BlockNode {
 
         modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(
             base,
-            "refinedstorage:blocks/security_manager/cutouts/top_connected",
-            "refinedstorage:blocks/security_manager/cutouts/front_connected",
-            "refinedstorage:blocks/security_manager/cutouts/left_connected",
-            "refinedstorage:blocks/security_manager/cutouts/back_connected",
-            "refinedstorage:blocks/security_manager/cutouts/right_connected"
+            RS.ID + ":blocks/security_manager/cutouts/top_connected",
+            RS.ID + ":blocks/security_manager/cutouts/front_connected",
+            RS.ID + ":blocks/security_manager/cutouts/left_connected",
+            RS.ID + ":blocks/security_manager/cutouts/back_connected",
+            RS.ID + ":blocks/security_manager/cutouts/right_connected"
         ));
     }
 

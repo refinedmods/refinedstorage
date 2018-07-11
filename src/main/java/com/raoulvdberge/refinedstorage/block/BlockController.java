@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockController;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.meshdefinition.ItemMeshDefinitionController;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
@@ -19,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
@@ -37,11 +39,23 @@ public class BlockController extends BlockNodeProxy {
     }
 
     @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModelMeshDefinition(this, new ItemMeshDefinitionController());
 
         modelRegistration.setStateMapper(this, new StateMap.Builder().ignore(TYPE).build());
+
+        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(
+            base,
+            RS.ID + ":blocks/controller/cutouts/nearly_off",
+            RS.ID + ":blocks/controller/cutouts/nearly_on",
+            RS.ID + ":blocks/controller/cutouts/on"
+        ));
     }
 
     @Override
