@@ -92,6 +92,10 @@ public class CoverManager {
                 ItemStack item = new ItemStack(tag.getCompoundTag(NBT_ITEM));
                 int type = tag.hasKey(NBT_TYPE) ? tag.getInteger(NBT_TYPE) : 0;
 
+                if (type >= CoverType.values().length) {
+                    type = 0;
+                }
+
                 if (isValidCover(item)) {
                     covers.put(direction, new Cover(item, CoverType.values()[type]));
                 }
