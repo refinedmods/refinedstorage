@@ -72,10 +72,12 @@ public class BlockCable extends BlockNode {
         return BlockInfoBuilder.forId(id).material(Material.GLASS).soundType(SoundType.GLASS).hardness(0.35F);
     }
 
+    @SideOnly(Side.CLIENT)
     void registerCover(IModelRegistration modelRegistration) {
         modelRegistration.addBakedModelOverride(info.getId(), BakedModelCableCover::new);
     }
 
+    @SideOnly(Side.CLIENT)
     void registerCoverAndFullbright(IModelRegistration modelRegistration, String... textures) {
         modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelCableCover(new BakedModelFullbright(base, textures)));
     }
