@@ -18,32 +18,16 @@
   "variants": {
     "disk_state": {
       "normal": {
-        "textures": {
-          "disk0": "refinedstorage:blocks/portable_grid_disk",
-          "disk1": "refinedstorage:blocks/portable_grid_disk"
-        },
-        "submodel": "refinedstorage:portable_grid_disk"
+        "submodel": "refinedstorage:disks/portable_grid_disk"
       },
       "near_capacity": {
-        "textures": {
-          "disk0": "refinedstorage:blocks/portable_grid_disk_near_capacity",
-          "disk1": "refinedstorage:blocks/portable_grid_disk_near_capacity"
-        },
-        "submodel": "refinedstorage:portable_grid_disk"
+        "submodel": "refinedstorage:disks/portable_grid_disk_near_capacity"
       },
       "full": {
-        "textures": {
-          "disk0": "refinedstorage:blocks/portable_grid_disk_full",
-          "disk1": "refinedstorage:blocks/portable_grid_disk_full"
-        },
-        "submodel": "refinedstorage:portable_grid_disk"
+        "submodel": "refinedstorage:disks/portable_grid_disk_full"
       },
       "disconnected": {
-        "textures": {
-          "disk0": "refinedstorage:blocks/portable_grid_disk_disconnected",
-          "disk1": "refinedstorage:blocks/portable_grid_disk_disconnected"
-        },
-        "submodel": "refinedstorage:portable_grid_disk"
+        "submodel": "refinedstorage:disks/portable_grid_disk_disconnected"
       },
       "none": {
       }

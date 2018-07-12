@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsPortableGrid;
 import com.raoulvdberge.refinedstorage.render.meshdefinition.ItemMeshDefinitionPortableGrid;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyEnum;
@@ -47,6 +48,11 @@ public class BlockPortableGrid extends BlockBase {
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setStateMapper(this, new StateMap.Builder().ignore(TYPE).build());
         modelRegistration.setModelMeshDefinition(this, new ItemMeshDefinitionPortableGrid());
+
+        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(
+            base,
+            RS.ID + ":blocks/disks/leds"
+        ));
     }
 
     @Override

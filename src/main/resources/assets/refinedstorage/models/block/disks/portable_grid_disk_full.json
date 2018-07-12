@@ -1,4 +1,8 @@
 {
+  "textures": {
+    "disk": "refinedstorage:blocks/disks/portable_grid_disk",
+    "led": "refinedstorage:blocks/disks/leds"
+  },
   "elements": [
     {
       "name": "disk",
@@ -21,7 +25,7 @@
             6,
             7
           ],
-          "texture": "#disk1"
+          "texture": "#disk"
         },
         "east": {
           "uv": [
@@ -30,7 +34,7 @@
             5,
             7
           ],
-          "texture": "#disk1"
+          "texture": "#disk"
         },
         "south": {
           "uv": [
@@ -39,7 +43,7 @@
             12,
             7
           ],
-          "texture": "#disk1"
+          "texture": "#disk"
         },
         "west": {
           "uv": [
@@ -48,7 +52,7 @@
             11,
             7
           ],
-          "texture": "#disk1"
+          "texture": "#disk"
         },
         "up": {
           "uv": [
@@ -57,7 +61,7 @@
             6,
             5
           ],
-          "texture": "#disk1",
+          "texture": "#disk",
           "rotation": 180
         },
         "down": {
@@ -67,7 +71,7 @@
             7,
             5
           ],
-          "texture": "#disk1",
+          "texture": "#disk",
           "rotation": 180
         }
       }
@@ -88,21 +92,57 @@
       "faces": {
         "east": {
           "uv": [
-            2,
             1,
-            3,
-            2
+            0,
+            1,
+            0
           ],
-          "texture": "#disk1"
+          "texture": "#led"
         },
         "west": {
           "uv": [
-            2,
             1,
-            3,
-            2
+            0,
+            1,
+            0
           ],
-          "texture": "#disk0"
+          "texture": "#led"
+        },
+        "north": {
+          "uv": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "texture": "#led"
+        },
+        "south": {
+          "uv": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "texture": "#led"
+        },
+        "up": {
+          "uv": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "texture": "#led"
+        },
+        "down": {
+          "uv": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "texture": "#led"
         }
       }
     }
