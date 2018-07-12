@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockController;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.state.IBlockState;
@@ -51,6 +52,19 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         for (EnumFacing facing : EnumFacing.VALUES) {
             BlockPos pos = controllerPos.offset(facing);
+
+            // Little hack to support not conducting through covers (if the cover is right next to the controller).
+            TileEntity tile = controllerWorld.getTileEntity(pos);
+
+            if (tile != null && tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite())) {
+                INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite()));
+                INetworkNode otherNode = otherNodeProxy.getNode();
+
+                if (otherNode instanceof ICoverable && ((ICoverable) otherNode).getCoverManager().hasCover(facing.getOpposite())) {
+                    continue;
+                }
+            }
+
             operator.apply(controllerWorld, pos, facing.getOpposite());
         }
 
