@@ -4,7 +4,7 @@
     "textures": {
       "cable": "refinedstorage:blocks/cable",
       "particle": "refinedstorage:blocks/cable",
-      "line": "refinedstorage:blocks/generic_grey"
+      "border": "refinedstorage:blocks/cable_part_border"
     },
     "model": "refinedstorage:cable_core",
     "uvlock": false

@@ -11,6 +11,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Removed "void excess items or fluids" functionality on storages (raoulvdberge)
 - Removed the Solderer (raoulvdberge)
 - Removed "compare oredict" buttons on Exporter, Importer, etc. (raoulvdberge)
+- Removed ConnectedTexturesMod integration for fullbright textures, RS now has fullbright textures natively (raoulvdberge)
 - Added the Cutting Tool (raoulvdberge)
 - Renamed "Printed Processors" to "Cut Processors" (raoulvdberge)
 - Added covers (raoulvdberge)

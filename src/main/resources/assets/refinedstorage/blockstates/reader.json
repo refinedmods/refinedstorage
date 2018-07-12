@@ -6,7 +6,7 @@
       "particle": "refinedstorage:blocks/cable",
       "front": "refinedstorage:blocks/reader/reader",
       "cutout": "refinedstorage:blocks/reader/cutouts/disconnected",
-      "line": "refinedstorage:blocks/generic_grey"
+      "border": "refinedstorage:blocks/cable_part_border"
     },
     "model": "refinedstorage:cable_core",
     "uvlock": true

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BakedModelCableCover extends BakedModelDelegate {
-    private static TextureAtlasSprite GREY_SPRITE;
+    private static TextureAtlasSprite BORDER_SPRITE;
 
     public BakedModelCableCover(IBakedModel base) {
         super(base);
@@ -137,8 +137,8 @@ public class BakedModelCableCover extends BakedModelDelegate {
         quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, sprite)).bake());
 
         if (handle) {
-            if (GREY_SPRITE == null) {
-                GREY_SPRITE = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(RS.ID + ":blocks/generic_grey");
+            if (BORDER_SPRITE == null) {
+                BORDER_SPRITE = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(RS.ID + ":blocks/cable_part_border");
             }
 
             bounds = ConstantsCable.getHolderBounds(coverSide);
@@ -146,7 +146,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
             to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
 
-            quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, GREY_SPRITE)).bake());
+            quads.addAll(new CubeBuilder().from(from.getX(), from.getY(), from.getZ()).to(to.getX(), to.getY(), to.getZ()).addFaces(face -> new CubeBuilder.Face(face, BORDER_SPRITE)).bake());
         }
     }
 
