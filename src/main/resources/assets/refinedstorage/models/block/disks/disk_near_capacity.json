@@ -1,7 +1,8 @@
 {
   "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
   "textures": {
-    "0": "refinedstorage:blocks/disk"
+    "base": "refinedstorage:blocks/disks/disk",
+    "led": "refinedstorage:blocks/disks/leds"
   },
   "elements": [
     {
@@ -18,7 +19,7 @@
       ],
       "faces": {
         "north": {
-          "texture": "#0",
+          "texture": "#base",
           "uv": [
             3.0,
             0.0,
@@ -27,7 +28,7 @@
           ]
         },
         "east": {
-          "texture": "#0",
+          "texture": "#base",
           "uv": [
             2.0,
             0.0,
@@ -36,7 +37,7 @@
           ]
         },
         "south": {
-          "texture": "#0",
+          "texture": "#base",
           "uv": [
             9.0,
             0.0,
@@ -45,7 +46,7 @@
           ]
         },
         "west": {
-          "texture": "#0",
+          "texture": "#base",
           "uv": [
             8.0,
             0.0,
@@ -54,7 +55,7 @@
           ]
         },
         "up": {
-          "texture": "#0",
+          "texture": "#base",
           "uv": [
             3.0,
             2.0,
@@ -63,7 +64,7 @@
           ]
         },
         "down": {
-          "texture": "#0",
+          "texture": "#base",
           "uv": [
             3.0,
             3.0,
@@ -87,57 +88,57 @@
       ],
       "faces": {
         "north": {
-          "texture": "#0",
+          "texture": "#led",
           "uv": [
-            14.0,
-            1.0,
-            15.0,
-            2.0
+            0.0,
+            0.0,
+            0.0,
+            0.0
           ]
         },
         "east": {
-          "texture": "#0",
+          "texture": "#led",
           "uv": [
-            14.0,
-            1.0,
-            15.0,
-            2.0
+            0.0,
+            0.0,
+            0.0,
+            0.0
           ]
         },
         "south": {
-          "texture": "#0",
+          "texture": "#led",
           "uv": [
-            14.0,
-            1.0,
-            15.0,
-            2.0
+            0.0,
+            0.0,
+            0.0,
+            0.0
           ]
         },
         "west": {
-          "texture": "#0",
+          "texture": "#led",
           "uv": [
-            14.0,
-            1.0,
-            15.0,
-            2.0
+            0.0,
+            0.0,
+            0.0,
+            0.0
           ]
         },
         "up": {
-          "texture": "#0",
+          "texture": "#led",
           "uv": [
-            14.0,
-            1.0,
-            15.0,
-            2.0
+            0.0,
+            0.0,
+            0.0,
+            0.0
           ]
         },
         "down": {
-          "texture": "#0",
+          "texture": "#led",
           "uv": [
-            14.0,
-            1.0,
-            15.0,
-            2.0
+            0.0,
+            0.0,
+            0.0,
+            0.0
           ]
         }
       }

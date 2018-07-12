@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.render.model;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelDiskDrive;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -18,10 +19,10 @@ import java.util.function.Function;
 public class ModelDiskDrive implements IModel {
     private static final ResourceLocation MODEL_BASE = new ResourceLocation(RS.ID + ":block/disk_drive");
 
-    private static final ResourceLocation MODEL_DISK = new ResourceLocation(RS.ID + ":block/disk");
-    private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation(RS.ID + ":block/disk_near_capacity");
-    private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation(RS.ID + ":block/disk_full");
-    private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_disconnected");
+    private static final ResourceLocation MODEL_DISK = new ResourceLocation(RS.ID + ":block/disks/disk");
+    private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity");
+    private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation(RS.ID + ":block/disks/disk_full");
+    private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disks/disk_disconnected");
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
@@ -56,9 +57,9 @@ public class ModelDiskDrive implements IModel {
 
         return new BakedModelDiskDrive(
             baseModel.bake(state, format, bakedTextureGetter),
-            diskModel.bake(state, format, bakedTextureGetter),
-            diskModelNearCapacity.bake(state, format, bakedTextureGetter),
-            diskModelFull.bake(state, format, bakedTextureGetter),
+            new BakedModelFullbright(diskModel.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            new BakedModelFullbright(diskModelNearCapacity.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            new BakedModelFullbright(diskModelFull.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
             diskModelDisconnected.bake(state, format, bakedTextureGetter)
         );
     }

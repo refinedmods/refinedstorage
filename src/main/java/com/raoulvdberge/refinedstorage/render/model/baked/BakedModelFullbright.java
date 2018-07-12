@@ -62,27 +62,24 @@ public class BakedModelFullbright extends BakedModelDelegate {
 
     private static final LoadingCache<CacheKey, List<BakedQuad>> CACHE = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
-        public List<BakedQuad> load(CacheKey key) throws Exception {
-            List<BakedQuad> quads = new ArrayList<>(key.base.getQuads(key.state, key.side, 0));
-
-            for (int i = 0; i < quads.size(); ++i) {
-                BakedQuad quad = quads.get(i);
-
-                if (key.textures.contains(quad.getSprite().getIconName())) {
-                    quads.set(i, transformQuad(quad, 0.007F));
-                }
-            }
-
-            return quads;
+        public List<BakedQuad> load(CacheKey key) {
+            return transformQuads(key.base.getQuads(key.state, key.side, 0), key.textures);
         }
     });
 
     private Set<String> textures;
+    private boolean cacheDisabled = false;
 
     public BakedModelFullbright(IBakedModel base, String... textures) {
         super(base);
 
         this.textures = new HashSet<>(Arrays.asList(textures));
+    }
+
+    public BakedModelFullbright setCacheDisabled() {
+        this.cacheDisabled = true;
+
+        return this;
     }
 
     @Override
@@ -91,7 +88,25 @@ public class BakedModelFullbright extends BakedModelDelegate {
             return base.getQuads(state, side, rand);
         }
 
+        if (cacheDisabled) {
+            return transformQuads(base.getQuads(state, side, 0), textures);
+        }
+
         return CACHE.getUnchecked(new CacheKey(base, textures, state instanceof IExtendedBlockState ? ((IExtendedBlockState) state).getClean() : state, side));
+    }
+
+    private static List<BakedQuad> transformQuads(List<BakedQuad> oldQuads, Set<String> textures) {
+        List<BakedQuad> quads = new ArrayList<>(oldQuads);
+
+        for (int i = 0; i < quads.size(); ++i) {
+            BakedQuad quad = quads.get(i);
+
+            if (textures.contains(quad.getSprite().getIconName())) {
+                quads.set(i, transformQuad(quad, 0.007F));
+            }
+        }
+
+        return quads;
     }
 
     private static BakedQuad transformQuad(BakedQuad quad, float light) {

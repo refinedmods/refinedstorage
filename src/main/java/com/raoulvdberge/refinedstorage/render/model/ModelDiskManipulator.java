@@ -22,10 +22,10 @@ public class ModelDiskManipulator implements IModel {
     private static final ResourceLocation MODEL_BASE_CONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_connected");
     private static final ResourceLocation MODEL_BASE_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected");
 
-    private static final ResourceLocation MODEL_DISK = new ResourceLocation(RS.ID + ":block/disk");
-    private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation(RS.ID + ":block/disk_near_capacity");
-    private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation(RS.ID + ":block/disk_full");
-    private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_disconnected");
+    private static final ResourceLocation MODEL_DISK = new ResourceLocation(RS.ID + ":block/disks/disk");
+    private static final ResourceLocation MODEL_DISK_NEAR_CAPACITY = new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity");
+    private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation(RS.ID + ":block/disks/disk_full");
+    private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disks/disk_disconnected");
 
     @Override
     public Collection<ResourceLocation> getDependencies() {
@@ -69,9 +69,9 @@ public class ModelDiskManipulator implements IModel {
         return new BakedModelDiskManipulator(
             new BakedModelFullbright(baseModelConnected.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disk_manipulator/cutouts/connected"),
             baseModelDisconnected.bake(state, format, bakedTextureGetter),
-            diskModel.bake(state, format, bakedTextureGetter),
-            diskModelNearCapacity.bake(state, format, bakedTextureGetter),
-            diskModelFull.bake(state, format, bakedTextureGetter),
+            new BakedModelFullbright(diskModel.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            new BakedModelFullbright(diskModelNearCapacity.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            new BakedModelFullbright(diskModelFull.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
             diskModelDisconnected.bake(state, format, bakedTextureGetter)
         );
     }
