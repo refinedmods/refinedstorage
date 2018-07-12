@@ -42,9 +42,11 @@ import com.raoulvdberge.refinedstorage.integration.inventorysorter.IntegrationIn
 import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
 import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
 import com.raoulvdberge.refinedstorage.item.ItemProcessor;
+import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.recipe.RecipeCover;
 import com.raoulvdberge.refinedstorage.recipe.RecipeHollowCover;
+import com.raoulvdberge.refinedstorage.recipe.RecipeUpgradeWithEnchantedBook;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -284,6 +286,10 @@ public class ProxyCommon {
     public void registerRecipes(RegistryEvent.Register<IRecipe> e) {
         e.getRegistry().register(new RecipeCover().setRegistryName(new ResourceLocation(RS.ID, "cover")));
         e.getRegistry().register(new RecipeHollowCover().setRegistryName(new ResourceLocation(RS.ID, "hollow_cover")));
+        e.getRegistry().register(new RecipeUpgradeWithEnchantedBook("fortune", 1, ItemUpgrade.TYPE_FORTUNE_1).setRegistryName(new ResourceLocation(RS.ID, "fortune_1_upgrade")));
+        e.getRegistry().register(new RecipeUpgradeWithEnchantedBook("fortune", 2, ItemUpgrade.TYPE_FORTUNE_2).setRegistryName(new ResourceLocation(RS.ID, "fortune_2_upgrade")));
+        e.getRegistry().register(new RecipeUpgradeWithEnchantedBook("fortune", 3, ItemUpgrade.TYPE_FORTUNE_3).setRegistryName(new ResourceLocation(RS.ID, "fortune_3_upgrade")));
+        e.getRegistry().register(new RecipeUpgradeWithEnchantedBook("silk_touch", 1, ItemUpgrade.TYPE_SILK_TOUCH).setRegistryName(new ResourceLocation(RS.ID, "silk_touch_upgrade")));
     }
 
     @SubscribeEvent
