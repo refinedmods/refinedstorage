@@ -1,14 +1,19 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "cube",
+    "model": "refinedstorage:cube_cutout",
     "textures": {
-      "particle": "refinedstorage:blocks/crafter_side",
-      "side": "refinedstorage:blocks/crafter_side",
-      "side_90": "refinedstorage:blocks/crafter_side_90",
-      "side_180": "refinedstorage:blocks/crafter_side_180",
-      "side_270": "refinedstorage:blocks/crafter_side_270",
-      "front": "refinedstorage:blocks/crafter_front"
+      "particle": "refinedstorage:blocks/crafter/side",
+      "side": "refinedstorage:blocks/crafter/side",
+      "side_90": "refinedstorage:blocks/crafter/side_90",
+      "side_180": "refinedstorage:blocks/crafter/side_180",
+      "side_270": "refinedstorage:blocks/crafter/side_270",
+      "cutout_side": "refinedstorage:blocks/crafter/cutouts/side_disconnected",
+      "cutout_side_90": "refinedstorage:blocks/crafter/cutouts/side_disconnected_90",
+      "cutout_side_180": "refinedstorage:blocks/crafter/cutouts/side_disconnected_180",
+      "cutout_side_270": "refinedstorage:blocks/crafter/cutouts/side_disconnected_270",
+      "front": "refinedstorage:blocks/crafter/front",
+      "cutout_front": "refinedstorage:blocks/crafter/cutouts/front_disconnected"
     },
     "uvlock": true
   },
@@ -16,11 +21,11 @@
     "connected": {
       "true": {
         "textures": {
-          "side": "refinedstorage:blocks/crafter_side_connected",
-          "side_90": "refinedstorage:blocks/crafter_side_connected_90",
-          "side_180": "refinedstorage:blocks/crafter_side_connected_180",
-          "side_270": "refinedstorage:blocks/crafter_side_connected_270",
-          "front": "refinedstorage:blocks/crafter_front_connected"
+          "cutout_side": "refinedstorage:blocks/crafter/cutouts/side_connected",
+          "cutout_side_90": "refinedstorage:blocks/crafter/cutouts/side_connected_90",
+          "cutout_side_180": "refinedstorage:blocks/crafter/cutouts/side_connected_180",
+          "cutout_side_270": "refinedstorage:blocks/crafter/cutouts/side_connected_270",
+          "cutout_front": "refinedstorage:blocks/crafter/cutouts/front_connected"
         }
       },
       "false": {
@@ -31,62 +36,98 @@
     "direction": {
       "north": {
         "textures": {
-          "down": "#side",
+          "down": "#side_180",
           "up": "#side",
           "north": "#front",
           "east": "#side_90",
-          "south": "refinedstorage:blocks/crafter_bottom",
-          "west": "#side_270"
+          "south": "refinedstorage:blocks/crafter/bottom",
+          "west": "#side_270",
+          "cutout_down": "#cutout_side_180",
+          "cutout_up": "#cutout_side",
+          "cutout_north": "#cutout_front",
+          "cutout_east": "#cutout_side_90",
+          "cutout_south": "refinedstorage:blocks/crafter/bottom",
+          "cutout_west": "#cutout_side_270"
         }
       },
       "east": {
         "textures": {
-          "down": "refinedstorage:blocks/crafter_bottom",
+          "down": "#side_90",
           "up": "#side_90",
           "north": "#side_270",
           "east": "#front",
           "south": "#side_90",
-          "west": "refinedstorage:blocks/crafter_bottom"
+          "west": "refinedstorage:blocks/crafter/bottom",
+          "cutout_down": "#cutout_side_90",
+          "cutout_up": "#cutout_side_90",
+          "cutout_north": "#cutout_side_270",
+          "cutout_east": "#cutout_front",
+          "cutout_south": "#cutout_side_90",
+          "cutout_west": "refinedstorage:blocks/crafter/bottom"
         }
       },
       "south": {
         "textures": {
-          "down": "refinedstorage:blocks/crafter_bottom",
+          "down": "#side",
           "up": "#side_180",
-          "north": "refinedstorage:blocks/crafter_bottom",
+          "north": "refinedstorage:blocks/crafter/bottom",
           "east": "#side_270",
           "south": "#front",
-          "west": "#side_90"
+          "west": "#side_90",
+          "cutout_down": "#cutout_side",
+          "cutout_up": "#cutout_side_180",
+          "cutout_north": "refinedstorage:blocks/crafter/bottom",
+          "cutout_east": "#cutout_side_270",
+          "cutout_south": "#cutout_front",
+          "cutout_west": "#cutout_side_90"
         }
       },
       "west": {
         "textures": {
-          "down": "refinedstorage:blocks/crafter_bottom",
+          "down": "#side_270",
           "up": "#side_270",
           "north": "#side_90",
-          "east": "refinedstorage:blocks/crafter_bottom",
+          "east": "refinedstorage:blocks/crafter/bottom",
           "south": "#side_270",
-          "west": "#front"
+          "west": "#front",
+          "cutout_down": "#cutout_side_270",
+          "cutout_up": "#cutout_side_270",
+          "cutout_north": "#cutout_side_90",
+          "cutout_east": "refinedstorage:blocks/crafter/bottom",
+          "cutout_south": "#cutout_side_270",
+          "cutout_west": "#cutout_front"
         }
       },
       "up": {
         "textures": {
-          "down": "refinedstorage:blocks/crafter_bottom",
+          "down": "refinedstorage:blocks/crafter/bottom",
           "up": "#front",
           "north": "#side",
           "east": "#side",
           "south": "#side",
-          "west": "#side"
+          "west": "#side",
+          "cutout_down": "refinedstorage:blocks/crafter/bottom",
+          "cutout_up": "#cutout_front",
+          "cutout_north": "#cutout_side",
+          "cutout_east": "#cutout_side",
+          "cutout_south": "#cutout_side",
+          "cutout_west": "#cutout_side"
         }
       },
       "down": {
         "textures": {
           "down": "#front",
-          "up": "refinedstorage:blocks/crafter_bottom",
+          "up": "refinedstorage:blocks/crafter/bottom",
           "north": "#side_180",
           "east": "#side_180",
           "south": "#side_180",
-          "west": "#side_180"
+          "west": "#side_180",
+          "cutout_down": "#cutout_front",
+          "cutout_up": "refinedstorage:blocks/crafter/bottom",
+          "cutout_north": "#cutout_side_180",
+          "cutout_east": "#cutout_side_180",
+          "cutout_south": "#cutout_side_180",
+          "cutout_west": "#cutout_side_180"
         }
       }
     }

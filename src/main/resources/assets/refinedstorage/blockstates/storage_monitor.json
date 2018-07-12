@@ -6,7 +6,7 @@
       "particle": "refinedstorage:blocks/side",
       "north": "refinedstorage:blocks/storage_monitor_front",
       "east": "refinedstorage:blocks/storage_monitor_left",
-      "south": "refinedstorage:blocks/grid_back",
+      "south": "refinedstorage:blocks/storage_monitor_back",
       "west": "refinedstorage:blocks/storage_monitor_right",
       "up": "refinedstorage:blocks/storage_monitor_top",
       "down": "refinedstorage:blocks/bottom"
