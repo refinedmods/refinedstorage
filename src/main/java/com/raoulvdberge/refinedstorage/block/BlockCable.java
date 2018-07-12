@@ -85,7 +85,7 @@ public class BlockCable extends BlockNode {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "down=false,east=true,north=false,south=false,up=false,west=true"));
 
         registerCover(modelRegistration);
     }

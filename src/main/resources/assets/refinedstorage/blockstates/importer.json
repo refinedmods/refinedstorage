@@ -7,15 +7,10 @@
       "border": "refinedstorage:blocks/cable_part_border"
     },
     "model": "refinedstorage:cable_core",
-    "uvlock": false
+    "uvlock": false,
+    "transform": "forge:default-block"
   },
   "variants": {
-    "inventory": [
-      {
-        "model": "refinedstorage:importer_item",
-        "transform": "forge:default-block"
-      }
-    ],
     "direction": {
       "north": {
         "submodel": "refinedstorage:importer"

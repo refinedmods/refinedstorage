@@ -9,15 +9,10 @@
       "border": "refinedstorage:blocks/cable_part_border"
     },
     "model": "refinedstorage:cable_core",
-    "uvlock": true
+    "uvlock": true,
+    "transform": "forge:default-block"
   },
   "variants": {
-    "inventory": [
-      {
-        "model": "refinedstorage:constructor_destructor_item",
-        "transform": "forge:default-block"
-      }
-    ],
     "connected": {
       "true": {
         "textures": {

@@ -6,15 +6,10 @@
       "particle": "refinedstorage:blocks/cable"
     },
     "model": "refinedstorage:cable_core",
-    "uvlock": true
+    "uvlock": true,
+    "transform": "forge:default-block"
   },
   "variants": {
-    "inventory": [
-      {
-        "model": "refinedstorage:cable_item",
-        "transform": "forge:default-block"
-      }
-    ],
     "north": {
       "true": {
         "submodel": "refinedstorage:cable_extension"

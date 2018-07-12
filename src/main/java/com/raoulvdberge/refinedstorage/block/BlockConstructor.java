@@ -30,7 +30,7 @@ public class BlockConstructor extends BlockCable {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "connected=false,direction=north,down=false,east=true,north=false,south=false,up=false,west=true"));
 
         registerCoverAndFullbright(modelRegistration, RS.ID + ":blocks/constructor/cutouts/connected");
     }
