@@ -364,3 +364,7 @@ advancements.refinedstorage:interface_to_the_world=Interface to the world
 advancements.refinedstorage:interface_to_the_world.description=Make your storage system available as a regular inventory to the world by using an Interface
 advancements.refinedstorage:storing_externally=Storing externally
 advancements.refinedstorage:storing_externally.description=Use an External Storage to provide the network with storage from an external block like a chest
+advancements.refinedstorage:covering=Covering
+advancements.refinedstorage:covering.description=Craft a Cover to hide cables
+advancements.refinedstorage:hollow_covering=Hollow covering
+advancements.refinedstorage:hollow_covering.description=Craft a Hollow Cover to hide cables, but still let cable through
