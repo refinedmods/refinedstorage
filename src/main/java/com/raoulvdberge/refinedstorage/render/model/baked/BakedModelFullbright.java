@@ -13,13 +13,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.client.model.pipeline.VertexLighterFlat;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class BakedModelFullbright extends BakedModelDelegate {
     private class CacheKey {
