@@ -1,50 +1,13 @@
 {
-  "parent": "block/block",
+  "parent": "refinedstorage:block/cube_north_cutout",
   "textures": {
-    "particle": "refinedstorage:blocks/disk_manipulator_disconnected",
-    "front": "refinedstorage:blocks/disk_manipulator_disconnected",
-    "bottom": "refinedstorage:blocks/side",
-    "top": "refinedstorage:blocks/side",
-    "side": "refinedstorage:blocks/side"
-  },
-  "elements": [
-    {
-      "from": [
-        0,
-        0,
-        0
-      ],
-      "to": [
-        16,
-        16,
-        16
-      ],
-      "faces": {
-        "down": {
-          "texture": "#bottom",
-          "cullface": "down"
-        },
-        "up": {
-          "texture": "#top",
-          "cullface": "up"
-        },
-        "north": {
-          "texture": "#front",
-          "cullface": "north"
-        },
-        "south": {
-          "texture": "#side",
-          "cullface": "south"
-        },
-        "west": {
-          "texture": "#side",
-          "cullface": "west"
-        },
-        "east": {
-          "texture": "#side",
-          "cullface": "east"
-        }
-      }
-    }
-  ]
+    "particle": "refinedstorage:blocks/disk_manipulator/disk_manipulator",
+    "north": "refinedstorage:blocks/disk_manipulator/disk_manipulator",
+    "east": "refinedstorage:blocks/side",
+    "south": "refinedstorage:blocks/side",
+    "west": "refinedstorage:blocks/side",
+    "up": "refinedstorage:blocks/side",
+    "down": "refinedstorage:blocks/side",
+    "cutout": "refinedstorage:blocks/disk_manipulator/cutouts/disconnected"
+  }
 }

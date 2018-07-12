@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.render.model;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelDiskManipulator;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class ModelDiskManipulator implements IModel {
+    private static final ResourceLocation MODEL_BASE_CUTOUT = new ResourceLocation(RS.ID + ":block/cube_north_cutout");
     private static final ResourceLocation MODEL_BASE_CONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_connected");
     private static final ResourceLocation MODEL_BASE_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected");
 
@@ -25,13 +27,11 @@ public class ModelDiskManipulator implements IModel {
     private static final ResourceLocation MODEL_DISK_FULL = new ResourceLocation(RS.ID + ":block/disk_full");
     private static final ResourceLocation MODEL_DISK_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_disconnected");
 
-    // TODO: Remove?
-    private static final ResourceLocation TEXTURE_BASE_CONNECTED_GLOW = new ResourceLocation(RS.ID + ":blocks/disk_manipulator_connected_glow");
-
     @Override
     public Collection<ResourceLocation> getDependencies() {
         List<ResourceLocation> dependencies = new ArrayList<>();
 
+        dependencies.add(MODEL_BASE_CUTOUT);
         dependencies.add(MODEL_BASE_CONNECTED);
         dependencies.add(MODEL_BASE_DISCONNECTED);
         dependencies.add(MODEL_DISK);
@@ -44,7 +44,7 @@ public class ModelDiskManipulator implements IModel {
 
     @Override
     public Collection<ResourceLocation> getTextures() {
-        return Collections.singletonList(TEXTURE_BASE_CONNECTED_GLOW);
+        return Collections.emptyList();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class ModelDiskManipulator implements IModel {
         }
 
         return new BakedModelDiskManipulator(
-            baseModelConnected.bake(state, format, bakedTextureGetter),
+            new BakedModelFullbright(baseModelConnected.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disk_manipulator/cutouts/connected"),
             baseModelDisconnected.bake(state, format, bakedTextureGetter),
             diskModel.bake(state, format, bakedTextureGetter),
             diskModelNearCapacity.bake(state, format, bakedTextureGetter),

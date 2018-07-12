@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ECE",
-    "RMR",
+    "ERE",
+    "CMC",
     "EPE"
   ],
   "key": {
@@ -13,7 +13,7 @@
       "item": "minecraft:comparator"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "item": "minecraft:redstone_torch"
     },
     "M": {
       "item": "refinedstorage:machine_casing"

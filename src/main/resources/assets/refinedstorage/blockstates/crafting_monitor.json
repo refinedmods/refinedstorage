@@ -1,7 +1,7 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "refinedstorage:cube_cutout_north",
+    "model": "refinedstorage:cube_north_cutout",
     "textures": {
       "particle": "refinedstorage:blocks/crafting_monitor/front",
       "north": "refinedstorage:blocks/crafting_monitor/front",

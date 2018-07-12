@@ -1,9 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsWirelessTransmitter;
+import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockFaceShape;
@@ -36,6 +38,8 @@ public class BlockWirelessTransmitter extends BlockNode {
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+
+        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(base, RS.ID + ":blocks/wireless_transmitter/cutouts/connected"));
     }
 
     @Override

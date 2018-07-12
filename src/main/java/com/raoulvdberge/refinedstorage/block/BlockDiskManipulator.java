@@ -13,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -37,6 +38,11 @@ public class BlockDiskManipulator extends BlockNode {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
 
         modelRegistration.addModelLoader(() -> new CustomModelLoaderDefault(info.getId(), ModelDiskManipulator::new));
+    }
+
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
