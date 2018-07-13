@@ -662,7 +662,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         if (renderInfo.getStored() == renderInfo.getCapacity()) {
             return PortableGridDiskState.FULL;
-        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= ConstantsDisk.DISK_NEAR_CAPACITY_TRESHOLD) {
+        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= ConstantsDisk.DISK_NEAR_CAPACITY_THRESHOLD) {
             return PortableGridDiskState.NEAR_CAPACITY;
         } else {
             return PortableGridDiskState.NORMAL;
