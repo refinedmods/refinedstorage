@@ -17,6 +17,11 @@ apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "1.6"
+def env = System.getenv()
+if (env.BUILD_NUMBER) {
+    version = version + "-" + "${env.BUILD_NUMBER}"
+}
+
 group = "refinedstorage"
 archivesBaseName = "refinedstorage"
 
@@ -125,7 +130,7 @@ publishing {
 publishing {
     repositories {
         maven {
-          url "/var/www/repo"
+            url "/var/www/repo"
         }
     }
 }
