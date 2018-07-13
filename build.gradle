@@ -33,6 +33,9 @@ minecraft {
     runDir = "run"
     useDepAts = true
     mappings = "snapshot_20180526"
+
+    replaceIn "RS.java"
+    replace "@version@", project.version
 }
 
 repositories {
@@ -90,14 +93,12 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
-    doLast {
-        keyStore = project.property('keyStore')
-        alias = project.property('keyStoreAlias')
-        storePass = project.property('keyStorePass')
-        keyPass = project.property('keyStoreKeyPass')
-        inputFile = jar.archivePath
-        outputFile = jar.archivePath
-    }
+    keyStore = project.property('keyStore')
+    alias = project.property('keyStoreAlias')
+    storePass = project.property('keyStorePass')
+    keyPass = project.property('keyStoreKeyPass')
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
 }
 
 signJar.onlyIf {

@@ -23,7 +23,7 @@ public final class RS {
     }
 
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "1.6";
+    public static final String VERSION = "@version@";
     public static final String GUI_FACTORY = "com.raoulvdberge.refinedstorage.gui.config.ModGuiFactory";
     public static final String UPDATE_JSON = "https://refinedstorage.raoulvdberge.com/update";
     public static final String FINGERPRINT = "57893d5b90a7336e8c63fe1c1e1ce472c3d59578";
