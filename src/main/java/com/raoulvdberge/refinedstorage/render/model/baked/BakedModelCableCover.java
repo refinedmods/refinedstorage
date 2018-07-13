@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.block.BlockCable;
 import com.raoulvdberge.refinedstorage.render.CubeBuilder;
-import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;

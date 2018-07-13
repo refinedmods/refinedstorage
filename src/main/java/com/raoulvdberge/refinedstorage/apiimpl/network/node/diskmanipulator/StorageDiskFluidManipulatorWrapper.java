@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -26,7 +26,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
         this.parent = parent;
         this.setSettings(
             () -> {
-                int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+                int currentState = ConstantsDisk.getDiskState(getStored(), getCapacity());
 
                 if (lastState != currentState) {
                     lastState = currentState;
@@ -36,7 +36,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
             },
             diskManipulator
         );
-        this.lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+        this.lastState = ConstantsDisk.getDiskState(getStored(), getCapacity());
     }
 
     @Override

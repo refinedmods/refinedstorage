@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.render.collision.constants;
+package com.raoulvdberge.refinedstorage.render.constants;
 
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.util.CollisionUtils;

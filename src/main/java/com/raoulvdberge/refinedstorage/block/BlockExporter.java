@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
-import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsExporter;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsExporter;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

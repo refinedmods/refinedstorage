@@ -5,9 +5,8 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -26,17 +25,17 @@ public class StorageDiskItemDriveWrapper implements IStorageDisk<ItemStack> {
         this.parent = parent;
         this.setSettings(
             () -> {
-                int currentState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+                int currentState = ConstantsDisk.getDiskState(getStored(), getCapacity());
 
-                if (lastState != currentState) {
-                    lastState = currentState;
+                if (this.lastState != currentState) {
+                    this.lastState = currentState;
 
-                    WorldUtils.updateBlock(diskDrive.getWorld(), diskDrive.getPos());
+                    diskDrive.requestBlockUpdate();
                 }
             },
             diskDrive
         );
-        this.lastState = TileDiskDrive.getDiskState(getStored(), getCapacity());
+        this.lastState = ConstantsDisk.getDiskState(getStored(), getCapacity());
     }
 
     @Override

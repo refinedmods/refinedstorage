@@ -46,6 +46,11 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
 
+    private static final int DISK_STATE_UPDATE_THROTTLE = 30;
+
+    private int ticksSinceBlockUpdateRequested;
+    private boolean blockUpdateRequested;
+
     private ItemHandlerBase disks = new ItemHandlerBase(8, new ItemHandlerListenerNetworkNode(this), VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -112,6 +117,28 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         }
 
         return usage;
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        if (blockUpdateRequested) {
+            ++ticksSinceBlockUpdateRequested;
+
+            if (ticksSinceBlockUpdateRequested > DISK_STATE_UPDATE_THROTTLE) {
+                WorldUtils.updateBlock(world, pos);
+
+                this.blockUpdateRequested = false;
+                this.ticksSinceBlockUpdateRequested = 0;
+            }
+        } else {
+            this.ticksSinceBlockUpdateRequested = 0;
+        }
+    }
+
+    void requestBlockUpdate() {
+        this.blockUpdateRequested = true;
     }
 
     @Override

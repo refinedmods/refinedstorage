@@ -33,6 +33,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerTile;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockPortableGrid;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
@@ -188,7 +189,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         if (type == null) {
             IBlockState state = world.getBlockState(pos);
             if (state.getBlock() == RSBlocks.PORTABLE_GRID) {
-                this.type = (PortableGridType) state.getValue(BlockPortableGrid.TYPE);                
+                this.type = (PortableGridType) state.getValue(BlockPortableGrid.TYPE);
             }
         }
 
@@ -227,7 +228,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private EnergyStorage recreateEnergyStorage(int energyStored) {
         return new EnergyStorage(RS.INSTANCE.config.portableGridCapacity, RS.INSTANCE.config.portableGridCapacity, 0, energyStored);
     }
-    
+
     public ItemStack getAsItem() {
         ItemStack stack = new ItemStack(RSBlocks.PORTABLE_GRID, 1, getPortableType() == PortableGridType.NORMAL ? ItemBlockPortableGrid.TYPE_NORMAL : ItemBlockPortableGrid.TYPE_CREATIVE);
 
@@ -661,7 +662,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         if (renderInfo.getStored() == renderInfo.getCapacity()) {
             return PortableGridDiskState.FULL;
-        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= 85) {
+        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= ConstantsDisk.DISK_NEAR_CAPACITY_TRESHOLD) {
             return PortableGridDiskState.NEAR_CAPACITY;
         } else {
             return PortableGridDiskState.NORMAL;

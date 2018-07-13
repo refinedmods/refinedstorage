@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.NBTTagCompound;
@@ -67,12 +68,6 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
 
     private static final String NBT_DISK_STATE = "DiskState_%d";
 
-    public static final int DISK_STATE_NORMAL = 0;
-    public static final int DISK_STATE_NEAR_CAPACITY = 1;
-    public static final int DISK_STATE_FULL = 2;
-    public static final int DISK_STATE_DISCONNECTED = 3;
-    public static final int DISK_STATE_NONE = 4;
-
     private Integer[] diskState = new Integer[8];
 
     public TileDiskDrive() {
@@ -109,13 +104,13 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
 
     public static void writeDiskState(NBTTagCompound tag, int disks, boolean connected, IStorageDisk[] itemStorages, IStorageDisk[] fluidStorages) {
         for (int i = 0; i < disks; ++i) {
-            int state = DISK_STATE_NONE;
+            int state = ConstantsDisk.DISK_STATE_NONE;
 
             if (itemStorages[i] != null || fluidStorages[i] != null) {
                 if (!connected) {
-                    state = DISK_STATE_DISCONNECTED;
+                    state = ConstantsDisk.DISK_STATE_DISCONNECTED;
                 } else {
-                    state = getDiskState(
+                    state = ConstantsDisk.getDiskState(
                         itemStorages[i] != null ? itemStorages[i].getStored() : fluidStorages[i].getStored(),
                         itemStorages[i] != null ? itemStorages[i].getCapacity() : fluidStorages[i].getCapacity()
                     );
@@ -134,17 +129,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
 
     public static void initDiskState(Integer[] diskState) {
         for (int i = 0; i < diskState.length; ++i) {
-            diskState[i] = DISK_STATE_NONE;
-        }
-    }
-
-    public static int getDiskState(int stored, int capacity) {
-        if (stored == capacity) {
-            return DISK_STATE_FULL;
-        } else if ((int) ((float) stored / (float) capacity * 100F) >= 85) {
-            return DISK_STATE_NEAR_CAPACITY;
-        } else {
-            return DISK_STATE_NORMAL;
+            diskState[i] = ConstantsDisk.DISK_STATE_NONE;
         }
     }
 

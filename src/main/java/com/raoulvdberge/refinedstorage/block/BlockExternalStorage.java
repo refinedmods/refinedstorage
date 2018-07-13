@@ -5,8 +5,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExternalS
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
-import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
-import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsExternalStorage;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

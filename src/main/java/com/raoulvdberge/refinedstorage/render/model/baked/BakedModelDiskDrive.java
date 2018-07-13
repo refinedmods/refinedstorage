@@ -5,7 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.block.BlockDiskDrive;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -72,7 +72,7 @@ public class BakedModelDiskDrive extends BakedModelDelegate {
             List<BakedQuad> quads = models.get(facing).getQuads(key.state, key.side, 0);
 
             for (int i = 0; i < 8; ++i) {
-                if (key.diskState[i] != TileDiskDrive.DISK_STATE_NONE) {
+                if (key.diskState[i] != ConstantsDisk.DISK_STATE_NONE) {
                     quads.addAll(disks.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, 0));
                 }
             }
@@ -89,15 +89,15 @@ public class BakedModelDiskDrive extends BakedModelDelegate {
 
             disks.put(facing, new HashMap<>());
 
-            disks.get(facing).put(TileDiskDrive.DISK_STATE_NORMAL, new ArrayList<>());
-            disks.get(facing).put(TileDiskDrive.DISK_STATE_NEAR_CAPACITY, new ArrayList<>());
-            disks.get(facing).put(TileDiskDrive.DISK_STATE_FULL, new ArrayList<>());
-            disks.get(facing).put(TileDiskDrive.DISK_STATE_DISCONNECTED, new ArrayList<>());
+            disks.get(facing).put(ConstantsDisk.DISK_STATE_NORMAL, new ArrayList<>());
+            disks.get(facing).put(ConstantsDisk.DISK_STATE_NEAR_CAPACITY, new ArrayList<>());
+            disks.get(facing).put(ConstantsDisk.DISK_STATE_FULL, new ArrayList<>());
+            disks.get(facing).put(ConstantsDisk.DISK_STATE_DISCONNECTED, new ArrayList<>());
 
-            initDiskModels(disk, TileDiskDrive.DISK_STATE_NORMAL, facing);
-            initDiskModels(diskNearCapacity, TileDiskDrive.DISK_STATE_NEAR_CAPACITY, facing);
-            initDiskModels(diskFull, TileDiskDrive.DISK_STATE_FULL, facing);
-            initDiskModels(diskDisconnected, TileDiskDrive.DISK_STATE_DISCONNECTED, facing);
+            initDiskModels(disk, ConstantsDisk.DISK_STATE_NORMAL, facing);
+            initDiskModels(diskNearCapacity, ConstantsDisk.DISK_STATE_NEAR_CAPACITY, facing);
+            initDiskModels(diskFull, ConstantsDisk.DISK_STATE_FULL, facing);
+            initDiskModels(diskDisconnected, ConstantsDisk.DISK_STATE_DISCONNECTED, facing);
         }
     }
 

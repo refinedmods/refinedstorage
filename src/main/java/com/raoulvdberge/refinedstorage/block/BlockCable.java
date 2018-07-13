@@ -13,7 +13,7 @@ import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTraceResult;
 import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTracer;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
-import com.raoulvdberge.refinedstorage.render.collision.constants.ConstantsCable;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCableCover;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
