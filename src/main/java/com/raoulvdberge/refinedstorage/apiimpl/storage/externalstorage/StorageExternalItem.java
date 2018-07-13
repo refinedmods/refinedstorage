@@ -71,6 +71,8 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
                 // If the cached is empty and the actual isn't, we added this item
                 network.getItemStorageCache().add(actual, actual.getCount(), false, true);
 
+                // When we use an interface + crafting upgrade + external storage combo, we don't want the crafting task
+                // to think we inserted twice.
                 if (!isConnectedToInterface()) {
                     network.getCraftingManager().track(actual, actual.getCount());
                 }
