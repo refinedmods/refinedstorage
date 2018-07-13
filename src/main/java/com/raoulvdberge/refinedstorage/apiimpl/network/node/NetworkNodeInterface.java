@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingRequester;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalItem;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
@@ -24,7 +23,6 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public static final String ID = "interface";
 
     private static final String NBT_COMPARE = "Compare";
-    private static final String NBT_REQUESTER = "Requester";
 
     private ItemHandlerBase importItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
 
@@ -38,8 +36,6 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
 
     private int currentSlot = 0;
-
-    private CraftingRequester requester = new CraftingRequester(this);
 
     public NetworkNodeInterface(World world, BlockPos pos) {
         super(world, pos);
@@ -109,7 +105,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                     delta -= result == null ? 0 : result.getCount();
 
                     if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                        requester.request(wanted, delta);
+                        network.getCraftingManager().request(wanted, delta);
                     }
                 } else if (delta < 0) {
                     ItemStack remainder = network.insertItemTracked(got, Math.abs(delta));
@@ -119,8 +115,6 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                     } else {
                         exportItems.extractItem(i, Math.abs(delta) - remainder.getCount(), false);
                     }
-                } else {
-                    requester.setAllowRequest();
                 }
             }
         }
@@ -145,10 +139,6 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         StackUtils.readItems(importItems, 0, tag);
         StackUtils.readItems(exportItems, 2, tag);
         StackUtils.readItems(upgrades, 3, tag);
-
-        if (tag.hasKey(NBT_REQUESTER)) {
-            requester.readFromNbt(tag.getCompoundTag(NBT_REQUESTER));
-        }
     }
 
     @Override
@@ -163,8 +153,6 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         StackUtils.writeItems(importItems, 0, tag);
         StackUtils.writeItems(exportItems, 2, tag);
         StackUtils.writeItems(upgrades, 3, tag);
-
-        tag.setTag(NBT_REQUESTER, requester.writeToNbt());
 
         return tag;
     }

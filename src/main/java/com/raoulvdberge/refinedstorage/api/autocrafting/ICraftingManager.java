@@ -68,12 +68,12 @@ public interface ICraftingManager {
     /**
      * Schedules a crafting task if the task isn't scheduled yet.
      *
-     * @param stack      the stack
-     * @param toSchedule the amount of tasks to schedule
+     * @param stack  the stack
+     * @param amount the amount of items to request
      * @return the crafting task created, or null if no task is created
      */
     @Nullable
-    ICraftingTask schedule(ItemStack stack, int toSchedule);
+    ICraftingTask request(ItemStack stack, int amount);
 
     /**
      * Tracks an incoming stack.

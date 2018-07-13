@@ -200,15 +200,15 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     @Nullable
-    public ICraftingTask schedule(ItemStack stack, int toSchedule) {
+    public ICraftingTask request(ItemStack stack, int amount) {
         for (ICraftingTask task : getTasks()) {
             if (API.instance().getComparer().isEqualNoQuantity(task.getRequested(), stack)) {
-                toSchedule -= task.getQuantity();
+                amount -= task.getQuantity();
             }
         }
 
-        if (toSchedule > 0) {
-            ICraftingTask task = create(stack, toSchedule);
+        if (amount > 0) {
+            ICraftingTask task = create(stack, amount);
 
             if (task != null) {
                 ICraftingTaskError error = task.calculate();

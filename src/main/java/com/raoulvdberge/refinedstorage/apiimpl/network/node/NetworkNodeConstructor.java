@@ -223,7 +223,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
 
-            network.getCraftingManager().schedule(craft, 1);
+            network.getCraftingManager().request(craft, 1);
         }
     }
 
@@ -235,7 +235,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
 
-            network.getCraftingManager().schedule(craft, 1);
+            network.getCraftingManager().request(craft, 1);
         }
     }
 

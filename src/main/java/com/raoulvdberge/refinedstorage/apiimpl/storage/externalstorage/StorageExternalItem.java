@@ -71,7 +71,9 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
                 // If the cached is empty and the actual isn't, we added this item
                 network.getItemStorageCache().add(actual, actual.getCount(), false, true);
 
-                network.getCraftingManager().track(actual, actual.getCount());
+                if (!isConnectedToInterface()) {
+                    network.getCraftingManager().track(actual, actual.getCount());
+                }
             } else if (cached.isEmpty() && actual.isEmpty()) {
                 // If they're both empty, nothing happens
             } else if (!API.instance().getComparer().isEqualNoQuantity(cached, actual)) {
@@ -79,14 +81,18 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
                 network.getItemStorageCache().remove(cached, cached.getCount(), true);
                 network.getItemStorageCache().add(actual, actual.getCount(), false, true);
 
-                network.getCraftingManager().track(actual, actual.getCount());
+                if (!isConnectedToInterface()) {
+                    network.getCraftingManager().track(actual, actual.getCount());
+                }
             } else if (cached.getCount() != actual.getCount()) {
                 int delta = actual.getCount() - cached.getCount();
 
                 if (delta > 0) {
                     network.getItemStorageCache().add(actual, delta, false, true);
 
-                    network.getCraftingManager().track(actual, delta);
+                    if (!isConnectedToInterface()) {
+                        network.getCraftingManager().track(actual, delta);
+                    }
                 } else {
                     network.getItemStorageCache().remove(actual, Math.abs(delta), true);
                 }
