@@ -404,8 +404,12 @@ public final class RenderUtils {
         return lines;
     }
 
+    public static boolean isLightMapDisabled() {
+        return FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled;
+    }
+
     public static VertexFormat getFormatWithLightMap(VertexFormat format) {
-        if (FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled) {
+        if (isLightMapDisabled()) {
             return format;
         }
 

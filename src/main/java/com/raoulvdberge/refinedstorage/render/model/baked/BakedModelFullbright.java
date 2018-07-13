@@ -110,6 +110,10 @@ public class BakedModelFullbright extends BakedModelDelegate {
     }
 
     private static BakedQuad transformQuad(BakedQuad quad, float light) {
+        if (RenderUtils.isLightMapDisabled()) {
+            return quad;
+        }
+
         VertexFormat newFormat = RenderUtils.getFormatWithLightMap(quad.getFormat());
 
         UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(newFormat);
