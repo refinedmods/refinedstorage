@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "EDE",
+    "EPE",
     "SMS",
     "ESE"
   ],
@@ -9,8 +9,8 @@
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     },
-    "D": {
-      "item": "minecraft:diamond"
+    "P": {
+      "item": "#advanced_processor"
     },
     "S": {
       "type": "forge:ore_dict",

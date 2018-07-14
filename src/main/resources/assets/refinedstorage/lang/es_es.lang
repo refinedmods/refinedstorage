@@ -338,6 +338,5 @@ advancements.refinedstorage:more_than_just_storage.description=Transfiere Objeto
 advancements.refinedstorage:detecting=Detectando
 advancements.refinedstorage:detecting.description=Detecta objetos o fluidos en la red con el Detector
 advancements.refinedstorage:interface_to_the_world=Interfaz al Mundo
-advancements.refinedstorage:interface_to_the_world.description=Haz tu sistema de almacenamiento disponible como un inventario regular al mundo usando una Interfaz
 advancements.refinedstorage:storing_externally=Almacén externo
 advancements.refinedstorage:storing_externally.description=Usa un Almacén Externo para que la red tenga almacenamiento desde un bloque externo como un cofre
