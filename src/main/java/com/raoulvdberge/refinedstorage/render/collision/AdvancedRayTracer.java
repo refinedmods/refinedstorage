@@ -20,7 +20,7 @@ public final class AdvancedRayTracer {
         Vec3d lookVec = player.getLookVec();
         Vec3d start = getStart(player);
 
-        return start.addVector(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
+        return start.add(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
     }
 
     public static AdvancedRayTraceResult<RayTraceResult> rayTrace(BlockPos pos, Vec3d start, Vec3d end, Collection<CollisionGroup> groups) {

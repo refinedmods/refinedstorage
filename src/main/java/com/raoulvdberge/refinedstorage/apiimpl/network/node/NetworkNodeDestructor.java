@@ -94,7 +94,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
             if (pickupItem && type == IType.ITEMS) {
                 List<Entity> droppedItems = new ArrayList<>();
 
-                Chunk chunk = world.getChunkFromBlockCoords(front);
+                Chunk chunk = world.getChunk(front);
                 chunk.getEntitiesWithinAABBForEntity(null, new AxisAlignedBB(front), droppedItems, null);
 
                 for (Entity entity : droppedItems) {

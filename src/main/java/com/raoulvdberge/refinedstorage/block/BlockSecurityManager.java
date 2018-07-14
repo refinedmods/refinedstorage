@@ -42,7 +42,7 @@ public class BlockSecurityManager extends BlockNode {
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 

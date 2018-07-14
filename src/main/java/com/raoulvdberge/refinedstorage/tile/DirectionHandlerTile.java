@@ -26,7 +26,7 @@ public class DirectionHandlerTile implements IDirectionHandler {
     @Override
     public void readFromTileNbt(NBTTagCompound tag) {
         if (tag.hasKey(NBT_DIRECTION)) {
-            direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+            direction = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
         }
     }
 }

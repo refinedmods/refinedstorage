@@ -172,7 +172,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         }
 
         if (tag.hasKey(NBT_DIRECTION)) {
-            direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+            direction = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
         }
 
         if (tag.hasKey(NBT_VERSION)) {

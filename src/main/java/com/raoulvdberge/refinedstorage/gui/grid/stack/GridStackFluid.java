@@ -36,7 +36,7 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public String getModId() {
-        return stack.getFluid().getStill(stack).getResourceDomain();
+        return stack.getFluid().getStill(stack).getNamespace();
     }
 
     @Override

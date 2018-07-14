@@ -32,7 +32,7 @@ public class GridFilterFilter implements Predicate<IGridStack> {
             lastMode = filter.getMode();
 
             if (filter.isModFilter()) {
-                if (filter.getStack().getItem().getRegistryName().getResourceDomain().equalsIgnoreCase(stackModId)) {
+                if (filter.getStack().getItem().getRegistryName().getNamespace().equalsIgnoreCase(stackModId)) {
                     return filter.getMode() == IFilter.MODE_WHITELIST;
                 }
             } else if (API.instance().getComparer().isEqual(stack, filter.getStack(), filter.getCompare())) {

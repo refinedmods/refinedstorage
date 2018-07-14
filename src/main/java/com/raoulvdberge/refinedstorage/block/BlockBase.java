@@ -44,7 +44,7 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "block." + info.getId().toString();
     }
 

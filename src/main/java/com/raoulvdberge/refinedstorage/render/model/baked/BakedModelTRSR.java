@@ -82,7 +82,7 @@ public class BakedModelTRSR implements IBakedModel {
             try {
                 // adjust side to facing-rotation
                 if (side != null && side.getHorizontalIndex() > -1) {
-                    side = EnumFacing.getHorizontal((side.getHorizontalIndex() + faceOffset) % 4);
+                    side = EnumFacing.byHorizontalIndex((side.getHorizontalIndex() + faceOffset) % 4);
                 }
                 for (BakedQuad quad : original.getQuads(state, side, rand)) {
                     Transformer transformer = new Transformer(transformation, quad.getFormat());

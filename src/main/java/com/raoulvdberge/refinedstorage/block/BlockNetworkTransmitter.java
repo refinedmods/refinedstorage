@@ -31,7 +31,7 @@ public class BlockNetworkTransmitter extends BlockNode {
     }
 
     @Override
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 

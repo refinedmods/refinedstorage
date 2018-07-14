@@ -23,16 +23,16 @@ public abstract class ItemBase extends Item {
     }
 
     @Override
-    public String getUnlocalizedName() {
+    public String getTranslationKey() {
         return "item." + info.getId().toString();
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
+    public String getTranslationKey(ItemStack stack) {
         if (getHasSubtypes()) {
-            return getUnlocalizedName() + "." + stack.getItemDamage();
+            return getTranslationKey() + "." + stack.getItemDamage();
         }
 
-        return getUnlocalizedName();
+        return getTranslationKey();
     }
 }

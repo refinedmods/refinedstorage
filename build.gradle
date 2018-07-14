@@ -29,10 +29,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 minecraft {
-    version = "1.12.2-14.23.4.2703"
+    version = "1.12.2-14.23.4.2732"
     runDir = "run"
     useDepAts = true
-    mappings = "snapshot_20180526"
+    mappings = "snapshot_20180714"
 
     replaceIn "RS.java"
     replace "@version@", project.version
@@ -52,9 +52,9 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.9.1.191:api"
-    runtime "mezz.jei:jei_1.12.2:4.9.1.191"
-    deobfCompile "li.cil.oc:OpenComputers:MC1.12.1-1.7.1.43:api"
+    deobfCompile "mezz.jei:jei_1.12.2:4.11.0.204:api"
+    runtime "mezz.jei:jei_1.12.2:4.11.0.204"
+    deobfCompile "li.cil.oc:OpenComputers:MC1.12.2-1.7.2.67:api"
     compile "inventory-tweaks:InventoryTweaks:1.63:api"
 }
 

@@ -58,7 +58,7 @@ public abstract class TileBase extends TileEntity {
     public void readUpdate(NBTTagCompound tag) {
         boolean doRender = canCauseRenderUpdate(tag);
 
-        clientDirection = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+        clientDirection = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
 
         if (doRender) {
             WorldUtils.updateBlock(world, pos);

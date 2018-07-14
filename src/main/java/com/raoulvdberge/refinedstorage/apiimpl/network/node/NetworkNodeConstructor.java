@@ -241,17 +241,17 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     // From BlockDispenser#getDispensePosition
     private double getDispensePositionX() {
-        return (double) pos.getX() + 0.5D + 0.8D * (double) getDirection().getFrontOffsetX();
+        return (double) pos.getX() + 0.5D + 0.8D * (double) getDirection().getXOffset();
     }
 
     // From BlockDispenser#getDispensePosition
     private double getDispensePositionY() {
-        return (double) pos.getY() + (getDirection() == EnumFacing.DOWN ? 0.45D : 0.5D) + 0.8D * (double) getDirection().getFrontOffsetY();
+        return (double) pos.getY() + (getDirection() == EnumFacing.DOWN ? 0.45D : 0.5D) + 0.8D * (double) getDirection().getYOffset();
     }
 
     // From BlockDispenser#getDispensePosition
     private double getDispensePositionZ() {
-        return (double) pos.getZ() + 0.5D + 0.8D * (double) getDirection().getFrontOffsetZ();
+        return (double) pos.getZ() + 0.5D + 0.8D * (double) getDirection().getZOffset();
     }
 
     @Override

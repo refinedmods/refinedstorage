@@ -42,7 +42,7 @@ public class ItemCuttingTool extends ItemBase {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        return getUnlocalizedName();
+    public String getTranslationKey(ItemStack stack) {
+        return getTranslationKey(); // Ignore damage
     }
 }

@@ -318,7 +318,7 @@ public class ProxyCommon {
         OneSixMigrationHelper.removalHook();
 
         for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
-            if (missing.key.getResourceDomain().equals(RS.ID) && (missing.key.getResourcePath().equals("wrench") || missing.key.getResourcePath().equals("solderer"))) {
+            if (missing.key.getNamespace().equals(RS.ID) && (missing.key.getPath().equals("wrench") || missing.key.getPath().equals("solderer"))) {
                 missing.ignore();
             }
         }
@@ -329,7 +329,7 @@ public class ProxyCommon {
         OneSixMigrationHelper.removalHook();
 
         for (RegistryEvent.MissingMappings.Mapping<Block> missing : e.getMappings()) {
-            if (missing.key.getResourceDomain().equals(RS.ID) && missing.key.getResourcePath().equals("solderer")) {
+            if (missing.key.getNamespace().equals(RS.ID) && missing.key.getPath().equals("solderer")) {
                 missing.ignore();
             }
         }

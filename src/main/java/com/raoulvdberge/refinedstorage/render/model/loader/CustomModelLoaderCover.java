@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public class CustomModelLoaderCover implements ICustomModelLoader {
     @Override
     public boolean accepts(ResourceLocation modelLocation) {
-        return modelLocation.getResourceDomain().equals(RS.ID) && getType(modelLocation) != null;
+        return modelLocation.getNamespace().equals(RS.ID) && getType(modelLocation) != null;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class CustomModelLoaderCover implements ICustomModelLoader {
 
     @Nullable
     private CoverType getType(ResourceLocation modelLocation) {
-        switch (modelLocation.getResourcePath()) {
+        switch (modelLocation.getPath()) {
             case "cover":
                 return CoverType.NORMAL;
             case "hollow_cover":

@@ -76,7 +76,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
         OneSixMigrationHelper.removalHook();
         if (tag.hasKey(NBT_DIRECTION)) {
-            directionToMigrate = EnumFacing.getFront(tag.getInteger("Direction"));
+            directionToMigrate = EnumFacing.byIndex(tag.getInteger("Direction"));
         }
     }
 

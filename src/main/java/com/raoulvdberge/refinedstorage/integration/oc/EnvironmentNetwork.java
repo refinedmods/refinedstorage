@@ -184,7 +184,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         // Third argument: which direction to extract to
-        EnumFacing facing = EnumFacing.getFront(args.optInteger(2, 0));
+        EnumFacing facing = EnumFacing.byIndex(args.optInteger(2, 0));
 
         // Get the tile-entity on the specified side
         TileEntity targetEntity = node.getNetwork().world().getTileEntity(node.getPos().offset(facing));
@@ -258,7 +258,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         count = Math.min(count, stack.getMaxStackSize());
 
         // Third argument: which direction to extract to
-        EnumFacing facing = EnumFacing.getFront(args.optInteger(2, 0));
+        EnumFacing facing = EnumFacing.byIndex(args.optInteger(2, 0));
 
         // Get the tile-entity on the specified side
         TileEntity targetEntity = node.getNetwork().world().getTileEntity(node.getPos().offset(facing));

@@ -325,13 +325,13 @@ public class CubeBuilder {
                     builder.put(i, x, y, z);
                     break;
                 case NORMAL:
-                    builder.put(i, face.face.getFrontOffsetX(), face.face.getFrontOffsetY(), face.face.getFrontOffsetZ());
+                    builder.put(i, face.face.getXOffset(), face.face.getYOffset(), face.face.getZOffset());
                     break;
                 case COLOR:
-                    float r = (color >> 16 & 0xFF) / 255f;
-                    float g = (color >> 8 & 0xFF) / 255f;
-                    float b = (color & 0xFF) / 255f;
-                    float a = (color >> 24 & 0xFF) / 255f;
+                    float r = (color >> 16 & 0xFF) / 255F;
+                    float g = (color >> 8 & 0xFF) / 255F;
+                    float b = (color & 0xFF) / 255F;
+                    float a = (color >> 24 & 0xFF) / 255F;
 
                     builder.put(i, r, g, b, a);
                     break;

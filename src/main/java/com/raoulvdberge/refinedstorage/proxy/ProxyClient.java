@@ -72,7 +72,7 @@ public class ProxyClient extends ProxyCommon implements IModelRegistration {
     @SubscribeEvent
     public void onModelBake(ModelBakeEvent e) {
         for (ModelResourceLocation resource : e.getModelRegistry().getKeys()) {
-            ResourceLocation key = new ResourceLocation(resource.getResourceDomain(), resource.getResourcePath());
+            ResourceLocation key = new ResourceLocation(resource.getNamespace(), resource.getPath());
 
             if (bakedModelOverrides.containsKey(key)) {
                 e.getModelRegistry().putObject(resource, bakedModelOverrides.get(key).apply(e.getModelRegistry().getObject(resource)));

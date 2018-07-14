@@ -138,7 +138,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
             ItemStack stack = handler.getStackInSlot(i);
 
             if (!stack.isEmpty()) {
-                components.add(new TextComponentString(stack.getCount() + "x ").appendSibling(new TextComponentTranslation(stack.getUnlocalizedName() + ".name")));
+                components.add(new TextComponentString(stack.getCount() + "x ").appendSibling(new TextComponentTranslation(stack.getTranslationKey() + ".name")));
             }
         }
 

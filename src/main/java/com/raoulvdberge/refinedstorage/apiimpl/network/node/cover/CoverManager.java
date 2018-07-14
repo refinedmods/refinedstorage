@@ -88,7 +88,7 @@ public class CoverManager {
             NBTTagCompound tag = list.getCompoundTagAt(i);
 
             if (tag.hasKey(NBT_DIRECTION) && tag.hasKey(NBT_ITEM)) {
-                EnumFacing direction = EnumFacing.getFront(tag.getInteger(NBT_DIRECTION));
+                EnumFacing direction = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
                 ItemStack item = new ItemStack(tag.getCompoundTag(NBT_ITEM));
                 int type = tag.hasKey(NBT_TYPE) ? tag.getInteger(NBT_TYPE) : 0;
 

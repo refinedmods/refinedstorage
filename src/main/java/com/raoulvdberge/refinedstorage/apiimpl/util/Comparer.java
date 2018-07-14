@@ -80,9 +80,9 @@ public class Comparer implements IComparer {
         }
 
         if (!ItemStack.areItemStackTagsEqual(left, right)) {
-            if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().hasNoTags()) {
+            if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().isEmpty()) {
                 return true;
-            } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().hasNoTags()) {
+            } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().isEmpty()) {
                 return true;
             } else if (!left.hasTagCompound() && !right.hasTagCompound()) {
                 return true;
