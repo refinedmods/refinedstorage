@@ -40,12 +40,14 @@ public class ContainerInterface extends ContainerBase {
         if (slot.getHasStack()) {
             stack = slot.getStack();
 
-            if (index < 9) {
+            if (index < 9 || (index >= 9 + 9 + 9 && index < 9 + 9 + 9 + 4)) {
                 if (!mergeItemStack(stack, 9 + 9 + 9 + 4, inventorySlots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!mergeItemStack(stack, 0, 9, false)) {
-                return ItemStack.EMPTY;
+            } else if (!mergeItemStack(stack, 9 + 9 + 9, 9 + 9 + 9 + 4, false)) {
+                if (!mergeItemStack(stack, 0, 9, false)) {
+                    return ItemStack.EMPTY;
+                }
             }
 
             if (stack.getCount() == 0) {
