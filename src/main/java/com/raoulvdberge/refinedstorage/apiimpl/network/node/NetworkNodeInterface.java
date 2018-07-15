@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -14,6 +15,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -90,7 +92,18 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                 int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
 
                 if (delta > 0) {
-                    ItemStack result = network.extractItem(wanted, delta, compare, Action.PERFORM, s -> !(s instanceof StorageExternalItem) || !((StorageExternalItem) s).isConnectedToInterface());
+                    final boolean actingAsStorage = isActingAsStorage();
+
+                    ItemStack result = network.extractItem(wanted, delta, compare, Action.PERFORM, s -> {
+                        // If we are not an interface acting as a storage, we can extract from anywhere.
+                        if (!actingAsStorage) {
+                            return true;
+                        }
+
+                        // If we are an interface acting as a storage, we don't want to extract from other interfaces to
+                        // avoid stealing from each other.
+                        return !(s instanceof StorageExternalItem) || !((StorageExternalItem) s).isConnectedToInterface();
+                    });
 
                     if (result != null) {
                         if (exportItems.getStackInSlot(i).isEmpty()) {
@@ -118,6 +131,18 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                 }
             }
         }
+    }
+
+    private boolean isActingAsStorage() {
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            INetworkNode facingNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(facing));
+
+            if (facingNode instanceof NetworkNodeExternalStorage && facingNode.canUpdate() && ((NetworkNodeExternalStorage) facingNode).getDirection() == facing.getOpposite()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
