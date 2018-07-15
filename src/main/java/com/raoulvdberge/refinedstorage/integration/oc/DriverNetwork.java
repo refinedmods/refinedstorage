@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.oc;
 
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import li.cil.oc.api.Driver;
 import li.cil.oc.api.driver.DriverBlock;
@@ -13,6 +14,11 @@ public class DriverNetwork implements DriverBlock {
     @Override
     public boolean worksWith(World world, BlockPos pos, EnumFacing facing) {
         TileEntity tile = world.getTileEntity(pos);
+
+        // Avoid bug #1855 (https://github.com/raoulvdberge/refinedstorage/issues/1855)
+        if (tile instanceof INetwork) {
+            return false;
+        }
 
         return tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing);
     }
