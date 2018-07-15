@@ -218,7 +218,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         }
     }
 
-    public boolean isOverSlotWithStack() {
+    private boolean isOverSlotWithStack() {
         return grid.isActive() && isOverSlot() && slotNumber < view.getStacks().size();
     }
 
@@ -311,6 +311,17 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        // Drawn in here for bug #1844 (https://github.com/raoulvdberge/refinedstorage/issues/1844)
+        // Item tooltips can't be rendered in the foreground layer due to the X offset translation.
+        if (isOverSlotWithStack()) {
+            drawGridTooltip(view.getStacks().get(slotNumber), mouseX, mouseY);
+        }
+    }
+
+    @Override
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7 + tabs.getHeight(), t(grid.getGuiTitle()));
         drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
@@ -355,10 +366,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
                 x = 8;
                 y += 18;
             }
-        }
-
-        if (isOverSlotWithStack()) {
-            drawGridTooltip(view.getStacks().get(slotNumber), mouseX, mouseY);
         }
 
         if (isOverClear(mouseX, mouseY)) {

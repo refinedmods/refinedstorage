@@ -40,6 +40,7 @@ NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined S
 - Fixed bug where External Storage doesn't detect new inventory when rotating (raoulvdberge)
 - Fixed JEI recipe transferring in Pattern Grid allowing non-processing recipes in processing mode and vice-versa (raoulvdberge)
 - Fixed using Interfaces for minimum stock levels failing when requester is also an Interface (raoulvdberge)
+- Fixed ItemZoom incompatibility in Grid (raoulvdberge)
 - Prevent accidental Grid scrollbar click after clicking JEI recipe transfer button (raoulvdberge)
 - Added a missing config option for Crafter Manager energy usage (raoulvdberge)
 - Added support for Disk Drive / Storage Block storage and capacity to OC integration (zangai)
