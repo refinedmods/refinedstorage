@@ -9,8 +9,10 @@ import com.raoulvdberge.refinedstorage.network.MessageGridProcessingTransfer;
 import com.raoulvdberge.refinedstorage.network.MessageGridTransfer;
 import mezz.jei.api.gui.IGuiIngredient;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
@@ -24,6 +26,18 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
     public static final long TRANSFER_SCROLL_DELAY_MS = 200;
     public static long LAST_TRANSFER;
 
+    private static final IRecipeTransferError ERROR_CANNOT_TRANSFER = new IRecipeTransferError() {
+        @Override
+        public Type getType() {
+            return Type.INTERNAL;
+        }
+
+        @Override
+        public void showError(Minecraft minecraft, int mouseX, int mouseY, IRecipeLayout recipeLayout, int recipeX, int recipeY) {
+            // NO OP
+        }
+    };
+
     @Override
     public Class<? extends Container> getContainerClass() {
         return ContainerGrid.class;
@@ -31,10 +45,10 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
 
     @Override
     public IRecipeTransferError transferRecipe(Container container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
+        IGrid grid = ((ContainerGrid) container).getGrid();
+
         if (doTransfer) {
             LAST_TRANSFER = System.currentTimeMillis();
-
-            IGrid grid = ((ContainerGrid) container).getGrid();
 
             if (grid.getType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
                 List<ItemStack> inputs = new LinkedList<>();
@@ -55,6 +69,16 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
                 RS.INSTANCE.network.sendToServer(new MessageGridProcessingTransfer(inputs, outputs));
             } else {
                 RS.INSTANCE.network.sendToServer(new MessageGridTransfer(recipeLayout.getItemStacks().getGuiIngredients(), container.inventorySlots.stream().filter(s -> s.inventory instanceof InventoryCrafting).collect(Collectors.toList())));
+            }
+        } else {
+            if (grid.getType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
+                if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
+                    return ERROR_CANNOT_TRANSFER;
+                }
+            } else {
+                if (!recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
+                    return ERROR_CANNOT_TRANSFER;
+                }
             }
         }
 
