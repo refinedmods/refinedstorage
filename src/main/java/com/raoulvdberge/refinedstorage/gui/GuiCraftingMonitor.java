@@ -352,7 +352,7 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         tabs.actionPerformed(button);
 
         if (button == cancelButton && hasValidTabSelected()) {
-            RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(craftingMonitor.getTabSelected().get()));
+            RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(((CraftingMonitorTask) getCurrentTab()).id));
         } else if (button == cancelAllButton && tasks.size() > 0) {
             RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(null));
         }
