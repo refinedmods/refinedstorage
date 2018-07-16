@@ -127,8 +127,10 @@ public class CraftingManager implements ICraftingManager {
             boolean changed = !tasksToCancel.isEmpty() || !tasksToAdd.isEmpty();
 
             for (UUID idToCancel : tasksToCancel) {
-                this.tasks.get(idToCancel).onCancelled();
-                this.tasks.remove(idToCancel);
+                if (this.tasks.containsKey(idToCancel)) {
+                    this.tasks.get(idToCancel).onCancelled();
+                    this.tasks.remove(idToCancel);
+                }
             }
             this.tasksToCancel.clear();
 
