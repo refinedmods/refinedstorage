@@ -56,6 +56,9 @@ public class GuiCraftingPreview extends GuiBase {
     private GuiButton startButton;
     private GuiButton cancelButton;
 
+    private ItemStack hoveringStack;
+    private FluidStack hoveringFluid;
+
     private IElementDrawers drawers = new CraftingPreviewElementDrawers();
 
     public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity) {
@@ -176,8 +179,8 @@ public class GuiCraftingPreview extends GuiBase {
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.enableDepth();
 
-            ItemStack hoveringStack = null;
-            FluidStack hoveringFluid = null;
+            this.hoveringStack = null;
+            this.hoveringFluid = null;
 
             for (int i = 0; i < 8; ++i) {
                 if (slot < stacks.size()) {
@@ -186,9 +189,10 @@ public class GuiCraftingPreview extends GuiBase {
                     stack.draw(x, y + 5, drawers);
 
                     if (inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
-                        hoveringStack = stack.getId().equals(CraftingPreviewElementItemStack.ID) ? (ItemStack) stack.getElement() : null;
-                        if (hoveringStack == null) {
-                            hoveringFluid = stack.getId().equals(CraftingPreviewElementFluidStack.ID) ? (FluidStack) stack.getElement() : null;
+                        this.hoveringStack = stack.getId().equals(CraftingPreviewElementItemStack.ID) ? (ItemStack) stack.getElement() : null;
+
+                        if (this.hoveringStack == null) {
+                            this.hoveringFluid = stack.getId().equals(CraftingPreviewElementFluidStack.ID) ? (FluidStack) stack.getElement() : null;
                         }
                     }
                 }
@@ -203,15 +207,20 @@ public class GuiCraftingPreview extends GuiBase {
                 slot++;
             }
 
-            if (hoveringStack != null) {
-                drawTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
-            } else if (hoveringFluid != null) {
-                drawTooltip(mouseX, mouseY, hoveringFluid.getLocalizedName());
-            }
-
             if (!startButton.enabled && inBounds(85, 144, 50, 20, mouseX, mouseY)) {
                 drawTooltip(mouseX, mouseY, t("gui.refinedstorage:crafting_preview.force_start"));
             }
+        }
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+
+        if (hoveringStack != null) {
+            drawTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
+        } else if (hoveringFluid != null) {
+            drawTooltip(mouseX, mouseY, hoveringFluid.getLocalizedName());
         }
     }
 
