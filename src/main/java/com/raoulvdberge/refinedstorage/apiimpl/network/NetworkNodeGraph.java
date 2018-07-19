@@ -35,14 +35,6 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     @Override
     public void rebuild() {
-        if (!controller.canRun()) {
-            if (!nodes.isEmpty()) {
-                disconnectAll();
-            }
-
-            return;
-        }
-
         rebuilding = true;
 
         Operator operator = new Operator();

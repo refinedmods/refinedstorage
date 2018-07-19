@@ -99,7 +99,13 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public boolean canUpdate() {
-        return redstoneMode.isEnabled(world, pos);
+        if (redstoneMode.isEnabled(world, pos)) {
+            if (network != null) {
+                return network.canRun();
+            }
+        }
+
+        return false;
     }
 
     protected int getUpdateThrottleInactiveToActive() {

@@ -86,7 +86,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         super.writeUpdate(tag);
 
-        writeDiskState(tag, 8, getNode().getNetwork() != null, getNode().getItemDisks(), getNode().getFluidDisks());
+        writeDiskState(tag, 8, getNode().getNetwork() != null && getNode().canUpdate(), getNode().getItemDisks(), getNode().getFluidDisks());
 
         return tag;
     }
