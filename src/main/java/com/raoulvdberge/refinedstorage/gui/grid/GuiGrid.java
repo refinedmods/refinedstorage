@@ -18,6 +18,7 @@ import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
 import com.raoulvdberge.refinedstorage.gui.grid.view.IGridView;
 import com.raoulvdberge.refinedstorage.network.*;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
@@ -124,7 +125,15 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
         if (grid.getGridType() == GridType.PATTERN) {
             processingPattern = addCheckBox(x + 7, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
-            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+
+            boolean showOredict = true;
+            if (((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.FLUIDS) {
+                showOredict = false;
+            }
+
+            if (showOredict) {
+                oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+            }
 
             addSideButton(new SideButtonType(this, TileGrid.PROCESSING_TYPE));
         }
@@ -455,7 +464,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
                         FMLCommonHandler.instance().showGuiScreen(new GuiGridCraftingSettings(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
                     } else if (grid.getGridType() == GridType.FLUID && held.isEmpty()) {
                         RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(view.getStacks().get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
-                    } else if (grid.getGridType() == GridType.NORMAL || grid.getGridType() == GridType.PATTERN) {
+                    } else if (grid.getGridType() != GridType.FLUID) {
                         int flags = 0;
 
                         if (clickedButton == 1) {

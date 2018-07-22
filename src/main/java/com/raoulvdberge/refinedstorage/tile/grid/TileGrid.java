@@ -83,7 +83,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
                 ((ContainerGrid) player.openContainer).sendAllSlots();
             });
     }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
-    public static final TileDataParameter<Integer, TileGrid> PROCESSING_TYPE = IType.createParameter();
+    public static final TileDataParameter<Integer, TileGrid> PROCESSING_TYPE = IType.createParameter((initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
 
     public static void trySortGrid(boolean initial) {
         if (!initial) {

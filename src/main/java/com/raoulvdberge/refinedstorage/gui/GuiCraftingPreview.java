@@ -79,7 +79,7 @@ public class GuiCraftingPreview extends GuiBase {
         this.quantity = quantity;
         this.fluids = fluids;
 
-        this.scrollbar = new Scrollbar(235, 20, 12, 168);
+        this.scrollbar = new Scrollbar(235, 20, 12, 149);
     }
 
     @Override
