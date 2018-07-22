@@ -157,6 +157,7 @@ public final class RenderUtils {
         public void draw(Minecraft minecraft, int xPosition, int yPosition, FluidStack fluidStack) {
             GlStateManager.enableBlend();
             GlStateManager.enableAlpha();
+            GlStateManager.disableLighting();
 
             drawFluid(minecraft, xPosition, yPosition, fluidStack);
 

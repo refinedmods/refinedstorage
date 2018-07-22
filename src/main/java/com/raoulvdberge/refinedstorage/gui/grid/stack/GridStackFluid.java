@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 
@@ -17,9 +16,9 @@ public class GridStackFluid implements IGridStack {
     private boolean craftable;
     private boolean displayCraftText;
 
-    public GridStackFluid(Pair<Integer, FluidStack> data, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
-        this.hash = data.getLeft();
-        this.stack = data.getRight();
+    public GridStackFluid(int hash, FluidStack stack, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
+        this.hash = hash;
+        this.stack = stack;
         this.entry = entry;
         this.craftable = craftable;
         this.displayCraftText = displayCraftText;

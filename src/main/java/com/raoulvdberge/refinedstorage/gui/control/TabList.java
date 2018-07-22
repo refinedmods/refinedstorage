@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -112,6 +113,8 @@ public class TabList {
 
         int tx = x + ((IGridTab.TAB_WIDTH + 1) * num);
         int ty = y;
+
+        GlStateManager.enableAlpha();
 
         gui.bindTexture("icons.png");
 

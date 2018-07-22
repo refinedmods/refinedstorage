@@ -67,8 +67,8 @@ public final class StackUtils {
         ByteBufUtils.writeTag(buf, stack.tag);
     }
 
-    public static Pair<Integer, FluidStack> readFluidStack(ByteBuf buf) {
-        return Pair.of(buf.readInt(), new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf)));
+    public static FluidStack readFluidStack(ByteBuf buf) {
+        return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf));
     }
 
     public static ItemStack nullToEmpty(@Nullable ItemStack stack) {

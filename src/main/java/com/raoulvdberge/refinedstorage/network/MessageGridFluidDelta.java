@@ -19,7 +19,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
     private FluidStack stack;
     private int delta;
 
-    private GridStackFluid clientStack;
+    private GridStackFluid gridStack;
 
     public MessageGridFluidDelta() {
     }
@@ -32,7 +32,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        clientStack = new GridStackFluid(StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), false);
+        gridStack = new GridStackFluid(buf.readInt(), StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), false);
         delta = buf.readInt();
     }
 
@@ -55,7 +55,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
     @Override
     public IMessage onMessage(MessageGridFluidDelta message, MessageContext ctx) {
         GuiBase.executeLater(GuiGrid.class, grid -> {
-            grid.getView().postChange(message.clientStack, message.delta);
+            grid.getView().postChange(message.gridStack, message.delta);
             grid.getView().sort();
         });
 

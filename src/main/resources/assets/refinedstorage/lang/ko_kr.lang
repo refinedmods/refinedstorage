@@ -22,7 +22,6 @@ gui.refinedstorage:interface.import=인터페이스 입력
 gui.refinedstorage:interface.export=인터페이스 출력
 gui.refinedstorage:crafting_monitor=조합 모니터
 gui.refinedstorage:wireless_crafting_monitor=무선 조합 모니터
-gui.refinedstorage:crafting_monitor.fluids_taking=사용할 액체
 gui.refinedstorage:crafting_monitor.items_crafting=제작할 아이템
 gui.refinedstorage:crafting_monitor.items_inserting=삽입할 아이템
 gui.refinedstorage:crafting_monitor.machine_none=기계를 찾을 수 없음

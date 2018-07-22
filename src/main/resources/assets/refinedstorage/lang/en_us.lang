@@ -27,7 +27,6 @@ gui.refinedstorage:interface.export=Interface Export
 gui.refinedstorage:crafting_monitor=Crafting Monitor
 gui.refinedstorage:wireless_crafting_monitor=Wireless Crafting Monitor
 gui.refinedstorage:crafting_monitor.tooltip.requested=%d requested
-gui.refinedstorage:crafting_monitor.fluids_taking=Fluids taking
 gui.refinedstorage:crafting_monitor.items_crafting=Items crafting
 gui.refinedstorage:crafting_monitor.processing=Processing
 gui.refinedstorage:crafting_monitor.items_inserting=Items inserting

@@ -26,7 +26,6 @@ gui.refinedstorage:interface.export=Интерфейс - Экспорт
 gui.refinedstorage:crafting_monitor=Терминал запросов
 gui.refinedstorage:wireless_crafting_monitor=Беспроводной монитор создания
 gui.refinedstorage:crafting_monitor.tooltip.requested=Требует %d
-gui.refinedstorage:crafting_monitor.fluids_taking=Прием жидкостей
 gui.refinedstorage:crafting_monitor.items_crafting=Предметы с возможностью крафта
 gui.refinedstorage:crafting_monitor.items_inserting=Вставка предметов
 gui.refinedstorage:crafting_monitor.machine_none=Машина не найдена

@@ -39,7 +39,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.stacks.add(new GridStackFluid(StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), buf.readBoolean()));
+            this.stacks.add(new GridStackFluid(buf.readInt(), StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), buf.readBoolean()));
         }
     }
 

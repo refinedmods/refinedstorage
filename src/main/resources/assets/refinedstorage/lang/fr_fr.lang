@@ -23,7 +23,6 @@ gui.refinedstorage:interface.import=Interface d'import
 gui.refinedstorage:interface.export=Interface d'export
 gui.refinedstorage:crafting_monitor=Moniteur de craft
 gui.refinedstorage:wireless_crafting_monitor=Moniteur de craft sans-fil
-gui.refinedstorage:crafting_monitor.fluids_taking=Fluides entrants
 gui.refinedstorage:crafting_monitor.items_crafting=Items en craft
 gui.refinedstorage:crafting_monitor.items_inserting=Insertion d'items
 gui.refinedstorage:crafting_monitor.machine_none=Pas de machine disponible
