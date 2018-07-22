@@ -26,6 +26,9 @@ public interface ICraftingPatternContainer {
     @Nullable
     IItemHandler getConnectedInventory();
 
+    /**
+     * @return the fluid inventory that this container is connected to, or null if no fluid inventory is present
+     */
     @Nullable
     IFluidHandler getConnectedFluidInventory();
 

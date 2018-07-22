@@ -2,6 +2,7 @@
 
 ### 1.6.1
 - Added fluid autocrafting (raoulvdberge)
+- Updated Russian translation (kellixon)
 
 ### 1.6
 NOTE: Worlds that used Refined Storage 1.5.x are fully compatible with Refined Storage 1.6.x and are getting converted upon loading the world. It is however not possible to revert back to Refined Storage 1.5.x when a world has already been converted to Refined Storage 1.6.x.

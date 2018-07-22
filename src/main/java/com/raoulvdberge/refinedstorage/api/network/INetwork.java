@@ -167,6 +167,13 @@ public interface INetwork {
     @Nullable
     FluidStack insertFluid(@Nonnull FluidStack stack, int size, Action action);
 
+    /**
+     * Inserts a fluid and notifies the crafting manager of the incoming fluid.
+     *
+     * @param stack the stack prototype to insert, do NOT modify
+     * @param size  the amount of that prototype that has to be inserted
+     * @return null if the insert was successful, or a stack with the remainder
+     */
     default FluidStack insertFluidTracked(@Nonnull FluidStack stack, int size) {
         FluidStack remainder = insertFluid(stack, size, Action.PERFORM);
 
