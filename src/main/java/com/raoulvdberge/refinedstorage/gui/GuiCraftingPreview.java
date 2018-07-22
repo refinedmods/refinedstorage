@@ -31,13 +31,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Make bigger/resizeable and allow more space?
 public class GuiCraftingPreview extends GuiBase {
     public class CraftingPreviewElementDrawers extends ElementDrawers {
         private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
             GlStateManager.color(1, 1, 1, 1);
             GlStateManager.disableLighting();
-            drawRect(x, y, x + 67, y + 29, colour);
+
+            drawRect(x, y, x + 73, y + 29, colour);
         };
 
         @Override
@@ -46,7 +46,7 @@ public class GuiCraftingPreview extends GuiBase {
         }
     }
 
-    private static final int VISIBLE_ROWS = 4;
+    private static final int VISIBLE_ROWS = 5;
 
     private List<ICraftingPreviewElement> stacks;
     private GuiScreen parent;
@@ -70,7 +70,7 @@ public class GuiCraftingPreview extends GuiBase {
             public boolean canInteractWith(EntityPlayer player) {
                 return false;
             }
-        }, 168, 171);
+        }, 254, 201);
 
         this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
@@ -79,13 +79,13 @@ public class GuiCraftingPreview extends GuiBase {
         this.quantity = quantity;
         this.fluids = fluids;
 
-        this.scrollbar = new Scrollbar(149, 20, 12, 119);
+        this.scrollbar = new Scrollbar(235, 20, 12, 168);
     }
 
     @Override
     public void init(int x, int y) {
-        cancelButton = addButton(x + 16, y + 144, 50, 20, t("gui.cancel"));
-        startButton = addButton(x + 85, y + 144, 50, 20, t("misc.refinedstorage:start"));
+        cancelButton = addButton(x + 55, y + 201 - 20 - 7, 50, 20, t("gui.cancel"));
+        startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, t("misc.refinedstorage:start"));
         startButton.enabled = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null;
     }
 
@@ -117,7 +117,7 @@ public class GuiCraftingPreview extends GuiBase {
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         if (getErrorType() != null) {
-            drawRect(x + 7, y + 20, x + 142, y + 139, 0xFFDBDBDB);
+            drawRect(x + 7, y + 20, x + 228, y + 169, 0xFFDBDBDB);
         }
     }
 
@@ -186,7 +186,7 @@ public class GuiCraftingPreview extends GuiBase {
             this.hoveringStack = null;
             this.hoveringFluid = null;
 
-            for (int i = 0; i < 8; ++i) {
+            for (int i = 0; i < 3 * 5; ++i) {
                 if (slot < stacks.size()) {
                     ICraftingPreviewElement stack = stacks.get(slot);
 
@@ -201,17 +201,17 @@ public class GuiCraftingPreview extends GuiBase {
                     }
                 }
 
-                if (i % 2 == 1) {
-                    x -= 68;
+                if ((i + 1) % 3 == 0) {
+                    x = 7;
                     y += 30;
                 } else {
-                    x += 68;
+                    x += 74;
                 }
 
                 slot++;
             }
 
-            if (!startButton.enabled && inBounds(85, 144, 50, 20, mouseX, mouseY)) {
+            if (!startButton.enabled && inBounds(startButton.x - guiLeft, startButton.y - guiTop, startButton.width, startButton.height, mouseX, mouseY)) {
                 drawTooltip(mouseX, mouseY, t("gui.refinedstorage:crafting_preview.force_start"));
             }
         }
@@ -257,7 +257,7 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     private int getRows() {
-        return Math.max(0, (int) Math.ceil((float) stacks.size() / 2F));
+        return Math.max(0, (int) Math.ceil((float) stacks.size() / 3F));
     }
 
     private void close() {

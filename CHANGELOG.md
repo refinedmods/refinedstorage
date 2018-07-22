@@ -2,6 +2,7 @@
 
 ### 1.6.1
 - Added fluid autocrafting (raoulvdberge)
+- Made the Crafting Preview window bigger (raoulvdberge)
 - Updated Russian translation (kellixon)
 
 ### 1.6
