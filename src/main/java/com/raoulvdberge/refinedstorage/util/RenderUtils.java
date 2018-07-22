@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -253,6 +255,30 @@ public final class RenderUtils {
                 data = (displayAmount ? (String.valueOf(amount) + "x ") : "") + data;
 
                 tooltip.add(data);
+            }
+        }
+    }
+
+    public static void addCombinedFluidsToTooltip(List<String> tooltip, NonNullList<FluidStack> stacks) {
+        Set<Integer> combinedIndices = new HashSet<>();
+
+        for (int i = 0; i < stacks.size(); ++i) {
+            if (!combinedIndices.contains(i)) {
+                FluidStack stack = stacks.get(i);
+
+                String data = stack.getLocalizedName();
+
+                int amount = stack.amount;
+
+                for (int j = i + 1; j < stacks.size(); ++j) {
+                    if (API.instance().getComparer().isEqual(stack, stacks.get(j), IComparer.COMPARE_NBT)) {
+                        amount += stacks.get(j).amount;
+
+                        combinedIndices.add(j);
+                    }
+                }
+
+                tooltip.add(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " " + data);
             }
         }
     }

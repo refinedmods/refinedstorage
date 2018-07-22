@@ -18,7 +18,7 @@ public class GridViewItem extends GridViewBase {
 
         for (IGridStack stack : stacks) {
             // Don't let a craftable stack override a normal stack
-            if (((GridStackItem) stack).doesDisplayCraftText() && map.containsKey(stack.getHash())) {
+            if (stack.doesDisplayCraftText() && map.containsKey(stack.getHash())) {
                 continue;
             }
 

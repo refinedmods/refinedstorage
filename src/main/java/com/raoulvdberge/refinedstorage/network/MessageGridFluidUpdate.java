@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
@@ -38,7 +39,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.stacks.add(new GridStackFluid(StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null));
+            this.stacks.add(new GridStackFluid(StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), buf.readBoolean()));
         }
     }
 
@@ -46,7 +47,13 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(canCraft);
 
-        buf.writeInt(network.getFluidStorageCache().getList().getStacks().size());
+        int size = network.getFluidStorageCache().getList().getStacks().size();
+
+        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
+            size += pattern.getFluidOutputs().size();
+        }
+
+        buf.writeInt(size);
 
         for (FluidStack stack : network.getFluidStorageCache().getList().getStacks()) {
             StackUtils.writeFluidStack(buf, stack);
@@ -56,6 +63,25 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
             if (entry != null) {
                 buf.writeLong(entry.getTime());
                 ByteBufUtils.writeUTF8String(buf, entry.getName());
+            }
+
+            buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
+            buf.writeBoolean(false);
+        }
+
+        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
+            for (FluidStack stack : pattern.getFluidOutputs()) {
+                StackUtils.writeFluidStack(buf, stack);
+
+                IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
+                buf.writeBoolean(entry != null);
+                if (entry != null) {
+                    buf.writeLong(entry.getTime());
+                    ByteBufUtils.writeUTF8String(buf, entry.getName());
+                }
+
+                buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
+                buf.writeBoolean(true);
             }
         }
     }

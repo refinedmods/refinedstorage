@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButton;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
@@ -24,6 +25,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -186,6 +188,16 @@ public abstract class GuiBase extends GuiContainer {
 
                 if (stack != null) {
                     FLUID_RENDERER.draw(mc, guiLeft + slot.xPos, guiTop + slot.yPos, stack);
+
+                    if (slot instanceof SlotFilterType) {
+                        int count = ((SlotFilterType) slot).getActualStack().getCount();
+
+                        if (count != 1) {
+                            drawQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, String.valueOf(count));
+
+                            GL11.glDisable(GL11.GL_LIGHTING);
+                        }
+                    }
 
                     if (inBounds(guiLeft + slot.xPos, guiTop + slot.yPos, 18, 18, mouseX, mouseY)) {
                         this.hoveringFluid = stack.getLocalizedName();

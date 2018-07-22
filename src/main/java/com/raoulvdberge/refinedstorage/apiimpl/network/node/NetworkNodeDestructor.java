@@ -183,7 +183,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                     if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, Action.SIMULATE) == null) {
                         FluidStack drained = handler.drain(Fluid.BUCKET_VOLUME, true);
 
-                        network.insertFluid(drained, drained.amount, Action.PERFORM);
+                        network.insertFluidTracked(drained, drained.amount);
                     }
                 }
             }

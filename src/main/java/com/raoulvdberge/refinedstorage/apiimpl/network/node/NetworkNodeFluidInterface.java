@@ -19,6 +19,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
+// TODO: Crafting upgrade
 public class NetworkNodeFluidInterface extends NetworkNode implements IComparable {
     public static final String ID = "fluid_interface";
 
@@ -96,7 +97,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
             // Drain in tank
             if (drained != null) {
-                FluidStack remainder = network.insertFluid(drained, drained.amount, Action.PERFORM);
+                FluidStack remainder = network.insertFluidTracked(drained, drained.amount);
 
                 if (remainder != null) {
                     tankIn.fillInternal(remainder, true);
@@ -112,7 +113,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
                 FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
 
                 if (remainder != null) {
-                    network.insertFluid(remainder, remainder.amount, Action.PERFORM);
+                    network.insertFluidTracked(remainder, remainder.amount);
                 }
             } else if (stack != null) {
                 // Fill the out fluid

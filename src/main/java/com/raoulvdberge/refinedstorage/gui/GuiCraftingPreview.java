@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: Make bigger/resizeable and allow more space?
 public class GuiCraftingPreview extends GuiBase {
     public class CraftingPreviewElementDrawers extends ElementDrawers {
         private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
@@ -61,7 +62,9 @@ public class GuiCraftingPreview extends GuiBase {
 
     private IElementDrawers drawers = new CraftingPreviewElementDrawers();
 
-    public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity) {
+    private boolean fluids;
+
+    public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity, boolean fluids) {
         super(new Container() {
             @Override
             public boolean canInteractWith(EntityPlayer player) {
@@ -74,6 +77,7 @@ public class GuiCraftingPreview extends GuiBase {
 
         this.hash = hash;
         this.quantity = quantity;
+        this.fluids = fluids;
 
         this.scrollbar = new Scrollbar(149, 20, 12, 119);
     }
@@ -247,7 +251,7 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     private void startRequest() {
-        RS.INSTANCE.network.sendToServer(new MessageGridCraftingStart(hash, quantity));
+        RS.INSTANCE.network.sendToServer(new MessageGridCraftingStart(hash, quantity, fluids));
 
         close();
     }

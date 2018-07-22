@@ -10,6 +10,7 @@ gui.refinedstorage:grid=Grid
 gui.refinedstorage:grid.craft=Craft
 gui.refinedstorage:crafting_grid=Crafting Grid
 gui.refinedstorage:pattern_grid=Pattern Grid
+gui.refinedstorage:pattern_grid.fluid_amount=Fluid amount in mB
 gui.refinedstorage:grid.pattern_create=Create Pattern
 gui.refinedstorage:fluid_grid=Fluid Grid
 gui.refinedstorage:disk_drive=Drive

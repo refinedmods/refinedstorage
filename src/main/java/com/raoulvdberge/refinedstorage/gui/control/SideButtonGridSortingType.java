@@ -38,7 +38,7 @@ public class SideButtonGridSortingType extends SideButton {
         if (type == IGrid.SORTING_TYPE_QUANTITY) {
             type = IGrid.SORTING_TYPE_NAME;
         } else if (type == IGrid.SORTING_TYPE_NAME) {
-            if (grid.getType() == GridType.FLUID) {
+            if (grid.getGridType() == GridType.FLUID) {
                 type = IGrid.SORTING_TYPE_LAST_MODIFIED;
             } else {
                 type = IGrid.SORTING_TYPE_ID;
@@ -46,7 +46,7 @@ public class SideButtonGridSortingType extends SideButton {
         } else if (type == IGrid.SORTING_TYPE_ID) {
             type = IGrid.SORTING_TYPE_LAST_MODIFIED;
         } else if (type == NetworkNodeGrid.SORTING_TYPE_LAST_MODIFIED) {
-            if (grid.getType() == GridType.FLUID || !Loader.isModLoaded(GridSorterInventoryTweaks.MOD_ID)) {
+            if (grid.getGridType() == GridType.FLUID || !Loader.isModLoaded(GridSorterInventoryTweaks.MOD_ID)) {
                 type = IGrid.SORTING_TYPE_QUANTITY;
             } else {
                 type = IGrid.SORTING_TYPE_INVENTORYTWEAKS;

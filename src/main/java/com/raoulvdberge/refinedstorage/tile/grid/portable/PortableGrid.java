@@ -186,7 +186,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public GridType getType() {
+    public GridType getGridType() {
         return GridType.NORMAL;
     }
 

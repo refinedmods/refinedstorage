@@ -257,7 +257,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public GridType getType() {
+    public GridType getGridType() {
         return GridType.NORMAL;
     }
 

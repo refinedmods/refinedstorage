@@ -196,13 +196,13 @@ public class ItemGridHandler implements IItemGridHandler {
                 ICraftingTaskError error = task.calculate();
 
                 if (error != null) {
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity), player);
+                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, false), player);
                 } else if (noPreview && task.getMissing().isEmpty()) {
                     network.getCraftingManager().add(task);
 
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
                 } else {
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity), player);
+                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity, false), player);
                 }
             }, "RS crafting preview calculation");
 

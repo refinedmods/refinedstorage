@@ -17,6 +17,11 @@ public class GridViewFluid extends GridViewBase {
         map.clear();
 
         for (IGridStack stack : stacks) {
+            // Don't let a craftable stack override a normal stack
+            if (stack.doesDisplayCraftText() && map.containsKey(stack.getHash())) {
+                continue;
+            }
+
             map.put(stack.getHash(), stack);
         }
     }
@@ -30,12 +35,24 @@ public class GridViewFluid extends GridViewBase {
         GridStackFluid existing = (GridStackFluid) map.get(stack.getHash());
 
         if (existing == null) {
+            ((GridStackFluid) stack).getStack().amount = delta;
+
             map.put(stack.getHash(), stack);
         } else {
             if (existing.getStack().amount + delta <= 0) {
-                map.remove(existing.getHash());
+                if (existing.isCraftable()) {
+                    existing.setDisplayCraftText(true);
+                } else {
+                    map.remove(existing.getHash());
+                }
             } else {
-                existing.getStack().amount += delta;
+                if (existing.doesDisplayCraftText()) {
+                    existing.setDisplayCraftText(false);
+
+                    existing.getStack().amount = delta;
+                } else {
+                    existing.getStack().amount += delta;
+                }
             }
 
             existing.setTrackerEntry(stack.getTrackerEntry());

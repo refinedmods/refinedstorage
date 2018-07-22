@@ -19,23 +19,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHandler<MessageGridCraftingPreviewResponse, IMessage> {
-    public List<ICraftingPreviewElement> stacks;
-    public int hash;
-    public int quantity;
+    private List<ICraftingPreviewElement> stacks;
+    private int hash;
+    private int quantity;
+    private boolean fluids;
 
     public MessageGridCraftingPreviewResponse() {
     }
 
-    public MessageGridCraftingPreviewResponse(List<ICraftingPreviewElement> stacks, int hash, int quantity) {
+    public MessageGridCraftingPreviewResponse(List<ICraftingPreviewElement> stacks, int hash, int quantity, boolean fluids) {
         this.stacks = stacks;
         this.hash = hash;
         this.quantity = quantity;
+        this.fluids = fluids;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         this.hash = buf.readInt();
         this.quantity = buf.readInt();
+        this.fluids = buf.readBoolean();
 
         this.stacks = new LinkedList<>();
 
@@ -50,6 +53,7 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
     public void toBytes(ByteBuf buf) {
         buf.writeInt(hash);
         buf.writeInt(quantity);
+        buf.writeBoolean(fluids);
 
         buf.writeInt(stacks.size());
 
@@ -69,7 +73,7 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
                 screen = ((GuiCraftingStart) screen).getParent();
             }
 
-            FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity));
+            FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity, message.fluids));
         });
 
         return null;

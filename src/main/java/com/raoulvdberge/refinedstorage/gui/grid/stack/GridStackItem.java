@@ -45,14 +45,17 @@ public class GridStackItem implements IGridStack {
         return stack;
     }
 
+    @Override
     public boolean isCraftable() {
         return craftable;
     }
 
+    @Override
     public boolean doesDisplayCraftText() {
         return displayCraftText;
     }
 
+    @Override
     public void setDisplayCraftText(boolean displayCraftText) {
         this.displayCraftText = displayCraftText;
 

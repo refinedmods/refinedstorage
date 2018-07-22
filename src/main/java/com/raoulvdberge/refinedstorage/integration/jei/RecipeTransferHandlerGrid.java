@@ -50,7 +50,7 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
         if (doTransfer) {
             LAST_TRANSFER = System.currentTimeMillis();
 
-            if (grid.getType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
+            if (grid.getGridType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
                 List<ItemStack> inputs = new LinkedList<>();
                 List<ItemStack> outputs = new LinkedList<>();
 
@@ -71,7 +71,7 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
                 RS.INSTANCE.network.sendToServer(new MessageGridTransfer(recipeLayout.getItemStacks().getGuiIngredients(), container.inventorySlots.stream().filter(s -> s.inventory instanceof InventoryCrafting).collect(Collectors.toList())));
             }
         } else {
-            if (grid.getType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
+            if (grid.getGridType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
                 if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
                     return ERROR_CANNOT_TRANSFER;
                 }

@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui.grid.stack;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -13,15 +14,34 @@ public class GridStackFluid implements IGridStack {
     private FluidStack stack;
     @Nullable
     private IStorageTracker.IStorageTrackerEntry entry;
+    private boolean craftable;
+    private boolean displayCraftText;
 
-    public GridStackFluid(Pair<Integer, FluidStack> data, @Nullable IStorageTracker.IStorageTrackerEntry entry) {
+    public GridStackFluid(Pair<Integer, FluidStack> data, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
         this.hash = data.getLeft();
         this.stack = data.getRight();
         this.entry = entry;
+        this.craftable = craftable;
+        this.displayCraftText = displayCraftText;
     }
 
     public FluidStack getStack() {
         return stack;
+    }
+
+    @Override
+    public boolean isCraftable() {
+        return craftable;
+    }
+
+    @Override
+    public boolean doesDisplayCraftText() {
+        return displayCraftText;
+    }
+
+    @Override
+    public void setDisplayCraftText(boolean displayCraftText) {
+        this.displayCraftText = displayCraftText;
     }
 
     @Override
@@ -63,11 +83,15 @@ public class GridStackFluid implements IGridStack {
     public void draw(GuiBase gui, int x, int y) {
         GuiBase.FLUID_RENDERER.draw(gui.mc, x, y, stack);
 
-        float amountRaw = ((float) stack.amount / 1000F);
-        int amount = (int) amountRaw;
-        String formattedAmount = amount >= 1 ? API.instance().getQuantityFormatter().formatWithUnits(amount) : String.format("%.1f", amountRaw);
+        String text;
 
-        gui.drawQuantity(x, y, formattedAmount);
+        if (displayCraftText) {
+            text = I18n.format("gui.refinedstorage:grid.craft");
+        } else {
+            text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
+        }
+
+        gui.drawQuantity(x, y, text);
     }
 
     @Override

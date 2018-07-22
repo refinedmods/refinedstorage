@@ -37,7 +37,7 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
 
             InventoryCrafting matrix = grid.getCraftingMatrix();
 
-            if (grid.getType() == GridType.CRAFTING && grid.getNetwork() != null && grid.getNetwork().getSecurityManager().hasPermission(Permission.INSERT, player)) {
+            if (grid.getGridType() == GridType.CRAFTING && grid.getNetwork() != null && grid.getNetwork().getSecurityManager().hasPermission(Permission.INSERT, player)) {
                 for (int i = 0; i < matrix.getSizeInventory(); ++i) {
                     ItemStack slot = matrix.getStackInSlot(i);
 
@@ -45,7 +45,7 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
                         matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(grid.getNetwork().insertItem(slot, slot.getCount(), Action.PERFORM)));
                     }
                 }
-            } else if (grid.getType() == GridType.PATTERN) {
+            } else if (grid.getGridType() == GridType.PATTERN) {
                 ((NetworkNodeGrid) grid).clearMatrix();
             }
         }

@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -185,6 +186,17 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         }
 
         return WorldUtils.getItemHandler(proxy.getFacingTile(), proxy.getDirection().getOpposite());
+    }
+
+    @Nullable
+    @Override
+    public IFluidHandler getConnectedFluidInventory() {
+        ICraftingPatternContainer proxy = getRootContainer();
+        if (proxy == null) {
+            return null;
+        }
+
+        return WorldUtils.getFluidHandler(proxy.getFacingTile(), proxy.getDirection().getOpposite());
     }
 
     @Override

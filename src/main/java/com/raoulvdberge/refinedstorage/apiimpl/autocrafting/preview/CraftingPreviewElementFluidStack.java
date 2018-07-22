@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import io.netty.buffer.ByteBuf;
@@ -25,7 +26,6 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
 
     public CraftingPreviewElementFluidStack(FluidStack stack) {
         this.stack = stack.copy();
-        this.available = stack.amount;
     }
 
     public CraftingPreviewElementFluidStack(FluidStack stack, int available, boolean missing, int toCraft) {
@@ -73,11 +73,21 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
 
         float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
 
+        y += 2;
+
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);
 
-        drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y + 3, scale), GuiBase.t("gui.refinedstorage:crafting_preview.available", ""));
-        drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y + 9, scale), getAvailable() + " mB");
+        if (getToCraft() > 0) {
+            String format = hasMissing() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), GuiBase.t(format, API.instance().getQuantityFormatter().formatInBucketForm(getToCraft())));
+
+            y += 7;
+        }
+
+        if (getAvailable() > 0) {
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), GuiBase.t("gui.refinedstorage:crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(getAvailable())));
+        }
 
         GlStateManager.popMatrix();
     }

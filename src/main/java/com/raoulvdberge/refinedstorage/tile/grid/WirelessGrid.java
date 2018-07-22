@@ -90,7 +90,7 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public GridType getType() {
+    public GridType getGridType() {
         return GridType.NORMAL;
     }
 

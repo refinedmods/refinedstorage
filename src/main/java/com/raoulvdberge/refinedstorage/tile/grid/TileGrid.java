@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
@@ -82,6 +83,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
                 ((ContainerGrid) player.openContainer).sendAllSlots();
             });
     }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
+    public static final TileDataParameter<Integer, TileGrid> PROCESSING_TYPE = IType.createParameter();
 
     public static void trySortGrid(boolean initial) {
         if (!initial) {
@@ -99,6 +101,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         dataManager.addWatchedParameter(TAB_PAGE);
         dataManager.addWatchedParameter(OREDICT_PATTERN);
         dataManager.addWatchedParameter(PROCESSING_PATTERN);
+        dataManager.addWatchedParameter(PROCESSING_TYPE);
     }
 
     @Override
@@ -114,12 +117,12 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side) {
-        return (getNode().getType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, side);
+        return (getNode().getGridType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, side);
     }
 
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing side) {
-        if (getNode().getType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (getNode().getGridType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getPatterns());
         }
 

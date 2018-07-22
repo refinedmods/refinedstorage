@@ -31,7 +31,7 @@ public class SlotFilter extends SlotItemHandler {
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack) {
         if (super.isItemValid(stack)) {
-            if (allowsBlocks()) {
+            if (isBlockAllowed()) {
                 return stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable || stack.getItem() instanceof ItemSkull;
             }
 
@@ -43,19 +43,35 @@ public class SlotFilter extends SlotItemHandler {
 
     @Override
     public void putStack(@Nonnull ItemStack stack) {
-        if (!stack.isEmpty() && !allowsSize()) {
+        if (!stack.isEmpty() && !isSizeAllowed()) {
             stack.setCount(1);
         }
 
         super.putStack(stack);
     }
 
-    public boolean allowsSize() {
+    public boolean isSizeAllowed() {
         return (flags & FILTER_ALLOW_SIZE) == FILTER_ALLOW_SIZE;
     }
 
-    public boolean allowsBlocks() {
+    public boolean isBlockAllowed() {
         return (flags & FILTER_ALLOW_BLOCKS) == FILTER_ALLOW_BLOCKS;
+    }
+
+    public int getAmountModified(int dragType) {
+        int amount = getStack().getCount();
+
+        if (dragType == 0) {
+            amount = Math.max(1, amount - 1);
+        } else if (dragType == 1) {
+            amount = Math.min(getStack().getMaxStackSize(), amount + 1);
+        }
+
+        return amount;
+    }
+
+    public int getInitialAmount(ItemStack stack) {
+        return stack.getCount();
     }
 
     @Nullable

@@ -32,7 +32,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        clientStack = new GridStackFluid(StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null);
+        clientStack = new GridStackFluid(StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), false);
         delta = buf.readInt();
     }
 
@@ -46,6 +46,8 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
             buf.writeLong(entry.getTime());
             ByteBufUtils.writeUTF8String(buf, entry.getName());
         }
+
+        buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
 
         buf.writeInt(delta);
     }

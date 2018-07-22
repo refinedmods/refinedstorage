@@ -11,14 +11,16 @@ public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<Mes
     private int hash;
     private int quantity;
     private boolean noPreview;
+    private boolean fluids;
 
     public MessageGridCraftingPreview() {
     }
 
-    public MessageGridCraftingPreview(int hash, int quantity, boolean noPreview) {
+    public MessageGridCraftingPreview(int hash, int quantity, boolean noPreview, boolean fluids) {
         this.hash = hash;
         this.quantity = quantity;
         this.noPreview = noPreview;
+        this.fluids = fluids;
     }
 
     @Override
@@ -26,6 +28,7 @@ public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<Mes
         hash = buf.readInt();
         quantity = buf.readInt();
         noPreview = buf.readBoolean();
+        fluids = buf.readBoolean();
     }
 
     @Override
@@ -33,6 +36,7 @@ public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<Mes
         buf.writeInt(hash);
         buf.writeInt(quantity);
         buf.writeBoolean(noPreview);
+        buf.writeBoolean(fluids);
     }
 
     @Override
@@ -42,8 +46,14 @@ public class MessageGridCraftingPreview extends MessageHandlerPlayerToServer<Mes
         if (container instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getItemHandler() != null) {
-                grid.getItemHandler().onCraftingPreviewRequested(player, message.hash, message.quantity, message.noPreview);
+            if (message.fluids) {
+                if (grid.getFluidHandler() != null) {
+                    grid.getFluidHandler().onCraftingPreviewRequested(player, message.hash, message.quantity, message.noPreview);
+                }
+            } else {
+                if (grid.getItemHandler() != null) {
+                    grid.getItemHandler().onCraftingPreviewRequested(player, message.hash, message.quantity, message.noPreview);
+                }
             }
         }
     }

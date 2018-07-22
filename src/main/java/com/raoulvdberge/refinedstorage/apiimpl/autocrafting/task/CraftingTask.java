@@ -4,21 +4,21 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.*;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementColor;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractor;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractorItemStatus;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractorStack;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractorStatus;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter.CraftingInserter;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter.CraftingInserterItem;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter.CraftingInserterItemStatus;
@@ -33,6 +33,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -56,7 +57,7 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
 
     private INetwork network;
-    private ItemStack requested;
+    private ICraftingRequestInfo requested;
     private int quantity;
     private ICraftingPattern pattern;
     private List<CraftingStep> steps = new LinkedList<>();
@@ -68,10 +69,15 @@ public class CraftingTask implements ICraftingTask {
     private UUID id = UUID.randomUUID();
 
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
-    private IStackList<ItemStack> missing = API.instance().createItemStackList();
-    private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
+    private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
 
-    public CraftingTask(INetwork network, ItemStack requested, int quantity, ICraftingPattern pattern) {
+    private IStackList<ItemStack> missing = API.instance().createItemStackList();
+    private IStackList<FluidStack> missingFluids = API.instance().createFluidStackList();
+
+    private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
+    private IStackList<FluidStack> toCraftFluids = API.instance().createFluidStackList();
+
+    public CraftingTask(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
         this.network = network;
         this.inserter = new CraftingInserter(network);
         this.requested = requested;
@@ -82,11 +88,7 @@ public class CraftingTask implements ICraftingTask {
     public CraftingTask(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
         this.network = network;
 
-        this.requested = new ItemStack(tag.getCompoundTag(NBT_REQUESTED));
-        if (requested.isEmpty()) {
-            throw new CraftingTaskReadException("Requested item doesn't exist anymore");
-        }
-
+        this.requested = API.instance().createCraftingRequestInfo(tag.getCompoundTag(NBT_REQUESTED));
         this.quantity = tag.getInteger(NBT_QUANTITY);
         this.pattern = readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
         this.inserter = new CraftingInserter(network, tag.getTagList(NBT_INSERTER, Constants.NBT.TAG_COMPOUND));
@@ -134,7 +136,10 @@ public class CraftingTask implements ICraftingTask {
         int crafted = 0;
 
         IStackList<ItemStack> results = API.instance().createItemStackList();
+        IStackList<FluidStack> fluidResults = API.instance().createFluidStackList();
+
         IStackList<ItemStack> storage = network.getItemStorageCache().getList().copy();
+        IStackList<FluidStack> fluidStorage = network.getFluidStorageCache().getList().copy();
 
         // Items that are being handled in other tasks aren't available to us.
         for (ICraftingTask task : network.getCraftingManager().getTasks()) {
@@ -149,8 +154,20 @@ public class CraftingTask implements ICraftingTask {
                     }
 
                     if (extractor != null) {
-                        for (ItemStack inUse : extractor.getItems()) {
-                            storage.remove(inUse);
+                        for (CraftingExtractorStack inUse : extractor.getStacks()) {
+                            ItemStack inUseItem = inUse.getItem();
+
+                            if (inUseItem != null) {
+                                storage.remove(inUseItem);
+                            } else {
+                                FluidStack inUseFluid = inUse.getFluid();
+
+                                if (inUseFluid != null) {
+                                    fluidStorage.remove(inUseFluid);
+                                } else {
+                                    throw new IllegalStateException("Extractor stack is neither a fluid or an item!");
+                                }
+                            }
                         }
                     }
                 }
@@ -162,7 +179,7 @@ public class CraftingTask implements ICraftingTask {
         ICraftingPatternChain patternChain = patternChainList.getChain(pattern);
 
         while (qty > 0) {
-            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(storage, results, patternChainList, patternChain.current());
+            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(storage, fluidStorage, results, fluidResults, patternChainList, patternChain.current());
 
             if (result.getRight() != null) {
                 return result.getRight();
@@ -177,12 +194,23 @@ public class CraftingTask implements ICraftingTask {
             patternChain.cycle();
         }
 
-        this.toCraft.add(requested, crafted);
+        if (requested.getItem() != null) {
+            this.toCraft.add(requested.getItem(), crafted);
+        } else {
+            this.toCraftFluids.add(requested.getFluid(), crafted);
+        }
 
         return null;
     }
 
-    private Pair<CraftingStep, ICraftingTaskError> calculateInternal(IStackList<ItemStack> mutatedStorage, IStackList<ItemStack> results, ICraftingPatternChainList patternChainList, ICraftingPattern pattern) {
+    private Pair<CraftingStep, ICraftingTaskError> calculateInternal(
+        IStackList<ItemStack> mutatedStorage,
+        IStackList<FluidStack> mutatedFluidStorage,
+        IStackList<ItemStack> results,
+        IStackList<FluidStack> fluidResults,
+        ICraftingPatternChainList patternChainList,
+        ICraftingPattern pattern) {
+
         if (System.currentTimeMillis() - calculationStarted > CALCULATION_TIMEOUT_MS) {
             return Pair.of(null, new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX));
         }
@@ -192,6 +220,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         IStackList<ItemStack> itemsToExtract = API.instance().createItemStackList();
+        IStackList<FluidStack> fluidsToExtract = API.instance().createFluidStackList();
 
         NonNullList<ItemStack> took = NonNullList.create();
 
@@ -270,7 +299,7 @@ public class CraftingTask implements ICraftingTask {
                         ICraftingPatternChain subPatternChain = patternChainList.getChain(subPattern);
 
                         while ((fromSelf == null ? 0 : fromSelf.getCount()) < remaining) {
-                            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(mutatedStorage, results, patternChainList, subPatternChain.current());
+                            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(mutatedStorage, mutatedFluidStorage, results, fluidResults, patternChainList, subPatternChain.current());
 
                             if (result.getRight() != null) {
                                 return Pair.of(null, result.getRight());
@@ -301,6 +330,73 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
+        for (FluidStack input : pattern.getFluidInputs()) {
+            FluidStack fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
+            FluidStack fromNetwork = mutatedFluidStorage.get(input, IComparer.COMPARE_NBT);
+
+            int remaining = input.amount;
+
+            while (remaining > 0) {
+                if (fromSelf != null) {
+                    int toTake = Math.min(remaining, fromSelf.amount);
+
+                    fluidsToExtract.add(input, toTake);
+
+                    fluidResults.remove(input, toTake);
+
+                    remaining -= toTake;
+
+                    fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
+                } else if (fromNetwork != null) {
+                    int toTake = Math.min(remaining, fromNetwork.amount);
+
+                    this.toTakeFluids.add(input, toTake);
+
+                    fluidsToExtract.add(input, toTake);
+
+                    mutatedFluidStorage.remove(fromNetwork, toTake);
+
+                    remaining -= toTake;
+
+                    fromNetwork = mutatedFluidStorage.get(input, IComparer.COMPARE_NBT);
+                } else {
+                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(input);
+
+                    if (subPattern != null) {
+                        ICraftingPatternChain subPatternChain = patternChainList.getChain(subPattern);
+
+                        while ((fromSelf == null ? 0 : fromSelf.amount) < remaining) {
+                            Pair<CraftingStep, ICraftingTaskError> result = calculateInternal(mutatedStorage, mutatedFluidStorage, results, fluidResults, patternChainList, subPatternChain.current());
+
+                            if (result.getRight() != null) {
+                                return Pair.of(null, result.getRight());
+                            }
+
+                            this.steps.add(result.getLeft());
+
+                            fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
+                            if (fromSelf == null) {
+                                throw new IllegalStateException("Recursive fluid calculation didn't yield anything");
+                            }
+
+                            fromNetwork = mutatedFluidStorage.get(input, IComparer.COMPARE_NBT);
+
+                            subPatternChain.cycle();
+                        }
+
+                        // fromSelf contains the amount crafted after the loop.
+                        this.toCraftFluids.add(input, fromSelf.amount);
+                    } else {
+                        this.missingFluids.add(input, remaining);
+
+                        fluidsToExtract.add(input, remaining);
+
+                        remaining = 0;
+                    }
+                }
+            }
+        }
+
         patternsUsed.remove(pattern);
 
         if (pattern.isProcessing()) {
@@ -308,8 +404,16 @@ public class CraftingTask implements ICraftingTask {
                 results.add(output);
             }
 
-            return Pair.of(new CraftingStepProcess(pattern, network, new ArrayList<>(itemsToExtract.getStacks())), null);
+            for (FluidStack output : pattern.getFluidOutputs()) {
+                fluidResults.add(output);
+            }
+
+            return Pair.of(new CraftingStepProcess(pattern, network, new ArrayList<>(itemsToExtract.getStacks()), new ArrayList<>(fluidsToExtract.getStacks())), null);
         } else {
+            if (!fluidsToExtract.isEmpty()) {
+                throw new IllegalStateException("Cannot extract fluids in normal pattern!");
+            }
+
             results.add(pattern.getOutput(took));
 
             for (ItemStack byproduct : pattern.getByproducts(took)) {
@@ -320,15 +424,23 @@ public class CraftingTask implements ICraftingTask {
         }
     }
 
-    private int getQuantityPerCraft(ICraftingPattern pattern, ItemStack requested) {
+    private int getQuantityPerCraft(ICraftingPattern pattern, ICraftingRequestInfo requested) {
         int qty = 0;
 
-        for (ItemStack output : pattern.getOutputs()) {
-            if (API.instance().getComparer().isEqualNoQuantity(output, requested)) {
-                qty += output.getCount();
+        if (requested.getItem() != null) {
+            for (ItemStack output : pattern.getOutputs()) {
+                if (API.instance().getComparer().isEqualNoQuantity(output, requested.getItem())) {
+                    qty += output.getCount();
 
-                if (!pattern.isProcessing()) {
-                    break;
+                    if (!pattern.isProcessing()) {
+                        break;
+                    }
+                }
+            }
+        } else {
+            for (FluidStack output : pattern.getFluidOutputs()) {
+                if (API.instance().getComparer().isEqual(output, requested.getFluid(), IComparer.COMPARE_NBT)) {
+                    qty += output.amount;
                 }
             }
         }
@@ -376,12 +488,12 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public ItemStack getRequested() {
+    public ICraftingRequestInfo getRequested() {
         return requested;
     }
 
     @Override
-    public int onTrackedItemInserted(ItemStack stack, int size) {
+    public int onTrackedInsert(ItemStack stack, int size) {
         for (CraftingStep step : steps) {
             if (step instanceof CraftingStepProcess) {
                 size = ((CraftingStepProcess) step).onTrackedItemInserted(stack, size);
@@ -396,14 +508,40 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
+    public int onTrackedInsert(FluidStack stack, int size) {
+        for (CraftingStep step : steps) {
+            if (step instanceof CraftingStepProcess) {
+                size = ((CraftingStepProcess) step).onTrackedFluidInserted(stack, size);
+
+                if (size == 0) {
+                    break;
+                }
+            }
+        }
+
+        return size;
+    }
+
+    // TODO: Fix lang keys.
+    @Override
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
-        if (!missing.isEmpty()) {
+        if (!missing.isEmpty() || !missingFluids.isEmpty()) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 5));
+        }
 
+        if (!missing.isEmpty()) {
             for (ItemStack missing : this.missing.getStacks()) {
                 elements.add(new CraftingMonitorElementColor(new CraftingMonitorElementItemRender(missing, missing.getCount(), 0), "", CraftingMonitorElementColor.COLOR_ERROR));
+            }
+
+            elements.commit();
+        }
+
+        if (!missingFluids.isEmpty()) {
+            for (FluidStack missing : this.missingFluids.getStacks()) {
+                elements.add(new CraftingMonitorElementColor(new CraftingMonitorElementFluidRender(missing, missing.amount, 0), "", CraftingMonitorElementColor.COLOR_ERROR));
             }
 
             elements.commit();
@@ -425,20 +563,20 @@ public class CraftingTask implements ICraftingTask {
             elements.commit();
         }
 
-        if (steps.stream().anyMatch(s -> s instanceof CraftingStepCraft && !s.isCompleted() && !((CraftingStepCraft) s).getExtractor().getItems().isEmpty())) {
+        if (steps.stream().anyMatch(s -> s instanceof CraftingStepCraft && !s.isCompleted() && !((CraftingStepCraft) s).getExtractor().getStacks().isEmpty())) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 5));
 
             for (CraftingStep step : steps) {
                 if (step instanceof CraftingStepCraft && !step.isCompleted()) {
                     CraftingExtractor extractor = ((CraftingStepCraft) step).getExtractor();
 
-                    for (int i = 0; i < extractor.getItems().size(); ++i) {
-                        ItemStack item = extractor.getItems().get(i);
-                        CraftingExtractorItemStatus status = extractor.getStatus().get(i);
+                    for (int i = 0; i < extractor.getStacks().size(); ++i) {
+                        // Assume we have an item here.
+                        CraftingExtractorStack stack = extractor.getStacks().get(i);
 
-                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(item, item.getCount(), 0);
+                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(stack.getItem(), stack.getItem().getCount(), 0);
 
-                        if (status == CraftingExtractorItemStatus.MISSING) {
+                        if (stack.getStatus() == CraftingExtractorStatus.MISSING) {
                             element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
                         }
 
@@ -450,6 +588,7 @@ public class CraftingTask implements ICraftingTask {
             elements.commit();
         }
 
+        // TODO: Make better?
         if (steps.stream().anyMatch(s -> s instanceof CraftingStepProcess && !s.isCompleted())) {
             elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 5));
 
@@ -457,19 +596,54 @@ public class CraftingTask implements ICraftingTask {
                 if (step instanceof CraftingStepProcess && !step.isCompleted()) {
                     CraftingExtractor extractor = ((CraftingStepProcess) step).getExtractor();
 
-                    for (int i = 0; i < extractor.getItems().size(); ++i) {
-                        ItemStack item = extractor.getItems().get(i);
-                        CraftingExtractorItemStatus status = extractor.getStatus().get(i);
+                    for (int i = 0; i < extractor.getStacks().size(); ++i) {
+                        CraftingExtractorStack stack = extractor.getStacks().get(i);
 
-                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(item, item.getCount(), 0);
+                        if (stack.getItem() == null) {
+                            continue;
+                        }
 
-                        if (status == CraftingExtractorItemStatus.MISSING) {
+                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(stack.getItem(), stack.getItem().getCount(), 0);
+
+                        if (stack.getStatus() == CraftingExtractorStatus.MISSING) {
                             element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
-                        } else if (status == CraftingExtractorItemStatus.MACHINE_DOES_NOT_ACCEPT) {
+                        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_DOES_NOT_ACCEPT) {
                             element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept", CraftingMonitorElementColor.COLOR_ERROR);
-                        } else if (status == CraftingExtractorItemStatus.MACHINE_NONE) {
+                        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_NONE) {
                             element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_none", CraftingMonitorElementColor.COLOR_ERROR);
-                        } else if (status == CraftingExtractorItemStatus.EXTRACTED) {
+                        } else if (stack.getStatus() == CraftingExtractorStatus.EXTRACTED) {
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.item_inserted_into_machine", CraftingMonitorElementColor.COLOR_SUCCESS);
+                        }
+
+                        elements.add(element);
+                    }
+                }
+            }
+
+            elements.commit();
+
+            for (CraftingStep step : steps) {
+                if (step instanceof CraftingStepProcess && !step.isCompleted()) {
+                    CraftingExtractor extractor = ((CraftingStepProcess) step).getExtractor();
+
+                    for (int i = 0; i < extractor.getStacks().size(); ++i) {
+                        CraftingExtractorStack stack = extractor.getStacks().get(i);
+
+                        ICraftingMonitorElement element;
+
+                        if (stack.getItem() != null) {
+                            continue;
+                        }
+
+                        element = new CraftingMonitorElementFluidRender(stack.getFluid(), stack.getFluid().amount, 0);
+
+                        if (stack.getStatus() == CraftingExtractorStatus.MISSING) {
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
+                        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_DOES_NOT_ACCEPT) {
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept", CraftingMonitorElementColor.COLOR_ERROR);
+                        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_NONE) {
+                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_none", CraftingMonitorElementColor.COLOR_ERROR);
+                        } else if (stack.getStatus() == CraftingExtractorStatus.EXTRACTED) {
                             element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.item_inserted_into_machine", CraftingMonitorElementColor.COLOR_SUCCESS);
                         }
 
@@ -487,6 +661,7 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public List<ICraftingPreviewElement> getPreviewStacks() {
         Map<Integer, CraftingPreviewElementItemStack> map = new LinkedHashMap<>();
+        Map<Integer, CraftingPreviewElementFluidStack> mapFluids = new LinkedHashMap<>();
 
         for (ItemStack stack : toCraft.getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack);
@@ -500,6 +675,20 @@ public class CraftingTask implements ICraftingTask {
             previewStack.addToCraft(stack.getCount());
 
             map.put(hash, previewStack);
+        }
+
+        for (FluidStack stack : toCraftFluids.getStacks()) {
+            int hash = API.instance().getFluidStackHashCode(stack);
+
+            CraftingPreviewElementFluidStack previewStack = mapFluids.get(hash);
+
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewElementFluidStack(stack);
+            }
+
+            previewStack.addToCraft(stack.amount);
+
+            mapFluids.put(hash, previewStack);
         }
 
         for (ItemStack stack : missing.getStacks()) {
@@ -517,6 +706,21 @@ public class CraftingTask implements ICraftingTask {
             map.put(hash, previewStack);
         }
 
+        for (FluidStack stack : missingFluids.getStacks()) {
+            int hash = API.instance().getFluidStackHashCode(stack);
+
+            CraftingPreviewElementFluidStack previewStack = mapFluids.get(hash);
+
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewElementFluidStack(stack);
+            }
+
+            previewStack.setMissing(true);
+            previewStack.addToCraft(stack.amount);
+
+            mapFluids.put(hash, previewStack);
+        }
+
         for (ItemStack stack : toTake.getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack);
 
@@ -531,7 +735,26 @@ public class CraftingTask implements ICraftingTask {
             map.put(hash, previewStack);
         }
 
-        return new ArrayList<>(map.values());
+        for (FluidStack stack : toTakeFluids.getStacks()) {
+            int hash = API.instance().getFluidStackHashCode(stack);
+
+            CraftingPreviewElementFluidStack previewStack = mapFluids.get(hash);
+
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewElementFluidStack(stack);
+            }
+
+            previewStack.addAvailable(stack.amount);
+
+            mapFluids.put(hash, previewStack);
+        }
+
+        List<ICraftingPreviewElement> elements = new ArrayList<>();
+
+        elements.addAll(map.values());
+        elements.addAll(mapFluids.values());
+
+        return elements;
     }
 
     @Override
@@ -561,7 +784,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public NBTTagCompound writeToNbt(NBTTagCompound tag) {
-        tag.setTag(NBT_REQUESTED, requested.serializeNBT());
+        tag.setTag(NBT_REQUESTED, requested.writeToNbt());
         tag.setInteger(NBT_QUANTITY, quantity);
         tag.setTag(NBT_PATTERN, writePatternToNbt(pattern));
         tag.setTag(NBT_INSERTER, inserter.writeToNbt());

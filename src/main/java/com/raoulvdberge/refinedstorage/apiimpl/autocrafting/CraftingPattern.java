@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
@@ -15,6 +16,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ public class CraftingPattern implements ICraftingPattern {
     private List<NonNullList<ItemStack>> inputs = new ArrayList<>();
     private NonNullList<ItemStack> outputs = NonNullList.create();
     private NonNullList<ItemStack> byproducts = NonNullList.create();
+    private NonNullList<FluidStack> fluidInputs = NonNullList.create();
+    private NonNullList<FluidStack> fluidOutputs = NonNullList.create();
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         if (!OneSixMigrationHelper.isValidOneSixPattern(stack)) {
@@ -76,6 +80,20 @@ public class CraftingPattern implements ICraftingPattern {
                     this.valid = true; // As soon as we have one output, we are valid.
 
                     outputs.add(output);
+                }
+
+                FluidStack fluidInput = ItemPattern.getFluidInputSlot(stack, i);
+                if (fluidInput != null) {
+                    this.valid = true;
+
+                    fluidInputs.add(fluidInput);
+                }
+
+                FluidStack fluidOutput = ItemPattern.getFluidOutputSlot(stack, i);
+                if (fluidOutput != null) {
+                    this.valid = true;
+
+                    fluidOutputs.add(fluidOutput);
                 }
             }
         } else {
@@ -219,6 +237,16 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
+    public NonNullList<FluidStack> getFluidInputs() {
+        return fluidInputs;
+    }
+
+    @Override
+    public NonNullList<FluidStack> getFluidOutputs() {
+        return fluidOutputs;
+    }
+
+    @Override
     public String getId() {
         return CraftingTaskFactory.ID;
     }
@@ -229,7 +257,10 @@ public class CraftingPattern implements ICraftingPattern {
             return false;
         }
 
-        if ((other.getInputs().size() != inputs.size()) || (other.getOutputs().size() != outputs.size())) {
+        if ((other.getInputs().size() != inputs.size()) ||
+            (other.getFluidInputs().size() != fluidInputs.size()) ||
+            (other.getOutputs().size() != outputs.size()) ||
+            (other.getFluidOutputs().size() != fluidOutputs.size())) {
             return false;
         }
 
@@ -252,8 +283,20 @@ public class CraftingPattern implements ICraftingPattern {
             }
         }
 
+        for (int i = 0; i < fluidInputs.size(); ++i) {
+            if (!API.instance().getComparer().isEqual(fluidInputs.get(i), other.getFluidInputs().get(i), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
+                return false;
+            }
+        }
+
         for (int i = 0; i < outputs.size(); ++i) {
             if (!API.instance().getComparer().isEqual(outputs.get(i), other.getOutputs().get(i))) {
+                return false;
+            }
+        }
+
+        for (int i = 0; i < fluidOutputs.size(); ++i) {
+            if (!API.instance().getComparer().isEqual(fluidOutputs.get(i), other.getFluidOutputs().get(i), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
                 return false;
             }
         }
@@ -282,8 +325,16 @@ public class CraftingPattern implements ICraftingPattern {
             }
         }
 
+        for (FluidStack input : this.fluidInputs) {
+            result = 31 * result + API.instance().getFluidStackHashCode(input);
+        }
+
         for (ItemStack output : this.outputs) {
             result = 31 * result + API.instance().getItemStackHashCode(output);
+        }
+
+        for (FluidStack output : this.fluidOutputs) {
+            result = 31 * result + API.instance().getFluidStackHashCode(output);
         }
 
         for (ItemStack byproduct : this.byproducts) {

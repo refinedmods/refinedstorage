@@ -2,15 +2,22 @@ package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.*;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.gui.GuiFluidAmount;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import invtweaks.api.container.InventoryContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -77,21 +84,21 @@ public abstract class ContainerBase extends Container {
         }
 
         if (slot instanceof SlotFilter) {
-            if (((SlotFilter) slot).allowsSize()) {
+            if (((SlotFilter) slot).isSizeAllowed()) {
                 if (clickType == ClickType.QUICK_MOVE) {
                     slot.putStack(ItemStack.EMPTY);
                 } else if (!player.inventory.getItemStack().isEmpty()) {
-                    slot.putStack(player.inventory.getItemStack().copy());
+                    slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), ((SlotFilter) slot).getInitialAmount(player.inventory.getItemStack())));
                 } else if (slot.getHasStack()) {
-                    int amount = slot.getStack().getCount();
+                    if (slot instanceof SlotFilterType && ((SlotFilterType) slot).getType().getType() == IType.FLUIDS) {
+                        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+                            FMLClientHandler.instance().showGuiScreen(new GuiFluidAmount((GuiBase) Minecraft.getMinecraft().currentScreen, player, slot.getSlotIndex(), ((SlotFilterType) slot).getActualStack()));
+                        }
+                    } else {
+                        slot.getStack().setCount(((SlotFilter) slot).getAmountModified(dragType));
 
-                    if (dragType == 0) {
-                        amount = Math.max(1, amount - 1);
-                    } else if (dragType == 1) {
-                        amount = Math.min(slot.getStack().getMaxStackSize(), amount + 1);
+                        detectAndSendChanges();
                     }
-
-                    slot.getStack().setCount(amount);
                 }
             } else if (player.inventory.getItemStack().isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
@@ -149,7 +156,7 @@ public abstract class ContainerBase extends Container {
             if (slot instanceof SlotFilterFluid) {
                 stackInSlot = ((SlotFilterFluid) slot).getRealStack();
             } else if (slot instanceof SlotFilterType) {
-                stackInSlot = ((SlotFilterType) slot).getRealStack();
+                stackInSlot = ((SlotFilterType) slot).getActualStack();
             }
         }
 

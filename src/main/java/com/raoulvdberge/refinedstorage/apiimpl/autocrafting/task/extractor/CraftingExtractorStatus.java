@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor;
 
-public enum CraftingExtractorItemStatus {
+public enum CraftingExtractorStatus {
     AVAILABLE,
     MISSING,
     EXTRACTED,

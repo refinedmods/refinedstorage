@@ -49,7 +49,7 @@ public class ContainerGrid extends ContainerBase {
 
         int headerAndSlots = getTabDelta() + display.getTopHeight() + (display.getVisibleRows() * 18);
 
-        if (grid.getType() != GridType.FLUID) {
+        if (grid.getGridType() != GridType.FLUID) {
             int yStart = 6;
 
             if (grid instanceof IPortableGrid) {
@@ -61,7 +61,7 @@ public class ContainerGrid extends ContainerBase {
             }
         }
 
-        if (grid.getType() == GridType.PATTERN) {
+        if (grid.getGridType() == GridType.PATTERN) {
             addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 172, headerAndSlots + 4));
             addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 1, 172, headerAndSlots + 40));
         }
@@ -72,7 +72,7 @@ public class ContainerGrid extends ContainerBase {
 
         addPlayerInventory(8, display.getYPlayerInventory());
 
-        if (grid.getType() == GridType.CRAFTING) {
+        if (grid.getGridType() == GridType.CRAFTING) {
             int x = 26;
             int y = headerAndSlots + 4;
 
@@ -88,14 +88,14 @@ public class ContainerGrid extends ContainerBase {
             }
 
             addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
-        } else if (grid.getType() == GridType.PATTERN) {
+        } else if (grid.getGridType() == GridType.PATTERN) {
             if (((NetworkNodeGrid) grid).isProcessingPattern()) {
                 int ox = 8;
                 int x = ox;
                 int y = headerAndSlots + 4;
 
                 for (int i = 0; i < 9 * 2; ++i) {
-                    addSlotToContainer(new SlotFilter(((NetworkNodeGrid) grid).getProcessingMatrix(), i, x, y, SlotFilter.FILTER_ALLOW_SIZE));
+                    addSlotToContainer(new SlotFilterType((NetworkNodeGrid) grid, i, x, y, SlotFilter.FILTER_ALLOW_SIZE));
 
                     x += 18;
 
@@ -210,7 +210,7 @@ public class ContainerGrid extends ContainerBase {
             if (slot.getHasStack()) {
                 if (grid instanceof IPortableGrid && slot.slotNumber == 4) { // Prevent moving disk slot into portable grid itself
                     return ItemStack.EMPTY;
-                } else if (grid.getType() == GridType.PATTERN && slot.slotNumber == 5) { // From output slot to inventory
+                } else if (grid.getGridType() == GridType.PATTERN && slot.slotNumber == 5) { // From output slot to inventory
                     ItemStack stack = slot.getStack();
 
                     int startIndex = 5;
@@ -231,7 +231,7 @@ public class ContainerGrid extends ContainerBase {
                 } else if (slot != patternResultSlot && !(slot instanceof SlotFilterLegacy)) {
                     ItemStack stack = slot.getStack();
 
-                    if (grid.getType() != GridType.FLUID && stack.getItem() == RSItems.FILTER) {
+                    if (grid.getGridType() != GridType.FLUID && stack.getItem() == RSItems.FILTER) {
                         int startIndex = 0;
                         int endIndex = 4;
 
@@ -239,7 +239,7 @@ public class ContainerGrid extends ContainerBase {
                         if (slotIndex < 4) {
                             startIndex = 4;
 
-                            if (grid.getType() == GridType.PATTERN) {
+                            if (grid.getGridType() == GridType.PATTERN) {
                                 startIndex += 2; // Skip the pattern slots
                             }
 
@@ -258,7 +258,7 @@ public class ContainerGrid extends ContainerBase {
 
                             return ItemStack.EMPTY;
                         }
-                    } else if ((grid.getType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof IPortableGrid && stack.getItem() instanceof IStorageDiskFactory)) {
+                    } else if ((grid.getGridType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof IPortableGrid && stack.getItem() instanceof IStorageDiskFactory)) {
                         int startIndex = 4;
                         int endIndex = startIndex + 1;
 
@@ -287,7 +287,7 @@ public class ContainerGrid extends ContainerBase {
                         }
                     }
 
-                    if (grid.getType() == GridType.FLUID) {
+                    if (grid.getGridType() == GridType.FLUID) {
                         IFluidGridHandler fluidHandler = grid.getFluidHandler();
 
                         if (fluidHandler != null) {

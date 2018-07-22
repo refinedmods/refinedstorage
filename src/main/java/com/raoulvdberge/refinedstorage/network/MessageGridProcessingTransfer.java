@@ -65,7 +65,7 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
-            if (grid.getType() == GridType.PATTERN) {
+            if (grid.getGridType() == GridType.PATTERN) {
                 ItemHandlerBase handler = ((NetworkNodeGrid) grid).getProcessingMatrix();
 
                 clearInputsAndOutputs(handler);

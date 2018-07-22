@@ -106,16 +106,14 @@ public final class StackUtils {
         }
     }
 
-    public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag) {
+    public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag, Function<ItemStack, NBTTagCompound> serializer) {
         NBTTagList tagList = new NBTTagList();
 
         for (int i = 0; i < handler.getSlots(); i++) {
             if (!handler.getStackInSlot(i).isEmpty()) {
-                NBTTagCompound stackTag = new NBTTagCompound();
+                NBTTagCompound stackTag = serializer.apply(handler.getStackInSlot(i));
 
                 stackTag.setInteger(NBT_SLOT, i);
-
-                handler.getStackInSlot(i).writeToNBT(stackTag);
 
                 tagList.appendTag(stackTag);
             }
@@ -124,7 +122,11 @@ public final class StackUtils {
         tag.setTag(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void readItems(IItemHandlerModifiable handler, int id, NBTTagCompound tag) {
+    public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag) {
+        writeItems(handler, id, tag, stack -> stack.writeToNBT(new NBTTagCompound()));
+    }
+
+    public static void readItems(IItemHandlerModifiable handler, int id, NBTTagCompound tag, Function<NBTTagCompound, ItemStack> deserializer) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (tag.hasKey(name)) {
@@ -134,10 +136,14 @@ public final class StackUtils {
                 int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
 
                 if (slot >= 0 && slot < handler.getSlots()) {
-                    handler.setStackInSlot(slot, new ItemStack(tagList.getCompoundTagAt(i)));
+                    handler.setStackInSlot(slot, deserializer.apply(tagList.getCompoundTagAt(i)));
                 }
             }
         }
+    }
+
+    public static void readItems(IItemHandlerModifiable handler, int id, NBTTagCompound tag) {
+        readItems(handler, id, tag, ItemStack::new);
     }
 
     public static void writeItems(IInventory inventory, int id, NBTTagCompound tag) {

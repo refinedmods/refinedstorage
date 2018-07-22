@@ -55,7 +55,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     private int slotNumber;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, grid.getType() == GridType.FLUID ? 193 : 227, 0);
+        super(container, grid.getGridType() == GridType.FLUID ? 193 : 227, 0);
 
         IGridSorter defaultSorter;
 
@@ -67,9 +67,9 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         sorters.add(new GridSorterLastModified());
 
         this.grid = grid;
-        this.view = grid.getType() == GridType.FLUID ? new GridViewFluid(this, defaultSorter, sorters) : new GridViewItem(this, defaultSorter, sorters);
+        this.view = grid.getGridType() == GridType.FLUID ? new GridViewFluid(this, defaultSorter, sorters) : new GridViewItem(this, defaultSorter, sorters);
         this.wasConnected = this.grid.isActive();
-        this.tabs = new TabList(this, grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
+        this.tabs = new TabList(this, new ElementDrawers(), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
         this.tabs.addListener(new TabList.ITabListListener() {
             @Override
             public void onSelectionChanged(int tab) {
@@ -113,12 +113,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             searchField.y = sy;
         }
 
-        if (grid.getType() == GridType.PATTERN) {
-            processingPattern = addCheckBox(x + 7, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
-            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
-        }
-
-        if (grid.getType() != GridType.FLUID && grid.getViewType() != -1) {
+        if (grid.getGridType() != GridType.FLUID && grid.getViewType() != -1) {
             addSideButton(new SideButtonGridViewType(this, grid));
         }
 
@@ -126,6 +121,13 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         addSideButton(new SideButtonGridSortingType(this, grid));
         addSideButton(new SideButtonGridSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
+
+        if (grid.getGridType() == GridType.PATTERN) {
+            processingPattern = addCheckBox(x + 7, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:processing"), TileGrid.PROCESSING_PATTERN.getValue());
+            oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+
+            addSideButton(new SideButtonType(this, TileGrid.PROCESSING_TYPE));
+        }
 
         updateScrollbar();
     }
@@ -161,9 +163,9 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
     @Override
     public int getBottomHeight() {
-        if (grid.getType() == GridType.CRAFTING) {
+        if (grid.getGridType() == GridType.CRAFTING) {
             return 156;
-        } else if (grid.getType() == GridType.PATTERN) {
+        } else if (grid.getGridType() == GridType.PATTERN) {
             return 169;
         } else {
             return 99;
@@ -174,11 +176,11 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     public int getYPlayerInventory() {
         int yp = tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18);
 
-        if (grid.getType() == GridType.NORMAL || grid.getType() == GridType.FLUID) {
+        if (grid.getGridType() == GridType.NORMAL || grid.getGridType() == GridType.FLUID) {
             yp += 16;
-        } else if (grid.getType() == GridType.CRAFTING) {
+        } else if (grid.getGridType() == GridType.CRAFTING) {
             yp += 73;
-        } else if (grid.getType() == GridType.PATTERN) {
+        } else if (grid.getGridType() == GridType.PATTERN) {
             yp += 86;
         }
 
@@ -237,7 +239,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     private boolean isOverClear(int mouseX, int mouseY) {
         int y = tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 4;
 
-        switch (grid.getType()) {
+        switch (grid.getGridType()) {
             case CRAFTING:
                 return inBounds(82, y, 7, 7, mouseX, mouseY);
             case PATTERN:
@@ -252,16 +254,16 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getType() == GridType.PATTERN && inBounds(172, tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
+        return grid.getGridType() == GridType.PATTERN && inBounds(172, tabs.getHeight() + getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
     }
 
     @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         tabs.drawBackground(x, y);
 
-        if (grid.getType() == GridType.CRAFTING) {
+        if (grid.getGridType() == GridType.CRAFTING) {
             bindTexture("gui/crafting_grid.png");
-        } else if (grid.getType() == GridType.PATTERN) {
+        } else if (grid.getGridType() == GridType.PATTERN) {
             bindTexture("gui/pattern_grid" + (((NetworkNodeGrid) grid).isProcessingPattern() ? "_processing" : "") + ".png");
         } else if (grid instanceof IPortableGrid) {
             bindTexture("gui/portable_grid.png");
@@ -271,9 +273,9 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
         int yy = y + tabs.getHeight();
 
-        drawTexture(x, yy, 0, 0, screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getTopHeight());
+        drawTexture(x, yy, 0, 0, screenWidth - (grid.getGridType() != GridType.FLUID ? 34 : 0), getTopHeight());
 
-        if (grid.getType() != GridType.FLUID) {
+        if (grid.getGridType() != GridType.FLUID) {
             drawTexture(x + screenWidth - 34 + 4, y + tabs.getHeight(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
         }
 
@@ -282,14 +284,14 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), 18);
+            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getGridType() != GridType.FLUID ? 34 : 0), 18);
         }
 
         yy += 18;
 
-        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth - (grid.getType() != GridType.FLUID ? 34 : 0), getBottomHeight());
+        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth - (grid.getGridType() != GridType.FLUID ? 34 : 0), getBottomHeight());
 
-        if (grid.getType() == GridType.PATTERN) {
+        if (grid.getGridType() == GridType.PATTERN) {
             int ty = 0;
 
             if (isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop)) {
@@ -383,7 +385,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         List<String> textLines = Lists.newArrayList(gridStack.getTooltip().split("\n"));
         List<String> smallTextLines = Lists.newArrayList();
 
-        if (!(gridStack instanceof GridStackItem) || !((GridStackItem) gridStack).doesDisplayCraftText()) {
+        if (!gridStack.doesDisplayCraftText()) {
             smallTextLines.add(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity()));
         }
 
@@ -439,16 +441,21 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
-                RS.INSTANCE.network.sendToServer(grid.getType() == GridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
+                RS.INSTANCE.network.sendToServer(grid.getGridType() == GridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
             }
 
             if (isOverSlotWithStack()) {
-                if (grid.getType() != GridType.FLUID && (held.isEmpty() || (!held.isEmpty() && clickedButton == 2))) {
-                    GridStackItem stack = (GridStackItem) view.getStacks().get(slotNumber);
+                boolean isMiddleClickPulling = !held.isEmpty() && clickedButton == 2;
+                boolean isPulling = held.isEmpty() || isMiddleClickPulling;
 
-                    if (stack.isCraftable() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown())) && view.canCraft()) {
+                IGridStack stack = view.getStacks().get(slotNumber);
+
+                if (isPulling) {
+                    if (stack.isCraftable() && view.canCraft() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
                         FMLCommonHandler.instance().showGuiScreen(new GuiCraftingStart(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
-                    } else {
+                    } else if (grid.getGridType() == GridType.FLUID && held.isEmpty()) {
+                        RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(view.getStacks().get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
+                    } else if (grid.getGridType() == GridType.NORMAL || grid.getGridType() == GridType.PATTERN) {
                         int flags = 0;
 
                         if (clickedButton == 1) {
@@ -465,8 +472,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
                         RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
                     }
-                } else if (grid.getType() == GridType.FLUID && held.isEmpty()) {
-                    RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(view.getStacks().get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                 }
             }
         }

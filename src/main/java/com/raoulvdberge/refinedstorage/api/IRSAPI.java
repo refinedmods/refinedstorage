@@ -5,6 +5,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.wireless.IWirelessGridFactory;
 import com.raoulvdberge.refinedstorage.api.network.grid.wireless.IWirelessGridRegistry;
@@ -25,6 +27,7 @@ import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -170,6 +173,30 @@ public interface IRSAPI {
      */
     @Nonnull
     IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity);
+
+    /**
+     * Creates crafting request info for an item.
+     *
+     * @param stack the stack
+     * @return the request info
+     */
+    ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack);
+
+    /**
+     * Creates crafting request info for a fluid.
+     *
+     * @param stack the stack
+     * @return the request info
+     */
+    ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack);
+
+    /**
+     * Creates crafting request info from NBT.
+     *
+     * @param tag the nbt tag
+     * @return the request info
+     */
+    ICraftingRequestInfo createCraftingRequestInfo(NBTTagCompound tag) throws CraftingTaskReadException;
 
     /**
      * Returns a helper for the 1.6.x migration.

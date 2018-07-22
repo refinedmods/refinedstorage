@@ -15,10 +15,12 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
     public static final String ID = "fluid_render";
 
     private FluidStack stack;
+    private int quantity;
     private int offset;
 
-    public CraftingMonitorElementFluidRender(FluidStack stack, int offset) {
+    public CraftingMonitorElementFluidRender(FluidStack stack, int quantity, int offset) {
         this.stack = stack;
+        this.quantity = quantity;
         this.offset = offset;
     }
 
@@ -36,7 +38,7 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
         GlStateManager.pushMatrix();
         GlStateManager.scale(scale, scale, 1);
 
-        drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 21 + offset, scale), RenderUtils.getOffsetOnScale(y + 7, scale), API.instance().getQuantityFormatter().format(stack.amount) + " mB " + stack.getLocalizedName());
+        drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 21 + offset, scale), RenderUtils.getOffsetOnScale(y + 7, scale), API.instance().getQuantityFormatter().formatInBucketForm(quantity) + " " + stack.getLocalizedName());
 
         GlStateManager.popMatrix();
     }
@@ -49,13 +51,14 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
     @Override
     public void write(ByteBuf buf) {
         StackUtils.writeFluidStack(buf, stack);
+        buf.writeInt(quantity);
         buf.writeInt(offset);
     }
 
     @Override
     public boolean merge(ICraftingMonitorElement element) {
         if (element.getId().equals(getId()) && elementHashCode() == element.elementHashCode()) {
-            this.stack.amount += ((CraftingMonitorElementFluidRender) element).stack.amount;
+            this.quantity += ((CraftingMonitorElementFluidRender) element).quantity;
 
             return true;
         }

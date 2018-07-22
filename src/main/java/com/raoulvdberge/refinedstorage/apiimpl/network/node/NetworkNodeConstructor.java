@@ -48,6 +48,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nullable;
 
+// TODO: Crafting upgrade for fluids.
 public class NetworkNodeConstructor extends NetworkNode implements IComparable, IType, ICoverable {
     public static final String ID = "constructor";
 

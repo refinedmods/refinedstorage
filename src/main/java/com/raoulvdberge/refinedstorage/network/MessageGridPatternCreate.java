@@ -40,7 +40,7 @@ public class MessageGridPatternCreate extends MessageHandlerPlayerToServer<Messa
     public void handle(MessageGridPatternCreate message, EntityPlayerMP player) {
         TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
 
-        if (tile instanceof TileGrid && ((TileGrid) tile).getNode().getType() == GridType.PATTERN) {
+        if (tile instanceof TileGrid && ((TileGrid) tile).getNode().getGridType() == GridType.PATTERN) {
             ((TileGrid) tile).getNode().onCreatePattern();
         }
     }

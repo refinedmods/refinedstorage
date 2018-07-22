@@ -30,7 +30,7 @@ public final class IntegrationCraftingTweaks {
     public static class ValidContainerPredicate implements Predicate<ContainerGrid> {
         @Override
         public boolean apply(ContainerGrid containerGrid) {
-            return containerGrid.getGrid().getType() == GridType.CRAFTING;
+            return containerGrid.getGrid().getGridType() == GridType.CRAFTING;
         }
     }
 

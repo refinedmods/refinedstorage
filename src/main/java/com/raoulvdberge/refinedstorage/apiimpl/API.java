@@ -9,6 +9,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.wireless.IWirelessGridRegistry;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
@@ -27,6 +29,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
@@ -244,6 +247,21 @@ public class API implements IRSAPI {
     @Nonnull
     public IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity) {
         return new StorageDiskFluid(world, capacity);
+    }
+
+    @Override
+    public ICraftingRequestInfo createCraftingRequestInfo(ItemStack stack) {
+        return new CraftingRequestInfo(stack);
+    }
+
+    @Override
+    public ICraftingRequestInfo createCraftingRequestInfo(FluidStack stack) {
+        return new CraftingRequestInfo(stack);
+    }
+
+    @Override
+    public ICraftingRequestInfo createCraftingRequestInfo(NBTTagCompound tag) throws CraftingTaskReadException {
+        return new CraftingRequestInfo(tag);
     }
 
     @Override

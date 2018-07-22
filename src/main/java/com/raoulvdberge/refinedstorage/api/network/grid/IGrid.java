@@ -47,7 +47,7 @@ public interface IGrid {
     /**
      * @return the grid type
      */
-    GridType getType();
+    GridType getGridType();
 
     /**
      * @param player the player to create a listener for

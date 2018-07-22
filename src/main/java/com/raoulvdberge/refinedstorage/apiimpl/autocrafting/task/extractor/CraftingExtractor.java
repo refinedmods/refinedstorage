@@ -3,11 +3,12 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.Action;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -16,80 +17,75 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingExtractor {
-    private static final String NBT_ITEM = "Item";
-    private static final String NBT_STATUS = "Status";
-
     private INetwork network;
-    private List<ItemStack> items;
-    private List<CraftingExtractorItemStatus> status = new ArrayList<>();
+    private List<CraftingExtractorStack> stacks;
     private boolean processing;
 
-    public CraftingExtractor(INetwork network, List<ItemStack> items, boolean processing) {
+    public CraftingExtractor(INetwork network, List<CraftingExtractorStack> stacks, boolean processing) {
         this.network = network;
-        this.items = items;
+        this.stacks = stacks;
         this.processing = processing;
-
-        for (int i = 0; i < items.size(); ++i) {
-            status.add(CraftingExtractorItemStatus.MISSING);
-        }
     }
 
     public CraftingExtractor(INetwork network, NBTTagList tag, boolean processing) throws CraftingTaskReadException {
         this.network = network;
         this.processing = processing;
 
-        this.items = new ArrayList<>();
+        this.stacks = new ArrayList<>();
 
         for (int i = 0; i < tag.tagCount(); ++i) {
-            NBTTagCompound itemTag = tag.getCompoundTagAt(i);
-
-            ItemStack stack = StackUtils.deserializeStackFromNbt(itemTag.getCompoundTag(NBT_ITEM));
-
-            if (stack.isEmpty()) {
-                throw new CraftingTaskReadException("Extractor stack is empty");
-            }
-
-            CraftingExtractorItemStatus status = CraftingExtractorItemStatus.values()[itemTag.getInteger(NBT_STATUS)];
-
-            this.items.add(stack);
-            this.status.add(status);
+            this.stacks.add(new CraftingExtractorStack(tag.getCompoundTagAt(i)));
         }
     }
 
-    public List<ItemStack> getItems() {
-        return items;
+    public List<CraftingExtractorStack> getStacks() {
+        return stacks;
     }
 
-    public List<CraftingExtractorItemStatus> getStatus() {
-        return status;
-    }
-
-    public void updateStatus(@Nullable IItemHandler processingInventory) {
+    public void updateStatus(@Nullable IItemHandler processingInventory, @Nullable IFluidHandler processingFluidInventory) {
         boolean updated = false;
 
-        for (int i = 0; i < items.size(); ++i) {
-            if (status.get(i) != CraftingExtractorItemStatus.EXTRACTED) {
-                ItemStack stack = items.get(i);
+        for (CraftingExtractorStack stack : stacks) {
+            if (stack.getStatus() != CraftingExtractorStatus.EXTRACTED) {
+                CraftingExtractorStatus previousStatus = stack.getStatus();
 
-                ItemStack inNetwork = network.extractItem(stack, stack.getCount(), CraftingTask.getFlags(stack), Action.SIMULATE);
+                if (stack.getItem() != null) {
+                    ItemStack item = stack.getItem();
 
-                CraftingExtractorItemStatus previousStatus = status.get(i);
+                    ItemStack inNetwork = network.extractItem(item, item.getCount(), CraftingTask.getFlags(item), Action.SIMULATE);
 
-                if (inNetwork == null || inNetwork.getCount() < stack.getCount()) {
-                    status.set(i, CraftingExtractorItemStatus.MISSING);
+                    if (inNetwork == null || inNetwork.getCount() < item.getCount()) {
+                        stack.setStatus(CraftingExtractorStatus.MISSING);
+                    } else {
+                        stack.setStatus(CraftingExtractorStatus.AVAILABLE);
+
+                        if (processing) {
+                            if (processingInventory == null) {
+                                stack.setStatus(CraftingExtractorStatus.MACHINE_NONE);
+                            } else if (!ItemHandlerHelper.insertItem(processingInventory, item, true).isEmpty()) {
+                                stack.setStatus(CraftingExtractorStatus.MACHINE_DOES_NOT_ACCEPT);
+                            }
+                        }
+                    }
                 } else {
-                    status.set(i, CraftingExtractorItemStatus.AVAILABLE);
+                    FluidStack fluid = stack.getFluid();
 
-                    if (processing) {
-                        if (processingInventory == null) {
-                            status.set(i, CraftingExtractorItemStatus.MACHINE_NONE);
-                        } else if (!ItemHandlerHelper.insertItem(processingInventory, stack, true).isEmpty()) {
-                            status.set(i, CraftingExtractorItemStatus.MACHINE_DOES_NOT_ACCEPT);
+                    FluidStack inNetwork = network.extractFluid(fluid, fluid.amount, IComparer.COMPARE_NBT, Action.SIMULATE);
+
+                    if (inNetwork == null || inNetwork.amount < fluid.amount) {
+                        stack.setStatus(CraftingExtractorStatus.MISSING);
+                    } else {
+                        stack.setStatus(CraftingExtractorStatus.AVAILABLE);
+
+                        if (processingFluidInventory == null) {
+                            stack.setStatus(CraftingExtractorStatus.MACHINE_NONE);
+                        } else if (processingFluidInventory.fill(fluid, false) != fluid.amount) {
+                            stack.setStatus(CraftingExtractorStatus.MACHINE_DOES_NOT_ACCEPT);
                         }
                     }
                 }
 
-                if (previousStatus != status.get(i)) {
+                if (previousStatus != stack.getStatus()) {
                     updated = true;
                 }
             }
@@ -101,43 +97,67 @@ public class CraftingExtractor {
     }
 
     public boolean isAllAvailable() {
-        return !items.isEmpty() && status.stream().allMatch(s -> s == CraftingExtractorItemStatus.AVAILABLE || s == CraftingExtractorItemStatus.EXTRACTED);
+        return !stacks.isEmpty() && stacks.stream().allMatch(s -> s.getStatus() == CraftingExtractorStatus.AVAILABLE || s.getStatus() == CraftingExtractorStatus.EXTRACTED);
     }
 
     public boolean isAllExtracted() {
-        return !items.isEmpty() && status.stream().allMatch(s -> s == CraftingExtractorItemStatus.EXTRACTED);
+        return !stacks.isEmpty() && stacks.stream().allMatch(s -> s.getStatus() == CraftingExtractorStatus.EXTRACTED);
     }
 
-    public void extractOne(@Nullable IItemHandler processingInventory) {
+    public void extractOne(@Nullable IItemHandler processingInventory, @Nullable IFluidHandler processingFluidInventory) {
         boolean changed = false;
 
-        for (int i = 0; i < items.size(); ++i) {
-            if (status.get(i) == CraftingExtractorItemStatus.AVAILABLE) {
-                ItemStack extracted = network.extractItem(items.get(i), items.get(i).getCount(), CraftingTask.getFlags(items.get(i)), Action.PERFORM);
-                if (extracted == null) {
-                    throw new IllegalStateException("Did not extract anything while available");
-                }
+        for (CraftingExtractorStack stack : stacks) {
+            if (stack.getStatus() == CraftingExtractorStatus.AVAILABLE) {
+                if (stack.getItem() != null) {
+                    ItemStack item = stack.getItem();
 
-                if (processing) {
-                    if (processingInventory == null) {
-                        throw new IllegalStateException("Processing inventory is null");
+                    ItemStack extracted = network.extractItem(item, item.getCount(), CraftingTask.getFlags(item), Action.PERFORM);
+                    if (extracted == null) {
+                        throw new IllegalStateException("Did not extract anything while available");
                     }
 
-                    ItemStack remainder = ItemHandlerHelper.insertItem(processingInventory, extracted, false);
-                    if (!remainder.isEmpty()) {
-                        throw new IllegalStateException("The processing inventory gave back a remainder while it previously stated it could handle all");
+                    if (processing) {
+                        if (processingInventory == null) {
+                            throw new IllegalStateException("Processing inventory is null");
+                        }
+
+                        ItemStack remainder = ItemHandlerHelper.insertItem(processingInventory, extracted, false);
+                        if (!remainder.isEmpty()) {
+                            throw new IllegalStateException("The processing inventory gave back a remainder while it previously stated it could handle all");
+                        }
                     }
+
+                    stack.setStatus(CraftingExtractorStatus.EXTRACTED);
+
+                    changed = true;
+                } else {
+                    FluidStack fluid = stack.getFluid();
+
+                    FluidStack extracted = network.extractFluid(fluid, fluid.amount, IComparer.COMPARE_NBT, Action.PERFORM);
+                    if (extracted == null) {
+                        throw new IllegalStateException("Did not extract any fluids while available");
+                    }
+
+                    if (processingFluidInventory == null) {
+                        throw new IllegalStateException("Processing fluid inventory is null");
+                    }
+
+                    int filled = processingFluidInventory.fill(fluid, true);
+                    if (filled != fluid.amount) {
+                        throw new IllegalStateException("The processing fluid inventory gave back a remainder while it previously stated it could handle all");
+                    }
+
+                    stack.setStatus(CraftingExtractorStatus.EXTRACTED);
+
+                    changed = true;
                 }
-
-                status.set(i, CraftingExtractorItemStatus.EXTRACTED);
-
-                changed = true;
 
                 // For processing patterns we want to insert all items at once to avoid conflicts with other crafting steps.
                 if (!processing) {
                     return;
                 } else {
-                    updateStatus(processingInventory);
+                    updateStatus(processingInventory, processingFluidInventory);
                 }
             }
         }
@@ -150,13 +170,8 @@ public class CraftingExtractor {
     public NBTTagList writeToNbt() {
         NBTTagList list = new NBTTagList();
 
-        for (int i = 0; i < items.size(); ++i) {
-            NBTTagCompound tag = new NBTTagCompound();
-
-            tag.setTag(NBT_ITEM, StackUtils.serializeStackToNbt(items.get(i)));
-            tag.setInteger(NBT_STATUS, status.get(i).ordinal());
-
-            list.appendTag(tag);
+        for (CraftingExtractorStack stack : stacks) {
+            list.appendTag(stack.writeToNbt());
         }
 
         return list;

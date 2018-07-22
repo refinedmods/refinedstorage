@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -8,7 +10,6 @@ import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -37,7 +38,14 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
 
         for (int i = 0; i < size; ++i) {
             UUID id = UUID.fromString(ByteBufUtils.readUTF8String(buf));
-            ItemStack requested = ByteBufUtils.readItemStack(buf);
+
+            ICraftingRequestInfo requested = null;
+            try {
+                requested = API.instance().createCraftingRequestInfo(ByteBufUtils.readTag(buf));
+            } catch (CraftingTaskReadException e) {
+                e.printStackTrace();
+            }
+
             int qty = buf.readInt();
             long executionStarted = buf.readLong();
 
@@ -63,7 +71,7 @@ public class MessageCraftingMonitorElements implements IMessage, IMessageHandler
 
         for (ICraftingTask task : craftingMonitor.getTasks()) {
             ByteBufUtils.writeUTF8String(buf, task.getId().toString());
-            ByteBufUtils.writeItemStack(buf, task.getRequested());
+            ByteBufUtils.writeTag(buf, task.getRequested().writeToNbt());
             buf.writeInt(task.getQuantity());
             buf.writeLong(task.getExecutionStarted());
 

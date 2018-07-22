@@ -25,6 +25,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -41,6 +42,8 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     private static final String NBT_VERSION = "Version";
     public static final String NBT_INPUT_SLOT = "Input_%d";
     public static final String NBT_OUTPUT_SLOT = "Output_%d";
+    private static final String NBT_FLUID_INPUT_SLOT = "FluidInput_%d";
+    private static final String NBT_FLUID_OUTPUT_SLOT = "FluidOutput_%d";
     private static final String NBT_OREDICT = "Oredict";
     public static final String NBT_PROCESSING = "Processing";
 
@@ -81,11 +84,13 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
                 RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> i.size() > 0 ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
+                RenderUtils.addCombinedFluidsToTooltip(tooltip, pattern.getFluidInputs());
 
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
 
             RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
+            RenderUtils.addCombinedFluidsToTooltip(tooltip, pattern.getFluidOutputs());
 
             if (isOredict(stack)) {
                 tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.oredict") + TextFormatting.RESET);
@@ -145,6 +150,44 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         }
 
         return stack;
+    }
+
+    public static void setFluidInputSlot(ItemStack pattern, int slot, FluidStack stack) {
+        if (!pattern.hasTagCompound()) {
+            pattern.setTagCompound(new NBTTagCompound());
+        }
+
+        pattern.getTagCompound().setTag(String.format(NBT_FLUID_INPUT_SLOT, slot), stack.writeToNBT(new NBTTagCompound()));
+    }
+
+    @Nullable
+    public static FluidStack getFluidInputSlot(ItemStack pattern, int slot) {
+        String id = String.format(NBT_FLUID_INPUT_SLOT, slot);
+
+        if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(id)) {
+            return null;
+        }
+
+        return FluidStack.loadFluidStackFromNBT(pattern.getTagCompound().getCompoundTag(id));
+    }
+
+    public static void setFluidOutputSlot(ItemStack pattern, int slot, FluidStack stack) {
+        if (!pattern.hasTagCompound()) {
+            pattern.setTagCompound(new NBTTagCompound());
+        }
+
+        pattern.getTagCompound().setTag(String.format(NBT_FLUID_OUTPUT_SLOT, slot), stack.writeToNBT(new NBTTagCompound()));
+    }
+
+    @Nullable
+    public static FluidStack getFluidOutputSlot(ItemStack pattern, int slot) {
+        String id = String.format(NBT_FLUID_OUTPUT_SLOT, slot);
+
+        if (!pattern.hasTagCompound() || !pattern.getTagCompound().hasKey(id)) {
+            return null;
+        }
+
+        return FluidStack.loadFluidStackFromNBT(pattern.getTagCompound().getCompoundTag(id));
     }
 
     public static boolean isProcessing(ItemStack pattern) {

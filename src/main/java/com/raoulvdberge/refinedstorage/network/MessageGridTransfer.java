@@ -74,7 +74,7 @@ public class MessageGridTransfer extends MessageHandlerPlayerToServer<MessageGri
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
-            if (grid.getType() == GridType.CRAFTING || grid.getType() == GridType.PATTERN) {
+            if (grid.getGridType() == GridType.CRAFTING || grid.getGridType() == GridType.PATTERN) {
                 grid.onRecipeTransfer(player, message.recipe);
             }
         }

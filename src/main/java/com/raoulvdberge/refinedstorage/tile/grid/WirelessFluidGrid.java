@@ -61,7 +61,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
     }
 
     @Override
-    public GridType getType() {
+    public GridType getGridType() {
         return GridType.FLUID;
     }
 

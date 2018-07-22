@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -44,7 +45,7 @@ public interface ICraftingTask {
     /**
      * @return the stack requested
      */
-    ItemStack getRequested();
+    ICraftingRequestInfo getRequested();
 
     /**
      * Called when a stack is inserted into the system through {@link com.raoulvdberge.refinedstorage.api.network.INetwork#insertItemTracked(ItemStack, int)}.
@@ -52,7 +53,15 @@ public interface ICraftingTask {
      * @param stack the stack
      * @return the size remaining, decremented by the crafting task when it was relevant to it
      */
-    int onTrackedItemInserted(ItemStack stack, int size);
+    int onTrackedInsert(ItemStack stack, int size);
+
+    /**
+     * Called when a stack is inserted into the system through {@link com.raoulvdberge.refinedstorage.api.network.INetwork#insertFluidTracked(FluidStack, int)}.
+     *
+     * @param stack the stack
+     * @return the size remaining, decremented by the crafting task when it was relevant to it
+     */
+    int onTrackedInsert(FluidStack stack, int size);
 
     /**
      * Writes this task to NBT.

@@ -24,10 +24,14 @@ public class ItemHandlerFluid extends ItemHandlerBase {
         ItemStack stack = getStackInSlot(slot);
 
         if (stack.isEmpty()) {
-            fluids[slot] = null;
+            setFluidStack(slot, null);
         } else {
-            fluids[slot] = StackUtils.getFluid(ItemHandlerHelper.copyStackWithSize(stack, 1), true).getValue();
+            setFluidStack(slot, StackUtils.getFluid(ItemHandlerHelper.copyStackWithSize(stack, 1), true).getValue());
         }
+    }
+
+    public void setFluidStack(int slot, @Nullable FluidStack stack) {
+        fluids[slot] = stack;
     }
 
     @Nullable

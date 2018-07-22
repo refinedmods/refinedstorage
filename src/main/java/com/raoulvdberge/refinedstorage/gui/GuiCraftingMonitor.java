@@ -4,11 +4,13 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonGridSize;
@@ -23,6 +25,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -46,12 +49,12 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
 
     public static class CraftingMonitorTask implements IGridTab {
         private UUID id;
-        private ItemStack requested;
+        private ICraftingRequestInfo requested;
         private int qty;
         private long executionStarted;
         private List<ICraftingMonitorElement> elements;
 
-        public CraftingMonitorTask(UUID id, ItemStack requested, int qty, long executionStarted, List<ICraftingMonitorElement> elements) {
+        public CraftingMonitorTask(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, List<ICraftingMonitorElement> elements) {
             this.id = id;
             this.requested = requested;
             this.qty = qty;
@@ -66,22 +69,26 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
 
         @Override
         public void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
-            List<String> textLines = Lists.newArrayList(requested.getDisplayName());
+            List<String> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getDisplayName() : requested.getFluid().getLocalizedName());
             List<String> smallTextLines = Lists.newArrayList();
 
             int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;
             int minutes = (totalSecs % 3600) / 60;
             int seconds = totalSecs % 60;
 
-            smallTextLines.add(I18n.format("gui.refinedstorage:crafting_monitor.tooltip.requested", qty));
+            smallTextLines.add(I18n.format("gui.refinedstorage:crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
             smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
 
             RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
         }
 
         @Override
-        public ItemStack getIcon() {
-            return requested;
+        public void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
+            if (requested.getItem() != null) {
+                itemDrawer.draw(x, y, requested.getItem());
+            } else {
+                fluidDrawer.draw(x, y, requested.getFluid());
+            }
         }
     }
 
@@ -105,7 +112,7 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
 
         this.craftingMonitor = craftingMonitor;
 
-        this.tabs = new TabList(this, () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
+        this.tabs = new TabList(this, new ElementDrawers(), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
             IGridTab tab = getCurrentTab();
 
             if (tab == null) {

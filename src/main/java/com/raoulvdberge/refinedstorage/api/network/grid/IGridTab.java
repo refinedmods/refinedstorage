@@ -1,8 +1,10 @@
 package com.raoulvdberge.refinedstorage.api.network.grid;
 
+import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -30,7 +32,10 @@ public interface IGridTab {
     void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer);
 
     /**
-     * @return the icon
+     * Draws the icon.
+     *
+     * @param x the x position
+     * @param y the y position
      */
-    ItemStack getIcon();
+    void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer);
 }

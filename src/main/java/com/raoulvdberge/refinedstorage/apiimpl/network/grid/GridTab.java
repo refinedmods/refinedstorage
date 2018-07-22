@@ -1,9 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 import java.util.Collections;
@@ -33,7 +36,9 @@ public class GridTab implements IGridTab {
     }
 
     @Override
-    public ItemStack getIcon() {
-        return icon;
+    public void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
+        RenderHelper.enableGUIStandardItemLighting();
+
+        itemDrawer.draw(x, y, icon);
     }
 }

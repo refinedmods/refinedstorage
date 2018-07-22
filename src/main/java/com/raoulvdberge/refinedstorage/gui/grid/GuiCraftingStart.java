@@ -4,7 +4,8 @@ import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingSettings;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreview;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -16,25 +17,27 @@ import org.lwjgl.input.Keyboard;
 
 import java.io.IOException;
 
+// TODO: Change quantities for fluid craft.
+// TODO: Cleanup childclasses.
 public class GuiCraftingStart extends GuiBase {
     private static final int DEFAULT_AMOUNT = 1;
 
     protected GuiTextField amountField;
     private GuiBase parent;
-    private GridStackItem stack;
+    private IGridStack stack;
     private GuiButton startButton;
     private GuiButton cancelButton;
     private GuiButton[] incrementButtons = new GuiButton[6];
 
-    public GuiCraftingStart(GuiBase parent, GridStackItem stack, Container container, int w, int h) {
+    public GuiCraftingStart(GuiBase parent, IGridStack stack, Container container, int w, int h) {
         super(container, w, h);
 
         this.parent = parent;
         this.stack = stack;
     }
 
-    public GuiCraftingStart(GuiGrid parent, EntityPlayer player, GridStackItem stack) {
-        this(parent, stack, new ContainerCraftingSettings(player, stack.getStack()), 172, 99);
+    public GuiCraftingStart(GuiGrid parent, EntityPlayer player, IGridStack stack) {
+        this(parent, stack, new ContainerCraftingSettings(player, stack), 172, 99);
     }
 
     protected String getStartButtonText() {
@@ -50,14 +53,21 @@ public class GuiCraftingStart extends GuiBase {
     }
 
     protected int[] getIncrements() {
-        return new int[]{
-            1, 10, 64,
-            -1, -10, -64
-        };
+        if (stack instanceof GridStackFluid) {
+            return new int[]{
+                1, 500, 1000,
+                -1, -500, -1000
+            };
+        } else {
+            return new int[]{
+                1, 10, 64,
+                -1, -10, -64
+            };
+        }
     }
 
     protected int getAmount() {
-        return DEFAULT_AMOUNT;
+        return stack instanceof GridStackFluid ? 1000 : DEFAULT_AMOUNT;
     }
 
     protected Tuple<Integer, Integer> getAmountPos() {
@@ -164,6 +174,10 @@ public class GuiCraftingStart extends GuiBase {
                         newAmount = oldAmount + newAmount;
                     }
 
+                    if (newAmount > getMaxAmount()) {
+                        newAmount = getMaxAmount();
+                    }
+
                     amountField.setText(String.valueOf(newAmount));
 
                     break;
@@ -172,11 +186,15 @@ public class GuiCraftingStart extends GuiBase {
         }
     }
 
+    protected int getMaxAmount() {
+        return Integer.MAX_VALUE;
+    }
+
     protected void startRequest(boolean noPreview) {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0) {
-            RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity, noPreview));
+            RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity, noPreview, stack instanceof GridStackFluid));
 
             startButton.enabled = false;
         }

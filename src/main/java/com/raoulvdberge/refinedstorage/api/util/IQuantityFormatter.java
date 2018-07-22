@@ -24,4 +24,20 @@ public interface IQuantityFormatter {
      * @return the formatted quantity
      */
     String format(int qty);
+
+    /**
+     * Divides quantity by 1000 and appends "B".
+     *
+     * @param qty the quantity
+     * @return the formatted quantity
+     */
+    String formatInBucketForm(int qty);
+
+    /**
+     * Used in Fluid Grid.
+     *
+     * @param qty the quantity
+     * @return the formatted quantity
+     */
+    String formatInBucketFormWithOnlyTrailingDigitsIfZero(int qty);
 }

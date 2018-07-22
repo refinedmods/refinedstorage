@@ -28,4 +28,10 @@ public interface IGridStack {
     IStorageTracker.IStorageTrackerEntry getTrackerEntry();
 
     void setTrackerEntry(@Nullable IStorageTracker.IStorageTrackerEntry entry);
+
+    boolean isCraftable();
+
+    boolean doesDisplayCraftText();
+
+    void setDisplayCraftText(boolean displayCraftText);
 }

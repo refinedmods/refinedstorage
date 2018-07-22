@@ -167,6 +167,16 @@ public interface INetwork {
     @Nullable
     FluidStack insertFluid(@Nonnull FluidStack stack, int size, Action action);
 
+    default FluidStack insertFluidTracked(@Nonnull FluidStack stack, int size) {
+        FluidStack remainder = insertFluid(stack, size, Action.PERFORM);
+
+        int inserted = remainder == null ? size : (size - remainder.amount);
+
+        getCraftingManager().track(stack, inserted);
+
+        return remainder;
+    }
+
     /**
      * Extracts a fluid from this network.
      *

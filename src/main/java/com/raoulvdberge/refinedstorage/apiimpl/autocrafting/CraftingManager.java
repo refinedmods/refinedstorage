@@ -10,12 +10,14 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadExc
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -91,7 +93,23 @@ public class CraftingManager implements ICraftingManager {
             return null;
         }
 
-        return factory.create(network, stack, quantity, pattern);
+        return factory.create(network, API.instance().createCraftingRequestInfo(stack), quantity, pattern);
+    }
+
+    @Nullable
+    @Override
+    public ICraftingTask create(FluidStack stack, int quantity) {
+        ICraftingPattern pattern = getPattern(stack);
+        if (pattern == null) {
+            return null;
+        }
+
+        ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getId());
+        if (factory == null) {
+            return null;
+        }
+
+        return factory.create(network, API.instance().createCraftingRequestInfo(stack), quantity, pattern);
     }
 
     @Override
@@ -200,12 +218,15 @@ public class CraftingManager implements ICraftingManager {
         listeners.forEach(ICraftingMonitorListener::onChanged);
     }
 
+    //TODO: Make fluid version
     @Override
     @Nullable
     public ICraftingTask request(ItemStack stack, int amount) {
         for (ICraftingTask task : getTasks()) {
-            if (API.instance().getComparer().isEqualNoQuantity(task.getRequested(), stack)) {
-                amount -= task.getQuantity();
+            if (task.getRequested().getItem() != null) {
+                if (API.instance().getComparer().isEqualNoQuantity(task.getRequested().getItem(), stack)) {
+                    amount -= task.getQuantity();
+                }
             }
         }
 
@@ -231,7 +252,24 @@ public class CraftingManager implements ICraftingManager {
         int initialSize = size;
 
         for (ICraftingTask task : tasks.values()) {
-            size = task.onTrackedItemInserted(stack, size);
+            size = task.onTrackedInsert(stack, size);
+
+            if (size == 0) {
+                break;
+            }
+        }
+
+        if (size != initialSize) {
+            this.onTaskChanged();
+        }
+    }
+
+    @Override
+    public void track(FluidStack stack, int size) {
+        int initialSize = size;
+
+        for (ICraftingTask task : tasks.values()) {
+            size = task.onTrackedInsert(stack, size);
 
             if (size == 0) {
                 break;
@@ -279,6 +317,20 @@ public class CraftingManager implements ICraftingManager {
         for (ICraftingPattern patternInList : patterns) {
             for (ItemStack output : patternInList.getOutputs()) {
                 if (API.instance().getComparer().isEqualNoQuantity(output, pattern)) {
+                    return patternInList;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public ICraftingPattern getPattern(FluidStack pattern) {
+        for (ICraftingPattern patternInList : patterns) {
+            for (FluidStack output : patternInList.getFluidOutputs()) {
+                if (API.instance().getComparer().isEqual(output, pattern, IComparer.COMPARE_NBT)) {
                     return patternInList;
                 }
             }

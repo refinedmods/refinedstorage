@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractor;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.extractor.CraftingExtractorStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.inserter.CraftingInserter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -13,6 +14,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CraftingStepCraft extends CraftingStep {
     public static final String TYPE = "craft";
@@ -33,7 +35,7 @@ public class CraftingStepCraft extends CraftingStep {
         }
 
         this.inserter = inserter;
-        this.extractor = new CraftingExtractor(network, toExtract, false);
+        this.extractor = new CraftingExtractor(network, toExtract.stream().map(CraftingExtractorStack::new).collect(Collectors.toList()), false);
         this.took = took;
     }
 
@@ -57,14 +59,14 @@ public class CraftingStepCraft extends CraftingStep {
 
     @Override
     public boolean canExecute() {
-        extractor.updateStatus(null);
+        extractor.updateStatus(null, null);
 
         return extractor.isAllAvailable();
     }
 
     @Override
     public boolean execute() {
-        extractor.extractOne(null);
+        extractor.extractOne(null, null);
 
         boolean allExtracted = extractor.isAllExtracted();
 

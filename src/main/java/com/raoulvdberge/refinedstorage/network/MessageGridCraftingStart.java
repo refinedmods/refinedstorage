@@ -10,25 +10,29 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<MessageGridCraftingStart> implements IMessage {
     private int hash;
     private int quantity;
+    private boolean fluids;
 
     public MessageGridCraftingStart() {
     }
 
-    public MessageGridCraftingStart(int hash, int quantity) {
+    public MessageGridCraftingStart(int hash, int quantity, boolean fluids) {
         this.hash = hash;
         this.quantity = quantity;
+        this.fluids = fluids;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         hash = buf.readInt();
         quantity = buf.readInt();
+        fluids = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(hash);
         buf.writeInt(quantity);
+        buf.writeBoolean(fluids);
     }
 
     @Override
@@ -38,8 +42,14 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
         if (container instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) container).getGrid();
 
-            if (grid.getItemHandler() != null) {
-                grid.getItemHandler().onCraftingRequested(player, message.hash, message.quantity);
+            if (message.fluids) {
+                if (grid.getFluidHandler() != null) {
+                    grid.getFluidHandler().onCraftingRequested(player, message.hash, message.quantity);
+                }
+            } else {
+                if (grid.getItemHandler() != null) {
+                    grid.getItemHandler().onCraftingRequested(player, message.hash, message.quantity);
+                }
             }
         }
     }

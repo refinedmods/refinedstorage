@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -61,6 +62,16 @@ public interface ICraftingManager {
     ICraftingTask create(ItemStack stack, int quantity);
 
     /**
+     * Creates a crafting task for a given stack, but doesn't add it to the list.
+     *
+     * @param stack    the stack to craft
+     * @param quantity the quantity to craft
+     * @return the crafting task, or null if no pattern was found for the given stack
+     */
+    @Nullable
+    ICraftingTask create(FluidStack stack, int quantity);
+
+    /**
      * @return a new pattern chain list
      */
     ICraftingPatternChainList createPatternChainList();
@@ -83,6 +94,13 @@ public interface ICraftingManager {
     void track(ItemStack stack, int size);
 
     /**
+     * Tracks an incoming stack.
+     *
+     * @param stack the stack
+     */
+    void track(FluidStack stack, int size);
+
+    /**
      * @return a list of crafting patterns in this network, do NOT modify this list
      */
     List<ICraftingPattern> getPatterns();
@@ -100,6 +118,15 @@ public interface ICraftingManager {
      */
     @Nullable
     ICraftingPattern getPattern(ItemStack pattern);
+
+    /**
+     * Return a crafting pattern from a fluid stack.
+     *
+     * @param pattern the stack to get a pattern for
+     * @return the crafting pattern, or null if none is found
+     */
+    @Nullable
+    ICraftingPattern getPattern(FluidStack pattern);
 
     /**
      * Updates the tasks in this manager.

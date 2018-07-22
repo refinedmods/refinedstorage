@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -24,6 +25,9 @@ public interface ICraftingPatternContainer {
      */
     @Nullable
     IItemHandler getConnectedInventory();
+
+    @Nullable
+    IFluidHandler getConnectedFluidInventory();
 
     /**
      * @return the tile that this container is connected to, or null if no tile is present

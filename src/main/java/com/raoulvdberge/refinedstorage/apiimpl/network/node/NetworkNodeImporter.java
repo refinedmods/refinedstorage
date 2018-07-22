@@ -115,7 +115,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
                     FluidStack toDrain = handler.drain(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), false);
 
                     if (toDrain != null) {
-                        FluidStack remainder = network.insertFluid(toDrain, toDrain.amount, Action.PERFORM);
+                        FluidStack remainder = network.insertFluidTracked(toDrain, toDrain.amount);
                         if (remainder != null) {
                             toDrain.amount -= remainder.amount;
                         }

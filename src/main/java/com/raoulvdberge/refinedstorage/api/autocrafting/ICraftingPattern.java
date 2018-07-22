@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
@@ -60,6 +61,10 @@ public interface ICraftingPattern {
      * @return the byproducts based on the items took
      */
     NonNullList<ItemStack> getByproducts(NonNullList<ItemStack> took);
+
+    NonNullList<FluidStack> getFluidInputs();
+
+    NonNullList<FluidStack> getFluidOutputs();
 
     /**
      * @return the id of the factory that creates a crafting task for this pattern, as defined in the {@link com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry}

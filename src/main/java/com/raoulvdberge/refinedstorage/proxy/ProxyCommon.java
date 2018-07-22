@@ -95,7 +95,7 @@ public class ProxyCommon {
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
 
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementItemRender.ID, buf -> new CraftingMonitorElementItemRender(StackUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
-        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementFluidRender.ID, buf -> new CraftingMonitorElementFluidRender(StackUtils.readFluidStack(buf).getRight(), buf.readInt()));
+        API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementFluidRender.ID, buf -> new CraftingMonitorElementFluidRender(StackUtils.readFluidStack(buf).getRight(), buf.readInt(), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementText.ID, buf -> new CraftingMonitorElementText(ByteBufUtils.readUTF8String(buf), buf.readInt()));
         API.instance().getCraftingMonitorElementRegistry().add(CraftingMonitorElementColor.ID, buf -> {
             int color = buf.readInt();
@@ -183,6 +183,7 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeRequest.class, MessageStorageDiskSizeRequest.class, id++, Side.SERVER);
         RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeResponse.class, MessageStorageDiskSizeResponse.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageConfigSync.class, MessageConfigSync.class, id++, Side.CLIENT);
+        RS.INSTANCE.network.registerMessage(MessageGridFluidAmount.class, MessageGridFluidAmount.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 

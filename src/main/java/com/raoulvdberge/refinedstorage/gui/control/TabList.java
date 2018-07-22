@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.RenderHelper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +17,7 @@ public class TabList {
     }
 
     private GuiBase gui;
+    private GuiBase.ElementDrawers drawers;
 
     private Supplier<List<IGridTab>> tabs;
     private int tabHovering;
@@ -34,8 +34,9 @@ public class TabList {
 
     private int width;
 
-    public TabList(GuiBase gui, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
+    public TabList(GuiBase gui, GuiBase.ElementDrawers drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
         this.gui = gui;
+        this.drawers = drawers;
         this.tabs = tabs;
         this.pages = pages;
         this.page = page;
@@ -138,9 +139,7 @@ public class TabList {
 
         gui.drawTexture(tx, ty, uvx, uvy, tbw, IGridTab.TAB_HEIGHT);
 
-        RenderHelper.enableGUIStandardItemLighting();
-
-        gui.drawItem(otx + 6, ty + 9 - (!isSelected ? 3 : 0), tab.getIcon());
+        tab.drawIcon(otx + 6, ty + 9 - (!isSelected ? 3 : 0), drawers.getItemDrawer(), drawers.getFluidDrawer());
     }
 
     public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY) {

@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.container.slot;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -26,13 +27,8 @@ public class SlotFilterType extends SlotFilter {
     }
 
     @Override
-    public boolean allowsSize() {
-        return super.allowsSize() && type.getType() != IType.FLUIDS;
-    }
-
-    @Override
-    public boolean allowsBlocks() {
-        return super.allowsBlocks() && type.getType() == IType.ITEMS;
+    public boolean isBlockAllowed() {
+        return super.isBlockAllowed() && type.getType() == IType.ITEMS;
     }
 
     @Override
@@ -41,7 +37,20 @@ public class SlotFilterType extends SlotFilter {
         return (type.getType() == IType.ITEMS || !((NetworkNode) type).getWorld().isRemote) ? super.getStack() : ItemStack.EMPTY;
     }
 
-    public ItemStack getRealStack() {
+    public ItemStack getActualStack() {
         return super.getStack();
+    }
+
+    public IType getType() {
+        return type;
+    }
+
+    @Override
+    public int getInitialAmount(ItemStack stack) {
+        if (type.getType() == IType.FLUIDS && isSizeAllowed()) {
+            return Fluid.BUCKET_VOLUME;
+        }
+
+        return super.getInitialAmount(stack);
     }
 }
