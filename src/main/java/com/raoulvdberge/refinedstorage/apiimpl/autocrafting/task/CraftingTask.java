@@ -132,7 +132,7 @@ public class CraftingTask implements ICraftingTask {
         this.calculationStarted = System.currentTimeMillis();
 
         int qty = this.quantity;
-        int qtyPerCraft = getQuantityPerCraft(pattern, requested);
+        int qtyPerCraft = getQuantityPerCraft();
         int crafted = 0;
 
         IStackList<ItemStack> results = API.instance().createItemStackList();
@@ -424,7 +424,8 @@ public class CraftingTask implements ICraftingTask {
         }
     }
 
-    private int getQuantityPerCraft(ICraftingPattern pattern, ICraftingRequestInfo requested) {
+    @Override
+    public int getQuantityPerCraft() {
         int qty = 0;
 
         if (requested.getItem() != null) {
@@ -522,13 +523,12 @@ public class CraftingTask implements ICraftingTask {
         return size;
     }
 
-    // TODO: Fix lang keys.
     @Override
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
         if (!missing.isEmpty() || !missingFluids.isEmpty()) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_missing", 5));
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.missing", 5));
         }
 
         if (!missing.isEmpty()) {
@@ -588,9 +588,8 @@ public class CraftingTask implements ICraftingTask {
             elements.commit();
         }
 
-        // TODO: Make better?
         if (steps.stream().anyMatch(s -> s instanceof CraftingStepProcess && !s.isCompleted())) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_processing", 5));
+            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.processing", 5));
 
             for (CraftingStep step : steps) {
                 if (step instanceof CraftingStepProcess && !step.isCompleted()) {
@@ -603,19 +602,7 @@ public class CraftingTask implements ICraftingTask {
                             continue;
                         }
 
-                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(stack.getItem(), stack.getItem().getCount(), 0);
-
-                        if (stack.getStatus() == CraftingExtractorStatus.MISSING) {
-                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
-                        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_DOES_NOT_ACCEPT) {
-                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept", CraftingMonitorElementColor.COLOR_ERROR);
-                        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_NONE) {
-                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_none", CraftingMonitorElementColor.COLOR_ERROR);
-                        } else if (stack.getStatus() == CraftingExtractorStatus.EXTRACTED) {
-                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.item_inserted_into_machine", CraftingMonitorElementColor.COLOR_SUCCESS);
-                        }
-
-                        elements.add(element);
+                        elements.add(wrapAccordingToStatus(new CraftingMonitorElementItemRender(stack.getItem(), stack.getItem().getCount(), 0), stack));
                     }
                 }
             }
@@ -629,25 +616,11 @@ public class CraftingTask implements ICraftingTask {
                     for (int i = 0; i < extractor.getStacks().size(); ++i) {
                         CraftingExtractorStack stack = extractor.getStacks().get(i);
 
-                        ICraftingMonitorElement element;
-
                         if (stack.getItem() != null) {
                             continue;
                         }
 
-                        element = new CraftingMonitorElementFluidRender(stack.getFluid(), stack.getFluid().amount, 0);
-
-                        if (stack.getStatus() == CraftingExtractorStatus.MISSING) {
-                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
-                        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_DOES_NOT_ACCEPT) {
-                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept", CraftingMonitorElementColor.COLOR_ERROR);
-                        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_NONE) {
-                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_none", CraftingMonitorElementColor.COLOR_ERROR);
-                        } else if (stack.getStatus() == CraftingExtractorStatus.EXTRACTED) {
-                            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.item_inserted_into_machine", CraftingMonitorElementColor.COLOR_SUCCESS);
-                        }
-
-                        elements.add(element);
+                        elements.add(wrapAccordingToStatus(new CraftingMonitorElementFluidRender(stack.getFluid(), stack.getFluid().amount, 0), stack));
                     }
                 }
             }
@@ -656,6 +629,20 @@ public class CraftingTask implements ICraftingTask {
         }
 
         return elements.getElements();
+    }
+
+    private ICraftingMonitorElement wrapAccordingToStatus(ICraftingMonitorElement element, CraftingExtractorStack stack) {
+        if (stack.getStatus() == CraftingExtractorStatus.MISSING) {
+            element = new CraftingMonitorElementColor(element, stack.getFluid() != null ? "gui.refinedstorage:crafting_monitor.waiting_for_fluids" : "gui.refinedstorage:crafting_monitor.waiting_for_items", CraftingMonitorElementColor.COLOR_INFO);
+        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_DOES_NOT_ACCEPT) {
+            element = new CraftingMonitorElementColor(element, stack.getFluid() != null ? "gui.refinedstorage:crafting_monitor.machine_does_not_accept_fluid" : "gui.refinedstorage:crafting_monitor.machine_does_not_accept_item", CraftingMonitorElementColor.COLOR_ERROR);
+        } else if (stack.getStatus() == CraftingExtractorStatus.MACHINE_NONE) {
+            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_none", CraftingMonitorElementColor.COLOR_ERROR);
+        } else if (stack.getStatus() == CraftingExtractorStatus.EXTRACTED) {
+            element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.inserted_into_machine", CraftingMonitorElementColor.COLOR_SUCCESS);
+        }
+
+        return element;
     }
 
     @Override

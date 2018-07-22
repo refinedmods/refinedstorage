@@ -225,7 +225,7 @@ public class CraftingManager implements ICraftingManager {
         for (ICraftingTask task : getTasks()) {
             if (task.getRequested().getItem() != null) {
                 if (API.instance().getComparer().isEqualNoQuantity(task.getRequested().getItem(), stack)) {
-                    amount -= task.getQuantity();
+                    amount -= task.getQuantity() * task.getQuantityPerCraft();
                 }
             }
         }

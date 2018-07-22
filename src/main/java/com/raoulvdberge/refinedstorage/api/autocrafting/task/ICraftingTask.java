@@ -43,6 +43,11 @@ public interface ICraftingTask {
     int getQuantity();
 
     /**
+     * @return the amount that this task gives back
+     */
+    int getQuantityPerCraft();
+
+    /**
      * @return the stack requested
      */
     ICraftingRequestInfo getRequested();

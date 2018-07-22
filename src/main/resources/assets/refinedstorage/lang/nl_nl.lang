@@ -20,7 +20,6 @@ gui.refinedstorage:interface.export=Interface Export
 gui.refinedstorage:crafting_monitor=Crafting Monitor
 gui.refinedstorage:crafting_monitor.missing_items=Ontbrekende items
 gui.refinedstorage:crafting_monitor.items_crafting=Items aan het craften
-gui.refinedstorage:crafting_monitor.items_processing=Items aan het verwerken
 gui.refinedstorage:crafting_monitor.machine_none=Geen machine gevonden
 gui.refinedstorage:wireless_transmitter=Draadloze Zender
 gui.refinedstorage:wireless_transmitter.distance=%d blokken
