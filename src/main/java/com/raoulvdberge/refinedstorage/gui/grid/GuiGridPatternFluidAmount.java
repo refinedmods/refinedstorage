@@ -1,32 +1,43 @@
-package com.raoulvdberge.refinedstorage.gui;
+package com.raoulvdberge.refinedstorage.gui.grid;
 
 import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerFluidAmount;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
+import com.raoulvdberge.refinedstorage.gui.GuiAmountSpecifying;
+import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.network.MessageGridFluidAmount;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 
-public class GuiFluidAmount extends GuiCraftingStart {
+public class GuiGridPatternFluidAmount extends GuiAmountSpecifying {
     private int slot;
     private ItemStack fluidContainer;
 
-    public GuiFluidAmount(GuiBase parent, EntityPlayer player, int slot, ItemStack fluidContainer) {
-        super(parent, null, new ContainerFluidAmount(player, fluidContainer), 172, 99);
+    public GuiGridPatternFluidAmount(GuiBase parent, EntityPlayer player, int slot, ItemStack fluidContainer) {
+        super(parent, new ContainerFluidAmount(player, fluidContainer), 172, 99);
 
         this.slot = slot;
         this.fluidContainer = fluidContainer;
     }
 
     @Override
-    protected int getAmount() {
+    protected int getDefaultAmount() {
         return fluidContainer.getCount();
     }
 
     @Override
-    protected String getStartButtonText() {
+    protected boolean canAmountGoNegative() {
+        return false;
+    }
+
+    @Override
+    protected int getMaxAmount() {
+        return Fluid.BUCKET_VOLUME;
+    }
+
+    @Override
+    protected String getOkButtonText() {
         return t("misc.refinedstorage:set");
     }
 
@@ -36,8 +47,8 @@ public class GuiFluidAmount extends GuiCraftingStart {
     }
 
     @Override
-    protected boolean canAmountGoNegative() {
-        return false;
+    protected String getTexture() {
+        return "gui/crafting_settings.png";
     }
 
     @Override
@@ -49,12 +60,7 @@ public class GuiFluidAmount extends GuiCraftingStart {
     }
 
     @Override
-    protected int getMaxAmount() {
-        return Fluid.BUCKET_VOLUME;
-    }
-
-    @Override
-    protected void startRequest(boolean noPreview) {
+    protected void onOkButtonPressed(boolean shiftDown) {
         Integer amount = Ints.tryParse(amountField.getText());
 
         if (amount != null && amount > 0 && amount <= Fluid.BUCKET_VOLUME) {

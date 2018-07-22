@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.GuiFluidAmount;
+import com.raoulvdberge.refinedstorage.gui.grid.GuiGridPatternFluidAmount;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
@@ -92,7 +92,7 @@ public abstract class ContainerBase extends Container {
                 } else if (slot.getHasStack()) {
                     if (slot instanceof SlotFilterType && ((SlotFilterType) slot).getType().getType() == IType.FLUIDS) {
                         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-                            FMLClientHandler.instance().showGuiScreen(new GuiFluidAmount((GuiBase) Minecraft.getMinecraft().currentScreen, player, slot.getSlotIndex(), ((SlotFilterType) slot).getActualStack()));
+                            FMLClientHandler.instance().showGuiScreen(new GuiGridPatternFluidAmount((GuiBase) Minecraft.getMinecraft().currentScreen, player, slot.getSlotIndex(), ((SlotFilterType) slot).getActualStack()));
                         }
                     } else {
                         slot.getStack().setCount(((SlotFilter) slot).getAmountModified(dragType));

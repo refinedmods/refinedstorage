@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
+import com.raoulvdberge.refinedstorage.gui.grid.GuiGridCraftingSettings;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -69,8 +69,8 @@ public class MessageGridCraftingPreviewResponse implements IMessage, IMessageHan
         Minecraft.getMinecraft().addScheduledTask(() -> {
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-            if (screen instanceof GuiCraftingStart) {
-                screen = ((GuiCraftingStart) screen).getParent();
+            if (screen instanceof GuiGridCraftingSettings) {
+                screen = ((GuiGridCraftingSettings) screen).getParent();
             }
 
             FMLCommonHandler.instance().showGuiScreen(new GuiCraftingPreview(screen, message.stacks, message.hash, message.quantity, message.fluids));

@@ -1,18 +1,17 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.util.Tuple;
+import org.apache.commons.lang3.tuple.Pair;
 
-public class GuiPriority extends GuiCraftingStart {
+public class GuiPriority extends GuiAmountSpecifying {
     private TileDataParameter<Integer, ?> priority;
 
     public GuiPriority(GuiBase parent, TileDataParameter<Integer, ?> priority) {
-        super(parent, null, new Container() {
+        super(parent, new Container() {
             @Override
             public boolean canInteractWith(EntityPlayer player) {
                 return false;
@@ -23,12 +22,12 @@ public class GuiPriority extends GuiCraftingStart {
     }
 
     @Override
-    protected int getAmount() {
+    protected int getDefaultAmount() {
         return priority.getValue();
     }
 
     @Override
-    protected String getStartButtonText() {
+    protected String getOkButtonText() {
         return t("misc.refinedstorage:set");
     }
 
@@ -43,23 +42,23 @@ public class GuiPriority extends GuiCraftingStart {
     }
 
     @Override
-    protected Tuple<Integer, Integer> getAmountPos() {
-        return new Tuple<>(18 + 1, 47 + 1);
+    protected Pair<Integer, Integer> getAmountPos() {
+        return Pair.of(18 + 1, 47 + 1);
     }
 
     @Override
-    protected Tuple<Integer, Integer> getIncrementButtonPos(int x, int y) {
-        return new Tuple<>(6 + (x * (30 + 3)), y + (y == 0 ? 20 : 64));
-    }
-
-    @Override
-    protected Tuple<Integer, Integer> getStartCancelPos() {
-        return new Tuple<>(107, 30);
+    protected Pair<Integer, Integer> getOkCancelPos() {
+        return Pair.of(107, 30);
     }
 
     @Override
     protected boolean canAmountGoNegative() {
         return true;
+    }
+
+    @Override
+    protected int getMaxAmount() {
+        return Integer.MAX_VALUE;
     }
 
     @Override
@@ -71,7 +70,7 @@ public class GuiPriority extends GuiCraftingStart {
     }
 
     @Override
-    protected void startRequest(boolean noPreview) {
+    protected void onOkButtonPressed(boolean noPreview) {
         Integer amount = Ints.tryParse(amountField.getText());
 
         if (amount != null) {

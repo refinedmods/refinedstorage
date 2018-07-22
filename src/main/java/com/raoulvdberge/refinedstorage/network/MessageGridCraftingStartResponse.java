@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.gui.grid.GuiCraftingStart;
+import com.raoulvdberge.refinedstorage.gui.grid.GuiGridCraftingSettings;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -30,8 +30,8 @@ public class MessageGridCraftingStartResponse implements IMessage, IMessageHandl
         Minecraft.getMinecraft().addScheduledTask(() -> {
             GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-            if (screen instanceof GuiCraftingStart) {
-                ((GuiCraftingStart) screen).close();
+            if (screen instanceof GuiGridCraftingSettings) {
+                ((GuiGridCraftingSettings) screen).close();
             }
         });
 
