@@ -115,6 +115,10 @@ public class RSConfig {
     public int readerWriterChannelEnergyCapacity;
     //endregion
 
+    //region Covers
+    public boolean hideCovers;
+    //endregion
+
     //region Categories
     private static final String ENERGY = "energy";
     private static final String CONTROLLER = "controller";
@@ -126,6 +130,7 @@ public class RSConfig {
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String UPGRADES = "upgrades";
     private static final String READER_WRITER = "readerWriter";
+    private static final String COVERS = "covers";
     //endregion
 
     public RSConfig(@Nullable RSConfig originalClientVersion, File configFile) {
@@ -257,6 +262,10 @@ public class RSConfig {
         readerWriterChannelEnergyCapacity = config.getInt("channelEnergyCapacity", READER_WRITER, 16000, 0, Integer.MAX_VALUE, "The energy capacity of energy channels");
         //endregion
 
+        //region Covers
+        hideCovers = config.getBoolean("hideCovers", COVERS, false, "Whether to hide covers in the creative mode tabs and JEI");
+        //endregion
+
         if (config.hasChanged()) {
             config.save();
         }
@@ -276,6 +285,7 @@ public class RSConfig {
         list.add(new ConfigElement(config.getCategory(WIRELESS_CRAFTING_MONITOR)));
         list.add(new ConfigElement(config.getCategory(PORTABLE_GRID)));
         list.add(new ConfigElement(config.getCategory(READER_WRITER)));
+        list.add(new ConfigElement(config.getCategory(COVERS)));
 
         return list;
     }

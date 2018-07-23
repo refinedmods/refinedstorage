@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -38,6 +39,8 @@ import java.util.List;
 
 public class ItemCover extends ItemBase {
     private static final String NBT_ITEM = "Item";
+
+    public static final ItemStack HIDDEN_COVER_ALTERNATIVE = new ItemStack(Blocks.STONEBRICK);
 
     public ItemCover(IItemInfo info) {
         super(info);
@@ -88,6 +91,16 @@ public class ItemCover extends ItemBase {
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if (!isInCreativeTab(tab)) {
+            return;
+        }
+
+        if (RS.INSTANCE.config.hideCovers) {
+            ItemStack stack = new ItemStack(this);
+
+            setItem(stack, HIDDEN_COVER_ALTERNATIVE);
+
+            items.add(stack);
+
             return;
         }
 

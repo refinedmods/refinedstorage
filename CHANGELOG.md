@@ -4,6 +4,7 @@
 - Added fluid autocrafting (raoulvdberge)
 - Added Crafting Upgrade support for fluids on the Exporter, Constructor and Fluid Interface (raoulvdberge)
 - Added support for JEI ghost slot dragging (raoulvdberge)
+- Added config option to hide covers in the creative mode tabs and JEI (raoulvdberge)
 - You can now keep fluids in stock by attaching a External Storage in fluid mode to a Fluid Interface with a Crafting Upgrade (raoulvdberge)
 - You can now specify the amount to export in the Fluid Interface (raoulvdberge)
 - Made the Crafting Preview window bigger (raoulvdberge)

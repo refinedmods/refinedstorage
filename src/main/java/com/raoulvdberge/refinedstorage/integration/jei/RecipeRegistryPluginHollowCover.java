@@ -1,8 +1,11 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
+import com.raoulvdberge.refinedstorage.item.ItemHollowCover;
 import mezz.jei.api.recipe.*;
 import net.minecraft.item.ItemStack;
 
@@ -16,8 +19,12 @@ public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
             ItemStack stack = (ItemStack) focus.getValue();
 
             if (focus.getMode() == IFocus.Mode.INPUT) {
-                if (stack.getItem() == RSItems.COVER && CoverManager.isValidCover(ItemCover.getItem(stack))) {
-                    return Collections.singletonList(VanillaRecipeCategoryUid.CRAFTING);
+                if (stack.getItem() == RSItems.COVER) {
+                    ItemStack covered = ItemCover.getItem(stack);
+
+                    if ((!RS.INSTANCE.config.hideCovers && CoverManager.isValidCover(covered)) || API.instance().getComparer().isEqualNoQuantity(covered, ItemHollowCover.HIDDEN_COVER_ALTERNATIVE)) {
+                        return Collections.singletonList(VanillaRecipeCategoryUid.CRAFTING);
+                    }
                 }
             } else if (focus.getMode() == IFocus.Mode.OUTPUT) {
                 if (stack.getItem() == RSItems.HOLLOW_COVER) {
@@ -35,12 +42,16 @@ public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
             ItemStack stack = (ItemStack) focus.getValue();
 
             if (focus.getMode() == IFocus.Mode.INPUT) {
-                if (stack.getItem() == RSItems.COVER && CoverManager.isValidCover(ItemCover.getItem(stack))) {
-                    ItemStack hollowCover = new ItemStack(RSItems.HOLLOW_COVER);
+                if (stack.getItem() == RSItems.COVER) {
+                    ItemStack covered = ItemCover.getItem(stack);
 
-                    ItemCover.setItem(hollowCover, ItemCover.getItem(stack));
+                    if ((!RS.INSTANCE.config.hideCovers && CoverManager.isValidCover(covered)) || API.instance().getComparer().isEqualNoQuantity(covered, ItemHollowCover.HIDDEN_COVER_ALTERNATIVE)) {
+                        ItemStack hollowCover = new ItemStack(RSItems.HOLLOW_COVER);
 
-                    return Collections.singletonList((T) new RecipeWrapperHollowCover(stack, hollowCover));
+                        ItemCover.setItem(hollowCover, ItemCover.getItem(stack));
+
+                        return Collections.singletonList((T) new RecipeWrapperHollowCover(stack, hollowCover));
+                    }
                 }
             } else if (focus.getMode() == IFocus.Mode.OUTPUT) {
                 if (stack.getItem() == RSItems.HOLLOW_COVER) {

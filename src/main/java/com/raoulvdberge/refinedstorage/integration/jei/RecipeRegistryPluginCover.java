@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import mezz.jei.api.recipe.*;
@@ -16,7 +18,7 @@ public class RecipeRegistryPluginCover implements IRecipeRegistryPlugin {
             ItemStack stack = (ItemStack) focus.getValue();
 
             if (focus.getMode() == IFocus.Mode.INPUT) {
-                if (CoverManager.isValidCover(stack)) {
+                if ((!RS.INSTANCE.config.hideCovers && CoverManager.isValidCover(stack)) || API.instance().getComparer().isEqualNoQuantity(stack, ItemCover.HIDDEN_COVER_ALTERNATIVE)) {
                     return Collections.singletonList(VanillaRecipeCategoryUid.CRAFTING);
                 }
             } else if (focus.getMode() == IFocus.Mode.OUTPUT) {
@@ -35,7 +37,7 @@ public class RecipeRegistryPluginCover implements IRecipeRegistryPlugin {
             ItemStack stack = (ItemStack) focus.getValue();
 
             if (focus.getMode() == IFocus.Mode.INPUT) {
-                if (CoverManager.isValidCover(stack)) {
+                if ((!RS.INSTANCE.config.hideCovers && CoverManager.isValidCover(stack)) || API.instance().getComparer().isEqualNoQuantity(stack, ItemCover.HIDDEN_COVER_ALTERNATIVE)) {
                     ItemStack cover = new ItemStack(RSItems.COVER);
 
                     ItemCover.setItem(cover, stack);
