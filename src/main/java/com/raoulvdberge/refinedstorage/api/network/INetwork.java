@@ -140,6 +140,7 @@ public interface INetwork {
      * @param action the action
      * @return null if we didn't extract anything, or a stack with the result
      */
+    @Nullable
     default ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, Action action) {
         return extractItem(stack, size, flags, action, s -> true);
     }
@@ -152,6 +153,7 @@ public interface INetwork {
      * @param action the action
      * @return null if we didn't extract anything, or a stack with the result
      */
+    @Nullable
     default ItemStack extractItem(@Nonnull ItemStack stack, int size, Action action) {
         return extractItem(stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, action);
     }
@@ -174,6 +176,7 @@ public interface INetwork {
      * @param size  the amount of that prototype that has to be inserted
      * @return null if the insert was successful, or a stack with the remainder
      */
+    @Nullable
     default FluidStack insertFluidTracked(@Nonnull FluidStack stack, int size) {
         FluidStack remainder = insertFluid(stack, size, Action.PERFORM);
 
@@ -194,7 +197,21 @@ public interface INetwork {
      * @return null if we didn't extract anything, or a stack with the result
      */
     @Nullable
-    FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, Action action);
+    FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, Action action, Predicate<IStorage<FluidStack>> filter);
+
+    /**
+     * Extracts a fluid from this network.
+     *
+     * @param stack  the prototype of the stack to extract, do NOT modify
+     * @param size   the amount of that prototype that has to be extracted
+     * @param flags  the flags to compare on, see {@link IComparer}
+     * @param action the action
+     * @return null if we didn't extract anything, or a stack with the result
+     */
+    @Nullable
+    default FluidStack extractFluid(FluidStack stack, int size, int flags, Action action) {
+        return extractFluid(stack, size, flags, action, s -> true);
+    }
 
     /**
      * Extracts a fluid from this network.
@@ -204,6 +221,7 @@ public interface INetwork {
      * @param action the action
      * @return null if we didn't extract anything, or a stack with the result
      */
+    @Nullable
     default FluidStack extractFluid(FluidStack stack, int size, Action action) {
         return extractFluid(stack, size, IComparer.COMPARE_NBT, action);
     }

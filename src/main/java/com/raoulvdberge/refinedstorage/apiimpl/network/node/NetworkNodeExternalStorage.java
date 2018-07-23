@@ -345,6 +345,11 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
+    @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
+
     public List<IStorageExternal<ItemStack>> getItemStorages() {
         return itemStorages;
     }

@@ -374,6 +374,11 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
+
+    @Override
     public CoverManager getCoverManager() {
         return coverManager;
     }

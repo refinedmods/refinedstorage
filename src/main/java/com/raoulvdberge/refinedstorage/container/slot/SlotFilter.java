@@ -58,7 +58,7 @@ public class SlotFilter extends SlotItemHandler {
         return (flags & FILTER_ALLOW_BLOCKS) == FILTER_ALLOW_BLOCKS;
     }
 
-    public int getAmountModified(int dragType) {
+    public int getModifiedAmount(int dragType) {
         int amount = getStack().getCount();
 
         if (dragType == 0) {

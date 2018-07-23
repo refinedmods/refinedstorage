@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
 import com.raoulvdberge.refinedstorage.container.ContainerFluidInterface;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.util.text.TextFormatting;
 
 public class GuiFluidInterface extends GuiBase {
     private static final RenderUtils.FluidRenderer TANK_RENDERER = new RenderUtils.FluidRenderer(NetworkNodeFluidInterface.TANK_CAPACITY, 12, 47);
@@ -18,8 +18,6 @@ public class GuiFluidInterface extends GuiBase {
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileFluidInterface.REDSTONE_MODE));
-
-        addSideButton(new SideButtonCompare(this, TileFluidInterface.COMPARE, IComparer.COMPARE_NBT));
     }
 
     @Override
@@ -49,11 +47,11 @@ public class GuiFluidInterface extends GuiBase {
         drawString(7, 111, t("container.inventory"));
 
         if (inBounds(46, 56, 12, 47, mouseX, mouseY) && TileFluidInterface.TANK_IN.getValue() != null) {
-            drawTooltip(mouseX, mouseY, TileFluidInterface.TANK_IN.getValue().getLocalizedName() + "\n" + TileFluidInterface.TANK_IN.getValue().amount + " mB");
+            drawTooltip(mouseX, mouseY, TileFluidInterface.TANK_IN.getValue().getLocalizedName() + "\n" + TextFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(TileFluidInterface.TANK_IN.getValue().amount) + TextFormatting.RESET);
         }
 
         if (inBounds(118, 56, 12, 47, mouseX, mouseY) && TileFluidInterface.TANK_OUT.getValue() != null) {
-            drawTooltip(mouseX, mouseY, TileFluidInterface.TANK_OUT.getValue().getLocalizedName() + "\n" + TileFluidInterface.TANK_OUT.getValue().amount + " mB");
+            drawTooltip(mouseX, mouseY, TileFluidInterface.TANK_OUT.getValue().getLocalizedName() + "\n" + TextFormatting.GRAY + API.instance().getQuantityFormatter().formatInBucketForm(TileFluidInterface.TANK_OUT.getValue().amount) + TextFormatting.RESET);
         }
     }
 }

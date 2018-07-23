@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilterItemOrFluid;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -11,7 +11,7 @@ public class ContainerExternalStorage extends ContainerBase {
         super(externalStorage, player);
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterType(externalStorage.getNode(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotFilterItemOrFluid(externalStorage.getNode(), i, 8 + (18 * i), 20));
         }
 
         addPlayerInventory(8, 141);

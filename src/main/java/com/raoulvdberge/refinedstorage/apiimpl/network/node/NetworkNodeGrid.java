@@ -694,6 +694,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
+
+    @Override
     public boolean hasConnectivityState() {
         return true;
     }

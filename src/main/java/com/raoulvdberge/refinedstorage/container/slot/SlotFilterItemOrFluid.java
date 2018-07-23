@@ -1,24 +1,34 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-public class SlotFilterType extends SlotFilter {
+public class SlotFilterItemOrFluid extends SlotFilter {
+    public interface IFluidAmountChangeListener {
+        void onChangeRequested(int slot, int amount);
+    }
+
     private IType type;
 
-    public SlotFilterType(IType type, int id, int x, int y, int flags) {
+    @Nullable
+    private IFluidAmountChangeListener listener;
+    private int maxFluidAmount;
+
+    public SlotFilterItemOrFluid(IType type, int id, int x, int y, int flags, @Nullable IFluidAmountChangeListener listener, int maxFluidAmount) {
         super(null, id, x, y, flags);
 
         this.type = type;
+        this.listener = listener;
+        this.maxFluidAmount = maxFluidAmount;
     }
 
-    public SlotFilterType(IType type, int id, int x, int y) {
-        this(type, id, x, y, 0);
+    public SlotFilterItemOrFluid(IType type, int id, int x, int y) {
+        this(type, id, x, y, 0, null, 0);
     }
 
     @Override
@@ -34,7 +44,7 @@ public class SlotFilterType extends SlotFilter {
     @Override
     @Nonnull
     public ItemStack getStack() {
-        return (type.getType() == IType.ITEMS || !((NetworkNode) type).getWorld().isRemote) ? super.getStack() : ItemStack.EMPTY;
+        return (type.getType() == IType.ITEMS || type.isServer()) ? super.getStack() : ItemStack.EMPTY;
     }
 
     public ItemStack getActualStack() {
@@ -52,5 +62,14 @@ public class SlotFilterType extends SlotFilter {
         }
 
         return super.getInitialAmount(stack);
+    }
+
+    @Nullable
+    public IFluidAmountChangeListener getFluidAmountChangeListener() {
+        return listener;
+    }
+
+    public int getMaxFluidAmount() {
+        return maxFluidAmount;
     }
 }

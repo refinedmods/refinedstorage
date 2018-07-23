@@ -407,6 +407,11 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
+
+    @Override
     public void setMode(int mode) {
         this.mode = mode;
     }

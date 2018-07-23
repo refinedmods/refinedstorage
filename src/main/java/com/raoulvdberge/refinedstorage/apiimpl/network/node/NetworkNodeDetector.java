@@ -251,4 +251,9 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     public IItemHandler getFilterInventory() {
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
+
+    @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
 }

@@ -443,7 +443,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, Action action) {
+    public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, Action action, Predicate<IStorage<FluidStack>> filter) {
         int requested = size;
         int received = 0;
 
@@ -454,7 +454,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         for (IStorage<FluidStack> storage : this.fluidStorage.getStorages()) {
             FluidStack took = null;
 
-            if (storage.getAccessType() != AccessType.INSERT) {
+            if (filter.test(storage) && storage.getAccessType() != AccessType.INSERT) {
                 took = storage.extract(stack, requested - received, flags, action);
             }
 

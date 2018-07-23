@@ -246,6 +246,11 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     }
 
     @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
+
+    @Override
     public CoverManager getCoverManager() {
         return coverManager;
     }

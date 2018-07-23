@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
@@ -95,7 +96,11 @@ public class ContainerGrid extends ContainerBase {
                 int y = headerAndSlots + 4;
 
                 for (int i = 0; i < 9 * 2; ++i) {
-                    addSlotToContainer(new SlotFilterType((NetworkNodeGrid) grid, i, x, y, SlotFilter.FILTER_ALLOW_SIZE));
+                    addSlotToContainer(new SlotFilterItemOrFluid((NetworkNodeGrid) grid, i, x, y, SlotFilter.FILTER_ALLOW_SIZE, (slot, amount) -> {
+                        if (amount > 0 && amount <= Fluid.BUCKET_VOLUME && slot < ((NetworkNodeGrid) grid).getMatrixProcessingFluids().getSlots()) {
+                            ((NetworkNodeGrid) grid).getMatrixProcessingFluids().getStackInSlot(slot).setCount(amount);
+                        }
+                    }, Fluid.BUCKET_VOLUME));
 
                     x += 18;
 

@@ -1,24 +1,23 @@
-package com.raoulvdberge.refinedstorage.gui.grid;
+package com.raoulvdberge.refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerFluidAmount;
-import com.raoulvdberge.refinedstorage.gui.GuiAmountSpecifying;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.network.MessageGridFluidAmount;
+import com.raoulvdberge.refinedstorage.network.MessageFluidAmount;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 
-public class GuiGridPatternFluidAmount extends GuiAmountSpecifying {
-    private int slot;
+public class GuiFluidAmount extends GuiAmountSpecifying {
+    private int containerSlot;
     private ItemStack fluidContainer;
+    private int maxAmount;
 
-    public GuiGridPatternFluidAmount(GuiBase parent, EntityPlayer player, int slot, ItemStack fluidContainer) {
+    public GuiFluidAmount(GuiBase parent, EntityPlayer player, int containerSlot, ItemStack fluidContainer, int maxAmount) {
         super(parent, new ContainerFluidAmount(player, fluidContainer), 172, 99);
 
-        this.slot = slot;
+        this.containerSlot = containerSlot;
         this.fluidContainer = fluidContainer;
+        this.maxAmount = maxAmount;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class GuiGridPatternFluidAmount extends GuiAmountSpecifying {
 
     @Override
     protected int getMaxAmount() {
-        return Fluid.BUCKET_VOLUME;
+        return maxAmount;
     }
 
     @Override
@@ -43,7 +42,7 @@ public class GuiGridPatternFluidAmount extends GuiAmountSpecifying {
 
     @Override
     protected String getTitle() {
-        return t("gui.refinedstorage:pattern_grid.fluid_amount");
+        return t("gui.refinedstorage:fluid_amount");
     }
 
     @Override
@@ -54,8 +53,8 @@ public class GuiGridPatternFluidAmount extends GuiAmountSpecifying {
     @Override
     protected int[] getIncrements() {
         return new int[]{
-            10, 50, 100,
-            -10, -50, -100
+            100, 500, 1000,
+            -100, -500, -1000
         };
     }
 
@@ -63,8 +62,8 @@ public class GuiGridPatternFluidAmount extends GuiAmountSpecifying {
     protected void onOkButtonPressed(boolean shiftDown) {
         Integer amount = Ints.tryParse(amountField.getText());
 
-        if (amount != null && amount > 0 && amount <= Fluid.BUCKET_VOLUME) {
-            RS.INSTANCE.network.sendToServer(new MessageGridFluidAmount(slot, amount));
+        if (amount != null) {
+            RS.INSTANCE.network.sendToServer(new MessageFluidAmount(containerSlot, amount));
 
             close();
         }

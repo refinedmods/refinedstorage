@@ -3,7 +3,8 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilterItemOrFluid;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButton;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
@@ -189,11 +190,11 @@ public abstract class GuiBase extends GuiContainer {
                 if (stack != null) {
                     FLUID_RENDERER.draw(mc, guiLeft + slot.xPos, guiTop + slot.yPos, stack);
 
-                    if (slot instanceof SlotFilterType) {
-                        int count = ((SlotFilterType) slot).getActualStack().getCount();
+                    if (slot instanceof SlotFilterItemOrFluid) {
+                        int count = ((SlotFilterItemOrFluid) slot).getActualStack().getCount();
 
                         if (count != 1) {
-                            drawQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, String.valueOf(count));
+                            drawQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(count));
 
                             GL11.glDisable(GL11.GL_LIGHTING);
                         }
