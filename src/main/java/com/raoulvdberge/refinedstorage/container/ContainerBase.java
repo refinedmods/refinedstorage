@@ -92,7 +92,10 @@ public abstract class ContainerBase extends Container {
                 } else if (slot.getHasStack()) {
                     if (slot instanceof SlotFilterType && ((SlotFilterType) slot).getType().getType() == IType.FLUIDS) {
                         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-                            FMLClientHandler.instance().showGuiScreen(new GuiGridPatternFluidAmount((GuiBase) Minecraft.getMinecraft().currentScreen, player, slot.getSlotIndex(), ((SlotFilterType) slot).getActualStack()));
+                            Minecraft.getMinecraft().addScheduledTask(() -> {
+                                // Prevent JEI crash - this needs to run on the main thread and not on the packet handler thread
+                                FMLClientHandler.instance().showGuiScreen(new GuiGridPatternFluidAmount((GuiBase) Minecraft.getMinecraft().currentScreen, player, slot.getSlotIndex(), ((SlotFilterType) slot).getActualStack()));
+                            });
                         }
                     } else {
                         slot.getStack().setCount(((SlotFilter) slot).getAmountModified(dragType));
