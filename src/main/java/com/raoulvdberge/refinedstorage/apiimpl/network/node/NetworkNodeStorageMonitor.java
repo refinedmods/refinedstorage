@@ -199,6 +199,11 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
+
+    @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 

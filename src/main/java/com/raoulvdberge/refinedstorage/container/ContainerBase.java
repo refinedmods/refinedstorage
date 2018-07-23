@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.*;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiGridPatternFluidAmount;
+import com.raoulvdberge.refinedstorage.gui.GuiFluidAmount;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
@@ -90,12 +90,15 @@ public abstract class ContainerBase extends Container {
                 } else if (!player.inventory.getItemStack().isEmpty()) {
                     slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), ((SlotFilter) slot).getInitialAmount(player.inventory.getItemStack())));
                 } else if (slot.getHasStack()) {
-                    if (slot instanceof SlotFilterType && ((SlotFilterType) slot).getType().getType() == IType.FLUIDS) {
+                    if (slot instanceof SlotFilterItemOrFluid && ((SlotFilterItemOrFluid) slot).getType().getType() == IType.FLUIDS) {
                         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-                            FMLClientHandler.instance().showGuiScreen(new GuiGridPatternFluidAmount((GuiBase) Minecraft.getMinecraft().currentScreen, player, slot.getSlotIndex(), ((SlotFilterType) slot).getActualStack()));
+                            Minecraft.getMinecraft().addScheduledTask(() -> {
+                                // Prevent JEI crash - this needs to run on the main thread and not on the packet handler thread
+                                FMLClientHandler.instance().showGuiScreen(new GuiFluidAmount((GuiBase) Minecraft.getMinecraft().currentScreen, player, slot.slotNumber, ((SlotFilterItemOrFluid) slot).getActualStack(), ((SlotFilterItemOrFluid) slot).getMaxFluidAmount()));
+                            });
                         }
                     } else {
-                        slot.getStack().setCount(((SlotFilter) slot).getAmountModified(dragType));
+                        slot.getStack().setCount(((SlotFilter) slot).getModifiedAmount(dragType));
 
                         detectAndSendChanges();
                     }
@@ -154,9 +157,9 @@ public abstract class ContainerBase extends Container {
 
         if (stackInSlot.isEmpty()) {
             if (slot instanceof SlotFilterFluid) {
-                stackInSlot = ((SlotFilterFluid) slot).getRealStack();
-            } else if (slot instanceof SlotFilterType) {
-                stackInSlot = ((SlotFilterType) slot).getActualStack();
+                stackInSlot = ((SlotFilterFluid) slot).getActualStack();
+            } else if (slot instanceof SlotFilterItemOrFluid) {
+                stackInSlot = ((SlotFilterItemOrFluid) slot).getActualStack();
             }
         }
 

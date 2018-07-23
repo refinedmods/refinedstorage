@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -54,6 +55,9 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
                 List<ItemStack> inputs = new LinkedList<>();
                 List<ItemStack> outputs = new LinkedList<>();
 
+                List<FluidStack> fluidInputs = new LinkedList<>();
+                List<FluidStack> fluidOutputs = new LinkedList<>();
+
                 for (IGuiIngredient<ItemStack> guiIngredient : recipeLayout.getItemStacks().getGuiIngredients().values()) {
                     if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
                         ItemStack ingredient = guiIngredient.getDisplayedIngredient().copy();
@@ -66,7 +70,19 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
                     }
                 }
 
-                RS.INSTANCE.network.sendToServer(new MessageGridProcessingTransfer(inputs, outputs));
+                for (IGuiIngredient<FluidStack> guiIngredient : recipeLayout.getFluidStacks().getGuiIngredients().values()) {
+                    if (guiIngredient != null && guiIngredient.getDisplayedIngredient() != null) {
+                        FluidStack ingredient = guiIngredient.getDisplayedIngredient().copy();
+
+                        if (guiIngredient.isInput()) {
+                            fluidInputs.add(ingredient);
+                        } else {
+                            fluidOutputs.add(ingredient);
+                        }
+                    }
+                }
+
+                RS.INSTANCE.network.sendToServer(new MessageGridProcessingTransfer(inputs, outputs, fluidInputs, fluidOutputs));
             } else {
                 RS.INSTANCE.network.sendToServer(new MessageGridTransfer(recipeLayout.getItemStacks().getGuiIngredients(), container.inventorySlots.stream().filter(s -> s.inventory instanceof InventoryCrafting).collect(Collectors.toList())));
             }

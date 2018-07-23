@@ -24,10 +24,16 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
     private IExternalStorageContext context;
     private Supplier<IFluidHandler> handlerSupplier;
     private List<FluidStack> cache;
+    private boolean connectedToInterface;
 
-    public StorageExternalFluid(IExternalStorageContext context, Supplier<IFluidHandler> handlerSupplier) {
+    public StorageExternalFluid(IExternalStorageContext context, Supplier<IFluidHandler> handlerSupplier, boolean connectedToInterface) {
         this.context = context;
         this.handlerSupplier = handlerSupplier;
+        this.connectedToInterface = connectedToInterface;
+    }
+
+    public boolean isConnectedToInterface() {
+        return connectedToInterface;
     }
 
     @Nullable
@@ -72,11 +78,25 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
                 network.getFluidStorageCache().remove(cached, cached.amount, true);
             } else if (actual != null && cached == null) {
                 network.getFluidStorageCache().add(actual, actual.amount, false, true);
+
+                // When we use an interface + crafting upgrade + external storage combo, we don't want the crafting task
+                // to think we inserted twice.
+                if (!isConnectedToInterface()) {
+                    network.getCraftingManager().track(actual, actual.amount);
+                }
             } else if (!API.instance().getComparer().isEqual(actual, cached, IComparer.COMPARE_NBT)) {
                 network.getFluidStorageCache().remove(cached, cached.amount, true);
                 network.getFluidStorageCache().add(actual, actual.amount, false, true);
+
+                if (!isConnectedToInterface()) {
+                    network.getCraftingManager().track(actual, actual.amount);
+                }
             } else if (actual.amount > cached.amount) {
                 network.getFluidStorageCache().add(actual, actual.amount - cached.amount, false, true);
+
+                if (!isConnectedToInterface()) {
+                    network.getCraftingManager().track(actual, actual.amount - cached.amount);
+                }
             } else if (actual.amount < cached.amount) {
                 network.getFluidStorageCache().remove(actual, cached.amount - actual.amount, true);
             }

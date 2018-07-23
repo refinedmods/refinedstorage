@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
@@ -89,44 +90,48 @@ public class ContainerGrid extends ContainerBase {
 
             addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
         } else if (grid.getGridType() == GridType.PATTERN) {
-            if (((NetworkNodeGrid) grid).isProcessingPattern()) {
-                int ox = 8;
-                int x = ox;
-                int y = headerAndSlots + 4;
+            // Processing patterns
+            int ox = 8;
+            int x = ox;
+            int y = headerAndSlots + 4;
 
-                for (int i = 0; i < 9 * 2; ++i) {
-                    addSlotToContainer(new SlotFilterType((NetworkNodeGrid) grid, i, x, y, SlotFilter.FILTER_ALLOW_SIZE));
-
-                    x += 18;
-
-                    if ((i + 1) % 3 == 0) {
-                        if (i == 8) {
-                            ox = 98;
-                            x = ox;
-                            y = headerAndSlots + 4;
-                        } else {
-                            x = ox;
-                            y += 18;
-                        }
+            for (int i = 0; i < 9 * 2; ++i) {
+                addSlotToContainer(new SlotFilterItemOrFluid((NetworkNodeGrid) grid, i, x, y, SlotFilter.FILTER_ALLOW_SIZE, (slot, amount) -> {
+                    if (amount > 0 && amount <= Fluid.BUCKET_VOLUME && slot < ((NetworkNodeGrid) grid).getMatrixProcessingFluids().getSlots()) {
+                        ((NetworkNodeGrid) grid).getMatrixProcessingFluids().getStackInSlot(slot).setCount(amount);
                     }
-                }
-            } else {
-                int x = 26;
-                int y = headerAndSlots + 4;
+                }, Fluid.BUCKET_VOLUME, () -> ((NetworkNodeGrid) grid).isProcessingPattern()));
 
-                for (int i = 0; i < 9; ++i) {
-                    addSlotToContainer(new SlotFilterLegacy(grid.getCraftingMatrix(), i, x, y));
+                x += 18;
 
-                    x += 18;
-
-                    if ((i + 1) % 3 == 0) {
+                if ((i + 1) % 3 == 0) {
+                    if (i == 8) {
+                        ox = 98;
+                        x = ox;
+                        y = headerAndSlots + 4;
+                    } else {
+                        x = ox;
                         y += 18;
-                        x = 26;
                     }
                 }
-
-                addSlotToContainer(patternResultSlot = new SlotDisabled(grid.getCraftingResult(), 0, 134, headerAndSlots + 22));
             }
+
+            // Regular patterns
+            x = 26;
+            y = headerAndSlots + 4;
+
+            for (int i = 0; i < 9; ++i) {
+                addSlotToContainer(new SlotFilterLegacy(grid.getCraftingMatrix(), i, x, y, () -> !((NetworkNodeGrid) grid).isProcessingPattern()));
+
+                x += 18;
+
+                if ((i + 1) % 3 == 0) {
+                    y += 18;
+                    x = 26;
+                }
+            }
+
+            addSlotToContainer(patternResultSlot = new SlotDisabled(grid.getCraftingResult(), 0, 134, headerAndSlots + 22, () -> !((NetworkNodeGrid) grid).isProcessingPattern()));
         }
     }
 
@@ -146,16 +151,6 @@ public class ContainerGrid extends ContainerBase {
                 for (IContainerListener listener : listeners) {
                     listener.sendSlotContents(this, i, slot.getStack());
                 }
-            }
-        }
-    }
-
-    public void sendAllSlots() {
-        for (int i = 0; i < inventorySlots.size(); ++i) {
-            Slot slot = inventorySlots.get(i);
-
-            for (IContainerListener listener : listeners) {
-                listener.sendSlotContents(this, i, slot.getStack());
             }
         }
     }

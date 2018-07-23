@@ -35,4 +35,6 @@ public interface IType {
     void setType(int type);
 
     IItemHandler getFilterInventory();
+
+    boolean isServer();
 }

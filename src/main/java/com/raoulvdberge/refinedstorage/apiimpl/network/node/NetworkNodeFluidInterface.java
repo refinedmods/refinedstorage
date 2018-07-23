@@ -1,15 +1,19 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalFluid;
 import com.raoulvdberge.refinedstorage.inventory.*;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
-import com.raoulvdberge.refinedstorage.tile.config.IComparable;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -19,17 +23,13 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
-// TODO: Crafting upgrade
-public class NetworkNodeFluidInterface extends NetworkNode implements IComparable {
+public class NetworkNodeFluidInterface extends NetworkNode {
     public static final String ID = "fluid_interface";
 
     public static final int TANK_CAPACITY = 16000;
 
-    private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TANK_IN = "TankIn";
     private static final String NBT_TANK_OUT = "TankOut";
-
-    private int compare = IComparer.COMPARE_NBT;
 
     private FluidTank tankIn = new FluidTank(TANK_CAPACITY) {
         @Override
@@ -43,26 +43,14 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
             markDirty();
         }
     };
-
-    private FluidTank tankOut = new FluidTank(TANK_CAPACITY) {
-        @Override
-        protected void onContentsChanged() {
-            super.onContentsChanged();
-
-            if (!world.isRemote) {
-                ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
-            }
-
-            markDirty();
-        }
-    };
+    private FluidTank tankOut = new FluidTank(TANK_CAPACITY);
 
     private FluidHandlerFluidInterface tank = new FluidHandlerFluidInterface(tankIn, tankOut);
 
     private ItemHandlerBase in = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this));
     private ItemHandlerFluid out = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
     public NetworkNodeFluidInterface(World world, BlockPos pos) {
         super(world, pos);
@@ -92,69 +80,101 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
             }
         }
 
-        if (network != null && canUpdate() && ticks % upgrades.getSpeed() == 0) {
-            FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
+        if (network != null && canUpdate()) {
+            if (ticks % upgrades.getSpeed() == 0) {
+                FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
 
-            // Drain in tank
-            if (drained != null) {
-                FluidStack remainder = network.insertFluidTracked(drained, drained.amount);
+                // Drain in tank
+                if (drained != null) {
+                    FluidStack remainder = network.insertFluidTracked(drained, drained.amount);
 
-                if (remainder != null) {
-                    tankIn.fillInternal(remainder, true);
+                    if (remainder != null) {
+                        tankIn.fillInternal(remainder, true);
+                    }
                 }
             }
 
-            FluidStack stack = out.getFluidStackInSlot(0);
+            FluidStack wanted = out.getFluidStackInSlot(0);
+            int wantedAmount = out.getStackInSlot(0).getCount();
+            FluidStack got = tankOut.getFluid();
 
-            // Fill out tank
+            if (wanted == null) {
+                if (got != null) {
+                    tankOut.setFluid(network.insertFluidTracked(got, got.amount));
 
-            // If our out fluid doesn't match the new fluid, empty it first
-            if (tankOut.getFluid() != null && (stack == null || (tankOut.getFluid().getFluid() != stack.getFluid()))) {
-                FluidStack remainder = tankOut.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
-
-                if (remainder != null) {
-                    network.insertFluidTracked(remainder, remainder.amount);
+                    onTankOutChanged();
                 }
-            } else if (stack != null) {
-                // Fill the out fluid
-                FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
+            } else if (got != null && !API.instance().getComparer().isEqual(wanted, got, IComparer.COMPARE_NBT)) {
+                tankOut.setFluid(network.insertFluidTracked(got, got.amount));
 
-                if (stackInStorage != null) {
-                    int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
+                onTankOutChanged();
+            } else {
+                int delta = got == null ? wantedAmount : (wantedAmount - got.amount);
 
-                    int spaceRemaining = tankOut.getCapacity() - tankOut.getFluidAmount();
-                    if (toExtract > spaceRemaining) {
-                        toExtract = spaceRemaining;
+                if (delta > 0) {
+                    final boolean actingAsStorage = isActingAsStorage();
+
+                    FluidStack result = network.extractFluid(wanted, delta, IComparer.COMPARE_NBT, Action.PERFORM, s -> {
+                        // If we are not an interface acting as a storage, we can extract from anywhere.
+                        if (!actingAsStorage) {
+                            return true;
+                        }
+
+                        // If we are an interface acting as a storage, we don't want to extract from other interfaces to
+                        // avoid stealing from each other.
+                        return !(s instanceof StorageExternalFluid) || !((StorageExternalFluid) s).isConnectedToInterface();
+                    });
+
+                    if (result != null) {
+                        if (tankOut.getFluid() == null) {
+                            tankOut.setFluid(result);
+                        } else {
+                            tankOut.getFluid().amount += result.amount;
+                        }
+
+                        onTankOutChanged();
                     }
-                    if (toExtract <= 0) {
-                        return;
+
+                    // Example: our delta is 5, we extracted 3 fluids.
+                    // That means we still have to autocraft 2 fluids.
+                    delta -= result == null ? 0 : result.amount;
+
+                    if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                        network.getCraftingManager().request(wanted, delta);
+                    }
+                } else if (delta < 0) {
+                    FluidStack remainder = network.insertFluidTracked(got, Math.abs(delta));
+
+                    if (remainder == null) {
+                        tankOut.getFluid().amount -= Math.abs(delta);
+                    } else {
+                        tankOut.getFluid().amount -= Math.abs(delta) - remainder.amount;
                     }
 
-                    FluidStack took = network.extractFluid(stack, toExtract, compare, Action.SIMULATE);
-
-                    if (took != null && (toExtract - tankOut.fillInternal(took, false)) == 0) {
-                        took = network.extractFluid(stack, toExtract, compare, Action.PERFORM);
-
-                        tankOut.fillInternal(took, true);
-                    }
+                    onTankOutChanged();
                 }
             }
         }
     }
 
+    private boolean isActingAsStorage() {
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            INetworkNode facingNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(facing));
+
+            if (facingNode instanceof NetworkNodeExternalStorage &&
+                facingNode.canUpdate() &&
+                ((NetworkNodeExternalStorage) facingNode).getDirection() == facing.getOpposite() &&
+                ((NetworkNodeExternalStorage) facingNode).getType() == IType.FLUIDS) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public int getEnergyUsage() {
         return RS.INSTANCE.config.fluidInterfaceUsage;
-    }
-
-    @Override
-    public int getCompare() {
-        return compare;
-    }
-
-    @Override
-    public void setCompare(int compare) {
-        this.compare = compare;
     }
 
     @Override
@@ -195,9 +215,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 
-        StackUtils.writeItems(out, 2, tag);
-
-        tag.setInteger(NBT_COMPARE, compare);
+        StackUtils.writeItems(out, 2, tag, StackUtils::serializeStackToNbt);
 
         return tag;
     }
@@ -206,11 +224,7 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
     public void readConfiguration(NBTTagCompound tag) {
         super.readConfiguration(tag);
 
-        StackUtils.readItems(out, 2, tag);
-
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
-        }
+        StackUtils.readItems(out, 2, tag, StackUtils::deserializeStackFromNbt);
     }
 
     public ItemHandlerUpgrade getUpgrades() {
@@ -235,6 +249,14 @@ public class NetworkNodeFluidInterface extends NetworkNode implements IComparabl
 
     public FluidTank getTankOut() {
         return tankOut;
+    }
+
+    private void onTankOutChanged() {
+        if (!world.isRemote) {
+            ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
+        }
+
+        markDirty();
     }
 
     @Override

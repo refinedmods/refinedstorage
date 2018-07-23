@@ -318,6 +318,11 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     }
 
     @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
+
+    @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
         return coverManager.canConduct(direction);
     }

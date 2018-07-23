@@ -1,10 +1,14 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilterFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilterItemOrFluid;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFluidInterface extends ContainerBase {
@@ -16,7 +20,31 @@ public class ContainerFluidInterface extends ContainerBase {
         }
 
         addSlotToContainer(new SlotItemHandler(fluidInterface.getNode().getIn(), 0, 44, 32));
-        addSlotToContainer(new SlotFilterFluid(!fluidInterface.getWorld().isRemote, fluidInterface.getNode().getOut(), 0, 116, 32));
+        addSlotToContainer(new SlotFilterItemOrFluid(new IType() {
+            @Override
+            public int getType() {
+                return IType.FLUIDS;
+            }
+
+            @Override
+            public void setType(int type) {
+                // NO OP
+            }
+
+            @Override
+            public IItemHandler getFilterInventory() {
+                return fluidInterface.getNode().getOut();
+            }
+
+            @Override
+            public boolean isServer() {
+                return !fluidInterface.getNode().getWorld().isRemote;
+            }
+        }, 0, 116, 32, SlotFilter.FILTER_ALLOW_SIZE, (slot, amount) -> {
+            if (amount > 0 && amount <= NetworkNodeFluidInterface.TANK_CAPACITY) {
+                fluidInterface.getNode().getOut().getStackInSlot(0).setCount(amount);
+            }
+        }, NetworkNodeFluidInterface.TANK_CAPACITY));
 
         addPlayerInventory(8, 122);
     }

@@ -218,14 +218,41 @@ public class CraftingManager implements ICraftingManager {
         listeners.forEach(ICraftingMonitorListener::onChanged);
     }
 
-    //TODO: Make fluid version
     @Override
     @Nullable
     public ICraftingTask request(ItemStack stack, int amount) {
         for (ICraftingTask task : getTasks()) {
             if (task.getRequested().getItem() != null) {
                 if (API.instance().getComparer().isEqualNoQuantity(task.getRequested().getItem(), stack)) {
-                    amount -= task.getQuantity() * task.getQuantityPerCraft();
+                    amount -= task.getQuantity();
+                }
+            }
+        }
+
+        if (amount > 0) {
+            ICraftingTask task = create(stack, amount);
+
+            if (task != null) {
+                ICraftingTaskError error = task.calculate();
+
+                if (error == null) {
+                    this.add(task);
+
+                    return task;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public ICraftingTask request(FluidStack stack, int amount) {
+        for (ICraftingTask task : getTasks()) {
+            if (task.getRequested().getFluid() != null) {
+                if (API.instance().getComparer().isEqual(task.getRequested().getFluid(), stack, IComparer.COMPARE_NBT)) {
+                    amount -= task.getQuantity();
                 }
             }
         }

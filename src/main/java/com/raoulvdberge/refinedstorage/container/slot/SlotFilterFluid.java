@@ -20,7 +20,7 @@ public class SlotFilterFluid extends SlotFilter {
         return server ? super.getStack() : ItemStack.EMPTY;
     }
 
-    public ItemStack getRealStack() {
+    public ItemStack getActualStack() {
         return super.getStack();
     }
 }

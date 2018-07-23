@@ -2,7 +2,11 @@
 
 ### 1.6.1
 - Added fluid autocrafting (raoulvdberge)
+- Added Crafting Upgrade support for fluids on the Exporter, Constructor and Fluid Interface (raoulvdberge)
+- You can now keep fluids in stock by attaching a External Storage in fluid mode to a Fluid Interface with a Crafting Upgrade (raoulvdberge)
+- You can now specify the amount to export in the Fluid Interface (raoulvdberge)
 - Made the Crafting Preview window bigger (raoulvdberge)
+- Fixed crash log when opening Pattern Grid GUI (raoulvdberge)
 - Updated Russian translation (kellixon)
 
 ### 1.6

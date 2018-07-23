@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -137,7 +138,10 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         for (EnumFacing facing : EnumFacing.VALUES) {
             INetworkNode facingNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(facing));
 
-            if (facingNode instanceof NetworkNodeExternalStorage && facingNode.canUpdate() && ((NetworkNodeExternalStorage) facingNode).getDirection() == facing.getOpposite()) {
+            if (facingNode instanceof NetworkNodeExternalStorage &&
+                facingNode.canUpdate() &&
+                ((NetworkNodeExternalStorage) facingNode).getDirection() == facing.getOpposite() &&
+                ((NetworkNodeExternalStorage) facingNode).getType() == IType.ITEMS) {
                 return true;
             }
         }

@@ -29,7 +29,6 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nullable;
 
-// TODO: Crafting upgrade for fluids
 public class NetworkNodeExporter extends NetworkNode implements IComparable, IType, ICoverable {
     public static final String ID = "exporter";
 
@@ -122,10 +121,12 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     FluidStack stack = fluids[filterSlot];
 
                     if (stack != null) {
+                        int toExtract = Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount();
+
                         FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
 
                         if (stackInStorage != null) {
-                            int toExtract = Math.min(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), stackInStorage.amount);
+                            toExtract = Math.min(toExtract, stackInStorage.amount);
 
                             FluidStack took = network.extractFluid(stack, toExtract, compare, Action.SIMULATE);
 
@@ -138,6 +139,8 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                                     handler.fill(took, true);
                                 }
                             }
+                        } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                            network.getCraftingManager().request(stack, toExtract);
                         }
                     }
 
@@ -240,6 +243,11 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     @Override
     public IItemHandler getFilterInventory() {
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    }
+
+    @Override
+    public boolean isServer() {
+        return !world.isRemote;
     }
 
     @Override

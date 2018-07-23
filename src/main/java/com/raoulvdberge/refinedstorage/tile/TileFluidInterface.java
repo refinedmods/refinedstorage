@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
-import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.EnumFacing;
@@ -15,12 +14,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TileFluidInterface extends TileNode<NetworkNodeFluidInterface> {
-    public static final TileDataParameter<Integer, TileFluidInterface> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<FluidStack, TileFluidInterface> TANK_IN = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, t -> t.getNode().getTankIn().getFluid());
     public static final TileDataParameter<FluidStack, TileFluidInterface> TANK_OUT = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, t -> t.getNode().getTankOut().getFluid());
 
     public TileFluidInterface() {
-        dataManager.addWatchedParameter(COMPARE);
         dataManager.addParameter(TANK_IN);
         dataManager.addParameter(TANK_OUT);
     }

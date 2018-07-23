@@ -363,6 +363,11 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         return getType() == IType.ITEMS ? itemFilters : fluidFilters;
     }
 
+    @Override
+    public boolean isServer() {
+        return !world.isRemote;
+    }
+
     ItemHandlerBase getItemFilters() {
         return itemFilters;
     }

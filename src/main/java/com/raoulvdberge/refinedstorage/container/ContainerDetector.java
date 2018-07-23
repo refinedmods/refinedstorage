@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilterType;
+import com.raoulvdberge.refinedstorage.container.slot.SlotFilterItemOrFluid;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -10,7 +10,7 @@ public class ContainerDetector extends ContainerBase {
     public ContainerDetector(TileDetector detector, EntityPlayer player) {
         super(detector, player);
 
-        addSlotToContainer(new SlotFilterType(detector.getNode(), 0, 107, 20));
+        addSlotToContainer(new SlotFilterItemOrFluid(detector.getNode(), 0, 107, 20));
 
         addPlayerInventory(8, 55);
     }
