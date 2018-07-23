@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
@@ -443,8 +444,10 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
             RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
         } else if (grid.isActive()) {
-            if (clickedClear) {
+            if (clickedClear && grid instanceof IGridNetworkAware) {
                 RS.INSTANCE.network.sendToServer(new MessageGridClear());
+
+                MessageGridClear.clear((IGridNetworkAware) grid, null); // Clear clientside
             }
 
             ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();

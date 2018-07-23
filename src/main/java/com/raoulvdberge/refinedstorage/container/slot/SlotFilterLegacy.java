@@ -7,10 +7,19 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 public class SlotFilterLegacy extends Slot {
+    private Supplier<Boolean> enableHandler = () -> true;
+
     public SlotFilterLegacy(IInventory inventory, int id, int x, int y) {
         super(inventory, id, x, y);
+    }
+
+    public SlotFilterLegacy(IInventory inventory, int id, int x, int y, Supplier<Boolean> enableHandler) {
+        this(inventory, id, x, y);
+
+        this.enableHandler = enableHandler;
     }
 
     @Override
@@ -30,5 +39,10 @@ public class SlotFilterLegacy extends Slot {
         }
 
         super.putStack(stack);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enableHandler.get();
     }
 }

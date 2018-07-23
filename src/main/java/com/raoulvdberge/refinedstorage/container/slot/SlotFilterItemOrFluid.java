@@ -7,6 +7,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 public class SlotFilterItemOrFluid extends SlotFilter {
     public interface IFluidAmountChangeListener {
@@ -19,12 +20,20 @@ public class SlotFilterItemOrFluid extends SlotFilter {
     private IFluidAmountChangeListener listener;
     private int maxFluidAmount;
 
+    private Supplier<Boolean> enableHandler = () -> true;
+
     public SlotFilterItemOrFluid(IType type, int id, int x, int y, int flags, @Nullable IFluidAmountChangeListener listener, int maxFluidAmount) {
         super(null, id, x, y, flags);
 
         this.type = type;
         this.listener = listener;
         this.maxFluidAmount = maxFluidAmount;
+    }
+
+    public SlotFilterItemOrFluid(IType type, int id, int x, int y, int flags, @Nullable IFluidAmountChangeListener listener, int maxFluidAmount, Supplier<Boolean> enableHandler) {
+        this(type, id, x, y, flags, listener, maxFluidAmount);
+
+        this.enableHandler = enableHandler;
     }
 
     public SlotFilterItemOrFluid(IType type, int id, int x, int y) {
@@ -71,5 +80,10 @@ public class SlotFilterItemOrFluid extends SlotFilter {
 
     public int getMaxFluidAmount() {
         return maxFluidAmount;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enableHandler.get();
     }
 }
