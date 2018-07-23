@@ -87,6 +87,16 @@ public interface ICraftingManager {
     ICraftingTask request(ItemStack stack, int amount);
 
     /**
+     * Schedules a crafting task if the task isn't scheduled yet.
+     *
+     * @param stack  the stack
+     * @param amount the mB of the fluid to request
+     * @return the crafting task created, or null if no task is created
+     */
+    @Nullable
+    ICraftingTask request(FluidStack stack, int amount);
+
+    /**
      * Tracks an incoming stack.
      *
      * @param stack the stack

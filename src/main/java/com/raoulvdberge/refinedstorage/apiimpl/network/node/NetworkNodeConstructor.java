@@ -48,7 +48,6 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nullable;
 
-// TODO: Crafting upgrade for fluids.
 public class NetworkNodeConstructor extends NetworkNode implements IComparable, IType, ICoverable {
     public static final String ID = "constructor";
 
@@ -135,6 +134,8 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
                                 world.setBlockState(front, state, 1 | 2);
                             }
+                        } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                            network.getCraftingManager().request(stack, Fluid.BUCKET_VOLUME);
                         }
                     }
                 }
