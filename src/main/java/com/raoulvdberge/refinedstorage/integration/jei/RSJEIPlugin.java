@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
@@ -23,7 +22,7 @@ public class RSJEIPlugin implements IModPlugin {
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginCover());
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowCover());
 
-        registry.addGhostIngredientHandler(GuiBase.class, new GhostIngredientHandler());
+        // TODO: #1905 registry.addGhostIngredientHandler(GuiBase.class, new GhostIngredientHandler());
     }
 
     @Override
