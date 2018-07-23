@@ -20,9 +20,9 @@ public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
 
             if (focus.getMode() == IFocus.Mode.INPUT) {
                 if (stack.getItem() == RSItems.COVER) {
-                    ItemStack covered = ItemCover.getItem(stack);
+                    ItemStack itemInCover = ItemCover.getItem(stack);
 
-                    if ((!RS.INSTANCE.config.hideCovers && CoverManager.isValidCover(covered)) || API.instance().getComparer().isEqualNoQuantity(covered, ItemHollowCover.HIDDEN_COVER_ALTERNATIVE)) {
+                    if ((!RS.INSTANCE.config.hideCovers && CoverManager.isValidCover(itemInCover)) || API.instance().getComparer().isEqualNoQuantity(itemInCover, ItemHollowCover.HIDDEN_COVER_ALTERNATIVE)) {
                         return Collections.singletonList(VanillaRecipeCategoryUid.CRAFTING);
                     }
                 }
@@ -43,12 +43,12 @@ public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
 
             if (focus.getMode() == IFocus.Mode.INPUT) {
                 if (stack.getItem() == RSItems.COVER) {
-                    ItemStack covered = ItemCover.getItem(stack);
+                    ItemStack itemInCover = ItemCover.getItem(stack);
 
-                    if ((!RS.INSTANCE.config.hideCovers && CoverManager.isValidCover(covered)) || API.instance().getComparer().isEqualNoQuantity(covered, ItemHollowCover.HIDDEN_COVER_ALTERNATIVE)) {
+                    if ((!RS.INSTANCE.config.hideCovers && CoverManager.isValidCover(itemInCover)) || API.instance().getComparer().isEqualNoQuantity(itemInCover, ItemHollowCover.HIDDEN_COVER_ALTERNATIVE)) {
                         ItemStack hollowCover = new ItemStack(RSItems.HOLLOW_COVER);
 
-                        ItemCover.setItem(hollowCover, ItemCover.getItem(stack));
+                        ItemCover.setItem(hollowCover, itemInCover);
 
                         return Collections.singletonList((T) new RecipeWrapperHollowCover(stack, hollowCover));
                     }
