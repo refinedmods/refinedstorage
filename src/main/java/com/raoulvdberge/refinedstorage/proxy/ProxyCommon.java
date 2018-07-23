@@ -189,6 +189,7 @@ public class ProxyCommon {
         RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeResponse.class, MessageStorageDiskSizeResponse.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageConfigSync.class, MessageConfigSync.class, id++, Side.CLIENT);
         RS.INSTANCE.network.registerMessage(MessageFluidAmount.class, MessageFluidAmount.class, id++, Side.SERVER);
+        RS.INSTANCE.network.registerMessage(MessageFilterSlot.class, MessageFilterSlot.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
