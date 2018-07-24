@@ -28,13 +28,9 @@ public interface ICraftingPatternContainer {
 
     /**
      * @return the fluid inventory that this container is connected to, or null if no fluid inventory is present
-     *
-     * TODO: Remove default.
      */
     @Nullable
-    default IFluidHandler getConnectedFluidInventory() {
-        return null;
-    }
+    IFluidHandler getConnectedFluidInventory();
 
     /**
      * @return the tile that this container is connected to, or null if no tile is present
