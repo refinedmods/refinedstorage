@@ -22,7 +22,11 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
 import com.raoulvdberge.refinedstorage.block.BlockGrid;
-import com.raoulvdberge.refinedstorage.inventory.*;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -39,6 +43,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -59,12 +64,13 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
-    public static final String NBT_OREDICT_PATTERN = "OredictPattern";
+    private static final String NBT_OREDICT_PATTERN = "OredictPattern";
     public static final String NBT_TAB_SELECTED = "TabSelected";
     public static final String NBT_TAB_PAGE = "TabPage";
     public static final String NBT_SIZE = "Size";
-    public static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
-    public static final String NBT_PROCESSING_TYPE = "ProcessingType";
+    private static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
+    private static final String NBT_PROCESSING_TYPE = "ProcessingType";
+    private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
 
     private Container craftingContainer = new Container() {
         @Override
@@ -80,10 +86,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     private IRecipe currentRecipe;
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
-    private ItemHandlerBase matrixProcessing = new ItemHandlerBase(9 * 2, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerFluid matrixProcessingFluids = new ItemHandlerFluid(9 * 2, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase processingMatrix = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this));
+    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, Fluid.BUCKET_VOLUME, new ListenerNetworkNode(this));
 
-    private ItemHandlerBase patterns = new ItemHandlerBase(2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN)) {
+    private ItemHandlerBase patterns = new ItemHandlerBase(2, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -94,11 +100,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
                 if (isPatternProcessing && isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
-                        matrixProcessing.setStackInSlot(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
+                        processingMatrix.setStackInSlot(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
                     }
 
                     for (int i = 0; i < 9; ++i) {
-                        matrixProcessing.setStackInSlot(9 + i, StackUtils.nullToEmpty(ItemPattern.getOutputSlot(pattern, i)));
+                        processingMatrix.setStackInSlot(9 + i, StackUtils.nullToEmpty(ItemPattern.getOutputSlot(pattern, i)));
                     }
                 } else if (!isPatternProcessing && !isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
@@ -130,7 +136,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     };
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ListenerNetworkNode(this));
 
     private GridType type;
 
@@ -292,11 +298,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     public ItemHandlerBase getProcessingMatrix() {
-        return matrixProcessing;
+        return processingMatrix;
     }
 
-    public ItemHandlerFluid getMatrixProcessingFluids() {
-        return matrixProcessingFluids;
+    public FluidInventory getProcessingMatrixFluids() {
+        return processingMatrixFluids;
     }
 
     @Override
@@ -405,12 +411,12 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     public void clearMatrix() {
-        for (int i = 0; i < matrixProcessing.getSlots(); ++i) {
-            matrixProcessing.setStackInSlot(i, ItemStack.EMPTY);
+        for (int i = 0; i < processingMatrix.getSlots(); ++i) {
+            processingMatrix.setStackInSlot(i, ItemStack.EMPTY);
         }
 
-        for (int i = 0; i < matrixProcessingFluids.getSlots(); ++i) {
-            matrixProcessingFluids.setStackInSlot(i, ItemStack.EMPTY);
+        for (int i = 0; i < processingMatrixFluids.getSlots(); ++i) {
+            processingMatrixFluids.setFluid(i, null);
         }
 
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
@@ -524,25 +530,20 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
             if (processingPattern) {
                 for (int i = 0; i < 18; ++i) {
-                    if (!matrixProcessing.getStackInSlot(i).isEmpty()) {
+                    if (!processingMatrix.getStackInSlot(i).isEmpty()) {
                         if (i >= 9) {
-                            ItemPattern.setOutputSlot(pattern, i - 9, matrixProcessing.getStackInSlot(i));
+                            ItemPattern.setOutputSlot(pattern, i - 9, processingMatrix.getStackInSlot(i));
                         } else {
-                            ItemPattern.setInputSlot(pattern, i, matrixProcessing.getStackInSlot(i));
+                            ItemPattern.setInputSlot(pattern, i, processingMatrix.getStackInSlot(i));
                         }
                     }
 
-                    if (!matrixProcessingFluids.getStackInSlot(i).isEmpty()) {
+                    FluidStack fluid = processingMatrixFluids.getFluid(i);
+                    if (fluid != null) {
                         if (i >= 9) {
-                            FluidStack fluid = StackUtils.getFluid(ItemHandlerHelper.copyStackWithSize(matrixProcessingFluids.getStackInSlot(i), 1), true).getValue();
-                            if (fluid != null) {
-                                ItemPattern.setFluidOutputSlot(pattern, i - 9, StackUtils.copy(fluid, matrixProcessingFluids.getStackInSlot(i).getCount()));
-                            }
+                            ItemPattern.setFluidOutputSlot(pattern, i - 9, fluid);
                         } else {
-                            FluidStack fluid = StackUtils.getFluid(ItemHandlerHelper.copyStackWithSize(matrixProcessingFluids.getStackInSlot(i), 1), true).getValue();
-                            if (fluid != null) {
-                                ItemPattern.setFluidInputSlot(pattern, i, StackUtils.copy(fluid, matrixProcessingFluids.getStackInSlot(i).getCount()));
-                            }
+                            ItemPattern.setFluidInputSlot(pattern, i, fluid);
                         }
                     }
                 }
@@ -574,21 +575,21 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
             int outputsFilled = 0;
 
             for (int i = 0; i < 9; ++i) {
-                if (!matrixProcessing.getStackInSlot(i).isEmpty()) {
+                if (!processingMatrix.getStackInSlot(i).isEmpty()) {
                     inputsFilled++;
                 }
 
-                if (!matrixProcessingFluids.getStackInSlot(i).isEmpty()) {
+                if (processingMatrixFluids.getFluid(i) != null) {
                     inputsFilled++;
                 }
             }
 
             for (int i = 9; i < 18; ++i) {
-                if (!matrixProcessing.getStackInSlot(i).isEmpty()) {
+                if (!processingMatrix.getStackInSlot(i).isEmpty()) {
                     outputsFilled++;
                 }
 
-                if (!matrixProcessingFluids.getStackInSlot(i).isEmpty()) {
+                if (processingMatrixFluids.getFluid(i) != null) {
                     outputsFilled++;
                 }
             }
@@ -689,13 +690,13 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public IItemHandler getFilterInventory() {
-        return getType() == IType.FLUIDS ? matrixProcessingFluids : matrixProcessing;
+    public IItemHandler getItemFilters() {
+        return processingMatrix;
     }
 
     @Override
-    public boolean isServer() {
-        return !world.isRemote;
+    public FluidInventory getFluidFilters() {
+        return processingMatrixFluids;
     }
 
     @Override
@@ -710,8 +711,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
         StackUtils.readItems(matrix, 0, tag);
         StackUtils.readItems(patterns, 1, tag);
         StackUtils.readItems(filter, 2, tag);
-        StackUtils.readItems(matrixProcessing, 3, tag);
-        StackUtils.readItems(matrixProcessingFluids, 4, tag, StackUtils::deserializeStackFromNbt);
+        StackUtils.readItems(processingMatrix, 3, tag);
+
+        if (tag.hasKey(NBT_PROCESSING_MATRIX_FLUIDS)) {
+            processingMatrixFluids.readFromNbt(tag.getCompoundTag(NBT_PROCESSING_MATRIX_FLUIDS));
+        }
 
         if (tag.hasKey(NBT_TAB_SELECTED)) {
             tabSelected = tag.getInteger(NBT_TAB_SELECTED);
@@ -734,9 +738,9 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
         StackUtils.writeItems(matrix, 0, tag);
         StackUtils.writeItems(patterns, 1, tag);
         StackUtils.writeItems(filter, 2, tag);
-        StackUtils.writeItems(matrixProcessing, 3, tag);
-        StackUtils.writeItems(matrixProcessingFluids, 4, tag, StackUtils::serializeStackToNbt);
+        StackUtils.writeItems(processingMatrix, 3, tag);
 
+        tag.setTag(NBT_PROCESSING_MATRIX_FLUIDS, processingMatrixFluids.writeToNbt());
         tag.setInteger(NBT_TAB_SELECTED, tabSelected);
         tag.setInteger(NBT_TAB_PAGE, tabPage);
 

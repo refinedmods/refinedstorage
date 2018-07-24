@@ -5,11 +5,11 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileConstructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -55,13 +55,14 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     private static final String NBT_TYPE = "Type";
     private static final String NBT_DROP = "Drop";
     private static final String NBT_COVERS = "Covers";
+    private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private static final int BASE_SPEED = 20;
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(1, new ListenerNetworkNode(this));
+    private FluidInventory fluidFilters = new FluidInventory(1, new ListenerNetworkNode(this));
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
@@ -105,8 +106,8 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                         dropItem();
                     }
                 }
-            } else if (type == IType.FLUIDS && !fluidFilters.getStackInSlot(0).isEmpty()) {
-                FluidStack stack = fluidFilters.getFluidStackInSlot(0);
+            } else if (type == IType.FLUIDS && fluidFilters.getFluid(0) != null) {
+                FluidStack stack = fluidFilters.getFluid(0);
 
                 if (stack != null && stack.getFluid().canBePlacedInWorld()) {
                     BlockPos front = pos.offset(getDirection());
@@ -300,7 +301,8 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         tag.setBoolean(NBT_DROP, drop);
 
         StackUtils.writeItems(itemFilters, 0, tag);
-        StackUtils.writeItems(fluidFilters, 2, tag);
+
+        tag.setTag(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
 
         return tag;
     }
@@ -326,7 +328,10 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
-        StackUtils.readItems(fluidFilters, 2, tag);
+
+        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+            fluidFilters.readFromNbt(tag.getCompoundTag(NBT_FLUID_FILTERS));
+        }
     }
 
     public boolean isDrop() {
@@ -369,13 +374,13 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public IItemHandler getFilterInventory() {
-        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    public IItemHandler getItemFilters() {
+        return itemFilters;
     }
 
     @Override
-    public boolean isServer() {
-        return !world.isRemote;
+    public FluidInventory getFluidFilters() {
+        return fluidFilters;
     }
 
     @Override

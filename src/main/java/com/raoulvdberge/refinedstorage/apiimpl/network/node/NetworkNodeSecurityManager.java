@@ -7,9 +7,9 @@ import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityCard;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -28,7 +28,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
 
     private List<ISecurityCard> actualCards = new ArrayList<>();
 
-    private ItemHandlerBase cards = new ItemHandlerBase(9 * 2, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD)) {
+    private ItemHandlerBase cards = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -42,7 +42,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
             }
         }
     };
-    private ItemHandlerBase editCard = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD));
+    private ItemHandlerBase editCard = new ItemHandlerBase(1, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD));
 
     public NetworkNodeSecurityManager(World world, BlockPos pos) {
         super(world, pos);

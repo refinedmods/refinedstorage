@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.inventory;
+package com.raoulvdberge.refinedstorage.inventory.item.validator;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

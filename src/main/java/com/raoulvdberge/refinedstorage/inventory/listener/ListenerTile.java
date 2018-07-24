@@ -1,13 +1,13 @@
-package com.raoulvdberge.refinedstorage.inventory;
+package com.raoulvdberge.refinedstorage.inventory.listener;
 
 import net.minecraft.tileentity.TileEntity;
 
 import java.util.function.Consumer;
 
-public class ItemHandlerListenerTile implements Consumer<Integer> {
+public class ListenerTile implements Consumer<Integer> {
     private TileEntity tile;
 
-    public ItemHandlerListenerTile(TileEntity tile) {
+    public ListenerTile(TileEntity tile) {
         this.tile = tile;
     }
 

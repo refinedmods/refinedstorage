@@ -3,15 +3,14 @@ package com.raoulvdberge.refinedstorage.container.slot;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
-public class SlotCrafterManager extends SlotItemHandler {
+public class SlotCrafterManager extends SlotBase {
     private boolean visible;
     private NetworkNodeCrafterManager crafterManager;
     private IResizableDisplay display;
 
-    public SlotCrafterManager(IItemHandler itemHandler, int index, int xPosition, int yPosition, boolean visible, IResizableDisplay display, NetworkNodeCrafterManager crafterManager) {
-        super(itemHandler, index, xPosition, yPosition);
+    public SlotCrafterManager(IItemHandler itemHandler, int inventoryIndex, int x, int y, boolean visible, IResizableDisplay display, NetworkNodeCrafterManager crafterManager) {
+        super(itemHandler, inventoryIndex, x, y);
 
         this.visible = visible;
         this.display = display;

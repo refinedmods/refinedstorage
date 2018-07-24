@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.inventory;
+package com.raoulvdberge.refinedstorage.inventory.item;
 
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Filter;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;

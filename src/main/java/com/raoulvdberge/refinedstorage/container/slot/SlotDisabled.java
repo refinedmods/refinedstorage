@@ -1,32 +1,17 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.function.Supplier;
 
-public class SlotDisabled extends Slot {
-    private Supplier<Boolean> enableHandler = () -> true;
-
-    public SlotDisabled(IInventory inventory, int id, int x, int y) {
-        super(inventory, id, x, y);
-    }
-
-    public SlotDisabled(IInventory inventory, int id, int x, int y, Supplier<Boolean> enableHandler) {
-        this(inventory, id, x, y);
-
-        this.enableHandler = enableHandler;
+public class SlotDisabled extends SlotBase {
+    public SlotDisabled(IItemHandler itemHandler, int inventoryIndex, int x, int y) {
+        super(itemHandler, inventoryIndex, x, y);
     }
 
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack) {
         return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enableHandler.get();
     }
 }

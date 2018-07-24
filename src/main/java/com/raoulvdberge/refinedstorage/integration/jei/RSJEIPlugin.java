@@ -22,7 +22,8 @@ public class RSJEIPlugin implements IModPlugin {
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginCover());
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowCover());
 
-        // TODO: #1905 registry.addGhostIngredientHandler(GuiBase.class, new GhostIngredientHandler());
+        // TODO: #1905
+        // registry.addGhostIngredientHandler(GuiBase.class, new GhostIngredientHandler());
     }
 
     @Override

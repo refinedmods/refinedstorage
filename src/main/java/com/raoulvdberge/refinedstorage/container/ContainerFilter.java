@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterIcon;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterIcon;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -50,7 +50,7 @@ public class ContainerFilter extends ContainerBase {
             stack = slot.getStack();
 
             if (index > 27 - 1) {
-                return mergeItemStackToFilters(stack, 0, 27);
+                return transferToFilters(stack, 0, 27);
             }
 
             return ItemStack.EMPTY;

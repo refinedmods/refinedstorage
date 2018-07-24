@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.config;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.container.ContainerBase;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameterClientListener;
 import net.minecraft.network.datasync.DataSerializers;
@@ -18,10 +18,6 @@ public interface IType {
         return new TileDataParameter<>(DataSerializers.VARINT, ITEMS, t -> ((IType) t.getNode()).getType(), (t, v) -> {
             if (v == IType.ITEMS || v == IType.FLUIDS) {
                 ((IType) t.getNode()).setType(v);
-
-                t.getWorld().playerEntities.stream()
-                    .filter(p -> p.openContainer instanceof ContainerBase && ((ContainerBase) p.openContainer).getTile().getPos().equals(t.getPos()))
-                    .forEach(p -> p.openContainer.detectAndSendChanges());
             }
         }, clientListener);
     }
@@ -34,7 +30,7 @@ public interface IType {
 
     void setType(int type);
 
-    IItemHandler getFilterInventory();
+    IItemHandler getItemFilters();
 
-    boolean isServer();
+    FluidInventory getFluidFilters();
 }

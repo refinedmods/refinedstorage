@@ -4,7 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
-import com.raoulvdberge.refinedstorage.container.slot.SlotGridCrafting;
+import com.raoulvdberge.refinedstorage.container.slot.grid.SlotGridCrafting;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInterModComms;

@@ -15,9 +15,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -45,9 +45,10 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_COVERS = "Covers";
+    private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ListenerNetworkNode(this));
+    private FluidInventory fluidFilters = new FluidInventory(9, new ListenerNetworkNode(this));
 
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
@@ -135,7 +136,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(itemFilters, 0, tag);
-        StackUtils.writeItems(fluidFilters, 1, tag);
+
+        tag.setTag(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
 
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
@@ -152,7 +154,10 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         super.readConfiguration(tag);
 
         StackUtils.readItems(itemFilters, 0, tag);
-        StackUtils.readItems(fluidFilters, 1, tag);
+
+        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+            fluidFilters.readFromNbt(tag.getCompoundTag(NBT_FLUID_FILTERS));
+        }
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -172,7 +177,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
         accessType = AccessTypeUtils.readAccessType(tag);
 
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters, fluidFilters);
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);
     }
 
     @Override
@@ -341,13 +346,13 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public IItemHandler getFilterInventory() {
-        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    public IItemHandler getItemFilters() {
+        return itemFilters;
     }
 
     @Override
-    public boolean isServer() {
-        return !world.isRemote;
+    public FluidInventory getFluidFilters() {
+        return fluidFilters;
     }
 
     public List<IStorageExternal<ItemStack>> getItemStorages() {

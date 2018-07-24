@@ -4,12 +4,9 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
-import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -21,31 +18,19 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class NetworkNodeStorageMonitor extends NetworkNode implements IComparable, IType {
+public class NetworkNodeStorageMonitor extends NetworkNode implements IComparable {
     public static final int DEPOSIT_ALL_MAX_DELAY = 500;
 
     public static final String ID = "storage_monitor";
 
     private static final String NBT_COMPARE = "Compare";
-    private static final String NBT_TYPE = "Type";
 
-    private ItemHandlerBase itemFilter = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this)) {
-        @Override
-        public void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            WorldUtils.updateBlock(world, pos);
-        }
-    };
-
-    private ItemHandlerFluid fluidFilter = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this)) {
+    private ItemHandlerBase itemFilter = new ItemHandlerBase(1, new ListenerNetworkNode(this)) {
         @Override
         public void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -57,7 +42,6 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     private Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
-    private int type = IType.ITEMS;
 
     private int oldAmount = -1;
 
@@ -81,7 +65,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     public boolean depositAll(EntityPlayer player) {
-        if (type != IType.ITEMS || network == null) {
+        if (network == null) {
             return false;
         }
 
@@ -112,7 +96,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     public boolean deposit(EntityPlayer player, ItemStack toInsert) {
-        if (type != IType.ITEMS || network == null) {
+        if (network == null) {
             return false;
         }
 
@@ -132,7 +116,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     public void extract(EntityPlayer player, EnumFacing side) {
-        if (type != IType.ITEMS || network == null || getDirection() != side) {
+        if (network == null || getDirection() != side) {
             return;
         }
 
@@ -180,38 +164,12 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     @Override
-    public int getType() {
-        return world.isRemote ? TileStorageMonitor.TYPE.getValue() : type;
-    }
-
-    @Override
-    public void setType(int type) {
-        this.type = type;
-
-        WorldUtils.updateBlock(world, pos);
-
-        markDirty();
-    }
-
-    @Override
-    public IItemHandler getFilterInventory() {
-        return getType() == IType.ITEMS ? itemFilter : fluidFilter;
-    }
-
-    @Override
-    public boolean isServer() {
-        return !world.isRemote;
-    }
-
-    @Override
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 
         tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_TYPE, type);
 
         StackUtils.writeItems(itemFilter, 0, tag);
-        StackUtils.writeItems(fluidFilter, 1, tag);
 
         return tag;
     }
@@ -224,20 +182,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
             compare = tag.getInteger(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
-        }
-
         StackUtils.readItems(itemFilter, 0, tag);
-        StackUtils.readItems(fluidFilter, 1, tag);
-    }
-
-    public ItemHandlerBase getItemFilter() {
-        return itemFilter;
-    }
-
-    public ItemHandlerFluid getFluidFilter() {
-        return fluidFilter;
     }
 
     public int getAmount() {
@@ -245,33 +190,19 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
             return 0;
         }
 
-        switch (type) {
-            case ITEMS: {
-                ItemStack toCheck = itemFilter.getStackInSlot(0);
+        ItemStack toCheck = itemFilter.getStackInSlot(0);
 
-                if (toCheck.isEmpty()) {
-                    return 0;
-                }
-
-                ItemStack stored = network.getItemStorageCache().getList().get(toCheck, compare);
-
-                return stored != null ? stored.getCount() : 0;
-            }
-            case FLUIDS: {
-                FluidStack toCheck = fluidFilter.getFluidStackInSlot(0);
-
-                if (toCheck == null) {
-                    return 0;
-                }
-
-                FluidStack stored = network.getFluidStorageCache().getList().get(toCheck, compare);
-
-                return stored != null ? stored.amount : 0;
-            }
-            default: {
-                return 0;
-            }
+        if (toCheck.isEmpty()) {
+            return 0;
         }
+
+        ItemStack stored = network.getItemStorageCache().getList().get(toCheck, compare);
+
+        return stored != null ? stored.getCount() : 0;
+    }
+
+    public ItemHandlerBase getItemFilters() {
+        return itemFilter;
     }
 
     @Override

@@ -15,9 +15,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -45,13 +45,14 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private static final int DISK_STATE_UPDATE_THROTTLE = 30;
 
     private int ticksSinceBlockUpdateRequested;
     private boolean blockUpdateRequested;
 
-    private ItemHandlerBase disks = new ItemHandlerBase(8, new ItemHandlerListenerNetworkNode(this), VALIDATOR_STORAGE_DISK) {
+    private ItemHandlerBase disks = new ItemHandlerBase(8, new ListenerNetworkNode(this), VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -77,8 +78,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         }
     };
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ListenerNetworkNode(this));
+    private FluidInventory fluidFilters = new FluidInventory(9, new ListenerNetworkNode(this));
 
     private IStorageDisk[] itemDisks = new IStorageDisk[8];
     private IStorageDisk[] fluidDisks = new IStorageDisk[8];
@@ -199,8 +200,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(itemFilters, 1, tag);
-        StackUtils.writeItems(fluidFilters, 2, tag);
 
+        tag.setTag(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
@@ -216,7 +217,10 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         super.readConfiguration(tag);
 
         StackUtils.readItems(itemFilters, 1, tag);
-        StackUtils.readItems(fluidFilters, 2, tag);
+
+        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+            fluidFilters.readFromNbt(tag.getCompoundTag(NBT_FLUID_FILTERS));
+        }
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -236,7 +240,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
         accessType = AccessTypeUtils.readAccessType(tag);
 
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters, fluidFilters);
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);
     }
 
     @Override
@@ -359,20 +363,12 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public IItemHandler getFilterInventory() {
-        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
-    }
-
-    @Override
-    public boolean isServer() {
-        return !world.isRemote;
-    }
-
-    ItemHandlerBase getItemFilters() {
+    public IItemHandler getItemFilters() {
         return itemFilters;
     }
 
-    ItemHandlerFluid getFluidFilters() {
+    @Override
+    public FluidInventory getFluidFilters() {
         return fluidFilters;
     }
 

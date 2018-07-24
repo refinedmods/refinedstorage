@@ -1,45 +1,31 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotDisabled;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluidDisabled;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
-
-import javax.annotation.Nonnull;
 
 public class ContainerCraftingSettings extends ContainerBase {
     public ContainerCraftingSettings(EntityPlayer player, IGridStack stack) {
         super(null, player);
 
-        IItemHandler handler = null;
-
         if (stack instanceof GridStackFluid) {
-            handler = new ItemHandlerFluid(1, null);
+            FluidInventory inventory = new FluidInventory(1);
 
-            ((ItemHandlerFluid) handler).setFluidStack(0, ((GridStackFluid) stack).getStack());
+            inventory.setFluid(0, ((GridStackFluid) stack).getStack());
+
+            addSlotToContainer(new SlotFilterFluidDisabled(inventory, 0, 89, 48));
         } else if (stack instanceof GridStackItem) {
-            handler = new ItemStackHandler(1);
+            ItemStackHandler handler = new ItemStackHandler(1);
 
-            ((ItemStackHandler) handler).setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(((GridStackItem) stack).getStack(), 1));
+            handler.setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(((GridStackItem) stack).getStack(), 1));
+
+            addSlotToContainer(new SlotDisabled(handler, 0, 89, 48));
         }
-
-        addSlotToContainer(new SlotItemHandler(handler, 0, 89, 48) {
-            @Override
-            public boolean isItemValid(@Nonnull ItemStack stack) {
-                return false;
-            }
-
-            @Nonnull
-            @Override
-            public ItemStack getStack() {
-                return stack instanceof GridStackFluid ? ItemStack.EMPTY : super.getStack();
-            }
-        });
     }
 }

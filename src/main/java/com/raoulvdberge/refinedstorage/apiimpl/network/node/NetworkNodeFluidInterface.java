@@ -6,7 +6,11 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalFluid;
-import com.raoulvdberge.refinedstorage.inventory.*;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidHandlerFluidInterface;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -26,10 +30,11 @@ import org.apache.commons.lang3.tuple.Pair;
 public class NetworkNodeFluidInterface extends NetworkNode {
     public static final String ID = "fluid_interface";
 
-    public static final int TANK_CAPACITY = 16000;
+    public static final int TANK_CAPACITY = 16_000;
 
     private static final String NBT_TANK_IN = "TankIn";
     private static final String NBT_TANK_OUT = "TankOut";
+    private static final String NBT_OUT = "Out";
 
     private FluidTank tankIn = new FluidTank(TANK_CAPACITY) {
         @Override
@@ -47,10 +52,10 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
     private FluidHandlerFluidInterface tank = new FluidHandlerFluidInterface(tankIn, tankOut);
 
-    private ItemHandlerBase in = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerFluid out = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase in = new ItemHandlerBase(1, new ListenerNetworkNode(this));
+    private FluidInventory out = new FluidInventory(1, TANK_CAPACITY, new ListenerNetworkNode(this));
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
     public NetworkNodeFluidInterface(World world, BlockPos pos) {
         super(world, pos);
@@ -66,21 +71,21 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     public void update() {
         super.update();
 
-        ItemStack container = in.getStackInSlot(0);
-
-        if (!container.isEmpty()) {
-            Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
-
-            if (result.getValue() != null && tankIn.fillInternal(result.getValue(), false) == result.getValue().amount) {
-                result = StackUtils.getFluid(container, false);
-
-                tankIn.fillInternal(result.getValue(), true);
-
-                in.setStackInSlot(0, result.getLeft());
-            }
-        }
-
         if (network != null && canUpdate()) {
+            ItemStack container = in.getStackInSlot(0);
+
+            if (!container.isEmpty()) {
+                Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
+
+                if (result.getValue() != null && tankIn.fillInternal(result.getValue(), false) == result.getValue().amount) {
+                    result = StackUtils.getFluid(container, false);
+
+                    tankIn.fillInternal(result.getValue(), true);
+
+                    in.setStackInSlot(0, result.getLeft());
+                }
+            }
+
             if (ticks % upgrades.getSpeed() == 0) {
                 FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
 
@@ -94,8 +99,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                 }
             }
 
-            FluidStack wanted = out.getFluidStackInSlot(0);
-            int wantedAmount = out.getStackInSlot(0).getCount();
+            FluidStack wanted = out.getFluid(0);
             FluidStack got = tankOut.getFluid();
 
             if (wanted == null) {
@@ -109,7 +113,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
                 onTankOutChanged();
             } else {
-                int delta = got == null ? wantedAmount : (wantedAmount - got.amount);
+                int delta = got == null ? wanted.amount : (wanted.amount - got.amount);
 
                 if (delta > 0) {
                     final boolean actingAsStorage = isActingAsStorage();
@@ -215,7 +219,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 
-        StackUtils.writeItems(out, 2, tag, StackUtils::serializeStackToNbt);
+        tag.setTag(NBT_OUT, out.writeToNbt());
 
         return tag;
     }
@@ -224,7 +228,9 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     public void readConfiguration(NBTTagCompound tag) {
         super.readConfiguration(tag);
 
-        StackUtils.readItems(out, 2, tag, StackUtils::deserializeStackFromNbt);
+        if (tag.hasKey(NBT_OUT)) {
+            out.readFromNbt(tag.getCompoundTag(NBT_OUT));
+        }
     }
 
     public ItemHandlerUpgrade getUpgrades() {
@@ -235,7 +241,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
         return in;
     }
 
-    public ItemHandlerFluid getOut() {
+    public FluidInventory getOut() {
         return out;
     }
 

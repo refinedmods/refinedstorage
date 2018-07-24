@@ -1,27 +1,30 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.container.slot.*;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.GuiFluidAmount;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyDisabled;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
-import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import invtweaks.api.container.InventoryContainer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 @InventoryContainer(showOptions = false)
 public abstract class ContainerBase extends Container {
@@ -31,11 +34,16 @@ public abstract class ContainerBase extends Container {
     private TileDataWatcher listener;
     private EntityPlayer player;
 
+    private List<SlotFilterFluid> fluidSlots = new ArrayList<>();
+    private List<FluidStack> fluids = new ArrayList<>();
+
     public ContainerBase(@Nullable TileBase tile, EntityPlayer player) {
         this.tile = tile;
+
         if (tile != null && player instanceof EntityPlayerMP) {
             listener = new TileDataWatcher((EntityPlayerMP) player, tile.getDataManager());
         }
+
         this.player = player;
     }
 
@@ -56,7 +64,7 @@ public abstract class ContainerBase extends Container {
             int y = yInventory + 4 + (3 * 18);
 
             if (isHeldItemDisabled() && i == player.inventory.currentItem) {
-                addSlotToContainer(new SlotDisabled(player.inventory, id, x, y));
+                addSlotToContainer(new SlotLegacyDisabled(player.inventory, id, x, y));
             } else {
                 addSlotToContainer(new Slot(player.inventory, id, x, y));
             }
@@ -77,8 +85,7 @@ public abstract class ContainerBase extends Container {
     public ItemStack slotClick(int id, int dragType, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
-        // Prevent swapping disabled held item with the number keys
-        // (dragType is the slot we're swapping with)
+        // Prevent swapping disabled held item with the number keys (dragType is the slot we're swapping with)
         if (isHeldItemDisabled() && clickType == ClickType.SWAP && dragType == player.inventory.currentItem) {
             return ItemStack.EMPTY;
         }
@@ -88,20 +95,11 @@ public abstract class ContainerBase extends Container {
                 if (clickType == ClickType.QUICK_MOVE) {
                     slot.putStack(ItemStack.EMPTY);
                 } else if (!player.inventory.getItemStack().isEmpty()) {
-                    slot.putStack(ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), ((SlotFilter) slot).getInitialAmount(player.inventory.getItemStack())));
+                    slot.putStack(player.inventory.getItemStack().copy());
                 } else if (slot.getHasStack()) {
-                    if (slot instanceof SlotFilterItemOrFluid && ((SlotFilterItemOrFluid) slot).getType().getType() == IType.FLUIDS) {
-                        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-                            Minecraft.getMinecraft().addScheduledTask(() -> {
-                                // Prevent JEI crash - this needs to run on the main thread and not on the packet handler thread
-                                FMLClientHandler.instance().showGuiScreen(new GuiFluidAmount((GuiBase) Minecraft.getMinecraft().currentScreen, player, slot.slotNumber, ((SlotFilterItemOrFluid) slot).getActualStack(), ((SlotFilterItemOrFluid) slot).getMaxFluidAmount()));
-                            });
-                        }
-                    } else {
-                        slot.getStack().setCount(((SlotFilter) slot).getModifiedAmount(dragType));
+                    slot.getStack().setCount(((SlotFilter) slot).getModifiedAmount(dragType));
 
-                        detectAndSendChanges();
-                    }
+                    detectAndSendChanges();
                 }
             } else if (player.inventory.getItemStack().isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
@@ -110,7 +108,21 @@ public abstract class ContainerBase extends Container {
             }
 
             return player.inventory.getItemStack();
-        } else if (slot instanceof SlotFilterLegacy) {
+        } else if (slot instanceof SlotFilterFluid) {
+            if (((SlotFilterFluid) slot).isSizeAllowed()) {
+                if (clickType == ClickType.QUICK_MOVE) {
+                    ((SlotFilterFluid) slot).onContainerClicked(ItemStack.EMPTY);
+                } else if (!player.inventory.getItemStack().isEmpty()) {
+                    ((SlotFilterFluid) slot).onContainerClicked(player.inventory.getItemStack());
+                }
+            } else if (player.inventory.getItemStack().isEmpty()) {
+                ((SlotFilterFluid) slot).onContainerClicked(ItemStack.EMPTY);
+            } else {
+                ((SlotFilterFluid) slot).onContainerClicked(player.inventory.getItemStack());
+            }
+
+            return player.inventory.getItemStack();
+        } else if (slot instanceof SlotLegacyFilter) {
             if (player.inventory.getItemStack().isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else if (slot.isItemValid(player.inventory.getItemStack())) {
@@ -118,7 +130,7 @@ public abstract class ContainerBase extends Container {
             }
 
             return player.inventory.getItemStack();
-        } else if (slot instanceof SlotDisabled) {
+        } else if (slot instanceof SlotLegacyDisabled) {
             return ItemStack.EMPTY;
         }
 
@@ -130,9 +142,9 @@ public abstract class ContainerBase extends Container {
         return ItemStack.EMPTY;
     }
 
-    protected ItemStack mergeItemStackToFilters(ItemStack stack, int begin, int end) {
+    protected ItemStack transferToFilters(ItemStack stack, int begin, int end) {
         for (int i = begin; i < end; ++i) {
-            if (API.instance().getComparer().isEqualNoQuantity(getStackFromSlot(getSlot(i)), stack)) {
+            if (API.instance().getComparer().isEqualNoQuantity(getSlot(i).getStack(), stack)) {
                 return ItemStack.EMPTY;
             }
         }
@@ -140,7 +152,7 @@ public abstract class ContainerBase extends Container {
         for (int i = begin; i < end; ++i) {
             Slot slot = getSlot(i);
 
-            if (getStackFromSlot(slot).isEmpty() && slot.isItemValid(stack)) {
+            if (slot.getStack().isEmpty() && slot.isItemValid(stack)) {
                 slot.putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
                 slot.onSlotChanged();
 
@@ -151,19 +163,30 @@ public abstract class ContainerBase extends Container {
         return ItemStack.EMPTY;
     }
 
-    @Nonnull
-    private ItemStack getStackFromSlot(Slot slot) {
-        ItemStack stackInSlot = slot.getStack();
+    protected ItemStack transferToFluidFilters(ItemStack stack) {
+        FluidStack fluidInContainer = StackUtils.getFluid(stack, true).getValue();
 
-        if (stackInSlot.isEmpty()) {
-            if (slot instanceof SlotFilterFluid) {
-                stackInSlot = ((SlotFilterFluid) slot).getActualStack();
-            } else if (slot instanceof SlotFilterItemOrFluid) {
-                stackInSlot = ((SlotFilterItemOrFluid) slot).getActualStack();
+        if (fluidInContainer == null) {
+            return ItemStack.EMPTY;
+        }
+
+        for (SlotFilterFluid slot : fluidSlots) {
+            if (API.instance().getComparer().isEqual(fluidInContainer, slot.getFluidInventory().getFluid(slot.getSlotIndex()), IComparer.COMPARE_NBT)) {
+                return ItemStack.EMPTY;
             }
         }
 
-        return stackInSlot;
+        for (SlotFilterFluid slot : fluidSlots) {
+            FluidInventory inventory = slot.getFluidInventory();
+
+            if (inventory.getFluid(slot.getSlotIndex()) == null) {
+                slot.onContainerClicked(stack);
+
+                return ItemStack.EMPTY;
+            }
+        }
+
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -176,11 +199,36 @@ public abstract class ContainerBase extends Container {
     }
 
     @Override
+    protected Slot addSlotToContainer(Slot slot) {
+        if (slot instanceof SlotFilterFluid) {
+            fluids.add(null);
+            fluidSlots.add((SlotFilterFluid) slot);
+        }
+
+        return super.addSlotToContainer(slot);
+    }
+
+    @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
 
         if (listener != null) {
             listener.detectAndSendChanges();
+        }
+
+        if (this.getPlayer() instanceof EntityPlayerMP) {
+            for (int i = 0; i < this.fluidSlots.size(); ++i) {
+                SlotFilterFluid slot = this.fluidSlots.get(i);
+
+                FluidStack cached = this.fluids.get(i);
+                FluidStack actual = slot.getFluidInventory().getFluid(slot.getSlotIndex());
+
+                if (!API.instance().getComparer().isEqual(cached, actual, IComparer.COMPARE_QUANTITY | IComparer.COMPARE_NBT)) {
+                    this.fluids.set(i, actual);
+
+                    RS.INSTANCE.network.sendTo(new MessageSlotFilterFluidUpdate(slot.slotNumber, actual), (EntityPlayerMP) this.getPlayer());
+                }
+            }
         }
     }
 

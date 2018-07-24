@@ -2,10 +2,10 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
-import com.raoulvdberge.refinedstorage.inventory.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemNetworkCard;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 public class NetworkNodeNetworkTransmitter extends NetworkNode {
     public static final String ID = "network_transmitter";
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_INTERDIMENSIONAL) {
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, new ListenerNetworkNode(this), ItemUpgrade.TYPE_INTERDIMENSIONAL) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -33,7 +33,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         }
     };
 
-    private ItemHandlerBase networkCard = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
+    private ItemHandlerBase networkCard = new ItemHandlerBase(1, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

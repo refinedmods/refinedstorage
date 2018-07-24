@@ -1,14 +1,11 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilterItemOrFluid;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
-import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFluidInterface extends ContainerBase {
@@ -20,31 +17,7 @@ public class ContainerFluidInterface extends ContainerBase {
         }
 
         addSlotToContainer(new SlotItemHandler(fluidInterface.getNode().getIn(), 0, 44, 32));
-        addSlotToContainer(new SlotFilterItemOrFluid(new IType() {
-            @Override
-            public int getType() {
-                return IType.FLUIDS;
-            }
-
-            @Override
-            public void setType(int type) {
-                // NO OP
-            }
-
-            @Override
-            public IItemHandler getFilterInventory() {
-                return fluidInterface.getNode().getOut();
-            }
-
-            @Override
-            public boolean isServer() {
-                return !fluidInterface.getNode().getWorld().isRemote;
-            }
-        }, 0, 116, 32, SlotFilter.FILTER_ALLOW_SIZE, (slot, amount) -> {
-            if (amount > 0 && amount <= NetworkNodeFluidInterface.TANK_CAPACITY) {
-                fluidInterface.getNode().getOut().getStackInSlot(0).setCount(amount);
-            }
-        }, NetworkNodeFluidInterface.TANK_CAPACITY));
+        addSlotToContainer(new SlotFilterFluid(fluidInterface.getNode().getOut(), 0, 116, 32, SlotFilter.FILTER_ALLOW_SIZE));
 
         addPlayerInventory(8, 122);
     }
@@ -58,12 +31,12 @@ public class ContainerFluidInterface extends ContainerBase {
         if (slot.getHasStack()) {
             stack = slot.getStack();
 
-            if (index < 4 + 2) {
-                if (!mergeItemStack(stack, 4 + 2, inventorySlots.size(), false)) {
+            if (index < 4 + 1 + 1) {
+                if (!mergeItemStack(stack, 4 + 1 + 1, inventorySlots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 4 + 1, false)) {
-                return mergeItemStackToFilters(stack, 5, 6);
+                return transferToFluidFilters(stack);
             }
 
             if (stack.getCount() == 0) {

@@ -10,9 +10,16 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.container.slot.*;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
+import com.raoulvdberge.refinedstorage.container.slot.grid.SlotGridCrafting;
+import com.raoulvdberge.refinedstorage.container.slot.grid.SlotGridCraftingResult;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyBase;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyDisabled;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
@@ -21,7 +28,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
@@ -33,7 +39,7 @@ public class ContainerGrid extends ContainerBase {
     private IResizableDisplay display;
 
     private SlotGridCraftingResult craftingResultSlot;
-    private SlotDisabled patternResultSlot;
+    private SlotLegacyBase patternResultSlot;
 
     public ContainerGrid(IGrid grid, IResizableDisplay display, @Nullable TileBase gridTile, EntityPlayer player) {
         super(gridTile, player);
@@ -96,11 +102,8 @@ public class ContainerGrid extends ContainerBase {
             int y = headerAndSlots + 4;
 
             for (int i = 0; i < 9 * 2; ++i) {
-                addSlotToContainer(new SlotFilterItemOrFluid((NetworkNodeGrid) grid, i, x, y, SlotFilter.FILTER_ALLOW_SIZE, (slot, amount) -> {
-                    if (amount > 0 && amount <= Fluid.BUCKET_VOLUME && slot < ((NetworkNodeGrid) grid).getMatrixProcessingFluids().getSlots()) {
-                        ((NetworkNodeGrid) grid).getMatrixProcessingFluids().getStackInSlot(slot).setCount(amount);
-                    }
-                }, Fluid.BUCKET_VOLUME, () -> ((NetworkNodeGrid) grid).isProcessingPattern()));
+                addSlotToContainer(new SlotFilter(((NetworkNodeGrid) grid).getProcessingMatrix(), i, x, y, SlotFilter.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.ITEMS));
+                addSlotToContainer(new SlotFilterFluid(((NetworkNodeGrid) grid).getProcessingMatrixFluids(), i, x, y, SlotFilter.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.FLUIDS));
 
                 x += 18;
 
@@ -121,7 +124,7 @@ public class ContainerGrid extends ContainerBase {
             y = headerAndSlots + 4;
 
             for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new SlotFilterLegacy(grid.getCraftingMatrix(), i, x, y, () -> !((NetworkNodeGrid) grid).isProcessingPattern()));
+                addSlotToContainer(new SlotLegacyFilter(grid.getCraftingMatrix(), i, x, y).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern()));
 
                 x += 18;
 
@@ -131,7 +134,7 @@ public class ContainerGrid extends ContainerBase {
                 }
             }
 
-            addSlotToContainer(patternResultSlot = new SlotDisabled(grid.getCraftingResult(), 0, 134, headerAndSlots + 22, () -> !((NetworkNodeGrid) grid).isProcessingPattern()));
+            addSlotToContainer(patternResultSlot = (new SlotLegacyDisabled(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern())));
         }
     }
 
@@ -223,7 +226,7 @@ public class ContainerGrid extends ContainerBase {
 
                     sendCraftingSlots();
                     detectAndSendChanges();
-                } else if (slot != patternResultSlot && !(slot instanceof SlotFilterLegacy)) {
+                } else if (slot != patternResultSlot && !(slot instanceof SlotLegacyFilter)) {
                     ItemStack stack = slot.getStack();
 
                     if (grid.getGridType() != GridType.FLUID && stack.getItem() == RSItems.FILTER) {

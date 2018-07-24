@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
@@ -17,7 +17,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import java.util.UUID;
 
 public class ItemMeshDefinitionPortableGrid implements ItemMeshDefinition {
-    // TODO: Optimize
     @Override
     public ModelResourceLocation getModelLocation(ItemStack stack) {
         ItemHandlerBase disk = new ItemHandlerBase(1);

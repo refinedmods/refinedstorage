@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.inventory;
+package com.raoulvdberge.refinedstorage.inventory.item;
 
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;

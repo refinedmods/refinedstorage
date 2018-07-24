@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;

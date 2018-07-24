@@ -16,8 +16,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
 import com.raoulvdberge.refinedstorage.block.enums.ItemStorageType;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import com.raoulvdberge.refinedstorage.tile.config.IAccessType;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -44,7 +44,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private static final String NBT_MODE = "Mode";
     public static final String NBT_ID = "Id";
 
-    private ItemHandlerBase filters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase filters = new ItemHandlerBase(9, new ListenerNetworkNode(this));
 
     private ItemStorageType type;
 
@@ -173,7 +173,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
 
         accessType = AccessTypeUtils.readAccessType(tag);
 
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, filters, null);
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, filters);
     }
 
     public ItemStorageType getType() {

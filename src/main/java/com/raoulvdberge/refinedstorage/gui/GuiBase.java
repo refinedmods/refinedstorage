@@ -4,26 +4,27 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilterItemOrFluid;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButton;
 import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
 import com.raoulvdberge.refinedstorage.integration.jei.RecipeTransferHandlerGrid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import net.minecraftforge.items.SlotItemHandler;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -87,6 +88,16 @@ public abstract class GuiBase extends GuiContainer {
 
     private void runRunnables() {
         Queue<Consumer> queue = RUNNABLES.get(getClass());
+
+        if (queue != null && !queue.isEmpty()) {
+            Consumer callback;
+            while ((callback = queue.poll()) != null) {
+                callback.accept(this);
+            }
+        }
+
+        queue = RUNNABLES.get(GuiContainer.class);
+
         if (queue != null && !queue.isEmpty()) {
             Consumer callback;
             while ((callback = queue.poll()) != null) {
@@ -184,23 +195,19 @@ public abstract class GuiBase extends GuiContainer {
         for (int i = 0; i < inventorySlots.inventorySlots.size(); ++i) {
             Slot slot = inventorySlots.inventorySlots.get(i);
 
-            if (slot instanceof SlotItemHandler && ((SlotItemHandler) slot).getItemHandler() instanceof ItemHandlerFluid) {
-                FluidStack stack = ((ItemHandlerFluid) ((SlotItemHandler) slot).getItemHandler()).getFluidStackInSlot(slot.getSlotIndex());
+            if (slot.isEnabled() && slot instanceof SlotFilterFluid) {
+                FluidStack stack = ((SlotFilterFluid) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (stack != null) {
                     FLUID_RENDERER.draw(mc, guiLeft + slot.xPos, guiTop + slot.yPos, stack);
 
-                    if (slot instanceof SlotFilterItemOrFluid) {
-                        int count = ((SlotFilterItemOrFluid) slot).getActualStack().getCount();
+                    if (((SlotFilterFluid) slot).isSizeAllowed()) {
+                        drawQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.amount));
 
-                        if (count != 1) {
-                            drawQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(count));
-
-                            GL11.glDisable(GL11.GL_LIGHTING);
-                        }
+                        GL11.glDisable(GL11.GL_LIGHTING);
                     }
 
-                    if (inBounds(guiLeft + slot.xPos, guiTop + slot.yPos, 18, 18, mouseX, mouseY)) {
+                    if (inBounds(guiLeft + slot.xPos, guiTop + slot.yPos, 17, 17, mouseX, mouseY)) {
                         this.hoveringFluid = stack.getLocalizedName();
                     }
                 }
@@ -235,6 +242,27 @@ public abstract class GuiBase extends GuiContainer {
 
         if (sideButtonTooltip != null || hoveringFluid != null) {
             drawTooltip(mouseX, mouseY, sideButtonTooltip != null ? sideButtonTooltip : hoveringFluid);
+        }
+    }
+
+    @Override
+    protected void handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type) {
+        if (slot instanceof SlotFilterFluid && slot.isEnabled() && ((SlotFilterFluid) slot).isSizeAllowed() && type != ClickType.QUICK_MOVE && Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty()) {
+            FluidStack stack = ((SlotFilterFluid) slot).getFluidInventory().getFluid(slot.getSlotIndex());
+
+            if (stack != null) {
+                FMLClientHandler.instance().showGuiScreen(new GuiFluidAmount(
+                    (GuiBase) Minecraft.getMinecraft().currentScreen,
+                    Minecraft.getMinecraft().player,
+                    slot.slotNumber,
+                    stack,
+                    ((SlotFilterFluid) slot).getFluidInventory().getMaxAmount()
+                ));
+            } else {
+                super.handleMouseClick(slot, slotId, mouseButton, type);
+            }
+        } else {
+            super.handleMouseClick(slot, slotId, mouseButton, type);
         }
     }
 
@@ -431,5 +459,9 @@ public abstract class GuiBase extends GuiContainer {
         }
 
         queue.add(callback);
+    }
+
+    public static void executeLater(Consumer<GuiContainer> callback) {
+        executeLater(GuiContainer.class, callback);
     }
 }

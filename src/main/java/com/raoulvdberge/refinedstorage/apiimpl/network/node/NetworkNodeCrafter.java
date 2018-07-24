@@ -7,9 +7,9 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -37,7 +37,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private static final String NBT_DISPLAY_NAME = "DisplayName";
     private static final String NBT_UUID = "CrafterUuid";
 
-    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this), s -> isValidPatternInSlot(world, s)) {
+    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ListenerNetworkNode(this), s -> isValidPatternInSlot(world, s)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -63,7 +63,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     private List<ICraftingPattern> actualPatterns = new ArrayList<>();
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
     // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
     private boolean visited = false;

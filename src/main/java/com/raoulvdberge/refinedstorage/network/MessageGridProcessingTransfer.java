@@ -4,17 +4,14 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.ArrayList;
@@ -60,8 +57,6 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
         this.fluidInputs = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            buf.readInt();
-
             this.fluidInputs.add(StackUtils.readFluidStack(buf));
         }
 
@@ -70,8 +65,6 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
         this.fluidOutputs = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            buf.readInt();
-
             this.fluidOutputs.add(StackUtils.readFluidStack(buf));
         }
     }
@@ -110,7 +103,7 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
 
             if (grid.getGridType() == GridType.PATTERN) {
                 ItemHandlerBase handler = ((NetworkNodeGrid) grid).getProcessingMatrix();
-                ItemHandlerFluid handlerFluid = ((NetworkNodeGrid) grid).getMatrixProcessingFluids();
+                FluidInventory handlerFluid = ((NetworkNodeGrid) grid).getProcessingMatrixFluids();
 
                 clearInputsAndOutputs(handler);
                 clearInputsAndOutputs(handlerFluid);
@@ -127,6 +120,12 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
     private void clearInputsAndOutputs(ItemHandlerBase handler) {
         for (int i = 0; i < 9 * 2; ++i) {
             handler.setStackInSlot(i, ItemStack.EMPTY);
+        }
+    }
+
+    private void clearInputsAndOutputs(FluidInventory handler) {
+        for (int i = 0; i < 9 * 2; ++i) {
+            handler.setFluid(i, null);
         }
     }
 
@@ -150,30 +149,21 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
         }
     }
 
-    private void setFluidInputs(ItemHandlerBase handler, Collection<FluidStack> stacks) {
-        setFluidSlots(handler, stacks, 0, 9);
+    private void setFluidInputs(FluidInventory inventory, Collection<FluidStack> stacks) {
+        setFluidSlots(inventory, stacks, 0, 9);
     }
 
-    private void setFluidOutputs(ItemHandlerBase handler, Collection<FluidStack> stacks) {
-        setFluidSlots(handler, stacks, 9, 18);
+    private void setFluidOutputs(FluidInventory inventory, Collection<FluidStack> stacks) {
+        setFluidSlots(inventory, stacks, 9, 18);
     }
 
-    private void setFluidSlots(ItemHandlerBase handler, Collection<FluidStack> stacks, int begin, int end) {
+    private void setFluidSlots(FluidInventory inventory, Collection<FluidStack> stacks, int begin, int end) {
         for (FluidStack stack : stacks) {
-            if (!StackUtils.hasFluidBucket(stack) || stack.amount > Fluid.BUCKET_VOLUME) {
+            if (stack.amount > Fluid.BUCKET_VOLUME) {
                 continue;
             }
 
-            ItemStack filledContainer = new ItemStack(Items.BUCKET);
-
-            IFluidHandlerItem fluidHandler = filledContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
-
-            fluidHandler.fill(StackUtils.copy(stack, Fluid.BUCKET_VOLUME), true);
-
-            filledContainer = fluidHandler.getContainer();
-            filledContainer.setCount(stack.amount);
-
-            handler.setStackInSlot(begin, filledContainer);
+            inventory.setFluid(begin, stack.copy());
 
             begin++;
 

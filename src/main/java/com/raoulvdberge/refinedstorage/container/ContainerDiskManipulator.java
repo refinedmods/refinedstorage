@@ -1,30 +1,41 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilterItemOrFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.NetworkNodeDiskManipulator;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerDiskManipulator extends ContainerBase {
-    public ContainerDiskManipulator(TileDiskManipulator manipulator, EntityPlayer player) {
-        super(manipulator, player);
+    private NetworkNodeDiskManipulator diskManipulator;
+
+    public ContainerDiskManipulator(TileDiskManipulator diskManipulator, EntityPlayer player) {
+        super(diskManipulator, player);
+
+        this.diskManipulator = diskManipulator.getNode();
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(diskManipulator.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getNode().getInputDisks(), i, 44, 57 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(diskManipulator.getNode().getInputDisks(), i, 44, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(manipulator.getNode().getOutputDisks(), i, 116, 57 + (i * 18)));
+            addSlotToContainer(new SlotItemHandler(diskManipulator.getNode().getOutputDisks(), i, 116, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterItemOrFluid(manipulator.getNode(), i, 8 + (18 * i), 20));
+            addSlotToContainer(new SlotFilter(diskManipulator.getNode().getItemFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskManipulator.getNode().getType() == IType.ITEMS));
+        }
+
+        for (int i = 0; i < 9; ++i) {
+            addSlotToContainer(new SlotFilterFluid(diskManipulator.getNode().getFluidFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskManipulator.getNode().getType() == IType.FLUIDS));
         }
 
         addPlayerInventory(8, 129);
@@ -39,12 +50,16 @@ public class ContainerDiskManipulator extends ContainerBase {
         if (slot.getHasStack()) {
             stack = slot.getStack();
 
-            if (index < 4 + 6) {
-                if (!mergeItemStack(stack, 4 + 6 + 9, inventorySlots.size(), false)) {
+            if (index < 4 + 3 + 3) {
+                if (!mergeItemStack(stack, 4 + 3 + 3 + 9 + 9, inventorySlots.size(), false)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!mergeItemStack(stack, 0, 4 + 3, false)) {
-                return mergeItemStackToFilters(stack, 4 + 6, 4 + 6 + 9);
+                if (diskManipulator.getType() == IType.ITEMS) {
+                    return transferToFilters(stack, 4 + 3 + 3, 4 + 3 + 3 + 9);
+                } else {
+                    return transferToFluidFilters(stack);
+                }
             }
 
             if (stack.getCount() == 0) {

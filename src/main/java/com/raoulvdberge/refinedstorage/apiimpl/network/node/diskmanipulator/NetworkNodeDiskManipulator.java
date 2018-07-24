@@ -10,7 +10,11 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
-import com.raoulvdberge.refinedstorage.inventory.*;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerProxy;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -42,6 +46,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_IO_MODE = "IOMode";
+    private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int mode = IFilterable.BLACKLIST;
@@ -51,7 +56,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private IStorageDisk<ItemStack>[] itemDisks = new IStorageDisk[6];
     private IStorageDisk<FluidStack>[] fluidDisks = new IStorageDisk[6];
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK) {
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK) {
         @Override
         public int getItemInteractCount() {
             int count = super.getItemInteractCount();
@@ -64,7 +69,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
+    private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -85,7 +90,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerBase outputDisks = new ItemHandlerBase(3, new ItemHandlerListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
+    private ItemHandlerBase outputDisks = new ItemHandlerBase(3, new ListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -112,8 +117,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         super(world, pos);
     }
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ListenerNetworkNode(this));
+    private FluidInventory fluidFilters = new FluidInventory(9, new ListenerNetworkNode(this));
 
     @Override
     public int getEnergyUsage() {
@@ -343,7 +348,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 FluidStack filterStack = null;
 
                 while (fluidFilters.getSlots() > i && filterStack == null) {
-                    filterStack = fluidFilters.getFluidStackInSlot(i++);
+                    filterStack = fluidFilters.getFluid(i++);
                 }
 
                 if (filterStack != null) {
@@ -402,13 +407,13 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     @Override
-    public IItemHandler getFilterInventory() {
-        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    public IItemHandler getItemFilters() {
+        return itemFilters;
     }
 
     @Override
-    public boolean isServer() {
-        return !world.isRemote;
+    public FluidInventory getFluidFilters() {
+        return fluidFilters;
     }
 
     @Override
@@ -439,14 +444,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     public ItemHandlerProxy getDisks() {
         return disks;
-    }
-
-    public ItemHandlerBase getItemFilters() {
-        return itemFilters;
-    }
-
-    public ItemHandlerFluid getFluidFilters() {
-        return fluidFilters;
     }
 
     public IItemHandler getUpgrades() {
@@ -499,8 +496,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(itemFilters, 1, tag);
-        StackUtils.writeItems(fluidFilters, 2, tag);
 
+        tag.setTag(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
         tag.setInteger(NBT_TYPE, type);
@@ -514,7 +511,10 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         super.readConfiguration(tag);
 
         StackUtils.readItems(itemFilters, 1, tag);
-        StackUtils.readItems(fluidFilters, 2, tag);
+
+        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+            fluidFilters.readFromNbt(tag.getCompoundTag(NBT_FLUID_FILTERS));
+        }
 
         if (tag.hasKey(NBT_COMPARE)) {
             compare = tag.getInteger(NBT_COMPARE);
@@ -532,7 +532,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             ioMode = tag.getInteger(NBT_IO_MODE);
         }
 
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters, fluidFilters);
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);
     }
 
     @Override

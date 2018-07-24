@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 

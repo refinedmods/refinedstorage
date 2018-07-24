@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilterItems;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterItems;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;

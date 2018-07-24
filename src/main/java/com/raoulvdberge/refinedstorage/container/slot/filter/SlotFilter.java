@@ -1,5 +1,6 @@
-package com.raoulvdberge.refinedstorage.container.slot;
+package com.raoulvdberge.refinedstorage.container.slot.filter;
 
+import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.*;
@@ -7,25 +8,24 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SlotFilter extends SlotItemHandler {
+public class SlotFilter extends SlotBase {
     public static final int FILTER_ALLOW_SIZE = 1;
     public static final int FILTER_ALLOW_BLOCKS = 2;
 
     private int flags = 0;
 
-    public SlotFilter(IItemHandler handler, int id, int x, int y, int flags) {
-        super(handler, id, x, y);
+    public SlotFilter(IItemHandler handler, int inventoryIndex, int x, int y, int flags) {
+        super(handler, inventoryIndex, x, y);
 
         this.flags = flags;
     }
 
-    public SlotFilter(IItemHandler handler, int id, int x, int y) {
-        this(handler, id, x, y, 0);
+    public SlotFilter(IItemHandler handler, int inventoryIndex, int x, int y) {
+        this(handler, inventoryIndex, x, y, 0);
     }
 
     @Override
@@ -68,10 +68,6 @@ public class SlotFilter extends SlotItemHandler {
         }
 
         return amount;
-    }
-
-    public int getInitialAmount(ItemStack stack) {
-        return stack.getCount();
     }
 
     @Nullable

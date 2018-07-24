@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.container.slot.SlotFilter;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -21,8 +21,8 @@ public class ContainerStorage extends ContainerBase {
     public ItemStack transferStackInSlot(EntityPlayer player, int index) {
         Slot slot = getSlot(index);
 
-        if (slot.getHasStack() && index >= 8) {
-            return mergeItemStackToFilters(slot.getStack(), 0, 9);
+        if (slot.getHasStack() && index > 8) {
+            return transferToFilters(slot.getStack(), 0, 9);
         }
 
         return ItemStack.EMPTY;

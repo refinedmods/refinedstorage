@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,9 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         int items = buf.readInt();
 
         for (int i = 0; i < items; ++i) {
-            this.stacks.add(new GridStackFluid(buf.readInt(), StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), buf.readBoolean()));
+            Pair<Integer, FluidStack> hashAndFluidStack = StackUtils.readFluidStackAndHash(buf);
+
+            this.stacks.add(new GridStackFluid(hashAndFluidStack.getLeft(), hashAndFluidStack.getRight(), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), buf.readBoolean()));
         }
     }
 
@@ -56,7 +59,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
         buf.writeInt(size);
 
         for (FluidStack stack : network.getFluidStorageCache().getList().getStacks()) {
-            StackUtils.writeFluidStack(buf, stack);
+            StackUtils.writeFluidStackAndHash(buf, stack);
 
             IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
             buf.writeBoolean(entry != null);
@@ -71,7 +74,7 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
 
         for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
             for (FluidStack stack : pattern.getFluidOutputs()) {
-                StackUtils.writeFluidStack(buf, stack);
+                StackUtils.writeFluidStackAndHash(buf, stack);
 
                 IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
                 buf.writeBoolean(entry != null);

@@ -1,13 +1,13 @@
-package com.raoulvdberge.refinedstorage.inventory;
+package com.raoulvdberge.refinedstorage.inventory.listener;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 
 import java.util.function.Consumer;
 
-public class ItemHandlerListenerNetworkNode implements Consumer<Integer> {
+public class ListenerNetworkNode implements Consumer<Integer> {
     private INetworkNode node;
 
-    public ItemHandlerListenerNetworkNode(INetworkNode node) {
+    public ListenerNetworkNode(INetworkNode node) {
         this.node = node;
     }
 

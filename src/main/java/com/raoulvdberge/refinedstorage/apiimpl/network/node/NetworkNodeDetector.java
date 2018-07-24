@@ -6,9 +6,9 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -36,9 +36,10 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     private static final String NBT_MODE = "Mode";
     private static final String NBT_AMOUNT = "Amount";
     private static final String NBT_TYPE = "Type";
+    private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(1, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerFluid fluidFilters = new ItemHandlerFluid(1, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase itemFilters = new ItemHandlerBase(1, new ListenerNetworkNode(this));
+    private FluidInventory fluidFilters = new FluidInventory(1, new ListenerNetworkNode(this));
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     private int type = IType.ITEMS;
@@ -101,7 +102,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
                     powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingManager().getTasks().isEmpty() : isPowered(network.getItemStorageCache().getList().getStacks().stream().map(ItemStack::getCount).mapToInt(Number::intValue).sum());
                 }
             } else if (type == IType.FLUIDS) {
-                FluidStack slot = fluidFilters.getFluidStackInSlot(0);
+                FluidStack slot = fluidFilters.getFluid(0);
 
                 if (slot != null) {
                     FluidStack stack = network.getFluidStorageCache().getList().get(slot, compare);
@@ -197,7 +198,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
         tag.setInteger(NBT_TYPE, type);
 
         StackUtils.writeItems(itemFilters, 0, tag);
-        StackUtils.writeItems(fluidFilters, 1, tag);
+
+        tag.setTag(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
 
         return tag;
     }
@@ -223,7 +225,10 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
-        StackUtils.readItems(fluidFilters, 1, tag);
+
+        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+            fluidFilters.readFromNbt(tag.getCompoundTag(NBT_FLUID_FILTERS));
+        }
     }
 
     public IItemHandler getInventory() {
@@ -248,12 +253,12 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public IItemHandler getFilterInventory() {
-        return getType() == IType.ITEMS ? itemFilters : fluidFilters;
+    public IItemHandler getItemFilters() {
+        return itemFilters;
     }
 
     @Override
-    public boolean isServer() {
-        return !world.isRemote;
+    public FluidInventory getFluidFilters() {
+        return fluidFilters;
     }
 }

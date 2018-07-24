@@ -6,10 +6,10 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalItem;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerProxy;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerProxy;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -27,14 +27,14 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private static final String NBT_COMPARE = "Compare";
 
-    private ItemHandlerBase importItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase importItems = new ItemHandlerBase(9, new ListenerNetworkNode(this));
 
-    private ItemHandlerBase exportFilterItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
-    private ItemHandlerBase exportItems = new ItemHandlerBase(9, new ItemHandlerListenerNetworkNode(this));
+    private ItemHandlerBase exportFilterItems = new ItemHandlerBase(9, new ListenerNetworkNode(this));
+    private ItemHandlerBase exportItems = new ItemHandlerBase(9, new ListenerNetworkNode(this));
 
     private IItemHandler items = new ItemHandlerProxy(importItems, exportItems);
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ItemHandlerListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
     private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
 

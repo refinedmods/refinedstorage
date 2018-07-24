@@ -21,6 +21,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -60,8 +61,13 @@ public final class StackUtils {
         }
     }
 
-    public static void writeFluidStack(ByteBuf buf, FluidStack stack) {
+    public static void writeFluidStackAndHash(ByteBuf buf, FluidStack stack) {
         buf.writeInt(API.instance().getFluidStackHashCode(stack));
+
+        writeFluidStack(buf, stack);
+    }
+
+    public static void writeFluidStack(ByteBuf buf, FluidStack stack) {
         ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
         buf.writeInt(stack.amount);
         ByteBufUtils.writeTag(buf, stack.tag);
@@ -69,6 +75,10 @@ public final class StackUtils {
 
     public static FluidStack readFluidStack(ByteBuf buf) {
         return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf));
+    }
+
+    public static Pair<Integer, FluidStack> readFluidStackAndHash(ByteBuf buf) {
+        return Pair.of(buf.readInt(), readFluidStack(buf));
     }
 
     public static ItemStack nullToEmpty(@Nullable ItemStack stack) {
@@ -197,6 +207,11 @@ public final class StackUtils {
     }
 
     public static Pair<ItemStack, FluidStack> getFluid(ItemStack stack, boolean simulate) {
+        // We won't have the capability on stacks with size bigger than 1.
+        if (stack.getCount() > 1) {
+            stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
+        }
+
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
             IFluidHandlerItem fluidHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
 

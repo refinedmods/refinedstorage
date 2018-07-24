@@ -14,7 +14,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.util.StackUtils;

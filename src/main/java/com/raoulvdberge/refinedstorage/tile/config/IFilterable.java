@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.config;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataSerializers;
@@ -50,10 +50,10 @@ public interface IFilterable {
         return false;
     }
 
-    static boolean acceptsFluid(ItemHandlerFluid filters, int mode, int compare, FluidStack stack) {
+    static boolean acceptsFluid(FluidInventory filters, int mode, int compare, FluidStack stack) {
         if (mode == WHITELIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
-                FluidStack slot = filters.getFluidStackInSlot(i);
+                FluidStack slot = filters.getFluid(i);
 
                 if (slot != null && API.instance().getComparer().isEqual(slot, stack, compare)) {
                     return true;
@@ -63,7 +63,7 @@ public interface IFilterable {
             return false;
         } else if (mode == BLACKLIST) {
             for (int i = 0; i < filters.getSlots(); ++i) {
-                FluidStack slot = filters.getFluidStackInSlot(i);
+                FluidStack slot = filters.getFluid(i);
 
                 if (slot != null && API.instance().getComparer().isEqual(slot, stack, compare)) {
                     return false;

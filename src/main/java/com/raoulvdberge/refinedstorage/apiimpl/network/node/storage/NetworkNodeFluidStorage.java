@@ -16,8 +16,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerFluid;
-import com.raoulvdberge.refinedstorage.inventory.ItemHandlerListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import com.raoulvdberge.refinedstorage.tile.config.IAccessType;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -25,7 +25,6 @@ import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IPrioritizable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,9 +41,10 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
+    private static final String NBT_FILTERS = "Filters";
     public static final String NBT_ID = "Id";
 
-    private ItemHandlerFluid filters = new ItemHandlerFluid(9, new ItemHandlerListenerNetworkNode(this));
+    private FluidInventory filters = new FluidInventory(9, new ListenerNetworkNode(this));
 
     private FluidStorageType type;
 
@@ -142,8 +142,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
         super.writeConfiguration(tag);
 
-        StackUtils.writeItems(filters, 0, tag);
-
+        tag.setTag(NBT_FILTERS, filters.writeToNbt());
         tag.setInteger(NBT_PRIORITY, priority);
         tag.setInteger(NBT_COMPARE, compare);
         tag.setInteger(NBT_MODE, mode);
@@ -157,7 +156,9 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void readConfiguration(NBTTagCompound tag) {
         super.readConfiguration(tag);
 
-        StackUtils.readItems(filters, 0, tag);
+        if (tag.hasKey(NBT_FILTERS)) {
+            filters.readFromNbt(tag.getCompoundTag(NBT_FILTERS));
+        }
 
         if (tag.hasKey(NBT_PRIORITY)) {
             priority = tag.getInteger(NBT_PRIORITY);
@@ -173,7 +174,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
         accessType = AccessTypeUtils.readAccessType(tag);
 
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, null, filters);
+        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, null);
     }
 
     public FluidStorageType getType() {
@@ -211,7 +212,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
         markDirty();
     }
 
-    public ItemHandlerFluid getFilters() {
+    public FluidInventory getFilters() {
         return filters;
     }
 

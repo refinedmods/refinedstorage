@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageGridFluidDelta, IMessage> {
     private INetwork network;
@@ -32,13 +33,15 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        gridStack = new GridStackFluid(buf.readInt(), StackUtils.readFluidStack(buf), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), false);
+        Pair<Integer, FluidStack> hashAndFluidStack = StackUtils.readFluidStackAndHash(buf);
+
+        gridStack = new GridStackFluid(hashAndFluidStack.getLeft(), hashAndFluidStack.getRight(), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), false);
         delta = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        StackUtils.writeFluidStack(buf, stack);
+        StackUtils.writeFluidStackAndHash(buf, stack);
 
         IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
         buf.writeBoolean(entry != null);

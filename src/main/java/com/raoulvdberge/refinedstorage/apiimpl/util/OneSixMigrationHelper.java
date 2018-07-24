@@ -205,10 +205,10 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
     public static void removalHook() {
     }
 
-    public static void migrateEmptyWhitelistToEmptyBlacklist(String version, IFilterable filterable, @Nullable IItemHandler itemFilterInv, @Nullable IItemHandler fluidFilterInv) {
+    public static void migrateEmptyWhitelistToEmptyBlacklist(String version, IFilterable filterable, @Nullable IItemHandler itemFilterInv) {
         // Only migrate if we come from a version where the RS version tag stuff in NetworkNode wasn't added yet.
         // Otherwise, we would constantly migrate empty whitelists to empty blacklists...
-        if (version == null && filterable.getMode() == IFilterable.WHITELIST && IFilterable.isEmpty(itemFilterInv) && IFilterable.isEmpty(fluidFilterInv)) {
+        if (version == null && filterable.getMode() == IFilterable.WHITELIST && IFilterable.isEmpty(itemFilterInv)) {
             filterable.setMode(IFilter.MODE_BLACKLIST);
         }
     }
