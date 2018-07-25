@@ -145,7 +145,6 @@ sidebutton.refinedstorage:detector.mode=모드
 sidebutton.refinedstorage:detector.mode.0=수량 이하일 때 신호 출력
 sidebutton.refinedstorage:detector.mode.1=수량과 일치할 때 신호 출력
 sidebutton.refinedstorage:detector.mode.2=수량 이상일 때 신호 출력
-sidebutton.refinedstorage:detector.mode.3=자동 조합 시 신호 출력
 
 sidebutton.refinedstorage:constructor.drop=블럭을 설치하지 않고 떨어트림
 

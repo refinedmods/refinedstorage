@@ -170,7 +170,6 @@ sidebutton.refinedstorage:detector.mode=Modo
 sidebutton.refinedstorage:detector.mode.0=Emitir señal si hay menos de lo indicado
 sidebutton.refinedstorage:detector.mode.1=Emitir señal si la cantidad se alcanza
 sidebutton.refinedstorage:detector.mode.2=Emitir señal si esta más de lo indicado
-sidebutton.refinedstorage:detector.mode.3=Emitir señal si se esta fabricando esto
 
 sidebutton.refinedstorage:constructor.drop=Soltar bloques en lugar de colocar
 

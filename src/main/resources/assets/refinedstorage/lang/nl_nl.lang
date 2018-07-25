@@ -103,7 +103,6 @@ sidebutton.refinedstorage:detector.mode=Mode
 sidebutton.refinedstorage:detector.mode.0=Redstone signaal aan wanneer onder het aantal
 sidebutton.refinedstorage:detector.mode.1=Redstone signaal aan wanneer op het aantal
 sidebutton.refinedstorage:detector.mode.2=Redstone signaal aan wanneer boven het aantal
-sidebutton.refinedstorage:detector.mode.3=Redstone signaal aan wanneer aan het autocraften
 
 sidebutton.refinedstorage:crafter.triggered_autocrafting=Autocrafting triggeren met redstone signaal
 

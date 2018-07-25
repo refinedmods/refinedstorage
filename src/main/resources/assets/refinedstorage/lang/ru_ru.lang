@@ -176,7 +176,6 @@ sidebutton.refinedstorage:detector.mode=Режим
 sidebutton.refinedstorage:detector.mode.0=Выдача сигнала, если количество меньше
 sidebutton.refinedstorage:detector.mode.1=Выдача сигнала, если количество равно
 sidebutton.refinedstorage:detector.mode.2=Выдача сигнала, если количество больше
-sidebutton.refinedstorage:detector.mode.3=Излучать сигнал, когда предмет начинает автосоздание
 
 sidebutton.refinedstorage:constructor.drop=Выкидывать блоки вместо размещения
 

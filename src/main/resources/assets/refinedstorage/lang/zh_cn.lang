@@ -149,7 +149,6 @@ sidebutton.refinedstorage:detector.mode=模式
 sidebutton.refinedstorage:detector.mode.0=物品数量小于输入数量时输出信号
 sidebutton.refinedstorage:detector.mode.1=物品数量等于输入数量时输出信号
 sidebutton.refinedstorage:detector.mode.2=物品数量大于于输入数量时输出信号
-sidebutton.refinedstorage:detector.mode.3=当正在自动合成的时候输出红石信号
 
 sidebutton.refinedstorage:constructor.drop=将物品以掉落物形式抛出
 

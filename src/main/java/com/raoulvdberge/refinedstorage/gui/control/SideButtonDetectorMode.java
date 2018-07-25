@@ -30,8 +30,6 @@ public class SideButtonDetectorMode extends SideButton {
         } else if (mode == NetworkNodeDetector.MODE_ABOVE) {
             mode = NetworkNodeDetector.MODE_UNDER;
         } else if (mode == NetworkNodeDetector.MODE_UNDER) {
-            mode = NetworkNodeDetector.MODE_AUTOCRAFTING;
-        } else if (mode == NetworkNodeDetector.MODE_AUTOCRAFTING) {
             mode = NetworkNodeDetector.MODE_EQUAL;
         }
 

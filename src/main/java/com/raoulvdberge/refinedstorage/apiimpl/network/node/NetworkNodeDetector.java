@@ -2,10 +2,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
@@ -30,7 +28,6 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     public static final int MODE_UNDER = 0;
     public static final int MODE_EQUAL = 1;
     public static final int MODE_ABOVE = 2;
-    public static final int MODE_AUTOCRAFTING = 3;
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -75,31 +72,11 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
                 ItemStack slot = itemFilters.getStackInSlot(0);
 
                 if (!slot.isEmpty()) {
-                    if (mode == MODE_AUTOCRAFTING) {
-                        boolean found = false;
+                    ItemStack stack = network.getItemStorageCache().getList().get(slot, compare);
 
-                        for (ICraftingTask task : network.getCraftingManager().getTasks()) {
-                            for (ItemStack output : task.getPattern().getOutputs()) {
-                                if (API.instance().getComparer().isEqualNoQuantity(slot, output)) {
-                                    found = true;
-
-                                    break;
-                                }
-                            }
-
-                            if (found) {
-                                break;
-                            }
-                        }
-
-                        powered = found;
-                    } else {
-                        ItemStack stack = network.getItemStorageCache().getList().get(slot, compare);
-
-                        powered = isPowered(stack == null ? null : stack.getCount());
-                    }
+                    powered = isPowered(stack == null ? null : stack.getCount());
                 } else {
-                    powered = mode == MODE_AUTOCRAFTING ? !network.getCraftingManager().getTasks().isEmpty() : isPowered(network.getItemStorageCache().getList().getStacks().stream().map(ItemStack::getCount).mapToInt(Number::intValue).sum());
+                    powered = isPowered(network.getItemStorageCache().getList().getStacks().stream().map(ItemStack::getCount).mapToInt(Number::intValue).sum());
                 }
             } else if (type == IType.FLUIDS) {
                 FluidStack slot = fluidFilters.getFluid(0);

@@ -183,7 +183,6 @@ sidebutton.refinedstorage:detector.mode=Modus
 sidebutton.refinedstorage:detector.mode.0=Signal Wenn Weniger
 sidebutton.refinedstorage:detector.mode.1=Signal Wenn Gleich
 sidebutton.refinedstorage:detector.mode.2=Signal Wenn Mehr
-sidebutton.refinedstorage:detector.mode.3=Signal Während Automatischer Fertigung
 
 sidebutton.refinedstorage:constructor.drop=Blöcke fallen lassen anstatt zu platzieren
 

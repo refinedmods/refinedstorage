@@ -19,7 +19,7 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
     public static final TileDataParameter<Integer, TileDetector> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileDetector> TYPE = IType.createParameter();
     public static final TileDataParameter<Integer, TileDetector> MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getMode(), (t, v) -> {
-        if (v == NetworkNodeDetector.MODE_UNDER || v == NetworkNodeDetector.MODE_EQUAL || v == NetworkNodeDetector.MODE_ABOVE || v == NetworkNodeDetector.MODE_AUTOCRAFTING) {
+        if (v == NetworkNodeDetector.MODE_UNDER || v == NetworkNodeDetector.MODE_EQUAL || v == NetworkNodeDetector.MODE_ABOVE) {
             t.getNode().setMode(v);
             t.getNode().markDirty();
         }

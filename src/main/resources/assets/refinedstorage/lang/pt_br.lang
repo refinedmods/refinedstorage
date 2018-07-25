@@ -148,7 +148,6 @@ sidebutton.refinedstorage:detector.mode=Modo
 sidebutton.refinedstorage:detector.mode.0=Emite um sinal quando estiver abaixo do valor
 sidebutton.refinedstorage:detector.mode.1=Emite um sinal quando estiver no valor
 sidebutton.refinedstorage:detector.mode.2=Emite sinal quando acima do valor
-sidebutton.refinedstorage:detector.mode.3=Emite o sinal quando o item está sendo auto-fabricado
 
 sidebutton.refinedstorage:constructor.drop=Solte os blocos em vez de colocar
 

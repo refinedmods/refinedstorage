@@ -145,9 +145,8 @@ sidebutton.refinedstorage:type.1=Fluides
 
 sidebutton.refinedstorage:detector.mode=Mode
 sidebutton.refinedstorage:detector.mode.0=Emet un signal quand la quantité est inférieure
-guidebutton.refinedstorage:detector.mode.1=Emet un signal quand la quantité est égale
+sidebutton.refinedstorage:detector.mode.1=Emet un signal quand la quantité est égale
 sidebutton.refinedstorage:detector.mode.2=Emet un signal quand la quantité est supérieure
-sidebutton.refinedstorage:detector.mode.3=Emet un signal quand l'item est crafté auto
 
 sidebutton.refinedstorage:constructor.drop=Laisse tomber les blocs au lieu de les placer
 
