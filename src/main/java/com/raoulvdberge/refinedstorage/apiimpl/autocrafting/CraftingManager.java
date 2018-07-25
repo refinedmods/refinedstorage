@@ -235,7 +235,7 @@ public class CraftingManager implements ICraftingManager {
             if (task != null) {
                 ICraftingTaskError error = task.calculate();
 
-                if (error == null) {
+                if (error == null && task.getMissing().isEmpty()) {
                     this.add(task);
 
                     return task;
@@ -263,7 +263,7 @@ public class CraftingManager implements ICraftingManager {
             if (task != null) {
                 ICraftingTaskError error = task.calculate();
 
-                if (error == null) {
+                if (error == null && task.getMissing().isEmpty()) {
                     this.add(task);
 
                     return task;
