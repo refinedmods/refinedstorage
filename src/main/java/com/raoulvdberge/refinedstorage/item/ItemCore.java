@@ -12,8 +12,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCore extends ItemBase {
-    public static final int TYPE_CONSTRUCTION = 0;
-    public static final int TYPE_DESTRUCTION = 1;
+    private static final int TYPE_CONSTRUCTION = 0;
+    private static final int TYPE_DESTRUCTION = 1;
 
     public ItemCore() {
         super(new ItemInfo(RS.ID, "core"));

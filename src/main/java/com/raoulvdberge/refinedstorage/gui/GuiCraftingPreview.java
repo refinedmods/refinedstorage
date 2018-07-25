@@ -178,7 +178,7 @@ public class GuiCraftingPreview extends GuiBase {
                 }
             }
         } else {
-            int slot = scrollbar != null ? (scrollbar.getOffset() * 2) : 0;
+            int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 
             RenderHelper.enableGUIStandardItemLighting();
             GlStateManager.enableDepth();
