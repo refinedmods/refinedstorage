@@ -11,6 +11,7 @@
 - You can now specify the amount to export in the Fluid Interface (raoulvdberge)
 - Made the Crafting Preview window bigger (raoulvdberge)
 - Fixed crash log when opening Pattern Grid GUI (raoulvdberge)
+- Fixed being able to put non fluid containers in Fluid Interface input slot (raoulvdberge)
 - Updated Russian translation (kellixon)
 - Overhauled and updated German translation (Cydhra)
 
