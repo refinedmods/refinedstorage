@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.inventory.item;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -28,15 +29,6 @@ public class ItemHandlerBase extends ItemStackHandler {
     }
 
     @Override
-    public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
-        validateSlotIndex(slot);
-
-        stacks.set(slot, stack);
-
-        onContentsChanged(slot);
-    }
-
-    @Override
     @Nonnull
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         if (validators.length > 0) {
@@ -59,6 +51,13 @@ public class ItemHandlerBase extends ItemStackHandler {
         if (listener != null) {
             listener.accept(slot);
         }
+
+        this.empty = stacks.stream().allMatch(ItemStack::isEmpty);
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound tag) {
+        super.deserializeNBT(tag);
 
         this.empty = stacks.stream().allMatch(ItemStack::isEmpty);
     }

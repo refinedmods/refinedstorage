@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import com.raoulvdberge.refinedstorage.tile.direction.DirectionHandlerTile;
+import com.raoulvdberge.refinedstorage.tile.direction.IDirectionHandler;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;

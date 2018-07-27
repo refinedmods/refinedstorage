@@ -21,9 +21,7 @@ public interface IStackList<T> {
      *
      * @param stack the stack
      */
-    default void add(@Nonnull T stack) {
-        add(stack, getSizeFromStack(stack));
-    }
+    void add(@Nonnull T stack);
 
     /**
      * Decrements the count of that stack in the list.
@@ -40,9 +38,7 @@ public interface IStackList<T> {
      * @param stack the stack
      * @return true if the remove was successful for the full amount, false otherwise
      */
-    default boolean remove(@Nonnull T stack) {
-        return remove(stack, getSizeFromStack(stack));
-    }
+    boolean remove(@Nonnull T stack);
 
     /**
      * Returns a stack.
@@ -83,12 +79,6 @@ public interface IStackList<T> {
      * @return true if the list is empty, false otherwise
      */
     boolean isEmpty();
-
-    /**
-     * @param stack the stack
-     * @return the size of the stack
-     */
-    int getSizeFromStack(T stack);
 
     /**
      * @return a collection of stacks in this list

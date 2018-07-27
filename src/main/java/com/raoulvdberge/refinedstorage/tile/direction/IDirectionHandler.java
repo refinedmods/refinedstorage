@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.tile;
+package com.raoulvdberge.refinedstorage.tile.direction;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;

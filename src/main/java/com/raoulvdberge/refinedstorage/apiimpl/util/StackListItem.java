@@ -36,6 +36,11 @@ public class StackListItem implements IStackList<ItemStack> {
     }
 
     @Override
+    public void add(@Nonnull ItemStack stack) {
+        add(stack, stack.getCount());
+    }
+
+    @Override
     public boolean remove(@Nonnull ItemStack stack, int size) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
@@ -52,6 +57,11 @@ public class StackListItem implements IStackList<ItemStack> {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean remove(@Nonnull ItemStack stack) {
+        return remove(stack, stack.getCount());
     }
 
     @Override
@@ -86,11 +96,6 @@ public class StackListItem implements IStackList<ItemStack> {
     @Override
     public boolean isEmpty() {
         return stacks.isEmpty();
-    }
-
-    @Override
-    public int getSizeFromStack(ItemStack stack) {
-        return stack.getCount();
     }
 
     @Nonnull

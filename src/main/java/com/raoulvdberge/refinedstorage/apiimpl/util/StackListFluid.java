@@ -18,7 +18,7 @@ public class StackListFluid implements IStackList<FluidStack> {
         if (stack == null || size < 0) {
             throw new IllegalArgumentException("Cannot accept empty stack");
         }
-        
+
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
                 if ((long) otherStack.amount + (long) size > Integer.MAX_VALUE) {
@@ -34,6 +34,11 @@ public class StackListFluid implements IStackList<FluidStack> {
         FluidStack newStack = stack.copy();
         newStack.amount = size;
         stacks.put(stack.getFluid(), newStack);
+    }
+
+    @Override
+    public void add(@Nonnull FluidStack stack) {
+        add(stack, stack.amount);
     }
 
     @Override
@@ -53,6 +58,11 @@ public class StackListFluid implements IStackList<FluidStack> {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean remove(@Nonnull FluidStack stack) {
+        return remove(stack, stack.amount);
     }
 
     @Override
@@ -87,11 +97,6 @@ public class StackListFluid implements IStackList<FluidStack> {
     @Override
     public boolean isEmpty() {
         return stacks.isEmpty();
-    }
-
-    @Override
-    public int getSizeFromStack(FluidStack stack) {
-        return stack.amount;
     }
 
     @Nonnull
