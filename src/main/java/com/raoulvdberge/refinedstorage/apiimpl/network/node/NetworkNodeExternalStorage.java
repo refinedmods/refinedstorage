@@ -366,12 +366,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return coverManager.canConduct(direction) && super.canConduct(direction);
-    }
-
-    @Override
-    public boolean canConductThroughFace() {
-        return false;
+        return coverManager.canConduct(direction);
     }
 
     @Nullable

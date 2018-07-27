@@ -7,7 +7,6 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalFluid;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidHandlerFluidInterface;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
@@ -24,7 +23,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -52,8 +50,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     };
     private FluidTank tankOut = new FluidTank(TANK_CAPACITY);
 
-    private FluidHandlerProxy tank = new FluidHandlerProxy(tankIn, tankOut);
-    private FluidHandlerFluidInterface fluids = new FluidHandlerFluidInterface(this);
+    private FluidHandlerFluidInterface tank = new FluidHandlerFluidInterface(tankIn, tankOut);
 
     private ItemHandlerBase in = new ItemHandlerBase(1, new ListenerNetworkNode(this), stack -> StackUtils.getFluid(stack, true).getRight() != null);
     private FluidInventory out = new FluidInventory(1, TANK_CAPACITY, new ListenerNetworkNode(this));
@@ -248,8 +245,8 @@ public class NetworkNodeFluidInterface extends NetworkNode {
         return out;
     }
 
-    public IFluidHandler getTank() {
-        return out.getFluid(0) == null ? fluids : tank;
+    public FluidHandlerFluidInterface getTank() {
+        return tank;
     }
 
     public FluidTank getTankIn() {

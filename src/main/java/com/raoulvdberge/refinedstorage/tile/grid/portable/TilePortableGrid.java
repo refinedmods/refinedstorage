@@ -30,7 +30,6 @@ import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerPortableGrid;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerTile;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockPortableGrid;
@@ -56,7 +55,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -144,7 +142,6 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private ItemGridHandlerPortable handler = new ItemGridHandlerPortable(this, this);
     private PortableGridDiskState diskState = PortableGridDiskState.NONE;
     private boolean connected;
-    private ItemHandlerPortableGrid items = new ItemHandlerPortableGrid(this);
 
     private StorageTrackerItem storageTracker = new StorageTrackerItem(this::markDirty);
 
@@ -629,19 +626,13 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+        return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
     }
 
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(items);
-        } else if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(energyStorage);
-        }
-
-        return super.getCapability(capability, facing);
+        return capability == CapabilityEnergy.ENERGY ? CapabilityEnergy.ENERGY.cast(energyStorage) : super.getCapability(capability, facing);
     }
 
     public void onOpened() {

@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.api.util;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * A stack list.
@@ -21,7 +21,9 @@ public interface IStackList<T> {
      *
      * @param stack the stack
      */
-    void add(@Nonnull T stack);
+    default void add(@Nonnull T stack) {
+        add(stack, getSizeFromStack(stack));
+    }
 
     /**
      * Decrements the count of that stack in the list.
@@ -38,7 +40,9 @@ public interface IStackList<T> {
      * @param stack the stack
      * @return true if the remove was successful for the full amount, false otherwise
      */
-    boolean remove(@Nonnull T stack);
+    default boolean remove(@Nonnull T stack) {
+        return remove(stack, getSizeFromStack(stack));
+    }
 
     /**
      * Returns a stack.
@@ -81,10 +85,16 @@ public interface IStackList<T> {
     boolean isEmpty();
 
     /**
-     * @return a list of stacks in this list
+     * @param stack the stack
+     * @return the size of the stack
+     */
+    int getSizeFromStack(T stack);
+
+    /**
+     * @return a collection of stacks in this list
      */
     @Nonnull
-    List<T> getStacks();
+    Collection<T> getStacks();
 
     /**
      * @return a new copy of this list, with the stacks in it copied as well

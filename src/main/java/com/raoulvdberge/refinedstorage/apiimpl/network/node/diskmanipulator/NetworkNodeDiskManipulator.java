@@ -232,7 +232,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         ItemStack extracted = null;
         int i = 0;
 
-        if (itemFilters.isEmpty()) {
+        if (IFilterable.isEmpty(itemFilters)) {
             ItemStack toExtract = null;
             ArrayList<ItemStack> networkItems = new ArrayList<>(network.getItemStorageCache().getList().getStacks());
 
@@ -331,7 +331,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         FluidStack extracted = null;
         int i = 0;
 
-        if (fluidFilters.isEmpty()) {
+        if (IFilterable.isEmpty(itemFilters)) {
             FluidStack toExtract = null;
             ArrayList<FluidStack> networkFluids = new ArrayList<>(network.getFluidStorageCache().getList().getStacks());
 

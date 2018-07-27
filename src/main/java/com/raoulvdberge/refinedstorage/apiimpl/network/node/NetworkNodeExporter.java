@@ -258,7 +258,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return coverManager.canConduct(direction) && super.canConduct(direction);
+        return coverManager.canConduct(direction);
     }
 
     @Override

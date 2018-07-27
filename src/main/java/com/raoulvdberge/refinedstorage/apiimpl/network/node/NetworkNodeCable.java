@@ -39,7 +39,7 @@ public class NetworkNodeCable extends NetworkNode implements ICoverable {
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return coverManager.canConduct(direction) && super.canConduct(direction);
+        return coverManager.canConduct(direction);
     }
 
     @Override

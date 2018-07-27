@@ -130,7 +130,7 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return coverManager.canConduct(direction) && super.canConduct(direction);
+        return coverManager.canConduct(direction);
     }
 
     @Override

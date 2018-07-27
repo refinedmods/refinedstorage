@@ -214,20 +214,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return world;
     }
 
-    public boolean canConductThroughFace() {
-        return true;
-    }
-
     public boolean canConduct(@Nullable EnumFacing direction) {
-        if (direction == getDirection() && !canConductThroughFace()) {
-            return false;
-        }
-
-        INetworkNode faceNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(direction));
-        if (faceNode instanceof NetworkNode && !((NetworkNode) faceNode).canConductThroughFace() && direction == ((NetworkNode) faceNode).getDirection().getOpposite()) {
-            return false;
-        }
-
         return true;
     }
 
