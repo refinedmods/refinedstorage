@@ -12,6 +12,7 @@
 - Made the Crafting Preview window bigger (raoulvdberge)
 - Fixed crash log when opening Pattern Grid GUI (raoulvdberge)
 - Fixed being able to put non fluid containers in Fluid Interface input slot (raoulvdberge)
+- Fixed Grid filters not updating Grid (raoulvdberge)
 - Updated Russian translation (kellixon)
 - Overhauled and updated German translation (Cydhra)
 
