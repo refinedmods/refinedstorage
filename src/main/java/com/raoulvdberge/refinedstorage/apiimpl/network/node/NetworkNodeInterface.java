@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalItem;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerInterface;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
@@ -33,6 +34,8 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     private ItemHandlerBase exportItems = new ItemHandlerBase(9, new ListenerNetworkNode(this));
 
     private IItemHandler items = new ItemHandlerProxy(importItems, exportItems);
+
+    private ItemHandlerInterface networkItems = new ItemHandlerInterface(this);
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
@@ -221,7 +224,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     }
 
     public IItemHandler getItems() {
-        return items;
+        return exportFilterItems.isEmpty() ? networkItems : items;
     }
 
     public IItemHandler getUpgrades() {

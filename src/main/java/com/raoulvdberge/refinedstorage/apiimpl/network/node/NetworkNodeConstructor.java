@@ -354,7 +354,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return coverManager.canConduct(direction);
+        return coverManager.canConduct(direction) && super.canConduct(direction);
     }
 
     @Override

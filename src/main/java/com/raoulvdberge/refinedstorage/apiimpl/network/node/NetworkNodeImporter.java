@@ -231,7 +231,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return coverManager.canConduct(direction);
+        return coverManager.canConduct(direction) && super.canConduct(direction);
     }
 
     @Override

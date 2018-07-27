@@ -39,7 +39,7 @@ public class NetworkNodeRelay extends NetworkNode {
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return canUpdate();
+        return canUpdate() && super.canConduct(direction);
     }
 
     @Override

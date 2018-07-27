@@ -98,7 +98,7 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
 
     @Override
     public boolean canConduct(@Nullable EnumFacing direction) {
-        return coverManager.canConduct(direction);
+        return coverManager.canConduct(direction) && super.canConduct(direction);
     }
 
     @Override

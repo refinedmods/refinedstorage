@@ -11,6 +11,7 @@ public class FluidInventory {
 
     private FluidStack[] fluids;
     private int maxAmount;
+    private boolean empty = true;
 
     @Nullable
     private Consumer<Integer> listener;
@@ -56,6 +57,24 @@ public class FluidInventory {
         if (listener != null) {
             listener.accept(slot);
         }
+
+        updateEmptyState();
+    }
+
+    private void updateEmptyState() {
+        this.empty = true;
+
+        for (FluidStack fluid : fluids) {
+            if (fluid != null) {
+                this.empty = false;
+
+                return;
+            }
+        }
+    }
+
+    public boolean isEmpty() {
+        return empty;
     }
 
     public NBTTagCompound writeToNbt() {
@@ -80,5 +99,7 @@ public class FluidInventory {
                 fluids[i] = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag(key));
             }
         }
+
+        updateEmptyState();
     }
 }

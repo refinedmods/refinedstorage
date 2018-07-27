@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeF
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
 import com.raoulvdberge.refinedstorage.block.enums.ItemStorageType;
+import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.Item;
@@ -205,10 +206,10 @@ public class OneSixMigrationHelper implements IOneSixMigrationHelper {
     public static void removalHook() {
     }
 
-    public static void migrateEmptyWhitelistToEmptyBlacklist(String version, IFilterable filterable, @Nullable IItemHandler itemFilterInv) {
+    public static void migrateEmptyWhitelistToEmptyBlacklist(String version, IFilterable filterable, @Nullable ItemHandlerBase itemFilterInv) {
         // Only migrate if we come from a version where the RS version tag stuff in NetworkNode wasn't added yet.
         // Otherwise, we would constantly migrate empty whitelists to empty blacklists...
-        if (version == null && filterable.getMode() == IFilterable.WHITELIST && IFilterable.isEmpty(itemFilterInv)) {
+        if (version == null && filterable.getMode() == IFilterable.WHITELIST && (itemFilterInv == null || itemFilterInv.isEmpty())) {
             filterable.setMode(IFilter.MODE_BLACKLIST);
         }
     }

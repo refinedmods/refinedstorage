@@ -1,18 +1,18 @@
 package com.raoulvdberge.refinedstorage.apiimpl.util;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.util.MultiMap;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
+import java.util.List;
 
 public class StackListItem implements IStackList<ItemStack> {
-    private ArrayListMultimap<Item, ItemStack> stacks = ArrayListMultimap.create();
+    private MultiMap<Item, ItemStack> stacks = new MultiMap<>();
 
     @Override
     public void add(@Nonnull ItemStack stack, int size) {
@@ -36,6 +36,11 @@ public class StackListItem implements IStackList<ItemStack> {
     }
 
     @Override
+    public void add(@Nonnull ItemStack stack) {
+        add(stack, stack.getCount());
+    }
+
+    @Override
     public boolean remove(@Nonnull ItemStack stack, int size) {
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
@@ -52,6 +57,11 @@ public class StackListItem implements IStackList<ItemStack> {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean remove(@Nonnull ItemStack stack) {
+        return remove(stack, stack.getCount());
     }
 
     @Override
@@ -88,14 +98,9 @@ public class StackListItem implements IStackList<ItemStack> {
         return stacks.isEmpty();
     }
 
-    @Override
-    public int getSizeFromStack(ItemStack stack) {
-        return stack.getCount();
-    }
-
     @Nonnull
     @Override
-    public Collection<ItemStack> getStacks() {
+    public List<ItemStack> getStacks() {
         return stacks.values();
     }
 

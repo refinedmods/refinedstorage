@@ -1,24 +1,24 @@
 package com.raoulvdberge.refinedstorage.apiimpl.util;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.util.MultiMap;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
+import java.util.List;
 
 public class StackListFluid implements IStackList<FluidStack> {
-    private ArrayListMultimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
+    private MultiMap<Fluid, FluidStack> stacks = new MultiMap<>();
 
     @Override
     public void add(@Nonnull FluidStack stack, int size) {
         if (stack == null || size < 0) {
             throw new IllegalArgumentException("Cannot accept empty stack");
         }
-        
+
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
                 if ((long) otherStack.amount + (long) size > Integer.MAX_VALUE) {
@@ -34,6 +34,11 @@ public class StackListFluid implements IStackList<FluidStack> {
         FluidStack newStack = stack.copy();
         newStack.amount = size;
         stacks.put(stack.getFluid(), newStack);
+    }
+
+    @Override
+    public void add(@Nonnull FluidStack stack) {
+        add(stack, stack.amount);
     }
 
     @Override
@@ -53,6 +58,11 @@ public class StackListFluid implements IStackList<FluidStack> {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean remove(@Nonnull FluidStack stack) {
+        return remove(stack, stack.amount);
     }
 
     @Override
@@ -89,14 +99,9 @@ public class StackListFluid implements IStackList<FluidStack> {
         return stacks.isEmpty();
     }
 
-    @Override
-    public int getSizeFromStack(FluidStack stack) {
-        return stack.amount;
-    }
-
     @Nonnull
     @Override
-    public Collection<FluidStack> getStacks() {
+    public List<FluidStack> getStacks() {
         return stacks.values();
     }
 
