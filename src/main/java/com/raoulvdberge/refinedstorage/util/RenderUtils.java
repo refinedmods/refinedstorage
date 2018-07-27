@@ -286,14 +286,6 @@ public final class RenderUtils {
 
     // Copied with some tweaks from GuiUtils#drawHoveringText(@Nonnull final ItemStack stack, List<String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font)
     public static void drawTooltipWithSmallText(List<String> textLines, List<String> smallTextLines, boolean showSmallText, @Nonnull ItemStack stack, int mouseX, int mouseY, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
-        // RS BEGIN
-        if (showSmallText) {
-            for (int i = 0; i < smallTextLines.size(); ++i) {
-                textLines.add("");
-            }
-        }
-        // RS END
-
         if (!textLines.isEmpty()) {
             RenderTooltipEvent.Pre event = new RenderTooltipEvent.Pre(stack, textLines, mouseX, mouseY, screenWidth, screenHeight, -1, fontRenderer);
             if (MinecraftForge.EVENT_BUS.post(event)) {
@@ -352,6 +344,12 @@ public final class RenderUtils {
                     tooltipHeight += 2;
                 }
             }
+
+            // RS BEGIN
+            if (showSmallText) {
+                tooltipHeight += smallTextLines.size() * 10;
+            }
+            // RS END
 
             if (tooltipY + tooltipHeight + 6 > screenHeight) {
                 tooltipY = screenHeight - tooltipHeight - 6;
