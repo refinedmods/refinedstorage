@@ -7,11 +7,10 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyDisabled;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
+import com.raoulvdberge.refinedstorage.container.transfer.TransferManager;
 import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import invtweaks.api.container.InventoryContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,7 +19,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -33,6 +31,8 @@ public abstract class ContainerBase extends Container {
     @Nullable
     private TileDataWatcher listener;
     private EntityPlayer player;
+
+    protected TransferManager transferManager = new TransferManager(this);
 
     private List<SlotFilterFluid> fluidSlots = new ArrayList<>();
     private List<FluidStack> fluids = new ArrayList<>();
@@ -139,54 +139,7 @@ public abstract class ContainerBase extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
-        return ItemStack.EMPTY;
-    }
-
-    protected ItemStack transferToFilters(ItemStack stack, int begin, int end) {
-        for (int i = begin; i < end; ++i) {
-            if (API.instance().getComparer().isEqualNoQuantity(getSlot(i).getStack(), stack)) {
-                return ItemStack.EMPTY;
-            }
-        }
-
-        for (int i = begin; i < end; ++i) {
-            Slot slot = getSlot(i);
-
-            if (slot.getStack().isEmpty() && slot.isItemValid(stack)) {
-                slot.putStack(ItemHandlerHelper.copyStackWithSize(stack, 1));
-                slot.onSlotChanged();
-
-                return ItemStack.EMPTY;
-            }
-        }
-
-        return ItemStack.EMPTY;
-    }
-
-    protected ItemStack transferToFluidFilters(ItemStack stack) {
-        FluidStack fluidInContainer = StackUtils.getFluid(stack, true).getValue();
-
-        if (fluidInContainer == null) {
-            return ItemStack.EMPTY;
-        }
-
-        for (SlotFilterFluid slot : fluidSlots) {
-            if (API.instance().getComparer().isEqual(fluidInContainer, slot.getFluidInventory().getFluid(slot.getSlotIndex()), IComparer.COMPARE_NBT)) {
-                return ItemStack.EMPTY;
-            }
-        }
-
-        for (SlotFilterFluid slot : fluidSlots) {
-            FluidInventory inventory = slot.getFluidInventory();
-
-            if (inventory.getFluid(slot.getSlotIndex()) == null) {
-                slot.onContainerClicked(stack);
-
-                return ItemStack.EMPTY;
-            }
-        }
-
-        return ItemStack.EMPTY;
+        return transferManager.transfer(slotIndex);
     }
 
     @Override

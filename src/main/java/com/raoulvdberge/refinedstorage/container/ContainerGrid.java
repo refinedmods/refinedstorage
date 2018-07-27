@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
@@ -8,7 +7,6 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandle
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
@@ -54,88 +52,151 @@ public class ContainerGrid extends ContainerBase {
         this.inventorySlots.clear();
         this.inventoryItemStacks.clear();
 
-        int headerAndSlots = getTabDelta() + display.getTopHeight() + (display.getVisibleRows() * 18);
+        this.transferManager.clearTransfers();
 
         if (grid.getGridType() != GridType.FLUID) {
-            int yStart = 6;
-
-            if (grid instanceof IPortableGrid) {
-                yStart = 38;
-            }
-
-            for (int i = 0; i < 4; ++i) {
-                addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, yStart + (18 * i) + getTabDelta()));
-            }
-        }
-
-        if (grid.getGridType() == GridType.PATTERN) {
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 172, headerAndSlots + 4));
-            addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 1, 172, headerAndSlots + 40));
+            addFilterSlots();
         }
 
         if (grid instanceof IPortableGrid) {
-            addSlotToContainer(new SlotItemHandler(((IPortableGrid) grid).getDisk(), 0, 204, 6 + getTabDelta()));
+            addPortableGridSlots();
         }
 
-        addPlayerInventory(8, display.getYPlayerInventory());
-
         if (grid.getGridType() == GridType.CRAFTING) {
-            int x = 26;
-            int y = headerAndSlots + 4;
-
-            for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new SlotGridCrafting(grid.getCraftingMatrix(), i, x, y));
-
-                x += 18;
-
-                if ((i + 1) % 3 == 0) {
-                    y += 18;
-                    x = 26;
-                }
-            }
-
-            addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
+            addCraftingSlots();
         } else if (grid.getGridType() == GridType.PATTERN) {
-            // Processing patterns
-            int ox = 8;
-            int x = ox;
-            int y = headerAndSlots + 4;
+            addPatternSlots();
+        }
 
-            for (int i = 0; i < 9 * 2; ++i) {
-                addSlotToContainer(new SlotFilter(((NetworkNodeGrid) grid).getProcessingMatrix(), i, x, y, SlotFilter.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.ITEMS));
-                addSlotToContainer(new SlotFilterFluid(((NetworkNodeGrid) grid).getProcessingMatrixFluids(), i, x, y, SlotFilter.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.FLUIDS));
+        transferManager.setNotFoundHandler(slotIndex -> {
+            if (!getPlayer().getEntityWorld().isRemote) {
+                Slot slot = inventorySlots.get(slotIndex);
 
-                x += 18;
+                if (slot.getHasStack()) {
+                    if (slot == craftingResultSlot) {
+                        grid.onCraftedShift(getPlayer());
 
-                if ((i + 1) % 3 == 0) {
-                    if (i == 8) {
-                        ox = 98;
-                        x = ox;
-                        y = headerAndSlots + 4;
+                        sendCraftingSlots();
+
+                        detectAndSendChanges();
                     } else {
-                        x = ox;
-                        y += 18;
+                        ItemStack stack = slot.getStack();
+
+                        if (grid.getGridType() == GridType.FLUID) {
+                            IFluidGridHandler fluidHandler = grid.getFluidHandler();
+
+                            if (fluidHandler != null) {
+                                slot.putStack(fluidHandler.onShiftClick((EntityPlayerMP) getPlayer(), stack));
+                            }
+                        } else {
+                            IItemGridHandler itemHandler = grid.getItemHandler();
+
+                            if (itemHandler != null) {
+                                slot.putStack(itemHandler.onShiftClick((EntityPlayerMP) getPlayer(), stack));
+                            } else if (slot instanceof SlotGridCrafting && mergeItemStack(stack, 4, 4 + (9 * 4), false)) {
+                                slot.onSlotChanged();
+                            }
+                        }
+
+                        detectAndSendChanges();
                     }
                 }
             }
 
-            // Regular patterns
-            x = 26;
-            y = headerAndSlots + 4;
+            return ItemStack.EMPTY;
+        });
 
-            for (int i = 0; i < 9; ++i) {
-                addSlotToContainer(new SlotLegacyFilter(grid.getCraftingMatrix(), i, x, y).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern()));
+        addPlayerInventory(8, display.getYPlayerInventory());
+    }
 
-                x += 18;
+    private void addPortableGridSlots() {
+        addSlotToContainer(new SlotItemHandler(((IPortableGrid) grid).getDisk(), 0, 204, 6 + getTabDelta()));
 
-                if ((i + 1) % 3 == 0) {
+        // TODO: avoid putting disks into disks.
+        transferManager.addTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDisk());
+    }
+
+    private void addFilterSlots() {
+        int yStart = 6;
+
+        if (grid instanceof IPortableGrid) {
+            yStart = 38;
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, yStart + (18 * i) + getTabDelta()));
+        }
+
+        transferManager.addBiTransfer(getPlayer().inventory, grid.getFilter());
+    }
+
+    private void addCraftingSlots() {
+        int headerAndSlots = getTabDelta() + display.getTopHeight() + (display.getVisibleRows() * 18);
+
+        int x = 26;
+        int y = headerAndSlots + 4;
+
+        for (int i = 0; i < 9; ++i) {
+            addSlotToContainer(new SlotGridCrafting(grid.getCraftingMatrix(), i, x, y));
+
+            x += 18;
+
+            if ((i + 1) % 3 == 0) {
+                y += 18;
+                x = 26;
+            }
+        }
+
+        addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
+    }
+
+    private void addPatternSlots() {
+        int headerAndSlots = getTabDelta() + display.getTopHeight() + (display.getVisibleRows() * 18);
+
+        addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 172, headerAndSlots + 4));
+        addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 1, 172, headerAndSlots + 40));
+
+        transferManager.addBiTransfer(getPlayer().inventory, ((NetworkNodeGrid) grid).getPatterns());
+
+        // Processing patterns
+        int ox = 8;
+        int x = ox;
+        int y = headerAndSlots + 4;
+
+        for (int i = 0; i < 9 * 2; ++i) {
+            addSlotToContainer(new SlotFilter(((NetworkNodeGrid) grid).getProcessingMatrix(), i, x, y, SlotFilter.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.ITEMS));
+            addSlotToContainer(new SlotFilterFluid(((NetworkNodeGrid) grid).getProcessingMatrixFluids(), i, x, y, SlotFilter.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.FLUIDS));
+
+            x += 18;
+
+            if ((i + 1) % 3 == 0) {
+                if (i == 8) {
+                    ox = 98;
+                    x = ox;
+                    y = headerAndSlots + 4;
+                } else {
+                    x = ox;
                     y += 18;
-                    x = 26;
                 }
             }
-
-            addSlotToContainer(patternResultSlot = (new SlotLegacyDisabled(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern())));
         }
+
+        // Regular patterns
+        x = 26;
+        y = headerAndSlots + 4;
+
+        for (int i = 0; i < 9; ++i) {
+            addSlotToContainer(new SlotLegacyFilter(grid.getCraftingMatrix(), i, x, y).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern()));
+
+            x += 18;
+
+            if ((i + 1) % 3 == 0) {
+                y += 18;
+                x = 26;
+            }
+        }
+
+        addSlotToContainer(patternResultSlot = (new SlotLegacyDisabled(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern())));
     }
 
     private int getTabDelta() {
@@ -198,115 +259,6 @@ public class ContainerGrid extends ContainerBase {
     @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot) {
         return (slot == craftingResultSlot || slot == patternResultSlot) ? false : super.canMergeSlot(stack, slot);
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
-        if (!player.getEntityWorld().isRemote) {
-            Slot slot = inventorySlots.get(slotIndex);
-
-            if (slot.getHasStack()) {
-                if (grid instanceof IPortableGrid && slot.slotNumber == 4) { // Prevent moving disk slot into portable grid itself
-                    return ItemStack.EMPTY;
-                } else if (grid.getGridType() == GridType.PATTERN && slot.slotNumber == 5) { // From output slot to inventory
-                    ItemStack stack = slot.getStack();
-
-                    int startIndex = 5;
-                    int endIndex = startIndex + (9 * 4);
-
-                    if (mergeItemStack(stack, startIndex, endIndex, false)) {
-                        slot.onSlotChanged();
-
-                        detectAndSendChanges();
-                    }
-
-                    return ItemStack.EMPTY;
-                } else if (slot == craftingResultSlot) {
-                    grid.onCraftedShift(player);
-
-                    sendCraftingSlots();
-                    detectAndSendChanges();
-                } else if (slot != patternResultSlot && !(slot instanceof SlotLegacyFilter)) {
-                    ItemStack stack = slot.getStack();
-
-                    if (grid.getGridType() != GridType.FLUID && stack.getItem() == RSItems.FILTER) {
-                        int startIndex = 0;
-                        int endIndex = 4;
-
-                        // Move to player inventory instead
-                        if (slotIndex < 4) {
-                            startIndex = 4;
-
-                            if (grid.getGridType() == GridType.PATTERN) {
-                                startIndex += 2; // Skip the pattern slots
-                            }
-
-                            endIndex = startIndex + (9 * 4);
-                        }
-
-                        if (mergeItemStack(stack, startIndex, endIndex, false)) {
-                            slot.onSlotChanged();
-
-                            detectAndSendChanges();
-
-                            // For some reason it doesn't detect when moving the filter from filter inventory to player inventory...
-                            if (slotIndex < 4) {
-                                grid.getFilter().setStackInSlot(slotIndex, ItemStack.EMPTY);
-                            }
-
-                            return ItemStack.EMPTY;
-                        }
-                    } else if ((grid.getGridType() == GridType.PATTERN && stack.getItem() == RSItems.PATTERN) || (grid instanceof IPortableGrid && stack.getItem() instanceof IStorageDiskFactory)) {
-                        int startIndex = 4;
-                        int endIndex = startIndex + 1;
-
-                        // Move to player inventory instead
-                        if (slotIndex == 4) {
-                            startIndex = endIndex;
-                            endIndex = startIndex + (9 * 4);
-                        }
-
-                        if (mergeItemStack(stack, startIndex, endIndex, false)) {
-                            slot.onSlotChanged();
-
-                            detectAndSendChanges();
-
-                            // For some reason it doesn't detect when moving the disk from disk inventory to player inventory...
-                            if (grid instanceof IPortableGrid && slotIndex == 4) {
-                                ((IPortableGrid) grid).getDisk().setStackInSlot(0, ItemStack.EMPTY);
-                            }
-
-                            return ItemStack.EMPTY;
-                        }
-
-                        // When we shift click a storage disk in a portable grid and our inventory is full, the disk can't go in the storage!
-                        if (grid instanceof PortableGrid) {
-                            return ItemStack.EMPTY;
-                        }
-                    }
-
-                    if (grid.getGridType() == GridType.FLUID) {
-                        IFluidGridHandler fluidHandler = grid.getFluidHandler();
-
-                        if (fluidHandler != null) {
-                            slot.putStack(fluidHandler.onShiftClick((EntityPlayerMP) player, stack));
-                        }
-                    } else {
-                        IItemGridHandler itemHandler = grid.getItemHandler();
-
-                        if (itemHandler != null) {
-                            slot.putStack(itemHandler.onShiftClick((EntityPlayerMP) player, stack));
-                        } else if (slot instanceof SlotGridCrafting && mergeItemStack(stack, 4, 4 + (9 * 4), false)) {
-                            slot.onSlotChanged();
-                        }
-                    }
-
-                    detectAndSendChanges();
-                }
-            }
-        }
-
-        return ItemStack.EMPTY;
     }
 
     @Override

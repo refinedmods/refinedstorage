@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterIcon;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterItems;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerFilter extends ContainerBase {
@@ -34,28 +33,11 @@ public class ContainerFilter extends ContainerBase {
         addSlotToContainer(new SlotFilter(new ItemHandlerFilterIcon(stack), 0, 8, 117));
 
         addPlayerInventory(8, 149);
+
+        transferManager.addItemFilterTransfer(player.inventory, filter);
     }
 
     public ItemStack getStack() {
-        return stack;
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = ItemStack.EMPTY;
-
-        Slot slot = getSlot(index);
-
-        if (slot.getHasStack()) {
-            stack = slot.getStack();
-
-            if (index > 27 - 1) {
-                return transferToFilters(stack, 0, 27);
-            }
-
-            return ItemStack.EMPTY;
-        }
-
         return stack;
     }
 

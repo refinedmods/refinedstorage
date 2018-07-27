@@ -19,7 +19,6 @@ public class StorageDiskFluidDriveWrapper implements IStorageDisk<FluidStack> {
     private NetworkNodeDiskDrive diskDrive;
     private IStorageDisk<FluidStack> parent;
     private int lastState;
-    private int ticksSinceLastChanged;
 
     public StorageDiskFluidDriveWrapper(NetworkNodeDiskDrive diskDrive, IStorageDisk<FluidStack> parent) {
         this.diskDrive = diskDrive;

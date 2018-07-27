@@ -2,8 +2,6 @@ package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerSecurityManager extends ContainerBase {
@@ -27,32 +25,8 @@ public class ContainerSecurityManager extends ContainerBase {
         addSlotToContainer(new SlotItemHandler(securityManager.getNode().getEditCard(), 0, 80, 70));
 
         addPlayerInventory(8, 152);
-    }
 
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-        ItemStack stack = ItemStack.EMPTY;
-
-        Slot slot = getSlot(index);
-
-        if (slot.getHasStack()) {
-            stack = slot.getStack();
-
-            if (index < (9 * 2) + 1) {
-                if (!mergeItemStack(stack, (9 * 2) + 1, inventorySlots.size(), false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!mergeItemStack(stack, 0, 9 * 2, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (stack.getCount() == 0) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-        }
-
-        return stack;
+        transferManager.addBiTransfer(player.inventory, securityManager.getNode().getCardsItems());
+        transferManager.addTransfer(securityManager.getNode().getEditCard(), player.inventory);
     }
 }

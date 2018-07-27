@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class NetworkNodeDetector extends NetworkNode implements IComparable, IType {
     public static final String ID = "detector";
@@ -230,7 +231,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public IItemHandler getItemFilters() {
+    public IItemHandlerModifiable getItemFilters() {
         return itemFilters;
     }
 

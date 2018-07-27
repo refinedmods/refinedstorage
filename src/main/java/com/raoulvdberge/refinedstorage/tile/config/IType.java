@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameterClientListener;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +30,7 @@ public interface IType {
 
     void setType(int type);
 
-    IItemHandler getItemFilters();
+    IItemHandlerModifiable getItemFilters();
 
     FluidInventory getFluidFilters();
 }
