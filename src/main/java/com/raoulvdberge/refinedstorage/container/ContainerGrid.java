@@ -112,8 +112,7 @@ public class ContainerGrid extends ContainerBase {
     private void addPortableGridSlots() {
         addSlotToContainer(new SlotItemHandler(((IPortableGrid) grid).getDisk(), 0, 204, 6 + getTabDelta()));
 
-        // TODO: avoid putting disks into disks.
-        transferManager.addTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDisk());
+        transferManager.addBiTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDisk());
     }
 
     private void addFilterSlots() {
