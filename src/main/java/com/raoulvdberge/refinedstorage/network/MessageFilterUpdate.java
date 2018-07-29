@@ -12,15 +12,17 @@ public class MessageFilterUpdate extends MessageHandlerPlayerToServer<MessageFil
     private int mode;
     private boolean modFilter;
     private String name;
+    private int type;
 
     public MessageFilterUpdate() {
     }
 
-    public MessageFilterUpdate(int compare, int mode, boolean modFilter, String name) {
+    public MessageFilterUpdate(int compare, int mode, boolean modFilter, String name, int type) {
         this.compare = compare;
         this.mode = mode;
         this.modFilter = modFilter;
         this.name = name;
+        this.type = type;
     }
 
     @Override
@@ -29,6 +31,7 @@ public class MessageFilterUpdate extends MessageHandlerPlayerToServer<MessageFil
         mode = buf.readInt();
         modFilter = buf.readBoolean();
         name = ByteBufUtils.readUTF8String(buf);
+        type = buf.readInt();
     }
 
     @Override
@@ -37,6 +40,7 @@ public class MessageFilterUpdate extends MessageHandlerPlayerToServer<MessageFil
         buf.writeInt(mode);
         buf.writeBoolean(modFilter);
         ByteBufUtils.writeUTF8String(buf, name);
+        buf.writeInt(type);
     }
 
     @Override
@@ -46,6 +50,7 @@ public class MessageFilterUpdate extends MessageHandlerPlayerToServer<MessageFil
             ItemFilter.setMode(((ContainerFilter) player.openContainer).getStack(), message.mode);
             ItemFilter.setModFilter(((ContainerFilter) player.openContainer).getStack(), message.modFilter);
             ItemFilter.setName(((ContainerFilter) player.openContainer).getStack(), message.name);
+            ItemFilter.setType(((ContainerFilter) player.openContainer).getStack(), message.type);
         }
     }
 }

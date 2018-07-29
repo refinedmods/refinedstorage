@@ -4,22 +4,28 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonFilterType;
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import com.raoulvdberge.refinedstorage.network.MessageFilterUpdate;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 import java.io.IOException;
 
 public class GuiFilter extends GuiBase {
+    private ItemStack stack;
+
     private int compare;
     private int mode;
     private boolean modFilter;
     private String name;
+    private int type;
 
     private GuiCheckBox compareDamage;
-    private GuiCheckBox compareNBT;
+    private GuiCheckBox compareNbt;
     private GuiCheckBox toggleModFilter;
     private GuiButton toggleMode;
     private GuiTextField nameField;
@@ -27,19 +33,26 @@ public class GuiFilter extends GuiBase {
     public GuiFilter(ContainerFilter container) {
         super(container, 176, 231);
 
+        this.stack = container.getStack();
+
         this.compare = ItemFilter.getCompare(container.getStack());
         this.mode = ItemFilter.getMode(container.getStack());
         this.modFilter = ItemFilter.isModFilter(container.getStack());
         this.name = ItemFilter.getName(container.getStack());
+        this.type = ItemFilter.getType(container.getStack());
     }
 
     @Override
     public void init(int x, int y) {
-        compareDamage = addCheckBox(x + 7, y + 77, t("gui.refinedstorage:filter.compare_damage"), (compare & IComparer.COMPARE_DAMAGE) == IComparer.COMPARE_DAMAGE);
-        compareNBT = addCheckBox(x + 7 + compareDamage.getButtonWidth() + 4, y + 77, t("gui.refinedstorage:filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT);
+        compareNbt = addCheckBox(x + 7, y + 77, t("gui.refinedstorage:filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT);
+        compareDamage = addCheckBox(x + 7 + compareNbt.getButtonWidth() + 4, y + 77, t("gui.refinedstorage:filter.compare_damage"), (compare & IComparer.COMPARE_DAMAGE) == IComparer.COMPARE_DAMAGE);
+        compareDamage.visible = type == IType.ITEMS;
+
         toggleModFilter = addCheckBox(0, y + 71 + 25, t("gui.refinedstorage:filter.mod_filter"), modFilter);
         toggleMode = addButton(x + 7, y + 71 + 21, 0, 20, "");
+
         updateModeButton(mode);
+
         nameField = new GuiTextField(0, fontRenderer, x + 34, y + 121, 137 - 6, fontRenderer.FONT_HEIGHT);
         nameField.setText(name);
         nameField.setEnableBackgroundDrawing(false);
@@ -47,6 +60,8 @@ public class GuiFilter extends GuiBase {
         nameField.setCanLoseFocus(true);
         nameField.setFocused(false);
         nameField.setTextColor(16777215);
+
+        addSideButton(new SideButtonFilterType(this));
     }
 
     private void updateModeButton(int mode) {
@@ -98,7 +113,7 @@ public class GuiFilter extends GuiBase {
 
         if (button == compareDamage) {
             compare ^= IComparer.COMPARE_DAMAGE;
-        } else if (button == compareNBT) {
+        } else if (button == compareNbt) {
             compare ^= IComparer.COMPARE_NBT;
         } else if (button == toggleMode) {
             mode = mode == IFilter.MODE_WHITELIST ? IFilter.MODE_BLACKLIST : IFilter.MODE_WHITELIST;
@@ -111,7 +126,19 @@ public class GuiFilter extends GuiBase {
         sendUpdate();
     }
 
-    private void sendUpdate() {
-        RS.INSTANCE.network.sendToServer(new MessageFilterUpdate(compare, mode, modFilter, nameField.getText()));
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+
+        ItemFilter.setType(stack, type);
+
+        compareDamage.visible = type == IType.ITEMS;
+    }
+
+    public void sendUpdate() {
+        RS.INSTANCE.network.sendToServer(new MessageFilterUpdate(compare, mode, modFilter, nameField.getText(), type));
     }
 }

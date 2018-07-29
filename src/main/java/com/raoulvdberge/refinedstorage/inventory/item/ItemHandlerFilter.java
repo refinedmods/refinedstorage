@@ -4,12 +4,15 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
-import com.raoulvdberge.refinedstorage.apiimpl.util.Filter;
+import com.raoulvdberge.refinedstorage.apiimpl.util.FilterFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.util.FilterItem;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -54,24 +57,31 @@ public class ItemHandlerFilter extends ItemHandlerBase {
         int mode = ItemFilter.getMode(filter);
         boolean modFilter = ItemFilter.isModFilter(filter);
 
-        ItemHandlerFilterItems items = new ItemHandlerFilterItems(filter);
-
         List<IFilter> filters = new ArrayList<>();
+
+        ItemHandlerFilterItems items = new ItemHandlerFilterItems(filter);
 
         for (ItemStack stack : items.getFilteredItems()) {
             if (stack.getItem() == RSItems.FILTER) {
                 addFilter(stack);
             } else if (!stack.isEmpty()) {
-                filters.add(new Filter(stack, compare, mode, modFilter));
+                filters.add(new FilterItem(stack, compare, mode, modFilter));
             }
         }
 
-        ItemStack icon = ItemFilter.getIcon(filter);
+        FluidInventoryFilter fluids = new FluidInventoryFilter(filter);
 
-        if (icon.isEmpty()) {
+        for (FluidStack stack : fluids.getFilteredFluids()) {
+            filters.add(new FilterFluid(stack, compare, mode, modFilter));
+        }
+
+        ItemStack icon = ItemFilter.getIcon(filter);
+        FluidStack fluidIcon = ItemFilter.getFluidIcon(filter);
+
+        if (icon.isEmpty() && fluidIcon == null) {
             this.filters.addAll(filters);
         } else {
-            tabs.add(new GridTab(filters, ItemFilter.getName(filter), icon));
+            tabs.add(new GridTab(filters, ItemFilter.getName(filter), icon, fluidIcon));
         }
     }
 }

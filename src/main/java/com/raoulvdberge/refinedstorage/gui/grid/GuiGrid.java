@@ -57,7 +57,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     private int slotNumber;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, (grid.getGridType() == GridType.FLUID && !(grid instanceof IPortableGrid)) ? 193 : 227, 0);
+        super(container, 227, 0);
 
         this.grid = grid;
         this.view = grid.getGridType() == GridType.FLUID ? new GridViewFluid(this, getDefaultSorter(), getSorters()) : new GridViewItem(this, getDefaultSorter(), getSorters());
@@ -278,24 +278,22 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
         int yy = y + tabs.getHeight();
 
-        drawTexture(x, yy, 0, 0, screenWidth - (grid.getGridType() != GridType.FLUID ? 34 : 0), getTopHeight());
+        drawTexture(x, yy, 0, 0, screenWidth - 34, getTopHeight());
 
-        // Filters and portable grid disk
-        if (grid.getGridType() != GridType.FLUID || grid instanceof IPortableGrid) {
-            drawTexture(x + screenWidth - 34 + 4, y + tabs.getHeight(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
-        }
+        // Filters and/or portable grid disk
+        drawTexture(x + screenWidth - 34 + 4, y + tabs.getHeight(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
 
         int rows = getVisibleRows();
 
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - ((grid.getGridType() != GridType.FLUID || grid instanceof IPortableGrid) ? 34 : 0), 18);
+            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - 34, 18);
         }
 
         yy += 18;
 
-        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth - ((grid.getGridType() != GridType.FLUID || grid instanceof IPortableGrid) ? 34 : 0), getBottomHeight());
+        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth - 34, getBottomHeight());
 
         if (grid.getGridType() == GridType.PATTERN) {
             int ty = 0;

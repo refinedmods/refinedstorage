@@ -5,9 +5,11 @@ import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterItems;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
@@ -20,9 +22,11 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -32,6 +36,9 @@ public class ItemFilter extends ItemBase {
     private static final String NBT_MOD_FILTER = "ModFilter";
     private static final String NBT_NAME = "Name";
     private static final String NBT_ICON = "Icon";
+    private static final String NBT_FLUID_ICON = "FluidIcon";
+    private static final String NBT_TYPE = "Type";
+    public static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     public ItemFilter() {
         super(new ItemInfo(RS.ID, "filter"));
@@ -63,17 +70,6 @@ public class ItemFilter extends ItemBase {
     }
 
     @Override
-    public String getItemStackDisplayName(ItemStack stack) {
-        String name = getName(stack);
-
-        if (!name.trim().equals("")) {
-            return name;
-        }
-
-        return super.getItemStackDisplayName(stack);
-    }
-
-    @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
@@ -86,6 +82,10 @@ public class ItemFilter extends ItemBase {
         ItemHandlerFilterItems items = new ItemHandlerFilterItems(stack);
 
         RenderUtils.addCombinedItemsToTooltip(tooltip, false, items.getFilteredItems());
+
+        FluidInventoryFilter fluids = new FluidInventoryFilter(stack);
+
+        RenderUtils.addCombinedFluidsToTooltip(tooltip, false, fluids.getFilteredFluids());
     }
 
     public static int getCompare(ItemStack stack) {
@@ -136,6 +136,7 @@ public class ItemFilter extends ItemBase {
         stack.getTagCompound().setString(NBT_NAME, name);
     }
 
+    @Nonnull
     public static ItemStack getIcon(ItemStack stack) {
         return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ICON) ? new ItemStack(stack.getTagCompound().getCompoundTag(NBT_ICON)) : ItemStack.EMPTY;
     }
@@ -146,5 +147,34 @@ public class ItemFilter extends ItemBase {
         }
 
         stack.getTagCompound().setTag(NBT_ICON, icon.serializeNBT());
+    }
+
+    public static void setFluidIcon(ItemStack stack, @Nullable FluidStack icon) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        if (icon == null) {
+            stack.getTagCompound().removeTag(NBT_FLUID_ICON);
+        } else {
+            stack.getTagCompound().setTag(NBT_FLUID_ICON, icon.writeToNBT(new NBTTagCompound()));
+        }
+    }
+
+    @Nullable
+    public static FluidStack getFluidIcon(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUID_ICON) ? FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(NBT_FLUID_ICON)) : null;
+    }
+
+    public static int getType(ItemStack stack) {
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_TYPE) ? stack.getTagCompound().getInteger(NBT_TYPE) : IType.ITEMS;
+    }
+
+    public static void setType(ItemStack stack, int type) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+
+        stack.getTagCompound().setInteger(NBT_TYPE, type);
     }
 }

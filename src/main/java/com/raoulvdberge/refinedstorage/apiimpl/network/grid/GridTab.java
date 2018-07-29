@@ -4,23 +4,30 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
 public class GridTab implements IGridTab {
     private List<IFilter> filters;
     private String name;
+    @Nonnull
     private ItemStack icon;
+    @Nullable
+    private FluidStack fluidIcon;
 
-    public GridTab(List<IFilter> filters, String name, ItemStack icon) {
+    public GridTab(List<IFilter> filters, String name, @Nonnull ItemStack icon, @Nullable FluidStack fluidIcon) {
         this.filters = filters;
         this.name = name;
         this.icon = icon;
+        this.fluidIcon = fluidIcon;
     }
 
     @Override
@@ -37,8 +44,14 @@ public class GridTab implements IGridTab {
 
     @Override
     public void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
-        RenderHelper.enableGUIStandardItemLighting();
+        if (!icon.isEmpty()) {
+            RenderHelper.enableGUIStandardItemLighting();
 
-        itemDrawer.draw(x, y, icon);
+            itemDrawer.draw(x, y, icon);
+        } else {
+            fluidDrawer.draw(x, y, fluidIcon);
+
+            GlStateManager.enableAlpha();
+        }
     }
 }

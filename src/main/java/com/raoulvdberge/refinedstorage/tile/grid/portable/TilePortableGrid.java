@@ -90,11 +90,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private static final TileDataParameter<Integer, TilePortableGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
         t.markDirty();
-    }, (initial, p) -> {
-        if (p != -1) {
-            GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
-        }
-    });
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
     private static final TileDataParameter<Integer, TilePortableGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabPage, (t, v) -> {
         if (v >= 0 && v <= t.getTotalTabPages()) {
             t.setTabPage(v);

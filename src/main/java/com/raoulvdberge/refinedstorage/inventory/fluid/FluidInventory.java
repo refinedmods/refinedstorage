@@ -14,7 +14,7 @@ public class FluidInventory {
     private boolean empty = true;
 
     @Nullable
-    private Consumer<Integer> listener;
+    protected Consumer<Integer> listener;
 
     public FluidInventory(int size, int maxAmount, @Nullable Consumer<Integer> listener) {
         this.fluids = new FluidStack[size];

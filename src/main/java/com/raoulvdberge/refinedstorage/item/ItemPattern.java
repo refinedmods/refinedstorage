@@ -84,13 +84,13 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.inputs") + TextFormatting.RESET);
 
                 RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> i.size() > 0 ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
-                RenderUtils.addCombinedFluidsToTooltip(tooltip, pattern.getFluidInputs());
+                RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidInputs());
 
                 tooltip.add(TextFormatting.YELLOW + I18n.format("misc.refinedstorage:pattern.outputs") + TextFormatting.RESET);
             }
 
             RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
-            RenderUtils.addCombinedFluidsToTooltip(tooltip, pattern.getFluidOutputs());
+            RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidOutputs());
 
             if (isOredict(stack)) {
                 tooltip.add(TextFormatting.BLUE + I18n.format("misc.refinedstorage:pattern.oredict") + TextFormatting.RESET);

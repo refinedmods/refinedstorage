@@ -52,11 +52,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     public static final TileDataParameter<Integer, TileGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();
-    }, (initial, p) -> {
-        if (p != -1) {
-            GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
-        }
-    });
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
     public static final TileDataParameter<Integer, TileGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
         if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
             t.getNode().setTabPage(v);

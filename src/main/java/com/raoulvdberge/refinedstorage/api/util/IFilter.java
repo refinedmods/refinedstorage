@@ -1,18 +1,16 @@
 package com.raoulvdberge.refinedstorage.api.util;
 
-import net.minecraft.item.ItemStack;
-
 /**
  * A filter.
  */
-public interface IFilter {
+public interface IFilter<T> {
     int MODE_WHITELIST = 0;
     int MODE_BLACKLIST = 1;
 
     /**
      * @return the stack being filtered
      */
-    ItemStack getStack();
+    T getStack();
 
     /**
      * @return the compare flags, see {@link IComparer}

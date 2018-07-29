@@ -260,7 +260,7 @@ public final class RenderUtils {
         }
     }
 
-    public static void addCombinedFluidsToTooltip(List<String> tooltip, NonNullList<FluidStack> stacks) {
+    public static void addCombinedFluidsToTooltip(List<String> tooltip, boolean showMb, NonNullList<FluidStack> stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.size(); ++i) {
@@ -279,7 +279,7 @@ public final class RenderUtils {
                     }
                 }
 
-                tooltip.add(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " " + data);
+                tooltip.add((showMb ? (API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ") : "") + data);
             }
         }
     }
