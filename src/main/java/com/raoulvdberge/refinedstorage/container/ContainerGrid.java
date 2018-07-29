@@ -54,7 +54,7 @@ public class ContainerGrid extends ContainerBase {
 
         this.transferManager.clearTransfers();
 
-        if (grid.getGridType() != GridType.FLUID) {
+        if (grid.getGridType() != GridType.FLUID || grid instanceof IPortableGrid) {
             addFilterSlots();
         }
 

@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalFluid;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidHandlerFluidInterface;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
@@ -50,7 +50,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     };
     private FluidTank tankOut = new FluidTank(TANK_CAPACITY);
 
-    private FluidHandlerFluidInterface tank = new FluidHandlerFluidInterface(tankIn, tankOut);
+    private FluidHandlerProxy tank = new FluidHandlerProxy(tankIn, tankOut);
 
     private ItemHandlerBase in = new ItemHandlerBase(1, new ListenerNetworkNode(this), stack -> StackUtils.getFluid(stack, true).getRight() != null);
     private FluidInventory out = new FluidInventory(1, TANK_CAPACITY, new ListenerNetworkNode(this));
@@ -245,7 +245,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
         return out;
     }
 
-    public FluidHandlerFluidInterface getTank() {
+    public FluidHandlerProxy getTank() {
         return tank;
     }
 

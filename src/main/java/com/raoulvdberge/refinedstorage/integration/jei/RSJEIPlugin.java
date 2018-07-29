@@ -22,7 +22,7 @@ public class RSJEIPlugin implements IModPlugin {
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginCover());
         registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowCover());
 
-        // TODO: #1905
+        // TODO: https://github.com/mezz/JustEnoughItems/issues/1307
         // registry.addGhostIngredientHandler(GuiBase.class, new GhostIngredientHandler());
     }
 

@@ -7,21 +7,18 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
-import com.raoulvdberge.refinedstorage.api.storage.StorageType;
+import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItemPortable;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridPortable;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.*;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluidPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPortable;
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
@@ -55,6 +52,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -64,32 +62,32 @@ import java.util.List;
 
 public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext, IPortableGrid.IPortableGridRenderInfo {
     public static final TileDataParameter<Integer, TilePortableGrid> REDSTONE_MODE = RedstoneMode.createParameter();
-    public static final TileDataParameter<Integer, TilePortableGrid> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energyStorage.getEnergyStored());
-    public static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingDirection, (t, v) -> {
+    private static final TileDataParameter<Integer, TilePortableGrid> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energyStorage.getEnergyStored());
+    private static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingDirection, (t, v) -> {
         if (IGrid.isValidSortingDirection(v)) {
             t.setSortingDirection(v);
             t.markDirty();
         }
     }, (initial, p) -> TileGrid.trySortGrid(initial));
-    public static final TileDataParameter<Integer, TilePortableGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingType, (t, v) -> {
+    private static final TileDataParameter<Integer, TilePortableGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingType, (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.markDirty();
         }
     }, (initial, p) -> TileGrid.trySortGrid(initial));
-    public static final TileDataParameter<Integer, TilePortableGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSearchBoxMode, (t, v) -> {
+    private static final TileDataParameter<Integer, TilePortableGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSearchBoxMode, (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
             t.markDirty();
         }
     }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getSearchField().setMode(p)));
-    public static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSize, (t, v) -> {
+    private static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);
             t.markDirty();
         }
     }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
-    public static final TileDataParameter<Integer, TilePortableGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabSelected, (t, v) -> {
+    private static final TileDataParameter<Integer, TilePortableGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
         t.markDirty();
     }, (initial, p) -> {
@@ -97,7 +95,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
         }
     });
-    public static final TileDataParameter<Integer, TilePortableGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabPage, (t, v) -> {
+    private static final TileDataParameter<Integer, TilePortableGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabPage, (t, v) -> {
         if (v >= 0 && v <= t.getTotalTabPages()) {
             t.setTabPage(v);
             t.markDirty();
@@ -108,6 +106,8 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private static final String NBT_DISK_STATE = "DiskState";
     private static final String NBT_CONNECTED = "Connected";
     private static final String NBT_STORAGE_TRACKER = "StorageTracker";
+    private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
+    private static final String NBT_TYPE = "Type";
 
     private EnergyStorage energyStorage = recreateEnergyStorage(0);
     private PortableGridType type;
@@ -121,10 +121,12 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     private int tabPage;
     private int size;
 
+    private GridType clientGridType;
+
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ListenerTile(this));
-    private ItemHandlerBase disk = new ItemHandlerBase(1, new ListenerTile(this), s -> NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK.test(s) && ((IStorageDiskProvider) s.getItem()).getType() == StorageType.ITEM) {
+    private ItemHandlerBase disk = new ItemHandlerBase(1, new ListenerTile(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -136,14 +138,17 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     };
 
     @Nullable
-    private IStorageDisk<ItemStack> storage;
+    private IStorageDisk storage;
+    @Nullable
+    private IStorageCache cache;
 
-    private StorageCacheItemPortable cache = new StorageCacheItemPortable(this);
-    private ItemGridHandlerPortable handler = new ItemGridHandlerPortable(this, this);
+    private ItemGridHandlerPortable itemHandler = new ItemGridHandlerPortable(this, this);
+    private FluidGridHandlerPortable fluidHandler = new FluidGridHandlerPortable(this);
     private PortableGridDiskState diskState = PortableGridDiskState.NONE;
     private boolean connected;
 
     private StorageTrackerItem storageTracker = new StorageTrackerItem(this::markDirty);
+    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
 
     public TilePortableGrid() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -161,20 +166,38 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         if (diskStack.isEmpty()) {
             this.storage = null;
+            this.cache = null;
         } else {
             IStorageDisk disk = API.instance().getStorageDiskManager(world).getByStack(getDisk().getStackInSlot(0));
 
             if (disk != null) {
-                this.storage = new StorageDiskItemPortable(disk, this);
+                StorageType type = ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType();
+
+                switch (type) {
+                    case ITEM:
+                        this.storage = new StorageDiskItemPortable(disk, this);
+                        this.cache = new StorageCacheItemPortable(this);
+                        break;
+                    case FLUID:
+                        this.storage = new StorageDiskFluidPortable(disk, this);
+                        this.cache = new StorageCacheFluidPortable(this);
+                        break;
+                }
+
                 this.storage.setSettings(TilePortableGrid.this::checkIfDiskStateChanged, TilePortableGrid.this);
             } else {
                 this.storage = null;
+                this.cache = null;
             }
         }
 
-        this.cache.invalidate();
+        if (cache != null) {
+            cache.invalidate();
+        }
 
-        this.checkIfDiskStateChanged();
+        checkIfDiskStateChanged();
+
+        WorldUtils.updateBlock(world, pos);
     }
 
     public PortableGridDiskState getDiskState() {
@@ -188,6 +211,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public PortableGridType getPortableType() {
         if (type == null) {
             IBlockState state = world.getBlockState(pos);
+
             if (state.getBlock() == RSBlocks.PORTABLE_GRID) {
                 this.type = (PortableGridType) state.getValue(BlockPortableGrid.TYPE);
             }
@@ -218,6 +242,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             if (stack.getTagCompound().hasKey(PortableGrid.NBT_STORAGE_TRACKER)) {
                 storageTracker.readFromNbt(stack.getTagCompound().getTagList(PortableGrid.NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
             }
+
+            if (stack.getTagCompound().hasKey(PortableGrid.NBT_FLUID_STORAGE_TRACKER)) {
+                fluidStorageTracker.readFromNbt(stack.getTagCompound().getTagList(PortableGrid.NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            }
         }
 
         this.diskState = getDiskState(this);
@@ -242,6 +270,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
 
         stack.getTagCompound().setTag(PortableGrid.NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
+        stack.getTagCompound().setTag(PortableGrid.NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
         stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(energyStorage.getEnergyStored(), false);
 
@@ -258,7 +287,11 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public GridType getGridType() {
-        return GridType.NORMAL;
+        return clientGridType != null ? clientGridType : getServerGridType();
+    }
+
+    private GridType getServerGridType() {
+        return (getDisk().getStackInSlot(0).isEmpty() || ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType() == StorageType.ITEM) ? GridType.NORMAL : GridType.FLUID;
     }
 
     @Nullable
@@ -269,19 +302,19 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     @Override
     public IStorageCacheListener createListener(EntityPlayerMP player) {
-        return new StorageCacheListenerGridPortable(this, player);
+        return getServerGridType() == GridType.FLUID ? new StorageCacheListenerGridPortableFluid(this, player) : new StorageCacheListenerGridPortable(this, player);
     }
 
     @Nullable
     @Override
     public IItemGridHandler getItemHandler() {
-        return handler;
+        return itemHandler;
     }
 
     @Nullable
     @Override
     public IFluidGridHandler getFluidHandler() {
-        return null;
+        return fluidHandler;
     }
 
     @Override
@@ -406,8 +439,13 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public StorageTrackerItem getStorageTracker() {
+    public IStorageTracker<ItemStack> getItemStorageTracker() {
         return storageTracker;
+    }
+
+    @Override
+    public IStorageTracker<FluidStack> getFluidStorageTracker() {
+        return fluidStorageTracker;
     }
 
     @Override
@@ -463,13 +501,14 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public IStorageCache<ItemStack> getCache() {
+    @Nullable
+    public IStorageCache getCache() {
         return cache;
     }
 
     @Override
     @Nullable
-    public IStorageDisk<ItemStack> getStorage() {
+    public IStorageDisk getStorage() {
         return storage;
     }
 
@@ -552,6 +591,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         redstoneMode.write(tag);
 
         tag.setTag(NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
+        tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
         return tag;
     }
@@ -596,6 +636,10 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         if (tag.hasKey(NBT_STORAGE_TRACKER)) {
             storageTracker.readFromNbt(tag.getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
+
+        if (tag.hasKey(NBT_FLUID_STORAGE_TRACKER)) {
+            fluidStorageTracker.readFromNbt(tag.getTagList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+        }
     }
 
     @Override
@@ -612,6 +656,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public NBTTagCompound writeUpdate(NBTTagCompound tag) {
         tag.setInteger(NBT_DISK_STATE, diskState.getId());
         tag.setBoolean(NBT_CONNECTED, getEnergy() != 0);
+        tag.setInteger(NBT_TYPE, getServerGridType().ordinal());
 
         return super.writeUpdate(tag);
     }
@@ -622,6 +667,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
         diskState = PortableGridDiskState.getById(tag.getInteger(NBT_DISK_STATE));
         connected = tag.getBoolean(NBT_CONNECTED);
+        clientGridType = GridType.values()[tag.getInteger(NBT_TYPE)];
     }
 
     @Override

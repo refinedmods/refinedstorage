@@ -33,7 +33,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
             return;
         }
 
-        ItemStack item = portableGrid.getCache().getList().get(hash);
+        ItemStack item = portableGrid.getItemCache().getList().get(hash);
 
         if (item == null) {
             return;
@@ -76,21 +76,21 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
         size = Math.min(size, maxItemSize);
 
         // Do this before actually extracting, since portable grid sends updates as soon as a change happens (so before the storage tracker used to track)
-        portableGrid.getStorageTracker().changed(player, item.copy());
+        portableGrid.getItemStorageTracker().changed(player, item.copy());
 
-        ItemStack took = portableGrid.getStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.SIMULATE);
+        ItemStack took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.SIMULATE);
 
         if (took != null) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
                 if (ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
-                    took = portableGrid.getStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                    took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
 
                     ItemHandlerHelper.insertItem(playerInventory, took, false);
                 }
             } else {
-                took = portableGrid.getStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
 
                 if (single && !held.isEmpty()) {
                     held.grow(1);
@@ -112,9 +112,9 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
             return stack;
         }
 
-        portableGrid.getStorageTracker().changed(player, stack.copy());
+        portableGrid.getItemStorageTracker().changed(player, stack.copy());
 
-        ItemStack remainder = portableGrid.getStorage().insert(stack, stack.getCount(), Action.PERFORM);
+        ItemStack remainder = portableGrid.getItemStorage().insert(stack, stack.getCount(), Action.PERFORM);
 
         portableGrid.drainEnergy(RS.INSTANCE.config.portableGridInsertUsage);
 
@@ -130,11 +130,11 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
         ItemStack stack = player.inventory.getItemStack();
         int size = single ? 1 : stack.getCount();
 
-        portableGrid.getStorageTracker().changed(player, stack.copy());
+        portableGrid.getItemStorageTracker().changed(player, stack.copy());
 
         if (single) {
-            if (portableGrid.getStorage().insert(stack, size, Action.SIMULATE) == null) {
-                portableGrid.getStorage().insert(stack, size, Action.PERFORM);
+            if (portableGrid.getItemStorage().insert(stack, size, Action.SIMULATE) == null) {
+                portableGrid.getItemStorage().insert(stack, size, Action.PERFORM);
 
                 stack.shrink(size);
 
@@ -143,7 +143,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
                 }
             }
         } else {
-            player.inventory.setItemStack(StackUtils.nullToEmpty(portableGrid.getStorage().insert(stack, size, Action.PERFORM)));
+            player.inventory.setItemStack(StackUtils.nullToEmpty(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM)));
         }
 
         player.updateHeldItem();

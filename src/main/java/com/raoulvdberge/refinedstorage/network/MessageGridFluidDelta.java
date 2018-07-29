@@ -15,8 +15,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
+
 public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageGridFluidDelta, IMessage> {
+    @Nullable
     private INetwork network;
+    private IStorageTracker<FluidStack> storageTracker;
     private FluidStack stack;
     private int delta;
 
@@ -25,8 +29,9 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
     public MessageGridFluidDelta() {
     }
 
-    public MessageGridFluidDelta(INetwork network, FluidStack stack, int delta) {
+    public MessageGridFluidDelta(@Nullable INetwork network, IStorageTracker<FluidStack> storageTracker, FluidStack stack, int delta) {
         this.network = network;
+        this.storageTracker = storageTracker;
         this.stack = stack;
         this.delta = delta;
     }
@@ -43,14 +48,18 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
     public void toBytes(ByteBuf buf) {
         StackUtils.writeFluidStackAndHash(buf, stack);
 
-        IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
+        IStorageTracker.IStorageTrackerEntry entry = storageTracker.get(stack);
         buf.writeBoolean(entry != null);
         if (entry != null) {
             buf.writeLong(entry.getTime());
             ByteBufUtils.writeUTF8String(buf, entry.getName());
         }
 
-        buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
+        if (network != null) {
+            buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
+        } else {
+            buf.writeBoolean(false);
+        }
 
         buf.writeInt(delta);
     }

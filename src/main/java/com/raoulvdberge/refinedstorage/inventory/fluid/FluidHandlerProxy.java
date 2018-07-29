@@ -8,17 +8,17 @@ import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
 
-public class FluidHandlerFluidInterface implements IFluidHandler {
-    private FluidTank input;
-    private FluidTank output;
+public class FluidHandlerProxy implements IFluidHandler {
+    private FluidTank insertHandler;
+    private FluidTank extractHandler;
     private IFluidTankProperties[] properties;
 
-    public FluidHandlerFluidInterface(FluidTank input, FluidTank output) {
-        this.input = input;
-        this.output = output;
+    public FluidHandlerProxy(FluidTank insertHandler, FluidTank extractHandler) {
+        this.insertHandler = insertHandler;
+        this.extractHandler = extractHandler;
         this.properties = new IFluidTankProperties[]{
-            new FluidTankPropertiesWrapper(input),
-            new FluidTankPropertiesWrapper(output)
+            new FluidTankPropertiesWrapper(insertHandler),
+            new FluidTankPropertiesWrapper(extractHandler)
         };
     }
 
@@ -29,18 +29,18 @@ public class FluidHandlerFluidInterface implements IFluidHandler {
 
     @Override
     public int fill(FluidStack resource, boolean doFill) {
-        return input.fill(resource, doFill);
+        return insertHandler.fill(resource, doFill);
     }
 
     @Nullable
     @Override
     public FluidStack drain(FluidStack resource, boolean doDrain) {
-        return output.drain(resource, doDrain);
+        return extractHandler.drain(resource, doDrain);
     }
 
     @Nullable
     @Override
     public FluidStack drain(int maxDrain, boolean doDrain) {
-        return output.drain(maxDrain, doDrain);
+        return extractHandler.drain(maxDrain, doDrain);
     }
 }

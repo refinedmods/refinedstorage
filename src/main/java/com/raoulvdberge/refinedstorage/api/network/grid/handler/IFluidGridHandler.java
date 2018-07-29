@@ -46,7 +46,6 @@ public interface IFluidGridHandler {
      */
     ItemStack onShiftClick(EntityPlayerMP player, ItemStack container);
 
-
     /**
      * Called when a player requests the crafting preview window to be opened.
      *

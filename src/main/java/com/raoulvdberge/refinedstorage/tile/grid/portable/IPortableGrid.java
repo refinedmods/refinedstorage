@@ -1,10 +1,11 @@
 package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -20,10 +21,27 @@ public interface IPortableGrid {
         boolean isActive();
     }
 
-    IStorageCache<ItemStack> getCache();
+    @Nullable
+    IStorageCache getCache();
+
+    default IStorageCache<ItemStack> getItemCache() {
+        return (IStorageCache<ItemStack>) getCache();
+    }
+
+    default IStorageCache<FluidStack> getFluidCache() {
+        return (IStorageCache<FluidStack>) getCache();
+    }
 
     @Nullable
-    IStorageDisk<ItemStack> getStorage();
+    IStorageDisk getStorage();
+
+    default IStorageDisk<ItemStack> getItemStorage() {
+        return (IStorageDisk<ItemStack>) getStorage();
+    }
+
+    default IStorageDisk<FluidStack> getFluidStorage() {
+        return (IStorageDisk<FluidStack>) getStorage();
+    }
 
     void drainEnergy(int energy);
 
@@ -33,5 +51,7 @@ public interface IPortableGrid {
 
     IItemHandlerModifiable getFilter();
 
-    StorageTrackerItem getStorageTracker();
+    IStorageTracker<ItemStack> getItemStorageTracker();
+
+    IStorageTracker<FluidStack> getFluidStorageTracker();
 }

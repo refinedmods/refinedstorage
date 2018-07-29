@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
+import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,17 +20,61 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MessageGridFluidUpdate implements IMessage, IMessageHandler<MessageGridFluidUpdate, IMessage> {
     private INetwork network;
     private boolean canCraft;
     private List<IGridStack> stacks = new ArrayList<>();
+    private Consumer<ByteBuf> sendHandler;
 
     public MessageGridFluidUpdate() {
     }
 
     public MessageGridFluidUpdate(INetwork network, boolean canCraft) {
-        this.network = network;
+        this(buf -> {
+            int size = network.getFluidStorageCache().getList().getStacks().size();
+
+            for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
+                size += pattern.getFluidOutputs().size();
+            }
+
+            buf.writeInt(size);
+
+            for (FluidStack stack : network.getFluidStorageCache().getList().getStacks()) {
+                StackUtils.writeFluidStackAndHash(buf, stack);
+
+                IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
+                buf.writeBoolean(entry != null);
+                if (entry != null) {
+                    buf.writeLong(entry.getTime());
+                    ByteBufUtils.writeUTF8String(buf, entry.getName());
+                }
+
+                buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
+                buf.writeBoolean(false);
+            }
+
+            for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
+                for (FluidStack stack : pattern.getFluidOutputs()) {
+                    StackUtils.writeFluidStackAndHash(buf, stack);
+
+                    IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
+                    buf.writeBoolean(entry != null);
+                    if (entry != null) {
+                        buf.writeLong(entry.getTime());
+                        ByteBufUtils.writeUTF8String(buf, entry.getName());
+                    }
+
+                    buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
+                    buf.writeBoolean(true);
+                }
+            }
+        }, canCraft);
+    }
+
+    public MessageGridFluidUpdate(Consumer<ByteBuf> sendHandler, boolean canCraft) {
+        this.sendHandler = sendHandler;
         this.canCraft = canCraft;
     }
 
@@ -50,48 +95,13 @@ public class MessageGridFluidUpdate implements IMessage, IMessageHandler<Message
     public void toBytes(ByteBuf buf) {
         buf.writeBoolean(canCraft);
 
-        int size = network.getFluidStorageCache().getList().getStacks().size();
-
-        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            size += pattern.getFluidOutputs().size();
-        }
-
-        buf.writeInt(size);
-
-        for (FluidStack stack : network.getFluidStorageCache().getList().getStacks()) {
-            StackUtils.writeFluidStackAndHash(buf, stack);
-
-            IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
-            buf.writeBoolean(entry != null);
-            if (entry != null) {
-                buf.writeLong(entry.getTime());
-                ByteBufUtils.writeUTF8String(buf, entry.getName());
-            }
-
-            buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
-            buf.writeBoolean(false);
-        }
-
-        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            for (FluidStack stack : pattern.getFluidOutputs()) {
-                StackUtils.writeFluidStackAndHash(buf, stack);
-
-                IStorageTracker.IStorageTrackerEntry entry = network.getFluidStorageTracker().get(stack);
-                buf.writeBoolean(entry != null);
-                if (entry != null) {
-                    buf.writeLong(entry.getTime());
-                    ByteBufUtils.writeUTF8String(buf, entry.getName());
-                }
-
-                buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
-                buf.writeBoolean(true);
-            }
-        }
+        sendHandler.accept(buf);
     }
 
     @Override
     public IMessage onMessage(MessageGridFluidUpdate message, MessageContext ctx) {
         GuiBase.executeLater(GuiGrid.class, grid -> {
+            grid.setView(new GridViewFluid(grid, GuiGrid.getDefaultSorter(), GuiGrid.getSorters()));
             grid.getView().setCanCraft(message.canCraft);
             grid.getView().setStacks(message.stacks);
             grid.getView().sort();

@@ -6,19 +6,19 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
-import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
+public class StorageCacheFluidPortable implements IStorageCache<FluidStack> {
     private IPortableGrid portableGrid;
-    private IStackList<ItemStack> list = API.instance().createItemStackList();
-    private List<IStorageCacheListener<ItemStack>> listeners = new LinkedList<>();
+    private IStackList<FluidStack> list = API.instance().createFluidStackList();
+    private List<IStorageCacheListener<FluidStack>> listeners = new LinkedList<>();
 
-    public StorageCacheItemPortable(IPortableGrid portableGrid) {
+    public StorageCacheFluidPortable(IPortableGrid portableGrid) {
         this.portableGrid = portableGrid;
     }
 
@@ -26,15 +26,15 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     public void invalidate() {
         list.clear();
 
-        if (portableGrid.getItemStorage() != null) {
-            portableGrid.getItemStorage().getStacks().forEach(list::add);
+        if (portableGrid.getFluidStorage() != null) {
+            portableGrid.getFluidStorage().getStacks().forEach(list::add);
         }
 
         listeners.forEach(IStorageCacheListener::onInvalidated);
     }
 
     @Override
-    public void add(@Nonnull ItemStack stack, int size, boolean rebuilding, boolean batched) {
+    public void add(@Nonnull FluidStack stack, int size, boolean rebuilding, boolean batched) {
         list.add(stack, size);
 
         if (!rebuilding) {
@@ -43,7 +43,7 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public void remove(@Nonnull ItemStack stack, int size, boolean batched) {
+    public void remove(@Nonnull FluidStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
             listeners.forEach(l -> l.onChanged(stack, -size));
         }
@@ -55,14 +55,14 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public void addListener(IStorageCacheListener<ItemStack> listener) {
+    public void addListener(IStorageCacheListener<FluidStack> listener) {
         listeners.add(listener);
 
         listener.onAttached();
     }
 
     @Override
-    public void removeListener(IStorageCacheListener<ItemStack> listener) {
+    public void removeListener(IStorageCacheListener<FluidStack> listener) {
         listeners.remove(listener);
     }
 
@@ -72,12 +72,12 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public IStackList<ItemStack> getList() {
+    public IStackList<FluidStack> getList() {
         return list;
     }
 
     @Override
-    public List<IStorage<ItemStack>> getStorages() {
+    public List<IStorage<FluidStack>> getStorages() {
         return Collections.emptyList();
     }
 }

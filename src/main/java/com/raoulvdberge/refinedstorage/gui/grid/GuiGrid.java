@@ -57,19 +57,10 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     private int slotNumber;
 
     public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, grid.getGridType() == GridType.FLUID ? 193 : 227, 0);
-
-        IGridSorter defaultSorter;
-
-        List<IGridSorter> sorters = new LinkedList<>();
-        sorters.add(defaultSorter = new GridSorterName());
-        sorters.add(new GridSorterQuantity());
-        sorters.add(new GridSorterID());
-        sorters.add(new GridSorterInventoryTweaks());
-        sorters.add(new GridSorterLastModified());
+        super(container, (grid.getGridType() == GridType.FLUID && !(grid instanceof IPortableGrid)) ? 193 : 227, 0);
 
         this.grid = grid;
-        this.view = grid.getGridType() == GridType.FLUID ? new GridViewFluid(this, defaultSorter, sorters) : new GridViewItem(this, defaultSorter, sorters);
+        this.view = grid.getGridType() == GridType.FLUID ? new GridViewFluid(this, getDefaultSorter(), getSorters()) : new GridViewItem(this, getDefaultSorter(), getSorters());
         this.wasConnected = this.grid.isActive();
         this.tabs = new TabList(this, new ElementDrawers(), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
         this.tabs.addListener(new TabList.ITabListListener() {
@@ -149,6 +140,10 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
     public IGrid getGrid() {
         return grid;
+    }
+
+    public void setView(IGridView view) {
+        this.view = view;
     }
 
     public IGridView getView() {
@@ -271,12 +266,12 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
         tabs.drawBackground(x, y);
 
-        if (grid.getGridType() == GridType.CRAFTING) {
+        if (grid instanceof IPortableGrid) {
+            bindTexture("gui/portable_grid.png");
+        } else if (grid.getGridType() == GridType.CRAFTING) {
             bindTexture("gui/crafting_grid.png");
         } else if (grid.getGridType() == GridType.PATTERN) {
             bindTexture("gui/pattern_grid" + (((NetworkNodeGrid) grid).isProcessingPattern() ? "_processing" : "") + ".png");
-        } else if (grid instanceof IPortableGrid) {
-            bindTexture("gui/portable_grid.png");
         } else {
             bindTexture("gui/grid.png");
         }
@@ -285,7 +280,8 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
         drawTexture(x, yy, 0, 0, screenWidth - (grid.getGridType() != GridType.FLUID ? 34 : 0), getTopHeight());
 
-        if (grid.getGridType() != GridType.FLUID) {
+        // Filters and portable grid disk
+        if (grid.getGridType() != GridType.FLUID || grid instanceof IPortableGrid) {
             drawTexture(x + screenWidth - 34 + 4, y + tabs.getHeight(), 197, 0, 30, grid instanceof IPortableGrid ? 114 : 82);
         }
 
@@ -294,12 +290,12 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - (grid.getGridType() != GridType.FLUID ? 34 : 0), 18);
+            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth - ((grid.getGridType() != GridType.FLUID || grid instanceof IPortableGrid) ? 34 : 0), 18);
         }
 
         yy += 18;
 
-        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth - (grid.getGridType() != GridType.FLUID ? 34 : 0), getBottomHeight());
+        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth - ((grid.getGridType() != GridType.FLUID || grid instanceof IPortableGrid) ? 34 : 0), getBottomHeight());
 
         if (grid.getGridType() == GridType.PATTERN) {
             int ty = 0;
@@ -525,5 +521,20 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             scrollbar.setEnabled(getRows() > getVisibleRows());
             scrollbar.setMaxOffset(getRows() - getVisibleRows());
         }
+    }
+
+    public static List<IGridSorter> getSorters() {
+        List<IGridSorter> sorters = new LinkedList<>();
+        sorters.add(getDefaultSorter());
+        sorters.add(new GridSorterQuantity());
+        sorters.add(new GridSorterID());
+        sorters.add(new GridSorterInventoryTweaks());
+        sorters.add(new GridSorterLastModified());
+
+        return sorters;
+    }
+
+    public static IGridSorter getDefaultSorter() {
+        return new GridSorterName();
     }
 }

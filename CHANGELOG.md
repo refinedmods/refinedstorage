@@ -3,8 +3,8 @@
 ### 1.6.1
 - Added fluid autocrafting (raoulvdberge)
 - Added Crafting Upgrade support for fluids on the Exporter, Constructor and Fluid Interface (raoulvdberge)
-- Added support for JEI ghost slot dragging (raoulvdberge)
 - Added config option to hide covers in the creative mode tabs and JEI (raoulvdberge)
+- The Portable Grid now supports fluid disks (raoulvdberge)
 - Removed "emit signal when item is being autocrafted" option in the Detector (raoulvdberge)
 - The Crafting Card no longer schedules requests when there are items or fluids missing (raoulvdberge)
 - You can now keep fluids in stock by attaching a External Storage in fluid mode to a Fluid Interface with a Crafting Upgrade (raoulvdberge)

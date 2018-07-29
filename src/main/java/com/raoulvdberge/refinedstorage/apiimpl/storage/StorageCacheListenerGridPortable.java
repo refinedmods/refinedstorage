@@ -25,12 +25,12 @@ public class StorageCacheListenerGridPortable implements IStorageCacheListener<I
     @Override
     public void onAttached() {
         RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(buf -> {
-            buf.writeInt(portableGrid.getCache().getList().getStacks().size());
+            buf.writeInt(portableGrid.getItemCache().getList().getStacks().size());
 
-            for (ItemStack stack : portableGrid.getCache().getList().getStacks()) {
+            for (ItemStack stack : portableGrid.getItemCache().getList().getStacks()) {
                 StackUtils.writeItemStack(buf, stack, null, false);
 
-                IStorageTracker.IStorageTrackerEntry entry = portableGrid.getStorageTracker().get(stack);
+                IStorageTracker.IStorageTrackerEntry entry = portableGrid.getItemStorageTracker().get(stack);
                 buf.writeBoolean(entry != null);
                 if (entry != null) {
                     buf.writeLong(entry.getTime());
@@ -47,6 +47,6 @@ public class StorageCacheListenerGridPortable implements IStorageCacheListener<I
 
     @Override
     public void onChanged(@Nonnull ItemStack stack, int size) {
-        RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getStorageTracker(), stack, size), player);
+        RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getItemStorageTracker(), stack, size), player);
     }
 }
