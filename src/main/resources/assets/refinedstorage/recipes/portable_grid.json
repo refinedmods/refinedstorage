@@ -3,7 +3,7 @@
   "pattern": [
     "EGE",
     "ECE",
-    "EEE"
+    "EFE"
   ],
   "key": {
     "E": {
@@ -12,6 +12,10 @@
     "G": {
       "item": "refinedstorage:grid",
       "data": 0
+    },
+    "F": {
+      "item": "refinedstorage:grid",
+      "data": 3
     },
     "C": {
       "item": "refinedstorage:controller",
