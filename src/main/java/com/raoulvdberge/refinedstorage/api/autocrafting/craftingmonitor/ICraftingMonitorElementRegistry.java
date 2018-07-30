@@ -20,7 +20,7 @@ public interface ICraftingMonitorElementRegistry {
     /**
      * Returns a factory from the registry.
      *
-     * @param id the id, as specified in {@link ICraftingMonitorElement#getTaskId()}
+     * @param id the id, as specified in {@link ICraftingMonitorElement#getId()}
      * @return the factory, or null if no factory was found
      */
     @Nullable
