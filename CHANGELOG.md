@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.2
+- Fixed Grid searching not working (raoulvdberge)
+
 ### 1.6.1
 - Added fluid autocrafting (raoulvdberge)
 - Added Crafting Upgrade support for fluids on the Exporter, Constructor and Fluid Interface (raoulvdberge)
