@@ -122,15 +122,7 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
 
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-        if (oldStack.getItem() == newStack.getItem()) {
-            if (isValid(oldStack) && isValid(newStack)) {
-                if (getX(oldStack) == getX(newStack) && getY(oldStack) == getY(newStack) && getZ(oldStack) == getZ(newStack) && getDimensionId(oldStack) == getDimensionId(newStack)) {
-                    return false;
-                }
-            }
-        }
-
-        return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
+        return false;
     }
 
     public boolean isValid(ItemStack stack) {

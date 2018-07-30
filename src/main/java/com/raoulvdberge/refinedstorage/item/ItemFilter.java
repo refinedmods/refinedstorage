@@ -88,6 +88,11 @@ public class ItemFilter extends ItemBase {
         RenderUtils.addCombinedFluidsToTooltip(tooltip, false, fluids.getFilteredFluids());
     }
 
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
+
     public static int getCompare(ItemStack stack) {
         return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_COMPARE)) ? stack.getTagCompound().getInteger(NBT_COMPARE) : (IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
     }
