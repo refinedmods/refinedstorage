@@ -7,7 +7,7 @@
 - The Portable Grid now supports fluid disks (raoulvdberge)
 - Filters now support fluids and can be inserted in the Fluid Grid (raoulvdberge)
 - Removed "emit signal when item is being autocrafted" option in the Detector (raoulvdberge)
-- The Crafting Card no longer schedules requests when there are items or fluids missing (raoulvdberge)
+- The Crafting Upgrade no longer schedules requests when there are items or fluids missing (raoulvdberge)
 - You can now keep fluids in stock by attaching a External Storage in fluid mode to a Fluid Interface with a Crafting Upgrade (raoulvdberge)
 - You can now specify the amount to export in the Fluid Interface (raoulvdberge)
 - Made the Crafting Preview window bigger (raoulvdberge)
