@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.3
+- Fixed crash with Wireless Fluid Grid (raoulvdberge)
+
 ### 1.6.2
 - Fixed Grid searching not working (raoulvdberge)
 

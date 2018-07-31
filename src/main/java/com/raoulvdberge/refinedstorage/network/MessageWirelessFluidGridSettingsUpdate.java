@@ -14,15 +14,19 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
     private int sortingType;
     private int searchBoxMode;
     private int size;
+    private int tabSelected;
+    private int tabPage;
 
     public MessageWirelessFluidGridSettingsUpdate() {
     }
 
-    public MessageWirelessFluidGridSettingsUpdate(int sortingDirection, int sortingType, int searchBoxMode, int size) {
+    public MessageWirelessFluidGridSettingsUpdate(int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected, int tabPage) {
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
         this.searchBoxMode = searchBoxMode;
         this.size = size;
+        this.tabSelected = tabSelected;
+        this.tabPage = tabPage;
     }
 
     @Override
@@ -31,6 +35,8 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
         sortingType = buf.readInt();
         searchBoxMode = buf.readInt();
         size = buf.readInt();
+        tabSelected = buf.readInt();
+        tabPage = buf.readInt();
     }
 
     @Override
@@ -39,6 +45,8 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
         buf.writeInt(sortingType);
         buf.writeInt(searchBoxMode);
         buf.writeInt(size);
+        buf.writeInt(tabSelected);
+        buf.writeInt(tabPage);
     }
 
     @Override
@@ -64,6 +72,9 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
                 if (IGrid.isValidSize(message.size)) {
                     stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SIZE, message.size);
                 }
+
+                stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, message.tabSelected);
+                stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, message.tabPage);
             }
         }
     }
