@@ -798,6 +798,8 @@ public class CraftingTask implements ICraftingTask {
 
     private int getTickInterval(int speedUpgrades) {
         switch (speedUpgrades) {
+            case 0:
+                return 10;
             case 1:
                 return 8;
             case 2:
@@ -806,9 +808,8 @@ public class CraftingTask implements ICraftingTask {
                 return 4;
             case 4:
                 return 2;
-            case 0:
             default:
-                return 10;
+                return 2;
         }
     }
 
