@@ -282,6 +282,7 @@ item.refinedstorage:upgrade.9.name=Улучшение: "Удача"
 item.refinedstorage:storage_housing.name=Хранилище корпуса
 item.refinedstorage:filter.name=Фильтр
 item.refinedstorage:network_card.name=Сетевая карта
+item.refinedstorage:wrench.name=Ключ
 item.refinedstorage:security_card.name=Карточка безопасности
 item.refinedstorage:security_card.owner=Связано с: %s
 item.refinedstorage:cutting_tool.name=Режущий инструмент

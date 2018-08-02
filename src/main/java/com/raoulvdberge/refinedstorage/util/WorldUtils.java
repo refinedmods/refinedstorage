@@ -4,6 +4,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -52,5 +53,13 @@ public final class WorldUtils {
 
     public static void sendNoPermissionMessage(EntityPlayer player) {
         player.sendMessage(new TextComponentTranslation("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
+    }
+
+    public static void dropInventory(World world, BlockPos pos, IItemHandler handler) {
+        for (int i = 0; i < handler.getSlots(); ++i) {
+            if (!handler.getStackInSlot(i).isEmpty()) {
+                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
+            }
+        }
     }
 }

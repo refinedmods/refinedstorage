@@ -11,7 +11,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,7 +20,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
@@ -130,13 +128,7 @@ public abstract class BlockBase extends Block {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
-            IItemHandler handler = ((TileBase) tile).getDrops();
-
-            for (int i = 0; i < handler.getSlots(); ++i) {
-                if (!handler.getStackInSlot(i).isEmpty()) {
-                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
-                }
-            }
+            WorldUtils.dropInventory(world, pos, ((TileBase) tile).getDrops());
         }
     }
 

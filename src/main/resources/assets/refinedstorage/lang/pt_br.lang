@@ -248,6 +248,7 @@ item.refinedstorage:upgrade.8.name=Aprimoramento de Fortuna
 item.refinedstorage:upgrade.9.name=Aprimoramento de Fortuna
 item.refinedstorage:storage_housing.name=Alojamento de Armazenação
 item.refinedstorage:filter.name=Filtro
+item.refinedstorage:wrench.name=Chave Inglesa
 item.refinedstorage:network_card.name=Cartão de Rede
 item.refinedstorage:security_card.name=Cartão de Segurança
 item.refinedstorage:security_card.owner=Ligado a: %s

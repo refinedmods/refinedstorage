@@ -246,6 +246,7 @@ item.refinedstorage:upgrade.7.name=Amélioration Fortune
 item.refinedstorage:storage_housing.name=Boitier de stockage
 item.refinedstorage:filter.name=Filtre
 item.refinedstorage:network_card.name=Carte réseau
+item.refinedstorage:wrench.name=Clé
 item.refinedstorage:security_card.name=Carte de sécurité
 item.refinedstorage:security_card.owner=Bound to: %s
 

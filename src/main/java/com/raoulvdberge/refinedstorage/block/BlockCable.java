@@ -250,7 +250,7 @@ public class BlockCable extends BlockNode {
                 groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     coverWest != null ? 2 : 0, coverDown != null ? 2 : 0, 0,
                     coverEast != null ? 14 : 16, coverUp != null ? 14 : 16, 2
-                )));
+                )).setDirection(EnumFacing.NORTH));
 
                 if (coverNorth.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_NORTH);
@@ -261,7 +261,7 @@ public class BlockCable extends BlockNode {
                 groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     14, coverDown != null ? 2 : 0, 0,
                     16, coverUp != null ? 14 : 16, 16
-                )));
+                )).setDirection(EnumFacing.EAST));
 
                 if (coverEast.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_EAST);
@@ -272,7 +272,7 @@ public class BlockCable extends BlockNode {
                 groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     coverEast != null ? 14 : 16, coverDown != null ? 2 : 0, 16,
                     coverWest != null ? 2 : 0, coverUp != null ? 14 : 16, 14
-                )));
+                )).setDirection(EnumFacing.SOUTH));
 
                 if (coverSouth.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_SOUTH);
@@ -283,7 +283,7 @@ public class BlockCable extends BlockNode {
                 groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     0, coverDown != null ? 2 : 0, 0,
                     2, coverUp != null ? 14 : 16, 16
-                )));
+                )).setDirection(EnumFacing.WEST));
 
                 if (coverWest.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_WEST);
@@ -294,7 +294,7 @@ public class BlockCable extends BlockNode {
                 groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     0, 14, 0,
                     16, 16, 16
-                )));
+                )).setDirection(EnumFacing.UP));
 
                 if (coverUp.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_UP);
@@ -305,7 +305,7 @@ public class BlockCable extends BlockNode {
                 groups.add(new CollisionGroup().addItem(CollisionUtils.getBounds(
                     0, 0, 0,
                     16, 2, 16
-                )));
+                )).setDirection(EnumFacing.DOWN));
 
                 if (coverDown.getType() != CoverType.HOLLOW) {
                     groups.add(ConstantsCable.HOLDER_DOWN);

@@ -2,6 +2,7 @@
 
 ### 1.6.3
 - Fixed crash with Wireless Fluid Grid (raoulvdberge)
+- Re-added a single mode Wrench that can rotate blocks and break Refined Storage covers (raoulvdberge)
 
 ### 1.6.2
 - Fixed Grid searching not working (raoulvdberge)

@@ -63,13 +63,19 @@ public class CoverManager {
         return covers.containsKey(facing);
     }
 
-    public boolean setCover(EnumFacing facing, Cover cover) {
-        if (isValidCover(cover.getStack()) && !hasCover(facing)) {
-            if (facing == node.getDirection() && !(node instanceof NetworkNodeCable) && cover.getType() != CoverType.HOLLOW) {
-                return false;
+    public boolean setCover(EnumFacing facing, @Nullable Cover cover) {
+        if (cover == null || (isValidCover(cover.getStack()) && !hasCover(facing))) {
+            if (cover != null) {
+                if (facing == node.getDirection() && !(node instanceof NetworkNodeCable) && cover.getType() != CoverType.HOLLOW) {
+                    return false;
+                }
             }
 
-            covers.put(facing, cover);
+            if (cover == null) {
+                covers.remove(facing);
+            } else {
+                covers.put(facing, cover);
+            }
 
             node.markDirty();
 
@@ -84,6 +90,8 @@ public class CoverManager {
     }
 
     public void readFromNbt(NBTTagList list) {
+        covers.clear();
+
         for (int i = 0; i < list.tagCount(); ++i) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
 

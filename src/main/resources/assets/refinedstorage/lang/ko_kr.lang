@@ -244,5 +244,6 @@ item.refinedstorage:upgrade.7.name=행운 업그레이드
 item.refinedstorage:storage_housing.name=빈 저장 디스크
 item.refinedstorage:filter.name=필터
 item.refinedstorage:network_card.name=네트워크 카드
+item.refinedstorage:wrench.name=렌치
 item.refinedstorage:security_card.name=보안 카드
 item.refinedstorage:security_card.owner=플레이어: %s

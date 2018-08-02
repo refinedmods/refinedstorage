@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 public final class AdvancedRayTracer {
@@ -23,6 +24,7 @@ public final class AdvancedRayTracer {
         return start.add(lookVec.x * reachDistance, lookVec.y * reachDistance, lookVec.z * reachDistance);
     }
 
+    @Nullable
     public static AdvancedRayTraceResult<RayTraceResult> rayTrace(BlockPos pos, Vec3d start, Vec3d end, Collection<CollisionGroup> groups) {
         double minDistance = Double.POSITIVE_INFINITY;
         AdvancedRayTraceResult hit = null;

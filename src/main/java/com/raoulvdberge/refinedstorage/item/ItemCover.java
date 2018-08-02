@@ -150,6 +150,8 @@ public class ItemCover extends ItemBase {
             INetworkNode node = ((TileNode) tile).getNode();
 
             if (node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, player)) {
+                WorldUtils.sendNoPermissionMessage(player);
+
                 return EnumActionResult.FAIL;
             }
 

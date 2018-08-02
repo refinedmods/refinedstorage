@@ -242,6 +242,7 @@ public class ProxyCommon {
         registerItem(RSItems.SECURITY_CARD);
         registerItem(RSItems.COVER);
         registerItem(RSItems.HOLLOW_COVER);
+        registerItem(RSItems.WRENCH);
 
         IntegrationInventorySorter.register();
     }
