@@ -77,7 +77,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     }
 
     @Override
-    public void flush() {
+    public synchronized void flush() {
         if (!batchedChanges.isEmpty()) {
             batchedChanges.forEach(c -> listeners.forEach(l -> l.onChanged(c.getKey(), c.getValue())));
             batchedChanges.clear();
