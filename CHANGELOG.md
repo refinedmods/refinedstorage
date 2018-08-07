@@ -1,7 +1,7 @@
 # Refined Storage Changelog
 
 ### 1.6.4
-- Image size reduced by improved compression (samtrion)
+- Image sizes optimized / Improved image compression (samtrion)
 
 ### 1.6.3
 - Fixed crash with Wireless Fluid Grid (raoulvdberge)
