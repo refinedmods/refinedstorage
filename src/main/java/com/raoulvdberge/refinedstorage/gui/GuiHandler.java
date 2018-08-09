@@ -50,7 +50,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.INTERFACE:
                 return new ContainerInterface((TileInterface) tile, player);
             case RSGui.CRAFTING_MONITOR:
-                return new ContainerCraftingMonitor(((TileCraftingMonitor) tile).getNode(), (TileCraftingMonitor) tile, player, new ResizableDisplayDummy());
+                return new ContainerCraftingMonitor(((TileCraftingMonitor) tile).getNode(), (TileCraftingMonitor) tile, player);
             case RSGui.WIRELESS_TRANSMITTER:
                 return new ContainerWirelessTransmitter((TileWirelessTransmitter) tile, player);
             case RSGui.CRAFTER:
@@ -128,7 +128,7 @@ public class GuiHandler implements IGuiHandler {
             case RSGui.CRAFTING_MONITOR: {
                 NetworkNodeCraftingMonitor node = ((TileCraftingMonitor) tile).getNode();
                 GuiCraftingMonitor gui = new GuiCraftingMonitor(null, node);
-                gui.inventorySlots = new ContainerCraftingMonitor(node, (TileCraftingMonitor) tile, player, gui);
+                gui.inventorySlots = new ContainerCraftingMonitor(node, (TileCraftingMonitor) tile, player);
                 return gui;
             }
             case RSGui.WIRELESS_TRANSMITTER:
@@ -186,12 +186,12 @@ public class GuiHandler implements IGuiHandler {
         WirelessCraftingMonitor craftingMonitor = getCraftingMonitor(player, hand, networkDimension);
 
         GuiCraftingMonitor gui = new GuiCraftingMonitor(null, craftingMonitor);
-        gui.inventorySlots = new ContainerCraftingMonitor(craftingMonitor, null, player, gui);
+        gui.inventorySlots = new ContainerCraftingMonitor(craftingMonitor, null, player);
         return gui;
     }
 
     private ContainerCraftingMonitor getCraftingMonitorContainer(EntityPlayer player, int hand, int networkDimension) {
-        return new ContainerCraftingMonitor(getCraftingMonitor(player, hand, networkDimension), null, player, new ResizableDisplayDummy());
+        return new ContainerCraftingMonitor(getCraftingMonitor(player, hand, networkDimension), null, player);
     }
 
     private ContainerFilter getFilterContainer(EntityPlayer player, int hand) {

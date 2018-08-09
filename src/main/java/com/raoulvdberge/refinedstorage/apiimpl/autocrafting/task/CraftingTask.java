@@ -15,10 +15,9 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementColor;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementText;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluid;
@@ -32,6 +31,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.*;
 
+// TODO: Calculation time.
+// TODO: Progressive outputs?
 public class CraftingTask implements ICraftingTask {
     private INetwork network;
     private ICraftingRequestInfo requested;
@@ -716,72 +717,81 @@ public class CraftingTask implements ICraftingTask {
     public List<ICraftingMonitorElement> getCraftingMonitorElements() {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
-        if (!missing.isEmpty() && !missingFluids.isEmpty()) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.missing", 5));
+        for (ItemStack stack : this.internalStorage.getStacks()) {
+            elements.add(new CraftingMonitorElementItemRender(stack, stack.getCount(), 0, 0, 0, 0));
         }
 
-        if (!missing.isEmpty()) {
-            for (ItemStack missing : this.missing.getStacks()) {
-                elements.add(new CraftingMonitorElementColor(new CraftingMonitorElementItemRender(missing, missing.getCount(), 0), "", CraftingMonitorElementColor.COLOR_ERROR));
+        for (ItemStack missing : this.missing.getStacks()) {
+            elements.add(new CraftingMonitorElementItemRender(missing, 0, missing.getCount(), 0, 0, 0));
+        }
+
+        for (Crafting crafting : this.crafting) {
+            for (ItemStack receive : crafting.getPattern().getOutputs()) {
+                elements.add(new CraftingMonitorElementItemRender(receive, 0, 0, 0, 0, receive.getCount()));
+            }
+        }
+
+        for (Processing processing : this.processing) {
+            if (processing.getState() == ProcessingState.PROCESSED) {
+                continue;
             }
 
-            elements.commit();
-        }
+            if (processing.getState() == ProcessingState.EXTRACTED_ALL) {
+                for (ItemStack put : processing.getItemsToPut()) {
+                    elements.add(new CraftingMonitorElementItemRender(put, 0, 0, put.getCount(), 0, 0));
+                }
+            } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE) {
+                for (ItemStack receive : processing.getItemsToReceive().getStacks()) {
+                    ICraftingMonitorElement element = new CraftingMonitorElementItemRender(receive, 0, 0, 0, receive.getCount(), 0);
 
-        if (!missingFluids.isEmpty()) {
-            for (FluidStack missing : this.missingFluids.getStacks()) {
-                elements.add(new CraftingMonitorElementColor(new CraftingMonitorElementFluidRender(missing, missing.amount, 0), "", CraftingMonitorElementColor.COLOR_ERROR));
-            }
+                    if (processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
+                        element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept_item");
+                    } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
+                        element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                    }
 
-            elements.commit();
-        }
-
-        if (!this.crafting.isEmpty()) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.items_crafting", 5));
-
-            for (Crafting c : this.crafting) {
-                for (ItemStack s : c.getToExtract().getStacks()) {
-                    elements.add(new CraftingMonitorElementItemRender(s, s.getCount(), 0));
+                    elements.add(element);
                 }
             }
-
-            elements.commit();
         }
 
-        if (!this.processing.isEmpty()) {
-            elements.directAdd(new CraftingMonitorElementText("gui.refinedstorage:crafting_monitor.processing", 5));
+        elements.commit();
 
-            for (Processing p : this.processing) {
-                for (ItemStack s : p.getItemsToReceive().getStacks()) {
-                    elements.add(wrapAccordingToState(new CraftingMonitorElementItemRender(s, s.getCount(), 0), p.getState(), false));
-                }
-            }
-
-            elements.commit();
-
-            for (Processing p : this.processing) {
-                for (FluidStack s : p.getFluidsToReceive().getStacks()) {
-                    elements.add(wrapAccordingToState(new CraftingMonitorElementFluidRender(s, s.amount, 0), p.getState(), true));
-                }
-            }
-
-            elements.commit();
+        for (FluidStack stack : this.internalFluidStorage.getStacks()) {
+            elements.add(new CraftingMonitorElementFluidRender(stack, stack.amount, 0, 0, 0, 0));
         }
+
+        for (FluidStack missing : this.missingFluids.getStacks()) {
+            elements.add(new CraftingMonitorElementFluidRender(missing, 0, missing.amount, 0, 0, 0));
+        }
+
+        for (Processing processing : this.processing) {
+            if (processing.getState() == ProcessingState.PROCESSED) {
+                continue;
+            }
+
+            if (processing.getState() == ProcessingState.EXTRACTED_ALL) {
+                for (FluidStack put : processing.getFluidsToPut()) {
+                    elements.add(new CraftingMonitorElementFluidRender(put, 0, 0, put.amount, 0, 0));
+                }
+            } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE) {
+                for (FluidStack receive : processing.getFluidsToReceive().getStacks()) {
+                    ICraftingMonitorElement element = new CraftingMonitorElementFluidRender(receive, 0, 0, 0, receive.amount, 0);
+
+                    if (processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
+                        element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept_fluid");
+                    } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
+                        element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                    }
+
+                    elements.add(element);
+                }
+            }
+        }
+
+        elements.commit();
 
         return elements.getElements();
-    }
-
-    private ICraftingMonitorElement wrapAccordingToState(ICraftingMonitorElement element, ProcessingState state, boolean fluid) {
-        switch (state) {
-            case MACHINE_NONE:
-                element = new CraftingMonitorElementColor(element, "gui.refinedstorage:crafting_monitor.machine_none", CraftingMonitorElementColor.COLOR_ERROR);
-                break;
-            case MACHINE_DOES_NOT_ACCEPT:
-                element = new CraftingMonitorElementColor(element, fluid ? "gui.refinedstorage:crafting_monitor.machine_does_not_accept_fluid" : "gui.refinedstorage:crafting_monitor.machine_does_not_accept_item", CraftingMonitorElementColor.COLOR_ERROR);
-                break;
-        }
-
-        return element;
     }
 
     @Override

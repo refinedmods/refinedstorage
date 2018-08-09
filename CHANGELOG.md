@@ -1,7 +1,9 @@
 # Refined Storage Changelog
 
 ### 1.6.4
-- Image sizes optimized / Improved image compression (samtrion)
+- Rewrote autocrafting again (raoulvdberge)
+- Reworked the Crafting Monitor (raoulvdberge)
+- Optimized image sizes and improved image compression (samtrion)
 
 ### 1.6.3
 - Fixed crash with Wireless Fluid Grid (raoulvdberge)

@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.google.common.base.Optional;
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessCraftingMonitor;
@@ -19,7 +18,6 @@ import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
-    public static final String NBT_SIZE = "Size";
     public static final String NBT_TAB_SELECTED = "TabSelected";
     public static final String NBT_TAB_PAGE = "TabPage";
 
@@ -37,22 +35,6 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     @Nonnull
     public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
         return new NetworkItemWirelessCraftingMonitor(handler, player, stack);
-    }
-
-    public static int getSize(ItemStack stack) {
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_SIZE)) {
-            return stack.getTagCompound().getInteger(NBT_SIZE);
-        }
-
-        return IGrid.SIZE_STRETCH;
-    }
-
-    public static void setSize(ItemStack stack, int size) {
-        if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
-        }
-
-        stack.getTagCompound().setInteger(NBT_SIZE, size);
     }
 
     public static Optional<UUID> getTabSelected(ItemStack stack) {

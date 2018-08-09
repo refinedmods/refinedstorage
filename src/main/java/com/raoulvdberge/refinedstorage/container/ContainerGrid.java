@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
@@ -108,7 +107,7 @@ public class ContainerGrid extends ContainerBase {
     }
 
     private void addPortableGridSlots() {
-        addSlotToContainer(new SlotItemHandler(((IPortableGrid) grid).getDisk(), 0, 204, 6 + getTabDelta()));
+        addSlotToContainer(new SlotItemHandler(((IPortableGrid) grid).getDisk(), 0, 204, 6));
 
         transferManager.addBiTransfer(getPlayer().inventory, ((IPortableGrid) grid).getDisk());
     }
@@ -121,14 +120,14 @@ public class ContainerGrid extends ContainerBase {
         }
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, yStart + (18 * i) + getTabDelta()));
+            addSlotToContainer(new SlotItemHandler(grid.getFilter(), i, 204, yStart + (18 * i)));
         }
 
         transferManager.addBiTransfer(getPlayer().inventory, grid.getFilter());
     }
 
     private void addCraftingSlots() {
-        int headerAndSlots = getTabDelta() + display.getTopHeight() + (display.getVisibleRows() * 18);
+        int headerAndSlots = display.getTopHeight() + (display.getVisibleRows() * 18);
 
         int x = 26;
         int y = headerAndSlots + 4;
@@ -148,7 +147,7 @@ public class ContainerGrid extends ContainerBase {
     }
 
     private void addPatternSlots() {
-        int headerAndSlots = getTabDelta() + display.getTopHeight() + (display.getVisibleRows() * 18);
+        int headerAndSlots = display.getTopHeight() + (display.getVisibleRows() * 18);
 
         addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 172, headerAndSlots + 4));
         addSlotToContainer(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 1, 172, headerAndSlots + 40));
@@ -194,10 +193,6 @@ public class ContainerGrid extends ContainerBase {
         }
 
         addSlotToContainer(patternResultSlot = (new SlotLegacyDisabled(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern())));
-    }
-
-    private int getTabDelta() {
-        return !grid.getTabs().isEmpty() ? IGridTab.TAB_HEIGHT - 4 : 0;
     }
 
     public IGrid getGrid() {

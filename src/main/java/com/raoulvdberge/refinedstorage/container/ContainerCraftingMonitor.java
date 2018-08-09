@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
-import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorElements;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
@@ -17,23 +16,12 @@ import javax.annotation.Nullable;
 
 public class ContainerCraftingMonitor extends ContainerBase implements ICraftingMonitorListener {
     private ICraftingMonitor craftingMonitor;
-    private IResizableDisplay resizableDisplay;
     private boolean addedListener;
 
-    public ContainerCraftingMonitor(ICraftingMonitor craftingMonitor, @Nullable TileCraftingMonitor craftingMonitorTile, EntityPlayer player, IResizableDisplay resizableDisplay) {
+    public ContainerCraftingMonitor(ICraftingMonitor craftingMonitor, @Nullable TileCraftingMonitor craftingMonitorTile, EntityPlayer player) {
         super(craftingMonitorTile, player);
 
         this.craftingMonitor = craftingMonitor;
-        this.resizableDisplay = resizableDisplay;
-
-        initSlots();
-    }
-
-    public void initSlots() {
-        this.inventorySlots.clear();
-        this.inventoryItemStacks.clear();
-
-        addPlayerInventory(8, resizableDisplay.getYPlayerInventory());
     }
 
     @Override

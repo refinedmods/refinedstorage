@@ -12,13 +12,12 @@ import javax.annotation.Nullable;
  */
 public interface ICraftingMonitorElement {
     /**
-     * @param x        position on the x axis to render
-     * @param y        position on the y axis to render
-     * @param drawers  the drawers that this element can use
-     * @param selected whether the element is selected
+     * @param x       position on the x axis to render
+     * @param y       position on the y axis to render
+     * @param drawers the drawers that this element can use
      */
     @SideOnly(Side.CLIENT)
-    void draw(int x, int y, IElementDrawers drawers, boolean selected);
+    void draw(int x, int y, IElementDrawers drawers);
 
     /**
      * Returns the id of this element, used for serialization and deserialization over the network.

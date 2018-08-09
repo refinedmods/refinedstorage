@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -23,30 +22,14 @@ import java.util.UUID;
 public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
     public static final String ID = "crafting_monitor";
 
-    private static final String NBT_SIZE = "Size";
     private static final String NBT_TAB_SELECTED = "TabSelected";
     private static final String NBT_TAB_PAGE = "TabPage";
 
-    private int size = IGrid.SIZE_STRETCH;
     private Optional<UUID> tabSelected = Optional.absent();
     private int tabPage;
 
     public NetworkNodeCraftingMonitor(World world, BlockPos pos) {
         super(world, pos);
-    }
-
-    @Override
-    public int getSize() {
-        return world.isRemote ? TileCraftingMonitor.SIZE.getValue() : size;
-    }
-
-    @Override
-    public void onSizeChanged(int size) {
-        TileDataManager.setParameter(TileCraftingMonitor.SIZE, size);
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 
     @Override
@@ -90,24 +73,6 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     @Override
     public ICraftingManager getCraftingManager() {
         return network != null ? network.getCraftingManager() : null;
-    }
-
-    @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
-        super.writeConfiguration(tag);
-
-        tag.setInteger(NBT_SIZE, size);
-
-        return tag;
-    }
-
-    @Override
-    public void readConfiguration(NBTTagCompound tag) {
-        super.readConfiguration(tag);
-
-        if (tag.hasKey(NBT_SIZE)) {
-            size = tag.getInteger(NBT_SIZE);
-        }
     }
 
     @Override

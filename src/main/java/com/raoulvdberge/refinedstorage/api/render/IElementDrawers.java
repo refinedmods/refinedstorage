@@ -36,6 +36,10 @@ public interface IElementDrawers {
         return getNullDrawer();
     }
 
+    default IElementDrawer getErrorDrawer() {
+        return getNullDrawer();
+    }
+
     /**
      * @return the font renderer
      */

@@ -25,10 +25,6 @@ public interface ICraftingMonitor {
     @Nullable
     ICraftingManager getCraftingManager();
 
-    int getSize();
-
-    void onSizeChanged(int size);
-
     boolean isActive();
 
     void onClosed(EntityPlayer player);

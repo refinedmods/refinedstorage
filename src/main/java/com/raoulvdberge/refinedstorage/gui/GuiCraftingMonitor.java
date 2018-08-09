@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
@@ -13,7 +12,6 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonGridSize;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.gui.control.TabList;
 import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorCancel;
@@ -33,17 +31,31 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
+public class GuiCraftingMonitor extends GuiBase {
     public class CraftingMonitorElementDrawers extends ElementDrawers {
         private IElementDrawer<Integer> overlayDrawer = (x, y, color) -> {
             GlStateManager.color(1, 1, 1, 1);
             GlStateManager.disableLighting();
-            drawRect(x, y, x + ITEM_WIDTH, y + ITEM_HEIGHT - 1, color);
+            drawRect(x, y, x + ITEM_WIDTH, y + ITEM_HEIGHT, color);
+        };
+
+        private IElementDrawer errorDrawer = (x, y, nothing) -> {
+            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.disableLighting();
+
+            bindTexture("gui/crafting_preview.png");
+
+            drawTexture(x + ITEM_WIDTH - 12 - 2, y + ITEM_HEIGHT - 12 - 2, 0, 244, 12, 12);
         };
 
         @Override
         public IElementDrawer<Integer> getOverlayDrawer() {
             return overlayDrawer;
+        }
+
+        @Override
+        public IElementDrawer getErrorDrawer() {
+            return errorDrawer;
         }
     }
 
@@ -92,8 +104,10 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         }
     }
 
-    private static final int ITEM_WIDTH = 143;
-    private static final int ITEM_HEIGHT = 18;
+    private static final int ROWS = 5;
+
+    private static final int ITEM_WIDTH = 73;
+    private static final int ITEM_HEIGHT = 29;
 
     private GuiButton cancelButton;
     private GuiButton cancelAllButton;
@@ -103,12 +117,10 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
     private List<IGridTab> tasks = Collections.emptyList();
     private TabList tabs;
 
-    private int elementSelected = -1;
-
     private IElementDrawers drawers = new CraftingMonitorElementDrawers();
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, ICraftingMonitor craftingMonitor) {
-        super(container, 176, 230);
+        super(container, 254, 201);
 
         this.craftingMonitor = craftingMonitor;
 
@@ -153,17 +165,13 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
 
     @Override
     public void init(int x, int y) {
-        ((ContainerCraftingMonitor) this.inventorySlots).initSlots();
-
         this.tabs.init(xSize);
 
-        this.scrollbar = new Scrollbar(157, getTopHeight() + tabs.getHeight(), 12, (getVisibleRows() * 18) - 1);
+        this.scrollbar = new Scrollbar(235, 20, 12, 149);
 
         if (craftingMonitor.getRedstoneModeParameter() != null) {
             addSideButton(new SideButtonRedstoneMode(this, craftingMonitor.getRedstoneModeParameter()));
         }
-
-        addSideButton(new SideButtonGridSize(this, () -> craftingMonitor.getSize(), size -> craftingMonitor.onSizeChanged(size)));
 
         String cancel = t("gui.cancel");
         String cancelAll = t("misc.refinedstorage:cancel_all");
@@ -171,17 +179,19 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         int cancelButtonWidth = 14 + fontRenderer.getStringWidth(cancel);
         int cancelAllButtonWidth = 14 + fontRenderer.getStringWidth(cancelAll);
 
-        int by = y + getTopHeight() + (getVisibleRows() * 18) + 3 + tabs.getHeight();
-
-        this.cancelButton = addButton(x + 7, by, cancelButtonWidth, 20, cancel, false, true);
-        this.cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, by, cancelAllButtonWidth, 20, cancelAll, false, true);
+        this.cancelButton = addButton(x + 7, y + 201 - 20 - 7, cancelButtonWidth, 20, cancel, false, true);
+        this.cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 201 - 20 - 7, cancelAllButtonWidth, 20, cancelAll, false, true);
     }
 
     private void updateScrollbar() {
         if (scrollbar != null) {
-            scrollbar.setEnabled(getRows() > getVisibleRows());
-            scrollbar.setMaxOffset(getRows() - getVisibleRows());
+            scrollbar.setEnabled(getRows() > ROWS);
+            scrollbar.setMaxOffset(getRows() - ROWS);
         }
+    }
+
+    private int getRows() {
+        return Math.max(0, (int) Math.ceil((float) getElements().size() / 3F));
     }
 
     @Override
@@ -189,10 +199,6 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         updateScrollbar();
 
         this.tabs.update();
-
-        if (elementSelected >= getElements().size()) {
-            elementSelected = -1;
-        }
 
         if (cancelButton != null) {
             cancelButton.enabled = hasValidTabSelected();
@@ -232,61 +238,45 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
     }
 
     @Override
-    protected void calcHeight() {
-        this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18) + tabs.getHeight();
-        this.screenHeight = ySize;
-    }
-
-    @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
-        tabs.drawBackground(x, y);
+        tabs.drawBackground(x, y - tabs.getHeight());
 
-        bindTexture("gui/crafting_monitor.png");
+        bindTexture("gui/crafting_preview.png");
 
-        int yy = y + tabs.getHeight();
+        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
-        drawTexture(x, yy, 0, 0, screenWidth, getTopHeight());
-
-        yy += getTopHeight();
-
-        int rows = getVisibleRows();
-
-        for (int i = 0; i < rows; ++i) {
-            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth, 18);
-
-            yy += 18;
-        }
-
-        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth, getBottomHeight());
-
-        tabs.drawForeground(x, y, mouseX, mouseY);
+        tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY);
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7 + tabs.getHeight(), t(craftingMonitor.getGuiTitle()));
-        drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
+        drawString(7, 7, t(craftingMonitor.getGuiTitle()));
 
-        int item = scrollbar != null ? scrollbar.getOffset() : 0;
+        int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        int x = 8;
-        int y = 20 + tabs.getHeight();
+        int x = 7;
+        int y = 20;
 
         String itemSelectedTooltip = null;
 
-        for (int i = scrollbar.getOffset(); i < scrollbar.getOffset() + getVisibleRows(); ++i) {
+        for (int i = 0; i < 3 * 5; ++i) {
             if (item < getElements().size()) {
                 ICraftingMonitorElement element = getElements().get(item);
+
+                element.draw(x, y, drawers);
 
                 if (inBounds(x, y, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
                     itemSelectedTooltip = element.getTooltip();
                 }
 
-                element.draw(x, y, drawers, item == elementSelected);
-
-                y += ITEM_HEIGHT;
+                if ((i + 1) % 3 == 0) {
+                    x = 7;
+                    y += 30;
+                } else {
+                    x += 74;
+                }
             }
 
             item++;
@@ -297,59 +287,6 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         }
 
         tabs.drawTooltip(fontRenderer, mouseX, mouseY);
-    }
-
-    @Override
-    public int getVisibleRows() {
-        switch (craftingMonitor.getSize()) {
-            case IGrid.SIZE_STRETCH:
-                int screenSpaceAvailable = height - getTopHeight() - getBottomHeight() - tabs.getHeight();
-
-                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRowsStretch));
-            case IGrid.SIZE_SMALL:
-                return 3;
-            case IGrid.SIZE_MEDIUM:
-                return 5;
-            case IGrid.SIZE_LARGE:
-                return 8;
-            default:
-                return 3;
-        }
-    }
-
-    @Override
-    public int getRows() {
-        return getElements().size();
-    }
-
-    @Override
-    public int getCurrentOffset() {
-        return scrollbar.getOffset();
-    }
-
-    @Override
-    public String getSearchFieldText() {
-        return null;
-    }
-
-    @Override
-    public int getTopHeight() {
-        return 20;
-    }
-
-    @Override
-    public int getBottomHeight() {
-        return 120;
-    }
-
-    @Override
-    public int getYPlayerInventory() {
-        return getTopHeight() + (18 * getVisibleRows()) + 38 + tabs.getHeight();
-    }
-
-    @Override
-    protected int getSideButtonYStart() {
-        return super.getSideButtonYStart() + tabs.getHeight();
     }
 
     @Override
@@ -370,20 +307,5 @@ public class GuiCraftingMonitor extends GuiBase implements IResizableDisplay {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         this.tabs.mouseClicked();
-
-        this.elementSelected = -1;
-
-        if (mouseButton == 0) {
-            int item = scrollbar != null ? scrollbar.getOffset() : 0;
-
-            for (int i = 0; i < getVisibleRows(); ++i) {
-                int ix = 8;
-                int iy = 20 + (i * ITEM_HEIGHT) + tabs.getHeight();
-
-                if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getElements().size()) {
-                    this.elementSelected = item + i;
-                }
-            }
-        }
     }
 }

@@ -5,8 +5,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.GuiCraftingMonitor;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorSettings;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -28,7 +26,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
     private int networkDimension;
     private BlockPos network;
-    private int size;
     private int tabPage;
     private Optional<UUID> tabSelected;
 
@@ -36,7 +33,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         this.stack = stack;
         this.networkDimension = networkDimension;
         this.network = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
-        this.size = ItemWirelessCraftingMonitor.getSize(stack);
         this.tabPage = ItemWirelessCraftingMonitor.getTabPage(stack);
         this.tabSelected = ItemWirelessCraftingMonitor.getTabSelected(stack);
     }
@@ -81,20 +77,6 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         }
 
         return null;
-    }
-
-    @Override
-    public int getSize() {
-        return size;
-    }
-
-    @Override
-    public void onSizeChanged(int size) {
-        this.size = size;
-
-        GuiBase.executeLater(GuiCraftingMonitor.class, GuiBase::initGui);
-
-        RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(size, tabSelected, tabPage));
     }
 
     private INetwork getNetwork() {
@@ -145,7 +127,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
             this.tabSelected = taskId;
         }
 
-        RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(size, tabSelected, tabPage));
+        RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(tabSelected, tabPage));
     }
 
     @Override
@@ -153,7 +135,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         if (page >= 0) {
             this.tabPage = page;
 
-            RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(size, tabSelected, tabPage));
+            RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(tabSelected, tabPage));
         }
     }
 }
