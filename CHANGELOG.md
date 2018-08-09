@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.4
+- Image sizes optimized / Improved image compression (samtrion)
+
 ### 1.6.3
 - Fixed crash with Wireless Fluid Grid (raoulvdberge)
 - Fixed Reborn Storage crafting being slower than normal (raoulvdberge)
