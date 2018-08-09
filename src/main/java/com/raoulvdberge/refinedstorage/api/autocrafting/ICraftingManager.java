@@ -101,14 +101,14 @@ public interface ICraftingManager {
      *
      * @param stack the stack
      */
-    void track(ItemStack stack, int size);
+    int track(ItemStack stack, int size);
 
     /**
      * Tracks an incoming stack.
      *
      * @param stack the stack
      */
-    void track(FluidStack stack, int size);
+    int track(FluidStack stack, int size);
 
     /**
      * @return a list of crafting patterns in this network, do NOT modify this list

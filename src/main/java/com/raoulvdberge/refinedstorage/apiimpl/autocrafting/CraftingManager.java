@@ -152,7 +152,9 @@ public class CraftingManager implements ICraftingManager {
             }
             this.tasksToCancel.clear();
 
-            this.tasksToAdd.stream().filter(ICraftingTask::isValid).forEach(t -> tasks.put(t.getId(), t));
+            for (ICraftingTask task : this.tasksToAdd) {
+                this.tasks.put(task.getId(), task);
+            }
             this.tasksToAdd.clear();
 
             boolean anyFinished = false;
@@ -275,37 +277,29 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void track(ItemStack stack, int size) {
-        int initialSize = size;
-
+    public int track(ItemStack stack, int size) {
         for (ICraftingTask task : tasks.values()) {
             size = task.onTrackedInsert(stack, size);
 
             if (size == 0) {
-                break;
+                return 0;
             }
         }
 
-        if (size != initialSize) {
-            this.onTaskChanged();
-        }
+        return size;
     }
 
     @Override
-    public void track(FluidStack stack, int size) {
-        int initialSize = size;
-
+    public int track(FluidStack stack, int size) {
         for (ICraftingTask task : tasks.values()) {
             size = task.onTrackedInsert(stack, size);
 
             if (size == 0) {
-                break;
+                return 0;
             }
         }
 
-        if (size != initialSize) {
-            this.onTaskChanged();
-        }
+        return size;
     }
 
     @Override

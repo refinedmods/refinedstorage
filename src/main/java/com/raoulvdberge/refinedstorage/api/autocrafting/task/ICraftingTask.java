@@ -56,7 +56,6 @@ public interface ICraftingTask {
      * Called when a stack is inserted into the system through {@link com.raoulvdberge.refinedstorage.api.network.INetwork#insertItemTracked(ItemStack, int)}.
      *
      * @param stack the stack
-     * @return the size remaining, decremented by the crafting task when it was relevant to it
      */
     int onTrackedInsert(ItemStack stack, int size);
 
@@ -64,7 +63,6 @@ public interface ICraftingTask {
      * Called when a stack is inserted into the system through {@link com.raoulvdberge.refinedstorage.api.network.INetwork#insertFluidTracked(FluidStack, int)}.
      *
      * @param stack the stack
-     * @return the size remaining, decremented by the crafting task when it was relevant to it
      */
     int onTrackedInsert(FluidStack stack, int size);
 
@@ -94,14 +92,6 @@ public interface ICraftingTask {
      * @return the crafting pattern corresponding to this task
      */
     ICraftingPattern getPattern();
-
-    /**
-     * Used to check if the crafting task has recursive elements (eg. block needs 9 ingots, ingots are crafted by a block).
-     * {@link ICraftingTask#calculate()} must be run before this!
-     *
-     * @return true if no recursion was found, false otherwise
-     */
-    boolean isValid();
 
     /**
      * @return the time in ms when this task has started

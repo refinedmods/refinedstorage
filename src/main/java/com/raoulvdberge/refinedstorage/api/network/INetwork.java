@@ -108,14 +108,15 @@ public interface INetwork {
      * @param size  the amount of that prototype that has to be inserted
      * @return null if the insert was successful, or a stack with the remainder
      */
+    @Nullable
     default ItemStack insertItemTracked(@Nonnull ItemStack stack, int size) {
-        ItemStack remainder = insertItem(stack, size, Action.PERFORM);
+        int remainder = getCraftingManager().track(stack, size);
 
-        int inserted = remainder == null ? size : (size - remainder.getCount());
+        if (remainder == 0) {
+            return null;
+        }
 
-        getCraftingManager().track(stack, inserted);
-
-        return remainder;
+        return insertItem(stack, remainder, Action.PERFORM);
     }
 
     /**
@@ -178,13 +179,13 @@ public interface INetwork {
      */
     @Nullable
     default FluidStack insertFluidTracked(@Nonnull FluidStack stack, int size) {
-        FluidStack remainder = insertFluid(stack, size, Action.PERFORM);
+        int remainder = getCraftingManager().track(stack, size);
 
-        int inserted = remainder == null ? size : (size - remainder.amount);
+        if (remainder == 0) {
+            return null;
+        }
 
-        getCraftingManager().track(stack, inserted);
-
-        return remainder;
+        return insertFluid(stack, remainder, Action.PERFORM);
     }
 
     /**
