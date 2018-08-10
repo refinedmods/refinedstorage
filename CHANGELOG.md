@@ -1,10 +1,13 @@
 # Refined Storage Changelog
 
+<<<<<<< HEAD
 ### 1.6.4
 - Rewrote autocrafting again (raoulvdberge)
 - Reworked the Crafting Monitor (raoulvdberge)
 - Optimized image sizes and improved image compression (samtrion)
 
+=======
+>>>>>>> parent of fea420aa... Image sizes optimized (#1944)
 ### 1.6.3
 - Fixed crash with Wireless Fluid Grid (raoulvdberge)
 - Fixed Reborn Storage crafting being slower than normal (raoulvdberge)
