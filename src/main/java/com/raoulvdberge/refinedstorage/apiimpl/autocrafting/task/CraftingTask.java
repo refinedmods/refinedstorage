@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainLis
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
@@ -31,16 +32,18 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nullable;
 import java.util.*;
 
-// TODO: Calculation time.
-// TODO: Progressive outputs?
 public class CraftingTask implements ICraftingTask {
+    private static final long CALCULATION_TIMEOUT_MS = 5000;
+
     private INetwork network;
     private ICraftingRequestInfo requested;
     private int quantity;
     private ICraftingPattern pattern;
     private UUID id = UUID.randomUUID();
     private int ticks;
+    private long calculationStarted = -1;
     private long executionStarted = -1;
+    private Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
     private IStorage<ItemStack> internalStorage;
     private IStorage<FluidStack> internalFluidStorage;
@@ -73,6 +76,16 @@ public class CraftingTask implements ICraftingTask {
     @Override
     @Nullable
     public ICraftingTaskError calculate() {
+        if (calculationStarted != -1) {
+            throw new IllegalStateException("Task already calculated!");
+        }
+
+        if (executionStarted != -1) {
+            throw new IllegalStateException("Task already started!");
+        }
+
+        this.calculationStarted = System.currentTimeMillis();
+
         int qty = this.quantity;
         int qtyPerCraft = getQuantityPerCraft();
         int crafted = 0;
@@ -118,6 +131,14 @@ public class CraftingTask implements ICraftingTask {
         IStackList<FluidStack> fluidResults,
         ICraftingPatternChainList patternChainList,
         ICraftingPattern pattern) {
+
+        if (System.currentTimeMillis() - calculationStarted > CALCULATION_TIMEOUT_MS) {
+            return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
+        }
+
+        if (!patternsUsed.add(pattern)) {
+            return new CraftingTaskError(CraftingTaskErrorType.RECURSIVE, pattern);
+        }
 
         IStackList<ItemStack> itemsToExtract = API.instance().createItemStackList();
         IStackList<FluidStack> fluidsToExtract = API.instance().createFluidStackList();
@@ -296,6 +317,8 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
         }
+
+        patternsUsed.remove(pattern);
 
         if (pattern.isProcessing()) {
             IStackList<ItemStack> itemsToReceive = API.instance().createItemStackList();

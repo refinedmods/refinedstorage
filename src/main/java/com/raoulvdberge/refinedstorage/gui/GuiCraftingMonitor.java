@@ -97,6 +97,8 @@ public class GuiCraftingMonitor extends GuiBase {
         @Override
         public void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
             if (requested.getItem() != null) {
+                RenderHelper.enableGUIStandardItemLighting();
+
                 itemDrawer.draw(x, y, requested.getItem());
             } else {
                 fluidDrawer.draw(x, y, requested.getFluid());
