@@ -102,6 +102,8 @@ public class GuiCraftingMonitor extends GuiBase {
                 itemDrawer.draw(x, y, requested.getItem());
             } else {
                 fluidDrawer.draw(x, y, requested.getFluid());
+
+                GlStateManager.enableAlpha();
             }
         }
     }

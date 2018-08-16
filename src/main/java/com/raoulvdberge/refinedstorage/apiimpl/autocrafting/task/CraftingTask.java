@@ -1,17 +1,13 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainList;
+import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.*;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -21,11 +17,18 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craf
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItem;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -33,6 +36,24 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class CraftingTask implements ICraftingTask {
+    private static final String NBT_REQUESTED = "Requested";
+    private static final String NBT_QUANTITY = "Quantity";
+    private static final String NBT_PATTERN = "Pattern";
+    private static final String NBT_TICKS = "Ticks";
+    private static final String NBT_ID = "Id";
+    private static final String NBT_EXECUTION_STARTED = "ExecutionStarted";
+    private static final String NBT_INTERNAL_STORAGE = "InternalStorage";
+    private static final String NBT_INTERNAL_FLUID_STORAGE = "InternalFluidStorage";
+    private static final String NBT_TO_EXTRACT_INITIAL = "ToExtractInitial";
+    private static final String NBT_TO_EXTRACT_INITIAL_FLUIDS = "ToExtractInitialFluids";
+    private static final String NBT_CRAFTING = "Crafting";
+    private static final String NBT_PROCESSING = "Processing";
+    private static final String NBT_MISSING = "Missing";
+    private static final String NBT_MISSING_FLUIDS = "MissingFluids";
+
+    private static final String NBT_PATTERN_STACK = "Stack";
+    private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
+
     private static final long CALCULATION_TIMEOUT_MS = 5000;
 
     private INetwork network;
@@ -45,8 +66,8 @@ public class CraftingTask implements ICraftingTask {
     private long executionStarted = -1;
     private Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
-    private IStorage<ItemStack> internalStorage;
-    private IStorage<FluidStack> internalFluidStorage;
+    private IStorageDisk<ItemStack> internalStorage;
+    private IStorageDisk<FluidStack> internalFluidStorage;
 
     private IStackList<ItemStack> toExtractInitial = API.instance().createItemStackList();
     private IStackList<FluidStack> toExtractInitialFluids = API.instance().createFluidStackList();
@@ -54,11 +75,11 @@ public class CraftingTask implements ICraftingTask {
     private List<Crafting> crafting = new ArrayList<>();
     private List<Processing> processing = new ArrayList<>();
 
-    private IStackList<ItemStack> toTake = API.instance().createItemStackList();
-    private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
-
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
     private IStackList<FluidStack> missingFluids = API.instance().createFluidStackList();
+
+    private IStackList<ItemStack> toTake = API.instance().createItemStackList();
+    private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
 
     private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
     private IStackList<FluidStack> toCraftFluids = API.instance().createFluidStackList();
@@ -71,6 +92,124 @@ public class CraftingTask implements ICraftingTask {
 
         this.internalStorage = new StorageDiskItem(network.world(), -1);
         this.internalFluidStorage = new StorageDiskFluid(network.world(), -1);
+    }
+
+    public CraftingTask(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
+        this.network = network;
+
+        this.requested = API.instance().createCraftingRequestInfo(tag.getCompoundTag(NBT_REQUESTED));
+        this.quantity = tag.getInteger(NBT_QUANTITY);
+        this.pattern = readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
+        this.ticks = tag.getInteger(NBT_TICKS);
+        this.id = tag.getUniqueId(NBT_ID);
+        this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
+
+        StorageDiskFactoryItem factoryItem = new StorageDiskFactoryItem();
+        StorageDiskFactoryFluid factoryFluid = new StorageDiskFactoryFluid();
+
+        this.internalStorage = factoryItem.createFromNbt(network.world(), tag.getCompoundTag(NBT_INTERNAL_STORAGE));
+        this.internalFluidStorage = factoryFluid.createFromNbt(network.world(), tag.getCompoundTag(NBT_INTERNAL_FLUID_STORAGE));
+
+        this.toExtractInitial = readItemStackList(tag.getTagList(NBT_TO_EXTRACT_INITIAL, Constants.NBT.TAG_COMPOUND));
+        this.toExtractInitialFluids = readFluidStackList(tag.getTagList(NBT_TO_EXTRACT_INITIAL_FLUIDS, Constants.NBT.TAG_COMPOUND));
+
+        NBTTagList craftingList = tag.getTagList(NBT_CRAFTING, Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < craftingList.tagCount(); ++i) {
+            crafting.add(new Crafting(network, craftingList.getCompoundTagAt(i)));
+        }
+
+        NBTTagList processingList = tag.getTagList(NBT_PROCESSING, Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < processingList.tagCount(); ++i) {
+            processing.add(new Processing(network, processingList.getCompoundTagAt(i)));
+        }
+
+        this.missing = readItemStackList(tag.getTagList(NBT_MISSING, Constants.NBT.TAG_COMPOUND));
+        this.missingFluids = readFluidStackList(tag.getTagList(NBT_MISSING_FLUIDS, Constants.NBT.TAG_COMPOUND));
+    }
+
+    @Override
+    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
+        tag.setTag(NBT_REQUESTED, requested.writeToNbt());
+        tag.setInteger(NBT_QUANTITY, quantity);
+        tag.setTag(NBT_PATTERN, writePatternToNbt(pattern));
+        tag.setInteger(NBT_TICKS, ticks);
+        tag.setUniqueId(NBT_ID, id);
+        tag.setLong(NBT_EXECUTION_STARTED, executionStarted);
+        tag.setTag(NBT_INTERNAL_STORAGE, internalStorage.writeToNbt());
+        tag.setTag(NBT_INTERNAL_FLUID_STORAGE, internalFluidStorage.writeToNbt());
+        tag.setTag(NBT_TO_EXTRACT_INITIAL, writeItemStackList(toExtractInitial));
+        tag.setTag(NBT_TO_EXTRACT_INITIAL_FLUIDS, writeFluidStackList(toExtractInitialFluids));
+
+        NBTTagList craftingList = new NBTTagList();
+        for (Crafting crafting : this.crafting) {
+            craftingList.appendTag(crafting.writeToNbt());
+        }
+
+        tag.setTag(NBT_CRAFTING, craftingList);
+
+        NBTTagList processingList = new NBTTagList();
+        for (Processing processing : this.processing) {
+            processingList.appendTag(processing.writeToNbt());
+        }
+
+        tag.setTag(NBT_PROCESSING, processingList);
+
+        tag.setTag(NBT_MISSING, writeItemStackList(missing));
+        tag.setTag(NBT_MISSING_FLUIDS, writeFluidStackList(missingFluids));
+
+        return tag;
+    }
+
+    public static NBTTagList writeItemStackList(IStackList<ItemStack> stacks) {
+        NBTTagList list = new NBTTagList();
+
+        for (ItemStack stack : stacks.getStacks()) {
+            list.appendTag(StackUtils.serializeStackToNbt(stack));
+        }
+
+        return list;
+    }
+
+    public static IStackList<ItemStack> readItemStackList(NBTTagList list) throws CraftingTaskReadException {
+        IStackList<ItemStack> stacks = API.instance().createItemStackList();
+
+        for (int i = 0; i < list.tagCount(); ++i) {
+            ItemStack stack = StackUtils.deserializeStackFromNbt(list.getCompoundTagAt(i));
+
+            if (stack.isEmpty()) {
+                throw new CraftingTaskReadException("Empty stack!");
+            }
+
+            stacks.add(stack);
+        }
+
+        return stacks;
+    }
+
+    public static NBTTagList writeFluidStackList(IStackList<FluidStack> stacks) {
+        NBTTagList list = new NBTTagList();
+
+        for (FluidStack stack : stacks.getStacks()) {
+            list.appendTag(stack.writeToNBT(new NBTTagCompound()));
+        }
+
+        return list;
+    }
+
+    public static IStackList<FluidStack> readFluidStackList(NBTTagList list) throws CraftingTaskReadException {
+        IStackList<FluidStack> stacks = API.instance().createFluidStackList();
+
+        for (int i = 0; i < list.tagCount(); ++i) {
+            FluidStack stack = FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i));
+
+            if (stack == null) {
+                throw new CraftingTaskReadException("Empty stack!");
+            }
+
+            stacks.add(stack);
+        }
+
+        return stacks;
     }
 
     @Override
@@ -564,6 +703,10 @@ public class CraftingTask implements ICraftingTask {
             executionStarted = System.currentTimeMillis();
         }
 
+        if (true) {
+            return false;
+        }
+
         ++ticks;
 
         extractInitial();
@@ -731,9 +874,31 @@ public class CraftingTask implements ICraftingTask {
         return size;
     }
 
-    @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
-        return new NBTTagCompound();
+    public static NBTTagCompound writePatternToNbt(ICraftingPattern pattern) {
+        NBTTagCompound tag = new NBTTagCompound();
+
+        tag.setTag(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
+        tag.setLong(NBT_PATTERN_CONTAINER_POS, pattern.getContainer().getPosition().toLong());
+
+        return tag;
+    }
+
+    public static ICraftingPattern readPatternFromNbt(NBTTagCompound tag, World world) throws CraftingTaskReadException {
+        BlockPos containerPos = BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER_POS));
+
+        INetworkNode node = API.instance().getNetworkNodeManager(world).getNode(containerPos);
+
+        if (node instanceof ICraftingPatternContainer) {
+            ItemStack stack = new ItemStack(tag.getCompoundTag(NBT_PATTERN_STACK));
+
+            if (stack.getItem() instanceof ICraftingPatternProvider) {
+                return ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) node);
+            } else {
+                throw new CraftingTaskReadException("Pattern stack is not a crafting pattern provider");
+            }
+        } else {
+            throw new CraftingTaskReadException("Crafting pattern container doesn't exist anymore");
+        }
     }
 
     @Override

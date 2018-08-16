@@ -22,6 +22,6 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
 
     @Override
     public ICraftingTask createFromNbt(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
-        throw new CraftingTaskReadException("Persistence isn't implemented yet, ignoring..."); // TODO: Persistence
+        return new CraftingTask(network, tag);
     }
 }

@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 public interface ICraftingMonitor {
-    int TABS_PER_PAGE = 6;
+    int TABS_PER_PAGE = 7;
 
     String getGuiTitle();
 

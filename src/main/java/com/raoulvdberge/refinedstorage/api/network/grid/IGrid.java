@@ -19,7 +19,7 @@ import java.util.List;
  * Represents a grid.
  */
 public interface IGrid {
-    int TABS_PER_PAGE = 6;
+    int TABS_PER_PAGE = 5;
 
     int SORTING_DIRECTION_ASCENDING = 0;
     int SORTING_DIRECTION_DESCENDING = 1;

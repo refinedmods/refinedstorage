@@ -63,7 +63,7 @@ public class TabList {
             if (i < tabs.get().size()) {
                 drawTab(tabs.get().get(i), true, x, y, i, j);
 
-                if (gui.inBounds(x + ((IGridTab.TAB_WIDTH + 1) * j), y, IGridTab.TAB_WIDTH, IGridTab.TAB_HEIGHT - (i == selected.get() ? 2 : 7), mouseX, mouseY)) {
+                if (gui.inBounds(x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * j), y, IGridTab.TAB_WIDTH, IGridTab.TAB_HEIGHT - (i == selected.get() ? 2 : 7), mouseX, mouseY)) {
                     this.tabHovering = i;
                 }
 
@@ -104,6 +104,14 @@ public class TabList {
         return !tabs.get().isEmpty() ? IGridTab.TAB_HEIGHT - 4 : 0;
     }
 
+    private int getXOffset() {
+        if (pages.get() > 0) {
+            return 23;
+        }
+
+        return 0;
+    }
+
     private void drawTab(IGridTab tab, boolean foregroundLayer, int x, int y, int index, int num) {
         boolean isSelected = index == selected.get();
 
@@ -111,7 +119,7 @@ public class TabList {
             return;
         }
 
-        int tx = x + ((IGridTab.TAB_WIDTH + 1) * num);
+        int tx = x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * num);
         int ty = y;
 
         GlStateManager.enableAlpha();
@@ -130,7 +138,7 @@ public class TabList {
         if (isSelected) {
             uvx = 227;
 
-            if (num > 0) {
+            if (num > 0 || getXOffset() != 0) {
                 uvx = 226;
                 uvy = 194;
                 tbw++;
@@ -148,12 +156,6 @@ public class TabList {
     public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY) {
         if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
             tabs.get().get(tabHovering).drawTooltip(mouseX, mouseY, gui.getScreenWidth(), gui.getScreenHeight(), fontRenderer);
-        }
-
-        if (pages.get() > 0) {
-            String text = (page.get() + 1) + " / " + (pages.get() + 1);
-
-            gui.drawString((int) ((width - (float) fontRenderer.getStringWidth(text)) / 2F), -16, text, 0xFFFFFF);
         }
     }
 
