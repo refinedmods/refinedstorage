@@ -703,10 +703,6 @@ public class CraftingTask implements ICraftingTask {
             executionStarted = System.currentTimeMillis();
         }
 
-        if (true) {
-            return false;
-        }
-
         ++ticks;
 
         extractInitial();
