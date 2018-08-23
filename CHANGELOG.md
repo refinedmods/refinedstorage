@@ -3,6 +3,7 @@
 ### 1.6.4
 - Rewrote autocrafting again (raoulvdberge)
 - Reworked the Crafting Monitor (raoulvdberge)
+- Removed left / right click functionality on filter slots to increase / decrease the amount, replaced that functionality with a dialog (raoulvdberge)
 
 ### 1.6.3
 - Fixed crash with Wireless Fluid Grid (raoulvdberge)

@@ -25,6 +25,10 @@ public class MessageSlotFilterSet extends MessageHandlerPlayerToServer<MessageSl
 
     @Override
     protected void handle(MessageSlotFilterSet message, EntityPlayerMP player) {
+        if (message.stack.isEmpty() || message.stack.getCount() > message.stack.getMaxStackSize()) {
+            return;
+        }
+
         Container container = player.openContainer;
 
         if (container != null) {

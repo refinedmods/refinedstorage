@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButton;
@@ -247,7 +248,19 @@ public abstract class GuiBase extends GuiContainer {
 
     @Override
     protected void handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type) {
-        if (slot instanceof SlotFilterFluid && slot.isEnabled() && ((SlotFilterFluid) slot).isSizeAllowed() && type != ClickType.QUICK_MOVE && Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty()) {
+        boolean valid = type != ClickType.QUICK_MOVE && Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty();
+
+        if (valid && slot instanceof SlotFilter && slot.isEnabled() && ((SlotFilter) slot).isSizeAllowed()) {
+            if (!slot.getStack().isEmpty()) {
+                FMLClientHandler.instance().showGuiScreen(new GuiAmount(
+                    (GuiBase) Minecraft.getMinecraft().currentScreen,
+                    Minecraft.getMinecraft().player,
+                    slot.slotNumber,
+                    slot.getStack(),
+                    slot.getSlotStackLimit()
+                ));
+            }
+        } else if (valid && slot instanceof SlotFilterFluid && slot.isEnabled() && ((SlotFilterFluid) slot).isSizeAllowed()) {
             FluidStack stack = ((SlotFilterFluid) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
             if (stack != null) {

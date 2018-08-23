@@ -96,10 +96,6 @@ public abstract class ContainerBase extends Container {
                     slot.putStack(ItemStack.EMPTY);
                 } else if (!player.inventory.getItemStack().isEmpty()) {
                     slot.putStack(player.inventory.getItemStack().copy());
-                } else if (slot.getHasStack()) {
-                    slot.getStack().setCount(((SlotFilter) slot).getModifiedAmount(dragType));
-
-                    detectAndSendChanges();
                 }
             } else if (player.inventory.getItemStack().isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);

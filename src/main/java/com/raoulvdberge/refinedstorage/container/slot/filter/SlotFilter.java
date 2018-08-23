@@ -58,18 +58,6 @@ public class SlotFilter extends SlotBase {
         return (flags & FILTER_ALLOW_BLOCKS) == FILTER_ALLOW_BLOCKS;
     }
 
-    public int getModifiedAmount(int dragType) {
-        int amount = getStack().getCount();
-
-        if (dragType == 0) {
-            amount = Math.max(1, amount - 1);
-        } else if (dragType == 1) {
-            amount = Math.min(getStack().getMaxStackSize(), amount + 1);
-        }
-
-        return amount;
-    }
-
     @Nullable
     public static IBlockState getBlockState(IBlockAccess world, BlockPos pos, @Nullable ItemStack stack) {
         if (stack != null) {
