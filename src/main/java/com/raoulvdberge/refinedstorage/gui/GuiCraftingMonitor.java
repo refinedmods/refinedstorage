@@ -158,6 +158,10 @@ public class GuiCraftingMonitor extends GuiBase {
     }
 
     public List<ICraftingMonitorElement> getElements() {
+        if (!craftingMonitor.isActive()) {
+            return Collections.emptyList();
+        }
+
         IGridTab tab = getCurrentTab();
 
         if (tab == null) {
@@ -243,13 +247,17 @@ public class GuiCraftingMonitor extends GuiBase {
 
     @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
-        tabs.drawBackground(x, y - tabs.getHeight());
+        if (craftingMonitor.isActive()) {
+            tabs.drawBackground(x, y - tabs.getHeight());
+        }
 
         bindTexture("gui/crafting_preview.png");
 
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
-        tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY);
+        if (craftingMonitor.isActive()) {
+            tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY);
+        }
     }
 
     @Override

@@ -21,6 +21,7 @@ class Processing {
     private static final String NBT_ITEMS_TO_PUT = "ItemsToPut";
     private static final String NBT_FLUIDS_TO_PUT = "FluidsToPut";
     private static final String NBT_STATE = "State";
+    private static final String NBT_ROOT = "Root";
 
     private ICraftingPattern pattern;
     private IStackList<ItemStack> itemsToReceive;
@@ -28,19 +29,22 @@ class Processing {
     private ArrayList<ItemStack> itemsToPut;
     private ArrayList<FluidStack> fluidsToPut;
     private ProcessingState state = ProcessingState.READY;
+    private boolean root;
 
-    public Processing(ICraftingPattern pattern, IStackList<ItemStack> itemsToReceive, IStackList<FluidStack> fluidsToReceive, ArrayList<ItemStack> itemsToPut, ArrayList<FluidStack> fluidsToPut) {
+    public Processing(ICraftingPattern pattern, IStackList<ItemStack> itemsToReceive, IStackList<FluidStack> fluidsToReceive, ArrayList<ItemStack> itemsToPut, ArrayList<FluidStack> fluidsToPut, boolean root) {
         this.pattern = pattern;
         this.itemsToReceive = itemsToReceive;
         this.fluidsToReceive = fluidsToReceive;
         this.itemsToPut = itemsToPut;
         this.fluidsToPut = fluidsToPut;
+        this.root = root;
     }
 
     public Processing(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
         this.pattern = CraftingTask.readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
         this.itemsToReceive = CraftingTask.readItemStackList(tag.getTagList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
         this.fluidsToReceive = CraftingTask.readFluidStackList(tag.getTagList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
+        this.root = tag.getBoolean(NBT_ROOT);
 
         this.itemsToPut = new ArrayList<>();
 
@@ -99,12 +103,17 @@ class Processing {
         return state;
     }
 
+    public boolean isRoot() {
+        return root;
+    }
+
     public NBTTagCompound writeToNbt() {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setTag(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
         tag.setTag(NBT_ITEMS_TO_RECEIVE, CraftingTask.writeItemStackList(itemsToReceive));
         tag.setTag(NBT_FLUIDS_TO_RECEIVE, CraftingTask.writeFluidStackList(fluidsToReceive));
+        tag.setBoolean(NBT_ROOT, root);
 
         NBTTagList itemsToPutList = new NBTTagList();
         for (ItemStack stack : this.itemsToPut) {

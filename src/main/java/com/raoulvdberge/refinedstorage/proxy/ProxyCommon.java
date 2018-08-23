@@ -320,7 +320,7 @@ public class ProxyCommon {
         OneSixMigrationHelper.removalHook();
 
         for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
-            if (missing.key.getNamespace().equals(RS.ID) && (missing.key.getPath().equals("wrench") || missing.key.getPath().equals("solderer"))) {
+            if (missing.key.getNamespace().equals(RS.ID) && missing.key.getPath().equals("solderer")) {
                 missing.ignore();
             }
         }

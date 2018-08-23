@@ -21,6 +21,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFl
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItem;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -95,6 +96,12 @@ public class CraftingTask implements ICraftingTask {
     }
 
     public CraftingTask(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
+        OneSixMigrationHelper.removalHook();
+
+        if (!tag.hasKey(NBT_INTERNAL_STORAGE)) {
+            throw new CraftingTaskReadException("Couldn't read crafting task from before RS v1.6.4, skipping...");
+        }
+
         this.network = network;
 
         this.requested = API.instance().createCraftingRequestInfo(tag.getCompoundTag(NBT_REQUESTED));
@@ -160,7 +167,7 @@ public class CraftingTask implements ICraftingTask {
         return tag;
     }
 
-    public static NBTTagList writeItemStackList(IStackList<ItemStack> stacks) {
+    static NBTTagList writeItemStackList(IStackList<ItemStack> stacks) {
         NBTTagList list = new NBTTagList();
 
         for (ItemStack stack : stacks.getStacks()) {
@@ -170,7 +177,7 @@ public class CraftingTask implements ICraftingTask {
         return list;
     }
 
-    public static IStackList<ItemStack> readItemStackList(NBTTagList list) throws CraftingTaskReadException {
+    static IStackList<ItemStack> readItemStackList(NBTTagList list) throws CraftingTaskReadException {
         IStackList<ItemStack> stacks = API.instance().createItemStackList();
 
         for (int i = 0; i < list.tagCount(); ++i) {
@@ -186,7 +193,7 @@ public class CraftingTask implements ICraftingTask {
         return stacks;
     }
 
-    public static NBTTagList writeFluidStackList(IStackList<FluidStack> stacks) {
+    static NBTTagList writeFluidStackList(IStackList<FluidStack> stacks) {
         NBTTagList list = new NBTTagList();
 
         for (FluidStack stack : stacks.getStacks()) {
@@ -196,7 +203,7 @@ public class CraftingTask implements ICraftingTask {
         return list;
     }
 
-    public static IStackList<FluidStack> readFluidStackList(NBTTagList list) throws CraftingTaskReadException {
+    static IStackList<FluidStack> readFluidStackList(NBTTagList list) throws CraftingTaskReadException {
         IStackList<FluidStack> stacks = API.instance().createFluidStackList();
 
         for (int i = 0; i < list.tagCount(); ++i) {
@@ -240,7 +247,7 @@ public class CraftingTask implements ICraftingTask {
         ICraftingPatternChain patternChain = patternChainList.getChain(pattern);
 
         while (qty > 0) {
-            ICraftingTaskError result = calculateInternal(storage, fluidStorage, results, fluidResults, patternChainList, patternChain.current());
+            ICraftingTaskError result = calculateInternal(storage, fluidStorage, results, fluidResults, patternChainList, patternChain.current(), true);
 
             if (result != null) {
                 return result;
@@ -269,7 +276,8 @@ public class CraftingTask implements ICraftingTask {
         IStackList<ItemStack> results,
         IStackList<FluidStack> fluidResults,
         ICraftingPatternChainList patternChainList,
-        ICraftingPattern pattern) {
+        ICraftingPattern pattern,
+        boolean root) {
 
         if (System.currentTimeMillis() - calculationStarted > CALCULATION_TIMEOUT_MS) {
             return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
@@ -361,7 +369,7 @@ public class CraftingTask implements ICraftingTask {
                         ICraftingPatternChain subPatternChain = patternChainList.getChain(subPattern);
 
                         while ((fromSelf == null ? 0 : fromSelf.getCount()) < remaining) {
-                            ICraftingTaskError result = calculateInternal(mutatedStorage, mutatedFluidStorage, results, fluidResults, patternChainList, subPatternChain.current());
+                            ICraftingTaskError result = calculateInternal(mutatedStorage, mutatedFluidStorage, results, fluidResults, patternChainList, subPatternChain.current(), false);
 
                             if (result != null) {
                                 return result;
@@ -428,7 +436,7 @@ public class CraftingTask implements ICraftingTask {
                         ICraftingPatternChain subPatternChain = patternChainList.getChain(subPattern);
 
                         while ((fromSelf == null ? 0 : fromSelf.amount) < remaining) {
-                            ICraftingTaskError result = calculateInternal(mutatedStorage, mutatedFluidStorage, results, fluidResults, patternChainList, subPatternChain.current());
+                            ICraftingTaskError result = calculateInternal(mutatedStorage, mutatedFluidStorage, results, fluidResults, patternChainList, subPatternChain.current(), false);
 
                             if (result != null) {
                                 return result;
@@ -475,13 +483,13 @@ public class CraftingTask implements ICraftingTask {
                 fluidsToReceive.add(output);
             }
 
-            processing.add(new Processing(pattern, itemsToReceive, fluidsToReceive, new ArrayList<>(itemsToExtract.getStacks()), new ArrayList<>(fluidsToExtract.getStacks())));
+            processing.add(new Processing(pattern, itemsToReceive, fluidsToReceive, new ArrayList<>(itemsToExtract.getStacks()), new ArrayList<>(fluidsToExtract.getStacks()), root));
         } else {
             if (!fluidsToExtract.isEmpty()) {
                 throw new IllegalStateException("Cannot extract fluids in normal pattern!");
             }
 
-            crafting.add(new Crafting(pattern, took, itemsToExtract));
+            crafting.add(new Crafting(pattern, took, itemsToExtract, root));
 
             results.add(pattern.getOutput(took));
 
@@ -585,10 +593,27 @@ public class CraftingTask implements ICraftingTask {
                     }
 
                     ItemStack output = c.getPattern().getOutput(c.getTook());
-                    this.internalStorage.insert(output, output.getCount(), Action.PERFORM);
 
-                    for (ItemStack byp : c.getPattern().getByproducts(c.getTook())) {
-                        this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
+                    if (!c.isRoot()) {
+                        this.internalStorage.insert(output, output.getCount(), Action.PERFORM);
+
+                        for (ItemStack byp : c.getPattern().getByproducts(c.getTook())) {
+                            this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
+                        }
+                    } else {
+                        ItemStack remainder = this.network.insertItem(output, output.getCount(), Action.PERFORM);
+
+                        if (remainder != null) {
+                            this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
+                        }
+
+                        for (ItemStack byp : c.getPattern().getByproducts(c.getTook())) {
+                            remainder = this.network.insertItem(byp, byp.getCount(), Action.PERFORM);
+
+                            if (remainder != null) {
+                                this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
+                            }
+                        }
                     }
 
                     it.remove();
@@ -824,7 +849,15 @@ public class CraftingTask implements ICraftingTask {
                     p.setState(ProcessingState.PROCESSED);
                 }
 
-                internalStorage.insert(stack, needed, Action.PERFORM);
+                if (!p.isRoot()) {
+                    internalStorage.insert(stack, needed, Action.PERFORM);
+                } else {
+                    ItemStack remainder = network.insertItem(stack, needed, Action.PERFORM);
+
+                    if (remainder != null) {
+                        internalStorage.insert(stack, needed, Action.PERFORM);
+                    }
+                }
 
                 if (size == 0) {
                     return 0;
@@ -859,7 +892,15 @@ public class CraftingTask implements ICraftingTask {
                     p.setState(ProcessingState.PROCESSED);
                 }
 
-                internalFluidStorage.insert(stack, needed, Action.PERFORM);
+                if (!p.isRoot()) {
+                    internalFluidStorage.insert(stack, needed, Action.PERFORM);
+                } else {
+                    FluidStack remainder = network.insertFluid(stack, needed, Action.PERFORM);
+
+                    if (remainder != null) {
+                        internalFluidStorage.insert(stack, needed, Action.PERFORM);
+                    }
+                }
 
                 if (size == 0) {
                     return 0;

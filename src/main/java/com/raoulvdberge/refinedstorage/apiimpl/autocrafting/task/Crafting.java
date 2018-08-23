@@ -15,20 +15,24 @@ class Crafting {
     private static final String NBT_PATTERN = "Pattern";
     private static final String NBT_TOOK = "Took";
     private static final String NBT_TO_EXTRACT = "ToExtract";
+    private static final String NBT_ROOT = "Root";
 
     private ICraftingPattern pattern;
     private NonNullList<ItemStack> took;
     private IStackList<ItemStack> toExtract;
+    private boolean root;
 
-    public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract) {
+    public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract, boolean root) {
         this.pattern = pattern;
         this.took = took;
         this.toExtract = toExtract;
+        this.root = root;
     }
 
     public Crafting(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
         this.pattern = CraftingTask.readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
         this.toExtract = CraftingTask.readItemStackList(tag.getTagList(NBT_TO_EXTRACT, Constants.NBT.TAG_COMPOUND));
+        this.root = tag.getBoolean(NBT_ROOT);
 
         this.took = NonNullList.create();
 
@@ -39,6 +43,10 @@ class Crafting {
             // Can be empty.
             took.add(stack);
         }
+    }
+
+    public boolean isRoot() {
+        return root;
     }
 
     public ICraftingPattern getPattern() {
@@ -58,6 +66,7 @@ class Crafting {
 
         tag.setTag(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
         tag.setTag(NBT_TO_EXTRACT, CraftingTask.writeItemStackList(toExtract));
+        tag.setBoolean(NBT_ROOT, root);
 
         NBTTagList tookList = new NBTTagList();
         for (ItemStack took : this.took) {
