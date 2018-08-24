@@ -807,7 +807,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private static int getFlags(ItemStack stack) {
-        if (false && stack.getItem().isDamageable()) {
+        if (stack.getItem().isDamageable()) {
             return IComparer.COMPARE_NBT;
         }
 
