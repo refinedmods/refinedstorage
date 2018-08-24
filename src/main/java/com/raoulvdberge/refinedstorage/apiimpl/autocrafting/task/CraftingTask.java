@@ -596,24 +596,18 @@ public class CraftingTask implements ICraftingTask {
 
                     if (!c.isRoot()) {
                         this.internalStorage.insert(output, output.getCount(), Action.PERFORM);
-
-                        for (ItemStack byp : c.getPattern().getByproducts(c.getTook())) {
-                            this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
-                        }
                     } else {
                         ItemStack remainder = this.network.insertItem(output, output.getCount(), Action.PERFORM);
 
                         if (remainder != null) {
                             this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
                         }
+                    }
 
-                        for (ItemStack byp : c.getPattern().getByproducts(c.getTook())) {
-                            remainder = this.network.insertItem(byp, byp.getCount(), Action.PERFORM);
-
-                            if (remainder != null) {
-                                this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
-                            }
-                        }
+                    // Byproducts need to always be inserted in the internal storage for later reuse further in the task.
+                    // Regular outputs can be inserted into the network *IF* it's a root since it's *NOT* expected to be used later on.
+                    for (ItemStack byp : c.getPattern().getByproducts(c.getTook())) {
+                        this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
                     }
 
                     it.remove();
@@ -813,7 +807,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private static int getFlags(ItemStack stack) {
-        if (stack.getItem().isDamageable()) {
+        if (false && stack.getItem().isDamageable()) {
             return IComparer.COMPARE_NBT;
         }
 
@@ -911,7 +905,7 @@ public class CraftingTask implements ICraftingTask {
         return size;
     }
 
-    public static NBTTagCompound writePatternToNbt(ICraftingPattern pattern) {
+    static NBTTagCompound writePatternToNbt(ICraftingPattern pattern) {
         NBTTagCompound tag = new NBTTagCompound();
 
         tag.setTag(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
@@ -920,7 +914,7 @@ public class CraftingTask implements ICraftingTask {
         return tag;
     }
 
-    public static ICraftingPattern readPatternFromNbt(NBTTagCompound tag, World world) throws CraftingTaskReadException {
+    static ICraftingPattern readPatternFromNbt(NBTTagCompound tag, World world) throws CraftingTaskReadException {
         BlockPos containerPos = BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER_POS));
 
         INetworkNode node = API.instance().getNetworkNodeManager(world).getNode(containerPos);
