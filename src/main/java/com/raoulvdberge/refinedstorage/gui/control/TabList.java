@@ -106,7 +106,7 @@ public class TabList {
 
     private int getXOffset() {
         if (pages.get() > 0) {
-            return 23;
+            return 24;
         }
 
         return 0;
