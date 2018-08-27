@@ -1,10 +1,12 @@
 # Refined Storage Changelog
 
 ### 1.6.4
-- Rewrote autocrafting again (raoulvdberge)
-- Reworked the Crafting Monitor (raoulvdberge)
+- Rewrote autocrafting again, bringing performance up to par with other autocrafting mods (raoulvdberge)
+- Autocrafting now reserves items and fluids in an internal inventory to avoid having the storage network steal stacks required for autocrafting (raoulvdberge)
+- Reworked the Crafting Monitor to be more condensed and more clear (raoulvdberge)
 - Removed left / right click functionality on filter slots to increase / decrease the amount, replaced that functionality with a dialog (raoulvdberge)
 - Fixed not being able to craft upgrades that require enchanted books (raoulvdberge)
+- Fixed quick jittering of the Grid and Crafting Monitor when opening them because the tabs appear (raoulvdberge)
 
 ### 1.6.3
 - Fixed crash with Wireless Fluid Grid (raoulvdberge)
