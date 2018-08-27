@@ -4,6 +4,7 @@
 - Rewrote autocrafting again (raoulvdberge)
 - Reworked the Crafting Monitor (raoulvdberge)
 - Removed left / right click functionality on filter slots to increase / decrease the amount, replaced that functionality with a dialog (raoulvdberge)
+- Fixed not being able to craft upgrades that require enchanted books (raoulvdberge)
 
 ### 1.6.3
 - Fixed crash with Wireless Fluid Grid (raoulvdberge)
