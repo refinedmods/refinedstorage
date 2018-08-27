@@ -44,6 +44,7 @@ public class RecipeUpgradeWithEnchantedBook extends ShapedRecipes {
             for (int i = 0; i < enchantments.tagCount(); ++i) {
                 NBTTagCompound enchantmentNbt = enchantments.getCompoundTagAt(i);
 
+                // @Volatile: NBT tags from ItemEnchantedBook
                 if (Enchantment.getEnchantmentByID(enchantmentNbt.getShort("id")) == enchant.enchantment && enchantmentNbt.getShort("lvl") == enchant.enchantmentLevel) {
                     return true;
                 }

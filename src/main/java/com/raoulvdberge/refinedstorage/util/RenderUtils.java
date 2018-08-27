@@ -45,7 +45,7 @@ import java.util.Set;
 public final class RenderUtils {
     public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
 
-    // From ForgeBlockStateV1
+    // @Volatile: From ForgeBlockStateV1
     private static final TRSRTransformation FLIP_X = new TRSRTransformation(null, null, new Vector3f(-1, 1, 1), null);
 
     private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_ITEM_TRANSFORM;
@@ -284,7 +284,7 @@ public final class RenderUtils {
         }
     }
 
-    // Copied with some tweaks from GuiUtils#drawHoveringText(@Nonnull final ItemStack stack, List<String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font)
+    // @Volatile: Copied with some tweaks from GuiUtils#drawHoveringText(@Nonnull final ItemStack stack, List<String> textLines, int mouseX, int mouseY, int screenWidth, int screenHeight, int maxTextWidth, FontRenderer font)
     public static void drawTooltipWithSmallText(List<String> textLines, List<String> smallTextLines, boolean showSmallText, @Nonnull ItemStack stack, int mouseX, int mouseY, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
         if (!textLines.isEmpty()) {
             RenderTooltipEvent.Pre event = new RenderTooltipEvent.Pre(stack, textLines, mouseX, mouseY, screenWidth, screenHeight, -1, fontRenderer);
@@ -414,10 +414,10 @@ public final class RenderUtils {
         }
     }
 
+    // @Volatile: From GuiScreen#getItemToolTip
     public static List<String> getItemTooltip(ItemStack stack) {
         List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
 
-        // From GuiScreen#getItemToolTip
         for (int i = 0; i < lines.size(); ++i) {
             if (i == 0) {
                 lines.set(i, stack.getRarity().rarityColor + lines.get(i));
