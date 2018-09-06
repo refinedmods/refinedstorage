@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.5
+- Fixed Refined Storage silicon's oredict entry being registered too late (raoulvdberge)
+
 ### 1.6.4
 - Rewrote autocrafting again, bringing performance up to par with other autocrafting mods (raoulvdberge)
 - Autocrafting now reserves items and fluids in an internal inventory to avoid having the storage network steal stacks required for autocrafting (raoulvdberge)

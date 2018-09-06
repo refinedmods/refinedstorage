@@ -245,8 +245,6 @@ public class ProxyCommon {
     }
 
     public void init(FMLInitializationEvent e) {
-        OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
-
         GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5F);
 
         GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_BASIC), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC), 0.5F);
@@ -282,6 +280,8 @@ public class ProxyCommon {
     @SubscribeEvent
     public void registerItems(RegistryEvent.Register<Item> e) {
         itemsToRegister.forEach(e.getRegistry()::register);
+
+        OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
     }
 
     @SubscribeEvent
