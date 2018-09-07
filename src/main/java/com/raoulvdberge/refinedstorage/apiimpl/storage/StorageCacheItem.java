@@ -81,7 +81,11 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     @Override
     public synchronized void flush() {
         if (!batchedChanges.isEmpty()) {
-            batchedChanges.forEach(c -> listeners.forEach(l -> l.onChanged(c.getKey(), c.getValue())));
+            if(batchedChanges.size() > 1) {
+                listeners.forEach(l -> l.onChangedBulk(batchedChanges));
+            } else {
+                batchedChanges.forEach(c -> listeners.forEach(l -> l.onChanged(c.getKey(), c.getValue())));
+            }
             batchedChanges.clear();
         }
     }
