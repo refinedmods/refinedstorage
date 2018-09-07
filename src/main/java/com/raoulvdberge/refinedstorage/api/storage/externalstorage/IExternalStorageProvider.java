@@ -32,6 +32,7 @@ public interface IExternalStorageProvider<T> {
      * Returns the priority of this external storage provider.
      * The one with the highest priority is chosen.
      * Refined Storage's default handlers for {@link net.minecraftforge.items.IItemHandler} and {@link net.minecraftforge.fluids.capability.IFluidHandler} return 0.
+     * This value can't be dynamic (only fixed), since the sorted order is cached.
      *
      * @return the priority
      */
