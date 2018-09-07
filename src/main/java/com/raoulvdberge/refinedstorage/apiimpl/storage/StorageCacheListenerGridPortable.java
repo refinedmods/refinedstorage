@@ -10,8 +10,10 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class StorageCacheListenerGridPortable implements IStorageCacheListener<ItemStack> {
     private IPortableGrid portableGrid;
@@ -48,5 +50,11 @@ public class StorageCacheListenerGridPortable implements IStorageCacheListener<I
     @Override
     public void onChanged(@Nonnull ItemStack stack, int size) {
         RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getItemStorageTracker(), stack, size), player);
+    }
+
+    @Override
+    public void onChangedBulk(@Nonnull List<Pair<ItemStack, Integer>> stacks)
+    {
+        RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getItemStorageTracker(), stacks), player);
     }
 }
