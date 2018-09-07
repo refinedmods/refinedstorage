@@ -27,4 +27,13 @@ public interface IExternalStorageProvider<T> {
      */
     @Nonnull
     IStorageExternal<T> provide(IExternalStorageContext context, Supplier<TileEntity> tile, EnumFacing direction);
+
+    /**
+     * Returns the priority of this external storage provider.
+     * The one with the highest priority is chosen.
+     * Refined Storage's default handlers for {@link net.minecraftforge.items.IItemHandler} and {@link net.minecraftforge.fluids.capability.IFluidHandler} return 0.
+     *
+     * @return the priority
+     */
+    int getPriority();
 }

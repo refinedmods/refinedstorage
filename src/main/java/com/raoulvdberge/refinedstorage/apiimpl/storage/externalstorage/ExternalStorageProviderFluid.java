@@ -23,4 +23,9 @@ public class ExternalStorageProviderFluid implements IExternalStorageProvider<Fl
     public IStorageExternal<FluidStack> provide(IExternalStorageContext context, Supplier<TileEntity> tile, EnumFacing direction) {
         return new StorageExternalFluid(context, () -> WorldUtils.getFluidHandler(tile.get(), direction.getOpposite()), tile.get() instanceof TileFluidInterface);
     }
+
+    @Override
+    public int getPriority() {
+        return 0;
+    }
 }

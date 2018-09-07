@@ -74,7 +74,7 @@ public class API implements IRSAPI {
     private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
     private IStorageDiskSync storageDiskSync = new StorageDiskSync();
     private IOneSixMigrationHelper oneSixMigrationHelper = new OneSixMigrationHelper();
-    private Map<StorageType, List<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
+    private Map<StorageType, TreeSet<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
     private List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
 
     public static IRSAPI instance() {
@@ -227,14 +227,14 @@ public class API implements IRSAPI {
 
     @Override
     public void addExternalStorageProvider(StorageType type, IExternalStorageProvider provider) {
-        externalStorageProviders.computeIfAbsent(type, k -> new ArrayList<>()).add(provider);
+        externalStorageProviders.computeIfAbsent(type, k -> new TreeSet<>((a, b) -> Integer.compare(b.getPriority(), a.getPriority()))).add(provider);
     }
 
     @Override
-    public List<IExternalStorageProvider> getExternalStorageProviders(StorageType type) {
-        List<IExternalStorageProvider> providers = externalStorageProviders.get(type);
+    public Set<IExternalStorageProvider> getExternalStorageProviders(StorageType type) {
+        TreeSet<IExternalStorageProvider> providers = externalStorageProviders.get(type);
 
-        return providers == null ? Collections.emptyList() : providers;
+        return providers == null ? Collections.emptySet() : providers;
     }
 
     @Override

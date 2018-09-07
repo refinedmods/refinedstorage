@@ -35,6 +35,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a Refined Storage API implementation.
@@ -154,9 +155,9 @@ public interface IRSAPI {
 
     /**
      * @param type the type
-     * @return a list of external storage providers
+     * @return a set of external storage providers
      */
-    List<IExternalStorageProvider> getExternalStorageProviders(StorageType type);
+    Set<IExternalStorageProvider> getExternalStorageProviders(StorageType type);
 
     /**
      * @param world    the world

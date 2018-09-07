@@ -233,12 +233,16 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
                 for (IExternalStorageProvider provider : API.instance().getExternalStorageProviders(StorageType.ITEM)) {
                     if (provider.canProvide(facing, getDirection())) {
                         itemStorages.add(provider.provide(this, () -> getFacingTile(), getDirection()));
+
+                        break;
                     }
                 }
             } else if (type == IType.FLUIDS) {
                 for (IExternalStorageProvider provider : API.instance().getExternalStorageProviders(StorageType.FLUID)) {
                     if (provider.canProvide(facing, getDirection())) {
                         fluidStorages.add(provider.provide(this, () -> getFacingTile(), getDirection()));
+
+                        break;
                     }
                 }
             }

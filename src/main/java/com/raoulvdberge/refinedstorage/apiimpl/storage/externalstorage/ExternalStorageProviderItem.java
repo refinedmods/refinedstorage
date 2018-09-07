@@ -33,4 +33,9 @@ public class ExternalStorageProviderItem implements IExternalStorageProvider<Ite
     public IStorageExternal<ItemStack> provide(IExternalStorageContext context, Supplier<TileEntity> tile, EnumFacing direction) {
         return new StorageExternalItem(context, () -> WorldUtils.getItemHandler(tile.get(), direction.getOpposite()), tile.get() instanceof TileInterface);
     }
+
+    @Override
+    public int getPriority() {
+        return 0;
+    }
 }
