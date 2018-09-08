@@ -10,8 +10,10 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class StorageCacheListenerGridPortableFluid implements IStorageCacheListener<FluidStack> {
     private IPortableGrid portableGrid;
@@ -53,5 +55,12 @@ public class StorageCacheListenerGridPortableFluid implements IStorageCacheListe
     @Override
     public void onChanged(@Nonnull FluidStack stack, int size) {
         RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(null, portableGrid.getFluidStorageTracker(), stack, size), player);
+    }
+
+    @Override
+    public void onChangedBulk(@Nonnull List<Pair<FluidStack, Integer>> stacks) {
+        for(Pair<FluidStack, Integer> stack : stacks) {
+            onChanged(stack.getLeft(), stack.getRight());
+        }
     }
 }
