@@ -30,9 +30,5 @@ public interface IStorageCacheListener<T> {
      */
     void onChanged(@Nonnull T stack, int size);
 
-    default void onChangedBulk(@Nonnull List<Pair<T, Integer>> stacks)
-    {
-        for(Pair<T, Integer> stack : stacks)
-            onChanged(stack.getLeft(), stack.getRight());
-    }
+    void onChangedBulk(@Nonnull List<Pair<T, Integer>> stacks);
 }

@@ -38,8 +38,7 @@ public class StorageCacheListenerGridItem implements IStorageCacheListener<ItemS
     }
 
     @Override
-    public void onChangedBulk(@Nonnull List<Pair<ItemStack, Integer>> stacks)
-    {
+    public void onChangedBulk(@Nonnull List<Pair<ItemStack, Integer>> stacks) {
         RS.INSTANCE.network.sendTo(new MessageGridItemDelta(network, network.getItemStorageTracker(), stacks), player);
     }
 }
