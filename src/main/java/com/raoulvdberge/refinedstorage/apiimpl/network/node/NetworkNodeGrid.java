@@ -87,7 +87,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
     private InventoryCraftResult result = new InventoryCraftResult();
     private ItemHandlerBase processingMatrix = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this));
-    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, Fluid.BUCKET_VOLUME, new ListenerNetworkNode(this));
+    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, Fluid.BUCKET_VOLUME * 64, new ListenerNetworkNode(this));
 
     private ItemHandlerBase patterns = new ItemHandlerBase(2, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN)) {
         @Override
