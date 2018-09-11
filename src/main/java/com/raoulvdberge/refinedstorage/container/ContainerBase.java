@@ -143,6 +143,15 @@ public abstract class ContainerBase extends Container {
         return true;
     }
 
+    @Override
+    public boolean canMergeSlot(ItemStack stack, Slot slot) {
+        if (slot instanceof SlotFilter || slot instanceof SlotFilterFluid || slot instanceof SlotLegacyFilter) {
+            return false;
+        }
+
+        return super.canMergeSlot(stack, slot);
+    }
+
     protected boolean isHeldItemDisabled() {
         return false;
     }

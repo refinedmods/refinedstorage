@@ -250,7 +250,11 @@ public class ContainerGrid extends ContainerBase {
 
     @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot) {
-        return (slot == craftingResultSlot || slot == patternResultSlot) ? false : super.canMergeSlot(stack, slot);
+        if (slot == craftingResultSlot || slot == patternResultSlot) {
+            return false;
+        }
+
+        return super.canMergeSlot(stack, slot);
     }
 
     @Override

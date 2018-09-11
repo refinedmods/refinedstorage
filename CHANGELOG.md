@@ -2,6 +2,7 @@
 
 ### 1.6.5
 - Fixed Refined Storage silicon's oredict entry being registered too late (raoulvdberge)
+- Fixed duplication bug with filter slots (raoulvdberge)
 - The Pattern Grid in fluid mode now supports up to 64 buckets in the input and output processing slots (raoulvdberge)
 
 ### 1.6.4
