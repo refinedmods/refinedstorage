@@ -88,4 +88,17 @@ public interface ICraftingPatternContainer {
      * @return the UUID of this container
      */
     UUID getUuid();
+
+    /**
+     * @return true if the connected inventory is locked for processing patterns, false otherwise
+     */
+    default boolean isLocked() {
+        return false;
+    }
+
+    /**
+     * Called when this container is used by a processing pattern to insert items or fluids in the connected inventory.
+     */
+    default void onUsedForProcessing() {
+    }
 }

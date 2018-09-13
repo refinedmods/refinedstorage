@@ -36,6 +36,7 @@ gui.refinedstorage:crafting_monitor.crafting=Crafting: %d
 gui.refinedstorage:crafting_monitor.machine_does_not_accept_item=Machine doesn't accept item
 gui.refinedstorage:crafting_monitor.machine_does_not_accept_fluid=Machine doesn't accept fluid
 gui.refinedstorage:crafting_monitor.machine_none=No machine found
+gui.refinedstorage:crafting_monitor.crafter_is_locked=Crafter is locked
 gui.refinedstorage:wireless_transmitter=Wireless Transmitter
 gui.refinedstorage:wireless_transmitter.distance=%d block(s)
 gui.refinedstorage:crafter=Crafter
@@ -140,6 +141,12 @@ sidebutton.refinedstorage:redstone_mode=Redstone mode
 sidebutton.refinedstorage:redstone_mode.0=Ignore redstone signal
 sidebutton.refinedstorage:redstone_mode.1=Only work with redstone signal
 sidebutton.refinedstorage:redstone_mode.2=Only work without redstone signal
+
+sidebutton.refinedstorage:crafter_mode=Crafter mode
+sidebutton.refinedstorage:crafter_mode.0=Ignore redstone signal
+sidebutton.refinedstorage:crafter_mode.1=Redstone signal unlocks autocrafting
+sidebutton.refinedstorage:crafter_mode.2=Redstone signal locks autocrafting
+sidebutton.refinedstorage:crafter_mode.3=Redstone pulse inserts next set
 
 sidebutton.refinedstorage:grid.view_type=Display
 sidebutton.refinedstorage:grid.view_type.0=Normal

@@ -30,20 +30,38 @@ import java.util.List;
 import java.util.UUID;
 
 public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternContainer {
+    public enum CrafterMode {
+        IGNORE,
+        SIGNAL_UNLOCKS_AUTOCRAFTING,
+        SIGNAL_LOCKS_AUTOCRAFTING,
+        PULSE_INSERTS_NEXT_SET;
+
+        public static CrafterMode getById(int id) {
+            if (id >= 0 && id < values().length) {
+                return values()[id];
+            }
+
+            return IGNORE;
+        }
+    }
+
     public static final String ID = "crafter";
 
     public static final String DEFAULT_NAME = "gui.refinedstorage:crafter";
 
     private static final String NBT_DISPLAY_NAME = "DisplayName";
     private static final String NBT_UUID = "CrafterUuid";
+    private static final String NBT_MODE = "Mode";
+    private static final String NBT_LOCKED = "Locked";
+    private static final String NBT_WAS_POWERED = "WasPowered";
 
-    private ItemHandlerBase patterns = new ItemHandlerBase(9, new ListenerNetworkNode(this), s -> isValidPatternInSlot(world, s)) {
+    private ItemHandlerBase patternsInventory = new ItemHandlerBase(9, new ListenerNetworkNode(this), s -> isValidPatternInSlot(world, s)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
             if (!world.isRemote) {
-                rebuildPatterns();
+                invalidate();
             }
 
             if (network != null) {
@@ -61,12 +79,16 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         return stack.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) stack.getItem()).create(world, stack, null).isValid();
     }
 
-    private List<ICraftingPattern> actualPatterns = new ArrayList<>();
+    private List<ICraftingPattern> patterns = new ArrayList<>();
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED);
 
     // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
     private boolean visited = false;
+
+    private CrafterMode mode = CrafterMode.IGNORE;
+    private boolean locked = false;
+    private boolean wasPowered;
 
     @Nullable
     private String displayName;
@@ -78,17 +100,17 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         super(world, pos);
     }
 
-    private void rebuildPatterns() {
-        actualPatterns.clear();
+    private void invalidate() {
+        patterns.clear();
 
-        for (int i = 0; i < patterns.getSlots(); ++i) {
-            ItemStack patternStack = patterns.getStackInSlot(i);
+        for (int i = 0; i < patternsInventory.getSlots(); ++i) {
+            ItemStack patternStack = patternsInventory.getStackInSlot(i);
 
             if (!patternStack.isEmpty()) {
                 ICraftingPattern pattern = ((ICraftingPatternProvider) patternStack.getItem()).create(world, patternStack, this);
 
                 if (pattern.isValid()) {
-                    actualPatterns.add(pattern);
+                    patterns.add(pattern);
                 }
             }
         }
@@ -96,7 +118,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage() + (RS.INSTANCE.config.crafterPerPatternUsage * actualPatterns.size());
+        return RS.INSTANCE.config.crafterUsage + upgrades.getEnergyUsage() + (RS.INSTANCE.config.crafterPerPatternUsage * patterns.size());
     }
 
     @Override
@@ -104,7 +126,20 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         super.update();
 
         if (ticks == 1) {
-            rebuildPatterns();
+            invalidate();
+        }
+
+        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET) {
+            if (world.isBlockPowered(pos)) {
+                this.wasPowered = true;
+
+                markDirty();
+            } else if (wasPowered) {
+                this.wasPowered = false;
+                this.locked = false;
+
+                markDirty();
+            }
         }
     }
 
@@ -132,9 +167,9 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        StackUtils.readItems(patterns, 0, tag);
+        StackUtils.readItems(patternsInventory, 0, tag);
 
-        if (API.instance().getOneSixMigrationHelper().migratePatternInventory(patterns)) {
+        if (API.instance().getOneSixMigrationHelper().migratePatternInventory(patternsInventory)) {
             markDirty();
         }
 
@@ -147,6 +182,18 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         if (tag.hasUniqueId(NBT_UUID)) {
             uuid = tag.getUniqueId(NBT_UUID);
         }
+
+        if (tag.hasKey(NBT_MODE)) {
+            mode = CrafterMode.getById(tag.getInteger(NBT_MODE));
+        }
+
+        if (tag.hasKey(NBT_LOCKED)) {
+            locked = tag.getBoolean(NBT_LOCKED);
+        }
+
+        if (tag.hasKey(NBT_WAS_POWERED)) {
+            wasPowered = tag.getBoolean(NBT_WAS_POWERED);
+        }
     }
 
     @Override
@@ -158,7 +205,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        StackUtils.writeItems(patterns, 0, tag);
+        StackUtils.writeItems(patternsInventory, 0, tag);
         StackUtils.writeItems(upgrades, 1, tag);
 
         if (displayName != null) {
@@ -168,6 +215,10 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         if (uuid != null) {
             tag.setUniqueId(NBT_UUID, uuid);
         }
+
+        tag.setInteger(NBT_MODE, mode.ordinal());
+        tag.setBoolean(NBT_LOCKED, locked);
+        tag.setBoolean(NBT_WAS_POWERED, wasPowered);
 
         return tag;
     }
@@ -212,13 +263,13 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public List<ICraftingPattern> getPatterns() {
-        return actualPatterns;
+        return patterns;
     }
 
     @Override
     @Nullable
     public IItemHandlerModifiable getPatternInventory() {
-        return patterns;
+        return patternsInventory;
     }
 
     @Override
@@ -254,8 +305,20 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         return pos;
     }
 
+    public CrafterMode getMode() {
+        return mode;
+    }
+
+    public void setMode(CrafterMode mode) {
+        this.mode = mode;
+        this.wasPowered = false;
+        this.locked = false;
+
+        this.markDirty();
+    }
+
     public IItemHandler getPatternItems() {
-        return patterns;
+        return patternsInventory;
     }
 
     public IItemHandler getUpgrades() {
@@ -264,7 +327,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public IItemHandler getDrops() {
-        return new CombinedInvWrapper(patterns, upgrades);
+        return new CombinedInvWrapper(patternsInventory, upgrades);
     }
 
     @Override
@@ -293,11 +356,37 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public UUID getUuid() {
-        if (uuid == null) {
-            uuid = UUID.randomUUID();
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID();
+
             markDirty();
         }
 
         return uuid;
+    }
+
+    @Override
+    public boolean isLocked() {
+        switch (mode) {
+            case IGNORE:
+                return false;
+            case SIGNAL_LOCKS_AUTOCRAFTING:
+                return world.isBlockPowered(pos);
+            case SIGNAL_UNLOCKS_AUTOCRAFTING:
+                return !world.isBlockPowered(pos);
+            case PULSE_INSERTS_NEXT_SET:
+                return locked;
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public void onUsedForProcessing() {
+        if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET) {
+            this.locked = true;
+
+            markDirty();
+        }
     }
 }

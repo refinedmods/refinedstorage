@@ -5,5 +5,6 @@ enum ProcessingState {
     EXTRACTED_ALL,
     MACHINE_NONE,
     MACHINE_DOES_NOT_ACCEPT,
-    PROCESSED
+    PROCESSED,
+    LOCKED
 }

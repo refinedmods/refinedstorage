@@ -641,72 +641,78 @@ public class CraftingTask implements ICraftingTask {
             if (ticks % getTickInterval(p.getPattern().getContainer().getSpeedUpgradeCount()) == 0) {
                 ProcessingState originalState = p.getState();
 
-                boolean hasAll = true;
+                if (p.getPattern().getContainer().isLocked()) {
+                    p.setState(ProcessingState.LOCKED);
+                } else {
+                    boolean hasAll = true;
 
-                for (ItemStack need : p.getItemsToPut()) {
-                    if (p.getPattern().getContainer().getConnectedInventory() == null) {
-                        p.setState(ProcessingState.MACHINE_NONE);
-                    } else {
-                        ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.SIMULATE);
-
-                        if (result == null || result.getCount() != need.getCount()) {
-                            hasAll = false;
-
-                            break;
-                        } else if (!ItemHandlerHelper.insertItem(p.getPattern().getContainer().getConnectedInventory(), result, true).isEmpty()) {
-                            p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
-
-                            break;
-                        } else {
-                            p.setState(ProcessingState.READY);
-                        }
-                    }
-                }
-
-                for (FluidStack need : p.getFluidsToPut()) {
-                    if (p.getPattern().getContainer().getConnectedFluidInventory() == null) {
-                        p.setState(ProcessingState.MACHINE_NONE);
-                    } else {
-                        FluidStack result = this.internalFluidStorage.extract(need, need.amount, IComparer.COMPARE_NBT, Action.SIMULATE);
-
-                        if (result == null || result.amount != need.amount) {
-                            hasAll = false;
-
-                            break;
-                        } else if (p.getPattern().getContainer().getConnectedFluidInventory().fill(result, false) != result.amount) {
-                            p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
-
-                            break;
-                        } else if (p.getState() == ProcessingState.READY) { // If the items were ok.
-                            p.setState(ProcessingState.READY);
-                        }
-                    }
-                }
-
-                if (p.getState() == ProcessingState.READY && hasAll) {
                     for (ItemStack need : p.getItemsToPut()) {
-                        ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.PERFORM);
-                        if (result == null || result.getCount() != need.getCount()) {
-                            throw new IllegalStateException("Could not extract from the internal inventory even though we could");
-                        }
+                        if (p.getPattern().getContainer().getConnectedInventory() == null) {
+                            p.setState(ProcessingState.MACHINE_NONE);
+                        } else {
+                            ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.SIMULATE);
 
-                        if (!ItemHandlerHelper.insertItem(p.getPattern().getContainer().getConnectedInventory(), result, false).isEmpty()) {
-                            throw new IllegalStateException("Can't fill up inventory even though we could");
+                            if (result == null || result.getCount() != need.getCount()) {
+                                hasAll = false;
+
+                                break;
+                            } else if (!ItemHandlerHelper.insertItem(p.getPattern().getContainer().getConnectedInventory(), result, true).isEmpty()) {
+                                p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
+
+                                break;
+                            } else {
+                                p.setState(ProcessingState.READY);
+                            }
                         }
                     }
 
                     for (FluidStack need : p.getFluidsToPut()) {
-                        FluidStack result = this.internalFluidStorage.extract(need, need.amount, IComparer.COMPARE_NBT, Action.PERFORM);
-                        if (result == null || result.amount != need.amount) {
-                            throw new IllegalStateException("Could not extract from the internal inventory even though we could");
-                        }
+                        if (p.getPattern().getContainer().getConnectedFluidInventory() == null) {
+                            p.setState(ProcessingState.MACHINE_NONE);
+                        } else {
+                            FluidStack result = this.internalFluidStorage.extract(need, need.amount, IComparer.COMPARE_NBT, Action.SIMULATE);
 
-                        if (p.getPattern().getContainer().getConnectedFluidInventory().fill(result, true) != result.amount) {
-                            throw new IllegalStateException("Can't fill up inventory even though we could");
+                            if (result == null || result.amount != need.amount) {
+                                hasAll = false;
+
+                                break;
+                            } else if (p.getPattern().getContainer().getConnectedFluidInventory().fill(result, false) != result.amount) {
+                                p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
+
+                                break;
+                            } else if (p.getState() == ProcessingState.READY) { // If the items were ok.
+                                p.setState(ProcessingState.READY);
+                            }
                         }
                     }
 
-                    p.setState(ProcessingState.EXTRACTED_ALL);
+                    if (p.getState() == ProcessingState.READY && hasAll) {
+                        for (ItemStack need : p.getItemsToPut()) {
+                            ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.PERFORM);
+                            if (result == null || result.getCount() != need.getCount()) {
+                                throw new IllegalStateException("Could not extract from the internal inventory even though we could");
+                            }
+
+                            if (!ItemHandlerHelper.insertItem(p.getPattern().getContainer().getConnectedInventory(), result, false).isEmpty()) {
+                                throw new IllegalStateException("Can't fill up inventory even though we could");
+                            }
+                        }
+
+                        for (FluidStack need : p.getFluidsToPut()) {
+                            FluidStack result = this.internalFluidStorage.extract(need, need.amount, IComparer.COMPARE_NBT, Action.PERFORM);
+                            if (result == null || result.amount != need.amount) {
+                                throw new IllegalStateException("Could not extract from the internal inventory even though we could");
+                            }
+
+                            if (p.getPattern().getContainer().getConnectedFluidInventory().fill(result, true) != result.amount) {
+                                throw new IllegalStateException("Can't fill up inventory even though we could");
+                            }
+                        }
+
+                        p.setState(ProcessingState.EXTRACTED_ALL);
+
+                        p.getPattern().getContainer().onUsedForProcessing();
+                    }
                 }
 
                 if (originalState != p.getState()) {
@@ -959,7 +965,7 @@ public class CraftingTask implements ICraftingTask {
                 for (ItemStack put : processing.getItemsToPut()) {
                     elements.add(new CraftingMonitorElementItemRender(put, 0, 0, put.getCount(), 0, 0));
                 }
-            } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE) {
+            } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE || processing.getState() == ProcessingState.LOCKED) {
                 for (ItemStack receive : processing.getItemsToReceive().getStacks()) {
                     ICraftingMonitorElement element = new CraftingMonitorElementItemRender(receive, 0, 0, 0, receive.getCount(), 0);
 
@@ -967,6 +973,8 @@ public class CraftingTask implements ICraftingTask {
                         element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept_item");
                     } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
                         element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                    } else if (processing.getState() == ProcessingState.LOCKED) {
+                        element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.crafter_is_locked");
                     }
 
                     elements.add(element);

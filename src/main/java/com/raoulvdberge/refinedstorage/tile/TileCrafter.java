@@ -14,9 +14,11 @@ import javax.annotation.Nullable;
 
 public class TileCrafter extends TileNode<NetworkNodeCrafter> {
     public static final TileDataParameter<String, TileCrafter> NAME = new TileDataParameter<>(DataSerializers.STRING, NetworkNodeCrafter.DEFAULT_NAME, t -> t.getNode().getName());
+    public static final TileDataParameter<Integer, TileCrafter> MODE = new TileDataParameter<>(DataSerializers.VARINT, NetworkNodeCrafter.CrafterMode.IGNORE.ordinal(), t -> t.getNode().getMode().ordinal(), (t, v) -> t.getNode().setMode(NetworkNodeCrafter.CrafterMode.getById(v)));
 
     public TileCrafter() {
         dataManager.addWatchedParameter(NAME);
+        dataManager.addWatchedParameter(MODE);
     }
 
     @Override
