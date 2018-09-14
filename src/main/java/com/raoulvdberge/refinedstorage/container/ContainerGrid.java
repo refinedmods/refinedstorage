@@ -144,6 +144,8 @@ public class ContainerGrid extends ContainerBase {
         }
 
         addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
+
+        transferManager.addTransfer(grid.getCraftingMatrix(), getPlayer().inventory);
     }
 
     private void addPatternSlots() {

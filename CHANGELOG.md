@@ -3,6 +3,7 @@
 ### 1.6.6
 - Added new Crafter modes: ignore redstone signal, redstone signal unlocks autocrafting, redstone signal locks autocrafting and redstone pulse inserts next set (replacement for blocking mode) (raoulvdberge)
 - Fixed an autocrafting bug where it crashed when external inventories couldn't be filled (raoulvdberge)
+- Fixed a duplication bug with a disconnected Crafting Grid (raoulvdberge)
 
 ### 1.6.5
 - Fixed Refined Storage silicon's oredict entry being registered too late (raoulvdberge)

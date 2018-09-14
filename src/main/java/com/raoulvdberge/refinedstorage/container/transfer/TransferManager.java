@@ -41,6 +41,10 @@ public class TransferManager {
         addTransfer(new InventoryWrapperInventory(from), new InventoryWrapperItemHandler(to));
     }
 
+    public void addTransfer(IInventory from, IInventory to) {
+        addTransfer(new InventoryWrapperInventory(from), new InventoryWrapperInventory(to));
+    }
+
     public void addFilterTransfer(IInventory from, IItemHandlerModifiable itemTo, FluidInventory fluidTo, Supplier<Integer> typeGetter) {
         addTransfer(new InventoryWrapperInventory(from), new InventoryWrapperFilter(itemTo, fluidTo, typeGetter));
     }
