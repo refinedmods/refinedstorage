@@ -119,6 +119,10 @@ public class RSConfig {
     public boolean hideCovers;
     //endregion
 
+    //region Autocrafting
+    public int calculationTimeoutMs;
+    //endregion
+
     //region Categories
     private static final String ENERGY = "energy";
     private static final String CONTROLLER = "controller";
@@ -131,6 +135,7 @@ public class RSConfig {
     private static final String UPGRADES = "upgrades";
     private static final String READER_WRITER = "readerWriter";
     private static final String COVERS = "covers";
+    private static final String AUTOCRAFTING = "autocrafting";
     //endregion
 
     public RSConfig(@Nullable RSConfig originalClientVersion, File configFile) {
@@ -266,6 +271,10 @@ public class RSConfig {
         hideCovers = config.getBoolean("hideCovers", COVERS, false, "Whether to hide covers in the creative mode tabs and JEI");
         //endregion
 
+        //region Autocrafting
+        calculationTimeoutMs = config.getInt("calculationTimeoutMs", AUTOCRAFTING, 5000, 5000, Integer.MAX_VALUE, "The autocrafting calculation timeout in milliseconds, tasks taking longer than this to calculate (NOT execute) are cancelled to avoid server strain");
+        //endregion
+
         if (config.hasChanged()) {
             config.save();
         }
@@ -286,6 +295,7 @@ public class RSConfig {
         list.add(new ConfigElement(config.getCategory(PORTABLE_GRID)));
         list.add(new ConfigElement(config.getCategory(READER_WRITER)));
         list.add(new ConfigElement(config.getCategory(COVERS)));
+        list.add(new ConfigElement(config.getCategory(AUTOCRAFTING)));
 
         return list;
     }

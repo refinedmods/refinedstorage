@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
@@ -56,8 +57,6 @@ public class CraftingTask implements ICraftingTask {
 
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
-
-    private static final long CALCULATION_TIMEOUT_MS = 5000;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -283,7 +282,7 @@ public class CraftingTask implements ICraftingTask {
         ICraftingPattern pattern,
         boolean root) {
 
-        if (System.currentTimeMillis() - calculationStarted > CALCULATION_TIMEOUT_MS) {
+        if (System.currentTimeMillis() - calculationStarted > RS.INSTANCE.config.calculationTimeoutMs) {
             return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
         }
 

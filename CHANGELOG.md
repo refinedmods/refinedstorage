@@ -2,6 +2,7 @@
 
 ### 1.6.6
 - Added new Crafter modes: ignore redstone signal, redstone signal unlocks autocrafting, redstone signal locks autocrafting and redstone pulse inserts next set (replacement for blocking mode) (raoulvdberge)
+- Added a config option to configure the autocrafting calculation timeout in milliseconds (raoulvdberge)
 - Fixed an autocrafting bug where it crashed when external inventories couldn't be filled (raoulvdberge)
 - Fixed a duplication bug with a disconnected Crafting Grid (raoulvdberge)
 
