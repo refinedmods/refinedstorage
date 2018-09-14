@@ -32,6 +32,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -56,6 +58,8 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
 
     private static final long CALCULATION_TIMEOUT_MS = 5000;
+
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private INetwork network;
     private ICraftingRequestInfo requested;
@@ -687,26 +691,58 @@ public class CraftingTask implements ICraftingTask {
                     }
 
                     if (p.getState() == ProcessingState.READY && hasAll) {
-                        for (ItemStack need : p.getItemsToPut()) {
+                        boolean abort = false;
+
+                        for (int i = 0; i < p.getItemsToPut().size(); ++i) {
+                            ItemStack need = p.getItemsToPut().get(i);
+
                             ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.PERFORM);
                             if (result == null || result.getCount() != need.getCount()) {
-                                throw new IllegalStateException("Could not extract from the internal inventory even though we could");
+                                throw new IllegalStateException("The internal crafting inventory reported that " + need + " was available but we got " + result);
                             }
 
-                            if (!ItemHandlerHelper.insertItem(p.getPattern().getContainer().getConnectedInventory(), result, false).isEmpty()) {
-                                throw new IllegalStateException("Can't fill up inventory even though we could");
+                            ItemStack remainder = ItemHandlerHelper.insertItem(p.getPattern().getContainer().getConnectedInventory(), result, false);
+                            if (!remainder.isEmpty()) {
+                                LOGGER.warn("In a simulation, " + p.getPattern().getContainer().getConnectedInventory() + " reported that we could insert " + result + " but we got " + remainder + " as a remainder");
+
+                                this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
+
+                                p.getItemsToPut().set(i, remainder);
+
+                                abort = true;
+
+                                break;
                             }
                         }
 
-                        for (FluidStack need : p.getFluidsToPut()) {
+                        if (abort) {
+                            continue;
+                        }
+
+                        for (int i = 0; i < p.getFluidsToPut().size(); ++i) {
+                            FluidStack need = p.getFluidsToPut().get(i);
+
                             FluidStack result = this.internalFluidStorage.extract(need, need.amount, IComparer.COMPARE_NBT, Action.PERFORM);
                             if (result == null || result.amount != need.amount) {
-                                throw new IllegalStateException("Could not extract from the internal inventory even though we could");
+                                throw new IllegalStateException("The internal crafting inventory reported that " + need + " was available but we got " + result);
                             }
 
-                            if (p.getPattern().getContainer().getConnectedFluidInventory().fill(result, true) != result.amount) {
-                                throw new IllegalStateException("Can't fill up inventory even though we could");
+                            int filled = p.getPattern().getContainer().getConnectedFluidInventory().fill(result, true);
+                            if (filled != result.amount) {
+                                LOGGER.warn("In a simulation, " + p.getPattern().getContainer().getConnectedFluidInventory() + " reported that we could fill " + result + " but we only filled " + filled);
+
+                                this.internalFluidStorage.insert(result, result.amount - filled, Action.PERFORM);
+
+                                p.getFluidsToPut().set(i, StackUtils.copy(result, result.amount - filled));
+
+                                abort = true;
+
+                                break;
                             }
+                        }
+
+                        if (abort) {
+                            continue;
                         }
 
                         p.setState(ProcessingState.EXTRACTED_ALL);
