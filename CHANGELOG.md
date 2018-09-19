@@ -5,6 +5,7 @@
 - Added a config option to configure the autocrafting calculation timeout in milliseconds (raoulvdberge)
 - Fixed an autocrafting bug where it crashed when external inventories couldn't be filled (raoulvdberge)
 - Fixed a duplication bug with a disconnected Crafting Grid (raoulvdberge)
+- Removed handling of reusable items in autocrafting, to avoid problems (raoulvdberge)
 
 ### 1.6.5
 - Fixed Refined Storage silicon's oredict entry being registered too late (raoulvdberge)

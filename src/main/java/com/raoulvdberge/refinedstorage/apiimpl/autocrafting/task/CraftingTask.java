@@ -58,6 +58,8 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
 
+    private static final int DEFAULT_EXTRACT_FLAGS = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+
     private static final Logger LOGGER = LogManager.getLogger();
 
     private INetwork network;
@@ -329,10 +331,8 @@ public class CraftingTask implements ICraftingTask {
 
             took.add(possibleInput);
 
-            int flags = getFlags(possibleInput);
-
-            ItemStack fromSelf = results.get(possibleInput, flags);
-            ItemStack fromNetwork = mutatedStorage.get(possibleInput, flags);
+            ItemStack fromSelf = results.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
+            ItemStack fromNetwork = mutatedStorage.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
 
             int remaining = possibleInput.getCount();
 
@@ -348,7 +348,7 @@ public class CraftingTask implements ICraftingTask {
 
                     took.set(took.size() - 1, ItemHandlerHelper.copyStackWithSize(fromSelf, possibleInput.getCount()));
 
-                    fromSelf = results.get(possibleInput, flags);
+                    fromSelf = results.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
                 } else if (fromNetwork != null) {
                     int toTake = Math.min(remaining, fromNetwork.getCount());
 
@@ -362,7 +362,7 @@ public class CraftingTask implements ICraftingTask {
 
                     took.set(took.size() - 1, ItemHandlerHelper.copyStackWithSize(fromNetwork, possibleInput.getCount()));
 
-                    fromNetwork = mutatedStorage.get(possibleInput, flags);
+                    fromNetwork = mutatedStorage.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
 
                     toExtractInitial.add(took.get(took.size() - 1));
                 } else {
@@ -378,12 +378,12 @@ public class CraftingTask implements ICraftingTask {
                                 return result;
                             }
 
-                            fromSelf = results.get(possibleInput, flags);
+                            fromSelf = results.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
                             if (fromSelf == null) {
                                 throw new IllegalStateException("Recursive calculation didn't yield anything");
                             }
 
-                            fromNetwork = mutatedStorage.get(possibleInput, flags);
+                            fromNetwork = mutatedStorage.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
 
                             subPatternChain.cycle();
                         }
@@ -526,7 +526,7 @@ public class CraftingTask implements ICraftingTask {
             List<ItemStack> toRemove = new ArrayList<>();
 
             for (ItemStack toExtract : toExtractInitial.getStacks()) {
-                ItemStack result = network.extractItem(toExtract, toExtract.getCount(), getFlags(toExtract), Action.PERFORM);
+                ItemStack result = network.extractItem(toExtract, toExtract.getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
 
                 if (result != null) {
                     internalStorage.insert(toExtract, toExtract.getCount(), Action.PERFORM);
@@ -577,7 +577,7 @@ public class CraftingTask implements ICraftingTask {
                 boolean hasAll = true;
 
                 for (ItemStack need : c.getToExtract().getStacks()) {
-                    ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.SIMULATE);
+                    ItemStack result = this.internalStorage.extract(need, need.getCount(), DEFAULT_EXTRACT_FLAGS, Action.SIMULATE);
 
                     if (result == null || result.getCount() != need.getCount()) {
                         hasAll = false;
@@ -588,7 +588,7 @@ public class CraftingTask implements ICraftingTask {
 
                 if (hasAll) {
                     for (ItemStack need : c.getToExtract().getStacks()) {
-                        ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.PERFORM);
+                        ItemStack result = this.internalStorage.extract(need, need.getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
 
                         if (result == null || result.getCount() != need.getCount()) {
                             throw new IllegalStateException("Extractor check lied");
@@ -653,7 +653,7 @@ public class CraftingTask implements ICraftingTask {
                         if (p.getPattern().getContainer().getConnectedInventory() == null) {
                             p.setState(ProcessingState.MACHINE_NONE);
                         } else {
-                            ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.SIMULATE);
+                            ItemStack result = this.internalStorage.extract(need, need.getCount(), DEFAULT_EXTRACT_FLAGS, Action.SIMULATE);
 
                             if (result == null || result.getCount() != need.getCount()) {
                                 hasAll = false;
@@ -695,7 +695,7 @@ public class CraftingTask implements ICraftingTask {
                         for (int i = 0; i < p.getItemsToPut().size(); ++i) {
                             ItemStack need = p.getItemsToPut().get(i);
 
-                            ItemStack result = this.internalStorage.extract(need, need.getCount(), getFlags(need), Action.PERFORM);
+                            ItemStack result = this.internalStorage.extract(need, need.getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
                             if (result == null || result.getCount() != need.getCount()) {
                                 throw new IllegalStateException("The internal crafting inventory reported that " + need + " was available but we got " + result);
                             }
@@ -845,14 +845,6 @@ public class CraftingTask implements ICraftingTask {
         }
 
         return qty;
-    }
-
-    private static int getFlags(ItemStack stack) {
-        if (stack.getItem().isDamageable()) {
-            return IComparer.COMPARE_NBT;
-        }
-
-        return IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
     }
 
     @Override
