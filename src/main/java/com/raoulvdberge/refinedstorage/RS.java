@@ -38,13 +38,13 @@ public final class RS {
     public final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
     public final CreativeTabs tab = new CreativeTabs(ID) {
         @Override
-        public ItemStack getTabIconItem() {
+        public ItemStack createIcon() {
             return new ItemStack(RSItems.STORAGE_HOUSING);
         }
     };
     public final CreativeTabs coversTab = new CreativeTabs(ID + ".covers") {
         @Override
-        public ItemStack getTabIconItem() {
+        public ItemStack createIcon() {
             ItemStack stack = new ItemStack(RSItems.COVER);
 
             ItemCover.setItem(stack, new ItemStack(Blocks.STONE));
