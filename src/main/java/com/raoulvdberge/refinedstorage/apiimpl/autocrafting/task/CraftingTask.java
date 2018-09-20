@@ -346,7 +346,7 @@ public class CraftingTask implements ICraftingTask {
                 continue;
             }
 
-            PossibleInputs possibleInputs = new PossibleInputs(inputs);
+            PossibleInputs possibleInputs = new PossibleInputs(new ArrayList<>(inputs));
             possibleInputs.sort(mutatedStorage, results);
 
             ItemStack possibleInput = possibleInputs.get();
