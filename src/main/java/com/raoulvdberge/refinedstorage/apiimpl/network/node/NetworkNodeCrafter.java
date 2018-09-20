@@ -27,6 +27,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternContainer {
@@ -354,6 +355,16 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         return facingContainer;
     }
 
+    public Optional<ICraftingPatternContainer> getRootContainerNotSelf() {
+        ICraftingPatternContainer root = getRootContainer();
+
+        if (root != null && root != this) {
+            return Optional.of(root);
+        }
+
+        return Optional.empty();
+    }
+
     @Override
     public UUID getUuid() {
         if (this.uuid == null) {
@@ -367,6 +378,11 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public boolean isLocked() {
+        Optional<ICraftingPatternContainer> root = getRootContainerNotSelf();
+        if (root.isPresent()) {
+            return root.get().isLocked();
+        }
+
         switch (mode) {
             case IGNORE:
                 return false;
@@ -383,6 +399,13 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public void onUsedForProcessing() {
+        Optional<ICraftingPatternContainer> root = getRootContainerNotSelf();
+        if (root.isPresent()) {
+            root.get().onUsedForProcessing();
+
+            return;
+        }
+
         if (mode == CrafterMode.PULSE_INSERTS_NEXT_SET) {
             this.locked = true;
 
