@@ -274,6 +274,48 @@ public class CraftingTask implements ICraftingTask {
         return null;
     }
 
+    class PossibleInputs {
+        private List<ItemStack> possibilities;
+        private int pos;
+
+        PossibleInputs(List<ItemStack> possibilities) {
+            this.possibilities = possibilities;
+        }
+
+        ItemStack get() {
+            return possibilities.get(pos);
+        }
+
+        // Return false if we're exhausted.
+        boolean cycle() {
+            if (pos + 1 >= possibilities.size()) {
+                pos = 0;
+
+                return false;
+            }
+
+            pos++;
+
+            return true;
+        }
+
+        void sort(IStackList<ItemStack> mutatedStorage, IStackList<ItemStack> results) {
+            possibilities.sort((a, b) -> {
+                ItemStack ar = mutatedStorage.get(a);
+                ItemStack br = mutatedStorage.get(b);
+
+                return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
+            });
+
+            possibilities.sort((a, b) -> {
+                ItemStack ar = results.get(a);
+                ItemStack br = results.get(b);
+
+                return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
+            });
+        }
+    }
+
     @Nullable
     private ICraftingTaskError calculateInternal(
         IStackList<ItemStack> mutatedStorage,
@@ -297,42 +339,22 @@ public class CraftingTask implements ICraftingTask {
 
         NonNullList<ItemStack> took = NonNullList.create();
 
-        for (NonNullList<ItemStack> possibleInputs : pattern.getInputs()) {
-            if (possibleInputs.isEmpty()) {
+        for (NonNullList<ItemStack> inputs : pattern.getInputs()) {
+            if (inputs.isEmpty()) {
                 took.add(ItemStack.EMPTY);
 
                 continue;
             }
 
-            ItemStack possibleInput;
+            PossibleInputs possibleInputs = new PossibleInputs(inputs);
+            possibleInputs.sort(mutatedStorage, results);
 
-            if (possibleInputs.size() == 1) {
-                possibleInput = possibleInputs.get(0);
-            } else {
-                NonNullList<ItemStack> sortedPossibleInputs = NonNullList.create();
-                sortedPossibleInputs.addAll(possibleInputs);
+            ItemStack possibleInput = possibleInputs.get();
 
-                sortedPossibleInputs.sort((a, b) -> {
-                    ItemStack ar = mutatedStorage.get(a);
-                    ItemStack br = mutatedStorage.get(b);
-
-                    return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
-                });
-
-                sortedPossibleInputs.sort((a, b) -> {
-                    ItemStack ar = results.get(a);
-                    ItemStack br = results.get(b);
-
-                    return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
-                });
-
-                possibleInput = sortedPossibleInputs.get(0);
-            }
+            ItemStack fromSelf = results.get(possibleInput);
+            ItemStack fromNetwork = mutatedStorage.get(possibleInput);
 
             took.add(possibleInput);
-
-            ItemStack fromSelf = results.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
-            ItemStack fromNetwork = mutatedStorage.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
 
             int remaining = possibleInput.getCount();
 
@@ -346,9 +368,7 @@ public class CraftingTask implements ICraftingTask {
 
                     remaining -= toTake;
 
-                    took.set(took.size() - 1, ItemHandlerHelper.copyStackWithSize(fromSelf, possibleInput.getCount()));
-
-                    fromSelf = results.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
+                    fromSelf = results.get(possibleInput);
                 } else if (fromNetwork != null) {
                     int toTake = Math.min(remaining, fromNetwork.getCount());
 
@@ -360,9 +380,7 @@ public class CraftingTask implements ICraftingTask {
 
                     remaining -= toTake;
 
-                    took.set(took.size() - 1, ItemHandlerHelper.copyStackWithSize(fromNetwork, possibleInput.getCount()));
-
-                    fromNetwork = mutatedStorage.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
+                    fromNetwork = mutatedStorage.get(possibleInput);
 
                     toExtractInitial.add(took.get(took.size() - 1));
                 } else {
@@ -378,12 +396,12 @@ public class CraftingTask implements ICraftingTask {
                                 return result;
                             }
 
-                            fromSelf = results.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
+                            fromSelf = results.get(possibleInput);
                             if (fromSelf == null) {
                                 throw new IllegalStateException("Recursive calculation didn't yield anything");
                             }
 
-                            fromNetwork = mutatedStorage.get(possibleInput, DEFAULT_EXTRACT_FLAGS);
+                            fromNetwork = mutatedStorage.get(possibleInput);
 
                             subPatternChain.cycle();
                         }
@@ -391,11 +409,22 @@ public class CraftingTask implements ICraftingTask {
                         // fromSelf contains the amount crafted after the loop.
                         this.toCraft.add(possibleInput, fromSelf.getCount());
                     } else {
-                        this.missing.add(possibleInput, remaining);
+                        if (!possibleInputs.cycle()) {
+                            // Give up.
+                            possibleInput = possibleInputs.get(); // Revert back to 0.
 
-                        itemsToExtract.add(possibleInput, remaining);
+                            this.missing.add(possibleInput, remaining);
 
-                        remaining = 0;
+                            itemsToExtract.add(possibleInput, remaining);
+
+                            remaining = 0;
+                        } else {
+                            // Retry with new input...
+                            possibleInput = possibleInputs.get();
+
+                            fromSelf = results.get(possibleInput);
+                            fromNetwork = mutatedStorage.get(possibleInput);
+                        }
                     }
                 }
             }
@@ -526,7 +555,7 @@ public class CraftingTask implements ICraftingTask {
             List<ItemStack> toRemove = new ArrayList<>();
 
             for (ItemStack toExtract : toExtractInitial.getStacks()) {
-                ItemStack result = network.extractItem(toExtract, toExtract.getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
+                ItemStack result = network.extractItem(toExtract, toExtract.getCount(), Action.PERFORM);
 
                 if (result != null) {
                     internalStorage.insert(toExtract, toExtract.getCount(), Action.PERFORM);
