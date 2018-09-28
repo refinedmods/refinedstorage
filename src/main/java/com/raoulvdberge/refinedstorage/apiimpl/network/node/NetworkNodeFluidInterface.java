@@ -144,7 +144,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                     delta -= result == null ? 0 : result.amount;
 
                     if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                        network.getCraftingManager().request(wanted, delta);
+                        network.getCraftingManager().request(this, wanted, delta);
                     }
                 } else if (delta < 0) {
                     FluidStack remainder = network.insertFluidTracked(got, Math.abs(delta));

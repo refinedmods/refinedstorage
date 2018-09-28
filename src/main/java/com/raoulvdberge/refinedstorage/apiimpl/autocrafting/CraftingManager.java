@@ -16,6 +16,7 @@ import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -25,6 +26,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class CraftingManager implements ICraftingManager {
+    private static final int THROTTLE_DELAY_MS = 3000;
+
     private static final String NBT_TASKS = "Tasks";
     private static final String NBT_TASK_TYPE = "Type";
     private static final String NBT_TASK_DATA = "Task";
@@ -39,6 +42,8 @@ public class CraftingManager implements ICraftingManager {
     private List<ICraftingTask> tasksToAdd = new ArrayList<>();
     private List<UUID> tasksToCancel = new ArrayList<>();
     private NBTTagList tasksToRead;
+
+    private Map<INetworkNode, Long> throttledRequesters = new HashMap<>();
 
     private Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
@@ -222,7 +227,11 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     @Nullable
-    public ICraftingTask request(ItemStack stack, int amount) {
+    public ICraftingTask request(INetworkNode source, ItemStack stack, int amount) {
+        if (isThrottled(source)) {
+            return null;
+        }
+
         for (ICraftingTask task : getTasks()) {
             if (task.getRequested().getItem() != null) {
                 if (API.instance().getComparer().isEqualNoQuantity(task.getRequested().getItem(), stack)) {
@@ -241,7 +250,11 @@ public class CraftingManager implements ICraftingManager {
                     this.add(task);
 
                     return task;
+                } else {
+                    throttle(source);
                 }
+            } else {
+                throttle(source);
             }
         }
 
@@ -250,7 +263,11 @@ public class CraftingManager implements ICraftingManager {
 
     @Nullable
     @Override
-    public ICraftingTask request(FluidStack stack, int amount) {
+    public ICraftingTask request(INetworkNode source, FluidStack stack, int amount) {
+        if (isThrottled(source)) {
+            return null;
+        }
+
         for (ICraftingTask task : getTasks()) {
             if (task.getRequested().getFluid() != null) {
                 if (API.instance().getComparer().isEqual(task.getRequested().getFluid(), stack, IComparer.COMPARE_NBT)) {
@@ -269,11 +286,28 @@ public class CraftingManager implements ICraftingManager {
                     this.add(task);
 
                     return task;
+                } else {
+                    throttle(source);
                 }
+            } else {
+                throttle(source);
             }
         }
 
         return null;
+    }
+
+    private void throttle(INetworkNode node) {
+        throttledRequesters.put(node, MinecraftServer.getCurrentTimeMillis());
+    }
+
+    private boolean isThrottled(INetworkNode node) {
+        Long throttledSince = throttledRequesters.get(node);
+        if (throttledSince == null) {
+            return false;
+        }
+
+        return MinecraftServer.getCurrentTimeMillis() - throttledSince < THROTTLE_DELAY_MS;
     }
 
     @Override

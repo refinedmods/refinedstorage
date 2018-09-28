@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -79,22 +80,24 @@ public interface ICraftingManager {
     /**
      * Schedules a crafting task if the task isn't scheduled yet.
      *
+     * @param source the source
      * @param stack  the stack
      * @param amount the amount of items to request
      * @return the crafting task created, or null if no task is created
      */
     @Nullable
-    ICraftingTask request(ItemStack stack, int amount);
+    ICraftingTask request(INetworkNode source, ItemStack stack, int amount);
 
     /**
      * Schedules a crafting task if the task isn't scheduled yet.
      *
+     * @param source the source
      * @param stack  the stack
      * @param amount the mB of the fluid to request
      * @return the crafting task created, or null if no task is created
      */
     @Nullable
-    ICraftingTask request(FluidStack stack, int amount);
+    ICraftingTask request(INetworkNode source, FluidStack stack, int amount);
 
     /**
      * Tracks an incoming stack.

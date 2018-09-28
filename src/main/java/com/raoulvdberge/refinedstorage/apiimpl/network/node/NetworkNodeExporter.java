@@ -89,7 +89,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
                         if (took == null) {
                             if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                                network.getCraftingManager().request(slot, stackSize);
+                                network.getCraftingManager().request(this, slot, stackSize);
                             }
                         } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
                             took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, Action.PERFORM);
@@ -142,7 +142,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                                 }
                             }
                         } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
-                            network.getCraftingManager().request(stack, toExtract);
+                            network.getCraftingManager().request(this, stack, toExtract);
                         }
                     }
 
