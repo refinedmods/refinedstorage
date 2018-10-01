@@ -7,6 +7,7 @@
 - Fixed an autocrafting bug where it crashed when external inventories couldn't be filled (raoulvdberge)
 - Fixed a duplication bug with a disconnected Crafting Grid (raoulvdberge)
 - Fixed oredict autocrafting sometimes reporting that a craftable item is missing (raoulvdberge)
+- Fixed fluid autocrafting without item inputs locking when there's not enough space for the fluids (raoulvdberge)
 - Removed handling of reusable items in autocrafting, to avoid problems (raoulvdberge)
 
 ### 1.6.5

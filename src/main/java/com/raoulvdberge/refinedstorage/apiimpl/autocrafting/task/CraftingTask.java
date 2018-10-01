@@ -712,7 +712,7 @@ public class CraftingTask implements ICraftingTask {
                                 p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
 
                                 break;
-                            } else if (p.getState() == ProcessingState.READY) { // If the items were ok.
+                            } else if (p.getState() == ProcessingState.READY || p.getItemsToPut().isEmpty()) { // If the items were ok (or if we didn't have items).
                                 p.setState(ProcessingState.READY);
                             }
                         }
