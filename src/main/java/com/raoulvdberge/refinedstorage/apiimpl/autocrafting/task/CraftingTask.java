@@ -789,7 +789,9 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public boolean update() {
         if (!missing.isEmpty() || !missingFluids.isEmpty()) {
-            throw new IllegalStateException("Crafting task with missing items or fluids cannot execute");
+            LOGGER.warn("Crafting task with missing items or fluids cannot execute, cancelling...");
+            
+            return true;
         }
 
         if (executionStarted == -1) {
