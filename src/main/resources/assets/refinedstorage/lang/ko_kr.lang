@@ -44,7 +44,6 @@ gui.refinedstorage:crafting_preview.available=사용 가능: %d
 gui.refinedstorage:crafting_preview.missing=부족: %d
 gui.refinedstorage:crafting_preview.circular=제작할 아이템이 서로를 필요로 합니다!
 gui.refinedstorage:crafting_preview.loop=처리 중..
-gui.refinedstorage:crafting_preview.force_start=CTRL + SHIFT를 눌러 강제로 시작할 수 있습니다.
 gui.refinedstorage:reader=수신기
 gui.refinedstorage:writer=송신기
 gui.refinedstorage:security_manager=보안 관리자

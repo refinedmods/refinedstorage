@@ -104,6 +104,18 @@ public interface ICraftingTask {
     IStackList<ItemStack> getMissing();
 
     /**
+     * @return the missing fluids
+     */
+    IStackList<FluidStack> getMissingFluids();
+
+    /**
+     * @return true if any items or fluids are missing, false otherwise
+     */
+    default boolean hasMissing() {
+        return !getMissing().isEmpty() || !getMissingFluids().isEmpty();
+    }
+
+    /**
      * @return the id of this task
      */
     UUID getId();

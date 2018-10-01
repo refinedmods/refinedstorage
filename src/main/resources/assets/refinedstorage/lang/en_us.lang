@@ -64,7 +64,6 @@ gui.refinedstorage:crafting_preview.error.recursive.3=the pattern is not used du
 gui.refinedstorage:crafting_preview.error.recursive.4=Offending pattern:
 gui.refinedstorage:crafting_preview.error.too_complex.0=The crafting task calculation was too complex
 gui.refinedstorage:crafting_preview.error.too_complex.1=and was stopped to avoid server strain.
-gui.refinedstorage:crafting_preview.force_start=Press CTRL + SHIFT to ignore
 gui.refinedstorage:reader=Reader
 gui.refinedstorage:writer=Writer
 gui.refinedstorage:security_manager=Security Manager

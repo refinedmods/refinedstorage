@@ -197,7 +197,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
                 if (error != null) {
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, false), player);
-                } else if (noPreview && task.getMissing().isEmpty()) {
+                } else if (noPreview && !task.hasMissing()) {
                     network.getCraftingManager().add(task);
 
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
@@ -239,7 +239,7 @@ public class ItemGridHandler implements IItemGridHandler {
             }
 
             ICraftingTaskError error = task.calculate();
-            if (error == null) {
+            if (error == null && !task.hasMissing()) {
                 network.getCraftingManager().add(task);
             }
         }

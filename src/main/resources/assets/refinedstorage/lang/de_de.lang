@@ -59,7 +59,6 @@ gui.refinedstorage:crafting_preview.error.recursive.3=dass sie nicht zur Herstel
 gui.refinedstorage:crafting_preview.error.recursive.4=Fehlerhafte Vorlage:
 gui.refinedstorage:crafting_preview.error.too_complex.0=Die Berechnung der Fertigung war zu komplex
 gui.refinedstorage:crafting_preview.error.too_complex.1=und wurde angehalten um Serverleistung zu sparen.
-gui.refinedstorage:crafting_preview.force_start=Erzwinge mit STRG + SHIFT
 gui.refinedstorage:reader=Lesegerät
 gui.refinedstorage:writer=Schreibgerät
 gui.refinedstorage:security_manager=Sicherheitsmanager

@@ -54,7 +54,6 @@ gui.refinedstorage:crafting_preview.error.recursive.3=шаблон не испо
 gui.refinedstorage:crafting_preview.error.recursive.4=Нарушение шаблона:
 gui.refinedstorage:crafting_preview.error.too_complex.0=Расчет крафтовой задачи был слишком сложным
 gui.refinedstorage:crafting_preview.error.too_complex.1=и был остановлен, чтобы избежать нагрузки на сервер.
-gui.refinedstorage:crafting_preview.force_start=Нажмите CTRL + SHIFT для игнорирования
 gui.refinedstorage:reader=Устройство чтения
 gui.refinedstorage:writer=Устройство записи
 gui.refinedstorage:security_manager=Менеджер безопасности

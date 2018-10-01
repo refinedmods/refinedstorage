@@ -50,7 +50,6 @@ gui.refinedstorage:crafting_preview.error.recursive.1=sí mismo.
 gui.refinedstorage:crafting_preview.error.recursive.2=Necesita remover el patrón o revisarlo
 gui.refinedstorage:crafting_preview.error.recursive.3=el patrón no se usa para la fabricación.
 gui.refinedstorage:crafting_preview.error.recursive.4=Patrón ofensivo:
-gui.refinedstorage:crafting_preview.force_start=Presiona CTRL + SHIFT para forzar el inicio
 gui.refinedstorage:reader=Lector
 gui.refinedstorage:writer=Escritor
 gui.refinedstorage:security_manager=Centro de Seguridad

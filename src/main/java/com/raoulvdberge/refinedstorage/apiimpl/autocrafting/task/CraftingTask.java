@@ -788,6 +788,10 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public boolean update() {
+        if (!missing.isEmpty() || !missingFluids.isEmpty()) {
+            throw new IllegalStateException("Crafting task with missing items or fluids cannot execute");
+        }
+
         if (executionStarted == -1) {
             executionStarted = System.currentTimeMillis();
         }
@@ -1189,6 +1193,11 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public IStackList<ItemStack> getMissing() {
         return missing;
+    }
+
+    @Override
+    public IStackList<FluidStack> getMissingFluids() {
+        return missingFluids;
     }
 
     @Override

@@ -45,7 +45,6 @@ gui.refinedstorage:crafting_preview.available=Disponible: %d
 gui.refinedstorage:crafting_preview.missing=Manquant: %d
 gui.refinedstorage:crafting_preview.circular=Dépendance circulaire!
 gui.refinedstorage:crafting_preview.loop=Boucle de traitement...
-gui.refinedstorage:crafting_preview.force_start=Appuyer sur CTRL + SHIFT pour commencer quand même
 gui.refinedstorage:reader=Scanneur
 gui.refinedstorage:writer=Imprimeur
 gui.refinedstorage:security_manager=Poste de sécurité

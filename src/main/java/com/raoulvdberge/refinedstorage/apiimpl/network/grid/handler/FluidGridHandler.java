@@ -153,7 +153,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
                 if (error != null) {
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, true), player);
-                } else if (noPreview && task.getMissing().isEmpty()) {
+                } else if (noPreview && !task.hasMissing()) {
                     network.getCraftingManager().add(task);
 
                     RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
@@ -195,7 +195,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             ICraftingTaskError error = task.calculate();
-            if (error == null) {
+            if (error == null && !task.hasMissing()) {
                 network.getCraftingManager().add(task);
             }
         }

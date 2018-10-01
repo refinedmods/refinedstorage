@@ -95,10 +95,6 @@ public class GuiCraftingPreview extends GuiBase {
             scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
             scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
         }
-
-        if (startButton != null && !startButton.enabled && isCtrlKeyDown() && isShiftKeyDown() && getErrorType() == null) {
-            startButton.enabled = true;
-        }
     }
 
     @Nullable
@@ -209,10 +205,6 @@ public class GuiCraftingPreview extends GuiBase {
                 }
 
                 slot++;
-            }
-
-            if (!startButton.enabled && inBounds(startButton.x - guiLeft, startButton.y - guiTop, startButton.width, startButton.height, mouseX, mouseY)) {
-                drawTooltip(mouseX, mouseY, t("gui.refinedstorage:crafting_preview.force_start"));
             }
         }
     }

@@ -45,7 +45,6 @@ gui.refinedstorage:crafting_preview.available=Disponível: %d
 gui.refinedstorage:crafting_preview.missing=Ausência de: %d
 gui.refinedstorage:crafting_preview.circular=Dependência circular!
 gui.refinedstorage:crafting_preview.loop=Loop em processamento...
-gui.refinedstorage:crafting_preview.force_start=Pressione CTRL + SHIFT para começar de qualquer maneira
 gui.refinedstorage:reader=Leitor
 gui.refinedstorage:writer=Escritor
 gui.refinedstorage:security_manager=Gerente de Segurança
