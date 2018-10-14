@@ -11,6 +11,7 @@
 - Fixed fluid autocrafting without item inputs locking when there's not enough space for the fluids (raoulvdberge)
 - Fixed Grid "last changed" date not changing when using clear button or JEI transfer (raoulvdberge)
 - Fixed duplication bug with autocrafting and External Storages (raoulvdberge)
+- Fixed Crafting Manager displaying wrong name for chained crafters connected to some blocks (raoulvdberge)
 - Removed handling of reusable items in autocrafting, to avoid problems (raoulvdberge)
 - You can no longer start a crafting task if it has missing items or fluids (raoulvdberge)
 

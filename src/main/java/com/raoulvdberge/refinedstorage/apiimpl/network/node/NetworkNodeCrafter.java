@@ -286,7 +286,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         }
 
         if (facing != null) {
-            return world.getBlockState(pos.offset(getDirection())).getBlock().getTranslationKey() + ".name";
+            return world.getBlockState(facing.getPos()).getBlock().getTranslationKey() + ".name";
         }
 
         return DEFAULT_NAME;
