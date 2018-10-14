@@ -17,6 +17,7 @@ import java.util.UUID;
 public class SecurityManager implements ISecurityManager {
     private INetwork network;
     private Map<UUID, ISecurityCard> cards = new HashMap<>();
+    private ISecurityCard globalCard;
 
     public SecurityManager(INetwork network) {
         this.network = network;
@@ -26,27 +27,42 @@ public class SecurityManager implements ISecurityManager {
     public boolean hasPermission(Permission permission, EntityPlayer player) {
         UserListOps ops = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOppedPlayers();
 
-        if (cards.isEmpty() || ops.getEntry(player.getGameProfile()) != null) {
+        if (ops.getEntry(player.getGameProfile()) != null) {
             return true;
         }
 
         UUID uuid = player.getGameProfile().getId();
 
         if (!cards.containsKey(uuid)) {
-            return false;
+            if (globalCard != null) {
+                return globalCard.hasPermission(permission);
+            }
+
+            return true;
         }
 
         return cards.get(uuid).hasPermission(permission);
     }
 
     @Override
-    public void rebuild() {
-        cards.clear();
+    public void invalidate() {
+        this.cards.clear();
+        this.globalCard = null;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
             if (node instanceof ISecurityCardContainer && node.canUpdate()) {
-                for (ISecurityCard card : ((ISecurityCardContainer) node).getCards()) {
-                    cards.put(card.getOwner(), card);
+                ISecurityCardContainer container = (ISecurityCardContainer) node;
+
+                for (ISecurityCard card : container.getCards()) {
+                    if (card.getOwner() == null) {
+                        throw new IllegalStateException("Owner in #getCards() cannot be null!");
+                    }
+
+                    this.cards.put(card.getOwner(), card);
+                }
+
+                if (container.getGlobalCard() != null) {
+                    this.globalCard = container.getGlobalCard();
                 }
             }
         }

@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,19 +27,20 @@ import java.util.UUID;
 public class NetworkNodeSecurityManager extends NetworkNode implements ISecurityCardContainer {
     public static final String ID = "security_manager";
 
-    private List<ISecurityCard> actualCards = new ArrayList<>();
+    private List<ISecurityCard> cards = new ArrayList<>();
+    private ISecurityCard globalCard;
 
-    private ItemHandlerBase cards = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD)) {
+    private ItemHandlerBase cardsInv = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.SECURITY_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
             if (!world.isRemote) {
-                rebuildCards();
+                invalidate();
             }
 
             if (network != null) {
-                network.getSecurityManager().rebuild();
+                network.getSecurityManager().invalidate();
             }
         }
     };
@@ -52,8 +54,8 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     public int getEnergyUsage() {
         int usage = RS.INSTANCE.config.securityManagerUsage;
 
-        for (int i = 0; i < cards.getSlots(); ++i) {
-            if (!cards.getStackInSlot(i).isEmpty()) {
+        for (int i = 0; i < cardsInv.getSlots(); ++i) {
+            if (!cardsInv.getStackInSlot(i).isEmpty()) {
                 usage += RS.INSTANCE.config.securityManagerPerSecurityCardUsage;
             }
         }
@@ -66,39 +68,46 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         super.update();
 
         if (ticks == 1) {
-            rebuildCards();
+            invalidate();
         }
     }
 
-    private void rebuildCards() {
-        actualCards.clear();
+    private void invalidate() {
+        this.cards.clear();
+        this.globalCard = null;
 
-        for (int i = 0; i < cards.getSlots(); ++i) {
-            ItemStack stack = cards.getStackInSlot(i);
+        for (int i = 0; i < cardsInv.getSlots(); ++i) {
+            ItemStack stack = cardsInv.getStackInSlot(i);
 
             if (!stack.isEmpty()) {
                 UUID uuid = ItemSecurityCard.getOwner(stack);
 
                 if (uuid == null) {
+                    this.globalCard = createCard(stack, null);
+
                     continue;
                 }
 
-                SecurityCard card = new SecurityCard(uuid);
-
-                for (Permission permission : Permission.values()) {
-                    card.getPermissions().put(permission, ItemSecurityCard.hasPermission(stack, permission));
-                }
-
-                actualCards.add(card);
+                this.cards.add(createCard(stack, uuid));
             }
         }
+    }
+
+    private ISecurityCard createCard(ItemStack stack, @Nullable UUID uuid) {
+        SecurityCard card = new SecurityCard(uuid);
+
+        for (Permission permission : Permission.values()) {
+            card.getPermissions().put(permission, ItemSecurityCard.hasPermission(stack, permission));
+        }
+
+        return card;
     }
 
     @Override
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
-        StackUtils.readItems(cards, 0, tag);
+        StackUtils.readItems(cardsInv, 0, tag);
         StackUtils.readItems(editCard, 1, tag);
     }
 
@@ -111,7 +120,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     public NBTTagCompound write(NBTTagCompound tag) {
         super.write(tag);
 
-        StackUtils.writeItems(cards, 0, tag);
+        StackUtils.writeItems(cardsInv, 0, tag);
         StackUtils.writeItems(editCard, 1, tag);
 
         return tag;
@@ -121,11 +130,11 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getSecurityManager().rebuild();
+        network.getSecurityManager().invalidate();
     }
 
     public ItemHandlerBase getCardsItems() {
-        return cards;
+        return cardsInv;
     }
 
     public ItemHandlerBase getEditCard() {
@@ -142,12 +151,18 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
 
     @Override
     public List<ISecurityCard> getCards() {
-        return actualCards;
+        return cards;
+    }
+
+    @Nullable
+    @Override
+    public ISecurityCard getGlobalCard() {
+        return globalCard;
     }
 
     @Override
     public IItemHandler getDrops() {
-        return new CombinedInvWrapper(cards, editCard);
+        return new CombinedInvWrapper(cardsInv, editCard);
     }
 
     @Override

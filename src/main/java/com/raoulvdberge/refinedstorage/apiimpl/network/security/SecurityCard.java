@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.security;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -11,7 +12,7 @@ public class SecurityCard implements ISecurityCard {
     private UUID owner;
     private Map<Permission, Boolean> permissions = new HashMap<>();
 
-    public SecurityCard(UUID owner) {
+    public SecurityCard(@Nullable UUID owner) {
         this.owner = owner;
     }
 
@@ -20,6 +21,7 @@ public class SecurityCard implements ISecurityCard {
     }
 
     @Override
+    @Nullable
     public UUID getOwner() {
         return owner;
     }

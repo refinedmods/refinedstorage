@@ -14,6 +14,8 @@
 - Fixed Crafting Manager displaying wrong name for chained crafters connected to some blocks (raoulvdberge)
 - Removed handling of reusable items in autocrafting, to avoid problems (raoulvdberge)
 - You can no longer start a crafting task if it has missing items or fluids (raoulvdberge)
+- The Security Manager now supports Security Cards that have no player assigned to them. It is the default security card for players that aren't configured (raoulvdberge)
+- If no default Security Card is configured in the Security Manager, an unconfigured player is allowed to do everything in the network. Create a default Security Card (craft a Security Craft and don't assign it to a player, it acts as a fallback) to handle unconfigured players (raoulvdberge)
 
 ### 1.6.5
 - Fixed Refined Storage silicon's oredict entry being registered too late (raoulvdberge)

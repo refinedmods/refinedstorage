@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.security;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -7,8 +8,9 @@ import java.util.UUID;
  */
 public interface ISecurityCard {
     /**
-     * @return the owner of this card
+     * @return the owner of this card, or null if this is a global card
      */
+    @Nullable
     UUID getOwner();
 
     /**

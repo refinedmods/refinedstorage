@@ -14,7 +14,7 @@ public interface ISecurityManager {
     boolean hasPermission(Permission permission, EntityPlayer player);
 
     /**
-     * Rebuilds the security list.
+     * Invalidates the security list.
      */
-    void rebuild();
+    void invalidate();
 }

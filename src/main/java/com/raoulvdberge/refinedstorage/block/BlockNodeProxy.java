@@ -73,7 +73,7 @@ public abstract class BlockNodeProxy extends BlockBase {
                     if (!node.getNetwork().getSecurityManager().hasPermission(permission, player)) {
                         WorldUtils.sendNoPermissionMessage(player);
 
-                        return false;
+                        return true; // Avoid placing blocks
                     }
                 }
             }

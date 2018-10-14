@@ -93,5 +93,11 @@ public class ItemSecurityCard extends ItemBase {
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER_NAME)) {
             tooltip.add(I18n.format("item.refinedstorage:security_card.owner", stack.getTagCompound().getString(NBT_OWNER_NAME)));
         }
+
+        for (Permission permission : Permission.values()) {
+            if (hasPermission(stack, permission)) {
+                tooltip.add("- " + I18n.format("gui.refinedstorage:security_manager.permission." + permission.getId()));
+            }
+        }
     }
 }

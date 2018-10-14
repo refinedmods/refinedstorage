@@ -232,7 +232,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                     throttlingDisabled = false;
 
                     nodeGraph.rebuild();
-                    securityManager.rebuild();
+                    securityManager.invalidate();
                 }
             } else {
                 ticksSinceUpdateChanged = 0;
