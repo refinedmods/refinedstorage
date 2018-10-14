@@ -90,7 +90,7 @@ public class ContainerGrid extends ContainerBase {
 
                             if (itemHandler != null) {
                                 slot.putStack(itemHandler.onShiftClick((EntityPlayerMP) getPlayer(), stack));
-                            } else if (slot instanceof SlotGridCrafting && mergeItemStack(stack, 4, 4 + (9 * 4), false)) {
+                            } else if (slot instanceof SlotGridCrafting && mergeItemStack(stack, 14, 14 + (9 * 4), false)) {
                                 slot.onSlotChanged();
                             }
                         }
@@ -144,8 +144,6 @@ public class ContainerGrid extends ContainerBase {
         }
 
         addSlotToContainer(craftingResultSlot = new SlotGridCraftingResult(this, getPlayer(), grid, 0, 130 + 4, headerAndSlots + 22));
-
-        transferManager.addTransfer(grid.getCraftingMatrix(), getPlayer().inventory);
     }
 
     private void addPatternSlots() {
