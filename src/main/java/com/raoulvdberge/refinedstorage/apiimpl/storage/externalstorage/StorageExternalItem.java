@@ -70,31 +70,17 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
             } else if (cached.isEmpty() && !actual.isEmpty()) {
                 // If the cached is empty and the actual isn't, we added this item
                 network.getItemStorageCache().add(actual, actual.getCount(), false, true);
-
-                // When we use an interface + crafting upgrade + external storage combo, we don't want the crafting task
-                // to think we inserted twice.
-                if (!isConnectedToInterface()) {
-                    network.getCraftingManager().track(actual, actual.getCount());
-                }
             } else if (cached.isEmpty() && actual.isEmpty()) {
                 // If they're both empty, nothing happens
             } else if (!API.instance().getComparer().isEqualNoQuantity(cached, actual)) {
                 // If both items mismatch, remove the old and add the new
                 network.getItemStorageCache().remove(cached, cached.getCount(), true);
                 network.getItemStorageCache().add(actual, actual.getCount(), false, true);
-
-                if (!isConnectedToInterface()) {
-                    network.getCraftingManager().track(actual, actual.getCount());
-                }
             } else if (cached.getCount() != actual.getCount()) {
                 int delta = actual.getCount() - cached.getCount();
 
                 if (delta > 0) {
                     network.getItemStorageCache().add(actual, delta, false, true);
-
-                    if (!isConnectedToInterface()) {
-                        network.getCraftingManager().track(actual, delta);
-                    }
                 } else {
                     network.getItemStorageCache().remove(actual, Math.abs(delta), true);
                 }
