@@ -9,6 +9,7 @@
 - Fixed a duplication bug with a disconnected Crafting Grid (raoulvdberge)
 - Fixed oredict autocrafting sometimes reporting that a craftable item is missing (raoulvdberge)
 - Fixed fluid autocrafting without item inputs locking when there's not enough space for the fluids (raoulvdberge)
+- Fixed Grid "last changed" date not changing when using clear button or JEI transfer (raoulvdberge)
 - Removed handling of reusable items in autocrafting, to avoid problems (raoulvdberge)
 - You can no longer start a crafting task if it has missing items or fluids (raoulvdberge)
 

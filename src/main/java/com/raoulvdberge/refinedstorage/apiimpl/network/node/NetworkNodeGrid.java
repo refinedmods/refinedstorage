@@ -345,6 +345,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
                             return;
                         } else {
                             network.insertItem(slot, slot.getCount(), Action.PERFORM);
+
+                            network.getItemStorageTracker().changed(player, slot.copy());
                         }
                     } else {
                         // If we aren't connected, try to insert into player inventory. If it fails, stop.
@@ -374,6 +376,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
                             if (took != null) {
                                 grid.getCraftingMatrix().setInventorySlotContents(i, StackUtils.nullToEmpty(took));
+
+                                network.getItemStorageTracker().changed(player, took.copy());
 
                                 found = true;
 
@@ -461,7 +465,13 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
                 }
             } else if (!slot.isEmpty()) {
                 if (slot.getCount() == 1 && network != null) {
-                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(network.extractItem(slot, 1, Action.PERFORM)));
+                    ItemStack refill = StackUtils.nullToEmpty(network.extractItem(slot, 1, Action.PERFORM));
+
+                    matrix.setInventorySlotContents(i, refill);
+
+                    if (!refill.isEmpty()) {
+                        network.getItemStorageTracker().changed(player, refill.copy());
+                    }
                 } else {
                     matrix.decrStackSize(i, 1);
                 }

@@ -49,6 +49,10 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
 
                 if (!slot.isEmpty()) {
                     matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(grid.getNetwork().insertItem(slot, slot.getCount(), Action.PERFORM)));
+
+                    if (player != null) {
+                        grid.getNetwork().getItemStorageTracker().changed(player, slot.copy());
+                    }
                 }
             }
         } else if (grid.getGridType() == GridType.PATTERN) {
