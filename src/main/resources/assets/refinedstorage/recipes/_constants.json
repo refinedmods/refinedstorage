@@ -21,13 +21,6 @@
     }
   },
   {
-    "name": "cut_silicon",
-    "ingredient": {
-      "item": "refinedstorage:processor",
-      "data": 6
-    }
-  },
-  {
     "name": "construction_core",
     "ingredient": {
       "item": "refinedstorage:core",
@@ -39,13 +32,6 @@
     "ingredient": {
       "item": "refinedstorage:core",
       "data": 1
-    }
-  },
-  {
-    "name": "cutting_tool",
-    "ingredient": {
-      "item": "refinedstorage:cutting_tool",
-      "data": 32767
     }
   }
 ]

@@ -10,7 +10,7 @@
       "translate": "advancements.refinedstorage:better_than_a_barrel.description"
     }
   },
-  "parent": "refinedstorage:cutting",
+  "parent": "refinedstorage:binding",
   "criteria": {
     "storage_monitor_in_inventory": {
       "trigger": "minecraft:inventory_changed",

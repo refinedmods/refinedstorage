@@ -11,7 +11,7 @@
       "translate": "advancements.refinedstorage:upgrading.description"
     }
   },
-  "parent": "refinedstorage:cutting",
+  "parent": "refinedstorage:binding",
   "criteria": {
     "upgrade_in_inventory": {
       "trigger": "minecraft:inventory_changed",

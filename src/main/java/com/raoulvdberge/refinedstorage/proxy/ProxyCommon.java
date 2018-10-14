@@ -220,6 +220,7 @@ public class ProxyCommon {
         registerBlock(RSBlocks.CRAFTER_MANAGER);
 
         registerItem(RSItems.QUARTZ_ENRICHED_IRON);
+        registerItem(RSItems.PROCESSOR_BINDING);
         registerItem(RSItems.CUTTING_TOOL);
         registerItem(RSItems.STORAGE_DISK);
         registerItem(RSItems.FLUID_STORAGE_DISK);

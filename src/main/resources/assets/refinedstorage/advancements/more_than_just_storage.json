@@ -10,7 +10,7 @@
       "translate": "advancements.refinedstorage:more_than_just_storage.description"
     }
   },
-  "parent": "refinedstorage:cutting",
+  "parent": "refinedstorage:binding",
   "criteria": {
     "reader_writer_in_inventory": {
       "trigger": "minecraft:inventory_changed",

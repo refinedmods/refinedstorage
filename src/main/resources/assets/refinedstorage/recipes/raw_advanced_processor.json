@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "#cutting_tool"
+      "item": "refinedstorage:processor_binding"
     },
     {
-      "item": "minecraft:gold_ingot"
+      "item": "minecraft:diamond"
     },
     {
-      "item": "#cut_silicon"
+      "item": "refinedstorage:silicon"
     },
     {
       "item": "minecraft:redstone"
@@ -16,6 +16,6 @@
   ],
   "result": {
     "item": "refinedstorage:processor",
-    "data": 1
+    "data": 2
   }
 }

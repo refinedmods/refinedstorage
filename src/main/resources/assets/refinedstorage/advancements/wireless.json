@@ -10,7 +10,7 @@
       "translate": "advancements.refinedstorage:wireless.description"
     }
   },
-  "parent": "refinedstorage:cutting",
+  "parent": "refinedstorage:binding",
   "criteria": {
     "wireless_transmitter_in_inventory": {
       "trigger": "minecraft:inventory_changed",

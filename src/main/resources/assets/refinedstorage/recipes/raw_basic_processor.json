@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "#cutting_tool"
+      "item": "refinedstorage:processor_binding"
     },
     {
       "item": "minecraft:iron_ingot"
     },
     {
-      "item": "#cut_silicon"
+      "item": "refinedstorage:silicon"
     },
     {
       "item": "minecraft:redstone"

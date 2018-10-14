@@ -1,13 +1,13 @@
 {
   "display": {
     "icon": {
-      "item": "refinedstorage:cutting_tool"
+      "item": "refinedstorage:processor_binding"
     },
     "title": {
-      "translate": "advancements.refinedstorage:cutting"
+      "translate": "advancements.refinedstorage:binding"
     },
     "description": {
-      "translate": "advancements.refinedstorage:cutting.description"
+      "translate": "advancements.refinedstorage:binding.description"
     }
   },
   "parent": "refinedstorage:root",
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "refinedstorage:cutting_tool"
+            "item": "refinedstorage:processor_binding"
           }
         ]
       }
