@@ -306,7 +306,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             drawTexture(x + 172, y + getTopHeight() + (getVisibleRows() * 18) + 22, 240, ty * 16, 16, 16);
         }
 
-        tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY);
+        tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, true);
 
         if (searchField != null) {
             searchField.drawTextBox();

@@ -55,19 +55,21 @@ public class TabList {
         listeners.add(listener);
     }
 
-    public void drawForeground(int x, int y, int mouseX, int mouseY) {
+    public void drawForeground(int x, int y, int mouseX, int mouseY, boolean visible) {
         this.tabHovering = -1;
 
-        int j = 0;
-        for (int i = page.get() * tabsPerPage; i < (page.get() * tabsPerPage) + tabsPerPage; ++i) {
-            if (i < tabs.get().size()) {
-                drawTab(tabs.get().get(i), true, x, y, i, j);
+        if (visible) {
+            int j = 0;
+            for (int i = page.get() * tabsPerPage; i < (page.get() * tabsPerPage) + tabsPerPage; ++i) {
+                if (i < tabs.get().size()) {
+                    drawTab(tabs.get().get(i), true, x, y, i, j);
 
-                if (gui.inBounds(x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * j), y, IGridTab.TAB_WIDTH, IGridTab.TAB_HEIGHT - (i == selected.get() ? 2 : 7), mouseX, mouseY)) {
-                    this.tabHovering = i;
+                    if (gui.inBounds(x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * j), y, IGridTab.TAB_WIDTH, IGridTab.TAB_HEIGHT - (i == selected.get() ? 2 : 7), mouseX, mouseY)) {
+                        this.tabHovering = i;
+                    }
+
+                    j++;
                 }
-
-                j++;
             }
         }
     }

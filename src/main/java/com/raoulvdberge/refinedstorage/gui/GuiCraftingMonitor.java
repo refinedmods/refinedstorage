@@ -255,9 +255,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
-        if (craftingMonitor.isActive()) {
-            tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY);
-        }
+        tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActive());
     }
 
     @Override
