@@ -8,14 +8,11 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-
-import javax.annotation.Nullable;
 
 public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridClear> implements IMessage {
     public MessageGridClear() {
@@ -36,27 +33,23 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid && ((ContainerGrid) container).getGrid() instanceof IGridNetworkAware) {
-            clear((IGridNetworkAware) ((ContainerGrid) container).getGrid(), player);
-        }
-    }
+            IGridNetworkAware grid = (IGridNetworkAware) ((ContainerGrid) container).getGrid();
 
-    public static void clear(IGridNetworkAware grid, @Nullable EntityPlayer player) {
-        InventoryCrafting matrix = grid.getCraftingMatrix();
+            if (grid.getGridType() == GridType.CRAFTING && grid.getNetwork() != null && grid.getNetwork().getSecurityManager().hasPermission(Permission.INSERT, player)) {
+                InventoryCrafting matrix = grid.getCraftingMatrix();
 
-        if (grid.getGridType() == GridType.CRAFTING && grid.getNetwork() != null && (player == null || grid.getNetwork().getSecurityManager().hasPermission(Permission.INSERT, player))) {
-            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
-                ItemStack slot = matrix.getStackInSlot(i);
+                for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+                    ItemStack slot = matrix.getStackInSlot(i);
 
-                if (!slot.isEmpty()) {
-                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(grid.getNetwork().insertItem(slot, slot.getCount(), Action.PERFORM)));
+                    if (!slot.isEmpty()) {
+                        matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(grid.getNetwork().insertItem(slot, slot.getCount(), Action.PERFORM)));
 
-                    if (player != null) {
                         grid.getNetwork().getItemStorageTracker().changed(player, slot.copy());
                     }
                 }
+            } else if (grid.getGridType() == GridType.PATTERN) {
+                ((NetworkNodeGrid) grid).clearMatrix();
             }
-        } else if (grid.getGridType() == GridType.PATTERN) {
-            ((NetworkNodeGrid) grid).clearMatrix();
         }
     }
 }

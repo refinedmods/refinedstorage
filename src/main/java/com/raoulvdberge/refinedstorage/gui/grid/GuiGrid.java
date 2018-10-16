@@ -437,8 +437,6 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         } else if (grid.isActive()) {
             if (clickedClear && grid instanceof IGridNetworkAware) {
                 RS.INSTANCE.network.sendToServer(new MessageGridClear());
-
-                MessageGridClear.clear((IGridNetworkAware) grid, null); // Clear clientside
             }
 
             ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();
