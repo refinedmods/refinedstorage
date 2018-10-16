@@ -13,6 +13,7 @@
 - Fixed a duplication bug when pressing clear on a Wireless Crafting Grid (raoulvdberge)
 - Fixed duplication bug with autocrafting and External Storages (raoulvdberge)
 - Fixed Crafting Manager displaying wrong name for chained crafters connected to some blocks (raoulvdberge)
+- Fixed crafting task losing internal buffer when network runs out of energy (raoulvdberge)
 - Removed handling of reusable items in autocrafting, to avoid problems (raoulvdberge)
 - You can no longer start a crafting task if it has missing items or fluids (raoulvdberge)
 - The Security Manager now supports Security Cards that have no player assigned to them. It is the default security card for players that aren't configured (raoulvdberge)
