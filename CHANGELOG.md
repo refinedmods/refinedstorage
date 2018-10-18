@@ -10,7 +10,7 @@
 - Fixed oredict autocrafting sometimes reporting that a craftable item is missing (raoulvdberge)
 - Fixed fluid autocrafting without item inputs locking when there's not enough space for the fluids (raoulvdberge)
 - Fixed Grid "last changed" date not changing when using clear button or JEI transfer (raoulvdberge)
-- Fixed a duplication bug when pressing clear on a Wireless Crafting Grid (raoulvdberge)
+- Fixed a duplication bug when pressing clear on a Wireless Crafting Grid from Refined Storage Addons (raoulvdberge)
 - Fixed a duplication bug with autocrafting and External Storages (raoulvdberge)
 - Fixed Crafting Manager displaying wrong name for chained crafters connected to some blocks (raoulvdberge)
 - Fixed crafting task losing internal buffer when network runs out of energy (raoulvdberge)
