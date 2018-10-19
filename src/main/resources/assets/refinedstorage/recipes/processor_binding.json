@@ -10,11 +10,12 @@
       "item": "minecraft:string"
     },
     "L": {
-      "item": "minecraft:slime_ball"
+      "type": "forge:ore_dict",
+      "ore": "slimeball"
     }
   },
   "result": {
     "item": "refinedstorage:processor_binding",
-    "count": 16
+    "count": 8
   }
 }

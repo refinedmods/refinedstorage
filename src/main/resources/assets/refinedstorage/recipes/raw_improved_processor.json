@@ -8,7 +8,8 @@
       "item": "minecraft:gold_ingot"
     },
     {
-      "item": "refinedstorage:silicon"
+      "type": "forge:ore_dict",
+      "ore": "itemSilicon"
     },
     {
       "item": "minecraft:redstone"

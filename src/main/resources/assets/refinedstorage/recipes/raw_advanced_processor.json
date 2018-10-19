@@ -8,7 +8,8 @@
       "item": "minecraft:diamond"
     },
     {
-      "item": "refinedstorage:silicon"
+      "type": "forge:ore_dict",
+      "ore": "itemSilicon"
     },
     {
       "item": "minecraft:redstone"
