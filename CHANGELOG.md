@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.8
+- Fixed Ender IO incompatibility (raoulvdberge)
+
 ### 1.6.7
 - Fixed the Raw Processor recipes not taking oredicted silicon (raoulvdberge)
 - Fixed the Processor Binding recipe not taking oredicted slimeballs (raoulvdberge)
