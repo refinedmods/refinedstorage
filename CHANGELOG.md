@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.9
+- Fixed OpenComputers "unknown error" when using extract item API (raoulvdberge)
+
 ### 1.6.8
 - Fixed Ender IO incompatibility (raoulvdberge)
 
