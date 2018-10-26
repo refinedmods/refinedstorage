@@ -74,6 +74,18 @@ public interface IGrid {
     IFluidGridHandler getFluidHandler();
 
     /**
+     * @param listener the listener
+     */
+    default void addCraftingListener(IGridCraftingListener listener) {
+    }
+
+    /**
+     * @param listener the listener
+     */
+    default void removeCraftingListener(IGridCraftingListener listener) {
+    }
+
+    /**
      * @return an unlocalized gui title
      */
     String getGuiTitle();

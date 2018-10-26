@@ -2,10 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.grid.*;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
@@ -131,6 +128,16 @@ public class WirelessFluidGrid implements IGridNetworkAware {
         INetwork network = getNetwork();
 
         return network != null ? network.getFluidGridHandler() : null;
+    }
+
+    @Override
+    public void addCraftingListener(IGridCraftingListener listener) {
+        // NO OP
+    }
+
+    @Override
+    public void removeCraftingListener(IGridCraftingListener listener) {
+        // NO OP
     }
 
     @Override

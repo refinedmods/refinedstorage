@@ -4,10 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.api.network.grid.*;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
@@ -55,7 +52,9 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, IType {
     public static final String ID = "grid";
@@ -80,7 +79,9 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
         @Override
         public void onCraftMatrixChanged(IInventory inventory) {
-            onCraftingMatrixChanged();
+            if (!world.isRemote) {
+                onCraftingMatrixChanged();
+            }
         }
     };
     private IRecipe currentRecipe;
@@ -88,6 +89,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     private InventoryCraftResult result = new InventoryCraftResult();
     private ItemHandlerBase processingMatrix = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this));
     private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, Fluid.BUCKET_VOLUME * 64, new ListenerNetworkNode(this));
+
+    private Set<IGridCraftingListener> craftingListeners = new HashSet<>();
 
     private ItemHandlerBase patterns = new ItemHandlerBase(2, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN)) {
         @Override
@@ -253,6 +256,16 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
+    public void addCraftingListener(IGridCraftingListener listener) {
+        craftingListeners.add(listener);
+    }
+
+    @Override
+    public void removeCraftingListener(IGridCraftingListener listener) {
+        craftingListeners.remove(listener);
+    }
+
+    @Override
     public String getGuiTitle() {
         GridType type = getGridType();
 
@@ -316,6 +329,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
         } else {
             result.setInventorySlotContents(0, currentRecipe.getCraftingResult(matrix));
         }
+
+        craftingListeners.forEach(IGridCraftingListener::onCraftingOutputChanged);
 
         markDirty();
     }

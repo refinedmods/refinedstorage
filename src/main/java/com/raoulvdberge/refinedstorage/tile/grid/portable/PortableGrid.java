@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridCraftingListener;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
@@ -234,6 +235,16 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     @Override
     public IFluidGridHandler getFluidHandler() {
         return fluidHandler;
+    }
+
+    @Override
+    public void addCraftingListener(IGridCraftingListener listener) {
+        // NO OP
+    }
+
+    @Override
+    public void removeCraftingListener(IGridCraftingListener listener) {
+        // NO OP
     }
 
     @Override

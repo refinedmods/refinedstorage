@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridCraftingListener;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
@@ -311,6 +312,16 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     @Override
     public IFluidGridHandler getFluidHandler() {
         return fluidHandler;
+    }
+
+    @Override
+    public void addCraftingListener(IGridCraftingListener listener) {
+        // NO OP
+    }
+
+    @Override
+    public void removeCraftingListener(IGridCraftingListener listener) {
+        // NO OP
     }
 
     @Override

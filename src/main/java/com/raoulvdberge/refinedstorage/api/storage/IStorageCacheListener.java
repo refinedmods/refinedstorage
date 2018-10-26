@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.api.storage;
 
-import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -30,5 +29,10 @@ public interface IStorageCacheListener<T> {
      */
     void onChanged(@Nonnull T stack, int size);
 
+    /**
+     * Called when the storage cache changes.
+     *
+     * @param stacks a list of stacks that are changed, with the size changed (negative if the amount decreases)
+     */
     void onChangedBulk(@Nonnull List<Pair<T, Integer>> stacks);
 }

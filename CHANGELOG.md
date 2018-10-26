@@ -2,6 +2,7 @@
 
 ### 1.6.9
 - Fixed OpenComputers "unknown error" when using extract item API (raoulvdberge)
+- Fixed client FPS stuttering when opening a Crafting Grid (raoulvdberge)
 
 ### 1.6.8
 - Fixed Ender IO incompatibility (raoulvdberge)
