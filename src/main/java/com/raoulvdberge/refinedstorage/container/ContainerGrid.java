@@ -77,7 +77,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
                     if (slot == craftingResultSlot) {
                         grid.onCraftedShift(getPlayer());
 
-                        onCraftingOutputChanged();
+                        onCraftingMatrixChanged();
 
                         detectAndSendChanges();
                     } else {
@@ -204,7 +204,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
     }
 
     @Override
-    public void onCraftingOutputChanged() {
+    public void onCraftingMatrixChanged() {
         for (int i = 0; i < inventorySlots.size(); ++i) {
             Slot slot = inventorySlots.get(i);
 

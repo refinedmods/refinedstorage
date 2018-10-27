@@ -330,7 +330,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
             result.setInventorySlotContents(0, currentRecipe.getCraftingResult(matrix));
         }
 
-        craftingListeners.forEach(IGridCraftingListener::onCraftingOutputChanged);
+        craftingListeners.forEach(IGridCraftingListener::onCraftingMatrixChanged);
 
         markDirty();
     }
