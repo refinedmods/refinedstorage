@@ -90,18 +90,22 @@ public class ItemGridHandler implements IItemGridHandler {
                 if (ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
                     took = network.extractItem(item, size, Action.PERFORM);
 
-                    ItemHandlerHelper.insertItem(playerInventory, took, false);
+                    if (took != null) {
+                        ItemHandlerHelper.insertItem(playerInventory, took, false);
+                    }
                 }
             } else {
                 took = network.extractItem(item, size, Action.PERFORM);
 
-                if (single && !held.isEmpty()) {
-                    held.grow(1);
-                } else {
-                    player.inventory.setItemStack(took);
-                }
+                if (took != null) {
+                    if (single && !held.isEmpty()) {
+                        held.grow(1);
+                    } else {
+                        player.inventory.setItemStack(took);
+                    }
 
-                player.updateHeldItem();
+                    player.updateHeldItem();
+                }
             }
 
             INetworkItem networkItem = network.getNetworkItemHandler().getItem(player);
