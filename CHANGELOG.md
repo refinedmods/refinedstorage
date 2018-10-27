@@ -4,6 +4,7 @@
 - Fixed OpenComputers "unknown error" when using extract item API (raoulvdberge)
 - Fixed client FPS stuttering when opening a Crafting Grid (raoulvdberge)
 - Fixed rare Grid crashing issue (raoulvdberge)
+- You can now interact with the fluid container input slot in the Fluid Interface (raoulvdberge)
 
 ### 1.6.8
 - Fixed Ender IO incompatibility (raoulvdberge)
