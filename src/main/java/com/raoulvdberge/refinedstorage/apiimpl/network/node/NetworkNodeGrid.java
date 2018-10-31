@@ -104,10 +104,12 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
                 if (isPatternProcessing && isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
                         processingMatrix.setStackInSlot(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
+                        processingMatrixFluids.setFluid(i, ItemPattern.getFluidInputSlot(pattern, i));
                     }
 
                     for (int i = 0; i < 9; ++i) {
                         processingMatrix.setStackInSlot(9 + i, StackUtils.nullToEmpty(ItemPattern.getOutputSlot(pattern, i)));
+                        processingMatrixFluids.setFluid(9 + i, ItemPattern.getFluidOutputSlot(pattern, i));
                     }
                 } else if (!isPatternProcessing && !isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
