@@ -77,8 +77,6 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
                     if (slot == craftingResultSlot) {
                         grid.onCraftedShift(getPlayer());
 
-                        onCraftingMatrixChanged();
-
                         detectAndSendChanges();
                     } else {
                         ItemStack stack = slot.getStack();
@@ -208,7 +206,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
         for (int i = 0; i < inventorySlots.size(); ++i) {
             Slot slot = inventorySlots.get(i);
 
-            if (slot instanceof SlotGridCrafting || slot == craftingResultSlot) {
+            if (slot instanceof SlotGridCrafting || slot == craftingResultSlot || slot == patternResultSlot) {
                 for (IContainerListener listener : listeners) {
                     // @Volatile: We can't use IContainerListener#sendSlotContents since EntityPlayerMP blocks SlotCrafting changes...
                     if (listener instanceof EntityPlayerMP) {
