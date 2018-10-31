@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.10
+- Fixed client FPS stalling when using "@" mod search in the Grid (raoulvdberge)
+
 ### 1.6.9
 - Fixed OpenComputers "unknown error" when using extract item API (raoulvdberge)
 - Fixed client FPS stuttering when opening a Crafting Grid (raoulvdberge)
@@ -18,7 +21,7 @@
 - Added new Crafter modes: ignore redstone signal, redstone signal unlocks autocrafting, redstone signal locks autocrafting and redstone pulse inserts next set (replacement for blocking mode) (raoulvdberge)
 - Added a config option to configure the autocrafting calculation timeout in milliseconds (raoulvdberge)
 - Added throttling for network devices that can request autocrafting (raoulvdberge)
-- Renamed Cut Processors to Raw Processors and those are now made with Processor Binding instead of a Cutting Tool (raoulvdberge)
+- Renamed Cut Processors to Raw PrDon't display advanced tooltip in Crafting Monitorocessors and those are now made with Processor Binding instead of a Cutting Tool (raoulvdberge)
 - Fixed an autocrafting bug where it crashed when external inventories couldn't be filled (raoulvdberge)
 - Fixed a duplication bug with a disconnected Crafting Grid (raoulvdberge)
 - Fixed oredict autocrafting sometimes reporting that a craftable item is missing (raoulvdberge)

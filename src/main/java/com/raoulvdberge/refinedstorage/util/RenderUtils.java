@@ -429,6 +429,10 @@ public final class RenderUtils {
         return lines;
     }
 
+    public static String getBriefItemTooltip(ItemStack stack) {
+        return stack.getRarity().color + stack.getDisplayName();
+    }
+
     public static boolean isLightMapDisabled() {
         return FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled;
     }
