@@ -45,13 +45,14 @@ public class GridStackItem implements IGridStack {
         }
     }
 
+    @Nullable
     static String getModNameByModId(String modId) {
         ModContainer container = Loader.instance().getActiveModList().stream()
             .filter(m -> m.getModId().toLowerCase().equals(modId))
             .findFirst()
             .orElse(null);
 
-        return container == null ? modId : container.getName().toLowerCase().replace(" ", "");
+        return container == null ? null : container.getName();
     }
 
     public ItemStack getStack() {
@@ -99,6 +100,10 @@ public class GridStackItem implements IGridStack {
     public String getModId() {
         if (modId == null) {
             modId = stack.getItem().getCreatorModId(stack);
+
+            if (modId == null) {
+                modId = "???";
+            }
         }
 
         return modId;
@@ -108,6 +113,10 @@ public class GridStackItem implements IGridStack {
     public String getModName() {
         if (modName == null) {
             modName = getModNameByModId(getModId());
+
+            if (modName == null) {
+                modName = "???";
+            }
         }
 
         return modName;

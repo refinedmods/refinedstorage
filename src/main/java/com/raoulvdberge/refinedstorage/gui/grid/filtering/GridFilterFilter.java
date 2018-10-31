@@ -34,7 +34,10 @@ public class GridFilterFilter implements Predicate<IGridStack> {
                 ItemStack stackInFilter = (ItemStack) filter.getStack();
 
                 if (filter.isModFilter()) {
-                    if (stackInFilter.getItem().getRegistryName().getNamespace().equalsIgnoreCase(stack.getModId())) {
+                    String stackModId = stack.getModId();
+                    String filterModId = stackInFilter.getItem().getCreatorModId(stackInFilter);
+
+                    if (filterModId != null && filterModId.equals(stackModId)) {
                         return filter.getMode() == IFilter.MODE_WHITELIST;
                     }
                 } else if (API.instance().getComparer().isEqual(((GridStackItem) stack).getStack(), stackInFilter, filter.getCompare())) {

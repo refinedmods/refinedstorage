@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -58,7 +59,11 @@ public class GridStackFluid implements IGridStack {
     @Override
     public String getModId() {
         if (modId == null) {
-            modId = stack.getFluid().getStill(stack).getNamespace();
+            modId = FluidRegistry.getModId(stack);
+
+            if (modId == null) {
+                modId = "???";
+            }
         }
 
         return modId;
@@ -68,6 +73,10 @@ public class GridStackFluid implements IGridStack {
     public String getModName() {
         if (modName == null) {
             modName = GridStackItem.getModNameByModId(getModId());
+
+            if (modName == null) {
+                modName = "???";
+            }
         }
 
         return modName;
