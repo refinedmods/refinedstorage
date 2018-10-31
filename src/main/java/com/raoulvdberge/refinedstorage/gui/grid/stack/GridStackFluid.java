@@ -15,6 +15,8 @@ public class GridStackFluid implements IGridStack {
     private IStorageTracker.IStorageTrackerEntry entry;
     private boolean craftable;
     private boolean displayCraftText;
+    private String modId;
+    private String modName;
 
     public GridStackFluid(int hash, FluidStack stack, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
         this.hash = hash;
@@ -55,7 +57,20 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public String getModId() {
-        return stack.getFluid().getStill(stack).getNamespace();
+        if (modId == null) {
+            modId = stack.getFluid().getStill(stack).getNamespace();
+        }
+
+        return modId;
+    }
+
+    @Override
+    public String getModName() {
+        if (modName == null) {
+            modName = GridStackItem.getModNameByModId(getModId());
+        }
+
+        return modName;
     }
 
     @Override

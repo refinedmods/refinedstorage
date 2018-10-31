@@ -9,6 +9,8 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
@@ -24,6 +26,8 @@ public class GridStackItem implements IGridStack {
     private String[] oreIds = null;
     @Nullable
     private IStorageTracker.IStorageTrackerEntry entry;
+    private String modId;
+    private String modName;
 
     public GridStackItem(ItemStack stack) {
         this.stack = stack;
@@ -39,6 +43,15 @@ public class GridStackItem implements IGridStack {
         if (buf.readBoolean()) {
             this.entry = new StorageTrackerEntry(buf);
         }
+    }
+
+    static String getModNameByModId(String modId) {
+        ModContainer container = Loader.instance().getActiveModList().stream()
+            .filter(m -> m.getModId().toLowerCase().equals(modId))
+            .findFirst()
+            .orElse(null);
+
+        return container == null ? modId : container.getName().toLowerCase().replace(" ", "");
     }
 
     public ItemStack getStack() {
@@ -84,7 +97,20 @@ public class GridStackItem implements IGridStack {
 
     @Override
     public String getModId() {
-        return stack.getItem().getCreatorModId(stack);
+        if (modId == null) {
+            modId = stack.getItem().getCreatorModId(stack);
+        }
+
+        return modId;
+    }
+
+    @Override
+    public String getModName() {
+        if (modName == null) {
+            modName = getModNameByModId(getModId());
+        }
+
+        return modName;
     }
 
     @Override

@@ -12,6 +12,8 @@ public interface IGridStack {
 
     String getModId();
 
+    String getModName();
+
     String[] getOreIds();
 
     String getTooltip();
