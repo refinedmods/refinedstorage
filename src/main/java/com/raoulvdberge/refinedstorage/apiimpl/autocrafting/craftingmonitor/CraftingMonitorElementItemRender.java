@@ -13,6 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 
 public class CraftingMonitorElementItemRender implements ICraftingMonitorElement {
     private static final int COLOR_PROCESSING = 0xFFD9EDF7;
@@ -99,7 +100,7 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
     @Nullable
     @Override
     public String getTooltip() {
-        return RenderUtils.getBriefItemTooltip(this.stack);
+        return RenderUtils.getItemTooltip(this.stack).stream().collect(Collectors.joining("\n"));
     }
 
     @Override
