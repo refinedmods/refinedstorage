@@ -13,6 +13,7 @@ public class ConverterCraftingTask implements Converter {
 
             output.put("stack", task.getRequested());
             output.put("missing", task.getMissing().getStacks());
+            output.put("missingFluids", task.getMissingFluids().getStacks());
             output.put("pattern", task.getPattern());
             output.put("quantity", task.getQuantity());
         }

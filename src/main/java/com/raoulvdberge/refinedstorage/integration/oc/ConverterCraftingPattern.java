@@ -14,7 +14,10 @@ public class ConverterCraftingPattern implements Converter {
             output.put("outputs", pattern.getOutputs());
             output.put("inputs", pattern.getInputs());
 
-            if (!pattern.isProcessing()) {
+            if (pattern.isProcessing()) {
+                output.put("fluidInputs", pattern.getFluidInputs());
+                output.put("fluidOutputs", pattern.getFluidOutputs());
+            } else {
                 output.put("byproducts", pattern.getByproducts());
             }
 

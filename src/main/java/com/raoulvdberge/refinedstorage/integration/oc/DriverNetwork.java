@@ -33,5 +33,6 @@ public class DriverNetwork implements DriverBlock {
 
         Driver.add(new ConverterCraftingPattern());
         Driver.add(new ConverterCraftingTask());
+        Driver.add(new ConverterCraftingRequestInfo());
     }
 }

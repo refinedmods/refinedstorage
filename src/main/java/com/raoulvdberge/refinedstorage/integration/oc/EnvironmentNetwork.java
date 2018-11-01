@@ -18,6 +18,7 @@ import li.cil.oc.api.prefab.AbstractManagedEnvironment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -42,7 +43,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
     @Callback(doc = "function():boolean -- Whether the node is connected.")
     public Object[] isConnected(final Context context, final Arguments args) {
-        return new Object[]{node.getNetwork() != null};
+        return new Object[]{node.canUpdate()};
     }
 
     @Callback(doc = "function():number -- Gets the energy usage of this network.")
@@ -73,6 +74,16 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack)};
     }
 
+    @Callback(doc = "function(stack:table):table -- Get one fluid pattern of this network.")
+    public Object[] getFluidPattern(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{null, "not connected"};
+        }
+
+        FluidStack stack = checkFluid(args.checkTable(0), 1000);
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack)};
+    }
+
     @Callback(doc = "function():table -- Gets the patterns of this network.")
     public Object[] getPatterns(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
@@ -81,7 +92,25 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         List<ItemStack> patterns = new LinkedList<>();
         for (ICraftingPattern pattern : node.getNetwork().getCraftingManager().getPatterns()) {
-            patterns.addAll(pattern.getOutputs());
+            if (!pattern.getOutputs().isEmpty()) {
+                patterns.addAll(pattern.getOutputs());
+            }
+        }
+
+        return new Object[]{patterns};
+    }
+
+    @Callback(doc = "function():table -- Gets the fluid patterns of this network.")
+    public Object[] getFluidPatterns(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{null, "not connected"};
+        }
+
+        List<FluidStack> patterns = new LinkedList<>();
+        for (ICraftingPattern pattern : node.getNetwork().getCraftingManager().getPatterns()) {
+            if (!pattern.getFluidOutputs().isEmpty()) {
+                patterns.addAll(pattern.getFluidOutputs());
+            }
         }
 
         return new Object[]{patterns};
@@ -98,26 +127,18 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack) != null};
     }
 
-    @Callback(doc = "function(stack:table[, count: number]):table -- Gets a list of missing items for a crafting task.")
-    public Object[] getMissingItems(final Context context, final Arguments args) {
+    @Callback(doc = "function(stack:table):boolean -- Whether a crafting pattern exists for this fluid.")
+    public Object[] hasFluidPattern(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
         }
 
-        ItemStack stack = args.checkItemStack(0);
-        int count = args.optInteger(1, 1);
+        FluidStack stack = checkFluid(args.checkTable(0), 1000);
 
-        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, count);
-        if (task == null) {
-            throw new IllegalArgumentException("Could not create crafting task");
-        }
-
-        task.calculate();
-
-        return new Object[]{task.getMissing().getStacks()};
+        return new Object[]{node.getNetwork().getCraftingManager().getPattern(stack) != null};
     }
 
-    @Callback(doc = "function(stack:table[, count: number]):table -- Schedules a crafting task.")
+    @Callback(doc = "function(stack:table[, count: number, [canSchedule: boolean]]):table -- Schedules a crafting task.")
     public Object[] scheduleTask(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{"not connected"};
@@ -133,7 +154,29 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
 
         ICraftingTaskError error = task.calculate();
 
-        if (error == null) {
+        if (error == null && !task.hasMissing() && args.optBoolean(2, true)) {
+            node.getNetwork().getCraftingManager().add(task);
+        }
+
+        return new Object[]{task};
+    }
+
+    @Callback(doc = "function(stack:table[, count: number]):table -- Schedules a fluid crafting task.")
+    public Object[] scheduleFluidTask(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{"not connected"};
+        }
+
+        FluidStack stack = checkFluid(args.checkTable(0), args.optInteger(1, Fluid.BUCKET_VOLUME));
+
+        ICraftingTask task = node.getNetwork().getCraftingManager().create(stack, stack.amount);
+        if (task == null) {
+            throw new IllegalArgumentException("Could not create crafting task");
+        }
+
+        ICraftingTaskError error = task.calculate();
+
+        if (error == null && !task.hasMissing() && args.optBoolean(2, true)) {
             node.getNetwork().getCraftingManager().add(task);
         }
 
@@ -162,28 +205,36 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{count};
     }
 
+    @Callback(doc = "function(stack:table):number -- Cancels a fluid task and returns the amount of tasks cancelled.")
+    public Object[] cancelFluidTask(final Context context, final Arguments args) {
+        if (node.getNetwork() == null) {
+            return new Object[]{null, "not connected"};
+        }
+
+        FluidStack stack = checkFluid(args.checkTable(0), 1000);
+
+        int count = 0;
+        for (ICraftingTask task : node.getNetwork().getCraftingManager().getTasks()) {
+            if (task.getRequested().getFluid() != null) {
+                if (API.instance().getComparer().isEqual(task.getRequested().getFluid(), stack, COMPARE_NBT)) {
+                    node.getNetwork().getCraftingManager().cancel(task.getId());
+
+                    count++;
+                }
+            }
+        }
+
+        return new Object[]{count};
+    }
+
     @Callback(doc = "function(stack:table[, amount:number[, direction:number]]):table -- Extracts a fluid from the network.")
     public Object[] extractFluid(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{null, "not connected"};
         }
 
-        // First argument: the fluid stack to extract
-        // There is no args.checkFluidStack(), we have to deal with this ourselves
-        Map<String, Object> fluidMap = args.checkTable(0);
-        if (!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
-            throw new IllegalArgumentException("no fluid name");
-        }
-        String fluid = (String) fluidMap.get("name");
-
-        // Second argument: the amount of liquid to extract, at least 1mb
-        int amount = Math.max(1, args.checkInteger(1));
-
-        // With the amount ready, we can actually try to create a fluid stack for the given fluid
-        FluidStack stack = FluidRegistry.getFluidStack(fluid, amount);
-        if (stack == null) {
-            throw new IllegalArgumentException("invalid fluid stack, does not exist");
-        }
+        // First and second argument: fluid and amount.
+        FluidStack stack = checkFluid(args.checkTable(0), args.checkInteger(1));
 
         // Third argument: which direction to extract to
         EnumFacing facing = EnumFacing.byIndex(args.optInteger(2, 0));
@@ -194,7 +245,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
             throw new IllegalArgumentException("No fluid tank on the given side");
         }
 
-        FluidStack extractedSim = node.getNetwork().extractFluid(stack, amount, Action.SIMULATE);
+        FluidStack extractedSim = node.getNetwork().extractFluid(stack, stack.amount, Action.SIMULATE);
         if (extractedSim == null || extractedSim.amount <= 0) {
             return new Object[]{null, "could not extract the specified fluid"};
         }
@@ -207,7 +258,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         // Actually do it and return how much fluid we've inserted
-        FluidStack extracted = node.getNetwork().extractFluid(stack, amount, Action.PERFORM);
+        FluidStack extracted = node.getNetwork().extractFluid(stack, stack.amount, Action.PERFORM);
         handler.fill(extracted, true);
 
         return new Object[]{filledAmountSim};
@@ -219,18 +270,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
             return new Object[]{null, "not connected"};
         }
 
-        // There is no args.checkFluidStack(), we have to deal with this ourselves
-        Map<String, Object> fluidMap = args.checkTable(0);
-        if (!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
-            throw new IllegalArgumentException("no fluid name");
-        }
-
-        String fluid = (String) fluidMap.get("name");
-
-        FluidStack needle = FluidRegistry.getFluidStack(fluid, 1000);
-        if (needle == null) {
-            throw new IllegalArgumentException("invalid fluid stack, does not exist");
-        }
+        FluidStack needle = checkFluid(args.checkTable(0), 1000);
 
         return new Object[]{node.getNetwork().getFluidStorageCache().getList().get(needle)};
     }
@@ -392,5 +432,21 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         response.put("devices", devices);
 
         return new Object[]{response};
+    }
+
+    private FluidStack checkFluid(Map<String, Object> fluidMap, int amount) {
+        if (!fluidMap.containsKey("name") || !(fluidMap.get("name") instanceof String) || ((String) fluidMap.get("name")).length() == 0) {
+            throw new IllegalArgumentException("no fluid name");
+        }
+        String fluid = (String) fluidMap.get("name");
+
+        amount = Math.max(1, amount);
+
+        FluidStack stack = FluidRegistry.getFluidStack(fluid, amount);
+        if (stack == null) {
+            throw new IllegalArgumentException("invalid fluid stack, does not exist");
+        }
+
+        return stack;
     }
 }
