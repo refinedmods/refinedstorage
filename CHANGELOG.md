@@ -6,6 +6,7 @@
 - Fixed bug where the Pattern Grid doesn't update it's output slot when manually configuring a crafting pattern (raoulvdberge)
 - Fixed network node scanning allowing multiple controllers in some cases (raoulvdberge)
 - Fixed OpenComputers integration not giving back a crafting task instance in the schedule task API (raoulvdberge)
+- Fixed OpenComputers integration causing log spam when getting processing patterns (raoulvdberge)
 
 ### 1.6.9
 - Fixed OpenComputers "unknown error" when using extract item API (raoulvdberge)

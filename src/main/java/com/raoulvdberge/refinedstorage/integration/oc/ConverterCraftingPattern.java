@@ -13,7 +13,11 @@ public class ConverterCraftingPattern implements Converter {
 
             output.put("outputs", pattern.getOutputs());
             output.put("inputs", pattern.getInputs());
-            output.put("byproducts", pattern.getByproducts());
+
+            if (!pattern.isProcessing()) {
+                output.put("byproducts", pattern.getByproducts());
+            }
+
             output.put("processing", pattern.isProcessing());
             output.put("oredict", pattern.isOredict());
         }
