@@ -117,7 +117,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{task.getMissing().getStacks()};
     }
 
-    @Callback(doc = "function(stack:table[, count: number]) -- Schedules a crafting task.")
+    @Callback(doc = "function(stack:table[, count: number]):table -- Schedules a crafting task.")
     public Object[] scheduleTask(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{"not connected"};
@@ -137,7 +137,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
             node.getNetwork().getCraftingManager().add(task);
         }
 
-        return new Object[]{};
+        return new Object[]{task};
     }
 
     @Callback(doc = "function(stack:table):number -- Cancels a task and returns the amount of tasks cancelled.")

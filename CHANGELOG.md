@@ -5,6 +5,7 @@
 - Fixed fluid inputs/outputs in the Pattern Grid not being set when you re-insert a Pattern with fluid inputs/outputs (raoulvdberge)
 - Fixed bug where the Pattern Grid doesn't update it's output slot when manually configuring a crafting pattern (raoulvdberge)
 - Fixed network node scanning allowing multiple controllers in some cases (raoulvdberge)
+- Fixed OpenComputers integration not giving back a crafting task instance in the schedule task API (raoulvdberge)
 
 ### 1.6.9
 - Fixed OpenComputers "unknown error" when using extract item API (raoulvdberge)
