@@ -5,25 +5,38 @@ import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTraceResult;
+import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTracer;
+import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.util.CollisionUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class BlockBase extends Block {
+    private static final CollisionGroup DEFAULT_COLLISION_GROUP = new CollisionGroup().addItem(new AxisAlignedBB(0, 0, 0, 1, 1, 1)).setCanAccessGui(true);
+    private static final List<CollisionGroup> DEFAULT_COLLISION_GROUPS = Collections.singletonList(DEFAULT_COLLISION_GROUP);
+
     protected final IBlockInfo info;
 
     public BlockBase(IBlockInfo info) {
@@ -161,5 +174,43 @@ public abstract class BlockBase extends Block {
 
     public final IBlockInfo getInfo() {
         return info;
+    }
+
+    protected boolean canAccessGui(IBlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
+        state = getActualState(state, world, pos);
+
+        for (CollisionGroup group : getCollisions(world.getTileEntity(pos), state)) {
+            if (group.canAccessGui()) {
+                for (AxisAlignedBB aabb : group.getItems()) {
+                    if (CollisionUtils.isInBounds(aabb, hitX, hitY, hitZ)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+        return DEFAULT_COLLISION_GROUPS;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState) {
+        for (CollisionGroup group : getCollisions(world.getTileEntity(pos), this.getActualState(state, world, pos))) {
+            for (AxisAlignedBB aabb : group.getItems()) {
+                addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
+            }
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public RayTraceResult collisionRayTrace(IBlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
+        AdvancedRayTraceResult result = AdvancedRayTracer.rayTrace(pos, start, end, getCollisions(world.getTileEntity(pos), this.getActualState(state, world, pos)));
+
+        return result != null ? result.getHit() : null;
     }
 }

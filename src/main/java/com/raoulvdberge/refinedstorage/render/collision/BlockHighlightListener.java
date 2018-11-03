@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.collision;
 
-import com.raoulvdberge.refinedstorage.block.BlockCable;
+import com.raoulvdberge.refinedstorage.block.BlockBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -25,21 +25,21 @@ public class BlockHighlightListener {
 
         BlockPos pos = e.getTarget().getBlockPos();
 
-        Block block = player.getEntityWorld().getBlockState(pos).getBlock();
+        Block b = player.getEntityWorld().getBlockState(pos).getBlock();
 
-        if (!(block instanceof BlockCable)) {
+        if (!(b instanceof BlockBase)) {
             return;
         }
 
-        BlockCable cable = (BlockCable) block;
+        BlockBase block = (BlockBase) b;
 
-        IBlockState state = cable.getActualState(cable.getDefaultState(), player.getEntityWorld(), pos);
+        IBlockState state = block.getActualState(block.getDefaultState(), player.getEntityWorld(), pos);
 
         AdvancedRayTraceResult result = AdvancedRayTracer.rayTrace(
             pos,
             AdvancedRayTracer.getStart(player),
             AdvancedRayTracer.getEnd(player),
-            cable.getCollisions(player.getEntityWorld().getTileEntity(pos), state)
+            block.getCollisions(player.getEntityWorld().getTileEntity(pos), state)
         );
 
         e.setCanceled(true);
