@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
@@ -28,7 +29,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
             super.onContentsChanged(slot);
 
             if (network != null) {
-                network.getNodeGraph().rebuild();
+                network.getNodeGraph().invalidate(Action.PERFORM, network.getPosition());
             }
         }
     };
@@ -48,7 +49,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
             }
 
             if (network != null) {
-                network.getNodeGraph().rebuild();
+                network.getNodeGraph().invalidate(Action.PERFORM, network.getPosition());
             }
         }
     };

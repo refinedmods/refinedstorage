@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.util.Action;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -11,15 +13,48 @@ import java.util.function.Consumer;
 public interface INetworkNodeGraph {
     /**
      * Rebuilds the network graph.
+     *
+     * @deprecated Use {@link #invalidate(Action, BlockPos)} - needed to support simulating the calculation of network connections
      */
-    void rebuild();
+    @Deprecated
+    default void rebuild() {
+        invalidate(Action.PERFORM, getNetworkForBCReasons().getPosition());
+    }
 
     /**
-     * Adds a runnable that is run after the graph is rebuilt.
+     * DON'T USE THIS!
+     * This method exists to support a default {@link #rebuild()} method to maintain backward compatibility.
+     */
+    @Deprecated
+    INetwork getNetworkForBCReasons();
+
+    /**
+     * Rebuilds the network graph.
+     *
+     * @param action whether to perform or simulate
+     * @param origin the origin, usually the network position
+     */
+    void invalidate(Action action, BlockPos origin);
+
+    /**
+     * Runs an action on the network.
+     * If the network is rebuilding it's graph, the action will be executed after the graph was built.
+     *
+     * @param handler the action to run
+     * @deprecated Use {@link #runActionWhenPossible(Consumer)} - just a method rename
+     */
+    @Deprecated
+    default void addPostRebuildHandler(Consumer<INetwork> handler) {
+        runActionWhenPossible(handler);
+    }
+
+    /**
+     * Runs an action on the network.
+     * If the network is rebuilding it's graph, the action will be executed after the graph was built.
      *
      * @param handler the action to run
      */
-    void addPostRebuildHandler(Consumer<INetwork> handler);
+    void runActionWhenPossible(Consumer<INetwork> handler);
 
     /**
      * @return a collection of all connected nodes

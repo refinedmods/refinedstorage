@@ -69,7 +69,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getNodeGraph().addPostRebuildHandler(StorageCacheFluid.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(StorageCacheFluid.INVALIDATE);
     }
 
     @Override

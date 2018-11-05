@@ -69,7 +69,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getNodeGraph().addPostRebuildHandler(StorageCacheItem.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(StorageCacheItem.INVALIDATE);
     }
 
     @Override

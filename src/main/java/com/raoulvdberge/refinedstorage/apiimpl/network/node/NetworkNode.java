@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
@@ -142,7 +143,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
                     onConnectedStateChange(network, canUpdate);
 
                     if (shouldRebuildGraphOnChange()) {
-                        network.getNodeGraph().rebuild();
+                        network.getNodeGraph().invalidate(Action.PERFORM, network.getPosition());
                     }
                 }
             }

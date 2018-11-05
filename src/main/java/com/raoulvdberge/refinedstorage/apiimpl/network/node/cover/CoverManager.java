@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.cover;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
@@ -80,7 +81,7 @@ public class CoverManager {
             node.markDirty();
 
             if (node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().rebuild();
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getPosition());
             }
 
             return true;

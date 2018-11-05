@@ -25,10 +25,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
-import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
+import com.raoulvdberge.refinedstorage.api.util.*;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
@@ -295,7 +292,7 @@ public class API implements IRSAPI {
                 INetworkNode node = nodeProxy.getNode();
 
                 if (node.getNetwork() != null) {
-                    node.getNetwork().getNodeGraph().rebuild();
+                    node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getPosition());
 
                     return;
                 }

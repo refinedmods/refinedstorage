@@ -248,8 +248,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
             }
         }
 
-        network.getNodeGraph().addPostRebuildHandler(StorageCacheItem.INVALIDATE);
-        network.getNodeGraph().addPostRebuildHandler(StorageCacheFluid.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(StorageCacheItem.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(StorageCacheFluid.INVALIDATE);
     }
 
     @Override

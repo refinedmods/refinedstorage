@@ -231,7 +231,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                     couldRun = canRun;
                     throttlingDisabled = false;
 
-                    nodeGraph.rebuild();
+                    nodeGraph.invalidate(Action.PERFORM, pos);
                     securityManager.invalidate();
                 }
             } else {

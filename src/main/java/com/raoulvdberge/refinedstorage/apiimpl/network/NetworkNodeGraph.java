@@ -6,7 +6,9 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
+import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.inventory.InventoryHelper;
@@ -17,6 +19,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -25,24 +28,25 @@ import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodePr
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private TileController controller;
     private Set<INetworkNode> nodes = Sets.newConcurrentHashSet();
-    private Set<Consumer<INetwork>> postRebuildHandlers = new HashSet<>();
-    private boolean rebuilding = false;
+
+    private Set<Consumer<INetwork>> actions = new HashSet<>();
+
+    private boolean invalidating = false;
 
     public NetworkNodeGraph(TileController controller) {
         this.controller = controller;
     }
 
     @Override
-    public void rebuild() {
-        rebuilding = true;
+    public void invalidate(Action action, BlockPos origin) {
+        this.invalidating = true;
 
-        Operator operator = new Operator();
+        Operator operator = new Operator(action);
 
-        BlockPos controllerPos = controller.getPos();
         World controllerWorld = controller.getWorld();
 
         for (EnumFacing facing : EnumFacing.VALUES) {
-            BlockPos pos = controllerPos.offset(facing);
+            BlockPos pos = origin.offset(facing);
 
             // Little hack to support not conducting through covers (if the cover is right next to the controller).
             TileEntity tile = controllerWorld.getTileEntity(pos);
@@ -67,28 +71,37 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         this.nodes = operator.foundNodes;
 
-        for (INetworkNode node : operator.newNodes) {
-            node.onConnected(controller);
+        if (action == Action.PERFORM) {
+            for (INetworkNode node : operator.newNodes) {
+                node.onConnected(controller);
+            }
+
+            for (INetworkNode node : operator.previousNodes) {
+                node.onDisconnected(controller);
+            }
+
+            actions.forEach(h -> h.accept(controller));
+            actions.clear();
+
+            if (!operator.newNodes.isEmpty() || !operator.previousNodes.isEmpty()) {
+                controller.getDataManager().sendParameterToWatchers(TileController.NODES);
+            }
         }
 
-        for (INetworkNode node : operator.previousNodes) {
-            node.onDisconnected(controller);
-        }
-
-        postRebuildHandlers.forEach(h -> h.accept(controller));
-        postRebuildHandlers.clear();
-
-        if (!operator.newNodes.isEmpty() || !operator.previousNodes.isEmpty()) {
-            controller.getDataManager().sendParameterToWatchers(TileController.NODES);
-        }
-
-        rebuilding = false;
+        invalidating = false;
     }
 
     @Override
-    public void addPostRebuildHandler(Consumer<INetwork> handler) {
-        if (rebuilding) {
-            postRebuildHandlers.add(handler);
+    public INetwork getNetworkForBCReasons() {
+        OneSixMigrationHelper.removalHook();
+
+        return controller;
+    }
+
+    @Override
+    public void runActionWhenPossible(Consumer<INetwork> handler) {
+        if (invalidating) {
+            actions.add(handler);
         } else {
             handler.accept(controller);
         }
@@ -134,8 +147,14 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         private Queue<Visitor> toCheck = new ArrayDeque<>();
 
+        private Action action;
+
+        public Operator(Action action) {
+            this.action = action;
+        }
+
         @Override
-        public void apply(World world, BlockPos pos, EnumFacing side) {
+        public void apply(World world, BlockPos pos, @Nullable EnumFacing side) {
             TileEntity tile = world.getTileEntity(pos);
 
             if (tile != null && tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, side)) {
@@ -144,7 +163,10 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
                 // This will work for regular nodes and for controllers too since controllers are internally a INetworkNode (and return themselves in INetworkNode#getNetwork).
                 if (otherNode.getNetwork() != null && otherNode.getNetwork() != controller) {
-                    dropConflictingBlock(world, tile.getPos());
+                    if (action == Action.PERFORM) {
+                        dropConflictingBlock(world, tile.getPos());
+                    }
+
                     return;
                 }
 
