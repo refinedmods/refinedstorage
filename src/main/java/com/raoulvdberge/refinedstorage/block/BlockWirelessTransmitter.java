@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
@@ -15,10 +16,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -27,6 +28,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 public class BlockWirelessTransmitter extends BlockNode {
@@ -58,9 +60,8 @@ public class BlockWirelessTransmitter extends BlockNode {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return ConstantsWirelessTransmitter.WIRELESS_TRANSMITTER_AABB;
+    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+        return Collections.singletonList(ConstantsWirelessTransmitter.COLLISION);
     }
 
     @Override

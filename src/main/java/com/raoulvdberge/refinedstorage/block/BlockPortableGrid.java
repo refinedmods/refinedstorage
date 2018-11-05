@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsPortableGrid;
 import com.raoulvdberge.refinedstorage.render.meshdefinition.ItemMeshDefinitionPortableGrid;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
@@ -22,10 +23,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -33,6 +34,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.List;
 
 public class BlockPortableGrid extends BlockBase {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", PortableGridType.class);
@@ -67,9 +70,8 @@ public class BlockPortableGrid extends BlockBase {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
-        return ConstantsPortableGrid.PORTABLE_GRID_AABB;
+    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+        return Collections.singletonList(ConstantsPortableGrid.COLLISION);
     }
 
     @Override

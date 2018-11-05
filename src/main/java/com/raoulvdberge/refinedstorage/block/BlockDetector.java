@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
+import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDetector;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
@@ -17,12 +18,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Collections;
+import java.util.List;
 
 public class BlockDetector extends BlockNode {
     private static final PropertyBool POWERED = PropertyBool.create("powered");
@@ -53,9 +56,8 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return ConstantsDetector.DETECTOR_AABB;
+    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+        return Collections.singletonList(ConstantsDetector.COLLISION);
     }
 
     @Override
