@@ -698,6 +698,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
             TileEntity tile = world.getTileEntity(pos);
 
+            // Little hack to support not conducting through covers (if the cover is right next to the controller).
             if (tile != null && tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite())) {
                 INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite()));
                 INetworkNode otherNode = otherNodeProxy.getNode();
