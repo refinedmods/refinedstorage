@@ -53,7 +53,7 @@ public abstract class BlockNode extends BlockNodeProxy {
         manager.markForSaving();
 
         if (node != null && node.getNetwork() != null) {
-            node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getPosition());
+            node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
         }
     }
 

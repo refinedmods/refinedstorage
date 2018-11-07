@@ -292,7 +292,7 @@ public class API implements IRSAPI {
                 INetworkNode node = nodeProxy.getNode();
 
                 if (node.getNetwork() != null) {
-                    node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getPosition());
+                    node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
 
                     return;
                 }

@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.network;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -14,11 +15,11 @@ public interface INetworkNodeGraph {
     /**
      * Rebuilds the network graph.
      *
-     * @deprecated Use {@link #invalidate(Action, BlockPos)} - needed to support simulating the calculation of network connections
+     * @deprecated Use {@link #invalidate(Action, World, BlockPos)} - needed to support simulating the calculation of network connections
      */
     @Deprecated
     default void rebuild() {
-        invalidate(Action.PERFORM, getNetworkForBCReasons().getPosition());
+        invalidate(Action.PERFORM, getNetworkForBCReasons().world(), getNetworkForBCReasons().getPosition());
     }
 
     /**
@@ -32,9 +33,10 @@ public interface INetworkNodeGraph {
      * Rebuilds the network graph.
      *
      * @param action whether to perform or simulate
+     * @param world  the origin world
      * @param origin the origin, usually the network position
      */
-    void invalidate(Action action, BlockPos origin);
+    void invalidate(Action action, World world, BlockPos origin);
 
     /**
      * Runs an action on the network.
@@ -60,6 +62,11 @@ public interface INetworkNodeGraph {
      * @return a collection of all connected nodes
      */
     Collection<INetworkNode> all();
+
+    /**
+     * @param listener the listener
+     */
+    void addListener(INetworkNodeGraphListener listener);
 
     /**
      * Disconnects and notifies all connected nodes.

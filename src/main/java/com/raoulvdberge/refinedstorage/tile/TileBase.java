@@ -123,16 +123,4 @@ public abstract class TileBase extends TileEntity {
             world.markChunkDirty(pos, this);
         }
     }
-
-    @Override
-    public boolean equals(Object o) {
-        return o instanceof TileBase && ((TileBase) o).getPos().equals(pos) && ((TileBase) o).world.provider.getDimension() == world.provider.getDimension();
-    }
-
-    @Override
-    public int hashCode() {
-        int result = pos.hashCode();
-        result = 31 * result + world.provider.getDimension();
-        return result;
-    }
 }

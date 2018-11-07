@@ -71,7 +71,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     public void update() {
         super.update();
 
-        if (network != null && canUpdate()) {
+        if (canUpdate()) {
             ItemStack container = in.getStackInSlot(0);
 
             if (!container.isEmpty()) {

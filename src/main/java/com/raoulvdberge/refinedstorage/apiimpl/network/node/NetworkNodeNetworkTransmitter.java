@@ -29,7 +29,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
             super.onContentsChanged(slot);
 
             if (network != null) {
-                network.getNodeGraph().invalidate(Action.PERFORM, network.getPosition());
+                network.getNodeGraph().invalidate(Action.PERFORM, network.world(), network.getPosition());
             }
         }
     };
@@ -49,7 +49,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
             }
 
             if (network != null) {
-                network.getNodeGraph().invalidate(Action.PERFORM, network.getPosition());
+                network.getNodeGraph().invalidate(Action.PERFORM, network.world(), network.getPosition());
             }
         }
     };

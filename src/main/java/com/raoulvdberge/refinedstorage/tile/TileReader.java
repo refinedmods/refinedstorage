@@ -73,7 +73,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
                 }
             }
 
-            if (reader.getNetwork() == null || !reader.canUpdate()) {
+            if (!reader.canUpdate()) {
                 return (T) dummyCap;
             }
 

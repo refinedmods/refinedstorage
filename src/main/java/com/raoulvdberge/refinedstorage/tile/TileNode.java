@@ -54,7 +54,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             tag.setTag(NBT_COVERS, ((ICoverable) getNode()).getCoverManager().writeToNbt());
         }
 
-        tag.setBoolean(NBT_ACTIVE, getNode().getNetwork() != null && getNode().canUpdate());
+        tag.setBoolean(NBT_ACTIVE, getNode().canUpdate());
 
         return tag;
     }

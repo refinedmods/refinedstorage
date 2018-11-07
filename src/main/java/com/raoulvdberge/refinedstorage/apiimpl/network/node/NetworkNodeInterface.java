@@ -53,7 +53,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public void update() {
         super.update();
 
-        if (network == null || !canUpdate()) {
+        if (!canUpdate()) {
             return;
         }
 

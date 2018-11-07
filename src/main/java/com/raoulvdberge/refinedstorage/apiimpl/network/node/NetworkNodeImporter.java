@@ -68,7 +68,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     public void update() {
         super.update();
 
-        if (network == null || !canUpdate()) {
+        if (!canUpdate()) {
             return;
         }
 

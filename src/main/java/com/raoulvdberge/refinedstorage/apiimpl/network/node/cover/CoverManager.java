@@ -81,7 +81,7 @@ public class CoverManager {
             node.markDirty();
 
             if (node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getPosition());
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
             }
 
             return true;

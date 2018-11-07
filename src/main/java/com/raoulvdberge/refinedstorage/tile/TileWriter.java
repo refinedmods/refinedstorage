@@ -61,7 +61,7 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
                 }
             }
 
-            if (writer.getNetwork() == null || !writer.canUpdate()) {
+            if (!writer.canUpdate()) {
                 return (T) dummyCap;
             }
 

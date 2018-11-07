@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
+import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -21,12 +22,14 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.api.util.Action;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.energy.Energy;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
@@ -49,6 +52,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
@@ -66,7 +70,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController> {
+import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
+
+public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController>, INetworkNodeVisitor {
     private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
         if (left.getEnergyUsage() == right.getEnergyUsage()) {
             return 0;
@@ -164,6 +170,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 markDirty();
             }
         });
+
+        nodeGraph.addListener(() -> dataManager.sendParameterToWatchers(TileController.NODES));
     }
 
     @Override
@@ -231,7 +239,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                     couldRun = canRun;
                     throttlingDisabled = false;
 
-                    nodeGraph.invalidate(Action.PERFORM, pos);
+                    nodeGraph.invalidate(Action.PERFORM, world, pos);
                     securityManager.invalidate();
                 }
             } else {
@@ -681,5 +689,35 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Nonnull
     public TileController getNode() {
         return this;
+    }
+
+    @Override
+    public void visit(Operator operator) {
+        for (EnumFacing facing : EnumFacing.VALUES) {
+            BlockPos pos = this.pos.offset(facing);
+
+            TileEntity tile = world.getTileEntity(pos);
+
+            if (tile != null && tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite())) {
+                INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite()));
+                INetworkNode otherNode = otherNodeProxy.getNode();
+
+                if (otherNode instanceof ICoverable && ((ICoverable) otherNode).getCoverManager().hasCover(facing.getOpposite())) {
+                    continue;
+                }
+            }
+
+            operator.apply(world, pos, facing.getOpposite());
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return API.instance().isNetworkNodeEqual(this, o);
+    }
+
+    @Override
+    public int hashCode() {
+        return API.instance().getNetworkNodeHashCode(this);
     }
 }

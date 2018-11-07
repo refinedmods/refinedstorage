@@ -84,7 +84,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     public void update() {
         super.update();
 
-        if (network != null && canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
+        if (canUpdate() && ticks % upgrades.getSpeed(BASE_SPEED, 4) == 0) {
             if (type == IType.ITEMS && !itemFilters.getStackInSlot(0).isEmpty()) {
                 ItemStack item = itemFilters.getStackInSlot(0);
 
