@@ -2,7 +2,10 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeCable;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
+import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsWirelessTransmitter;
@@ -78,7 +81,17 @@ public class BlockWirelessTransmitter extends BlockNode {
 
     @Override
     public boolean canPlaceBlockAt(World world, BlockPos pos) {
-        return world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockCable;
+        TileEntity tile = world.getTileEntity(pos.offset(EnumFacing.DOWN));
+
+        if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, EnumFacing.UP)) {
+            INetworkNodeProxy proxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, EnumFacing.UP);
+
+            if (proxy != null && proxy.getNode() instanceof INetworkNodeCable) {
+                return true;
+            }
+        }
+
+        return world.getBlockState(pos.offset(EnumFacing.DOWN)).getBlock() instanceof BlockCable; // Make sure we still detect stuff like importers/exporters/etc.
     }
 
     @Override

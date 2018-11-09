@@ -285,7 +285,6 @@ advancements.refinedstorage:storing_items.description=Haz un Disco Duro y coloca
 advancements.refinedstorage:viewing_items=Viendo Objetos
 advancements.refinedstorage:viewing_items.description=Haz un Panel para interactuar con tus objetos almacenados
 advancements.refinedstorage:portable_storage=Almacén Portátil
-advancements.refinedstorage:portable_storage.description=Haz un Panel Portatil para manipular objetos en discos sin estar en la red
 advancements.refinedstorage:upgrading_your_grid=Mejorando el Panel
 advancements.refinedstorage:upgrading_your_grid.description=Mejora tu panel a uno de Panel de Fabricación Para fabricar y ver objetos
 advancements.refinedstorage:storing_fluids=Guardando Fluidos

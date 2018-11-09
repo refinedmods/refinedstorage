@@ -304,7 +304,6 @@ advancements.refinedstorage:storing_items.description=Stelle eine Speicherzelle 
 advancements.refinedstorage:viewing_items=Items Betrachten
 advancements.refinedstorage:viewing_items.description=Stelle eine Konsole her, um mit deinem Speicher zu interagieren
 advancements.refinedstorage:portable_storage=Tragbarer Speicher
-advancements.refinedstorage:portable_storage.description=Stelle eine mobile Konsole her, um mit deinem Speicher unterwegs zu interagieren
 advancements.refinedstorage:upgrading_your_grid=Konsolenupgrade
 advancements.refinedstorage:upgrading_your_grid.description=Erweitere eine Konsole zu einer Fertigungskonsole um eine Werkbank in der Konsole zu erhalten
 advancements.refinedstorage:storing_fluids=Flüssigkeiten Speichern

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeCable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -11,7 +12,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class NetworkNodeCable extends NetworkNode implements ICoverable {
+public class NetworkNodeCable extends NetworkNode implements ICoverable, INetworkNodeCable {
     public static final String ID = "cable";
 
     private static final String NBT_COVERS = "Covers";

@@ -299,7 +299,6 @@ advancements.refinedstorage:storing_items.description=Создайте диск 
 advancements.refinedstorage:viewing_items=Просмотр предметов
 advancements.refinedstorage:viewing_items.description=Создайте терминал для взаимодействия с хранилищем предметов
 advancements.refinedstorage:portable_storage=Портативное хранение
-advancements.refinedstorage:portable_storage.description=Создайте переносимый терминал для доступа к предметам на дисках без подключения к сети
 advancements.refinedstorage:upgrading_your_grid=Обновление терминала
 advancements.refinedstorage:upgrading_your_grid.description=Обновите терминал до терминала создания, чтобы получить способности создания в терминале
 advancements.refinedstorage:storing_fluids=Хранение жидкостей

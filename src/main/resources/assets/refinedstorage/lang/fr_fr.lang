@@ -260,7 +260,6 @@ advancements.refinedstorage:storing_items.description=Crafter un disque et le me
 advancements.refinedstorage:viewing_items=Voir les items
 advancements.refinedstorage:viewing_items.description=Crafter une grille pour intéragir avec votre stockage d'item
 advancements.refinedstorage:portable_storage=Stockage portatif
-advancements.refinedstorage:portable_storage.description=Crafter une grille portative pour accéder à vos items présents sur vos disques sans être dans un réseau
 advancements.refinedstorage:upgrading_your_grid=Améliorer votre grille
 advancements.refinedstorage:upgrading_your_grid.description=Améliorer votre grille vers une grille de craft pour pouvoir crafter dans votre grille
 advancements.refinedstorage:storing_fluids=Stocker des fluides
