@@ -309,18 +309,18 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         // Simulate extracting the item and get the amount of items that can be extracted
-        ItemStack extractedSim = node.getNetwork().extractItem(stack, count, Action.SIMULATE);
-        if (extractedSim == null) {
+        ItemStack extracted = node.getNetwork().extractItem(stack, count, Action.SIMULATE);
+        if (extracted == null) {
             return new Object[]{null, "could not extract the specified item"};
         }
 
-        int transferableAmount = extractedSim.getCount();
+        int transferableAmount = extracted.getCount();
 
         // Simulate inserting the item and see how many we were able to insert
         IItemHandler handler = targetEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-        ItemStack insertedSim = ItemHandlerHelper.insertItemStacked(handler, extractedSim, true);
-        if (!insertedSim.isEmpty() && insertedSim.getCount() > 0) {
-            transferableAmount -= insertedSim.getCount();
+        ItemStack remainder = ItemHandlerHelper.insertItemStacked(handler, extracted, true);
+        if (!remainder.isEmpty()) {
+            transferableAmount -= remainder.getCount();
         }
 
         // Abort early if we can not insert items
@@ -329,9 +329,13 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         // Actually do it and return how many items we've inserted
-        ItemStack extracted = node.getNetwork().extractItem(stack, count, Action.PERFORM);
+        extracted = node.getNetwork().extractItem(stack, transferableAmount, Action.PERFORM);
         if (extracted != null) {
-            ItemHandlerHelper.insertItemStacked(handler, extracted, false);
+            remainder = ItemHandlerHelper.insertItemStacked(handler, extracted, false);
+
+            if (!remainder.isEmpty()) {
+                node.getNetwork().insertItem(remainder, remainder.getCount(), Action.PERFORM);
+            }
         }
 
         return new Object[]{transferableAmount};
