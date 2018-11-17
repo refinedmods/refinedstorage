@@ -22,7 +22,6 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.energy.Energy;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
@@ -712,13 +711,31 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         }
     }
 
+    // Cannot use API#getNetworkNodeHashCode or API#isNetworkNodeEqual: it will crash with a AbstractMethodError (getPos).
     @Override
     public boolean equals(Object o) {
-        return API.instance().isNetworkNodeEqual(this, o);
+        if (!(o instanceof TileController)) {
+            return false;
+        }
+
+        if (this == o) {
+            return true;
+        }
+
+        TileController otherController = (TileController) o;
+
+        if (world.provider.getDimension() != otherController.world.provider.getDimension()) {
+            return false;
+        }
+
+        return pos.equals(otherController.pos);
     }
 
     @Override
     public int hashCode() {
-        return API.instance().getNetworkNodeHashCode(this);
+        int result = pos.hashCode();
+        result = 31 * result + world.provider.getDimension();
+
+        return result;
     }
 }
