@@ -133,7 +133,9 @@ public abstract class GuiBase extends GuiContainer {
 
         super.initGui();
 
-        buttonList.clear();
+        if (!buttonList.isEmpty()) {
+            buttonList.removeIf(b -> !b.getClass().getName().contains("net.blay09.mods.craftingtweaks")); // Prevent crafting tweaks buttons from resetting
+        }
 
         lastButtonId = 0;
         lastSideButtonY = getSideButtonYStart();
@@ -152,6 +154,7 @@ public abstract class GuiBase extends GuiContainer {
     }
 
     protected void calcHeight() {
+        // NO OP
     }
 
     protected int getSideButtonYStart() {

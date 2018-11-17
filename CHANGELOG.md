@@ -7,6 +7,7 @@
 - Fixed network node scanning allowing multiple controllers in some cases (raoulvdberge)
 - Fixed OpenComputers integration not giving back a crafting task instance in the schedule task API (raoulvdberge)
 - Fixed OpenComputers integration causing log spam when getting processing patterns (raoulvdberge)
+- Fixed CraftingTweaks buttons resetting sometimes in the Crafting Grid (raoulvdberge)
 - Removed getMissingItems() and getMissingFluids() functions from the OpenComputers integration, that info is now accessible through schedule(Fluid)Task(). If you just want to check if there are missing items/fluids but don't want to start an actual task, use the "canSchedule" parameter (raoulvdberge)
 - Added fluid functions for the fluid autocrafting to the OpenComputers integration (raoulvdberge)
 

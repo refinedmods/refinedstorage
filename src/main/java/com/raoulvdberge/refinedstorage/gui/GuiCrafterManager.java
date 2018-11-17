@@ -41,8 +41,6 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
 
     @Override
     protected void calcHeight() {
-        super.calcHeight();
-
         this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
         this.screenHeight = ySize;
     }
