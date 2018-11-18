@@ -94,6 +94,11 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
                                 slot.putStack(itemHandler.onShiftClick((EntityPlayerMP) getPlayer(), stack));
                             } else if (slot instanceof SlotGridCrafting && mergeItemStack(stack, 14, 14 + (9 * 4), false)) {
                                 slot.onSlotChanged();
+
+                                // This is needed because when a grid is disconnected,
+                                // and a player shift clicks from the matrix to the inventory (this if case),
+                                // the crafting inventory isn't being notified.
+                                grid.onCraftingMatrixChanged();
                             }
                         }
 
