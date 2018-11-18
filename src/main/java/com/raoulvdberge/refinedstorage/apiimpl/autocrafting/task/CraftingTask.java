@@ -719,7 +719,10 @@ public class CraftingTask implements ICraftingTask {
                     }
 
                     if (p.getState() == ProcessingState.READY && hasAll) {
-                        boolean abort = false;
+                        boolean insertedAll = true;
+
+                        List<ItemStack> put = new ArrayList<>();
+                        List<FluidStack> putFluids = new ArrayList<>();
 
                         for (int i = 0; i < p.getItemsToPut().size(); ++i) {
                             ItemStack need = p.getItemsToPut().get(i);
@@ -731,20 +734,14 @@ public class CraftingTask implements ICraftingTask {
 
                             ItemStack remainder = ItemHandlerHelper.insertItem(p.getPattern().getContainer().getConnectedInventory(), result, false);
                             if (!remainder.isEmpty()) {
-                                LOGGER.warn("In a simulation, " + p.getPattern().getContainer().getConnectedInventory() + " reported that we could insert " + result + " but we got " + remainder + " as a remainder");
-
                                 this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
 
                                 p.getItemsToPut().set(i, remainder);
 
-                                abort = true;
-
-                                break;
+                                insertedAll = false;
+                            } else {
+                                put.add(need);
                             }
-                        }
-
-                        if (abort) {
-                            continue;
                         }
 
                         for (int i = 0; i < p.getFluidsToPut().size(); ++i) {
@@ -757,25 +754,24 @@ public class CraftingTask implements ICraftingTask {
 
                             int filled = p.getPattern().getContainer().getConnectedFluidInventory().fill(result, true);
                             if (filled != result.amount) {
-                                LOGGER.warn("In a simulation, " + p.getPattern().getContainer().getConnectedFluidInventory() + " reported that we could fill " + result + " but we only filled " + filled);
-
                                 this.internalFluidStorage.insert(result, result.amount - filled, Action.PERFORM);
 
                                 p.getFluidsToPut().set(i, StackUtils.copy(result, result.amount - filled));
 
-                                abort = true;
-
-                                break;
+                                insertedAll = false;
+                            } else {
+                                putFluids.add(need);
                             }
                         }
 
-                        if (abort) {
-                            continue;
+                        put.forEach(p::markItemAsPut);
+                        putFluids.forEach(p::markFluidAsPut);
+
+                        if (insertedAll) {
+                            p.setState(ProcessingState.EXTRACTED_ALL);
+
+                            p.getPattern().getContainer().onUsedForProcessing();
                         }
-
-                        p.setState(ProcessingState.EXTRACTED_ALL);
-
-                        p.getPattern().getContainer().onUsedForProcessing();
                     }
                 }
 
@@ -1024,10 +1020,10 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (processing.getState() == ProcessingState.EXTRACTED_ALL) {
-                for (ItemStack put : processing.getItemsToPut()) {
+                for (ItemStack put : processing.getItemsPut()) {
                     elements.add(new CraftingMonitorElementItemRender(put, 0, 0, put.getCount(), 0, 0));
                 }
-            } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE || processing.getState() == ProcessingState.LOCKED) {
+            } else {
                 for (ItemStack receive : processing.getItemsToReceive().getStacks()) {
                     ICraftingMonitorElement element = new CraftingMonitorElementItemRender(receive, 0, 0, 0, receive.getCount(), 0);
 
@@ -1060,10 +1056,10 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (processing.getState() == ProcessingState.EXTRACTED_ALL) {
-                for (FluidStack put : processing.getFluidsToPut()) {
+                for (FluidStack put : processing.getFluidsPut()) {
                     elements.add(new CraftingMonitorElementFluidRender(put, 0, 0, put.amount, 0, 0));
                 }
-            } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE) {
+            } else {
                 for (FluidStack receive : processing.getFluidsToReceive().getStacks()) {
                     ICraftingMonitorElement element = new CraftingMonitorElementFluidRender(receive, 0, 0, 0, receive.amount, 0);
 
@@ -1071,6 +1067,8 @@ public class CraftingTask implements ICraftingTask {
                         element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept_fluid");
                     } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
                         element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                    } else if (processing.getState() == ProcessingState.LOCKED) {
+                        element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.crafter_is_locked");
                     }
 
                     elements.add(element);

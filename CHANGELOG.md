@@ -11,6 +11,7 @@
 - Fixed CraftingTweaks buttons resetting sometimes in the Crafting Grid (raoulvdberge)
 - Fixed Refined Storage jars not being signed (raoulvdberge)
 - Fixed client stalling when trying to search with # for tooltips (raoulvdberge)
+- Fixed crafting task stalling when there's not enough space in the inventory (raoulvdberge)
 - Removed getMissingItems() and getMissingFluids() functions from the OpenComputers integration, that info is now accessible through schedule(Fluid)Task(). If you just want to check if there are missing items/fluids but don't want to start an actual task, use the "canSchedule" parameter (raoulvdberge)
 - Updated Russian translation (kellixon)
 - Added fluid functions for the fluid autocrafting to the OpenComputers integration (raoulvdberge)
