@@ -58,7 +58,7 @@ public class CraftingPattern implements ICraftingPattern {
 
                     ores.add(input.copy());
 
-                    for (int id : OreDictionary.getOreIDs(stack)) {
+                    for (int id : OreDictionary.getOreIDs(input)) {
                         String name = OreDictionary.getOreName(id);
 
                         for (ItemStack ore : OreDictionary.getOres(name)) {
