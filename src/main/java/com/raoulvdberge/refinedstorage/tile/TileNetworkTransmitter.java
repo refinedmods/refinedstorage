@@ -19,12 +19,10 @@ public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitt
         return (transmitter.getReceiver() != null && transmitter.isSameDimension()) ? transmitter.getDistance() : -1;
     });
     public static final TileDataParameter<Integer, TileNetworkTransmitter> RECEIVER_DIMENSION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getReceiverDimension());
-    public static final TileDataParameter<Boolean, TileNetworkTransmitter> RECEIVER_DIMENSION_SUPPORTED = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isDimensionSupported());
 
     public TileNetworkTransmitter() {
         dataManager.addWatchedParameter(DISTANCE);
         dataManager.addWatchedParameter(RECEIVER_DIMENSION);
-        dataManager.addWatchedParameter(RECEIVER_DIMENSION_SUPPORTED);
     }
 
     @Override

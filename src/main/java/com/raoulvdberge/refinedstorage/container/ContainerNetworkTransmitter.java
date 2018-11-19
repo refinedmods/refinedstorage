@@ -10,11 +10,8 @@ public class ContainerNetworkTransmitter extends ContainerBase {
 
         addSlotToContainer(new SlotItemHandler(networkTransmitter.getNode().getNetworkCard(), 0, 8, 20));
 
-        addSlotToContainer(new SlotItemHandler(networkTransmitter.getNode().getUpgrades(), 0, 187, 6));
-
         addPlayerInventory(8, 55);
 
-        transferManager.addBiTransfer(player.inventory, networkTransmitter.getNode().getUpgrades());
         transferManager.addBiTransfer(player.inventory, networkTransmitter.getNode().getNetworkCard());
     }
 }

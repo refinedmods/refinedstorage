@@ -4,11 +4,9 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemNetworkCard;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,23 +14,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nullable;
 
 public class NetworkNodeNetworkTransmitter extends NetworkNode {
     public static final String ID = "network_transmitter";
-
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(1, new ListenerNetworkNode(this), ItemUpgrade.TYPE_INTERDIMENSIONAL) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            if (network != null) {
-                network.getNodeGraph().invalidate(Action.PERFORM, network.world(), network.getPosition());
-            }
-        }
-    };
 
     private ItemHandlerBase networkCard = new ItemHandlerBase(1, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
         @Override
@@ -66,7 +52,6 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         super.write(tag);
 
         StackUtils.writeItems(networkCard, 0, tag);
-        StackUtils.writeItems(upgrades, 1, tag);
 
         return tag;
     }
@@ -76,7 +61,6 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         super.read(tag);
 
         StackUtils.readItems(networkCard, 0, tag);
-        StackUtils.readItems(upgrades, 1, tag);
     }
 
     @Override
@@ -86,23 +70,16 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
 
     @Override
     public int getEnergyUsage() {
-        return Math.min(
-            RS.INSTANCE.config.interdimensionalUpgradeUsage,
-            RS.INSTANCE.config.networkTransmitterUsage + (isSameDimension() ? (int) Math.ceil(RS.INSTANCE.config.networkTransmitterPerBlockUsage * getDistance()) : 0) + upgrades.getEnergyUsage()
-        );
+        return RS.INSTANCE.config.networkTransmitterUsage;
     }
 
     public ItemHandlerBase getNetworkCard() {
         return networkCard;
     }
 
-    public ItemHandlerUpgrade getUpgrades() {
-        return upgrades;
-    }
-
     @Override
     public IItemHandler getDrops() {
-        return new CombinedInvWrapper(networkCard, upgrades);
+        return networkCard;
     }
 
     @Nullable
@@ -126,12 +103,8 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         return world.provider.getDimension() == receiverDimension;
     }
 
-    public boolean isDimensionSupported() {
-        return isSameDimension() || upgrades.hasUpgrade(ItemUpgrade.TYPE_INTERDIMENSIONAL);
-    }
-
     private boolean canTransmit() {
-        return canUpdate() && receiver != null && isDimensionSupported();
+        return canUpdate() && receiver != null;
     }
 
     @Override
@@ -151,6 +124,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         if (canTransmit()) {
             if (!isSameDimension()) {
                 final World dimensionWorld = DimensionManager.getWorld(receiverDimension);
+
                 if (dimensionWorld != null) {
                     operator.apply(dimensionWorld, receiver, null);
                 }

@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+// TODO: getId: return a ResourceLocation.
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_DIRECTION = "Direction";

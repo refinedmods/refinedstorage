@@ -71,6 +71,7 @@ import java.util.function.Predicate;
 
 import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
 
+// TODO: Change INetwork to be offloaded from the tile.
 public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController>, INetworkNodeVisitor {
     private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
         if (left.getEnergyUsage() == right.getEnergyUsage()) {

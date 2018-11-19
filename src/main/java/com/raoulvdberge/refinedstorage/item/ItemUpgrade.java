@@ -22,7 +22,6 @@ public class ItemUpgrade extends ItemBase {
     public static final int TYPE_SPEED = 2;
     public static final int TYPE_CRAFTING = 3;
     public static final int TYPE_STACK = 4;
-    public static final int TYPE_INTERDIMENSIONAL = 5;
     public static final int TYPE_SILK_TOUCH = 6;
     public static final int TYPE_FORTUNE_1 = 7;
     public static final int TYPE_FORTUNE_2 = 8;
@@ -44,7 +43,6 @@ public class ItemUpgrade extends ItemBase {
             new ResourceLocation(RS.ID, "range_upgrade"),
             new ResourceLocation(RS.ID, "speed_upgrade"),
             new ResourceLocation(RS.ID, "stack_upgrade"),
-            new ResourceLocation(RS.ID, "interdimensional_upgrade"),
             new ResourceLocation(RS.ID, "silk_touch_upgrade"),
             new ResourceLocation(RS.ID, "fortune_upgrade")
         );
@@ -54,7 +52,6 @@ public class ItemUpgrade extends ItemBase {
         modelRegistration.setModel(this, TYPE_SPEED, new ModelResourceLocation(RS.ID + ":speed_upgrade", "inventory"));
         modelRegistration.setModel(this, TYPE_CRAFTING, new ModelResourceLocation(RS.ID + ":crafting_upgrade", "inventory"));
         modelRegistration.setModel(this, TYPE_STACK, new ModelResourceLocation(RS.ID + ":stack_upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_INTERDIMENSIONAL, new ModelResourceLocation(RS.ID + ":interdimensional_upgrade", "inventory"));
         modelRegistration.setModel(this, TYPE_SILK_TOUCH, new ModelResourceLocation(RS.ID + ":silk_touch_upgrade", "inventory"));
         modelRegistration.setModel(this, TYPE_FORTUNE_1, new ModelResourceLocation(RS.ID + ":fortune_upgrade", "inventory"));
         modelRegistration.setModel(this, TYPE_FORTUNE_2, new ModelResourceLocation(RS.ID + ":fortune_upgrade", "inventory"));
@@ -82,7 +79,9 @@ public class ItemUpgrade extends ItemBase {
         }
 
         for (int i = 0; i <= 9; ++i) {
-            items.add(new ItemStack(this, 1, i));
+            if (i != 5) { // Removal of interdimensional upgrade
+                items.add(new ItemStack(this, 1, i));
+            }
         }
     }
 
@@ -110,8 +109,6 @@ public class ItemUpgrade extends ItemBase {
                 return RS.INSTANCE.config.craftingUpgradeUsage;
             case TYPE_STACK:
                 return RS.INSTANCE.config.stackUpgradeUsage;
-            case TYPE_INTERDIMENSIONAL:
-                return RS.INSTANCE.config.interdimensionalUpgradeUsage;
             case TYPE_SILK_TOUCH:
                 return RS.INSTANCE.config.silkTouchUpgradeUsage;
             case TYPE_FORTUNE_1:

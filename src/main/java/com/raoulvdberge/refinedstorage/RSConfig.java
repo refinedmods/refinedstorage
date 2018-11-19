@@ -44,7 +44,6 @@ public class RSConfig {
     public int patternGridUsage;
     public int fluidGridUsage;
     public int networkTransmitterUsage;
-    public float networkTransmitterPerBlockUsage;
     public int networkReceiverUsage;
     public int diskManipulatorUsage;
     public int securityManagerUsage;
@@ -104,7 +103,6 @@ public class RSConfig {
     public int speedUpgradeUsage;
     public int craftingUpgradeUsage;
     public int stackUpgradeUsage;
-    public int interdimensionalUpgradeUsage;
     public int silkTouchUpgradeUsage;
     public int fortuneUpgradeUsagePerFortune;
     //endregion
@@ -195,8 +193,7 @@ public class RSConfig {
         craftingGridUsage = config.getInt("craftingGrid", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafting Grids");
         patternGridUsage = config.getInt("patternGrid", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Pattern Grids");
         fluidGridUsage = config.getInt("fluidGrid", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Fluid Grids");
-        networkTransmitterUsage = config.getInt("networkTransmitter", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by Network Transmitters");
-        networkTransmitterPerBlockUsage = config.getFloat("networkTransmitterPerBlock", ENERGY, 1, 0, Float.MAX_VALUE, "The additional energy per block that the Network Transmitter uses, gets rounded up");
+        networkTransmitterUsage = config.getInt("networkTransmitter", ENERGY, 64, 0, Integer.MAX_VALUE, "The energy used by Network Transmitters");
         networkReceiverUsage = config.getInt("networkReceiver", ENERGY, 0, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
         securityManagerUsage = config.getInt("securityManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The base energy used by Security Managers");
@@ -256,7 +253,6 @@ public class RSConfig {
         speedUpgradeUsage = config.getInt("speed", UPGRADES, 2, 0, Integer.MAX_VALUE, "The additional energy used per Speed Upgrade");
         craftingUpgradeUsage = config.getInt("crafting", UPGRADES, 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
         stackUpgradeUsage = config.getInt("stack", UPGRADES, 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
-        interdimensionalUpgradeUsage = config.getInt("interdimensional", UPGRADES, 1000, 0, Integer.MAX_VALUE, "The additional energy used by the Interdimensional Upgrade");
         silkTouchUpgradeUsage = config.getInt("silkTouch", UPGRADES, 15, 0, Integer.MAX_VALUE, "The additional energy used by the Silk Touch Upgrade");
         fortuneUpgradeUsagePerFortune = config.getInt("fortune", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune Upgrade, multiplied by the level of the enchantment");
         //endregion
