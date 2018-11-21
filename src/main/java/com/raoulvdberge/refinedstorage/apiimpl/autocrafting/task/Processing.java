@@ -20,8 +20,6 @@ class Processing {
     private static final String NBT_FLUIDS_TO_RECEIVE = "FluidsToReceive";
     private static final String NBT_ITEMS_TO_PUT = "ItemsToPut";
     private static final String NBT_FLUIDS_TO_PUT = "FluidsToPut";
-    private static final String NBT_ITEMS_PUT = "ItemsPut";
-    private static final String NBT_FLUIDS_PUT = "FluidsPut";
     private static final String NBT_STATE = "State";
     private static final String NBT_ROOT = "Root";
 
@@ -30,8 +28,6 @@ class Processing {
     private IStackList<FluidStack> fluidsToReceive;
     private ArrayList<ItemStack> itemsToPut;
     private ArrayList<FluidStack> fluidsToPut;
-    private ArrayList<ItemStack> itemsPut = new ArrayList<>();
-    private ArrayList<FluidStack> fluidsPut = new ArrayList<>();
     private ProcessingState state = ProcessingState.READY;
     private boolean root;
 
@@ -63,17 +59,6 @@ class Processing {
             itemsToPut.add(stack);
         }
 
-        NBTTagList itemsPutList = tag.getTagList(NBT_ITEMS_PUT, Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < itemsPutList.tagCount(); ++i) {
-            ItemStack stack = StackUtils.deserializeStackFromNbt(itemsPutList.getCompoundTagAt(i));
-
-            if (stack.isEmpty()) {
-                throw new CraftingTaskReadException("Stack is empty!");
-            }
-
-            itemsPut.add(stack);
-        }
-
         this.fluidsToPut = new ArrayList<>();
 
         NBTTagList fluidsToPutList = tag.getTagList(NBT_FLUIDS_TO_PUT, Constants.NBT.TAG_COMPOUND);
@@ -85,17 +70,6 @@ class Processing {
             }
 
             fluidsToPut.add(stack);
-        }
-
-        NBTTagList fluidsPutList = tag.getTagList(NBT_FLUIDS_PUT, Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < fluidsPutList.tagCount(); ++i) {
-            FluidStack stack = FluidStack.loadFluidStackFromNBT(fluidsPutList.getCompoundTagAt(i));
-
-            if (stack == null) {
-                throw new CraftingTaskReadException("Stack is empty!");
-            }
-
-            fluidsPut.add(stack);
         }
 
         this.state = ProcessingState.values()[tag.getInteger(NBT_STATE)];
@@ -121,26 +95,8 @@ class Processing {
         return fluidsToPut;
     }
 
-    public ArrayList<ItemStack> getItemsPut() {
-        return itemsPut;
-    }
-
-    public ArrayList<FluidStack> getFluidsPut() {
-        return fluidsPut;
-    }
-
     public void setState(ProcessingState state) {
         this.state = state;
-    }
-
-    public void markItemAsPut(ItemStack stack) {
-        itemsToPut.remove(stack);
-        itemsPut.add(stack);
-    }
-
-    public void markFluidAsPut(FluidStack stack) {
-        fluidsToPut.remove(stack);
-        fluidsPut.add(stack);
     }
 
     public ProcessingState getState() {
@@ -163,25 +119,15 @@ class Processing {
         for (ItemStack stack : this.itemsToPut) {
             itemsToPutList.appendTag(StackUtils.serializeStackToNbt(stack));
         }
-        tag.setTag(NBT_ITEMS_TO_PUT, itemsToPutList);
 
-        NBTTagList itemsPutList = new NBTTagList();
-        for (ItemStack stack : this.itemsPut) {
-            itemsPutList.appendTag(StackUtils.serializeStackToNbt(stack));
-        }
-        tag.setTag(NBT_ITEMS_PUT, itemsPutList);
+        tag.setTag(NBT_ITEMS_TO_PUT, itemsToPutList);
 
         NBTTagList fluidsToPutList = new NBTTagList();
         for (FluidStack stack : this.fluidsToPut) {
             fluidsToPutList.appendTag(stack.writeToNBT(new NBTTagCompound()));
         }
-        tag.setTag(NBT_FLUIDS_TO_PUT, fluidsToPutList);
 
-        NBTTagList fluidsPutList = new NBTTagList();
-        for (FluidStack stack : this.fluidsPut) {
-            fluidsPutList.appendTag(stack.writeToNBT(new NBTTagCompound()));
-        }
-        tag.setTag(NBT_FLUIDS_PUT, fluidsPutList);
+        tag.setTag(NBT_FLUIDS_TO_PUT, fluidsToPutList);
 
         tag.setInteger(NBT_STATE, state.ordinal());
 
