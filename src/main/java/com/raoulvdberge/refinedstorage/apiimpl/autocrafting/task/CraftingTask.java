@@ -33,7 +33,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -689,10 +688,6 @@ public class CraftingTask implements ICraftingTask {
 
                             if (result == null || result.getCount() != need.getCount()) {
                                 hasAll = false;
-
-                                break;
-                            } else if (!ItemHandlerHelper.insertItem(p.getPattern().getContainer().getConnectedInventory(), result, true).isEmpty()) {
-                                p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
 
                                 break;
                             } else {
