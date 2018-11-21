@@ -16,7 +16,7 @@ public class StackListItem implements IStackList<ItemStack> {
 
     @Override
     public void add(@Nonnull ItemStack stack, int size) {
-        if (stack == null || stack.isEmpty() || size <= 0) {
+        if (stack.isEmpty() || size <= 0) {
             throw new IllegalArgumentException("Cannot accept empty stack");
         }
 

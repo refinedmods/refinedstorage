@@ -15,7 +15,7 @@ public class StackListFluid implements IStackList<FluidStack> {
 
     @Override
     public void add(@Nonnull FluidStack stack, int size) {
-        if (stack == null || size < 0) {
+        if (size < 0) {
             throw new IllegalArgumentException("Cannot accept empty stack");
         }
 

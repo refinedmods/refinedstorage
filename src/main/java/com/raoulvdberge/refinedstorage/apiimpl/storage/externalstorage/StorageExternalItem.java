@@ -22,8 +22,8 @@ import java.util.function.Supplier;
 public class StorageExternalItem implements IStorageExternal<ItemStack> {
     private IExternalStorageContext context;
     private Supplier<IItemHandler> handlerSupplier;
-    private List<ItemStack> cache;
     private boolean connectedToInterface;
+    private ExternalStorageCacheItem cache = new ExternalStorageCacheItem();
 
     public StorageExternalItem(IExternalStorageContext context, Supplier<IItemHandler> handlerSupplier, boolean connectedToInterface) {
         this.context = context;
@@ -37,69 +37,11 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
 
     @Override
     public void update(INetwork network) {
-        // If we are insert only, we don't care about sending changes
         if (getAccessType() == AccessType.INSERT) {
             return;
         }
 
-        if (cache == null) {
-            cache = new ArrayList<>(getStacks());
-
-            return;
-        }
-
-        List<ItemStack> newStacks = new ArrayList<>(getStacks());
-
-        for (int i = 0; i < newStacks.size(); ++i) {
-            ItemStack actual = newStacks.get(i);
-
-            // If we exceed the cache size, than that means this item is added
-            if (i >= cache.size()) {
-                if (!actual.isEmpty()) {
-                    network.getItemStorageCache().add(actual, actual.getCount(), false, true);
-                }
-
-                continue;
-            }
-
-            ItemStack cached = cache.get(i);
-
-            if (!cached.isEmpty() && actual.isEmpty()) {
-                // If the cached is not empty but the actual is, we remove this item
-                network.getItemStorageCache().remove(cached, cached.getCount(), true);
-            } else if (cached.isEmpty() && !actual.isEmpty()) {
-                // If the cached is empty and the actual isn't, we added this item
-                network.getItemStorageCache().add(actual, actual.getCount(), false, true);
-            } else if (cached.isEmpty() && actual.isEmpty()) {
-                // If they're both empty, nothing happens
-            } else if (!API.instance().getComparer().isEqualNoQuantity(cached, actual)) {
-                // If both items mismatch, remove the old and add the new
-                network.getItemStorageCache().remove(cached, cached.getCount(), true);
-                network.getItemStorageCache().add(actual, actual.getCount(), false, true);
-            } else if (cached.getCount() != actual.getCount()) {
-                int delta = actual.getCount() - cached.getCount();
-
-                if (delta > 0) {
-                    network.getItemStorageCache().add(actual, delta, false, true);
-                } else {
-                    network.getItemStorageCache().remove(actual, Math.abs(delta), true);
-                }
-            }
-        }
-
-        // If the cache size is somehow bigger than the actual stacks, that means the inventory shrunk
-        // In that case, we remove the items that have been removed due to the shrinkage
-        if (cache.size() > newStacks.size()) {
-            for (int i = newStacks.size(); i < cache.size(); ++i) {
-                if (cache.get(i) != ItemStack.EMPTY) {
-                    network.getItemStorageCache().remove(cache.get(i), cache.get(i).getCount(), true);
-                }
-            }
-        }
-
-        this.cache = newStacks;
-
-        network.getItemStorageCache().flush();
+        cache.update(network, handlerSupplier.get());
     }
 
     @Override
@@ -130,7 +72,7 @@ public class StorageExternalItem implements IStorageExternal<ItemStack> {
         List<ItemStack> stacks = new ArrayList<>();
 
         for (int i = 0; i < handler.getSlots(); ++i) {
-            stacks.add(handler.getStackInSlot(i).copy());
+            stacks.add(handler.getStackInSlot(i));
         }
 
         return stacks;

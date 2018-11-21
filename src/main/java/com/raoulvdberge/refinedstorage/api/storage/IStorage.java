@@ -16,6 +16,11 @@ public interface IStorage<T> {
     };
 
     /**
+     * Returns the stacks of the storage.
+     * Empty stacks are allowed.
+     * Please do not copy the stacks for performance reasons.
+     * For the caller: modifying stacks is not allowed!
+     *
      * @return stacks stored in this storage, empty stacks are allowed
      */
     Collection<T> getStacks();
