@@ -19,6 +19,7 @@
 - Removed the per block FE cost of the Network Transmitter, it draws a fixed amount of FE/t now (raoulvdberge)
 - Updated Russian translation (kellixon)
 - Added fluid functions for the fluid autocrafting to the OpenComputers integration (raoulvdberge)
+- Slightly increased performance of the External Storage (raoulvdberge)
 
 ### 1.6.9
 - Fixed OpenComputers "unknown error" when using extract item API (raoulvdberge)
