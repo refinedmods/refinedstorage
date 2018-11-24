@@ -160,8 +160,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
                 INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side));
                 INetworkNode otherNode = otherNodeProxy.getNode();
 
-                // This will work for regular nodes and for controllers too since controllers are internally a INetworkNode (and return themselves in INetworkNode#getNetwork).
-                if (otherNode.getNetwork() != null && otherNode.getNetwork() != network) {
+                if (otherNode.getNetwork() != null && !otherNode.getNetwork().equals(network)) {
                     if (action == Action.PERFORM) {
                         dropConflictingBlock(world, tile.getPos());
                     }

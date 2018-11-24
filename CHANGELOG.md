@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.11
+- Fixed blocks neighboring a controller breaking when returning from a dimension in a unchunkloaded area (raoulvdberge)
+
 ### 1.6.10
 - Fixed client FPS stalling when using "@" mod search in the Grid (raoulvdberge)
 - Fixed client FPS stalling when using "#" tooltip search in the Grid (raoulvdberge)
