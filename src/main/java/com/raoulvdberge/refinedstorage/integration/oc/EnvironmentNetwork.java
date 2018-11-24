@@ -161,7 +161,7 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return new Object[]{task};
     }
 
-    @Callback(doc = "function(stack:table[, count: number]):table -- Schedules a fluid crafting task.")
+    @Callback(doc = "function(stack:table[, count: number, [canSchedule: boolean]]):table -- Schedules a fluid crafting task.")
     public Object[] scheduleFluidTask(final Context context, final Arguments args) {
         if (node.getNetwork() == null) {
             return new Object[]{"not connected"};
