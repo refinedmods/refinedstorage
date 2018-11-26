@@ -64,13 +64,15 @@ public class GuiCraftingMonitor extends GuiBase {
         private ICraftingRequestInfo requested;
         private int qty;
         private long executionStarted;
+        private int completionPercentage;
         private List<ICraftingMonitorElement> elements;
 
-        public CraftingMonitorTask(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, List<ICraftingMonitorElement> elements) {
+        public CraftingMonitorTask(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, int completionPercentage, List<ICraftingMonitorElement> elements) {
             this.id = id;
             this.requested = requested;
             this.qty = qty;
             this.executionStarted = executionStarted;
+            this.completionPercentage = completionPercentage;
             this.elements = elements;
         }
 
@@ -90,6 +92,7 @@ public class GuiCraftingMonitor extends GuiBase {
 
             smallTextLines.add(I18n.format("gui.refinedstorage:crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
             smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
+            smallTextLines.add(String.format("%d%%", completionPercentage));
 
             RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
         }

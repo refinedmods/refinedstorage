@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 1.6.12
+- Increased the speed of autocrafting (raoulvdberge)
+- Added a completion percentage to the Crafting Monitor (raoulvdberge)
+- Updated Russian translation (kellixon)
+
 ### 1.6.11
 - Fixed blocks neighboring a controller breaking when returning from a dimension in a unchunkloaded area (raoulvdberge)
 

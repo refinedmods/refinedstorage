@@ -48,6 +48,13 @@ public interface ICraftingTask {
     int getQuantityPerCraft();
 
     /**
+     * @return the completion percentage
+     */
+    default int getCompletionPercentage() {
+        return 0;
+    }
+
+    /**
      * @return the stack requested
      */
     ICraftingRequestInfo getRequested();
