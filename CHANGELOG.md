@@ -3,6 +3,7 @@
 ### 1.6.12
 - Increased the speed of autocrafting (raoulvdberge)
 - Fixed External Storage sending storage updates when it is disabled (raoulvdberge)
+- Fixed slight performance issue with loading Crafters from disk (raoulvdberge)
 - Added a completion percentage to the Crafting Monitor (raoulvdberge)
 - Updated Russian translation (kellixon)
 

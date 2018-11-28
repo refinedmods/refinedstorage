@@ -61,12 +61,14 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (!world.isRemote) {
-                invalidate();
-            }
+            if (!reading) {
+                if (!world.isRemote) {
+                    invalidate();
+                }
 
-            if (network != null) {
-                network.getCraftingManager().rebuild();
+                if (network != null) {
+                    network.getCraftingManager().rebuild();
+                }
             }
         }
 
@@ -90,6 +92,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private CrafterMode mode = CrafterMode.IGNORE;
     private boolean locked = false;
     private boolean wasPowered;
+
+    private boolean reading;
 
     @Nullable
     private String displayName;
@@ -171,11 +175,18 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     public void read(NBTTagCompound tag) {
         super.read(tag);
 
+        // Fix cascading crafter invalidates while reading patterns
+        this.reading = true;
+
         StackUtils.readItems(patternsInventory, 0, tag);
 
         if (API.instance().getOneSixMigrationHelper().migratePatternInventory(patternsInventory)) {
             markDirty();
         }
+
+        this.invalidate();
+
+        this.reading = false;
 
         StackUtils.readItems(upgrades, 1, tag);
 
