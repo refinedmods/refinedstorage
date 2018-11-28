@@ -293,12 +293,12 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public int getStored() {
+    public long getStored() {
         return TileExternalStorage.STORED.getValue();
     }
 
     @Override
-    public int getCapacity() {
+    public long getCapacity() {
         return TileExternalStorage.CAPACITY.getValue();
     }
 

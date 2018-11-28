@@ -304,12 +304,12 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public int getStored() {
+    public long getStored() {
         return TileDiskDrive.STORED.getValue();
     }
 
     @Override
-    public int getCapacity() {
+    public long getCapacity() {
         return TileDiskDrive.CAPACITY.getValue();
     }
 

@@ -18,7 +18,7 @@ public interface IGuiStorage {
 
     TileDataParameter<AccessType, ?> getAccessTypeParameter();
 
-    int getStored();
+    long getStored();
 
-    int getCapacity();
+    long getCapacity();
 }

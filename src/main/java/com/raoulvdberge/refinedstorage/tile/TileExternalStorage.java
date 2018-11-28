@@ -4,9 +4,9 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.config.*;
+import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,8 +19,8 @@ public class TileExternalStorage extends TileNode<NetworkNodeExternalStorage> {
     public static final TileDataParameter<Integer, TileExternalStorage> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer, TileExternalStorage> TYPE = IType.createParameter();
     public static final TileDataParameter<AccessType, TileExternalStorage> ACCESS_TYPE = IAccessType.createParameter();
-    public static final TileDataParameter<Integer, TileExternalStorage> STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
-        int stored = 0;
+    public static final TileDataParameter<Long, TileExternalStorage> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
+        long stored = 0;
 
         for (IStorageExternal<ItemStack> storage : t.getNode().getItemStorages()) {
             stored += storage.getStored();
@@ -32,8 +32,8 @@ public class TileExternalStorage extends TileNode<NetworkNodeExternalStorage> {
 
         return stored;
     });
-    public static final TileDataParameter<Integer, TileExternalStorage> CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
-        int capacity = 0;
+    public static final TileDataParameter<Long, TileExternalStorage> CAPACITY = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
+        long capacity = 0;
 
         for (IStorageExternal<ItemStack> storage : t.getNode().getItemStorages()) {
             capacity += storage.getCapacity();

@@ -4,6 +4,7 @@
 - Increased the speed of autocrafting (raoulvdberge)
 - Fixed External Storage sending storage updates when it is disabled (raoulvdberge)
 - Fixed slight performance issue with loading Crafters from disk (raoulvdberge)
+- Fixed storage GUIs overflowing on large numbers (raoulvdberge)
 - Added a completion percentage to the Crafting Monitor (raoulvdberge)
 - Updated Russian translation (kellixon)
 

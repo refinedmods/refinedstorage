@@ -251,12 +251,12 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public int getStored() {
+    public long getStored() {
         return TileStorage.STORED.getValue();
     }
 
     @Override
-    public int getCapacity() {
+    public long getCapacity() {
         return getType().getCapacity();
     }
 
