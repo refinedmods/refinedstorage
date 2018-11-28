@@ -122,7 +122,7 @@ public class CraftingTask implements ICraftingTask {
         this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
 
         if (tag.hasKey(NBT_TOTAL_STEPS)) {
-            totalSteps = tag.getInteger(NBT_TOTAL_STEPS);
+            this.totalSteps = tag.getInteger(NBT_TOTAL_STEPS);
         }
 
         StorageDiskFactoryItem factoryItem = new StorageDiskFactoryItem();

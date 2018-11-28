@@ -60,7 +60,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
             if (!batched) {
                 listeners.forEach(l -> l.onChanged(stack, size));
             } else {
-                batchedChanges.add(Pair.of(stack, size));
+                batchedChanges.add(Pair.of(stack.copy(), size));
             }
         }
     }
@@ -71,7 +71,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
             if (!batched) {
                 listeners.forEach(l -> l.onChanged(stack, -size));
             } else {
-                batchedChanges.add(Pair.of(stack, -size));
+                batchedChanges.add(Pair.of(stack.copy(), -size));
             }
         }
     }

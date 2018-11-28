@@ -83,7 +83,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public void update() {
         super.update();
 
-        if (network != null) {
+        if (canUpdate()) {
             if (networkTicks++ == 0) {
                 updateStorage(network);
 

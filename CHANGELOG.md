@@ -2,6 +2,7 @@
 
 ### 1.6.12
 - Increased the speed of autocrafting (raoulvdberge)
+- Fixed External Storage sending storage updates when it is disabled (raoulvdberge)
 - Added a completion percentage to the Crafting Monitor (raoulvdberge)
 - Updated Russian translation (kellixon)
 
