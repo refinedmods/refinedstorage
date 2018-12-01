@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
@@ -78,7 +77,7 @@ public interface ICraftingManager {
     ICraftingPatternChainList createPatternChainList();
 
     /**
-     * @deprecated Use {@link #request(INetworkNode, ItemStack, int)}
+     * @deprecated Use {@link #request(Object, ItemStack, int)}
      */
     @Nullable
     @Deprecated
@@ -87,7 +86,7 @@ public interface ICraftingManager {
     }
 
     /**
-     * @deprecated Use {@link #request(INetworkNode, FluidStack, int)}
+     * @deprecated Use {@link #request(Object, FluidStack, int)}
      */
     @Nullable
     @Deprecated
@@ -104,7 +103,7 @@ public interface ICraftingManager {
      * @return the crafting task created, or null if no task is created
      */
     @Nullable
-    ICraftingTask request(INetworkNode source, ItemStack stack, int amount);
+    ICraftingTask request(Object source, ItemStack stack, int amount);
 
     /**
      * Schedules a crafting task if the task isn't scheduled yet.
@@ -115,7 +114,7 @@ public interface ICraftingManager {
      * @return the crafting task created, or null if no task is created
      */
     @Nullable
-    ICraftingTask request(INetworkNode source, FluidStack stack, int amount);
+    ICraftingTask request(Object source, FluidStack stack, int amount);
 
     /**
      * Tracks an incoming stack.

@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.13
+- Fixed Interface with Crafting Upgrade being stuck if an earlier item configuration has missing items or fluids (raoulvdberge)
+
 ### 1.6.12
 - Increased the speed of autocrafting (raoulvdberge)
 - Fixed External Storage sending storage updates when it is disabled (raoulvdberge)
