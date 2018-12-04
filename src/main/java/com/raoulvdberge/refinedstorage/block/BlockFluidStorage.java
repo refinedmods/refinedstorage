@@ -1,12 +1,14 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockFluidStorage;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
+import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -25,6 +27,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Arrays;
 
 public class BlockFluidStorage extends BlockNode {
     public static final PropertyEnum TYPE = PropertyEnum.create("type", FluidStorageType.class);
@@ -81,6 +85,10 @@ public class BlockFluidStorage extends BlockNode {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         if (!world.isRemote) {
             NetworkNodeFluidStorage storage = ((TileFluidStorage) world.getTileEntity(pos)).getNode();
+
+            if (player.getHeldItemOffhand().getItem() == RSItems.WRENCH) {
+                storage.setMode(IFilterable.WHITELIST);
+            }
 
             if (stack.hasTagCompound() && stack.getTagCompound().hasUniqueId(NetworkNodeFluidStorage.NBT_ID)) {
                 storage.setStorageId(stack.getTagCompound().getUniqueId(NetworkNodeFluidStorage.NBT_ID));

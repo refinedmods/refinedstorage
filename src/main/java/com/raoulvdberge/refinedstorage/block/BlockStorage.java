@@ -1,12 +1,14 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.block.enums.ItemStorageType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockStorage;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
+import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -81,6 +83,10 @@ public class BlockStorage extends BlockNode {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         if (!world.isRemote) {
             NetworkNodeStorage storage = ((TileStorage) world.getTileEntity(pos)).getNode();
+
+            if (player.getHeldItemOffhand().getItem() == RSItems.WRENCH) {
+                storage.setMode(IFilterable.WHITELIST);
+            }
 
             if (stack.hasTagCompound() && stack.getTagCompound().hasUniqueId(NetworkNodeStorage.NBT_ID)) {
                 storage.setStorageId(stack.getTagCompound().getUniqueId(NetworkNodeStorage.NBT_ID));
