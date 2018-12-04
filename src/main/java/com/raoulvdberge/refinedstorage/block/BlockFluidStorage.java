@@ -7,7 +7,6 @@ import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockFluidStorage;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -82,7 +81,6 @@ public class BlockFluidStorage extends BlockNode {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
         if (!world.isRemote) {
             NetworkNodeFluidStorage storage = ((TileFluidStorage) world.getTileEntity(pos)).getNode();
-            storage.setMode(IFilterable.WHITELIST);
 
             if (stack.hasTagCompound() && stack.getTagCompound().hasUniqueId(NetworkNodeFluidStorage.NBT_ID)) {
                 storage.setStorageId(stack.getTagCompound().getUniqueId(NetworkNodeFluidStorage.NBT_ID));
