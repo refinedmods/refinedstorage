@@ -58,6 +58,14 @@ public abstract class BlockNodeProxy extends BlockBase {
     }
 
     protected boolean openNetworkGui(int guiId, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Permission... permissions) {
+        return openNetworkGui(player, world, pos, facing, () -> player.openGui(info.getModObject(), guiId, world, pos.getX(), pos.getY(), pos.getZ()), permissions);
+    }
+
+    protected boolean openNetworkGui(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Runnable action) {
+        return openNetworkGui(player, world, pos, facing, action, Permission.MODIFY);
+    }
+
+    protected boolean openNetworkGui(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Runnable action, Permission... permissions) {
         if (world.isRemote) {
             return true;
         }
@@ -79,7 +87,7 @@ public abstract class BlockNodeProxy extends BlockBase {
             }
         }
 
-        player.openGui(info.getModObject(), guiId, world, pos.getX(), pos.getY(), pos.getZ());
+        action.run();
 
         return true;
     }

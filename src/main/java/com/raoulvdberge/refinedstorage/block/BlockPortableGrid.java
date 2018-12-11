@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSGui;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
@@ -21,6 +21,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -131,7 +132,7 @@ public class BlockPortableGrid extends BlockBase {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
-            player.openGui(RS.INSTANCE, RSGui.PORTABLE_GRID, world, pos.getX(), pos.getY(), pos.getZ());
+            API.instance().getGridManager().openGrid(TilePortableGrid.FACTORY_ID, (EntityPlayerMP) player, pos);
 
             ((TilePortableGrid) world.getTileEntity(pos)).onOpened();
         }

@@ -62,6 +62,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, IRedstoneConfigurable, IStorageDiskContainerContext, IPortableGrid.IPortableGridRenderInfo {
+    public static int FACTORY_ID;
+
     public static final TileDataParameter<Integer, TilePortableGrid> REDSTONE_MODE = RedstoneMode.createParameter();
     private static final TileDataParameter<Integer, TilePortableGrid> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energyStorage.getEnergyStored());
     private static final TileDataParameter<Integer, TilePortableGrid> SORTING_DIRECTION = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingDirection, (t, v) -> {

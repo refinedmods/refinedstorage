@@ -29,9 +29,9 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     private int tabPage;
     private Optional<UUID> tabSelected;
 
-    public WirelessCraftingMonitor(int networkDimension, ItemStack stack) {
+    public WirelessCraftingMonitor(ItemStack stack) {
         this.stack = stack;
-        this.networkDimension = networkDimension;
+        this.networkDimension = ItemWirelessCraftingMonitor.getDimensionId(stack);
         this.network = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
         this.tabPage = ItemWirelessCraftingMonitor.getTabPage(stack);
         this.tabSelected = ItemWirelessCraftingMonitor.getTabSelected(stack);
@@ -105,7 +105,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         INetwork network = getNetwork();
 
         if (network != null) {
-            network.getNetworkItemHandler().onClose(player);
+            network.getNetworkItemHandler().close(player);
         }
     }
 

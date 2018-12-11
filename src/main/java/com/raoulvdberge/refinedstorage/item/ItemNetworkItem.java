@@ -47,7 +47,7 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            applyNetwork(stack, n -> n.getNetworkItemHandler().onOpen(player, hand), player::sendMessage);
+            applyNetwork(stack, n -> n.getNetworkItemHandler().open(player, player.getHeldItem(hand)), player::sendMessage);
         }
 
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);

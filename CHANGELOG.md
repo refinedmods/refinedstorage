@@ -2,6 +2,7 @@
 
 ### 1.6.13
 - Fixed Interface with Crafting Upgrade being stuck if an earlier item configuration has missing items or fluids (raoulvdberge)
+- Added keybindings to open wireless items. The default one set to open a Wireless Grid is CTRL + G (raoulvdberge)
 
 ### 1.6.12
 - Increased the speed of autocrafting (raoulvdberge)

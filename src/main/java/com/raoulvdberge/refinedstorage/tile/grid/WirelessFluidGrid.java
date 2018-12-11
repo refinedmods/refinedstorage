@@ -62,8 +62,8 @@ public class WirelessFluidGrid implements IGridNetworkAware {
         }
     };
 
-    public WirelessFluidGrid(int networkDimension, ItemStack stack) {
-        this.networkDimension = networkDimension;
+    public WirelessFluidGrid(ItemStack stack) {
+        this.networkDimension = ItemWirelessFluidGrid.getDimensionId(stack);
         this.network = new BlockPos(ItemWirelessFluidGrid.getX(stack), ItemWirelessFluidGrid.getY(stack), ItemWirelessFluidGrid.getZ(stack));
 
         this.stack = stack;
@@ -299,7 +299,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
         INetwork network = getNetwork();
 
         if (network != null) {
-            network.getNetworkItemHandler().onClose(player);
+            network.getNetworkItemHandler().close(player);
         }
     }
 }

@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumHand;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import java.util.Map;
@@ -23,7 +23,7 @@ public class NetworkItemHandler implements INetworkItemHandler {
     }
 
     @Override
-    public void onOpen(EntityPlayer player, EnumHand hand) {
+    public void open(EntityPlayer player, ItemStack stack) {
         boolean inRange = false;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
@@ -46,20 +46,29 @@ public class NetworkItemHandler implements INetworkItemHandler {
             return;
         }
 
-        INetworkItem item = ((INetworkItemProvider) player.getHeldItem(hand).getItem()).provide(this, player, player.getHeldItem(hand));
+        INetworkItem item = ((INetworkItemProvider) stack.getItem()).provide(this, player, stack);
 
-        if (item.onOpen(network, player, hand)) {
+        if (item.onOpen(network)) {
             items.put(player, item);
         }
     }
 
     @Override
-    public void onClose(EntityPlayer player) {
+    public void close(EntityPlayer player) {
         items.remove(player);
     }
 
     @Override
     public INetworkItem getItem(EntityPlayer player) {
         return items.get(player);
+    }
+
+    @Override
+    public void drainEnergy(EntityPlayer player, int energy) {
+        INetworkItem item = getItem(player);
+
+        if (item != null) {
+            item.drainEnergy(energy);
+        }
     }
 }

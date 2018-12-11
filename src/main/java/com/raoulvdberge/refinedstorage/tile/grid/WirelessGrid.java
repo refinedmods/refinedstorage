@@ -63,8 +63,8 @@ public class WirelessGrid implements IGridNetworkAware {
         }
     };
 
-    public WirelessGrid(int networkDimension, ItemStack stack) {
-        this.networkDimension = networkDimension;
+    public WirelessGrid(ItemStack stack) {
+        this.networkDimension = ItemWirelessGrid.getDimensionId(stack);
         this.network = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
 
         this.stack = stack;
@@ -305,7 +305,7 @@ public class WirelessGrid implements IGridNetworkAware {
         INetwork network = getNetwork();
 
         if (network != null) {
-            network.getNetworkItemHandler().onClose(player);
+            network.getNetworkItemHandler().close(player);
         }
     }
 }
