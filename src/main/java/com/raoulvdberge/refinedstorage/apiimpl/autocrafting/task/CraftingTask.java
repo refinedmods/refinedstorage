@@ -551,7 +551,7 @@ public class CraftingTask implements ICraftingTask {
                 ItemStack result = network.extractItem(toExtract, toExtract.getCount(), Action.PERFORM);
 
                 if (result != null) {
-                    internalStorage.insert(toExtract, toExtract.getCount(), Action.PERFORM);
+                    internalStorage.insert(toExtract, result.getCount(), Action.PERFORM);
 
                     toRemove.add(result);
                 }
@@ -573,7 +573,7 @@ public class CraftingTask implements ICraftingTask {
                 FluidStack result = network.extractFluid(toExtract, toExtract.amount, Action.PERFORM);
 
                 if (result != null) {
-                    internalFluidStorage.insert(toExtract, toExtract.amount, Action.PERFORM);
+                    internalFluidStorage.insert(toExtract, result.amount, Action.PERFORM);
 
                     toRemove.add(result);
                 }
