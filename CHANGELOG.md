@@ -5,6 +5,9 @@
 - Added keybindings to open wireless items. The default one set to open a Wireless Grid is CTRL + G (raoulvdberge)
 - Updated German translation (cydhra)
 - Updated Chinese translation (KoderX)
+- Fixed wrong item count for oredict patterns (the-eater)
+- Fixed autocrafting duplication bug (Radviger / notcake)
+- Let Constructor and Destructor interact with world using their owner's profile (Radviger)
 
 ### 1.6.12
 - Increased the speed of autocrafting (raoulvdberge)
