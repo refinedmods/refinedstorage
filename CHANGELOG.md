@@ -7,6 +7,7 @@
 - Updated Chinese translation (KoderX)
 - Fixed wrong item count for oredict patterns (the-eater)
 - Fixed autocrafting duplication bug (Radviger / notcake)
+- Fixed Crafting Pattern not rendering tile entity items like a chest (zhykzhykzhyk / raoulvdberge)
 - Let Constructor and Destructor interact with world using their owner's profile (Radviger)
 
 ### 1.6.12
