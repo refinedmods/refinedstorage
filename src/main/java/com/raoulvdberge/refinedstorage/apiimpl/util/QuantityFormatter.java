@@ -25,7 +25,9 @@ public class QuantityFormatter implements IQuantityFormatter {
 
     @Override
     public String formatWithUnits(long qty) {
-        if (qty >= 1_000_000) {
+        if (qty >= 1_000_000_000) {
+            return formatterWithUnits.format(Math.round((float) qty / 1_000_000_000)) + "B";
+        } else if (qty >= 1_000_000) {
             float qtyShort = (float) qty / 1_000_000F;
 
             if (qty >= 100_000_000) {
