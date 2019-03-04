@@ -70,6 +70,11 @@ public class CraftingPattern implements ICraftingPattern {
                         }
                     }
 
+                    // Fix item count
+                    for (ItemStack ore: ores) {
+                        ore.setCount(input.getCount());
+                    }
+
                     inputs.add(ores);
                 } else {
                     inputs.add(NonNullList.from(ItemStack.EMPTY, input));
