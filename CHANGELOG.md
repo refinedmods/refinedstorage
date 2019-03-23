@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.14
+- Fixed server crash (raoulvdberge)
+
 ### 1.6.13
 - Fixed Interface with Crafting Upgrade being stuck if an earlier item configuration has missing items or fluids (raoulvdberge)
 - Added keybindings to open wireless items. The default one set to open a Wireless Crafting Grid from Refined Storage Addons is CTRL + G (raoulvdberge)

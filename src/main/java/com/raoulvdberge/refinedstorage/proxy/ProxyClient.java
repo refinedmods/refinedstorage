@@ -1,11 +1,13 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
+import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.gui.KeyInputListener;
 import com.raoulvdberge.refinedstorage.item.ItemBase;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.BlockHighlightListener;
+import com.raoulvdberge.refinedstorage.render.teisr.TileEntityItemStackRendererPattern;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -47,6 +49,8 @@ public class ProxyClient extends ProxyCommon implements IModelRegistration {
 
         MinecraftForge.EVENT_BUS.register(new BlockHighlightListener());
         MinecraftForge.EVENT_BUS.register(new KeyInputListener());
+
+        RSItems.PATTERN.setTileEntityItemStackRenderer(new TileEntityItemStackRendererPattern());
     }
 
     @Override

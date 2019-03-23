@@ -11,11 +11,9 @@ import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.color.ItemColorPattern;
 import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelPattern;
-import com.raoulvdberge.refinedstorage.render.teisr.TileEntityItemStackRendererPattern;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -51,8 +49,6 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     public ItemPattern() {
         super(new ItemInfo(RS.ID, "pattern"));
-
-        setTileEntityItemStackRenderer(new TileEntityItemStackRendererPattern());
     }
 
     @Override
