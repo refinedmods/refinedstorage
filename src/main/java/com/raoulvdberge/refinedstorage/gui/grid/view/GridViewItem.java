@@ -35,10 +35,13 @@ public class GridViewItem extends GridViewBase {
         GridStackItem existing = (GridStackItem) map.get(stack.getHash());
 
         if (existing == null) {
-            ((GridStackItem) stack).getStack().setCount(delta);
+            if(delta != 0) {
+                ((GridStackItem) stack).getStack().setCount(delta);
+            }
 
             map.put(stack.getHash(), stack);
         } else {
+            existing.setCraftable(stack.isCraftable());
             if (existing.getStack().getCount() + delta <= 0) {
                 if (existing.isCraftable()) {
                     existing.setDisplayCraftText(true);

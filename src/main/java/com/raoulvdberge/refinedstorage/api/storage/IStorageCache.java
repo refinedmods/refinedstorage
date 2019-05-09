@@ -28,9 +28,11 @@ public interface IStorageCache<T> {
      * Use {@link IStorage#insert(T, int, com.raoulvdberge.refinedstorage.api.util.Action)} to add a stack to an actual storage.
      * <p>
      * Will merge it with another stack if it already exists.
+     * <p>
+     * Use with (craftingresult,0) to update all listeners about newly available crafts.
      *
      * @param stack      the stack to add, do NOT modify
-     * @param size       the size to add
+     * @param size       the size to add or 0 for new crafts
      * @param rebuilding true if this method is called while rebuilding, false otherwise
      * @param batched    true if this change needs to be batched
      */

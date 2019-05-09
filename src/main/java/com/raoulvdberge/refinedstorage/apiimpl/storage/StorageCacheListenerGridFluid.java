@@ -34,6 +34,9 @@ public class StorageCacheListenerGridFluid implements IStorageCacheListener<Flui
 
     @Override
     public void onChanged(@Nonnull FluidStack stack, int size) {
+        if(size == 0) {
+            if(network.getCraftingManager().getPattern(stack) == null)  return;
+        }
         RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(network, network.getFluidStorageTracker(), stack, size), player);
     }
 

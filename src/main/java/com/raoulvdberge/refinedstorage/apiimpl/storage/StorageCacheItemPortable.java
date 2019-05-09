@@ -35,7 +35,9 @@ public class StorageCacheItemPortable implements IStorageCache<ItemStack> {
 
     @Override
     public void add(@Nonnull ItemStack stack, int size, boolean rebuilding, boolean batched) {
-        list.add(stack, size);
+        if(size !=0) {
+            list.add(stack, size);
+        }
 
         if (!rebuilding) {
             listeners.forEach(l -> l.onChanged(stack, size));

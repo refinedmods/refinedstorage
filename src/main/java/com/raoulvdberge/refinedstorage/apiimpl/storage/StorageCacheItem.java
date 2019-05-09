@@ -56,7 +56,9 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
 
     @Override
     public synchronized void add(@Nonnull ItemStack stack, int size, boolean rebuilding, boolean batched) {
-        list.add(stack, size);
+        if(size !=0) {
+            list.add(stack, size);
+        }
 
         if (!rebuilding) {
             if (!batched) {

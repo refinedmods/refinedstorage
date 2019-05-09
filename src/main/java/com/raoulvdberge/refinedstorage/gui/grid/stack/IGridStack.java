@@ -33,6 +33,8 @@ public interface IGridStack {
 
     boolean isCraftable();
 
+    void setCraftable(boolean craftable);
+
     boolean doesDisplayCraftText();
 
     void setDisplayCraftText(boolean displayCraftText);
