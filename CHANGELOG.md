@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.15
+- Added new recipes appearing in opened Grids
+
 ### 1.6.14
 - Fixed server crash (raoulvdberge)
 
