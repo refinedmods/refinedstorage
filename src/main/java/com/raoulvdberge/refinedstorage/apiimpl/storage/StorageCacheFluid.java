@@ -54,9 +54,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
 
     @Override
     public synchronized void add(@Nonnull FluidStack stack, int size, boolean rebuilding, boolean batched) {
-        if(size != 0) {
-            list.add(stack, size);
-        }
+        list.add(stack, size);
 
         if (!rebuilding) {
             if (!batched) {

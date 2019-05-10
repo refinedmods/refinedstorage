@@ -66,11 +66,6 @@ public class GridStackItem implements IGridStack {
     }
 
     @Override
-    public void setCraftable(boolean craftable) {
-        this.craftable = craftable;
-    }
-
-    @Override
     public boolean doesDisplayCraftText() {
         return displayCraftText;
     }

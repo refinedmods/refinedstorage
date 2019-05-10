@@ -39,7 +39,6 @@ public class GridViewFluid extends GridViewBase {
 
             map.put(stack.getHash(), stack);
         } else {
-            existing.setCraftable(stack.isCraftable());
             if (existing.getStack().amount + delta <= 0) {
                 if (existing.isCraftable()) {
                     existing.setDisplayCraftText(true);

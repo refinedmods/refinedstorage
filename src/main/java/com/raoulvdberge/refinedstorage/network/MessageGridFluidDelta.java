@@ -40,7 +40,7 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
     public void fromBytes(ByteBuf buf) {
         Pair<Integer, FluidStack> hashAndFluidStack = StackUtils.readFluidStackAndHash(buf);
 
-        gridStack = new GridStackFluid(hashAndFluidStack.getLeft(), hashAndFluidStack.getRight(), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), buf.readBoolean());
+        gridStack = new GridStackFluid(hashAndFluidStack.getLeft(), hashAndFluidStack.getRight(), buf.readBoolean() ? new StorageTrackerEntry(buf) : null, buf.readBoolean(), false);
         delta = buf.readInt();
     }
 
@@ -60,7 +60,6 @@ public class MessageGridFluidDelta implements IMessage, IMessageHandler<MessageG
         } else {
             buf.writeBoolean(false);
         }
-        buf.writeBoolean(delta == 0);
 
         buf.writeInt(delta);
     }

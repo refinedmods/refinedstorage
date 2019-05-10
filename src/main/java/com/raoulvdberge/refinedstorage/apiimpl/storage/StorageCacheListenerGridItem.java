@@ -26,6 +26,7 @@ public class StorageCacheListenerGridItem implements IStorageCacheListener<ItemS
     public void onAttached() {
         RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(network, network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)), player);
     }
+
     @Override
     public void onInvalidated() {
         // NO OP
@@ -33,9 +34,6 @@ public class StorageCacheListenerGridItem implements IStorageCacheListener<ItemS
 
     @Override
     public void onChanged(@Nonnull ItemStack stack, int size) {
-        if(size == 0) {
-            if(network.getCraftingManager().getPattern(stack) == null)  return;
-        }
         RS.INSTANCE.network.sendTo(new MessageGridItemDelta(network, network.getItemStorageTracker(), stack, size), player);
     }
 
