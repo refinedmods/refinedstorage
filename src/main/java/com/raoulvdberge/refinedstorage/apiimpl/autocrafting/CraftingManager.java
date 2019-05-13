@@ -43,6 +43,10 @@ public class CraftingManager implements ICraftingManager {
     private List<ICraftingTask> tasksToAdd = new ArrayList<>();
     private List<UUID> tasksToCancel = new ArrayList<>();
     private NBTTagList tasksToRead;
+    private boolean limitedUpdates;
+    private boolean taskChanged;
+    private int numberOfNoUpdateTicks;
+    private int noUpdateTick;
 
     private Map<Object, Long> throttledRequesters = new HashMap<>();
 
@@ -180,6 +184,16 @@ public class CraftingManager implements ICraftingManager {
                 onTaskChanged();
             }
 
+            if (limitedUpdates && taskChanged) {
+                if (noUpdateTick >= numberOfNoUpdateTicks) {
+                    listeners.forEach(ICraftingMonitorListener::onChanged);
+                    taskChanged = false;
+                    noUpdateTick = 0;
+                } else {
+                    noUpdateTick++;
+                }
+            }
+
             if (!tasks.isEmpty()) {
                 network.markDirty();
             }
@@ -223,7 +237,21 @@ public class CraftingManager implements ICraftingManager {
 
     @Override
     public void onTaskChanged() {
-        listeners.forEach(ICraftingMonitorListener::onChanged);
+        if (limitedUpdates) {
+            taskChanged = true;
+        } else {
+            listeners.forEach(ICraftingMonitorListener::onChanged);
+        }
+
+    }
+
+    public void throttleUpdates(int numberOfTasks) {
+       if (numberOfTasks<1000) {
+           limitedUpdates = false;
+       } else {
+           limitedUpdates = true;
+           numberOfNoUpdateTicks = Math.min(20,Math.floorDiv(numberOfTasks,10000));
+       }
     }
 
     @Override

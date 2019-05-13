@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.15
+- Fixed craftingmonitor sending too many updates on large crafting tasks (Darkere)
+
 ### 1.6.14
 - Fixed server crash (raoulvdberge)
 
