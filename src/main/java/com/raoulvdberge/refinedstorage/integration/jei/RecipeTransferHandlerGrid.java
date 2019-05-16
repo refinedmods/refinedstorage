@@ -84,7 +84,12 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
 
                 RS.INSTANCE.network.sendToServer(new MessageGridProcessingTransfer(inputs, outputs, fluidInputs, fluidOutputs));
             } else {
-                RS.INSTANCE.network.sendToServer(new MessageGridTransfer(recipeLayout.getItemStacks().getGuiIngredients(), container.inventorySlots.stream().filter(s -> s.inventory instanceof InventoryCrafting).collect(Collectors.toList())));
+                try {
+                    RS.INSTANCE.network.sendToServer(new MessageGridTransfer(recipeLayout.getItemStacks().getGuiIngredients(), container.inventorySlots.stream().filter(s -> s.inventory instanceof InventoryCrafting).collect(Collectors.toList())));
+                } catch (IllegalArgumentException e){
+                    //TODO: React to Payload error
+                }
+
             }
         } else {
             if (grid.getGridType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
