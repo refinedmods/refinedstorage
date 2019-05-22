@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -11,22 +12,31 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class Crafting {
     private static final String NBT_PATTERN = "Pattern";
     private static final String NBT_TOOK = "Took";
     private static final String NBT_TO_EXTRACT = "ToExtract";
     private static final String NBT_ROOT = "Root";
+    private static final String NBT_CONTAINERS = "Containers";
+    private static final String NBT_QUANTITY = "Quantity";
 
     private ICraftingPattern pattern;
     private NonNullList<ItemStack> took;
     private IStackList<ItemStack> toExtract;
+    private List<ICraftingPatternContainer> containers = new ArrayList<>();
+    private int quantity;
     private boolean root;
 
-    public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract, boolean root) {
+    public Crafting(ICraftingPattern pattern,int quantity, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract, boolean root) {
         this.pattern = pattern;
         this.took = took;
         this.toExtract = toExtract;
         this.root = root;
+        this.containers.add(pattern.getContainer());
+        this.quantity = quantity;
     }
 
     public Crafting(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
@@ -43,6 +53,28 @@ class Crafting {
             // Can be empty.
             took.add(stack);
         }
+        this.quantity = tag.getInteger(NBT_QUANTITY);
+        this.containers = CraftingTask.readContainerList(tag.getTagList(NBT_CONTAINERS,Constants.NBT.TAG_COMPOUND),network.world());
+    }
+
+    public void addQuantity() {
+        quantity++;
+    }
+
+    public List<ICraftingPatternContainer> getContainer() {
+        return containers;
+    }
+
+    public void addContainer(ICraftingPatternContainer container) {
+        containers.add(container);
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void reduceQuantity() {
+        quantity--;
     }
 
     public boolean isRoot() {
@@ -74,6 +106,8 @@ class Crafting {
         }
 
         tag.setTag(NBT_TOOK, tookList);
+        tag.setInteger(NBT_QUANTITY,quantity);
+        tag.setTag(NBT_CONTAINERS,CraftingTask.writeContainerList(containers));
 
         return tag;
     }
