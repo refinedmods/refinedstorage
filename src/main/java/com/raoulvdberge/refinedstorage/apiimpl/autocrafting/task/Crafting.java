@@ -57,8 +57,8 @@ class Crafting {
         this.containers = CraftingTask.readContainerList(tag.getTagList(NBT_CONTAINERS,Constants.NBT.TAG_COMPOUND),network.world());
     }
 
-    public void addQuantity() {
-        quantity++;
+    public void addQuantity(int quantity) {
+        this.quantity+= quantity;
     }
 
     public List<ICraftingPatternContainer> getContainer() {

@@ -95,8 +95,8 @@ class Processing {
         fluidsToPutTotal.getStacks().forEach(x -> x.amount *= totalQuantity);
     }
 
-    public void addQuantity() {
-        quantity++;
+    public void addQuantity(int quantity) {
+        this.quantity+= quantity;
     }
 
     public void reduceQuantity() {
@@ -109,8 +109,7 @@ class Processing {
 
     public int getProcessing(ItemStack stack){ // insertedItems - finishedItems
         if (itemsToPut.get(stack) != null) {
-            return  (itemsToPut.get(stack).getCount()*(totalQuantity-quantity)) -
-                    (itemsToPut.get(stack).getCount()*finished);
+            return (itemsToPut.get(stack).getCount() * ((totalQuantity - quantity) - finished));
         }
         return 0;
     }
@@ -123,13 +122,13 @@ class Processing {
         if(!itemsReceived.isEmpty()){
             int temp = totalQuantity;
             for(ItemStack stack : itemsReceived.getStacks()) {
-                if(temp > Math.floorDiv(stack.getCount(),itemsToReceive.get(stack).getCount())) {
-                    temp = Math.floorDiv(stack.getCount(),itemsToReceive.get(stack).getCount());
+                if(temp > stack.getCount()/itemsToReceive.get(stack).getCount()) {
+                    temp = stack.getCount()/itemsToReceive.get(stack).getCount();
                 }
             }
             for(FluidStack stack :fluidsReceived.getStacks()) {
-                if(temp > Math.floorDiv(stack.amount,fluidsToReceive.get(stack).amount)) {
-                    temp = Math.floorDiv(stack.amount,fluidsToReceive.get(stack).amount);
+                if(temp > stack.amount/fluidsToReceive.get(stack).amount) {
+                    temp = stack.amount/fluidsToReceive.get(stack).amount;
                 }
             }
             finished = temp;
@@ -138,8 +137,7 @@ class Processing {
 
     public int getProcessing(FluidStack stack){
         if (fluidsToPut.get(stack) != null) {
-            return  fluidsToPut.get(stack).amount*(totalQuantity-quantity) -
-                    (fluidsToPut.get(stack).amount*finished);
+            return  fluidsToPut.get(stack).amount * ((totalQuantity - quantity) - finished);
         }
         return 0;
     }
