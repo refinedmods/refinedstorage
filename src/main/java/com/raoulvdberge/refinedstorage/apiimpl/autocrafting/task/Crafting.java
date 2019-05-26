@@ -30,7 +30,7 @@ class Crafting {
     private int quantity;
     private boolean root;
 
-    public Crafting(ICraftingPattern pattern,int quantity, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract, boolean root) {
+    public Crafting(ICraftingPattern pattern, int quantity, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract, boolean root) {
         this.pattern = pattern;
         this.took = took;
         this.toExtract = toExtract;
@@ -54,19 +54,11 @@ class Crafting {
             took.add(stack);
         }
         this.quantity = tag.getInteger(NBT_QUANTITY);
-        this.containers = CraftingTask.readContainerList(tag.getTagList(NBT_CONTAINERS,Constants.NBT.TAG_COMPOUND),network.world());
+        this.containers = CraftingTask.readContainerList(tag.getTagList(NBT_CONTAINERS, Constants.NBT.TAG_COMPOUND), network.world());
     }
 
     public void addQuantity(int quantity) {
-        this.quantity+= quantity;
-    }
-
-    public List<ICraftingPatternContainer> getContainer() {
-        return containers;
-    }
-
-    public void addContainer(ICraftingPatternContainer container) {
-        containers.add(container);
+        this.quantity += quantity;
     }
 
     public int getQuantity() {
@@ -75,6 +67,14 @@ class Crafting {
 
     public void reduceQuantity() {
         quantity--;
+    }
+
+    public void addContainer(ICraftingPatternContainer container) {
+        containers.add(container);
+    }
+
+    public List<ICraftingPatternContainer> getContainer() {
+        return containers;
     }
 
     public boolean isRoot() {
@@ -106,8 +106,8 @@ class Crafting {
         }
 
         tag.setTag(NBT_TOOK, tookList);
-        tag.setInteger(NBT_QUANTITY,quantity);
-        tag.setTag(NBT_CONTAINERS,CraftingTask.writeContainerList(containers));
+        tag.setInteger(NBT_QUANTITY, quantity);
+        tag.setTag(NBT_CONTAINERS, CraftingTask.writeContainerList(containers));
 
         return tag;
     }

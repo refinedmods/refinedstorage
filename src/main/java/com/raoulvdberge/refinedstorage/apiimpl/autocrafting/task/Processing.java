@@ -38,8 +38,6 @@ class Processing {
     private IStackList<FluidStack> fluidsReceived;
     private IStackList<ItemStack> itemsToReceiveTotal;
     private IStackList<FluidStack> fluidsToReceiveTotal;
-    private IStackList<ItemStack> itemsToPutTotal;
-    private IStackList<FluidStack> fluidsToPutTotal;
 
     private ProcessingState state = ProcessingState.READY_OR_PROCESSING;
     private boolean root;
@@ -73,7 +71,7 @@ class Processing {
         this.totalQuantity = tag.getInteger(NBT_QUANTITY_TOTAL);
         this.itemsReceived = CraftingTask.readItemStackList(tag.getTagList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
         this.fluidsReceived = CraftingTask.readFluidStackList(tag.getTagList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
-        this.containers = CraftingTask.readContainerList(tag.getTagList(NBT_CONTAINERS,Constants.NBT.TAG_COMPOUND),network.world());
+        this.containers = CraftingTask.readContainerList(tag.getTagList(NBT_CONTAINERS, Constants.NBT.TAG_COMPOUND), network.world());
         setTotals(false);
     }
 
@@ -89,55 +87,34 @@ class Processing {
         itemsToReceiveTotal.getStacks().forEach(x -> x.setCount(x.getCount() * totalQuantity));
         fluidsToReceiveTotal = fluidsToReceive.copy();
         fluidsToReceiveTotal.getStacks().forEach(x -> x.amount *= totalQuantity);
-        itemsToPutTotal = itemsToPut.copy();
-        itemsToPutTotal.getStacks().forEach(x -> x.setCount(x.getCount() * totalQuantity));
-        fluidsToPutTotal = fluidsToPut.copy();
-        fluidsToPutTotal.getStacks().forEach(x -> x.amount *= totalQuantity);
     }
 
     public void addQuantity(int quantity) {
-        this.quantity+= quantity;
+        this.quantity += quantity;
     }
 
     public void reduceQuantity() {
         quantity--;
     }
 
-    public boolean nothingIsProcessing() {
-        return (totalQuantity-quantity) == finished; // no items are in processing
+    public int getQuantity() {
+        return quantity;
     }
 
-    public int getProcessing(ItemStack stack){ // insertedItems - finishedItems
+    public boolean isNothingProcessing() {
+        return (totalQuantity - quantity) == finished; // no items are in processing
+    }
+
+    public int getProcessing(ItemStack stack) { // insertedItems - finishedItems
         if (itemsToPut.get(stack) != null) {
             return (itemsToPut.get(stack).getCount() * ((totalQuantity - quantity) - finished));
         }
         return 0;
     }
 
-    /* Calculates how many patterns were already finished
-       by calculating finished patterns for every output
-       and then taking the minimum of those
-    */
-    private void updateFinishedPatterns() {
-        if(!itemsReceived.isEmpty()){
-            int temp = totalQuantity;
-            for(ItemStack stack : itemsReceived.getStacks()) {
-                if(temp > stack.getCount()/itemsToReceive.get(stack).getCount()) {
-                    temp = stack.getCount()/itemsToReceive.get(stack).getCount();
-                }
-            }
-            for(FluidStack stack :fluidsReceived.getStacks()) {
-                if(temp > stack.amount/fluidsToReceive.get(stack).amount) {
-                    temp = stack.amount/fluidsToReceive.get(stack).amount;
-                }
-            }
-            finished = temp;
-        }
-    }
-
-    public int getProcessing(FluidStack stack){
+    public int getProcessing(FluidStack stack) {
         if (fluidsToPut.get(stack) != null) {
-            return  fluidsToPut.get(stack).amount * ((totalQuantity - quantity) - finished);
+            return fluidsToPut.get(stack).amount * ((totalQuantity - quantity) - finished);
         }
         return 0;
     }
@@ -146,7 +123,7 @@ class Processing {
         if (itemsToReceiveTotal.get(stack) != null) {
             int scheduled = itemsToReceiveTotal.get(stack).getCount();
             if (itemsReceived.get(stack) != null) {
-                scheduled -=itemsReceived.get(stack).getCount();
+                scheduled -= itemsReceived.get(stack).getCount();
             }
             return scheduled;
         }
@@ -164,23 +141,51 @@ class Processing {
         return 0;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
 
     public boolean calculateFinished(ItemStack received, int size) {
         itemsReceived.add(received, size);
         return isFinished();
     }
 
-    private boolean isFinished() {
-         updateFinishedPatterns();
-        return finished== totalQuantity;
+    public boolean calculateFinished(FluidStack received, int size) {
+        fluidsReceived.add(received, size);
+        return isFinished();
     }
 
-    public boolean calculateFinished(FluidStack recieved, int size) {
-        fluidsReceived.add(recieved, size);
-        return isFinished();
+    private boolean isFinished() {
+        updateFinishedPatterns();
+        return finished == totalQuantity;
+    }
+
+    /* Calculates how many patterns were already finished
+       by calculating finished patterns for every output
+       and then taking the minimum of those
+    */
+    private void updateFinishedPatterns() {
+        int temp = totalQuantity;
+        if (!itemsToReceive.isEmpty()) {
+            for (ItemStack stack : itemsToReceive.getStacks()) {
+                if (itemsReceived.get(stack) != null) {
+                    if (temp > itemsReceived.get(stack).getCount() / itemsToReceive.get(stack).getCount()) {
+                        temp = itemsReceived.get(stack).getCount() / itemsToReceive.get(stack).getCount();
+                    }
+                } else {
+                    temp = 0;
+                }
+            }
+        }
+        if (!fluidsToReceive.isEmpty()) {
+            for (FluidStack stack : fluidsToReceive.getStacks()) {
+                if (fluidsReceived.get(stack) != null) {
+                    if (temp > fluidsReceived.get(stack).amount / fluidsToReceive.get(stack).amount) {
+                        temp = fluidsReceived.get(stack).amount / fluidsToReceive.get(stack).amount;
+                    }
+                } else {
+                    temp = 0;
+                }
+            }
+        }
+        finished = temp;
     }
 
     public IStackList<ItemStack> getItemsToPut() {
@@ -199,6 +204,28 @@ class Processing {
         return fluidsToReceiveTotal;
     }
 
+    public int getFluidReceived(FluidStack stack) {
+        if (fluidsReceived.get(stack) != null) {
+            return fluidsReceived.get(stack).amount;
+        }
+        return 0;
+    }
+
+    public int getItemReceived(ItemStack stack) {
+        if (itemsReceived.get(stack) != null) {
+            return itemsReceived.get(stack).getCount();
+        }
+        return 0;
+    }
+
+    public void addContainer(ICraftingPatternContainer container) {
+        containers.add(container);
+    }
+
+    public List<ICraftingPatternContainer> getContainer() {
+        return containers;
+    }
+
     public void setState(ProcessingState state) {
         this.state = state;
     }
@@ -209,13 +236,6 @@ class Processing {
 
     public boolean isRoot() {
         return root;
-    }
-
-    public void addContainer(ICraftingPatternContainer container) {
-        containers.add(container);
-    }
-    public List<ICraftingPatternContainer> getContainer() {
-        return containers;
     }
 
     public NBTTagCompound writeToNbt() {
@@ -232,7 +252,7 @@ class Processing {
         tag.setInteger(NBT_QUANTITY_TOTAL, totalQuantity);
         tag.setTag(NBT_ITEMS_RECEIVED, CraftingTask.writeItemStackList(itemsReceived));
         tag.setTag(NBT_FLUIDS_RECEIVED, CraftingTask.writeFluidStackList(fluidsReceived));
-        tag.setTag(NBT_CONTAINERS,CraftingTask.writeContainerList(containers));
+        tag.setTag(NBT_CONTAINERS, CraftingTask.writeContainerList(containers));
         return tag;
     }
 }
