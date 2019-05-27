@@ -802,6 +802,7 @@ public class CraftingTask implements ICraftingTask {
                             for (ItemStack need : p.getItemsToPut().getStacks()) {
                                 if (container.getConnectedInventory() == null) {
                                     p.setState(ProcessingState.MACHINE_NONE);
+                                    break;
                                 } else {
                                     ItemStack result = this.internalStorage.extract(need, need.getCount(), DEFAULT_EXTRACT_FLAGS, Action.SIMULATE);
 
@@ -826,6 +827,7 @@ public class CraftingTask implements ICraftingTask {
                             for (FluidStack need : p.getFluidsToPut().getStacks()) {
                                 if (container.getConnectedFluidInventory() == null) {
                                     p.setState(ProcessingState.MACHINE_NONE);
+                                    break;
                                 } else {
                                     FluidStack result = this.internalFluidStorage.extract(need, need.amount, IComparer.COMPARE_NBT, Action.SIMULATE);
 
@@ -833,10 +835,12 @@ public class CraftingTask implements ICraftingTask {
                                         hasAll = false;
 
                                         break;
-                                    } else if (container.getConnectedFluidInventory().fill(result, false) != result.amount) {
+                                    }
+                                    if (hasAll && container.getConnectedFluidInventory().fill(result, false) != result.amount) {
                                         if (p.isNothingProcessing()) {
                                             p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
                                         }
+                                        hasAll = false;
                                         break;
                                     } else if (p.getState() == ProcessingState.READY_OR_PROCESSING || p.getItemsToPut().isEmpty()) { // If the items were ok (or if we didn't have items).
                                         p.setState(ProcessingState.READY_OR_PROCESSING);
