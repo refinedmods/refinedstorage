@@ -349,7 +349,7 @@ public class CraftingPattern implements ICraftingPattern {
         return result;
     }
 
-    private class InventoryCraftingDummy extends InventoryCrafting {
+    public static class InventoryCraftingDummy extends InventoryCrafting {
         public InventoryCraftingDummy() {
             super(new Container() {
                 @Override

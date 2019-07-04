@@ -26,14 +26,14 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,6 +62,8 @@ public class CraftingTask implements ICraftingTask {
 
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
+    private static final String NBT_ITEM_LIST = "ItemList";
+    private static final String NBT_ITEM_COUNTS = "ItemCounts";
 
     private static final int DEFAULT_EXTRACT_FLAGS = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
 
@@ -85,8 +87,8 @@ public class CraftingTask implements ICraftingTask {
     private IStackList<ItemStack> toExtractInitial = API.instance().createItemStackList();
     private IStackList<FluidStack> toExtractInitialFluids = API.instance().createFluidStackList();
 
-    private Map<Integer, Crafting> crafting = new HashMap<>();
-    private Map<Integer, Processing> processing = new HashMap<>();
+    private Map<Integer, Crafting> crafting = new LinkedHashMap<>();
+    private Map<Integer, Processing> processing = new LinkedHashMap<>();
     List<Processing> processingToRemove = new ArrayList<>();
     List<Crafting> craftingToRemove = new ArrayList<>();
 
@@ -210,6 +212,33 @@ public class CraftingTask implements ICraftingTask {
         return containers;
     }
 
+    static NBTTagCompound writeMappedStackList(Map<IStackList<ItemStack>, Integer> map) {
+        NBTTagList itemList = new NBTTagList();
+        List<Integer> counts = new ArrayList<>();
+        for (Map.Entry<IStackList<ItemStack>, Integer> entry : map.entrySet()) {
+            itemList.appendTag(writeItemStackList(entry.getKey()));
+            counts.add(entry.getValue());
+        }
+        NBTTagIntArray countList = new NBTTagIntArray(counts);
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setTag(NBT_ITEM_LIST, itemList);
+        compound.setTag(NBT_ITEM_COUNTS, countList);
+        return compound;
+    }
+
+    static Map<IStackList<ItemStack>, Integer> readMappedStackList(NBTTagCompound compound) throws CraftingTaskReadException {
+        Map<IStackList<ItemStack>, Integer> map = new LinkedHashMap<>();
+        NBTTagList itemList = compound.getTagList(NBT_ITEM_LIST, Constants.NBT.TAG_LIST);
+        int[] countList = compound.getIntArray(NBT_ITEM_COUNTS);
+        if (countList.length == 0) return null;
+        for (int i = 0; i < itemList.tagCount(); ++i) {
+            IStackList<ItemStack> stackList = readItemStackList((NBTTagList) itemList.get(i));
+            int count = countList[i];
+            map.put(stackList, count);
+        }
+        return map;
+    }
+
     static NBTTagList writeItemStackList(IStackList<ItemStack> stacks) {
         NBTTagList list = new NBTTagList();
 
@@ -296,10 +325,15 @@ public class CraftingTask implements ICraftingTask {
         if (result != null) {
             return result;
         }
-
-        for (Processing p : processing.values()) {
-            p.setTotals(true);
+        if (!hasMissing()) {
+            for (Processing p : processing.values()) {
+                p.finishCalculation();
+            }
+            for (Crafting c : crafting.values()) {
+                c.finishCalculation();
+            }
         }
+
 
         if (requested.getItem() != null) {
             this.toCraft.add(requested.getItem(), qty * qtyPerCraft);
@@ -310,7 +344,7 @@ public class CraftingTask implements ICraftingTask {
         return null;
     }
 
-    class PossibleInputs {
+    static class PossibleInputs {
         private List<ItemStack> possibilities;
         private int pos;
 
@@ -335,17 +369,10 @@ public class CraftingTask implements ICraftingTask {
             return true;
         }
 
-        void sort(IStackList<ItemStack> mutatedStorage, IStackList<ItemStack> results) {
+        void sort(IStackList<ItemStack> stackList) {
             possibilities.sort((a, b) -> {
-                ItemStack ar = mutatedStorage.get(a);
-                ItemStack br = mutatedStorage.get(b);
-
-                return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
-            });
-
-            possibilities.sort((a, b) -> {
-                ItemStack ar = results.get(a);
-                ItemStack br = results.get(b);
+                ItemStack ar = stackList.get(a);
+                ItemStack br = stackList.get(b);
 
                 return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
             });
@@ -375,13 +402,12 @@ public class CraftingTask implements ICraftingTask {
         IStackList<FluidStack> fluidsToExtract = API.instance().createFluidStackList();
         boolean duplicate;
         NonNullList<ItemStack> took = NonNullList.create();
-        Map<NonNullList<ItemStack>, Integer> counts = new HashMap<>();
+        Map<NonNullList<ItemStack>, Integer> ingredientList = new LinkedHashMap<>();
 
         if (pattern.isProcessing()) {
             for (NonNullList<ItemStack> in : pattern.getInputs()) {
                 if (!in.isEmpty()) {
-                    counts.put(in, in.get(0).getCount());
-                    itemsToExtract.add(in.get(0));
+                    ingredientList.put(in, in.get(0).getCount());
                 }
             }
         } else {
@@ -392,9 +418,8 @@ public class CraftingTask implements ICraftingTask {
                 } else {
                     took.add(in.get(0));
                     duplicate = false;
-                    itemsToExtract.add(in.get(0));
 
-                    for (Map.Entry<NonNullList<ItemStack>, Integer> entry : counts.entrySet()) {
+                    for (Map.Entry<NonNullList<ItemStack>, Integer> entry : ingredientList.entrySet()) {
                         if (API.instance().getComparer().isEqualNoQuantity(in.get(0), entry.getKey().get(0))) {
                             entry.setValue(entry.getValue() + in.get(0).getCount());
                             duplicate = true;
@@ -402,33 +427,31 @@ public class CraftingTask implements ICraftingTask {
                         }
                     }
                     if (!duplicate) {
-                        counts.put(in, in.get(0).getCount());
+                        ingredientList.put(in, in.get(0).getCount());
                     }
 
                 }
             }
         }
 
-        for (Map.Entry<NonNullList<ItemStack>, Integer> entry : counts.entrySet()) {
+        for (Map.Entry<NonNullList<ItemStack>, Integer> entry : ingredientList.entrySet()) {
 
             NonNullList<ItemStack> inputs = entry.getKey();
 
             PossibleInputs possibleInputs = new PossibleInputs(new ArrayList<>(inputs));
-            possibleInputs.sort(mutatedStorage, results);
+            possibleInputs.sort(mutatedStorage);
+            possibleInputs.sort(results);
 
-            ItemStack possibleInput = possibleInputs.get().copy();
-            possibleInput.setCount(entry.getValue());
+            ImmutablePair<ItemStack, Integer> possibleInput = new ImmutablePair<>(possibleInputs.get(), entry.getValue() * qty);
 
-            if (possibleInput.getCount() * qty < 0) {
+            if (possibleInput.getRight() < 0) {
                 return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
             }
-            possibleInput.setCount(possibleInput.getCount() * qty);
 
-            ItemStack fromSelf = results.get(possibleInput);
-            ItemStack fromNetwork = mutatedStorage.get(possibleInput);
+            ItemStack fromSelf = results.get(possibleInput.getLeft());
+            ItemStack fromNetwork = mutatedStorage.get(possibleInput.getLeft());
 
-
-            int remaining = possibleInput.getCount();
+            int remaining = possibleInput.getRight();
 
             while (remaining > 0) {
                 if (fromSelf != null) {
@@ -436,31 +459,35 @@ public class CraftingTask implements ICraftingTask {
 
                     results.remove(fromSelf, toTake);
 
+                    itemsToExtract.add(possibleInput.getLeft(), toTake);
+
                     remaining -= toTake;
 
-                    fromSelf = results.get(possibleInput);
+                    fromSelf = results.get(possibleInput.getLeft());
                 }
                 if (fromNetwork != null && remaining > 0) {
                     int toTake = Math.min(remaining, fromNetwork.getCount());
 
-                    this.toTake.add(possibleInput, toTake);
+                    this.toTake.add(possibleInput.getLeft(), toTake);
 
-                    toExtractInitial.add(possibleInput, toTake);
+                    toExtractInitial.add(possibleInput.getLeft(), toTake);
+
+                    itemsToExtract.add(possibleInput.getLeft(), toTake);
 
                     mutatedStorage.remove(fromNetwork, toTake);
 
                     remaining -= toTake;
 
-                    fromNetwork = mutatedStorage.get(possibleInput);
+                    fromNetwork = mutatedStorage.get(possibleInput.getLeft());
 
 
                 }
                 if (remaining > 0) {
-                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
+                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput.getLeft());
 
                     if (subPattern != null) {
                         ICraftingPatternChain subPatternChain = patternChainList.getChain(subPattern);
-                        int quantityPerCraft = getQuantityPerCraft(possibleInput, null, subPattern);
+                        int quantityPerCraft = getQuantityPerCraft(possibleInput.getLeft(), null, subPattern);
                         int quantity = remaining / quantityPerCraft;
                         if (quantity * quantityPerCraft != remaining) {
                             quantity++;
@@ -473,11 +500,11 @@ public class CraftingTask implements ICraftingTask {
                             return result;
                         }
 
-                        fromSelf = results.get(possibleInput);
+                        fromSelf = results.get(possibleInput.getLeft());
                         if (fromSelf == null) {
                             throw new IllegalStateException("Recursive calculation didn't yield anything");
                         }
-                        fromNetwork = mutatedStorage.get(possibleInput);
+                        fromNetwork = mutatedStorage.get(possibleInput.getLeft());
 
                         // fromSelf contains the amount crafted after the loop.
                         this.toCraft.add(fromSelf);
@@ -485,22 +512,21 @@ public class CraftingTask implements ICraftingTask {
                     } else {
                         if (!possibleInputs.cycle()) {
                             // Give up.
-                            possibleInput = possibleInputs.get(); // Revert back to 0.
+                            possibleInput = new ImmutablePair<>(possibleInputs.get(), remaining); // Revert back to 0.
 
-                            if (possibleInput.getCount() * remaining < 0) {
+                            if (possibleInput.getRight() < 0) {
                                 return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
                             }
-                            this.missing.add(possibleInput, possibleInput.getCount() * remaining);
+                            this.missing.add(possibleInput.getLeft(), possibleInput.getRight());
 
                             remaining = 0;
 
                         } else {
                             // Retry with new input...
-                            possibleInput = possibleInputs.get();
-                            possibleInput.setCount(possibleInput.getCount() * remaining);
+                            possibleInput = new ImmutablePair<>(possibleInputs.get(), remaining);
 
-                            fromSelf = results.get(possibleInput);
-                            fromNetwork = mutatedStorage.get(possibleInput);
+                            fromSelf = results.get(possibleInput.getLeft());
+                            fromNetwork = mutatedStorage.get(possibleInput.getLeft());
                         }
                     }
                 }
@@ -596,6 +622,9 @@ public class CraftingTask implements ICraftingTask {
 
             if (processing.containsKey(pattern.getChainHashCode())) {
                 processing.get(pattern.getChainHashCode()).addQuantity(qty);
+                for (ItemStack stack : itemsToExtract.getStacks()) {
+                    processing.get(pattern.getChainHashCode()).addToItemsToPut(stack);
+                }
 
                 for (ICraftingPatternContainer container : processing.get(pattern.getChainHashCode()).getContainer()) {
                     if (API.instance().isNetworkNodeEqual((INetworkNode) container, pattern.getContainer())) {
@@ -608,7 +637,7 @@ public class CraftingTask implements ICraftingTask {
                 }
 
             } else {
-                processing.put(pattern.getChainHashCode(), new Processing(pattern, qty, itemsToReceive, fluidsToReceive, itemsToExtract, fluidsToExtract, root));
+                processing.put(pattern.getChainHashCode(), new Processing(pattern, qty, itemsToReceive, fluidsToReceive, itemsToExtract, fluidsToExtract, root, ingredientList));
             }
 
         } else {
@@ -618,6 +647,9 @@ public class CraftingTask implements ICraftingTask {
 
             if (crafting.containsKey(pattern.getChainHashCode())) {
                 crafting.get(pattern.getChainHashCode()).addQuantity(qty);
+                for (ItemStack stack : itemsToExtract.getStacks()) {
+                    crafting.get(pattern.getChainHashCode()).addToExtractTotal(stack);
+                }
 
                 for (ICraftingPatternContainer container : crafting.get(pattern.getChainHashCode()).getContainer()) {
                     if (API.instance().isNetworkNodeEqual((INetworkNode) container, pattern.getContainer())) {
@@ -630,7 +662,7 @@ public class CraftingTask implements ICraftingTask {
                 }
 
             } else {
-                crafting.put(pattern.getChainHashCode(), new Crafting(pattern, qty, took, itemsToExtract, root));
+                crafting.put(pattern.getChainHashCode(), new Crafting(pattern, qty, took, itemsToExtract, root, ingredientList));
             }
             ItemStack stack = pattern.getOutput(took);
             results.add(stack, stack.getCount() * qty);
@@ -692,13 +724,14 @@ public class CraftingTask implements ICraftingTask {
     private void updateCrafting() {
 
         for (Crafting c : crafting.values()) {
+            if (c.getQuantity() <= 0) {
+                craftingToRemove.add(c);
+                continue;
+            }
             for (ICraftingPatternContainer container : c.getContainer()) {
                 for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
-
-
-                    if (c.getQuantity() == 0) {
-                        craftingToRemove.add(c);
-                        continue;
+                    if (c.getQuantity() <= 0) {
+                        break;
                     }
 
                     int interval = container.getUpdateInterval();
@@ -711,7 +744,7 @@ public class CraftingTask implements ICraftingTask {
 
                         boolean hasAll = true;
 
-                        for (ItemStack need : c.getToExtract().getStacks()) {
+                        for (ItemStack need : c.getToExtract(true).getStacks()) {
                             ItemStack result = this.internalStorage.extract(need, need.getCount(), DEFAULT_EXTRACT_FLAGS, Action.SIMULATE);
 
                             if (result == null || result.getCount() != need.getCount()) {
@@ -722,7 +755,7 @@ public class CraftingTask implements ICraftingTask {
                         }
 
                         if (hasAll) {
-                            for (ItemStack need : c.getToExtract().getStacks()) {
+                            for (ItemStack need : c.getToExtract(false).getStacks()) {
                                 ItemStack result = this.internalStorage.extract(need, need.getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
 
                                 if (result == null || result.getCount() != need.getCount()) {
@@ -748,13 +781,11 @@ public class CraftingTask implements ICraftingTask {
                                 this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
                             }
 
-                            if (c.getQuantity() != 0) {
-                                c.reduceQuantity();
-
-                            }
-
+                            c.reduceQuantity();
                             network.getCraftingManager().onTaskChanged();
 
+                        } else {
+                            break;
                         }
                     }
                 }
@@ -799,7 +830,7 @@ public class CraftingTask implements ICraftingTask {
                         } else {
                             boolean hasAll = true;
                             //Is there an Inventory and are there enough items in internal storage
-                            for (ItemStack need : p.getItemsToPut().getStacks()) {
+                            for (ItemStack need : p.getItemsToPut(true).getStacks()) {
                                 if (container.getConnectedInventory() == null) {
                                     p.setState(ProcessingState.MACHINE_NONE);
                                     break;
@@ -816,7 +847,7 @@ public class CraftingTask implements ICraftingTask {
                                 }
                             }
 
-                            if (hasAll && p.getState() == ProcessingState.READY_OR_PROCESSING && !insertIntoInventory(container.getConnectedInventory(), new ArrayDeque<>(p.getItemsToPut().getStacks()), Action.SIMULATE)) {
+                            if (hasAll && p.getState() == ProcessingState.READY_OR_PROCESSING && !insertIntoInventory(container.getConnectedInventory(), new ArrayDeque<>(p.getItemsToPut(true).getStacks()), Action.SIMULATE)) {
                                 if (p.isNothingProcessing()) {
                                     p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
                                 }
@@ -842,7 +873,7 @@ public class CraftingTask implements ICraftingTask {
                                         }
                                         hasAll = false;
                                         break;
-                                    } else if (p.getState() == ProcessingState.READY_OR_PROCESSING || p.getItemsToPut().isEmpty()) { // If the items were ok (or if we didn't have items).
+                                    } else if (p.getState() == ProcessingState.READY_OR_PROCESSING || p.getItemsToPut(true).isEmpty()) { // If the items were ok (or if we didn't have items).
                                         p.setState(ProcessingState.READY_OR_PROCESSING);
                                     }
                                 }
@@ -851,7 +882,7 @@ public class CraftingTask implements ICraftingTask {
                             if (p.getState() == ProcessingState.READY_OR_PROCESSING && hasAll) {
                                 Deque<ItemStack> toInsert = new ArrayDeque<>();
 
-                                for (ItemStack need : p.getItemsToPut().getStacks()) {
+                                for (ItemStack need : p.getItemsToPut(false).getStacks()) {
                                     ItemStack result = this.internalStorage.extract(need, need.getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
                                     if (result == null || result.getCount() != need.getCount()) {
                                         throw new IllegalStateException("The internal crafting inventory reported that " + need + " was available but we got " + result);
@@ -1054,7 +1085,7 @@ public class CraftingTask implements ICraftingTask {
                 continue;
             }
             int needed = p.getItemsToReceiveTotal().get(stack).getCount();
-            needed -= p.getItemReceived(stack);
+            needed -= p.getItemReceivedCount(stack);
 
 
             if (needed != 0) {
@@ -1066,7 +1097,7 @@ public class CraftingTask implements ICraftingTask {
                 if (p.calculateFinished(stack, needed)) {
                     p.setState(ProcessingState.PROCESSED);
                 }
-
+                network.getCraftingManager().onTaskChanged();
                 size -= needed;
 
                 if (!p.isRoot()) {
@@ -1095,7 +1126,7 @@ public class CraftingTask implements ICraftingTask {
                 continue;
             }
             int needed = p.getFluidsToReceiveTotal().get(stack).amount;
-            needed -= p.getFluidReceived(stack);
+            needed -= p.getFluidReceivedCount(stack);
 
             if (needed != 0) {
 
@@ -1106,7 +1137,7 @@ public class CraftingTask implements ICraftingTask {
                 if (p.calculateFinished(stack, needed)) {
                     p.setState(ProcessingState.PROCESSED);
                 }
-
+                network.getCraftingManager().onTaskChanged();
                 size -= needed;
 
 
@@ -1183,13 +1214,25 @@ public class CraftingTask implements ICraftingTask {
             }
 
             if (processing.getState() == ProcessingState.READY_OR_PROCESSING || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE || processing.getState() == ProcessingState.LOCKED) {
-                for (ItemStack p : processing.getItemsToPut().getStacks()) {
-                    int proc = processing.getProcessing(p);
-                    if (proc != 0) {
-                        ICraftingMonitorElement element = new CraftingMonitorElementItemRender(p, 0, 0, proc, 0, 0);
-                        elements.add(element);
+                int current = 0;
+                int proc;
+                //this avoids creating new Stacklists every iteration, as this code can get called several hundred times per second in worst case
+                for (Map.Entry<IStackList<ItemStack>, Integer> entry : processing.getAllItemsToPut().entrySet()) {
+                    if (processing.getFinished() >= current + entry.getValue()) { // if this oredict type has finished
+                        continue;
+                    } else if (processing.getInserted() <= current + entry.getValue()) { // if this oredict type was started but not completly inserted
+                        proc = (processing.getInserted() - current) - (processing.getFinished() - current);
+                    } else { //if this oredict type was completely inserted but not finished
+                        proc = entry.getValue() - (processing.getFinished() - current);
                     }
+                    for (ItemStack p : entry.getKey().getStacks()) {
+                        if (proc != 0) {
+                            ICraftingMonitorElement element = new CraftingMonitorElementItemRender(p, 0, 0, p.getCount() * proc, 0, 0);
+                            elements.add(element);
+                        }
 
+                    }
+                    current += entry.getValue();
                 }
                 for (ItemStack receive : processing.getItemsToReceiveTotal().getStacks()) {
 
@@ -1354,6 +1397,92 @@ public class CraftingTask implements ICraftingTask {
         elements.addAll(mapFluids.values());
 
         return elements;
+    }
+
+    /**
+     * This Method takes all Inputs of a Crafting/Processing and turns that into one list with all the items
+     * that are needed for one crafting step, mapped to the number of times it needs to get used.
+     * Needed for working with Oredict.
+     **/
+
+    public static Map<IStackList<ItemStack>, Integer> calculateItemsToPut(IStackList<ItemStack> itemsToPutTotal, Map<NonNullList<ItemStack>, Integer> ingredientList) {
+        Map<IStackList<ItemStack>, Integer> itemsToPut = new LinkedHashMap<>();
+        Map<CraftingTask.PossibleInputs, Integer> inputs = new LinkedHashMap<>(); // Linked to be able to remove items in order
+
+        //Creates a new Map with PossibleInputs instead of NonNullList
+        for (Map.Entry<NonNullList<ItemStack>, Integer> entry : ingredientList.entrySet()) {
+            PossibleInputs possibilities = new CraftingTask.PossibleInputs(entry.getKey());
+            possibilities.sort(itemsToPutTotal);
+            inputs.put(possibilities, entry.getValue());
+        }
+
+        int count;
+        boolean oredictExhausted = false;
+        boolean split = false;
+        boolean singlerun;
+        boolean found;
+        int splitcount = 0;
+
+        while (!itemsToPutTotal.isEmpty() && !oredictExhausted) {
+            Map<ItemStack, Integer> singleSet = new HashMap<>();
+            count = Integer.MAX_VALUE;
+            singlerun = false;
+            //calculate 1 Set of items
+            for (Map.Entry<PossibleInputs, Integer> entry : inputs.entrySet()) {
+                do {
+                    if (entry.getKey().get() != null && itemsToPutTotal.get(entry.getKey().get()) != null) {
+                        found = true;
+
+                        ItemStack temp = itemsToPutTotal.get(entry.getKey().get());
+                        if (count > temp.getCount() / entry.getValue()) {
+                            count = temp.getCount() / entry.getValue();
+                        }
+
+                        //If we do not have enough of one type
+                        if (temp.getCount() < entry.getValue()) {
+                            split = true; //add to list and check for more
+                            found = false;//cycle the possibilities
+                            singlerun = true;//sets count to 1
+                        }
+
+                        if (!split) {
+                            singleSet.merge(temp, entry.getValue(), (x, y) -> x + y);
+                        } else {
+                            //if we have enough items for 1 full Set
+                            if (temp.getCount() + splitcount >= entry.getValue()) {
+                                singleSet.put(temp, entry.getValue() - splitcount);
+                                splitcount = 0;
+                                split = false;
+                                found = true;
+                            } else {
+                                singleSet.put(temp, temp.getCount());
+                                splitcount += temp.getCount();
+                            }
+                        }
+                    } else {
+                        found = false;
+                    }
+                    if (!found) {
+                        if (!entry.getKey().cycle()) {
+                            //this shouldn't happen
+                            LOGGER.warn("Oredict crafting is unexpectedly missing an item!");
+                            oredictExhausted = true; //failsafe, would otherwise loop indefinitely
+                            break;
+                        }
+                    }
+                } while (!found || split);
+            }
+
+            IStackList<ItemStack> list = API.instance().createItemStackList();
+            singleSet.forEach((x, y) -> list.add(x, y));
+
+            itemsToPut.put(list, singlerun ? 1 : count);
+
+            for (Map.Entry<ItemStack, Integer> entry : singleSet.entrySet()) {
+                itemsToPutTotal.remove(entry.getKey(), singlerun ? entry.getValue() : entry.getValue() * count);
+            }
+        }
+        return itemsToPut;
     }
 
     @Override
