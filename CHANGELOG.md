@@ -1,7 +1,10 @@
 # Refined Storage Changelog
 
 ### 1.6.15
-- Fixed recipes with more than 1 bucket of fluid not transferring from JEI
+- Fixed recipes with more than 1 bucket of fluid not transferring from JEI (Darkere)
+- Fixed oredict crafting patterns redefining recipes (Darkere)
+- Fixed Portable Grids not keeping their enchantments when placed (Darkere)
+- Shortened crafting text for the Russion translation to fix Grid overlays (yaroslav4167)
 
 ### 1.6.14
 - Fixed server crash (raoulvdberge)
