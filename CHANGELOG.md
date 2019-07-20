@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.15
+- Fixed recipes with more than 1 bucket of fluid not transferring from JEI
+
 ### 1.6.14
 - Fixed server crash (raoulvdberge)
 
