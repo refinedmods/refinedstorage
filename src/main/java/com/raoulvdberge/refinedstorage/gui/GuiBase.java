@@ -119,6 +119,10 @@ public abstract class GuiBase extends GuiContainer {
         return scrollbar;
     }
 
+    public boolean isMouseOverSlotPublic(Slot slot, int mx, int my) {
+        return this.isPointInRegion(slot.xPos, slot.yPos, 16, 16, mx, my);
+    }
+
     @Override
     public void initGui() {
         if (initializing) { // Fix double initialize because of runRunnables

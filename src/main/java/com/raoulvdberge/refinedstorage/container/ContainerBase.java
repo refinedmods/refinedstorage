@@ -81,6 +81,10 @@ public abstract class ContainerBase extends Container {
         }
     }
 
+    public List<SlotFilterFluid> getFluidSlots() {
+        return fluidSlots;
+    }
+
     @Override
     public ItemStack slotClick(int id, int dragType, ClickType clickType, EntityPlayer player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
