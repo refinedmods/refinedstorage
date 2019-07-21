@@ -6,6 +6,7 @@
 - Fixed Portable Grids not keeping their enchantments when placed (Darkere)
 - Shortened crafting text for the Russion translation to fix Grid overlays (yaroslav4167)
 - Fixed JEI hotkeys not working on fluid filter slots (raoulvdberge)
+- Fixed crash when opening Crafter Manager with FTB Quests installed (raoulvdberge)
 
 ### 1.6.14
 - Fixed server crash (raoulvdberge)
