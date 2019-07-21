@@ -37,7 +37,12 @@ public class BakedModelPattern extends BakedModelDelegate {
                 CraftingPattern pattern = ItemPattern.getPatternFromCache(world, stack);
 
                 if (canDisplayOutput(stack, pattern)) {
-                    return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(pattern.getOutputs().get(0), world, entity);
+                    ItemStack outputToRender = pattern.getOutputs().get(0);
+
+                    // @Volatile: Gregtech banned for rendering due to issues
+                    if (!"gregtech".equals(outputToRender.getItem().getCreatorModId(outputToRender))) {
+                        return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(outputToRender, world, entity);
+                    }
                 }
 
                 return super.handleItemState(originalModel, stack, world, entity);
