@@ -61,13 +61,25 @@ public class GridManager implements IGridManager {
         player.getNextWindowId();
         player.closeContainer();
 
+        // The order of sending this packet and setting openContainer matters!
+
+        // We first need to send the grid open packet with the window id.
+
+        // Then we set the openContainer so the slots are getting sent (EntityPlayerMP::update -> Container::detectAndSendChanges).
+
+        // If the client window id mismatches with the server window id this causes problems with slots not being set.
+        // If we would set the openContainer first, the slot packets would be sent first but wouldn't be able to be set
+        // on the client since the window id would mismatch.
+        // So we first send the window id in MessageGridOpen.
+
+        // The order is preserved by TCP.
+        RS.INSTANCE.network.sendTo(new MessageGridOpen(player.currentWindowId, pos, id, stack), player);
+
         player.openContainer = new ContainerGrid(grid.getLeft(), new ResizableDisplayDummy(), grid.getRight() instanceof TileBase ? (TileBase) grid.getRight() : null, player);
         player.openContainer.windowId = player.currentWindowId;
         player.openContainer.addListener(player);
 
         MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.openContainer));
-
-        RS.INSTANCE.network.sendTo(new MessageGridOpen(player.currentWindowId, pos, id, stack), player);
     }
 
     @Override
