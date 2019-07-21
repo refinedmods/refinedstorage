@@ -40,7 +40,8 @@ public class BakedModelPattern extends BakedModelDelegate {
                     ItemStack outputToRender = pattern.getOutputs().get(0);
 
                     // @Volatile: Gregtech banned for rendering due to issues
-                    if (!"gregtech".equals(outputToRender.getItem().getCreatorModId(outputToRender))) {
+                    if (!("gregtech".equals(outputToRender.getItem().getCreatorModId(outputToRender))
+                            && (outputToRender.getTranslationKey().equals("tile.pipe")||outputToRender.getItem().delegate.name().getPath().equals("machine")))) {
                         return Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(outputToRender, world, entity);
                     }
                 }
