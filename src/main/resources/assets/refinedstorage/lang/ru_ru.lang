@@ -118,7 +118,7 @@ misc.refinedstorage:priority=Приоритет
 misc.refinedstorage:oredict=Словарь руд
 misc.refinedstorage:processing=Обработка
 
-misc.refinedstorage:reader_writer.redstone=Мощность сигнала редстоуна: %d
+misc.refinedstorage:reader_writer.redstone=Сила сигнала редстоуна: %d
 
 misc.refinedstorage:total=%s всего
 
