@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
+/*
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.wrapper.IShapedCraftingRecipeWrapper;
@@ -44,3 +45,4 @@ public class RecipeWrapperHollowCover implements IShapedCraftingRecipeWrapper {
         return 3;
     }
 }
+*/

@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.inventorysorter;
-
+/*
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 public class IntegrationInventorySorter {
@@ -8,3 +8,4 @@ public class IntegrationInventorySorter {
         FMLInterModComms.sendMessage("inventorysorter", "slotblacklist", "com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager");
     }
 }
+ */

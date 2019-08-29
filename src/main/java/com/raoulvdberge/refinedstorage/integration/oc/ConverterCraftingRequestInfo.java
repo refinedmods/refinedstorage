@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.oc;
-
+/*
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import li.cil.oc.api.driver.Converter;
 
@@ -14,3 +14,4 @@ public class ConverterCraftingRequestInfo implements Converter {
         }
     }
 }
+*/

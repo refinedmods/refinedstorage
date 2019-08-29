@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
-
+/*
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
@@ -71,3 +71,4 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<GuiBase> 
         // NO OP
     }
 }
+*/

@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.oc;
-
+/*
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import li.cil.oc.api.driver.Converter;
 
@@ -26,3 +26,4 @@ public class ConverterCraftingPattern implements Converter {
         }
     }
 }
+*/

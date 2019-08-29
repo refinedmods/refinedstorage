@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.oc;
 
+/*
 import net.minecraftforge.fml.common.Loader;
 
 public final class IntegrationOC {
@@ -9,3 +10,4 @@ public final class IntegrationOC {
         return Loader.isModLoaded(ID);
     }
 }
+*/

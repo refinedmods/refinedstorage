@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
-
+/*
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
@@ -101,3 +101,4 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
         return null;
     }
 }
+*/

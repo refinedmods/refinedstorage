@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
-
+/*
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -72,3 +72,4 @@ public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
         return Collections.emptyList();
     }
 }
+*/

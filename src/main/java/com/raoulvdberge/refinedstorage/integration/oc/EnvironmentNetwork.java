@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.oc;
 
+/*
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
@@ -454,3 +455,4 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         return stack;
     }
 }
+*/

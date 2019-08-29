@@ -1,14 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.craftingtweaks;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
-import com.raoulvdberge.refinedstorage.container.slot.grid.SlotGridCrafting;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-
+/*
 public final class IntegrationCraftingTweaks {
     private static final String ID = "craftingtweaks";
 
@@ -46,3 +38,4 @@ public final class IntegrationCraftingTweaks {
         }
     }
 }
+*/

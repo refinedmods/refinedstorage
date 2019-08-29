@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
-
+/*
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
@@ -50,3 +50,4 @@ public class AdvancedGuiHandler implements IAdvancedGuiHandler<GuiBase> {
         return null;
     }
 }
+*/

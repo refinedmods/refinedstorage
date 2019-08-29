@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
-
+/*
 import net.minecraftforge.fml.common.Loader;
 
 public final class IntegrationJEI {
@@ -7,3 +7,4 @@ public final class IntegrationJEI {
         return Loader.isModLoaded("jei");
     }
 }
+ */

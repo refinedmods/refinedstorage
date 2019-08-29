@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
 
+/*
 import com.raoulvdberge.refinedstorage.RSItems;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.ingredients.VanillaTypes;
@@ -30,3 +31,4 @@ public class RecipeWrapperCover implements ICraftingRecipeWrapper {
         ingredients.setOutput(VanillaTypes.ITEM, cover);
     }
 }
+*/

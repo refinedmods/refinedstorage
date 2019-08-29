@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.funkylocomotion;
-
+/*
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.block.BlockNode;
 import com.rwtema.funkylocomotion.api.FunkyRegistry;
@@ -16,3 +16,4 @@ public class MoveFactoryRegisterer {
         }
     }
 }
+*/

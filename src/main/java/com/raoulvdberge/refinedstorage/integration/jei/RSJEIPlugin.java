@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
-
+/*
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
@@ -35,3 +35,4 @@ public class RSJEIPlugin implements IModPlugin {
         return runtime;
     }
 }
+*/

@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.integration.funkylocomotion;
-
+/*
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -73,3 +73,4 @@ public class MoveFactoryNetworkNode implements IMoveFactory {
         return true;
     }
 }
+ */
