@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -62,7 +62,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
 
     @Override
     public int getDimension() {
-        return world.provider.getDimension();
+        return world.getDimension().getType().getId();
     }
 
     public ItemHandlerBase getUpgrades() {
@@ -75,8 +75,8 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
-        return direction != null && EnumFacing.DOWN.equals(direction);
+    public boolean canConduct(@Nullable Direction direction) {
+        return direction != null && Direction.DOWN.equals(direction);
     }
 
     @Override
@@ -86,6 +86,6 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
 
     @Override
     public void visit(Operator operator) {
-        operator.apply(world, pos.offset(EnumFacing.DOWN), EnumFacing.UP);
+        operator.apply(world, pos.offset(Direction.DOWN), Direction.UP);
     }
 }

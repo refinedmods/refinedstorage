@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -38,7 +38,7 @@ public class NetworkNodeRelay extends NetworkNode {
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return canUpdate();
     }
 

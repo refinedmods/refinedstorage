@@ -15,7 +15,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -41,7 +41,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
 
     private Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
 
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
 
     private int oldAmount = -1;
 
@@ -82,7 +82,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         ItemStack inserted = deposit.getKey();
         long insertedAt = deposit.getValue();
 
-        if (MinecraftServer.getCurrentTimeMillis() - insertedAt < DEPOSIT_ALL_MAX_DELAY) {
+        if (System.currentTimeMillis() - insertedAt < DEPOSIT_ALL_MAX_DELAY) {
             for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
                 ItemStack toInsert = player.inventory.getStackInSlot(i);
 
@@ -109,13 +109,13 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
             player.inventory.setInventorySlotContents(player.inventory.currentItem, StackUtils.nullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
 
-            deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, MinecraftServer.getCurrentTimeMillis()));
+            deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, System.currentTimeMillis()));
         }
 
         return true;
     }
 
-    public void extract(PlayerEntity player, EnumFacing side) {
+    public void extract(PlayerEntity player, Direction side) {
         if (network == null || getDirection() != side) {
             return;
         }
@@ -178,8 +178,8 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
         StackUtils.readItems(itemFilter, 0, tag);

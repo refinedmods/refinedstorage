@@ -100,7 +100,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     }
 
     public boolean isSameDimension() {
-        return world.provider.getDimension() == receiverDimension;
+        return world.getDimension().getType().getId() == receiverDimension;
     }
 
     private boolean canTransmit() {
@@ -123,11 +123,12 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
 
         if (canTransmit()) {
             if (!isSameDimension()) {
-                final World dimensionWorld = DimensionManager.getWorld(receiverDimension);
 
-                if (dimensionWorld != null) {
-                    operator.apply(dimensionWorld, receiver, null);
-                }
+// TODO                final World dimensionWorld = DimensionManager.getWorld(receiverDimension);
+
+       //         if (dimensionWorld != null) {
+         //           operator.apply(dimensionWorld, receiver, null);
+           //     }
             } else {
                 operator.apply(world, receiver, null);
             }

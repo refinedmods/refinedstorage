@@ -14,7 +14,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
@@ -26,7 +25,7 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -52,7 +51,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private FluidInventory fluidFilters = new FluidInventory(9, new ListenerNetworkNode(this));
 
     private int priority = 0;
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private AccessType accessType = AccessType.INSERT_EXTRACT;
@@ -118,7 +117,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.hasKey(NBT_COVERS)) {
+        if (tag.contains(NBT_COVERS)) {
             coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
     }
@@ -156,29 +155,27 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
         StackUtils.readItems(itemFilters, 0, tag);
 
-        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+        if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
 
-        if (tag.hasKey(NBT_PRIORITY)) {
-            priority = tag.getInteger(NBT_PRIORITY);
+        if (tag.contains(NBT_PRIORITY)) {
+            priority = tag.getInt(NBT_PRIORITY);
         }
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_MODE)) {
-            mode = tag.getInteger(NBT_MODE);
+        if (tag.contains(NBT_MODE)) {
+            mode = tag.getInt(NBT_MODE);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
         }
 
         accessType = AccessTypeUtils.readAccessType(tag);
-
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);
     }
 
     @Override
@@ -369,7 +366,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return coverManager.canConduct(direction);
     }
 

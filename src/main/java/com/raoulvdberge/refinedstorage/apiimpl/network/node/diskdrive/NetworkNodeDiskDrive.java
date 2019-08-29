@@ -9,12 +9,10 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
@@ -29,8 +27,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -58,7 +56,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO : correct?
                 StackUtils.createStorages(
                     world,
                     getStackInSlot(slot),
@@ -87,7 +85,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
 
@@ -176,10 +174,6 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         super.read(tag);
 
         StackUtils.readItems(disks, 0, tag);
-
-        if (API.instance().getOneSixMigrationHelper().migrateDiskInventory(world, disks)) {
-            markDirty();
-        }
     }
 
     @Override
@@ -219,29 +213,27 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
         StackUtils.readItems(itemFilters, 1, tag);
 
-        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+        if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
 
-        if (tag.hasKey(NBT_PRIORITY)) {
-            priority = tag.getInteger(NBT_PRIORITY);
+        if (tag.contains(NBT_PRIORITY)) {
+            priority = tag.getInt(NBT_PRIORITY);
         }
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_MODE)) {
-            mode = tag.getInteger(NBT_MODE);
+        if (tag.contains(NBT_MODE)) {
+            mode = tag.getInt(NBT_MODE);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
         }
 
         accessType = AccessTypeUtils.readAccessType(tag);
-
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);
     }
 
     @Override

@@ -16,7 +16,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -36,7 +36,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
 
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
 
     private int currentSlot = 0;
 
@@ -135,7 +135,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     }
 
     private boolean isActingAsStorage() {
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        for (Direction facing : Direction.values()) {
             INetworkNode facingNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(facing));
 
             if (facingNode instanceof NetworkNodeExternalStorage &&
@@ -203,8 +203,8 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
         StackUtils.readItems(exportFilterItems, 1, tag);
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
     }
 

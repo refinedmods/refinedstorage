@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -71,11 +71,11 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.hasKey(NBT_CHANNEL)) {
+        if (tag.contains(NBT_CHANNEL)) {
             channel = tag.getString(NBT_CHANNEL);
         }
 
-        if (tag.hasKey(NBT_COVERS)) {
+        if (tag.contains(NBT_COVERS)) {
             coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
     }
@@ -89,7 +89,7 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.setString(NBT_CHANNEL, channel);
+        tag.putString(NBT_CHANNEL, channel);
 
         tag.put(NBT_COVERS, coverManager.writeToNbt());
 
@@ -97,7 +97,7 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return coverManager.canConduct(direction);
     }
 

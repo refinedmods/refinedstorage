@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
@@ -20,11 +19,11 @@ import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -47,7 +46,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK);
 
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
 
@@ -111,18 +110,19 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
             IFluidHandler handler = WorldUtils.getFluidHandler(getFacingTile(), getDirection().getOpposite());
 
             if (handler != null) {
-                FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
+                FluidStack stack = handler.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
 
-                if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, Action.SIMULATE) == null) {
-                    FluidStack toDrain = handler.drain(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), false);
+                if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.getAmount(), Action.SIMULATE) == null) {
+                    FluidStack toDrain = handler.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount(), IFluidHandler.FluidAction.EXECUTE); // TODO: is this execute?
 
                     if (toDrain != null) {
-                        FluidStack remainder = network.insertFluidTracked(toDrain, toDrain.amount);
+                        FluidStack remainder = network.insertFluidTracked(toDrain, toDrain.getAmount());
+
                         if (remainder != null) {
-                            toDrain.amount -= remainder.amount;
+                            toDrain.shrink(remainder.getAmount());
                         }
 
-                        handler.drain(toDrain, true);
+                        handler.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
             }
@@ -159,7 +159,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
         StackUtils.readItems(upgrades, 1, tag);
 
-        if (tag.hasKey(NBT_COVERS)) {
+        if (tag.contains(NBT_COVERS)) {
             coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
     }
@@ -199,25 +199,23 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_MODE)) {
-            mode = tag.getInteger(NBT_MODE);
+        if (tag.contains(NBT_MODE)) {
+            mode = tag.getInt(NBT_MODE);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
 
-        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+        if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
-
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);
     }
 
     public IItemHandler getUpgrades() {
@@ -230,7 +228,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return coverManager.canConduct(direction);
     }
 

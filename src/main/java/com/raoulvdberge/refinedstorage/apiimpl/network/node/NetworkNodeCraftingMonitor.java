@@ -82,7 +82,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
         tag.putInt(NBT_TAB_PAGE, tabPage);
 
         if (tabSelected.isPresent()) {
-            tag.setUniqueId(NBT_TAB_SELECTED, tabSelected.get());
+            tag.putUniqueId(NBT_TAB_SELECTED, tabSelected.get());
         }
 
         return tag;
@@ -92,8 +92,8 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.hasKey(NBT_TAB_PAGE)) {
-            tabPage = tag.getInteger(NBT_TAB_PAGE);
+        if (tag.contains(NBT_TAB_PAGE)) {
+            tabPage = tag.getInt(NBT_TAB_PAGE);
         }
 
         if (tag.hasUniqueId(NBT_TAB_SELECTED)) {

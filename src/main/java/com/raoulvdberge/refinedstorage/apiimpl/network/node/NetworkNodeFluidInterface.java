@@ -17,7 +17,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
@@ -162,7 +162,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     }
 
     private boolean isActingAsStorage() {
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        for (Direction facing : Direction.VALUES) {
             INetworkNode facingNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(facing));
 
             if (facingNode instanceof NetworkNodeExternalStorage &&
@@ -201,11 +201,11 @@ public class NetworkNodeFluidInterface extends NetworkNode {
         StackUtils.readItems(upgrades, 0, tag);
         StackUtils.readItems(in, 1, tag);
 
-        if (tag.hasKey(NBT_TANK_IN)) {
+        if (tag.contains(NBT_TANK_IN)) {
             tankIn.readFromNBT(tag.getCompound(NBT_TANK_IN));
         }
 
-        if (tag.hasKey(NBT_TANK_OUT)) {
+        if (tag.contains(NBT_TANK_OUT)) {
             tankOut.readFromNBT(tag.getCompound(NBT_TANK_OUT));
         }
     }
@@ -228,7 +228,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_OUT)) {
+        if (tag.contains(NBT_OUT)) {
             out.readFromNbt(tag.getCompound(NBT_OUT));
         }
     }

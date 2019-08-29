@@ -31,7 +31,7 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySkull;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -68,7 +68,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
     private boolean drop = false;
 
@@ -223,9 +223,9 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                                 if (item.hasTagCompound()) {
                                     CompoundNBT tag = item.getTagCompound();
 
-                                    if (tag.hasKey("SkullOwner", 10)) {
+                                    if (tag.contains("SkullOwner", 10)) {
                                         playerInfo = NBTUtil.readGameProfileFromNBT(tag.getCompound("SkullOwner"));
-                                    } else if (tag.hasKey("SkullOwner", 8) && !tag.getString("SkullOwner").isEmpty()) {
+                                    } else if (tag.contains("SkullOwner", 8) && !tag.getString("SkullOwner").isEmpty()) {
                                         playerInfo = new GameProfile(null, tag.getString("SkullOwner"));
                                     }
                                 }
@@ -266,7 +266,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     // From BlockDispenser#getDispensePosition
     private double getDispensePositionY() {
-        return (double) pos.getY() + (getDirection() == EnumFacing.DOWN ? 0.45D : 0.5D) + 0.8D * (double) getDirection().getYOffset();
+        return (double) pos.getY() + (getDirection() == Direction.DOWN ? 0.45D : 0.5D) + 0.8D * (double) getDirection().getYOffset();
     }
 
     // From BlockDispenser#getDispensePosition
@@ -328,25 +328,25 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
         }
 
-        if (tag.hasKey(NBT_DROP)) {
+        if (tag.contains(NBT_DROP)) {
             drop = tag.getBoolean(NBT_DROP);
         }
 
-        if (tag.hasKey(NBT_COVERS)) {
+        if (tag.contains(NBT_COVERS)) {
             coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
 
-        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+        if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
     }
@@ -369,7 +369,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return coverManager.canConduct(direction);
     }
 

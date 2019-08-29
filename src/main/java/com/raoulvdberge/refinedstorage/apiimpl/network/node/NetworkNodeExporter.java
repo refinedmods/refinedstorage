@@ -16,11 +16,11 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -43,7 +43,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
 
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
 
     private CoverManager coverManager = new CoverManager(this);
@@ -123,22 +123,22 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     FluidStack stack = fluids[filterSlot];
 
                     if (stack != null) {
-                        int toExtract = Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount();
+                        int toExtract = FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount();
 
                         FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
 
                         if (stackInStorage != null) {
-                            toExtract = Math.min(toExtract, stackInStorage.amount);
+                            toExtract = Math.min(toExtract, stackInStorage.getAmount());
 
                             FluidStack took = network.extractFluid(stack, toExtract, compare, Action.SIMULATE);
 
                             if (took != null) {
-                                int filled = handler.fill(took, false);
+                                int filled = handler.fill(took, IFluidHandler.FluidAction.SIMULATE);
 
                                 if (filled > 0) {
                                     took = network.extractFluid(stack, filled, compare, Action.PERFORM);
 
-                                    handler.fill(took, true);
+                                    handler.fill(took, IFluidHandler.FluidAction.EXECUTE);
                                 }
                             }
                         } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
@@ -201,7 +201,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
         StackUtils.readItems(upgrades, 1, tag);
 
-        if (tag.hasKey(NBT_COVERS)) {
+        if (tag.contains(NBT_COVERS)) {
             coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
     }
@@ -210,17 +210,17 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
 
-        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+        if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
     }
@@ -257,7 +257,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return coverManager.canConduct(direction);
     }
 

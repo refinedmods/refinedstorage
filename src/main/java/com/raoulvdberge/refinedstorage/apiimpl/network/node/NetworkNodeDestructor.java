@@ -28,7 +28,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityShulkerBox;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -239,7 +239,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
         StackUtils.readItems(upgrades, 1, tag);
 
-        if (tag.hasKey(NBT_COVERS)) {
+        if (tag.contains(NBT_COVERS)) {
             coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
     }
@@ -280,25 +280,25 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_MODE)) {
-            mode = tag.getInteger(NBT_MODE);
+        if (tag.contains(NBT_MODE)) {
+            mode = tag.getInt(NBT_MODE);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
         }
 
-        if (tag.hasKey(NBT_PICKUP)) {
+        if (tag.contains(NBT_PICKUP)) {
             pickupItem = tag.getBoolean(NBT_PICKUP);
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
 
-        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+        if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
 
@@ -346,7 +346,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return coverManager.canConduct(direction);
     }
 

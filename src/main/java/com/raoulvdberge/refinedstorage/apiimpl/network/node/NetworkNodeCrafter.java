@@ -16,8 +16,8 @@ import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldNameable;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -180,17 +180,13 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         StackUtils.readItems(patternsInventory, 0, tag);
 
-        if (API.instance().getOneSixMigrationHelper().migratePatternInventory(patternsInventory)) {
-            markDirty();
-        }
-
         this.invalidate();
 
         this.reading = false;
 
         StackUtils.readItems(upgrades, 1, tag);
 
-        if (tag.hasKey(NBT_DISPLAY_NAME)) {
+        if (tag.contains(NBT_DISPLAY_NAME)) {
             displayName = tag.getString(NBT_DISPLAY_NAME);
         }
 
@@ -198,15 +194,15 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             uuid = tag.getUniqueId(NBT_UUID);
         }
 
-        if (tag.hasKey(NBT_MODE)) {
-            mode = CrafterMode.getById(tag.getInteger(NBT_MODE));
+        if (tag.contains(NBT_MODE)) {
+            mode = CrafterMode.getById(tag.getInt(NBT_MODE));
         }
 
-        if (tag.hasKey(NBT_LOCKED)) {
+        if (tag.contains(NBT_LOCKED)) {
             locked = tag.getBoolean(NBT_LOCKED);
         }
 
-        if (tag.hasKey(NBT_WAS_POWERED)) {
+        if (tag.contains(NBT_WAS_POWERED)) {
             wasPowered = tag.getBoolean(NBT_WAS_POWERED);
         }
     }
@@ -224,11 +220,11 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         StackUtils.writeItems(upgrades, 1, tag);
 
         if (displayName != null) {
-            tag.setString(NBT_DISPLAY_NAME, displayName);
+            tag.putString(NBT_DISPLAY_NAME, displayName);
         }
 
         if (uuid != null) {
-            tag.setUniqueId(NBT_UUID, uuid);
+            tag.putUniqueId(NBT_UUID, uuid);
         }
 
         tag.putInt(NBT_MODE, mode.ordinal());
@@ -326,8 +322,8 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
         TileEntity facing = getConnectedTile();
 
-        if (facing instanceof IWorldNameable && ((IWorldNameable) facing).getName() != null) {
-            return ((IWorldNameable) facing).getName();
+        if (facing instanceof INameable && ((INameable) facing).getName() != null) {
+            return ((INameable) facing).getName().getString(); // TODO: DOes this even work
         }
 
         if (facing != null) {

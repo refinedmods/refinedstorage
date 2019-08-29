@@ -27,18 +27,23 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.*;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -70,7 +75,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     private static final String NBT_PROCESSING_TYPE = "ProcessingType";
     private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
 
-    private Container craftingContainer = new Container() {
+    private Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
         @Override
         public boolean canInteractWith(PlayerEntity player) {
             return false;
@@ -84,10 +89,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
         }
     };
     private IRecipe currentRecipe;
-    private InventoryCrafting matrix = new InventoryCrafting(craftingContainer, 3, 3);
-    private InventoryCraftResult result = new InventoryCraftResult();
+    private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
+    private CraftResultInventory result = new CraftResultInventory();
     private ItemHandlerBase processingMatrix = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this));
-    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, Fluid.BUCKET_VOLUME * 64, new ListenerNetworkNode(this));
+    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64, new ListenerNetworkNode(this));
 
     private Set<IGridCraftingListener> craftingListeners = new HashSet<>();
 
@@ -131,7 +136,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
             // Only allow in slot 1 when it isn't a blank pattern
             // This makes it so that written patterns can be re-inserted in slot 1 to be overwritten again
             // This makes it so that blank patterns can't be inserted in slot 1 through hoppers.
-            if (slot == 0 || stack.getTagCompound() != null) {
+            if (slot == 0 || stack.getTag() != null) {
                 return super.insertItem(slot, stack, simulate);
             }
 
@@ -224,9 +229,10 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     @Override
     public GridType getGridType() {
         if (type == null) {
-            IBlockState state = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
+
             if (state.getBlock() == RSBlocks.GRID) {
-                type = (GridType) state.getValue(BlockGrid.TYPE);
+                type = state.get(BlockGrid.TYPE);
             }
         }
 
@@ -302,12 +308,12 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public InventoryCrafting getCraftingMatrix() {
+    public CraftingInventory getCraftingMatrix() {
         return matrix;
     }
 
     @Override
-    public InventoryCraftResult getCraftingResult() {
+    public CraftResultInventory getCraftingResult() {
         return result;
     }
 
@@ -322,7 +328,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     @Override
     public void onCraftingMatrixChanged() {
         if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
-            currentRecipe = CraftingManager.findMatchingRecipe(matrix, world);
+            currentRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, matrix, world).orElse(null); // TODO: does this work?
         }
 
         if (currentRecipe == null) {
@@ -388,7 +394,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
                     // If we are connected, first try to get the possibilities from the network
                     if (network != null) {
                         for (ItemStack possibility : possibilities) {
-                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT | (possibility.getItem().isDamageable() ? 0 : IComparer.COMPARE_DAMAGE), Action.PERFORM);
+                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT, Action.PERFORM);
 
                             if (took != null) {
                                 grid.getCraftingMatrix().setInventorySlotContents(i, StackUtils.nullToEmpty(took));
@@ -731,16 +737,16 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
         StackUtils.readItems(filter, 2, tag);
         StackUtils.readItems(processingMatrix, 3, tag);
 
-        if (tag.hasKey(NBT_PROCESSING_MATRIX_FLUIDS)) {
+        if (tag.contains(NBT_PROCESSING_MATRIX_FLUIDS)) {
             processingMatrixFluids.readFromNbt(tag.getCompound(NBT_PROCESSING_MATRIX_FLUIDS));
         }
 
-        if (tag.hasKey(NBT_TAB_SELECTED)) {
-            tabSelected = tag.getInteger(NBT_TAB_SELECTED);
+        if (tag.contains(NBT_TAB_SELECTED)) {
+            tabSelected = tag.getInt(NBT_TAB_SELECTED);
         }
 
-        if (tag.hasKey(NBT_TAB_PAGE)) {
-            tabPage = tag.getInteger(NBT_TAB_PAGE);
+        if (tag.contains(NBT_TAB_PAGE)) {
+            tabPage = tag.getInt(NBT_TAB_PAGE);
         }
     }
 
@@ -786,36 +792,36 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_VIEW_TYPE)) {
-            viewType = tag.getInteger(NBT_VIEW_TYPE);
+        if (tag.contains(NBT_VIEW_TYPE)) {
+            viewType = tag.getInt(NBT_VIEW_TYPE);
         }
 
-        if (tag.hasKey(NBT_SORTING_DIRECTION)) {
-            sortingDirection = tag.getInteger(NBT_SORTING_DIRECTION);
+        if (tag.contains(NBT_SORTING_DIRECTION)) {
+            sortingDirection = tag.getInt(NBT_SORTING_DIRECTION);
         }
 
-        if (tag.hasKey(NBT_SORTING_TYPE)) {
-            sortingType = tag.getInteger(NBT_SORTING_TYPE);
+        if (tag.contains(NBT_SORTING_TYPE)) {
+            sortingType = tag.getInt(NBT_SORTING_TYPE);
         }
 
-        if (tag.hasKey(NBT_SEARCH_BOX_MODE)) {
-            searchBoxMode = tag.getInteger(NBT_SEARCH_BOX_MODE);
+        if (tag.contains(NBT_SEARCH_BOX_MODE)) {
+            searchBoxMode = tag.getInt(NBT_SEARCH_BOX_MODE);
         }
 
-        if (tag.hasKey(NBT_SIZE)) {
-            size = tag.getInteger(NBT_SIZE);
+        if (tag.contains(NBT_SIZE)) {
+            size = tag.getInt(NBT_SIZE);
         }
 
-        if (tag.hasKey(NBT_OREDICT_PATTERN)) {
+        if (tag.contains(NBT_OREDICT_PATTERN)) {
             oredictPattern = tag.getBoolean(NBT_OREDICT_PATTERN);
         }
 
-        if (tag.hasKey(NBT_PROCESSING_PATTERN)) {
+        if (tag.contains(NBT_PROCESSING_PATTERN)) {
             processingPattern = tag.getBoolean(NBT_PROCESSING_PATTERN);
         }
 
-        if (tag.hasKey(NBT_PROCESSING_TYPE)) {
-            processingType = tag.getInteger(NBT_PROCESSING_TYPE);
+        if (tag.contains(NBT_PROCESSING_TYPE)) {
+            processingType = tag.getInt(NBT_PROCESSING_TYPE);
         }
     }
 

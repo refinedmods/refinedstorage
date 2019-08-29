@@ -10,13 +10,14 @@ import com.raoulvdberge.refinedstorage.item.ItemCover;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockGlass;
 import net.minecraft.block.BlockStainedGlass;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -30,14 +31,14 @@ public class CoverManager {
     private static final String NBT_ITEM = "Item";
     private static final String NBT_TYPE = "Type";
 
-    private Map<EnumFacing, Cover> covers = new HashMap<>();
+    private Map<Direction, Cover> covers = new HashMap<>();
     private NetworkNode node;
 
     public CoverManager(NetworkNode node) {
         this.node = node;
     }
 
-    public boolean canConduct(EnumFacing direction) {
+    public boolean canConduct(Direction direction) {
         Cover cover = getCover(direction);
         if (cover != null && cover.getType() != CoverType.HOLLOW) {
             return false;
@@ -56,15 +57,15 @@ public class CoverManager {
     }
 
     @Nullable
-    public Cover getCover(EnumFacing facing) {
+    public Cover getCover(Direction facing) {
         return covers.get(facing);
     }
 
-    public boolean hasCover(EnumFacing facing) {
+    public boolean hasCover(Direction facing) {
         return covers.containsKey(facing);
     }
 
-    public boolean setCover(EnumFacing facing, @Nullable Cover cover) {
+    public boolean setCover(Direction facing, @Nullable Cover cover) {
         if (cover == null || (isValidCover(cover.getStack()) && !hasCover(facing))) {
             if (cover != null) {
                 if (facing == node.getDirection() && !(node instanceof NetworkNodeCable) && cover.getType() != CoverType.HOLLOW) {
@@ -96,10 +97,10 @@ public class CoverManager {
         for (int i = 0; i < list.size(); ++i) {
             CompoundNBT tag = list.getCompound(i);
 
-            if (tag.hasKey(NBT_DIRECTION) && tag.hasKey(NBT_ITEM)) {
-                EnumFacing direction = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
-                ItemStack item = new ItemStack(tag.getCompound(NBT_ITEM));
-                int type = tag.hasKey(NBT_TYPE) ? tag.getInteger(NBT_TYPE) : 0;
+            if (tag.contains(NBT_DIRECTION) && tag.contains(NBT_ITEM)) {
+                Direction direction = Direction.byIndex(tag.getInt(NBT_DIRECTION));
+                ItemStack item = ItemStack.read(tag.getCompound(NBT_ITEM));
+                int type = tag.contains(NBT_TYPE) ? tag.getInt(NBT_TYPE) : 0;
 
                 if (type >= CoverType.values().length) {
                     type = 0;
@@ -115,7 +116,7 @@ public class CoverManager {
     public ListNBT writeToNbt() {
         ListNBT list = new ListNBT();
 
-        for (Map.Entry<EnumFacing, Cover> entry : covers.entrySet()) {
+        for (Map.Entry<Direction, Cover> entry : covers.entrySet()) {
             CompoundNBT tag = new CompoundNBT();
 
             tag.putInt(NBT_DIRECTION, entry.getKey().ordinal());
@@ -133,7 +134,7 @@ public class CoverManager {
 
         int i = 0;
 
-        for (Map.Entry<EnumFacing, Cover> entry : covers.entrySet()) {
+        for (Map.Entry<Direction, Cover> entry : covers.entrySet()) {
             ItemStack cover = entry.getValue().getType().createStack();
 
             ItemCover.setItem(cover, entry.getValue().getStack());
@@ -152,7 +153,7 @@ public class CoverManager {
 
         Block block = getBlock(item);
 
-        IBlockState state = getBlockState(item);
+        BlockState state = getBlockState(item);
 
         return block != null && state != null && ((isModelSupported(state) && block.isTopSolid(state) && !block.getTickRandomly() && !block.hasTileEntity(state)) || block instanceof BlockGlass || block instanceof BlockStainedGlass);
     }
@@ -182,7 +183,7 @@ public class CoverManager {
 
     @Nullable
     @SuppressWarnings("deprecation")
-    public static IBlockState getBlockState(@Nullable ItemStack item) {
+    public static BlockState getBlockState(@Nullable ItemStack item) {
         Block block = getBlock(item);
 
         if (block == null) {

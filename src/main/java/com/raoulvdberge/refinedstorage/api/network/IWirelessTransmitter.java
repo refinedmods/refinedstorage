@@ -19,5 +19,5 @@ public interface IWirelessTransmitter {
     /**
      * @return the dimension in which the transmitter is
      */
-    int getDimension();
+    int getDimension(); // TODO: return dimension actual value instead?
 }

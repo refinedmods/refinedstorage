@@ -6,10 +6,8 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerProxy;
@@ -26,10 +24,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -49,7 +47,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private static final String NBT_IO_MODE = "IOMode";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
@@ -63,7 +61,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             int count = super.getItemInteractCount();
 
             if (type == IType.FLUIDS) {
-                count *= Fluid.BUCKET_VOLUME;
+                count *= FluidAttributes.BUCKET_VOLUME;
             }
 
             return count;
@@ -75,7 +73,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO: correct?
                 StackUtils.createStorages(
                     world,
                     getStackInSlot(slot),
@@ -96,7 +94,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO: correct?
                 StackUtils.createStorages(
                     world,
                     getStackInSlot(slot),
@@ -288,10 +286,10 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             return;
         }
 
-        FluidStack remainder = network.insertFluid(extracted, extracted.amount, Action.PERFORM);
+        FluidStack remainder = network.insertFluid(extracted, extracted.getAmount(), Action.PERFORM);
 
         if (remainder != null) {
-            storage.insert(remainder, remainder.amount, Action.PERFORM);
+            storage.insert(remainder, remainder.getAmount(), Action.PERFORM);
         }
     }
 
@@ -319,7 +317,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 continue;
             }
 
-            FluidStack remainder = network.insertFluid(extracted, extracted.amount, Action.SIMULATE);
+            FluidStack remainder = network.insertFluid(extracted, extracted.getAmount(), Action.SIMULATE);
             if (remainder == null) { // A fluid could be inserted (no remainders when trying to). This disk isn't done.
                 return false;
             }
@@ -337,7 +335,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             int j = 0;
 
-            while ((toExtract == null || toExtract.amount == 0) && j < networkFluids.size()) {
+            while ((toExtract == null || toExtract.getAmount() == 0) && j < networkFluids.size()) {
                 toExtract = networkFluids.get(j++);
             }
 
@@ -363,10 +361,10 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             return;
         }
 
-        FluidStack remainder = storage.insert(extracted, extracted.amount, Action.PERFORM);
+        FluidStack remainder = storage.insert(extracted, extracted.getAmount(), Action.PERFORM);
 
         if (remainder != null) {
-            network.insertFluid(remainder, remainder.amount, Action.PERFORM);
+            network.insertFluid(remainder, remainder.getAmount(), Action.PERFORM);
         }
     }
 
@@ -466,14 +464,6 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         StackUtils.readItems(upgrades, 3, tag);
         StackUtils.readItems(inputDisks, 4, tag);
         StackUtils.readItems(outputDisks, 5, tag);
-
-        if (API.instance().getOneSixMigrationHelper().migrateDiskInventory(world, inputDisks)) {
-            markDirty();
-        }
-
-        if (API.instance().getOneSixMigrationHelper().migrateDiskInventory(world, outputDisks)) {
-            markDirty();
-        }
     }
 
     @Override
@@ -513,27 +503,25 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         StackUtils.readItems(itemFilters, 1, tag);
 
-        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+        if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_MODE)) {
-            mode = tag.getInteger(NBT_MODE);
+        if (tag.contains(NBT_MODE)) {
+            mode = tag.getInt(NBT_MODE);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
         }
 
-        if (tag.hasKey(NBT_IO_MODE)) {
-            ioMode = tag.getInteger(NBT_IO_MODE);
+        if (tag.contains(NBT_IO_MODE)) {
+            ioMode = tag.getInt(NBT_IO_MODE);
         }
-
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);
     }
 
     @Override

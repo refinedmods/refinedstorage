@@ -39,7 +39,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     private ItemHandlerBase itemFilters = new ItemHandlerBase(1, new ListenerNetworkNode(this));
     private FluidInventory fluidFilters = new FluidInventory(1, new ListenerNetworkNode(this));
 
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
     private int mode = MODE_EQUAL;
     private int amount = 0;
@@ -63,7 +63,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
         if (powered != wasPowered) {
             wasPowered = powered;
 
-            world.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR, true);
+            world.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR);
 
             WorldUtils.updateBlock(world, pos);
         }
@@ -85,9 +85,9 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
                 if (slot != null) {
                     FluidStack stack = network.getFluidStorageCache().getList().get(slot, compare);
 
-                    powered = isPowered(stack == null ? null : stack.amount);
+                    powered = isPowered(stack == null ? null : stack.getAmount());
                 } else {
-                    powered = isPowered(network.getFluidStorageCache().getList().getStacks().stream().map(s -> s.amount).mapToInt(Number::intValue).sum());
+                    powered = isPowered(network.getFluidStorageCache().getList().getStacks().stream().map(FluidStack::getAmount).mapToInt(Number::intValue).sum());
                 }
             }
         }
@@ -186,25 +186,25 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_MODE)) {
-            mode = tag.getInteger(NBT_MODE);
+        if (tag.contains(NBT_MODE)) {
+            mode = tag.getInt(NBT_MODE);
         }
 
-        if (tag.hasKey(NBT_AMOUNT)) {
-            amount = tag.getInteger(NBT_AMOUNT);
+        if (tag.contains(NBT_AMOUNT)) {
+            amount = tag.getInt(NBT_AMOUNT);
         }
 
-        if (tag.hasKey(NBT_TYPE)) {
-            type = tag.getInteger(NBT_TYPE);
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
 
-        if (tag.hasKey(NBT_FLUID_FILTERS)) {
+        if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
     }

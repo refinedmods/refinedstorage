@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeCable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -39,7 +39,7 @@ public class NetworkNodeCable extends NetworkNode implements ICoverable, INetwor
     }
 
     @Override
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return coverManager.canConduct(direction);
     }
 
@@ -56,7 +56,7 @@ public class NetworkNodeCable extends NetworkNode implements ICoverable, INetwor
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.hasKey(NBT_COVERS)) {
+        if (tag.contains(NBT_COVERS)) {
             coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
     }

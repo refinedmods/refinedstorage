@@ -6,15 +6,14 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -39,7 +38,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     protected UUID owner;
     protected String version;
 
-    private EnumFacing direction = EnumFacing.NORTH;
+    private Direction direction = Direction.NORTH;
 
     // Disable throttling for the first tick.
     // This is to make sure couldUpdate is going to be correctly set.
@@ -75,9 +74,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
 
-        return new ItemStack(Item.getItemFromBlock(state.getBlock()), 1, state.getBlock().getMetaFromState(state));
+        // TODO: Fix.
+        return new ItemStack(Item.getItemFromBlock(state.getBlock()), 1);
     }
 
     @Override
@@ -162,10 +162,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         if (owner != null) {
-            tag.setUniqueId(NBT_OWNER, owner);
+            tag.putUniqueId(NBT_OWNER, owner);
         }
 
-        tag.setString(NBT_VERSION, RS.VERSION);
+        tag.putString(NBT_VERSION, RS.VERSION);
 
         tag.putInt(NBT_DIRECTION, direction.ordinal());
 
@@ -185,21 +185,15 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             owner = tag.getUniqueId(NBT_OWNER);
         }
 
-        if (tag.hasKey(NBT_DIRECTION)) {
-            direction = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
+        if (tag.contains(NBT_DIRECTION)) {
+            direction = Direction.byIndex(tag.getInt(NBT_DIRECTION));
         }
 
-        if (tag.hasKey(NBT_VERSION)) {
+        if (tag.contains(NBT_VERSION)) {
             version = tag.getString(NBT_VERSION);
         }
 
         readConfiguration(tag);
-
-        // We do this after readConfiguration so the 1.6 migration calls see that version is null.
-        OneSixMigrationHelper.removalHook();
-        if (version == null) {
-            version = RS.VERSION;
-        }
     }
 
     public void readConfiguration(CompoundNBT tag) {
@@ -222,13 +216,13 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return world;
     }
 
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return true;
     }
 
     @Override
     public void visit(Operator operator) {
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        for (Direction facing : Direction.values()) {
             if (canConduct(facing)) {
                 operator.apply(world, pos.offset(facing), facing.getOpposite());
             }
@@ -240,11 +234,11 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return world.getTileEntity(pos.offset(getDirection()));
     }
 
-    public EnumFacing getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(EnumFacing direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
 
         onDirectionChanged();

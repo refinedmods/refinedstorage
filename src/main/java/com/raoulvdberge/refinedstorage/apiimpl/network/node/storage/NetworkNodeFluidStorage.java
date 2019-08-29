@@ -13,7 +13,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
@@ -25,7 +24,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IPrioritizable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
@@ -95,7 +94,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.setUniqueId(NBT_ID, storageId);
+        tag.putUniqueId(NBT_ID, storageId);
 
         return tag;
     }
@@ -109,8 +108,6 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
 
             loadStorage();
         }
-
-        OneSixMigrationHelper.migrateFluidStorageBlock(this, tag);
     }
 
     public void loadStorage() {
@@ -156,32 +153,31 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_FILTERS)) {
+        if (tag.contains(NBT_FILTERS)) {
             filters.readFromNbt(tag.getCompound(NBT_FILTERS));
         }
 
-        if (tag.hasKey(NBT_PRIORITY)) {
-            priority = tag.getInteger(NBT_PRIORITY);
+        if (tag.contains(NBT_PRIORITY)) {
+            priority = tag.getInt(NBT_PRIORITY);
         }
 
-        if (tag.hasKey(NBT_COMPARE)) {
-            compare = tag.getInteger(NBT_COMPARE);
+        if (tag.contains(NBT_COMPARE)) {
+            compare = tag.getInt(NBT_COMPARE);
         }
 
-        if (tag.hasKey(NBT_MODE)) {
-            mode = tag.getInteger(NBT_MODE);
+        if (tag.contains(NBT_MODE)) {
+            mode = tag.getInt(NBT_MODE);
         }
 
         accessType = AccessTypeUtils.readAccessType(tag);
-
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, null);
     }
 
     public FluidStorageType getType() {
         if (type == null && world != null) {
-            IBlockState state = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
+
             if (state.getBlock() == RSBlocks.FLUID_STORAGE) {
-                type = (FluidStorageType) state.getValue(BlockFluidStorage.TYPE);
+                type = state.get(BlockFluidStorage.TYPE);
             }
         }
 

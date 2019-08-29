@@ -34,7 +34,7 @@ public class NetworkNodeCrafterManager extends NetworkNode {
 
     public void sendTo(ServerPlayerEntity player) {
         if (network != null) {
-            RS.INSTANCE.network.sendTo(new MessageCrafterManagerSlotSizes(network.getCraftingManager().getNamedContainers()), player);
+            // TODO RS.INSTANCE.network.sendTo(new MessageCrafterManagerSlotSizes(network.getCraftingManager().getNamedContainers()), player);
         }
     }
 
@@ -60,12 +60,12 @@ public class NetworkNodeCrafterManager extends NetworkNode {
     public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
-        if (tag.hasKey(NBT_SIZE)) {
-            size = tag.getInteger(NBT_SIZE);
+        if (tag.contains(NBT_SIZE)) {
+            size = tag.getInt(NBT_SIZE);
         }
 
-        if (tag.hasKey(NBT_SEARCH_BOX_MODE)) {
-            searchBoxMode = tag.getInteger(NBT_SEARCH_BOX_MODE);
+        if (tag.contains(NBT_SEARCH_BOX_MODE)) {
+            searchBoxMode = tag.getInt(NBT_SEARCH_BOX_MODE);
         }
     }
 
