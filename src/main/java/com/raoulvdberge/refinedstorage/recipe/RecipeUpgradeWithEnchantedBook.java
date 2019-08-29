@@ -1,29 +1,36 @@
 package com.raoulvdberge.refinedstorage.recipe;
+/*
 
+TODO
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
+import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 // MC JSON recipes don't like comparing to NBT, that's why we need a custom recipe class.
 // We need to compare to NBT for the enchanted book.
-public class RecipeUpgradeWithEnchantedBook extends ShapedRecipes {
+public class RecipeUpgradeWithEnchantedBook extends ShapedRecipe {
     private EnchantmentData enchant;
 
     public RecipeUpgradeWithEnchantedBook(String enchantmentId, int enchantmentLevel, int upgradeId) {
         super(RS.ID, 3, 3, NonNullList.from(Ingredient.EMPTY,
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
-            Ingredient.fromStacks(ItemEnchantedBook.getEnchantedItemStack(new EnchantmentData(Enchantment.getEnchantmentByLocation(enchantmentId), enchantmentLevel))),
+            Ingredient.fromStacks(EnchantedBookItem.getEnchantedItemStack(new EnchantmentData(Registry.ENCHANTMENT.getOrDefault(new ResourceLocation("minecraft", enchantmentId)), enchantmentLevel))),
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
             Ingredient.fromStacks(new ItemStack(Blocks.BOOKSHELF)),
             Ingredient.fromStacks(new ItemStack(RSItems.UPGRADE)),
@@ -31,7 +38,7 @@ public class RecipeUpgradeWithEnchantedBook extends ShapedRecipes {
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON))
-        ), new ItemStack(RSItems.UPGRADE, 1, upgradeId));
+        ), new ItemStack(RSItems.UPGRADE, 1));
 
         this.enchant = new EnchantmentData(Enchantment.getEnchantmentByLocation(enchantmentId), enchantmentLevel);
     }
@@ -54,3 +61,4 @@ public class RecipeUpgradeWithEnchantedBook extends ShapedRecipes {
         return false;
     }
 }
+*/

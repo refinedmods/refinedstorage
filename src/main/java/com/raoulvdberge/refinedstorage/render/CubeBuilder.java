@@ -1,14 +1,14 @@
 package com.raoulvdberge.refinedstorage.render;
 
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,23 +32,23 @@ public class CubeBuilder {
     }
 
     public static class Face {
-        private EnumFacing face;
+        private Direction face;
         private TextureAtlasSprite sprite;
         private int light;
         private UvRotation uvRotation = UvRotation.CLOCKWISE_0;
 
-        public Face(EnumFacing face, TextureAtlasSprite sprite) {
+        public Face(Direction face, TextureAtlasSprite sprite) {
             this.face = face;
             this.sprite = sprite;
         }
 
-        public Face(EnumFacing face, TextureAtlasSprite sprite, UvRotation uvRotation) {
+        public Face(Direction face, TextureAtlasSprite sprite, UvRotation uvRotation) {
             this(face, sprite);
 
             this.uvRotation = uvRotation;
         }
 
-        public Face(EnumFacing face, TextureAtlasSprite sprite, UvRotation uvRotation, int light) {
+        public Face(Direction face, TextureAtlasSprite sprite, UvRotation uvRotation, int light) {
             this(face, sprite, uvRotation);
 
             this.light = light;
@@ -58,7 +58,7 @@ public class CubeBuilder {
     private Vector3f from;
     private Vector3f to;
     private VertexFormat format = DefaultVertexFormats.ITEM;
-    private Map<EnumFacing, Face> faces = new HashMap<>();
+    private Map<Direction, Face> faces = new HashMap<>();
     private int color = 0xFFFFFFFF;
 
     public CubeBuilder from(float x, float y, float z) {
@@ -85,8 +85,8 @@ public class CubeBuilder {
         return this;
     }
 
-    public CubeBuilder addFaces(Function<EnumFacing, Face> faceSupplier) {
-        for (EnumFacing facing : EnumFacing.VALUES) {
+    public CubeBuilder addFaces(Function<Direction, Face> faceSupplier) {
+        for (Direction facing : Direction.values()) {
             addFace(faceSupplier.apply(facing));
         }
 
@@ -102,14 +102,14 @@ public class CubeBuilder {
     public List<BakedQuad> bake() {
         List<BakedQuad> quads = new ArrayList<>();
 
-        for (Map.Entry<EnumFacing, Face> entry : faces.entrySet()) {
+        for (Map.Entry<Direction, Face> entry : faces.entrySet()) {
             quads.add(bakeFace(entry.getKey(), entry.getValue()));
         }
 
         return quads;
     }
 
-    private BakedQuad bakeFace(EnumFacing facing, Face cubeFace) {
+    private BakedQuad bakeFace(Direction facing, Face cubeFace) {
         UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
 
         builder.setTexture(cubeFace.sprite);
@@ -117,51 +117,51 @@ public class CubeBuilder {
         builder.setQuadTint(-1);
         builder.setApplyDiffuseLighting(true);
 
-        Uv uv = getDefaultUv(facing, cubeFace.sprite, from.x, from.y, from.z, to.x, to.y, to.z);
+        Uv uv = getDefaultUv(facing, cubeFace.sprite, from.getX(), from.getY(), from.getZ(), to.getX(), to.getY(), to.getZ());
 
         switch (facing) {
             case DOWN:
-                addVertexTopRight(builder, cubeFace, to.x, from.y, from.z, uv);
-                addVertexBottomRight(builder, cubeFace, to.x, from.y, to.z, uv);
-                addVertexBottomLeft(builder, cubeFace, from.x, from.y, to.z, uv);
-                addVertexTopLeft(builder, cubeFace, from.x, from.y, from.z, uv);
+                addVertexTopRight(builder, cubeFace, to.getX(), from.getY(), from.getZ(), uv);
+                addVertexBottomRight(builder, cubeFace, to.getX(), from.getY(), to.getZ(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.getX(), from.getY(), to.getZ(), uv);
+                addVertexTopLeft(builder, cubeFace, from.getX(), from.getY(), from.getZ(), uv);
                 break;
             case UP:
-                addVertexTopLeft(builder, cubeFace, from.x, to.y, from.z, uv);
-                addVertexBottomLeft(builder, cubeFace, from.x, to.y, to.z, uv);
-                addVertexBottomRight(builder, cubeFace, to.x, to.y, to.z, uv);
-                addVertexTopRight(builder, cubeFace, to.x, to.y, from.z, uv);
+                addVertexTopLeft(builder, cubeFace, from.getX(), to.getY(), from.getZ(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.getX(), to.getY(), to.getZ(), uv);
+                addVertexBottomRight(builder, cubeFace, to.getX(), to.getY(), to.getZ(), uv);
+                addVertexTopRight(builder, cubeFace, to.getX(), to.getY(), from.getZ(), uv);
                 break;
             case NORTH:
-                addVertexBottomRight(builder, cubeFace, to.x, to.y, from.z, uv);
-                addVertexTopRight(builder, cubeFace, to.x, from.y, from.z, uv);
-                addVertexTopLeft(builder, cubeFace, from.x, from.y, from.z, uv);
-                addVertexBottomLeft(builder, cubeFace, from.x, to.y, from.z, uv);
+                addVertexBottomRight(builder, cubeFace, to.getX(), to.getY(), from.getZ(), uv);
+                addVertexTopRight(builder, cubeFace, to.getX(), from.getY(), from.getZ(), uv);
+                addVertexTopLeft(builder, cubeFace, from.getX(), from.getY(), from.getZ(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.getX(), to.getY(), from.getZ(), uv);
                 break;
             case SOUTH:
-                addVertexBottomLeft(builder, cubeFace, from.x, to.y, to.z, uv);
-                addVertexTopLeft(builder, cubeFace, from.x, from.y, to.z, uv);
-                addVertexTopRight(builder, cubeFace, to.x, from.y, to.z, uv);
-                addVertexBottomRight(builder, cubeFace, to.x, to.y, to.z, uv);
+                addVertexBottomLeft(builder, cubeFace, from.getX(), to.getY(), to.getZ(), uv);
+                addVertexTopLeft(builder, cubeFace, from.getX(), from.getY(), to.getZ(), uv);
+                addVertexTopRight(builder, cubeFace, to.getX(), from.getY(), to.getZ(), uv);
+                addVertexBottomRight(builder, cubeFace, to.getX(), to.getY(), to.getZ(), uv);
                 break;
             case WEST:
-                addVertexTopLeft(builder, cubeFace, from.x, from.y, from.z, uv);
-                addVertexTopRight(builder, cubeFace, from.x, from.y, to.z, uv);
-                addVertexBottomRight(builder, cubeFace, from.x, to.y, to.z, uv);
-                addVertexBottomLeft(builder, cubeFace, from.x, to.y, from.z, uv);
+                addVertexTopLeft(builder, cubeFace, from.getX(), from.getY(), from.getZ(), uv);
+                addVertexTopRight(builder, cubeFace, from.getX(), from.getY(), to.getZ(), uv);
+                addVertexBottomRight(builder, cubeFace, from.getX(), to.getY(), to.getZ(), uv);
+                addVertexBottomLeft(builder, cubeFace, from.getX(), to.getY(), from.getZ(), uv);
                 break;
             case EAST:
-                addVertexBottomRight(builder, cubeFace, to.x, to.y, from.z, uv);
-                addVertexBottomLeft(builder, cubeFace, to.x, to.y, to.z, uv);
-                addVertexTopLeft(builder, cubeFace, to.x, from.y, to.z, uv);
-                addVertexTopRight(builder, cubeFace, to.x, from.y, from.z, uv);
+                addVertexBottomRight(builder, cubeFace, to.getX(), to.getY(), from.getZ(), uv);
+                addVertexBottomLeft(builder, cubeFace, to.getX(), to.getY(), to.getZ(), uv);
+                addVertexTopLeft(builder, cubeFace, to.getX(), from.getY(), to.getZ(), uv);
+                addVertexTopRight(builder, cubeFace, to.getX(), from.getY(), from.getZ(), uv);
                 break;
         }
 
         return builder.build();
     }
 
-    private Uv getDefaultUv(EnumFacing face, TextureAtlasSprite texture, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
+    private Uv getDefaultUv(Direction face, TextureAtlasSprite texture, float fromX, float fromY, float fromZ, float toX, float toY, float toZ) {
         Uv uv = new Uv();
 
         switch (face) {

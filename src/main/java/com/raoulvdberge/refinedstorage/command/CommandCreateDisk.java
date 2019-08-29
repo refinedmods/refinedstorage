@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.command;
 
+/* TODO
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class CommandCreateDisk extends CommandBase {
+public class CommandCreateDisk extends Command {
     @Override
     public String getName() {
         return "createdisk";
@@ -88,3 +89,4 @@ public class CommandCreateDisk extends CommandBase {
         return Collections.emptyList();
     }
 }
+*/

@@ -1,38 +1,36 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.model.TRSRTransformation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 import javax.annotation.Nonnull;
@@ -40,10 +38,11 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public final class RenderUtils {
-    public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
+    public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix(Direction.DOWN); // TODO: dir?
 
     // @Volatile: From ForgeBlockStateV1
     private static final TRSRTransformation FLIP_X = new TRSRTransformation(null, null, new Vector3f(-1, 1, 1), null);
@@ -65,7 +64,7 @@ public final class RenderUtils {
         float green = (color >> 8 & 0xFF) / 255.0F;
         float blue = (color & 0xFF) / 255.0F;
 
-        GlStateManager.color(red, green, blue, 1.0F);
+        GlStateManager.color4f(red, green, blue, 1.0F);
     }
 
     private static void drawFluidTexture(double xCoord, double yCoord, TextureAtlasSprite textureSprite, int maskTop, int maskRight, double zLevel) {
@@ -156,14 +155,14 @@ public final class RenderUtils {
 
         public void draw(Minecraft minecraft, int xPosition, int yPosition, FluidStack fluidStack) {
             GlStateManager.enableBlend();
-            GlStateManager.enableAlpha();
+            GlStateManager.enableAlphaTest();
             GlStateManager.disableLighting();
 
             drawFluid(minecraft, xPosition, yPosition, fluidStack);
 
-            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.color4f(1, 1, 1, 1);
 
-            GlStateManager.disableAlpha();
+            GlStateManager.disableAlphaTest();
             GlStateManager.disableBlend();
         }
 
@@ -178,6 +177,7 @@ public final class RenderUtils {
                 return;
             }
 
+            /* TODO
             TextureMap textureMapBlocks = minecraft.getTextureMapBlocks();
             ResourceLocation fluidStill = fluid.getStill();
             TextureAtlasSprite fluidStillSprite = null;
@@ -231,6 +231,7 @@ public final class RenderUtils {
                     }
                 }
             }
+        }*/
         }
     }
 
@@ -241,7 +242,7 @@ public final class RenderUtils {
             if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
                 ItemStack stack = stacks.get(i);
 
-                String data = stack.getDisplayName();
+                String data = stack.getDisplayName().getString(); // TODO does this work
 
                 int amount = stack.getCount();
 
@@ -267,13 +268,13 @@ public final class RenderUtils {
             if (!combinedIndices.contains(i)) {
                 FluidStack stack = stacks.get(i);
 
-                String data = stack.getLocalizedName();
+                String data = stack.getDisplayName().getString(); // TODO does this work
 
-                int amount = stack.amount;
+                int amount = stack.getAmount();
 
                 for (int j = i + 1; j < stacks.size(); ++j) {
                     if (API.instance().getComparer().isEqual(stack, stacks.get(j), IComparer.COMPARE_NBT)) {
-                        amount += stacks.get(j).amount;
+                        amount += stacks.get(j).getAmount();
 
                         combinedIndices.add(j);
                     }
@@ -301,13 +302,14 @@ public final class RenderUtils {
             FontRenderer font = event.getFontRenderer();
 
             // RS BEGIN
-            float textScale = font.getUnicodeFlag() ? 1F : 0.7F;
+            //float textScale = font.getUnicodeFlag() ? 1F : 0.7F;
+            float textScale = 1F;
             // RS END
 
             GlStateManager.disableRescaleNormal();
             RenderHelper.disableStandardItemLighting();
             GlStateManager.disableLighting();
-            GlStateManager.disableDepth();
+            GlStateManager.disableDepthTest();
             int tooltipTextWidth = 0;
 
             for (String textLine : textLines) {
@@ -388,7 +390,7 @@ public final class RenderUtils {
             // RS BEGIN
             if (showSmallText) {
                 GlStateManager.pushMatrix();
-                GlStateManager.scale(textScale, textScale, 1);
+                GlStateManager.scalef(textScale, textScale, 1);
 
                 int y = tooltipTop + tooltipHeight - 6;
 
@@ -396,7 +398,7 @@ public final class RenderUtils {
                     font.drawStringWithShadow(
                         TextFormatting.GRAY + smallTextLines.get(i),
                         RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                        RenderUtils.getOffsetOnScale(y - (font.getUnicodeFlag() ? 2 : 0), textScale),
+                        RenderUtils.getOffsetOnScale(y - (/* TODO font.getUnicodeFlag() ? 2 : */0), textScale),
                         -1
                     );
 
@@ -408,21 +410,22 @@ public final class RenderUtils {
             // RS END
 
             GlStateManager.enableLighting();
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
             RenderHelper.enableStandardItemLighting();
             GlStateManager.enableRescaleNormal();
         }
     }
 
     // @Volatile: From GuiScreen#getItemToolTip
-    public static List<String> getItemTooltip(ItemStack stack) {
-        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+    public static List<ITextComponent> getItemTooltip(ItemStack stack) {
+        // TODO
+        List<ITextComponent> lines = stack.getTooltip(Minecraft.getInstance().player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
 
         for (int i = 0; i < lines.size(); ++i) {
             if (i == 0) {
-                lines.set(i, stack.getItem().getForgeRarity(stack).getColor() + lines.get(i));
+                //lines.set(i, stack.getItem().getRarity(stack).color + lines.get(i));
             } else {
-                lines.set(i, TextFormatting.GRAY + lines.get(i));
+                //lines.set(i, TextFormatting.GRAY + lines.get(i));
             }
         }
 
@@ -430,7 +433,8 @@ public final class RenderUtils {
     }
 
     public static boolean isLightMapDisabled() {
-        return FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled;
+        return false;
+        // TODO return FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled;
     }
 
     public static VertexFormat getFormatWithLightMap(VertexFormat format) {
@@ -442,7 +446,7 @@ public final class RenderUtils {
             return DefaultVertexFormats.BLOCK;
         } else if (format == DefaultVertexFormats.ITEM) {
             return ITEM_FORMAT_WITH_LIGHTMAP;
-        } else if (!format.hasUvOffset(1)) {
+        } else if (!format.hasUv(1)) {
             VertexFormat result = new VertexFormat(format);
 
             result.addElement(DefaultVertexFormats.TEX_2S);
@@ -453,7 +457,7 @@ public final class RenderUtils {
         return format;
     }
 
-    public static TextureAtlasSprite getSprite(IBakedModel coverModel, IBlockState coverState, EnumFacing facing, long rand) {
+    public static TextureAtlasSprite getSprite(IBakedModel coverModel, BlockState coverState, Direction facing, long rand) {
         TextureAtlasSprite sprite = null;
 
         BlockRenderLayer originalLayer = MinecraftForgeClient.getRenderLayer();
@@ -462,11 +466,11 @@ public final class RenderUtils {
             for (BlockRenderLayer layer : BlockRenderLayer.values()) {
                 ForgeHooksClient.setRenderLayer(layer);
 
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, new Random())) {
                     return bakedQuad.getSprite();
                 }
 
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, rand)) {
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, new Random())) { // TODO random inst
                     if (sprite == null) {
                         sprite = bakedQuad.getSprite();
                     }
@@ -491,7 +495,7 @@ public final class RenderUtils {
         }
 
         if (sprite == null) {
-            sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
+            sprite = MissingTextureSprite.func_217790_a(); // TODO Mapping
         }
 
         return sprite;

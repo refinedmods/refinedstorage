@@ -1,18 +1,21 @@
 package com.raoulvdberge.refinedstorage.recipe;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import com.raoulvdberge.refinedstorage.item.ItemHollowCover;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class RecipeHollowCover extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeHollowCover implements IRecipe<CraftingInventory> {
     protected boolean isValid(ItemStack slot, @Nullable ItemStack previousValidSlot) {
         ItemStack currentCover = ItemCover.getItem(slot);
 
@@ -23,14 +26,14 @@ public class RecipeHollowCover extends IForgeRegistryEntry.Impl<IRecipe> impleme
 
             ItemStack previousCover = ItemCover.getItem(previousValidSlot);
 
-            return previousCover.getItem() == currentCover.getItem() && previousCover.getItemDamage() == currentCover.getItemDamage();
+            return previousCover.getItem() == currentCover.getItem();
         }
 
         return false;
     }
 
     @Override
-    public boolean matches(InventoryCrafting inv, World worldIn) {
+    public boolean matches(CraftingInventory inv, World worldIn) {
         ItemStack previousValidSlot = null;
 
         for (int i = 0; i < 9; ++i) {
@@ -53,7 +56,7 @@ public class RecipeHollowCover extends IForgeRegistryEntry.Impl<IRecipe> impleme
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
+    public ItemStack getCraftingResult(CraftingInventory inv) {
         ItemStack stack = new ItemStack(RSItems.HOLLOW_COVER, 8);
 
         ItemHollowCover.setItem(stack, ItemCover.getItem(inv.getStackInSlot(0)));
@@ -69,5 +72,20 @@ public class RecipeHollowCover extends IForgeRegistryEntry.Impl<IRecipe> impleme
     @Override
     public ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return new ResourceLocation(RS.ID, "hollow_cover");
+    }
+
+    @Override
+    public IRecipeSerializer<?> getSerializer() {
+        return null;
+    }
+
+    @Override
+    public IRecipeType<?> getType() {
+        return IRecipeType.CRAFTING;
     }
 }

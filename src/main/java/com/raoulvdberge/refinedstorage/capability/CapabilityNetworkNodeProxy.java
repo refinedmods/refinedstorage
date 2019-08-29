@@ -3,8 +3,8 @@ package com.raoulvdberge.refinedstorage.capability;
 import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -26,12 +26,12 @@ public class CapabilityNetworkNodeProxy {
     private static class Storage implements Capability.IStorage<INetworkNodeProxy> {
         @Nullable
         @Override
-        public NBTBase writeNBT(Capability<INetworkNodeProxy> capability, INetworkNodeProxy instance, EnumFacing side) {
+        public INBT writeNBT(Capability<INetworkNodeProxy> capability, INetworkNodeProxy instance, Direction side) {
             return null;
         }
 
         @Override
-        public void readNBT(Capability<INetworkNodeProxy> capability, INetworkNodeProxy instance, EnumFacing side, NBTBase nbt) {
+        public void readNBT(Capability<INetworkNodeProxy> capability, INetworkNodeProxy instance, Direction side, INBT nbt) {
             // NO OP
         }
     }

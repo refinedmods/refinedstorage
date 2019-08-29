@@ -11,15 +11,15 @@ public class FluidInventoryFilter extends FluidInventory {
         super(27, Integer.MAX_VALUE, null);
 
         this.listener = slot -> {
-            if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new CompoundNBT());
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundNBT());
             }
 
-            stack.getTagCompound().put(ItemFilter.NBT_FLUID_FILTERS, writeToNbt());
+            stack.getTag().put(ItemFilter.NBT_FLUID_FILTERS, writeToNbt());
         };
 
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(ItemFilter.NBT_FLUID_FILTERS)) {
-            readFromNbt(stack.getTagCompound().getCompound(ItemFilter.NBT_FLUID_FILTERS));
+        if (stack.hasTag() && stack.getTag().contains(ItemFilter.NBT_FLUID_FILTERS)) {
+            readFromNbt(stack.getTag().getCompound(ItemFilter.NBT_FLUID_FILTERS));
         }
     }
 

@@ -1,20 +1,20 @@
 package com.raoulvdberge.refinedstorage.render.tesr;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
+import com.sun.prism.TextureMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.util.Direction;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
-public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRenderer<TileStorageMonitor> {
+public class TileEntitySpecialRendererStorageMonitor extends TileEntityRenderer<TileStorageMonitor> {
     @Override
-    public void render(TileStorageMonitor tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileStorageMonitor tile, double x, double y, double z, float partialTicks, int destroyStage) {
         setLightmapDisabled(true);
 
         float disX = 0, disXText = 0;
@@ -39,7 +39,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
             }
         }
 
-        if (tile.getDirection() == EnumFacing.NORTH) {
+        if (tile.getDirection() == Direction.NORTH) {
             disX = 0.5F;
             disXText = disX + textWidth;
 
@@ -47,7 +47,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
             disZText = disZ - spacing;
 
             rotZ = 1F;
-        } else if (tile.getDirection() == EnumFacing.WEST) {
+        } else if (tile.getDirection() == Direction.WEST) {
             disX = -spacing;
             disXText = disX - spacing;
 
@@ -56,7 +56,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
 
             rotZ = 1F;
             rotX = 1F;
-        } else if (tile.getDirection() == EnumFacing.SOUTH) {
+        } else if (tile.getDirection() == Direction.SOUTH) {
             disX = 0.5F;
             disXText = disX - textWidth;
 
@@ -64,7 +64,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
             disZText = disZ + spacing;
 
             rotX = 1F;
-        } else if (tile.getDirection() == EnumFacing.EAST) {
+        } else if (tile.getDirection() == Direction.EAST) {
             disX = 1F + spacing;
             disXText = disX + spacing;
 
@@ -76,49 +76,50 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntitySpecialRe
         }
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x + disX, y + disY, z + disZ);
-        GlStateManager.rotate(180F, rotX, rotY, rotZ);
-        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.translated(x + disX, y + disY, z + disZ);
+        GlStateManager.rotated(180F, rotX, rotY, rotZ);
+        GlStateManager.color4f(1F, 1F, 1F, 1F);
         GlStateManager.depthMask(false);
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.depthMask(true);
-        GlStateManager.scale(0.4F, -0.4F, -0.015F);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+        GlStateManager.scalef(0.4F, -0.4F, -0.015F);
+        Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
         GlStateManager.enableRescaleNormal();
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.color4f(1F, 1F, 1F, 1F);
 
         if (tile.getItemStack() != null) {
-            IBakedModel bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(tile.getItemStack(), null, Minecraft.getMinecraft().player);
+            IBakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(tile.getItemStack(), null, Minecraft.getInstance().player);
             bakedModel = ForgeHooksClient.handleCameraTransforms(bakedModel, ItemCameraTransforms.TransformType.GUI, false);
-            Minecraft.getMinecraft().getRenderItem().renderItem(tile.getItemStack(), bakedModel);
+            Minecraft.getInstance().getItemRenderer().renderItem(tile.getItemStack(), bakedModel);
         }
 
-        GlStateManager.disableAlpha();
+        GlStateManager.disableAlphaTest();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableLighting();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Minecraft.getMinecraft().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+        Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
         GlStateManager.disableBlend();
-        GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.color4f(1F, 1F, 1F, 1F);
 
         GlStateManager.popMatrix();
 
         GlStateManager.pushMatrix();
 
-        GlStateManager.translate(x + disXText, y + disYText, z + disZText);
-        GlStateManager.rotate(180F, rotX, rotY, rotZ);
+        GlStateManager.translated(x + disXText, y + disYText, z + disZText);
+        GlStateManager.rotated(180F, rotX, rotY, rotZ);
         float size = 0.00450F;
         float factor = 2.0f;
-        GlStateManager.scale(size * factor, size * factor, size);
+        GlStateManager.scaled(size * factor, size * factor, size);
 
         if (tile.getItemStack() != null) {
-            Minecraft.getMinecraft().fontRenderer.drawString(amount, 0, 0, 0xFFFFFF);
+            Minecraft.getInstance().fontRenderer.drawString(amount, 0, 0, 0xFFFFFF);
         }
 
         GlStateManager.popMatrix();

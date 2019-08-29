@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.inventory.item;
 
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 
@@ -8,11 +7,11 @@ import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class ItemHandlerUpgrade extends ItemHandlerBase {
-    public ItemHandlerUpgrade(int size, @Nullable Consumer<Integer> listener, int... supportedUpgrades) {
+    public ItemHandlerUpgrade(int size, @Nullable Consumer<Integer> listener, ItemUpgrade... supportedUpgrades) {
         super(size, listener, new ItemValidatorBasic[supportedUpgrades.length]);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {
-            this.validators[i] = new ItemValidatorBasic(RSItems.UPGRADE, supportedUpgrades[i]);
+            this.validators[i] = new ItemValidatorBasic(supportedUpgrades[i]);
         }
     }
 
@@ -22,7 +21,8 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
 
     public int getSpeed(int speed, int speedIncrease) {
         for (int i = 0; i < getSlots(); ++i) {
-            if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_SPEED) {
+            /*TODO if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_SPEED) {*/
+            if (false) {
                 speed -= speedIncrease;
             }
         }
@@ -38,7 +38,8 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
         int upgrades = 0;
 
         for (int i = 0; i < getSlots(); ++i) {
-            if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == type) {
+            /*TODO if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == type) {*/
+            if (false) {
                 upgrades++;
             }
         }

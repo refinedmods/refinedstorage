@@ -1,29 +1,29 @@
 package com.raoulvdberge.refinedstorage.render.collision;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BlockHighlightListener {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onBlockDrawHighlight(DrawBlockHighlightEvent e) {
-        if (e.getTarget() == null || e.getTarget().getBlockPos() == null) {
+        if (e.getTarget() == null || e.getInfo().getBlockPos() == null) { // TODO: Still need to check this?
             return;
         }
 
-        PlayerEntity player = e.getPlayer();
+        PlayerEntity player = (PlayerEntity) e.getInfo().getRenderViewEntity();
 
-        BlockPos pos = e.getTarget().getBlockPos();
+        BlockPos pos = e.getInfo().getBlockPos();
 
         Block b = player.getEntityWorld().getBlockState(pos).getBlock();
 
@@ -33,7 +33,8 @@ public class BlockHighlightListener {
 
         BlockBase block = (BlockBase) b;
 
-        IBlockState state = block.getActualState(block.getDefaultState(), player.getEntityWorld(), pos);
+        // TODO BlockState state = block.getActualState(block.getDefaultState(), player.getEntityWorld(), pos);
+        BlockState state = e.getInfo().getBlockAtCamera();
 
         AdvancedRayTraceResult result = AdvancedRayTracer.rayTrace(
             pos,
@@ -49,10 +50,10 @@ public class BlockHighlightListener {
         }
 
         GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(0.0F, 0.0F, 0.0F, 0.4F);
-        GlStateManager.glLineWidth(3.0F);
-        GlStateManager.disableTexture2D();
+        GlStateManager.blendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color4f(0.0F, 0.0F, 0.0F, 0.4F);
+        GlStateManager.lineWidth(3.0F);
+        GlStateManager.disableTexture();
         GlStateManager.depthMask(false);
 
         double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) e.getPartialTicks();
@@ -64,7 +65,7 @@ public class BlockHighlightListener {
         }
 
         GlStateManager.depthMask(true);
-        GlStateManager.enableTexture2D();
+        GlStateManager.enableTexture();
         GlStateManager.disableBlend();
     }
 

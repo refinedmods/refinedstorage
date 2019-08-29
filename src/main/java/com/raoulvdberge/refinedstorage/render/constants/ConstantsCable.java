@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.render.constants;
 
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.util.CollisionUtils;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import javax.annotation.Nonnull;
@@ -16,15 +16,15 @@ public final class ConstantsCable {
     public static final CollisionGroup UP = new CollisionGroup().addItem(CollisionUtils.getBounds(6, 10, 6, 10, 16, 10));
     public static final CollisionGroup DOWN = new CollisionGroup().addItem(CollisionUtils.getBounds(6, 0, 6, 10, 6, 10));
 
-    public static final CollisionGroup HOLDER_NORTH = new CollisionGroup().addItem(getHolderBounds(EnumFacing.NORTH));
-    public static final CollisionGroup HOLDER_EAST = new CollisionGroup().addItem(getHolderBounds(EnumFacing.EAST));
-    public static final CollisionGroup HOLDER_SOUTH = new CollisionGroup().addItem(getHolderBounds(EnumFacing.SOUTH));
-    public static final CollisionGroup HOLDER_WEST = new CollisionGroup().addItem(getHolderBounds(EnumFacing.WEST));
-    public static final CollisionGroup HOLDER_UP = new CollisionGroup().addItem(getHolderBounds(EnumFacing.UP));
-    public static final CollisionGroup HOLDER_DOWN = new CollisionGroup().addItem(getHolderBounds(EnumFacing.DOWN));
+    public static final CollisionGroup HOLDER_NORTH = new CollisionGroup().addItem(getHolderBounds(Direction.NORTH));
+    public static final CollisionGroup HOLDER_EAST = new CollisionGroup().addItem(getHolderBounds(Direction.EAST));
+    public static final CollisionGroup HOLDER_SOUTH = new CollisionGroup().addItem(getHolderBounds(Direction.SOUTH));
+    public static final CollisionGroup HOLDER_WEST = new CollisionGroup().addItem(getHolderBounds(Direction.WEST));
+    public static final CollisionGroup HOLDER_UP = new CollisionGroup().addItem(getHolderBounds(Direction.UP));
+    public static final CollisionGroup HOLDER_DOWN = new CollisionGroup().addItem(getHolderBounds(Direction.DOWN));
 
     @Nonnull
-    public static AxisAlignedBB getCoverBounds(EnumFacing side) {
+    public static AxisAlignedBB getCoverBounds(Direction side) {
         switch (side) {
             case DOWN:
                 return CollisionUtils.getBounds(0, 0, 0, 16, 2, 16);
@@ -44,7 +44,7 @@ public final class ConstantsCable {
     }
 
     @Nonnull
-    public static AxisAlignedBB getHolderBounds(EnumFacing side) {
+    public static AxisAlignedBB getHolderBounds(Direction side) {
         switch (side) {
             case DOWN:
                 return CollisionUtils.getBounds(7, 2, 7, 9, 6, 9);

@@ -1,18 +1,21 @@
 package com.raoulvdberge.refinedstorage.recipe;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
-public class RecipeCover extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
+public class RecipeCover implements IRecipe<CraftingInventory> {
     @Override
-    public boolean matches(InventoryCrafting inv, World world) {
+    public boolean matches(CraftingInventory inv, World world) {
         boolean hadCuttingTool = false;
         boolean hadItem = false;
 
@@ -44,7 +47,7 @@ public class RecipeCover extends IForgeRegistryEntry.Impl<IRecipe> implements IR
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
+    public ItemStack getCraftingResult(CraftingInventory inv) {
         for (int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack slot = inv.getStackInSlot(i);
 
@@ -68,5 +71,20 @@ public class RecipeCover extends IForgeRegistryEntry.Impl<IRecipe> implements IR
     @Override
     public ItemStack getRecipeOutput() {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return new ResourceLocation(RS.ID, "cover");
+    }
+
+    @Override
+    public IRecipeSerializer<?> getSerializer() {
+        return null;
+    }
+
+    @Override
+    public IRecipeType<?> getType() {
+        return IRecipeType.CRAFTING;
     }
 }

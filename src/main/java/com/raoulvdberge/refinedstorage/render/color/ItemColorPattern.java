@@ -9,11 +9,11 @@ import net.minecraft.item.ItemStack;
 
 public class ItemColorPattern implements IItemColor {
     @Override
-    public int colorMultiplier(ItemStack stack, int tintIndex) {
-        CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getMinecraft().world, stack);
+    public int getColor(ItemStack stack, int tintIndex) {
+        CraftingPattern pattern = ItemPattern.getPatternFromCache(Minecraft.getInstance().world, stack);
 
         if (BakedModelPattern.canDisplayOutput(stack, pattern)) {
-            int color = Minecraft.getMinecraft().getItemColors().colorMultiplier(pattern.getOutputs().get(0), tintIndex);
+            int color = Minecraft.getInstance().getItemColors().getColor(pattern.getOutputs().get(0), tintIndex);
 
             if (color != -1) {
                 return color;

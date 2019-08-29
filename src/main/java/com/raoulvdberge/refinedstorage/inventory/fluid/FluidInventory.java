@@ -48,8 +48,8 @@ public class FluidInventory {
     }
 
     public void setFluid(int slot, @Nullable FluidStack stack) {
-        if (stack != null && stack.amount <= 0 && stack.amount > maxAmount) {
-            throw new IllegalArgumentException("Fluid size is invalid (given: " + stack.amount + ", max size: " + maxAmount + ")");
+        if (stack != null && stack.getAmount() <= 0 && stack.getAmount() > maxAmount) {
+            throw new IllegalArgumentException("Fluid size is invalid (given: " + stack.getAmount() + ", max size: " + maxAmount + ")");
         }
 
         fluids[slot] = stack;
@@ -79,7 +79,7 @@ public class FluidInventory {
         for (int i = 0; i < getSlots(); ++i) {
             String key = String.format(NBT_SLOT, i);
 
-            if (tag.hasKey(key)) {
+            if (tag.contains(key)) {
                 fluids[i] = FluidStack.loadFluidStackFromNBT(tag.getCompound(key));
             }
         }

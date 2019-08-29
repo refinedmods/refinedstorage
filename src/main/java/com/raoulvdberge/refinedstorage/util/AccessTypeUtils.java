@@ -11,7 +11,7 @@ public final class AccessTypeUtils {
     }
 
     public static AccessType readAccessType(CompoundNBT tag) {
-        return tag.hasKey(NBT_ACCESS_TYPE) ? getAccessType(tag.getInteger(NBT_ACCESS_TYPE)) : AccessType.INSERT_EXTRACT;
+        return tag.contains(NBT_ACCESS_TYPE) ? getAccessType(tag.getInt(NBT_ACCESS_TYPE)) : AccessType.INSERT_EXTRACT;
     }
 
     public static AccessType getAccessType(int id) {

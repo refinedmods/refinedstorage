@@ -41,4 +41,9 @@ public class ItemHandlerProxy implements IItemHandler {
     public int getSlotLimit(int slot) {
         return slot < insertHandler.getSlots() ? insertHandler.getSlotLimit(slot) : extractHandler.getSlotLimit(slot - insertHandler.getSlots());
     }
+
+    @Override
+    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        return slot < insertHandler.getSlots() ? insertHandler.isItemValid(slot, stack) : extractHandler.isItemValid(slot - extractHandler.getSlots(), stack);
+    }
 }

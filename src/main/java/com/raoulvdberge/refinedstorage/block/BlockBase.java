@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.util.CollisionUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -192,7 +193,7 @@ public abstract class BlockBase extends Block {
         return false;
     }
 
-    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+    public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
         return DEFAULT_COLLISION_GROUPS;
     }
 

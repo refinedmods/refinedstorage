@@ -20,7 +20,7 @@ public class AdvancedRayTraceResult<T extends RayTraceResult> {
     }
 
     public double squareDistanceTo(Vec3d vec) {
-        return hit.hitVec.squareDistanceTo(vec);
+        return hit.getHitVec().squareDistanceTo(vec);
     }
 
     public CollisionGroup getGroup() {

@@ -13,8 +13,8 @@ import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBas
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
             }
         }
 
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+        if (EffectiveSide.get() == LogicalSide.CLIENT) { // TODO check
             GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
         }
     }

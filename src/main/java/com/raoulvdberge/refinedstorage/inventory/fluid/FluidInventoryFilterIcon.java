@@ -10,8 +10,8 @@ public class FluidInventoryFilterIcon extends FluidInventory {
         super(1, Integer.MAX_VALUE, null);
 
         this.listener = slot -> {
-            if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new CompoundNBT());
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundNBT());
             }
 
             ItemFilter.setFluidIcon(stack, getFluid(slot));

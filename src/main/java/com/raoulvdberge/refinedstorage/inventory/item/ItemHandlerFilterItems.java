@@ -14,8 +14,8 @@ public class ItemHandlerFilterItems extends ItemStackHandler {
 
         this.stack = stack;
 
-        if (stack.hasTagCompound()) {
-            StackUtils.readItems(this, 0, stack.getTagCompound());
+        if (stack.hasTag()) {
+            StackUtils.readItems(this, 0, stack.getTag());
         }
     }
 
@@ -23,11 +23,11 @@ public class ItemHandlerFilterItems extends ItemStackHandler {
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
 
-        if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new CompoundNBT());
+        if (!stack.hasTag()) {
+            stack.setTag(new CompoundNBT());
         }
 
-        StackUtils.writeItems(this, 0, stack.getTagCompound());
+        StackUtils.writeItems(this, 0, stack.getTag());
     }
 
     public NonNullList<ItemStack> getFilteredItems() {

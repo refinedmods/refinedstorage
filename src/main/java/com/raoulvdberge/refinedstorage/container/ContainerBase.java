@@ -11,12 +11,10 @@ import com.raoulvdberge.refinedstorage.container.transfer.TransferManager;
 import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
-import invtweaks.api.container.InventoryContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -24,7 +22,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@InventoryContainer(showOptions = false)
 public abstract class ContainerBase extends Container {
     @Nullable
     private TileBase tile;
@@ -37,7 +34,9 @@ public abstract class ContainerBase extends Container {
     private List<SlotFilterFluid> fluidSlots = new ArrayList<>();
     private List<FluidStack> fluids = new ArrayList<>();
 
-    public ContainerBase(@Nullable TileBase tile, PlayerEntity player) {
+    public ContainerBase(@Nullable TileBase tile, PlayerEntity player, int windowId) {
+        super(ContainerType.CRAFTING, windowId);
+
         this.tile = tile;
 
         if (tile != null && player instanceof ServerPlayerEntity) {
