@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.6.16
+- Updated Russian translation (Bytegm)
+
 ### 1.6.15
 - Fixed recipes with more than 1 bucket of fluid not transferring from JEI (Darkere)
 - Fixed oredict crafting patterns redefining recipes (Darkere)
