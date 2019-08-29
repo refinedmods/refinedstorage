@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.api.autocrafting.preview;
 
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Represents a crafting preview element.
@@ -19,7 +19,7 @@ public interface ICraftingPreviewElement<T> {
      * @param y       position on the y axis to render
      * @param drawers the drawers this element can use
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     void draw(int x, int y, IElementDrawers drawers);
 
     /**

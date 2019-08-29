@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.grid;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +33,7 @@ public interface IGridManager {
      * @param player the player
      * @param pos    the block position
      */
-    void openGrid(int id, EntityPlayerMP player, BlockPos pos);
+    void openGrid(int id, ServerPlayerEntity player, BlockPos pos);
 
     /**
      * Opens a grid. Can only be called on the server.
@@ -42,7 +42,7 @@ public interface IGridManager {
      * @param player the player
      * @param stack  the stack
      */
-    void openGrid(int id, EntityPlayerMP player, ItemStack stack);
+    void openGrid(int id, ServerPlayerEntity player, ItemStack stack);
 
     /**
      * Creates a grid.
@@ -54,5 +54,5 @@ public interface IGridManager {
      * @return a grid, or null if an error has occurred
      */
     @Nullable
-    Pair<IGrid, TileEntity> createGrid(int id, EntityPlayer player, @Nullable ItemStack stack, @Nullable BlockPos pos);
+    Pair<IGrid, TileEntity> createGrid(int id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos);
 }

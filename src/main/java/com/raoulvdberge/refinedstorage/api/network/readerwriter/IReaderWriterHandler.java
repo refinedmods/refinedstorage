@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 
@@ -64,7 +64,7 @@ public interface IReaderWriterHandler {
      * @param tag the tag to write to
      * @return the written tag
      */
-    NBTTagCompound writeToNbt(NBTTagCompound tag);
+    CompoundNBT writeToNbt(CompoundNBT tag);
 
     /**
      * @return the id of this writer, as assigned to the {@link IReaderWriterHandlerRegistry}

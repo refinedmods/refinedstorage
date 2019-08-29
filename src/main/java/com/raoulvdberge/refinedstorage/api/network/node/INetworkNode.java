@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.api.network.node;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -65,7 +65,7 @@ public interface INetworkNode {
      * @param tag the tag
      * @return the written tag
      */
-    NBTTagCompound write(NBTTagCompound tag);
+    CompoundNBT write(CompoundNBT tag);
 
     /**
      * @return the position of this network node

@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.grid.handler;
 
 import com.raoulvdberge.refinedstorage.api.IRSAPI;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -22,7 +22,7 @@ public interface IItemGridHandler {
      * @param hash   the hash of the item we're trying to extract, see {@link IRSAPI#getItemStackHashCode(ItemStack)}
      * @param flags  how we are extracting, see the flags in {@link IItemGridHandler}
      */
-    void onExtract(EntityPlayerMP player, int hash, int flags);
+    void onExtract(ServerPlayerEntity player, int hash, int flags);
 
     /**
      * Called when a player tries to insert an item in the grid.
@@ -32,7 +32,7 @@ public interface IItemGridHandler {
      * @return the remainder, or null if there is no remainder
      */
     @Nullable
-    ItemStack onInsert(EntityPlayerMP player, ItemStack stack);
+    ItemStack onInsert(ServerPlayerEntity player, ItemStack stack);
 
     /**
      * Called when a player is trying to insert an item that it is holding in their hand in the GUI.
@@ -40,7 +40,7 @@ public interface IItemGridHandler {
      * @param player the player that is attempting the insert
      * @param single true if we are only inserting a single item, false otherwise
      */
-    void onInsertHeldItem(EntityPlayerMP player, boolean single);
+    void onInsertHeldItem(ServerPlayerEntity player, boolean single);
 
     /**
      * Called when the player shift clicks an item into the grid.
@@ -49,7 +49,7 @@ public interface IItemGridHandler {
      * @param stack  the stack
      * @return the remainder stack
      */
-    ItemStack onShiftClick(EntityPlayerMP player, ItemStack stack);
+    ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack);
 
     /**
      * Called when a player requests the crafting preview window to be opened.
@@ -59,7 +59,7 @@ public interface IItemGridHandler {
      * @param quantity  the amount of that item that we need a preview for
      * @param noPreview true if the crafting preview window shouldn't be shown, false otherwise
      */
-    void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity, boolean noPreview);
+    void onCraftingPreviewRequested(ServerPlayerEntity player, int hash, int quantity, boolean noPreview);
 
     /**
      * Called when a player requested crafting for an item.
@@ -68,7 +68,7 @@ public interface IItemGridHandler {
      * @param hash     the hash of the item to request a craft for
      * @param quantity the amount of the item that has to be crafted
      */
-    void onCraftingRequested(EntityPlayerMP player, int hash, int quantity);
+    void onCraftingRequested(ServerPlayerEntity player, int hash, int quantity);
 
     /**
      * Called when a player wants to cancel a crafting task.
@@ -76,5 +76,5 @@ public interface IItemGridHandler {
      * @param player the player that requested the cancel
      * @param id     the task id, or null to cancel all tasks that are in the network currently
      */
-    void onCraftingCancelRequested(EntityPlayerMP player, @Nullable UUID id);
+    void onCraftingCancelRequested(ServerPlayerEntity player, @Nullable UUID id);
 }

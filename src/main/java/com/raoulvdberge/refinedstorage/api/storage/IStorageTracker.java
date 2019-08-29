@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.storage;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +26,7 @@ public interface IStorageTracker<T> {
      * @param player player
      * @param stack  the stack
      */
-    void changed(EntityPlayer player, T stack);
+    void changed(PlayerEntity player, T stack);
 
     /**
      * @param stack the stack

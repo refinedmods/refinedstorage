@@ -25,7 +25,7 @@ import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -194,7 +194,7 @@ public interface IRSAPI {
      * @param tag the nbt tag
      * @return the request info
      */
-    ICraftingRequestInfo createCraftingRequestInfo(NBTTagCompound tag) throws CraftingTaskReadException;
+    ICraftingRequestInfo createCraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException;
 
     /**
      * Returns a helper for the 1.6.x migration.

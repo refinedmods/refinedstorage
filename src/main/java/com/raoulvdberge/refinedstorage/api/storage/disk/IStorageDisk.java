@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.storage.disk;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nullable;
 
@@ -28,7 +28,7 @@ public interface IStorageDisk<T> extends IStorage<T> {
     /**
      * Writes the storage to NBT.
      */
-    NBTTagCompound writeToNbt();
+    CompoundNBT writeToNbt();
 
     /**
      * @return the factory id as registered in {@link IStorageDiskRegistry}

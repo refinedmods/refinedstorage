@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -57,10 +57,10 @@ public interface IReaderWriterManager {
     /**
      * @param tag the tag to write to
      */
-    void writeToNbt(NBTTagCompound tag);
+    void writeToNbt(CompoundNBT tag);
 
     /**
      * @param tag the tag to read from
      */
-    void readFromNbt(NBTTagCompound tag);
+    void readFromNbt(CompoundNBT tag);
 }

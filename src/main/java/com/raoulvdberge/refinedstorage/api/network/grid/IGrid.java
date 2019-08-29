@@ -5,10 +5,9 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -53,7 +52,7 @@ public interface IGrid {
      * @param player the player to create a listener for
      * @return a listener for this grid, will be attached to the storage cache in {@link #getStorageCache()}
      */
-    IStorageCacheListener createListener(EntityPlayerMP player);
+    IStorageCacheListener createListener(ServerPlayerEntity player);
 
     /**
      * @return the storage cache for this grid, or null if this grid is unavailable
@@ -184,13 +183,13 @@ public interface IGrid {
      * @return the crafting matrix, or null if not a crafting grid
      */
     @Nullable
-    InventoryCrafting getCraftingMatrix();
+    CraftingInventory getCraftingMatrix();
 
     /**
      * @return the crafting result inventory, or null if not a crafting grid
      */
     @Nullable
-    InventoryCraftResult getCraftingResult();
+    CraftResultInventory getCraftingResult();
 
     /**
      * Called when the crafting matrix changes.
@@ -202,14 +201,14 @@ public interface IGrid {
      *
      * @param player the player that crafted the item
      */
-    void onCrafted(EntityPlayer player);
+    void onCrafted(ServerPlayerEntity player);
 
     /**
      * Called when an item is crafted with shift click (up to 64 items) in a crafting grid.
      *
      * @param player the player that crafted the item
      */
-    void onCraftedShift(EntityPlayer player);
+    void onCraftedShift(ServerPlayerEntity player);
 
     /**
      * Called when a JEI recipe transfer occurs.
@@ -217,14 +216,14 @@ public interface IGrid {
      * @param player the player
      * @param recipe a 9*x array stack array, where x is the possible combinations for the given slot
      */
-    void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe);
+    void onRecipeTransfer(ServerPlayerEntity player, ItemStack[][] recipe);
 
     /**
      * Called when the grid is closed.
      *
      * @param player the player
      */
-    void onClosed(EntityPlayer player);
+    void onClosed(ServerPlayerEntity player);
 
     /**
      * @return true if the grid is active, false otherwise

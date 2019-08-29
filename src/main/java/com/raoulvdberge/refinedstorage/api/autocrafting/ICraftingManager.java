@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -166,13 +166,13 @@ public interface ICraftingManager {
     /**
      * @param tag the tag to read from
      */
-    void readFromNbt(NBTTagCompound tag);
+    void readFromNbt(CompoundNBT tag);
 
     /**
      * @param tag the tag to write to
      * @return the written tag
      */
-    NBTTagCompound writeToNbt(NBTTagCompound tag);
+    CompoundNBT writeToNbt(CompoundNBT tag);
 
     /**
      * @param listener the listener

@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -74,7 +74,7 @@ public interface ICraftingPatternContainer {
     /**
      * @return the direction to the facing tile
      */
-    EnumFacing getDirection();
+    Direction getDirection();
 
     /**
      * @return the patterns stored in this container

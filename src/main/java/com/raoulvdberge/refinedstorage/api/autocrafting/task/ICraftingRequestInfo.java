@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.task;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -25,5 +25,5 @@ public interface ICraftingRequestInfo {
     /**
      * @return the written tag
      */
-    NBTTagCompound writeToNbt();
+    CompoundNBT writeToNbt();
 }

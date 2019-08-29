@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -16,7 +16,7 @@ public interface ICraftingMonitorElement {
      * @param y       position on the y axis to render
      * @param drawers the drawers that this element can use
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     void draw(int x, int y, IElementDrawers drawers);
 
     /**

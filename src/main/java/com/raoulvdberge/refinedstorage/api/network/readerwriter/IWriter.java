@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 /**
  * Represents a writer network node.
@@ -20,7 +20,7 @@ public interface IWriter extends INetworkNode {
     /**
      * @return the direction of the writer
      */
-    EnumFacing getDirection();
+    Direction getDirection();
 
     /**
      * @return the channel

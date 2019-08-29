@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.storage.disk;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 
 /**
@@ -16,7 +16,7 @@ public interface IStorageDiskFactory<T> {
      * @param tag   the tag
      * @return the storage disk
      */
-    IStorageDisk<T> createFromNbt(World world, NBTTagCompound tag);
+    IStorageDisk<T> createFromNbt(World world, CompoundNBT tag);
 
     /**
      * Creates a storage disk on-demand.

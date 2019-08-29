@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.readerwriter;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.List;
 
@@ -29,12 +29,12 @@ public interface IReaderWriterChannel {
      * @param tag the tag to write to
      * @return the written tag
      */
-    NBTTagCompound writeToNbt(NBTTagCompound tag);
+    CompoundNBT writeToNbt(CompoundNBT tag);
 
     /**
      * Reads this channel from NBT.
      *
      * @param tag the tag to read from
      */
-    void readFromNbt(NBTTagCompound tag);
+    void readFromNbt(CompoundNBT tag);
 }
