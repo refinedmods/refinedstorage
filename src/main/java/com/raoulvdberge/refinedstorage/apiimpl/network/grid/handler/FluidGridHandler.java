@@ -14,12 +14,16 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStartResponse;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -34,10 +38,10 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onExtract(EntityPlayerMP player, int hash, boolean shift) {
+    public void onExtract(ServerPlayerEntity player, int hash, boolean shift) {
         FluidStack stack = network.getFluidStorageCache().getList().get(hash);
 
-        if (stack == null || stack.amount < Fluid.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+        if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
         }
 
@@ -61,41 +65,41 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
 
             if (bucket != null) {
-                IFluidHandlerItem fluidHandler = bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
+                    network.getFluidStorageTracker().changed(player, stack.copy());
 
-                network.getFluidStorageTracker().changed(player, stack.copy());
+                    fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
-                fluidHandler.fill(network.extractFluid(stack, Fluid.BUCKET_VOLUME, Action.PERFORM), true);
-
-                if (shift) {
-                    if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                        InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
+                    if (shift) {
+                        if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
+                            InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
+                        }
+                    } else {
+                        player.inventory.setItemStack(fluidHandler.getContainer());
+                        player.updateHeldItem();
                     }
-                } else {
-                    player.inventory.setItemStack(fluidHandler.getContainer());
-                    player.updateHeldItem();
-                }
 
-                network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridExtractUsage);
+                    network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridExtractUsage);
+                });
             }
         }
     }
 
     @Nullable
     @Override
-    public ItemStack onInsert(EntityPlayerMP player, ItemStack container) {
+    public ItemStack onInsert(ServerPlayerEntity player, ItemStack container) {
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return container;
         }
 
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
-        if (result.getValue() != null && network.insertFluid(result.getValue(), result.getValue().amount, Action.SIMULATE) == null) {
+        if (result.getValue() != null && network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE) == null) {
             network.getFluidStorageTracker().changed(player, result.getValue().copy());
 
             result = StackUtils.getFluid(container, false);
 
-            network.insertFluid(result.getValue(), result.getValue().amount, Action.PERFORM);
+            network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.PERFORM);
 
             network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridInsertUsage);
 
@@ -106,18 +110,18 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onInsertHeldContainer(EntityPlayerMP player) {
+    public void onInsertHeldContainer(ServerPlayerEntity player) {
         player.inventory.setItemStack(StackUtils.nullToEmpty(onInsert(player, player.inventory.getItemStack())));
         player.updateHeldItem();
     }
 
     @Override
-    public ItemStack onShiftClick(EntityPlayerMP player, ItemStack container) {
+    public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack container) {
         return StackUtils.nullToEmpty(onInsert(player, container));
     }
 
     @Override
-    public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayerEntity player, int hash, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -142,13 +146,13 @@ public class FluidGridHandler implements IFluidGridHandler {
                 ICraftingTaskError error = task.calculate();
 
                 if (error != null) {
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, true), player);
+                    // TODO: Networking RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, true), player);
                 } else if (noPreview && !task.hasMissing()) {
                     network.getCraftingManager().add(task);
 
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
+                    // TODO: Networking RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
                 } else {
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity, true), player);
+                    // TODO: Networking RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity, true), player);
                 }
             }, "RS crafting preview calculation");
 
@@ -157,7 +161,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(EntityPlayerMP player, int hash, int quantity) {
+    public void onCraftingRequested(ServerPlayerEntity player, int hash, int quantity) {
         if (quantity <= 0 || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }

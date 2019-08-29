@@ -1,17 +1,16 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<ItemStack> {
@@ -34,26 +33,29 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
         this.toCraft = toCraft;
     }
 
+    // TODO ren
     @Override
-    public void writeToByteBuf(ByteBuf buf) {
+    public void writeToByteBuf(PacketBuffer buf) {
+        // TODO can't we use writeItemSTack
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
-        buf.writeInt(stack.getMetadata());
-        ByteBufUtils.writeTag(buf, stack.getTagCompound());
+        buf.writeCompoundTag(stack.getTag());
         buf.writeInt(available);
         buf.writeBoolean(missing);
         buf.writeInt(toCraft);
     }
 
-    public static CraftingPreviewElementItemStack fromByteBuf(ByteBuf buf) {
+    // TODO ren
+    public static CraftingPreviewElementItemStack fromByteBuf(PacketBuffer buf) {
+        // TODO readItemStack
+
         Item item = Item.getItemById(buf.readInt());
-        int meta = buf.readInt();
-        NBTTagCompound tag = ByteBufUtils.readTag(buf);
+        CompoundNBT tag = buf.readCompoundTag();
         int available = buf.readInt();
         boolean missing = buf.readBoolean();
         int toCraft = buf.readInt();
 
-        ItemStack stack = new ItemStack(item, 1, meta);
-        stack.setTagCompound(tag);
+        ItemStack stack = new ItemStack(item, 1);
+        stack.put(tag);
 
         return new CraftingPreviewElementItemStack(stack, available, missing, toCraft);
     }
@@ -64,7 +66,7 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void draw(int x, int y, IElementDrawers drawers) {
         if (missing) {
             drawers.getOverlayDrawer().draw(x, y, 0xFFF2DEDE);
@@ -75,12 +77,13 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
 
         drawers.getItemDrawer().draw(x, y, getElement());
 
-        float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
+        // TODO float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
+        float scale = 1F;
 
         y += 2;
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 1);
+        GlStateManager.scalef(scale, scale, 1);
 
         if (getToCraft() > 0) {
             String format = hasMissing() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";

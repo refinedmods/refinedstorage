@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
-
+/* TODO
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -49,7 +49,7 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     private FluidTank tank;
     private FluidTankReaderWriter tankReader, tankWriter;
 
-    public ReaderWriterHandlerFluids(@Nullable NBTTagCompound tag) {
+    public ReaderWriterHandlerFluids(@Nullable CompoundNBT tag) {
         this.tank = new FluidTank(16 * Fluid.BUCKET_VOLUME);
         this.tankReader = new FluidTankReaderWriter(tank, true, false);
         this.tankWriter = new FluidTankReaderWriter(tank, false, true);
@@ -103,7 +103,7 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
+    public CompoundNBT writeToNbt(CompoundNBT tag) {
         tank.writeToNBT(tag);
 
         return tag;
@@ -224,4 +224,4 @@ public class ReaderWriterHandlerFluids implements IReaderWriterHandler {
             return canDrain ? parent.drain(maxDrain, doDrain) : null;
         }
     }
-}
+}*/

@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -44,7 +44,7 @@ public class MessageWirelessCraftingMonitorSettings extends MessageHandlerPlayer
     }
 
     @Override
-    public void handle(MessageWirelessCraftingMonitorSettings message, EntityPlayerMP player) {
+    public void handle(MessageWirelessCraftingMonitorSettings message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerCraftingMonitor) {
             ItemStack stack = ((WirelessCraftingMonitor) ((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor()).getStack();
 

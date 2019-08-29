@@ -4,8 +4,8 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeFactory;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
@@ -24,7 +24,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_POS = "Pos";
 
     private boolean canReadNodes;
-    private NBTTagList nodesTag;
+    private ListNBT nodesTag;
 
     private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
@@ -33,9 +33,9 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
+    public void readFromNBT(CompoundNBT tag) {
         if (tag.hasKey(NBT_NODES)) {
-            this.nodesTag = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
+            this.nodesTag = tag.getList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
             this.canReadNodes = true;
         }
     }
@@ -46,11 +46,11 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
             this.nodes.clear();
 
-            for (int i = 0; i < nodesTag.tagCount(); ++i) {
-                NBTTagCompound nodeTag = nodesTag.getCompoundTagAt(i);
+            for (int i = 0; i < nodesTag.size(); ++i) {
+                CompoundNBT nodeTag = nodesTag.getCompound(i);
 
                 String id = nodeTag.getString(NBT_NODE_ID);
-                NBTTagCompound data = nodeTag.getCompoundTag(NBT_NODE_DATA);
+                CompoundNBT data = nodeTag.getCompound(NBT_NODE_DATA);
                 BlockPos pos = BlockPos.fromLong(nodeTag.getLong(NBT_NODE_POS));
 
                 INetworkNodeFactory factory = API.instance().getNetworkNodeRegistry().get(id);
@@ -73,24 +73,24 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        NBTTagList list = new NBTTagList();
+    public CompoundNBT writeToNBT(CompoundNBT tag) {
+        ListNBT list = new ListNBT();
 
         for (INetworkNode node : all()) {
             try {
-                NBTTagCompound nodeTag = new NBTTagCompound();
+                CompoundNBT nodeTag = new CompoundNBT();
 
                 nodeTag.setString(NBT_NODE_ID, node.getId());
                 nodeTag.setLong(NBT_NODE_POS, node.getPos().toLong());
-                nodeTag.setTag(NBT_NODE_DATA, node.write(new NBTTagCompound()));
+                nodeTag.put(NBT_NODE_DATA, node.write(new CompoundNBT()));
 
-                list.appendTag(nodeTag);
+                list.add(nodeTag);
             } catch (Throwable t) {
                 t.printStackTrace();
             }
         }
 
-        tag.setTag(NBT_NODES, list);
+        tag.put(NBT_NODES, list);
 
         return tag;
     }

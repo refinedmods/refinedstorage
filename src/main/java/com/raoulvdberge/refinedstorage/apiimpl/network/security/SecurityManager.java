@@ -6,9 +6,8 @@ import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCard;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityCardContainer;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.management.UserListOps;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.management.OpList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +23,8 @@ public class SecurityManager implements ISecurityManager {
     }
 
     @Override
-    public boolean hasPermission(Permission permission, EntityPlayer player) {
-        UserListOps ops = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOppedPlayers();
+    public boolean hasPermission(Permission permission, PlayerEntity player) {
+        OpList ops = player.getServer().getPlayerList().getOppedPlayers(); // TODO does that work?
 
         if (ops.getEntry(player.getGameProfile()) != null) {
             return true;

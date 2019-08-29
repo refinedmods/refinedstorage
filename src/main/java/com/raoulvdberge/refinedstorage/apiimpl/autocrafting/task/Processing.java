@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadExc
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -35,14 +35,14 @@ class Processing {
         this.root = root;
     }
 
-    public Processing(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
-        this.pattern = CraftingTask.readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
-        this.itemsToReceive = CraftingTask.readItemStackList(tag.getTagList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
-        this.fluidsToReceive = CraftingTask.readFluidStackList(tag.getTagList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
+    public Processing(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+        this.pattern = CraftingTask.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.world());
+        this.itemsToReceive = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
+        this.fluidsToReceive = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
         this.root = tag.getBoolean(NBT_ROOT);
-        this.itemsToPut = CraftingTask.readItemStackList(tag.getTagList(NBT_ITEMS_TO_PUT, Constants.NBT.TAG_COMPOUND));
-        this.fluidsToPut = CraftingTask.readFluidStackList(tag.getTagList(NBT_FLUIDS_TO_PUT, Constants.NBT.TAG_COMPOUND));
-        this.state = ProcessingState.values()[tag.getInteger(NBT_STATE)];
+        this.itemsToPut = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_PUT, Constants.NBT.TAG_COMPOUND));
+        this.fluidsToPut = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_TO_PUT, Constants.NBT.TAG_COMPOUND));
+        this.state = ProcessingState.values()[tag.getInt(NBT_STATE)];
     }
 
     public ICraftingPattern getPattern() {
@@ -77,16 +77,16 @@ class Processing {
         return root;
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound tag = new NBTTagCompound();
+    public CompoundNBT writeToNbt() {
+        CompoundNBT tag = new CompoundNBT();
 
-        tag.setTag(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
-        tag.setTag(NBT_ITEMS_TO_RECEIVE, CraftingTask.writeItemStackList(itemsToReceive));
-        tag.setTag(NBT_FLUIDS_TO_RECEIVE, CraftingTask.writeFluidStackList(fluidsToReceive));
-        tag.setBoolean(NBT_ROOT, root);
-        tag.setTag(NBT_ITEMS_TO_PUT, CraftingTask.writeItemStackList(itemsToPut));
-        tag.setTag(NBT_FLUIDS_TO_PUT, CraftingTask.writeFluidStackList(fluidsToPut));
-        tag.setInteger(NBT_STATE, state.ordinal());
+        tag.put(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
+        tag.put(NBT_ITEMS_TO_RECEIVE, CraftingTask.writeItemStackList(itemsToReceive));
+        tag.put(NBT_FLUIDS_TO_RECEIVE, CraftingTask.writeFluidStackList(fluidsToReceive));
+        tag.putBoolean(NBT_ROOT, root);
+        tag.put(NBT_ITEMS_TO_PUT, CraftingTask.writeItemStackList(itemsToPut));
+        tag.put(NBT_FLUIDS_TO_PUT, CraftingTask.writeFluidStackList(fluidsToPut));
+        tag.putInt(NBT_STATE, state.ordinal());
 
         return tag;
     }

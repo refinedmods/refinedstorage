@@ -12,7 +12,7 @@ import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -160,27 +160,27 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         if (owner != null) {
             tag.setUniqueId(NBT_OWNER, owner);
         }
 
         tag.setString(NBT_VERSION, RS.VERSION);
 
-        tag.setInteger(NBT_DIRECTION, direction.ordinal());
+        tag.putInt(NBT_DIRECTION, direction.ordinal());
 
         writeConfiguration(tag);
 
         return tag;
     }
 
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         redstoneMode.write(tag);
 
         return tag;
     }
 
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         if (tag.hasUniqueId(NBT_OWNER)) {
             owner = tag.getUniqueId(NBT_OWNER);
         }
@@ -202,7 +202,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         }
     }
 
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         redstoneMode = RedstoneMode.read(tag);
     }
 

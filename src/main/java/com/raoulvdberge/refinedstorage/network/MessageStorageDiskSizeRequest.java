@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -21,7 +21,7 @@ public class MessageStorageDiskSizeRequest extends MessageHandlerPlayerToServer<
     }
 
     @Override
-    protected void handle(MessageStorageDiskSizeRequest message, EntityPlayerMP player) {
+    protected void handle(MessageStorageDiskSizeRequest message, ServerPlayerEntity player) {
         IStorageDisk disk = API.instance().getStorageDiskManager(player.getEntityWorld()).get(message.id);
 
         if (disk != null) {

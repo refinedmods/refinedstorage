@@ -13,8 +13,8 @@ import net.minecraft.block.BlockStainedGlass;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.property.IExtendedBlockState;
@@ -90,15 +90,15 @@ public class CoverManager {
         return false;
     }
 
-    public void readFromNbt(NBTTagList list) {
+    public void readFromNbt(ListNBT list) {
         covers.clear();
 
-        for (int i = 0; i < list.tagCount(); ++i) {
-            NBTTagCompound tag = list.getCompoundTagAt(i);
+        for (int i = 0; i < list.size(); ++i) {
+            CompoundNBT tag = list.getCompound(i);
 
             if (tag.hasKey(NBT_DIRECTION) && tag.hasKey(NBT_ITEM)) {
                 EnumFacing direction = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
-                ItemStack item = new ItemStack(tag.getCompoundTag(NBT_ITEM));
+                ItemStack item = new ItemStack(tag.getCompound(NBT_ITEM));
                 int type = tag.hasKey(NBT_TYPE) ? tag.getInteger(NBT_TYPE) : 0;
 
                 if (type >= CoverType.values().length) {
@@ -112,17 +112,17 @@ public class CoverManager {
         }
     }
 
-    public NBTTagList writeToNbt() {
-        NBTTagList list = new NBTTagList();
+    public ListNBT writeToNbt() {
+        ListNBT list = new ListNBT();
 
         for (Map.Entry<EnumFacing, Cover> entry : covers.entrySet()) {
-            NBTTagCompound tag = new NBTTagCompound();
+            CompoundNBT tag = new CompoundNBT();
 
-            tag.setInteger(NBT_DIRECTION, entry.getKey().ordinal());
-            tag.setTag(NBT_ITEM, entry.getValue().getStack().serializeNBT());
-            tag.setInteger(NBT_TYPE, entry.getValue().getType().ordinal());
+            tag.putInt(NBT_DIRECTION, entry.getKey().ordinal());
+            tag.put(NBT_ITEM, entry.getValue().getStack().serializeNBT());
+            tag.putInt(NBT_TYPE, entry.getValue().getType().ordinal());
 
-            list.appendTag(tag);
+            list.add(tag);
         }
 
         return list;

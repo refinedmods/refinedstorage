@@ -4,11 +4,11 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerDiskDrive extends ContainerBase {
-    public ContainerDiskDrive(TileDiskDrive diskDrive, EntityPlayer player) {
+    public ContainerDiskDrive(TileDiskDrive diskDrive, PlayerEntity player) {
         super(diskDrive, player);
 
         int x = 80;

@@ -13,7 +13,7 @@ import com.raoulvdberge.refinedstorage.item.ItemStorageDisk;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -55,7 +55,7 @@ public class ItemBlockStorage extends ItemBlockBase {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
         ItemStack storageStack = player.getHeldItem(hand);
 
         if (!world.isRemote && player.isSneaking() && storageStack.getMetadata() != ItemStorageDisk.TYPE_CREATIVE) {

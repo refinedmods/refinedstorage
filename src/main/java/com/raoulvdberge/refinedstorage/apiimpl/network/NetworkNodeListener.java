@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.event.world.BlockEvent;
@@ -31,7 +31,7 @@ public class NetworkNodeListener {
 
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.EntityPlaceEvent e) {
-        if (!e.getWorld().isRemote && e.getEntity() instanceof EntityPlayer) {
+        if (!e.getWorld().isRemote && e.getEntity() instanceof PlayerEntity) {
             TileEntity placed = e.getWorld().getTileEntity(e.getPos());
 
             if (placed != null && placed.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, null)) {
@@ -42,8 +42,8 @@ public class NetworkNodeListener {
                         INetworkNodeProxy nodeProxy = side.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite());
                         INetworkNode node = nodeProxy.getNode();
 
-                        if (node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, (EntityPlayer) e.getEntity())) {
-                            WorldUtils.sendNoPermissionMessage((EntityPlayer) e.getEntity());
+                        if (node.getNetwork() != null && !node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, (PlayerEntity) e.getEntity())) {
+                            WorldUtils.sendNoPermissionMessage((PlayerEntity) e.getEntity());
 
                             e.setCanceled(true);
 

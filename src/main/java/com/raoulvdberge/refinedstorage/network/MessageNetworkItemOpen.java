@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.item.ItemNetworkItem;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -21,7 +21,7 @@ public class MessageNetworkItemOpen extends MessageHandlerPlayerToServer<Message
     }
 
     @Override
-    protected void handle(MessageNetworkItemOpen message, EntityPlayerMP player) {
+    protected void handle(MessageNetworkItemOpen message, ServerPlayerEntity player) {
         ItemStack stack = player.inventory.getStackInSlot(message.slotId);
 
         if (stack.getItem() instanceof ItemNetworkItem) {

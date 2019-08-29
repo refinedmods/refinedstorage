@@ -7,8 +7,8 @@ import com.raoulvdberge.refinedstorage.network.MessageCraftingMonitorElements;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -18,7 +18,7 @@ public class ContainerCraftingMonitor extends ContainerBase implements ICrafting
     private ICraftingMonitor craftingMonitor;
     private boolean addedListener;
 
-    public ContainerCraftingMonitor(ICraftingMonitor craftingMonitor, @Nullable TileCraftingMonitor craftingMonitorTile, EntityPlayer player) {
+    public ContainerCraftingMonitor(ICraftingMonitor craftingMonitor, @Nullable TileCraftingMonitor craftingMonitorTile, PlayerEntity player) {
         super(craftingMonitorTile, player);
 
         this.craftingMonitor = craftingMonitor;
@@ -41,7 +41,7 @@ public class ContainerCraftingMonitor extends ContainerBase implements ICrafting
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer player) {
+    public void onContainerClosed(PlayerEntity player) {
         super.onContainerClosed(player);
 
         ICraftingManager manager = craftingMonitor.getCraftingManager();
@@ -55,7 +55,7 @@ public class ContainerCraftingMonitor extends ContainerBase implements ICrafting
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);
@@ -93,6 +93,6 @@ public class ContainerCraftingMonitor extends ContainerBase implements ICrafting
 
     @Override
     public void onChanged() {
-        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingMonitor), (EntityPlayerMP) getPlayer());
+        RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingMonitor), (ServerPlayerEntity) getPlayer());
     }
 }

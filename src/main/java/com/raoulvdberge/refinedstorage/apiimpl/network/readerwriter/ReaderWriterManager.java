@@ -6,8 +6,8 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHan
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterListener;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -79,27 +79,27 @@ public class ReaderWriterManager implements IReaderWriterManager {
     }
 
     @Override
-    public void writeToNbt(NBTTagCompound tag) {
-        NBTTagList readerWriterChannelsList = new NBTTagList();
+    public void writeToNbt(CompoundNBT tag) {
+        ListNBT readerWriterChannelsList = new ListNBT();
 
         for (Map.Entry<String, IReaderWriterChannel> entry : channels.entrySet()) {
-            NBTTagCompound channelTag = entry.getValue().writeToNbt(new NBTTagCompound());
+            CompoundNBT channelTag = entry.getValue().writeToNbt(new CompoundNBT());
 
-            channelTag.setString(NBT_NAME, entry.getKey());
+            channelTag.putString(NBT_NAME, entry.getKey());
 
-            readerWriterChannelsList.appendTag(channelTag);
+            readerWriterChannelsList.add(channelTag);
         }
 
-        tag.setTag(NBT_CHANNELS, readerWriterChannelsList);
+        tag.put(NBT_CHANNELS, readerWriterChannelsList);
     }
 
     @Override
-    public void readFromNbt(NBTTagCompound tag) {
-        if (tag.hasKey(NBT_CHANNELS)) {
-            NBTTagList readerWriterChannelsList = tag.getTagList(NBT_CHANNELS, Constants.NBT.TAG_COMPOUND);
+    public void readFromNbt(CompoundNBT tag) {
+        if (tag.contains(NBT_CHANNELS)) {
+            ListNBT readerWriterChannelsList = tag.getList(NBT_CHANNELS, Constants.NBT.TAG_COMPOUND);
 
-            for (int i = 0; i < readerWriterChannelsList.tagCount(); ++i) {
-                NBTTagCompound channelTag = readerWriterChannelsList.getCompoundTagAt(i);
+            for (int i = 0; i < readerWriterChannelsList.size(); ++i) {
+                CompoundNBT channelTag = readerWriterChannelsList.getCompound(i);
 
                 String name = channelTag.getString(NBT_NAME);
 

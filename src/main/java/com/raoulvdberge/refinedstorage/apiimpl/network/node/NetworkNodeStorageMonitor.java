@@ -10,10 +10,10 @@ import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -64,7 +64,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         }
     }
 
-    public boolean depositAll(EntityPlayer player) {
+    public boolean depositAll(PlayerEntity player) {
         if (network == null) {
             return false;
         }
@@ -95,7 +95,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         return true;
     }
 
-    public boolean deposit(EntityPlayer player, ItemStack toInsert) {
+    public boolean deposit(PlayerEntity player, ItemStack toInsert) {
         if (network == null) {
             return false;
         }
@@ -115,7 +115,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         return true;
     }
 
-    public void extract(EntityPlayer player, EnumFacing side) {
+    public void extract(PlayerEntity player, EnumFacing side) {
         if (network == null || getDirection() != side) {
             return;
         }
@@ -164,10 +164,10 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
-        tag.setInteger(NBT_COMPARE, compare);
+        tag.putInt(NBT_COMPARE, compare);
 
         StackUtils.writeItems(itemFilter, 0, tag);
 
@@ -175,7 +175,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         if (tag.hasKey(NBT_COMPARE)) {

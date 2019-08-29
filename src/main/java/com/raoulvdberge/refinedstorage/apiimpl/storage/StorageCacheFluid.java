@@ -28,7 +28,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     }
 
     @Override
-    public synchronized void invalidate() {
+    public void invalidate() {
         storages.clear();
 
         network.getNodeGraph().all().stream()
@@ -45,7 +45,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
             }
 
             for (FluidStack stack : storage.getStacks()) {
-                add(stack, stack.amount, true, false);
+                add(stack, stack.getAmount(), true, false);
             }
         }
 
@@ -53,7 +53,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     }
 
     @Override
-    public synchronized void add(@Nonnull FluidStack stack, int size, boolean rebuilding, boolean batched) {
+    public void add(@Nonnull FluidStack stack, int size, boolean rebuilding, boolean batched) {
         list.add(stack, size);
 
         if (!rebuilding) {
@@ -66,7 +66,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     }
 
     @Override
-    public synchronized void remove(@Nonnull FluidStack stack, int size, boolean batched) {
+    public void remove(@Nonnull FluidStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
             if (!batched) {
                 listeners.forEach(l -> l.onChanged(stack, -size));
@@ -77,7 +77,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     }
 
     @Override
-    public synchronized void flush() {
+    public void flush() {
         if (!batchedChanges.isEmpty()) {
             batchedChanges.forEach(c -> listeners.forEach(l -> l.onChanged(c.getKey(), c.getValue())));
             batchedChanges.clear();

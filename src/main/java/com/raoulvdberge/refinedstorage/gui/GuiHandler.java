@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 public class GuiHandler implements IGuiHandler {
-    private Container getContainer(int ID, EntityPlayer player, TileEntity tile) {
+    private Container getContainer(int ID, PlayerEntity player, TileEntity tile) {
         switch (ID) {
             case RSGui.CONTROLLER:
                 return new ContainerController((TileController) tile, player);
@@ -68,7 +68,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+    public Object getServerGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z) {
         if (ID == RSGui.FILTER) {
             return getFilterContainer(player, x);
         } else if (ID == RSGui.WIRELESS_CRAFTING_MONITOR) {
@@ -79,7 +79,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+    public Object getClientGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z) {
         TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 
         switch (ID) {
@@ -142,11 +142,11 @@ public class GuiHandler implements IGuiHandler {
         }
     }
 
-    private WirelessCraftingMonitor getWirelessCraftingMonitor(EntityPlayer player, int invIndex) {
+    private WirelessCraftingMonitor getWirelessCraftingMonitor(PlayerEntity player, int invIndex) {
         return new WirelessCraftingMonitor(player.inventory.getStackInSlot(invIndex));
     }
 
-    private GuiCraftingMonitor getWirelessCraftingMonitorGui(EntityPlayer player, int invIndex) {
+    private GuiCraftingMonitor getWirelessCraftingMonitorGui(PlayerEntity player, int invIndex) {
         WirelessCraftingMonitor craftingMonitor = getWirelessCraftingMonitor(player, invIndex);
 
         GuiCraftingMonitor gui = new GuiCraftingMonitor(null, craftingMonitor);
@@ -154,11 +154,11 @@ public class GuiHandler implements IGuiHandler {
         return gui;
     }
 
-    private ContainerCraftingMonitor getCraftingMonitorContainer(EntityPlayer player, int invIndex) {
+    private ContainerCraftingMonitor getCraftingMonitorContainer(PlayerEntity player, int invIndex) {
         return new ContainerCraftingMonitor(getWirelessCraftingMonitor(player, invIndex), null, player);
     }
 
-    private ContainerFilter getFilterContainer(EntityPlayer player, int hand) {
+    private ContainerFilter getFilterContainer(PlayerEntity player, int hand) {
         return new ContainerFilter(player, player.getHeldItem(EnumHand.values()[hand]));
     }
 }

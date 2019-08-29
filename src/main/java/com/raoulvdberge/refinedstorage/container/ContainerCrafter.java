@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerCrafter extends ContainerBase {
-    public ContainerCrafter(TileCrafter crafter, EntityPlayer player) {
+    public ContainerCrafter(TileCrafter crafter, PlayerEntity player) {
         super(crafter, player);
 
         for (int i = 0; i < 9; ++i) {

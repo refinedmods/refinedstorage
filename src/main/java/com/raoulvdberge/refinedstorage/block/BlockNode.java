@@ -10,7 +10,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -31,8 +31,8 @@ public abstract class BlockNode extends BlockNodeProxy {
         if (!world.isRemote) {
             TileEntity tile = world.getTileEntity(pos);
 
-            if (tile instanceof TileNode && placer instanceof EntityPlayer) {
-                ((TileNode) tile).getNode().setOwner(((EntityPlayer) placer).getGameProfile().getId());
+            if (tile instanceof TileNode && placer instanceof PlayerEntity) {
+                ((TileNode) tile).getNode().setOwner(((PlayerEntity) placer).getGameProfile().getId());
             }
 
             API.instance().discoverNode(world, pos);

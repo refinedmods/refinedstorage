@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -56,7 +56,7 @@ public class MessageSecurityManagerUpdate extends MessageHandlerPlayerToServer<M
     }
 
     @Override
-    protected void handle(MessageSecurityManagerUpdate message, EntityPlayerMP player) {
+    protected void handle(MessageSecurityManagerUpdate message, ServerPlayerEntity player) {
         TileEntity tile = player.getEntityWorld().getTileEntity(new BlockPos(message.x, message.y, message.z));
 
         if (tile instanceof TileSecurityManager) {

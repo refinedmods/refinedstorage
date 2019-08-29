@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.direction;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumFacing;
 
 public interface IDirectionHandler {
@@ -8,7 +8,7 @@ public interface IDirectionHandler {
 
     EnumFacing getDirection();
 
-    void writeToTileNbt(NBTTagCompound tag);
+    void writeToTileNbt(CompoundNBT tag);
 
-    void readFromTileNbt(NBTTagCompound tag);
+    void readFromTileNbt(CompoundNBT tag);
 }

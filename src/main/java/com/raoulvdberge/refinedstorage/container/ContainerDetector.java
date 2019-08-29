@@ -4,10 +4,10 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class ContainerDetector extends ContainerBase {
-    public ContainerDetector(TileDetector detector, EntityPlayer player) {
+    public ContainerDetector(TileDetector detector, PlayerEntity player) {
         super(detector, player);
 
         addSlotToContainer(new SlotFilter(detector.getNode().getItemFilters(), 0, 107, 20).setEnableHandler(() -> detector.getNode().getType() == IType.ITEMS));

@@ -10,18 +10,17 @@ import com.raoulvdberge.refinedstorage.tile.TileInterface;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public class ExternalStorageProviderItem implements IExternalStorageProvider<ItemStack> {
     @Override
-    public boolean canProvide(TileEntity tile, EnumFacing direction) {
-        boolean isNode = tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, direction.getOpposite());
-        INetworkNodeProxy nodeProxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, direction.getOpposite());
+    public boolean canProvide(TileEntity tile, Direction direction) {
+        INetworkNodeProxy nodeProxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, direction.getOpposite()).orElse(null);
 
-        if (!(isNode && nodeProxy.getNode() instanceof IStorageProvider)) {
+        if (!(nodeProxy != null && nodeProxy.getNode() instanceof IStorageProvider)) { // TODO: Correct if still?
             return WorldUtils.getItemHandler(tile, direction.getOpposite()) != null;
         }
 
@@ -30,7 +29,7 @@ public class ExternalStorageProviderItem implements IExternalStorageProvider<Ite
 
     @Nonnull
     @Override
-    public IStorageExternal<ItemStack> provide(IExternalStorageContext context, Supplier<TileEntity> tile, EnumFacing direction) {
+    public IStorageExternal<ItemStack> provide(IExternalStorageContext context, Supplier<TileEntity> tile, Direction direction) {
         return new StorageExternalItem(context, () -> WorldUtils.getItemHandler(tile.get(), direction.getOpposite()), tile.get() instanceof TileInterface);
     }
 

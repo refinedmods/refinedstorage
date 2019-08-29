@@ -6,12 +6,12 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ContainerCraftingSettings extends ContainerBase {
-    public ContainerCraftingSettings(EntityPlayer player, IGridStack stack) {
+    public ContainerCraftingSettings(PlayerEntity player, IGridStack stack) {
         super(null, player);
 
         if (stack instanceof GridStackFluid) {

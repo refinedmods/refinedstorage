@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -90,7 +90,7 @@ public class StorageDiskFluidDriveWrapper implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
+    public CompoundNBT writeToNbt() {
         return parent.writeToNbt();
     }
 

@@ -4,10 +4,10 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 public class ContainerExternalStorage extends ContainerBase {
-    public ContainerExternalStorage(TileExternalStorage externalStorage, EntityPlayer player) {
+    public ContainerExternalStorage(TileExternalStorage externalStorage, PlayerEntity player) {
         super(externalStorage, player);
 
         for (int i = 0; i < 9; ++i) {

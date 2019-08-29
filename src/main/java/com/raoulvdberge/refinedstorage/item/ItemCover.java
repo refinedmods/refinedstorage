@@ -17,12 +17,12 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -62,10 +62,10 @@ public class ItemCover extends ItemBase {
 
     public static void setItem(ItemStack cover, ItemStack item) {
         if (!cover.hasTagCompound()) {
-            cover.setTagCompound(new NBTTagCompound());
+            cover.setTagCompound(new CompoundNBT());
         }
 
-        cover.getTagCompound().setTag(NBT_ITEM, item.serializeNBT());
+        cover.getTagCompound().put(NBT_ITEM, item.serializeNBT());
     }
 
     @Nonnull
@@ -74,7 +74,7 @@ public class ItemCover extends ItemBase {
             return ItemStack.EMPTY;
         }
 
-        return new ItemStack(cover.getTagCompound().getCompoundTag(NBT_ITEM));
+        return new ItemStack(cover.getTagCompound().getCompound(NBT_ITEM));
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ItemCover extends ItemBase {
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(PlayerEntity player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = player.getHeldItem(hand);
 
         TileEntity tile = world.getTileEntity(pos);

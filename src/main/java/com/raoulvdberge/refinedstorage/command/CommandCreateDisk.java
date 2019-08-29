@@ -7,7 +7,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -42,7 +42,7 @@ public class CommandCreateDisk extends CommandBase {
         if (args.length < 4) {
             throw new WrongUsageException("commands.refinedstorage.createdisk.usage");
         } else {
-            EntityPlayer player = getPlayer(server, sender, args[0]);
+            PlayerEntity player = getPlayer(server, sender, args[0]);
             Item item = getItemByText(sender, args[1]);
             int metadata = parseInt(args[2]);
 

@@ -12,7 +12,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.direction.DirectionHandlerNetworkNode;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -47,23 +47,23 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         getNode().setRedstoneMode(mode);
     }
 
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
         if (getNode() instanceof ICoverable) {
-            tag.setTag(NBT_COVERS, ((ICoverable) getNode()).getCoverManager().writeToNbt());
+            tag.put(NBT_COVERS, ((ICoverable) getNode()).getCoverManager().writeToNbt());
         }
 
-        tag.setBoolean(NBT_ACTIVE, getNode().canUpdate());
+        tag.putBoolean(NBT_ACTIVE, getNode().canUpdate());
 
         return tag;
     }
 
-    public void readUpdate(NBTTagCompound tag) {
+    public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
         if (getNode() instanceof ICoverable && tag.hasKey(NBT_COVERS)) {
-            ((ICoverable) getNode()).getCoverManager().readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+            ((ICoverable) getNode()).getCoverManager().readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
 
         getNode().setActive(tag.getBoolean(NBT_ACTIVE));
@@ -72,7 +72,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     private EnumFacing directionToMigrate;
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         OneSixMigrationHelper.removalHook();

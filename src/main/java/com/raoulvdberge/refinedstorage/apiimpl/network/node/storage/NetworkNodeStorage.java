@@ -28,7 +28,7 @@ import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -92,7 +92,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         tag.setUniqueId(NBT_ID, storageId);
@@ -101,7 +101,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         if (tag.hasUniqueId(NBT_ID)) {
@@ -139,14 +139,14 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(filters, 0, tag);
 
-        tag.setInteger(NBT_PRIORITY, priority);
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
+        tag.putInt(NBT_PRIORITY, priority);
+        tag.putInt(NBT_COMPARE, compare);
+        tag.putInt(NBT_MODE, mode);
 
         AccessTypeUtils.writeAccessType(tag, accessType);
 
@@ -154,7 +154,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         StackUtils.readItems(filters, 0, tag);

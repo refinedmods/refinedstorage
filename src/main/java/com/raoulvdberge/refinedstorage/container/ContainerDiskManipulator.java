@@ -4,11 +4,11 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerDiskManipulator extends ContainerBase {
-    public ContainerDiskManipulator(TileDiskManipulator diskManipulator, EntityPlayer player) {
+    public ContainerDiskManipulator(TileDiskManipulator diskManipulator, PlayerEntity player) {
         super(diskManipulator, player);
 
         for (int i = 0; i < 4; ++i) {

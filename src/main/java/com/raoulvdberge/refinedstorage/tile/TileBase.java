@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.tile.direction.DirectionHandlerTile;
 import com.raoulvdberge.refinedstorage.tile.direction.IDirectionHandler;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -41,23 +41,23 @@ public abstract class TileBase extends TileEntity {
         return dataManager;
     }
 
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         directionHandler.writeToTileNbt(tag);
 
         return tag;
     }
 
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
-        tag.setInteger(NBT_DIRECTION, directionHandler.getDirection().ordinal());
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
+        tag.putInt(NBT_DIRECTION, directionHandler.getDirection().ordinal());
 
         return tag;
     }
 
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         directionHandler.readFromTileNbt(tag);
     }
 
-    public void readUpdate(NBTTagCompound tag) {
+    public void readUpdate(CompoundNBT tag) {
         boolean doRender = canCauseRenderUpdate(tag);
 
         clientDirection = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
@@ -67,12 +67,12 @@ public abstract class TileBase extends TileEntity {
         }
     }
 
-    protected boolean canCauseRenderUpdate(NBTTagCompound tag) {
+    protected boolean canCauseRenderUpdate(CompoundNBT tag) {
         return true;
     }
 
     @Override
-    public final NBTTagCompound getUpdateTag() {
+    public final CompoundNBT getUpdateTag() {
         return writeUpdate(super.getUpdateTag());
     }
 
@@ -88,21 +88,21 @@ public abstract class TileBase extends TileEntity {
     }
 
     @Override
-    public final void handleUpdateTag(NBTTagCompound tag) {
+    public final void handleUpdateTag(CompoundNBT tag) {
         super.readFromNBT(tag);
 
         readUpdate(tag);
     }
 
     @Override
-    public final void readFromNBT(NBTTagCompound tag) {
+    public final void readFromNBT(CompoundNBT tag) {
         super.readFromNBT(tag);
 
         read(tag);
     }
 
     @Override
-    public final NBTTagCompound writeToNBT(NBTTagCompound tag) {
+    public final CompoundNBT writeToNBT(CompoundNBT tag) {
         return write(super.writeToNBT(tag));
     }
 

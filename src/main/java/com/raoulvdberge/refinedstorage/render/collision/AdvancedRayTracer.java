@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.render.collision;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -11,12 +11,12 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public final class AdvancedRayTracer {
-    public static Vec3d getStart(EntityPlayer player) {
+    public static Vec3d getStart(PlayerEntity player) {
         return new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
     }
 
-    public static Vec3d getEnd(EntityPlayer player) {
-        double reachDistance = player instanceof EntityPlayerMP ? player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() : (player.capabilities.isCreativeMode ? 5.0D : 4.5D);
+    public static Vec3d getEnd(PlayerEntity player) {
+        double reachDistance = player instanceof ServerPlayerEntity ? player.getEntityAttribute(PlayerEntity.REACH_DISTANCE).getAttributeValue() : (player.capabilities.isCreativeMode ? 5.0D : 4.5D);
 
         Vec3d lookVec = player.getLookVec();
         Vec3d start = getStart(player);

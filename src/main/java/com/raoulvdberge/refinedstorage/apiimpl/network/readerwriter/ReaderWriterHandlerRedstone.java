@@ -4,9 +4,9 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.Collections;
@@ -65,7 +65,7 @@ public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
+    public CompoundNBT writeToNbt(CompoundNBT tag) {
         return tag;
     }
 
@@ -91,6 +91,6 @@ public class ReaderWriterHandlerRedstone implements IReaderWriterHandler {
             return Collections.emptyList();
         }
 
-        return Collections.singletonList(new TextComponentTranslation("misc.refinedstorage:reader_writer.redstone", strength));
+        return Collections.singletonList(new TranslationTextComponent("misc.refinedstorage:reader_writer.redstone", strength));
     }
 }

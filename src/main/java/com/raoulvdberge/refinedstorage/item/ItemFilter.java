@@ -14,9 +14,9 @@ import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -53,7 +53,7 @@ public class ItemFilter extends ItemBase {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
@@ -99,10 +99,10 @@ public class ItemFilter extends ItemBase {
 
     public static void setCompare(ItemStack stack, int compare) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
-        stack.getTagCompound().setInteger(NBT_COMPARE, compare);
+        stack.getTagCompound().putInt(NBT_COMPARE, compare);
     }
 
     public static int getMode(ItemStack stack) {
@@ -111,10 +111,10 @@ public class ItemFilter extends ItemBase {
 
     public static void setMode(ItemStack stack, int mode) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
-        stack.getTagCompound().setInteger(NBT_MODE, mode);
+        stack.getTagCompound().putInt(NBT_MODE, mode);
     }
 
     public static boolean isModFilter(ItemStack stack) {
@@ -123,10 +123,10 @@ public class ItemFilter extends ItemBase {
 
     public static void setModFilter(ItemStack stack, boolean modFilter) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
-        stack.getTagCompound().setBoolean(NBT_MOD_FILTER, modFilter);
+        stack.getTagCompound().putBoolean(NBT_MOD_FILTER, modFilter);
     }
 
     public static String getName(ItemStack stack) {
@@ -135,7 +135,7 @@ public class ItemFilter extends ItemBase {
 
     public static void setName(ItemStack stack, String name) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
         stack.getTagCompound().setString(NBT_NAME, name);
@@ -143,32 +143,32 @@ public class ItemFilter extends ItemBase {
 
     @Nonnull
     public static ItemStack getIcon(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ICON) ? new ItemStack(stack.getTagCompound().getCompoundTag(NBT_ICON)) : ItemStack.EMPTY;
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ICON) ? new ItemStack(stack.getTagCompound().getCompound(NBT_ICON)) : ItemStack.EMPTY;
     }
 
     public static void setIcon(ItemStack stack, ItemStack icon) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
-        stack.getTagCompound().setTag(NBT_ICON, icon.serializeNBT());
+        stack.getTagCompound().put(NBT_ICON, icon.serializeNBT());
     }
 
     public static void setFluidIcon(ItemStack stack, @Nullable FluidStack icon) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
         if (icon == null) {
             stack.getTagCompound().removeTag(NBT_FLUID_ICON);
         } else {
-            stack.getTagCompound().setTag(NBT_FLUID_ICON, icon.writeToNBT(new NBTTagCompound()));
+            stack.getTagCompound().put(NBT_FLUID_ICON, icon.writeToNBT(new CompoundNBT()));
         }
     }
 
     @Nullable
     public static FluidStack getFluidIcon(ItemStack stack) {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUID_ICON) ? FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag(NBT_FLUID_ICON)) : null;
+        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_FLUID_ICON) ? FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompound(NBT_FLUID_ICON)) : null;
     }
 
     public static int getType(ItemStack stack) {
@@ -177,9 +177,9 @@ public class ItemFilter extends ItemBase {
 
     public static void setType(ItemStack stack, int type) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
-        stack.getTagCompound().setInteger(NBT_TYPE, type);
+        stack.getTagCompound().putInt(NBT_TYPE, type);
     }
 }

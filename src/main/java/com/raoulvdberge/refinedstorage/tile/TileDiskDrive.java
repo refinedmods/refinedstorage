@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -83,7 +83,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     }
 
     @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
         writeDiskState(tag, 8, getNode().canUpdate(), getNode().getItemDisks(), getNode().getFluidDisks());
@@ -92,7 +92,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     }
 
     @Override
-    public void readUpdate(NBTTagCompound tag) {
+    public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
         readDiskState(tag, diskState);
@@ -102,7 +102,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
         return diskState;
     }
 
-    public static void writeDiskState(NBTTagCompound tag, int disks, boolean connected, IStorageDisk[] itemStorages, IStorageDisk[] fluidStorages) {
+    public static void writeDiskState(CompoundNBT tag, int disks, boolean connected, IStorageDisk[] itemStorages, IStorageDisk[] fluidStorages) {
         for (int i = 0; i < disks; ++i) {
             int state = ConstantsDisk.DISK_STATE_NONE;
 
@@ -117,11 +117,11 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
                 }
             }
 
-            tag.setInteger(String.format(NBT_DISK_STATE, i), state);
+            tag.putInt(String.format(NBT_DISK_STATE, i), state);
         }
     }
 
-    public static void readDiskState(NBTTagCompound tag, Integer[] diskState) {
+    public static void readDiskState(CompoundNBT tag, Integer[] diskState) {
         for (int i = 0; i < diskState.length; ++i) {
             diskState[i] = tag.getInteger(String.format(NBT_DISK_STATE, i));
         }

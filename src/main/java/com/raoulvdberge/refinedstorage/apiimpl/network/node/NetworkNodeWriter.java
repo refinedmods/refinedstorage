@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -100,7 +100,7 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         if (tag.hasKey(NBT_CHANNEL)) {
@@ -108,7 +108,7 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
         }
 
         if (tag.hasKey(NBT_COVERS)) {
-            coverManager.readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+            coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
     }
 
@@ -118,12 +118,12 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         tag.setString(NBT_CHANNEL, channel);
 
-        tag.setTag(NBT_COVERS, coverManager.writeToNbt());
+        tag.put(NBT_COVERS, coverManager.writeToNbt());
 
         return tag;
     }

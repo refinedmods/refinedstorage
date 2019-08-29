@@ -9,8 +9,8 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.Fluid;
@@ -116,74 +116,74 @@ public final class StackUtils {
         }
     }
 
-    public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag, Function<ItemStack, NBTTagCompound> serializer) {
-        NBTTagList tagList = new NBTTagList();
+    public static void writeItems(IItemHandler handler, int id, CompoundNBT tag, Function<ItemStack, CompoundNBT> serializer) {
+        ListNBT tagList = new ListNBT();
 
         for (int i = 0; i < handler.getSlots(); i++) {
             if (!handler.getStackInSlot(i).isEmpty()) {
-                NBTTagCompound stackTag = serializer.apply(handler.getStackInSlot(i));
+                CompoundNBT stackTag = serializer.apply(handler.getStackInSlot(i));
 
-                stackTag.setInteger(NBT_SLOT, i);
+                stackTag.putInt(NBT_SLOT, i);
 
-                tagList.appendTag(stackTag);
+                tagList.add(stackTag);
             }
         }
 
-        tag.setTag(String.format(NBT_INVENTORY, id), tagList);
+        tag.put(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void writeItems(IItemHandler handler, int id, NBTTagCompound tag) {
-        writeItems(handler, id, tag, stack -> stack.writeToNBT(new NBTTagCompound()));
+    public static void writeItems(IItemHandler handler, int id, CompoundNBT tag) {
+        writeItems(handler, id, tag, stack -> stack.writeToNBT(new CompoundNBT()));
     }
 
-    public static void readItems(IItemHandlerModifiable handler, int id, NBTTagCompound tag, Function<NBTTagCompound, ItemStack> deserializer) {
+    public static void readItems(IItemHandlerModifiable handler, int id, CompoundNBT tag, Function<CompoundNBT, ItemStack> deserializer) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (tag.hasKey(name)) {
-            NBTTagList tagList = tag.getTagList(name, Constants.NBT.TAG_COMPOUND);
+            ListNBT tagList = tag.getList(name, Constants.NBT.TAG_COMPOUND);
 
-            for (int i = 0; i < tagList.tagCount(); i++) {
-                int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
+            for (int i = 0; i < tagList.size(); i++) {
+                int slot = tagList.getCompound(i).getInteger(NBT_SLOT);
 
                 if (slot >= 0 && slot < handler.getSlots()) {
-                    handler.setStackInSlot(slot, deserializer.apply(tagList.getCompoundTagAt(i)));
+                    handler.setStackInSlot(slot, deserializer.apply(tagList.getCompound(i)));
                 }
             }
         }
     }
 
-    public static void readItems(IItemHandlerModifiable handler, int id, NBTTagCompound tag) {
+    public static void readItems(IItemHandlerModifiable handler, int id, CompoundNBT tag) {
         readItems(handler, id, tag, ItemStack::new);
     }
 
-    public static void writeItems(IInventory inventory, int id, NBTTagCompound tag) {
-        NBTTagList tagList = new NBTTagList();
+    public static void writeItems(IInventory inventory, int id, CompoundNBT tag) {
+        ListNBT tagList = new ListNBT();
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             if (!inventory.getStackInSlot(i).isEmpty()) {
-                NBTTagCompound stackTag = new NBTTagCompound();
+                CompoundNBT stackTag = new CompoundNBT();
 
-                stackTag.setInteger(NBT_SLOT, i);
+                stackTag.putInt(NBT_SLOT, i);
 
                 inventory.getStackInSlot(i).writeToNBT(stackTag);
 
-                tagList.appendTag(stackTag);
+                tagList.add(stackTag);
             }
         }
 
-        tag.setTag(String.format(NBT_INVENTORY, id), tagList);
+        tag.put(String.format(NBT_INVENTORY, id), tagList);
     }
 
-    public static void readItems(IInventory inventory, int id, NBTTagCompound tag) {
+    public static void readItems(IInventory inventory, int id, CompoundNBT tag) {
         String name = String.format(NBT_INVENTORY, id);
 
         if (tag.hasKey(name)) {
-            NBTTagList tagList = tag.getTagList(name, Constants.NBT.TAG_COMPOUND);
+            ListNBT tagList = tag.getList(name, Constants.NBT.TAG_COMPOUND);
 
-            for (int i = 0; i < tagList.tagCount(); i++) {
-                int slot = tagList.getCompoundTagAt(i).getInteger(NBT_SLOT);
+            for (int i = 0; i < tagList.size(); i++) {
+                int slot = tagList.getCompound(i).getInteger(NBT_SLOT);
 
-                ItemStack stack = new ItemStack(tagList.getCompoundTagAt(i));
+                ItemStack stack = new ItemStack(tagList.getCompound(i));
 
                 if (!stack.isEmpty()) {
                     inventory.setInventorySlotContents(slot, stack);
@@ -198,7 +198,7 @@ public final class StackUtils {
 
     public static FluidStack copy(FluidStack stack, int size) {
         FluidStack copy = stack.copy();
-        copy.amount = size;
+        copy.setAmount(size);
         return copy;
     }
 
@@ -229,23 +229,23 @@ public final class StackUtils {
     private static final String NBT_ITEM_NBT = "NBT";
     private static final String NBT_ITEM_CAPS = "Caps";
 
-    public static NBTTagCompound serializeStackToNbt(@Nonnull ItemStack stack) {
-        NBTTagCompound dummy = new NBTTagCompound();
+    public static CompoundNBT serializeStackToNbt(@Nonnull ItemStack stack) {
+        CompoundNBT dummy = new CompoundNBT();
 
-        NBTTagCompound itemTag = new NBTTagCompound();
+        CompoundNBT itemTag = new CompoundNBT();
 
-        itemTag.setInteger(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
-        itemTag.setInteger(NBT_ITEM_QUANTITY, stack.getCount());
-        itemTag.setInteger(NBT_ITEM_DAMAGE, stack.getItemDamage());
+        itemTag.putInt(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
+        itemTag.putInt(NBT_ITEM_QUANTITY, stack.getCount());
+        itemTag.putInt(NBT_ITEM_DAMAGE, stack.getItemDamage());
 
         if (stack.hasTagCompound()) {
-            itemTag.setTag(NBT_ITEM_NBT, stack.getTagCompound());
+            itemTag.put(NBT_ITEM_NBT, stack.getTagCompound());
         }
 
         stack.writeToNBT(dummy);
 
         if (dummy.hasKey("ForgeCaps")) {
-            itemTag.setTag(NBT_ITEM_CAPS, dummy.getTag("ForgeCaps"));
+            itemTag.put(NBT_ITEM_CAPS, dummy.getTag("ForgeCaps"));
         }
 
         dummy.removeTag("ForgeCaps");
@@ -254,15 +254,15 @@ public final class StackUtils {
     }
 
     @Nonnull
-    public static ItemStack deserializeStackFromNbt(NBTTagCompound tag) {
+    public static ItemStack deserializeStackFromNbt(CompoundNBT tag) {
         ItemStack stack = new ItemStack(
             Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
             tag.getInteger(NBT_ITEM_QUANTITY),
             tag.getInteger(NBT_ITEM_DAMAGE),
-            tag.hasKey(NBT_ITEM_CAPS) ? tag.getCompoundTag(NBT_ITEM_CAPS) : null
+            tag.hasKey(NBT_ITEM_CAPS) ? tag.getCompound(NBT_ITEM_CAPS) : null
         );
 
-        stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompoundTag(NBT_ITEM_NBT) : null);
+        stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompound(NBT_ITEM_NBT) : null);
 
         return stack;
     }

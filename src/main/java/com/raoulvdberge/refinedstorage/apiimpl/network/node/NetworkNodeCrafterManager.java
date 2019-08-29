@@ -4,8 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.network.MessageCrafterManagerSlotSizes;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -32,7 +32,7 @@ public class NetworkNodeCrafterManager extends NetworkNode {
         return ID;
     }
 
-    public void sendTo(EntityPlayerMP player) {
+    public void sendTo(ServerPlayerEntity player) {
         if (network != null) {
             RS.INSTANCE.network.sendTo(new MessageCrafterManagerSlotSizes(network.getCraftingManager().getNamedContainers()), player);
         }
@@ -47,17 +47,17 @@ public class NetworkNodeCrafterManager extends NetworkNode {
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
-        tag.setInteger(NBT_SIZE, size);
-        tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
+        tag.putInt(NBT_SIZE, size);
+        tag.putInt(NBT_SEARCH_BOX_MODE, searchBoxMode);
 
         return tag;
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         if (tag.hasKey(NBT_SIZE)) {

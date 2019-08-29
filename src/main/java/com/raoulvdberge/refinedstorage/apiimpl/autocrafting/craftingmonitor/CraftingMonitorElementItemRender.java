@@ -1,16 +1,16 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.stream.Collectors;
@@ -40,7 +40,7 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void draw(int x, int y, IElementDrawers drawers) {
         if (missing > 0) {
             drawers.getOverlayDrawer().draw(x, y, COLOR_MISSING);
@@ -54,10 +54,11 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
 
         drawers.getItemDrawer().draw(x + 4, y + 6, stack);
 
-        float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
+        // TODO float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
+        float scale = 1F;
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 1);
+        GlStateManager.scalef(scale, scale, 1);
 
         int yy = y + 7;
 

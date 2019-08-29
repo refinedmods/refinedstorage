@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.config;
 
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -25,11 +25,11 @@ public enum RedstoneMode {
         }
     }
 
-    public void write(NBTTagCompound tag) {
-        tag.setInteger(NBT, ordinal());
+    public void write(CompoundNBT tag) {
+        tag.putInt(NBT, ordinal());
     }
 
-    public static RedstoneMode read(NBTTagCompound tag) {
+    public static RedstoneMode read(CompoundNBT tag) {
         if (tag.hasKey(RedstoneMode.NBT)) {
             return getById(tag.getInteger(NBT));
         }

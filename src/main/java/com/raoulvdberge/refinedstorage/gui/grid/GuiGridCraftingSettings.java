@@ -8,13 +8,13 @@ import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreview;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fluids.Fluid;
 
 public class GuiGridCraftingSettings extends GuiAmountSpecifying {
     private IGridStack stack;
 
-    public GuiGridCraftingSettings(GuiBase parent, EntityPlayer player, IGridStack stack) {
+    public GuiGridCraftingSettings(GuiBase parent, PlayerEntity player, IGridStack stack) {
         super(parent, new ContainerCraftingSettings(player, stack), 172, 99);
 
         this.stack = stack;

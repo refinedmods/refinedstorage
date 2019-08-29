@@ -16,12 +16,12 @@ import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -56,7 +56,7 @@ public class WirelessGrid implements IGridNetworkAware {
             super.onContentsChanged(slot);
 
             if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
+                stack.setTagCompound(new CompoundNBT());
             }
 
             StackUtils.writeItems(this, 0, stack.getTagCompound());
@@ -106,7 +106,7 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public IStorageCacheListener createListener(EntityPlayerMP player) {
+    public IStorageCacheListener createListener(ServerPlayerEntity player) {
         return new StorageCacheListenerGridItem(player, getNetwork());
     }
 
@@ -281,17 +281,17 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public void onCrafted(EntityPlayer player) {
+    public void onCrafted(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onCraftedShift(EntityPlayer player) {
+    public void onCraftedShift(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
         // NO OP
     }
 
@@ -301,7 +301,7 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public void onClosed(EntityPlayer player) {
+    public void onClosed(PlayerEntity player) {
         INetwork network = getNetwork();
 
         if (network != null) {

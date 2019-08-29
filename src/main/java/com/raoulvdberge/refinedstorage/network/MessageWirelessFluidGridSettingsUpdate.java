@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -50,7 +50,7 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
     }
 
     @Override
-    public void handle(MessageWirelessFluidGridSettingsUpdate message, EntityPlayerMP player) {
+    public void handle(MessageWirelessFluidGridSettingsUpdate message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
@@ -58,23 +58,23 @@ public class MessageWirelessFluidGridSettingsUpdate extends MessageHandlerPlayer
                 ItemStack stack = ((WirelessFluidGrid) grid).getStack();
 
                 if (IGrid.isValidSortingDirection(message.sortingDirection)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
                 }
 
                 if (IGrid.isValidSortingType(message.sortingType)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, message.sortingType);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SORTING_TYPE, message.sortingType);
                 }
 
                 if (IGrid.isValidSearchBoxMode(message.searchBoxMode)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
                 }
 
                 if (IGrid.isValidSize(message.size)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SIZE, message.size);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SIZE, message.size);
                 }
 
-                stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, message.tabSelected);
-                stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, message.tabPage);
+                stack.getTagCompound().putInt(NetworkNodeGrid.NBT_TAB_SELECTED, message.tabSelected);
+                stack.getTagCompound().putInt(NetworkNodeGrid.NBT_TAB_PAGE, message.tabPage);
             }
         }
     }

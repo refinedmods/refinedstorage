@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,7 +23,7 @@ public class MessageSlotFilterSetFluid extends MessageHandlerPlayerToServer<Mess
     }
 
     @Override
-    protected void handle(MessageSlotFilterSetFluid message, EntityPlayerMP player) {
+    protected void handle(MessageSlotFilterSetFluid message, ServerPlayerEntity player) {
         Container container = player.openContainer;
 
         if (container != null) {

@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ public class StorageDiskItemPortable implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
+    public CompoundNBT writeToNbt() {
         return parent.writeToNbt();
     }
 

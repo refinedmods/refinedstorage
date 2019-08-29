@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Container;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -13,7 +13,7 @@ public class GuiPriority extends GuiAmountSpecifying {
     public GuiPriority(GuiBase parent, TileDataParameter<Integer, ?> priority) {
         super(parent, new Container() {
             @Override
-            public boolean canInteractWith(EntityPlayer player) {
+            public boolean canInteractWith(PlayerEntity player) {
                 return false;
             }
         }, 164, 92);

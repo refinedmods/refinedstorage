@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.container.slot.legacy;
 
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
@@ -13,7 +13,7 @@ public class SlotLegacyFilter extends SlotLegacyBase {
     }
 
     @Override
-    public boolean canTakeStack(EntityPlayer player) {
+    public boolean canTakeStack(PlayerEntity player) {
         return false;
     }
 

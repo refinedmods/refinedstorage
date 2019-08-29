@@ -18,7 +18,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -154,13 +154,13 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         StackUtils.readItems(upgrades, 1, tag);
 
         if (tag.hasKey(NBT_COVERS)) {
-            coverManager.readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+            coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
     }
 
@@ -170,33 +170,33 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         StackUtils.writeItems(upgrades, 1, tag);
 
-        tag.setTag(NBT_COVERS, coverManager.writeToNbt());
+        tag.put(NBT_COVERS, coverManager.writeToNbt());
 
         return tag;
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
-        tag.setInteger(NBT_TYPE, type);
+        tag.putInt(NBT_COMPARE, compare);
+        tag.putInt(NBT_MODE, mode);
+        tag.putInt(NBT_TYPE, type);
 
         StackUtils.writeItems(itemFilters, 0, tag);
 
-        tag.setTag(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
+        tag.put(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
 
         return tag;
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
@@ -214,7 +214,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
         StackUtils.readItems(itemFilters, 0, tag);
 
         if (tag.hasKey(NBT_FLUID_FILTERS)) {
-            fluidFilters.readFromNbt(tag.getCompoundTag(NBT_FLUID_FILTERS));
+            fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
 
         OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);

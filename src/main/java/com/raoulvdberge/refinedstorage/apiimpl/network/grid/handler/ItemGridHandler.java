@@ -10,19 +10,15 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
-import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreviewResponse;
-import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStartResponse;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.UUID;
 
 public class ItemGridHandler implements IItemGridHandler {
@@ -33,7 +29,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(EntityPlayerMP player, int hash, int flags) {
+    public void onExtract(ServerPlayerEntity player, int hash, int flags) {
         ItemStack item = network.getItemStorageCache().getList().get(hash);
 
         if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
@@ -83,9 +79,9 @@ public class ItemGridHandler implements IItemGridHandler {
 
         if (took != null) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
-                IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+                IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
 
-                if (ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
+                if (playerInventory != null && ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
                     took = network.extractItem(item, size, Action.PERFORM);
 
                     if (took != null) {
@@ -111,7 +107,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
+    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack) {
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return stack;
         }
@@ -126,7 +122,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onInsertHeldItem(EntityPlayerMP player, boolean single) {
+    public void onInsertHeldItem(ServerPlayerEntity player, boolean single) {
         if (player.inventory.getItemStack().isEmpty() || !network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return;
         }
@@ -156,12 +152,12 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public ItemStack onShiftClick(EntityPlayerMP player, ItemStack stack) {
+    public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack) {
         return StackUtils.nullToEmpty(onInsert(player, stack));
     }
 
     @Override
-    public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayerEntity player, int hash, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -186,13 +182,13 @@ public class ItemGridHandler implements IItemGridHandler {
                 ICraftingTaskError error = task.calculate();
 
                 if (error != null) {
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, false), player);
+                    // TODO RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, false), player);
                 } else if (noPreview && !task.hasMissing()) {
                     network.getCraftingManager().add(task);
 
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
+                    // TODO  RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
                 } else {
-                    RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity, false), player);
+                    // TODO RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity, false), player);
                 }
             }, "RS crafting preview calculation");
 
@@ -201,7 +197,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(EntityPlayerMP player, int hash, int quantity) {
+    public void onCraftingRequested(ServerPlayerEntity player, int hash, int quantity) {
         if (quantity <= 0 || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -236,7 +232,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingCancelRequested(EntityPlayerMP player, @Nullable UUID id) {
+    public void onCraftingCancelRequested(ServerPlayerEntity player, @Nullable UUID id) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }

@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,7 +24,7 @@ public class MessageSlotFilterFluidSetAmount extends MessageHandlerPlayerToServe
     }
 
     @Override
-    protected void handle(MessageSlotFilterFluidSetAmount message, EntityPlayerMP player) {
+    protected void handle(MessageSlotFilterFluidSetAmount message, ServerPlayerEntity player) {
         Container container = player.openContainer;
 
         if (container != null) {

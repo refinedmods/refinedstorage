@@ -26,13 +26,15 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItem;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -105,98 +107,98 @@ public class CraftingTask implements ICraftingTask {
         this.internalFluidStorage = new StorageDiskFluid(network.world(), -1);
     }
 
-    public CraftingTask(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
+    public CraftingTask(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         OneSixMigrationHelper.removalHook();
 
-        if (!tag.hasKey(NBT_INTERNAL_STORAGE)) {
+        if (!tag.contains(NBT_INTERNAL_STORAGE)) {
             throw new CraftingTaskReadException("Couldn't read crafting task from before RS v1.6.4, skipping...");
         }
 
         this.network = network;
 
-        this.requested = API.instance().createCraftingRequestInfo(tag.getCompoundTag(NBT_REQUESTED));
-        this.quantity = tag.getInteger(NBT_QUANTITY);
-        this.pattern = readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
-        this.ticks = tag.getInteger(NBT_TICKS);
+        this.requested = API.instance().createCraftingRequestInfo(tag.getCompound(NBT_REQUESTED));
+        this.quantity = tag.getInt(NBT_QUANTITY);
+        this.pattern = readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.world());
+        this.ticks = tag.getInt(NBT_TICKS);
         this.id = tag.getUniqueId(NBT_ID);
         this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
 
-        if (tag.hasKey(NBT_TOTAL_STEPS)) {
-            this.totalSteps = tag.getInteger(NBT_TOTAL_STEPS);
+        if (tag.contains(NBT_TOTAL_STEPS)) {
+            this.totalSteps = tag.getInt(NBT_TOTAL_STEPS);
         }
 
         StorageDiskFactoryItem factoryItem = new StorageDiskFactoryItem();
         StorageDiskFactoryFluid factoryFluid = new StorageDiskFactoryFluid();
 
-        this.internalStorage = factoryItem.createFromNbt(network.world(), tag.getCompoundTag(NBT_INTERNAL_STORAGE));
-        this.internalFluidStorage = factoryFluid.createFromNbt(network.world(), tag.getCompoundTag(NBT_INTERNAL_FLUID_STORAGE));
+        this.internalStorage = factoryItem.createFromNbt(network.world(), tag.getCompound(NBT_INTERNAL_STORAGE));
+        this.internalFluidStorage = factoryFluid.createFromNbt(network.world(), tag.getCompound(NBT_INTERNAL_FLUID_STORAGE));
 
-        this.toExtractInitial = readItemStackList(tag.getTagList(NBT_TO_EXTRACT_INITIAL, Constants.NBT.TAG_COMPOUND));
-        this.toExtractInitialFluids = readFluidStackList(tag.getTagList(NBT_TO_EXTRACT_INITIAL_FLUIDS, Constants.NBT.TAG_COMPOUND));
+        this.toExtractInitial = readItemStackList(tag.getList(NBT_TO_EXTRACT_INITIAL, Constants.NBT.TAG_COMPOUND));
+        this.toExtractInitialFluids = readFluidStackList(tag.getList(NBT_TO_EXTRACT_INITIAL_FLUIDS, Constants.NBT.TAG_COMPOUND));
 
-        NBTTagList craftingList = tag.getTagList(NBT_CRAFTING, Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < craftingList.tagCount(); ++i) {
-            crafting.add(new Crafting(network, craftingList.getCompoundTagAt(i)));
+        ListNBT craftingList = tag.getList(NBT_CRAFTING, Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < craftingList.size(); ++i) {
+            crafting.add(new Crafting(network, craftingList.getCompound(i)));
         }
 
-        NBTTagList processingList = tag.getTagList(NBT_PROCESSING, Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < processingList.tagCount(); ++i) {
-            processing.add(new Processing(network, processingList.getCompoundTagAt(i)));
+        ListNBT processingList = tag.getList(NBT_PROCESSING, Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < processingList.size(); ++i) {
+            processing.add(new Processing(network, processingList.getCompound(i)));
         }
 
-        this.missing = readItemStackList(tag.getTagList(NBT_MISSING, Constants.NBT.TAG_COMPOUND));
-        this.missingFluids = readFluidStackList(tag.getTagList(NBT_MISSING_FLUIDS, Constants.NBT.TAG_COMPOUND));
+        this.missing = readItemStackList(tag.getList(NBT_MISSING, Constants.NBT.TAG_COMPOUND));
+        this.missingFluids = readFluidStackList(tag.getList(NBT_MISSING_FLUIDS, Constants.NBT.TAG_COMPOUND));
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
-        tag.setTag(NBT_REQUESTED, requested.writeToNbt());
-        tag.setInteger(NBT_QUANTITY, quantity);
-        tag.setTag(NBT_PATTERN, writePatternToNbt(pattern));
-        tag.setInteger(NBT_TICKS, ticks);
-        tag.setUniqueId(NBT_ID, id);
-        tag.setLong(NBT_EXECUTION_STARTED, executionStarted);
-        tag.setTag(NBT_INTERNAL_STORAGE, internalStorage.writeToNbt());
-        tag.setTag(NBT_INTERNAL_FLUID_STORAGE, internalFluidStorage.writeToNbt());
-        tag.setTag(NBT_TO_EXTRACT_INITIAL, writeItemStackList(toExtractInitial));
-        tag.setTag(NBT_TO_EXTRACT_INITIAL_FLUIDS, writeFluidStackList(toExtractInitialFluids));
-        tag.setInteger(NBT_TOTAL_STEPS, totalSteps);
+    public CompoundNBT writeToNbt(CompoundNBT tag) {
+        tag.put(NBT_REQUESTED, requested.writeToNbt());
+        tag.putInt(NBT_QUANTITY, quantity);
+        tag.put(NBT_PATTERN, writePatternToNbt(pattern));
+        tag.putInt(NBT_TICKS, ticks);
+        tag.putUniqueId(NBT_ID, id);
+        tag.putLong(NBT_EXECUTION_STARTED, executionStarted);
+        tag.put(NBT_INTERNAL_STORAGE, internalStorage.writeToNbt());
+        tag.put(NBT_INTERNAL_FLUID_STORAGE, internalFluidStorage.writeToNbt());
+        tag.put(NBT_TO_EXTRACT_INITIAL, writeItemStackList(toExtractInitial));
+        tag.put(NBT_TO_EXTRACT_INITIAL_FLUIDS, writeFluidStackList(toExtractInitialFluids));
+        tag.putInt(NBT_TOTAL_STEPS, totalSteps);
 
-        NBTTagList craftingList = new NBTTagList();
+        ListNBT craftingList = new ListNBT();
         for (Crafting crafting : this.crafting) {
-            craftingList.appendTag(crafting.writeToNbt());
+            craftingList.add(crafting.writeToNbt());
         }
 
-        tag.setTag(NBT_CRAFTING, craftingList);
+        tag.put(NBT_CRAFTING, craftingList);
 
-        NBTTagList processingList = new NBTTagList();
+        ListNBT processingList = new ListNBT();
         for (Processing processing : this.processing) {
-            processingList.appendTag(processing.writeToNbt());
+            processingList.add(processing.writeToNbt());
         }
 
-        tag.setTag(NBT_PROCESSING, processingList);
+        tag.put(NBT_PROCESSING, processingList);
 
-        tag.setTag(NBT_MISSING, writeItemStackList(missing));
-        tag.setTag(NBT_MISSING_FLUIDS, writeFluidStackList(missingFluids));
+        tag.put(NBT_MISSING, writeItemStackList(missing));
+        tag.put(NBT_MISSING_FLUIDS, writeFluidStackList(missingFluids));
 
         return tag;
     }
 
-    static NBTTagList writeItemStackList(IStackList<ItemStack> stacks) {
-        NBTTagList list = new NBTTagList();
+    static ListNBT writeItemStackList(IStackList<ItemStack> stacks) {
+        ListNBT list = new ListNBT();
 
         for (ItemStack stack : stacks.getStacks()) {
-            list.appendTag(StackUtils.serializeStackToNbt(stack));
+            list.add(StackUtils.serializeStackToNbt(stack));
         }
 
         return list;
     }
 
-    static IStackList<ItemStack> readItemStackList(NBTTagList list) throws CraftingTaskReadException {
+    static IStackList<ItemStack> readItemStackList(ListNBT list) throws CraftingTaskReadException {
         IStackList<ItemStack> stacks = API.instance().createItemStackList();
 
-        for (int i = 0; i < list.tagCount(); ++i) {
-            ItemStack stack = StackUtils.deserializeStackFromNbt(list.getCompoundTagAt(i));
+        for (int i = 0; i < list.size(); ++i) {
+            ItemStack stack = StackUtils.deserializeStackFromNbt(list.getCompound(i));
 
             if (stack.isEmpty()) {
                 throw new CraftingTaskReadException("Empty stack!");
@@ -208,21 +210,21 @@ public class CraftingTask implements ICraftingTask {
         return stacks;
     }
 
-    static NBTTagList writeFluidStackList(IStackList<FluidStack> stacks) {
-        NBTTagList list = new NBTTagList();
+    static ListNBT writeFluidStackList(IStackList<FluidStack> stacks) {
+        ListNBT list = new ListNBT();
 
         for (FluidStack stack : stacks.getStacks()) {
-            list.appendTag(stack.writeToNBT(new NBTTagCompound()));
+            list.add(stack.writeToNBT(new CompoundNBT()));
         }
 
         return list;
     }
 
-    static IStackList<FluidStack> readFluidStackList(NBTTagList list) throws CraftingTaskReadException {
+    static IStackList<FluidStack> readFluidStackList(ListNBT list) throws CraftingTaskReadException {
         IStackList<FluidStack> stacks = API.instance().createFluidStackList();
 
-        for (int i = 0; i < list.tagCount(); ++i) {
-            FluidStack stack = FluidStack.loadFluidStackFromNBT(list.getCompoundTagAt(i));
+        for (int i = 0; i < list.size(); ++i) {
+            FluidStack stack = FluidStack.loadFluidStackFromNBT(list.getCompound(i));
 
             if (stack == null) {
                 throw new CraftingTaskReadException("Empty stack!");
@@ -444,11 +446,11 @@ public class CraftingTask implements ICraftingTask {
             FluidStack fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
             FluidStack fromNetwork = mutatedFluidStorage.get(input, IComparer.COMPARE_NBT);
 
-            int remaining = input.amount;
+            int remaining = input.getAmount();
 
             while (remaining > 0) {
                 if (fromSelf != null) {
-                    int toTake = Math.min(remaining, fromSelf.amount);
+                    int toTake = Math.min(remaining, fromSelf.getAmount());
 
                     fluidsToExtract.add(input, toTake);
 
@@ -458,7 +460,7 @@ public class CraftingTask implements ICraftingTask {
 
                     fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
                 } else if (fromNetwork != null) {
-                    int toTake = Math.min(remaining, fromNetwork.amount);
+                    int toTake = Math.min(remaining, fromNetwork.getAmount());
 
                     this.toTakeFluids.add(input, toTake);
 
@@ -477,7 +479,7 @@ public class CraftingTask implements ICraftingTask {
                     if (subPattern != null) {
                         ICraftingPatternChain subPatternChain = patternChainList.getChain(subPattern);
 
-                        while ((fromSelf == null ? 0 : fromSelf.amount) < remaining) {
+                        while ((fromSelf == null ? 0 : fromSelf.getAmount()) < remaining) {
                             ICraftingTaskError result = calculateInternal(mutatedStorage, mutatedFluidStorage, results, fluidResults, patternChainList, subPatternChain.current(), false);
 
                             if (result != null) {
@@ -495,7 +497,7 @@ public class CraftingTask implements ICraftingTask {
                         }
 
                         // fromSelf contains the amount crafted after the loop.
-                        this.toCraftFluids.add(input, fromSelf.amount);
+                        this.toCraftFluids.add(input, fromSelf.getAmount());
                     } else {
                         this.missingFluids.add(input, remaining);
 
@@ -570,10 +572,10 @@ public class CraftingTask implements ICraftingTask {
             List<FluidStack> toRemove = new ArrayList<>();
 
             for (FluidStack toExtract : toExtractInitialFluids.getStacks()) {
-                FluidStack result = network.extractFluid(toExtract, toExtract.amount, Action.PERFORM);
+                FluidStack result = network.extractFluid(toExtract, toExtract.getAmount(), Action.PERFORM);
 
                 if (result != null) {
-                    internalFluidStorage.insert(toExtract, result.amount, Action.PERFORM);
+                    internalFluidStorage.insert(toExtract, result.getAmount(), Action.PERFORM);
 
                     toRemove.add(result);
                 }
@@ -723,13 +725,13 @@ public class CraftingTask implements ICraftingTask {
                         if (p.getPattern().getContainer().getConnectedFluidInventory() == null) {
                             p.setState(ProcessingState.MACHINE_NONE);
                         } else {
-                            FluidStack result = this.internalFluidStorage.extract(need, need.amount, IComparer.COMPARE_NBT, Action.SIMULATE);
+                            FluidStack result = this.internalFluidStorage.extract(need, need.getAmount(), IComparer.COMPARE_NBT, Action.SIMULATE);
 
-                            if (result == null || result.amount != need.amount) {
+                            if (result == null || result.getAmount() != need.getAmount()) {
                                 hasAll = false;
 
                                 break;
-                            } else if (p.getPattern().getContainer().getConnectedFluidInventory().fill(result, false) != result.amount) {
+                            } else if (p.getPattern().getContainer().getConnectedFluidInventory().fill(result, IFluidHandler.FluidAction.SIMULATE) != result.getAmount()) {
                                 p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
 
                                 break;
@@ -756,13 +758,13 @@ public class CraftingTask implements ICraftingTask {
                         }
 
                         for (FluidStack need : p.getFluidsToPut().getStacks()) {
-                            FluidStack result = this.internalFluidStorage.extract(need, need.amount, IComparer.COMPARE_NBT, Action.PERFORM);
-                            if (result == null || result.amount != need.amount) {
+                            FluidStack result = this.internalFluidStorage.extract(need, need.getAmount(), IComparer.COMPARE_NBT, Action.PERFORM);
+                            if (result == null || result.getAmount() != need.getAmount()) {
                                 throw new IllegalStateException("The internal crafting inventory reported that " + need + " was available but we got " + result);
                             }
 
-                            int filled = p.getPattern().getContainer().getConnectedFluidInventory().fill(result, true);
-                            if (filled != result.amount) {
+                            int filled = p.getPattern().getContainer().getConnectedFluidInventory().fill(result, IFluidHandler.FluidAction.EXECUTE);
+                            if (filled != result.getAmount()) {
                                 LOGGER.warn(p.getPattern().getContainer().getConnectedFluidInventory() + " unexpectedly didn't accept fluids, the remainder has been voided!");
                             }
                         }
@@ -862,13 +864,13 @@ public class CraftingTask implements ICraftingTask {
             }
 
             for (FluidStack stack : internalFluidStorage.getStacks()) {
-                FluidStack remainder = network.insertFluid(stack, stack.amount, Action.PERFORM);
+                FluidStack remainder = network.insertFluid(stack, stack.getAmount(), Action.PERFORM);
 
                 toPerform.add(() -> {
                     if (remainder == null) {
-                        internalFluidStorage.extract(stack, stack.amount, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                        internalFluidStorage.extract(stack, stack.getAmount(), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
                     } else {
-                        internalFluidStorage.extract(stack, stack.amount - remainder.amount, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                        internalFluidStorage.extract(stack, stack.getAmount() - remainder.getAmount(), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
                     }
                 });
             }
@@ -892,7 +894,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         for (FluidStack remainder : internalFluidStorage.getStacks()) {
-            network.insertFluid(remainder, remainder.amount, Action.PERFORM);
+            network.insertFluid(remainder, remainder.getAmount(), Action.PERFORM);
         }
     }
 
@@ -918,7 +920,7 @@ public class CraftingTask implements ICraftingTask {
         } else {
             for (FluidStack output : pattern.getFluidOutputs()) {
                 if (API.instance().getComparer().isEqual(output, requested.getFluid(), IComparer.COMPARE_NBT)) {
-                    qty += output.amount;
+                    qty += output.getAmount();
                 }
             }
         }
@@ -984,7 +986,7 @@ public class CraftingTask implements ICraftingTask {
             FluidStack content = p.getFluidsToReceive().get(stack);
 
             if (content != null) {
-                int needed = content.amount;
+                int needed = content.getAmount();
 
                 if (needed > size) {
                     needed = size;
@@ -1017,22 +1019,22 @@ public class CraftingTask implements ICraftingTask {
         return size;
     }
 
-    static NBTTagCompound writePatternToNbt(ICraftingPattern pattern) {
-        NBTTagCompound tag = new NBTTagCompound();
+    static CompoundNBT writePatternToNbt(ICraftingPattern pattern) {
+        CompoundNBT tag = new CompoundNBT();
 
-        tag.setTag(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
-        tag.setLong(NBT_PATTERN_CONTAINER_POS, pattern.getContainer().getPosition().toLong());
+        tag.put(NBT_PATTERN_STACK, pattern.getStack().serializeNBT());
+        tag.putLong(NBT_PATTERN_CONTAINER_POS, pattern.getContainer().getPosition().toLong());
 
         return tag;
     }
 
-    static ICraftingPattern readPatternFromNbt(NBTTagCompound tag, World world) throws CraftingTaskReadException {
+    static ICraftingPattern readPatternFromNbt(CompoundNBT tag, World world) throws CraftingTaskReadException {
         BlockPos containerPos = BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER_POS));
 
         INetworkNode node = API.instance().getNetworkNodeManager(world).getNode(containerPos);
 
         if (node instanceof ICraftingPatternContainer) {
-            ItemStack stack = new ItemStack(tag.getCompoundTag(NBT_PATTERN_STACK));
+            ItemStack stack = ItemStack.read(tag.getCompound(NBT_PATTERN_STACK));
 
             if (stack.getItem() instanceof ICraftingPatternProvider) {
                 return ((ICraftingPatternProvider) stack.getItem()).create(world, stack, (ICraftingPatternContainer) node);
@@ -1091,11 +1093,11 @@ public class CraftingTask implements ICraftingTask {
         elements.commit();
 
         for (FluidStack stack : this.internalFluidStorage.getStacks()) {
-            elements.add(new CraftingMonitorElementFluidRender(stack, stack.amount, 0, 0, 0, 0));
+            elements.add(new CraftingMonitorElementFluidRender(stack, stack.getAmount(), 0, 0, 0, 0));
         }
 
         for (FluidStack missing : this.missingFluids.getStacks()) {
-            elements.add(new CraftingMonitorElementFluidRender(missing, 0, missing.amount, 0, 0, 0));
+            elements.add(new CraftingMonitorElementFluidRender(missing, 0, missing.getAmount(), 0, 0, 0));
         }
 
         for (Processing processing : this.processing) {
@@ -1105,11 +1107,11 @@ public class CraftingTask implements ICraftingTask {
 
             if (processing.getState() == ProcessingState.EXTRACTED_ALL) {
                 for (FluidStack put : processing.getFluidsToPut().getStacks()) {
-                    elements.add(new CraftingMonitorElementFluidRender(put, 0, 0, put.amount, 0, 0));
+                    elements.add(new CraftingMonitorElementFluidRender(put, 0, 0, put.getAmount(), 0, 0));
                 }
             } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE) {
                 for (FluidStack receive : processing.getFluidsToReceive().getStacks()) {
-                    ICraftingMonitorElement element = new CraftingMonitorElementFluidRender(receive, 0, 0, 0, receive.amount, 0);
+                    ICraftingMonitorElement element = new CraftingMonitorElementFluidRender(receive, 0, 0, 0, receive.getAmount(), 0);
 
                     if (processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
                         element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept_fluid");
@@ -1155,7 +1157,7 @@ public class CraftingTask implements ICraftingTask {
                 previewStack = new CraftingPreviewElementFluidStack(stack);
             }
 
-            previewStack.addToCraft(stack.amount);
+            previewStack.addToCraft(stack.getAmount());
 
             mapFluids.put(hash, previewStack);
         }
@@ -1185,7 +1187,7 @@ public class CraftingTask implements ICraftingTask {
             }
 
             previewStack.setMissing(true);
-            previewStack.addToCraft(stack.amount);
+            previewStack.addToCraft(stack.getAmount());
 
             mapFluids.put(hash, previewStack);
         }
@@ -1213,7 +1215,7 @@ public class CraftingTask implements ICraftingTask {
                 previewStack = new CraftingPreviewElementFluidStack(stack);
             }
 
-            previewStack.addAvailable(stack.amount);
+            previewStack.addAvailable(stack.getAmount());
 
             mapFluids.put(hash, previewStack);
         }

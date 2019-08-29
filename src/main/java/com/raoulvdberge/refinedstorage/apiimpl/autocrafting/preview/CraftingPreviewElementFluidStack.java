@@ -1,19 +1,15 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement<FluidStack> {
     public static final String ID = "fluid_renderer";
@@ -35,23 +31,23 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
         this.toCraft = toCraft;
     }
 
+    // TODO ren
     @Override
-    public void writeToByteBuf(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack));
-        ByteBufUtils.writeTag(buf, stack.tag);
+    public void writeToByteBuf(PacketBuffer buf) {
+        stack.writeToPacket(buf);
         buf.writeInt(available);
         buf.writeBoolean(missing);
         buf.writeInt(toCraft);
     }
 
-    public static CraftingPreviewElementFluidStack fromByteBuf(ByteBuf buf) {
-        Fluid fluid = FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf));
-        NBTTagCompound tag = ByteBufUtils.readTag(buf);
+    //TODO ren
+    public static CraftingPreviewElementFluidStack fromByteBuf(PacketBuffer buf) {
+        FluidStack stack = FluidStack.readFromPacket(buf);
         int available = buf.readInt();
         boolean missing = buf.readBoolean();
         int toCraft = buf.readInt();
 
-        return new CraftingPreviewElementFluidStack(new FluidStack(fluid, 1, tag), available, missing, toCraft);
+        return new CraftingPreviewElementFluidStack(stack, available, missing, toCraft);
     }
 
     @Override
@@ -60,7 +56,7 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void draw(int x, int y, IElementDrawers drawers) {
         if (missing) {
             drawers.getOverlayDrawer().draw(x, y, 0xFFF2DEDE);
@@ -71,12 +67,14 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
 
         drawers.getFluidDrawer().draw(x, y, getElement());
 
-        float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
+        // TODO
+        //float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
+        float scale = 1F;
 
         y += 2;
 
         GlStateManager.pushMatrix();
-        GlStateManager.scale(scale, scale, 1);
+        GlStateManager.scalef(scale, scale, 1);
 
         if (getToCraft() > 0) {
             String format = hasMissing() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";

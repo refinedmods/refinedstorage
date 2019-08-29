@@ -3,14 +3,13 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainList;
-import gnu.trove.map.hash.TCustomHashMap;
-import gnu.trove.strategy.HashingStrategy;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CraftingPatternChainList implements ICraftingPatternChainList {
-    private Map<ICraftingPattern, CraftingPatternChain> map = new TCustomHashMap<>(new HashingStrategy<ICraftingPattern>() {
+    /*private Map<ICraftingPattern, CraftingPatternChain> map = new TCustomHashMap<>(new HashingStrategy<ICraftingPattern>() {
         @Override
         public int computeHashCode(ICraftingPattern pattern) {
             return pattern.getChainHashCode();
@@ -20,7 +19,9 @@ public class CraftingPatternChainList implements ICraftingPatternChainList {
         public boolean equals(ICraftingPattern left, ICraftingPattern right) {
             return left.canBeInChainWith(right);
         }
-    });
+    });*/
+    // TODO: broken
+    private Map<ICraftingPattern, CraftingPatternChain> map = new HashMap<>();
 
     public CraftingPatternChainList(List<ICraftingPattern> patterns) {
         for (ICraftingPattern pattern : patterns) {

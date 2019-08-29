@@ -4,11 +4,11 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerExporter extends ContainerBase {
-    public ContainerExporter(TileExporter exporter, EntityPlayer player) {
+    public ContainerExporter(TileExporter exporter, PlayerEntity player) {
         super(exporter, player);
 
         for (int i = 0; i < 4; ++i) {

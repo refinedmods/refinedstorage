@@ -4,7 +4,7 @@ import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerFluidAmount;
 import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidSetAmount;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fluids.FluidStack;
 
 public class GuiFluidAmount extends GuiAmountSpecifying {
@@ -12,7 +12,7 @@ public class GuiFluidAmount extends GuiAmountSpecifying {
     private FluidStack stack;
     private int maxAmount;
 
-    public GuiFluidAmount(GuiBase parent, EntityPlayer player, int containerSlot, FluidStack stack, int maxAmount) {
+    public GuiFluidAmount(GuiBase parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount) {
         super(parent, new ContainerFluidAmount(player, stack), 172, 99);
 
         this.containerSlot = containerSlot;

@@ -16,10 +16,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -90,7 +90,7 @@ public class BlockController extends BlockNodeProxy {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, PlayerEntity player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         return openNetworkGui(RSGui.CONTROLLER, player, world, pos, side);
     }
 
@@ -99,7 +99,7 @@ public class BlockController extends BlockNodeProxy {
         if (!world.isRemote) {
             TileController controller = (TileController) world.getTileEntity(pos);
 
-            NBTTagCompound tag = stack.getTagCompound();
+            CompoundNBT tag = stack.getTagCompound();
 
             if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
                 controller.getEnergy().setStored(tag.getInteger(TileController.NBT_ENERGY));
@@ -113,8 +113,8 @@ public class BlockController extends BlockNodeProxy {
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         ItemStack stack = new ItemStack(this, 1, getMetaFromState(state));
 
-        stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setInteger(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergy().getStored());
+        stack.setTagCompound(new CompoundNBT());
+        stack.getTagCompound().putInt(TileController.NBT_ENERGY, ((TileController) world.getTileEntity(pos)).getEnergy().getStored());
 
         drops.add(stack);
     }

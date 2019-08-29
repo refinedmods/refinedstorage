@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.ItemNetworkCard;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -48,7 +48,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         StackUtils.writeItems(networkCard, 0, tag);
@@ -57,7 +57,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         StackUtils.readItems(networkCard, 0, tag);

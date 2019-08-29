@@ -1,16 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
-import gnu.trove.map.hash.TCustomHashMap;
-import gnu.trove.strategy.HashingStrategy;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class StorageTrackerFluid implements IStorageTracker<FluidStack> {
@@ -18,6 +14,8 @@ public class StorageTrackerFluid implements IStorageTracker<FluidStack> {
     private static final String NBT_NAME = "Name";
     private static final String NBT_TIME = "Time";
 
+    private Map<FluidStack, IStorageTrackerEntry> changes = new HashMap<>(); // TODO broken
+    /*
     private Map<FluidStack, IStorageTrackerEntry> changes = new TCustomHashMap<>(new HashingStrategy<FluidStack>() {
         @Override
         public int computeHashCode(FluidStack stack) {
@@ -28,7 +26,7 @@ public class StorageTrackerFluid implements IStorageTracker<FluidStack> {
         public boolean equals(FluidStack left, FluidStack right) {
             return API.instance().getComparer().isEqual(left, right, IComparer.COMPARE_NBT);
         }
-    });
+    });*/
 
     private Runnable listener;
 
@@ -37,8 +35,8 @@ public class StorageTrackerFluid implements IStorageTracker<FluidStack> {
     }
 
     @Override
-    public void changed(EntityPlayer player, FluidStack stack) {
-        changes.put(stack, new StorageTrackerEntry(MinecraftServer.getCurrentTimeMillis(), player.getName()));
+    public void changed(PlayerEntity player, FluidStack stack) {
+        changes.put(stack, new StorageTrackerEntry(System.currentTimeMillis(), player.getName().getString())); // TODO: correct?
 
         listener.run();
     }
@@ -48,11 +46,11 @@ public class StorageTrackerFluid implements IStorageTracker<FluidStack> {
         return changes.get(stack);
     }
 
-    public void readFromNbt(NBTTagList list) {
-        for (int i = 0; i < list.tagCount(); ++i) {
-            NBTTagCompound tag = list.getCompoundTagAt(i);
+    public void readFromNbt(ListNBT list) {
+        for (int i = 0; i < list.size(); ++i) {
+            CompoundNBT tag = list.getCompound(i);
 
-            FluidStack stack = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag(NBT_STACK));
+            FluidStack stack = FluidStack.loadFluidStackFromNBT(tag.getCompound(NBT_STACK));
 
             if (stack != null) {
                 changes.put(
@@ -63,17 +61,17 @@ public class StorageTrackerFluid implements IStorageTracker<FluidStack> {
         }
     }
 
-    public NBTTagList serializeNbt() {
-        NBTTagList list = new NBTTagList();
+    public ListNBT serializeNbt() {
+        ListNBT list = new ListNBT();
 
         for (Map.Entry<FluidStack, IStorageTrackerEntry> entry : changes.entrySet()) {
-            NBTTagCompound tag = new NBTTagCompound();
+            CompoundNBT tag = new CompoundNBT();
 
-            tag.setLong(NBT_TIME, entry.getValue().getTime());
-            tag.setString(NBT_NAME, entry.getValue().getName());
-            tag.setTag(NBT_STACK, entry.getKey().writeToNBT(new NBTTagCompound()));
+            tag.putLong(NBT_TIME, entry.getValue().getTime());
+            tag.putString(NBT_NAME, entry.getValue().getName());
+            tag.put(NBT_STACK, entry.getKey().writeToNBT(new CompoundNBT()));
 
-            list.appendTag(tag);
+            list.add(tag);
         }
 
         return list;

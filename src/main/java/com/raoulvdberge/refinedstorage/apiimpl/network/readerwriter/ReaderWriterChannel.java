@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.*;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,24 +45,24 @@ public class ReaderWriterChannel implements IReaderWriterChannel {
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
+    public CompoundNBT writeToNbt(CompoundNBT tag) {
         for (IReaderWriterHandler handler : handlers) {
-            tag.setTag(String.format(NBT_HANDLER, handler.getId()), handler.writeToNbt(new NBTTagCompound()));
+            tag.put(String.format(NBT_HANDLER, handler.getId()), handler.writeToNbt(new CompoundNBT()));
         }
 
         return tag;
     }
 
     @Override
-    public void readFromNbt(NBTTagCompound tag) {
+    public void readFromNbt(CompoundNBT tag) {
         for (IReaderWriterHandler handler : handlers) {
             String id = String.format(NBT_HANDLER, handler.getId());
 
-            if (tag.hasKey(id)) {
+            if (tag.contains(id)) {
                 IReaderWriterHandlerFactory factory = API.instance().getReaderWriterHandlerRegistry().get(id);
 
                 if (factory != null) {
-                    handlers.add(factory.create(tag.getCompoundTag(id)));
+                    handlers.add(factory.create(tag.getCompound(id)));
                 }
             }
         }

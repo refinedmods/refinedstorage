@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.inventory.item;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -56,7 +56,7 @@ public class ItemHandlerBase extends ItemStackHandler {
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound tag) {
+    public void deserializeNBT(CompoundNBT tag) {
         super.deserializeNBT(tag);
 
         this.empty = stacks.stream().allMatch(ItemStack::isEmpty);

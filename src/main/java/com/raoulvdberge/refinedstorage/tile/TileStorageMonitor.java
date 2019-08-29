@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorageMo
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,30 +36,30 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
     }
 
     @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
         ItemStack stack = getNode().getItemFilters().getStackInSlot(0);
 
         if (!stack.isEmpty()) {
-            tag.setTag(NBT_STACK, stack.writeToNBT(new NBTTagCompound()));
+            tag.put(NBT_STACK, stack.writeToNBT(new CompoundNBT()));
         }
 
-        tag.setInteger(NBT_AMOUNT, getNode().getAmount());
+        tag.putInt(NBT_AMOUNT, getNode().getAmount());
 
         return tag;
     }
 
     @Override
-    public void readUpdate(NBTTagCompound tag) {
+    public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
-        itemStack = tag.hasKey(NBT_STACK) ? new ItemStack(tag.getCompoundTag(NBT_STACK)) : null;
+        itemStack = tag.hasKey(NBT_STACK) ? new ItemStack(tag.getCompound(NBT_STACK)) : null;
         amount = tag.getInteger(NBT_AMOUNT);
     }
 
     @Override
-    protected boolean canCauseRenderUpdate(NBTTagCompound tag) {
+    protected boolean canCauseRenderUpdate(CompoundNBT tag) {
         EnumFacing receivedDirection = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
         boolean receivedActive = tag.getBoolean(NBT_ACTIVE);
 

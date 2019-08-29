@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -50,7 +50,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
+    public CompoundNBT writeToNbt() {
         return parent.writeToNbt();
     }
 

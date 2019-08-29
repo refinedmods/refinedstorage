@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class StorageTrackerEntry implements IStorageTracker.IStorageTrackerEntry {
@@ -13,9 +14,9 @@ public class StorageTrackerEntry implements IStorageTracker.IStorageTrackerEntry
         this.name = name;
     }
 
-    public StorageTrackerEntry(ByteBuf buf) {
+    public StorageTrackerEntry(PacketBuffer buf) {
         this.time = buf.readLong();
-        this.name = ByteBufUtils.readUTF8String(buf);
+        this.name = buf.readString();
     }
 
     @Override

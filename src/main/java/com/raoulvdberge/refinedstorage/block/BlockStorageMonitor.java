@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.render.tesr.TileEntitySpecialRendererStor
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -42,7 +42,7 @@ public class BlockStorageMonitor extends BlockNode {
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, PlayerEntity player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             ItemStack held = player.inventory.getCurrentItem();
 
@@ -63,11 +63,11 @@ public class BlockStorageMonitor extends BlockNode {
     }
 
     @Override
-    public void onBlockClicked(World world, BlockPos pos, EntityPlayer player) {
+    public void onBlockClicked(World world, BlockPos pos, PlayerEntity player) {
         super.onBlockClicked(world, pos, player);
 
         if (!world.isRemote) {
-            RayTraceResult rayResult = ForgeHooks.rayTraceEyes(player, player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1);
+            RayTraceResult rayResult = ForgeHooks.rayTraceEyes(player, player.getEntityAttribute(PlayerEntity.REACH_DISTANCE).getAttributeValue() + 1);
 
             if (rayResult == null) {
                 return;

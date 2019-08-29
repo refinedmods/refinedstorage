@@ -6,9 +6,9 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<MessageGridSettingsUpdate> implements IMessage {
@@ -56,7 +56,7 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
     }
 
     @Override
-    public void handle(MessageGridSettingsUpdate message, EntityPlayerMP player) {
+    public void handle(MessageGridSettingsUpdate message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 
@@ -64,31 +64,31 @@ public class MessageGridSettingsUpdate extends MessageHandlerPlayerToServer<Mess
                 ItemStack stack = grid instanceof WirelessGrid ? ((WirelessGrid) grid).getStack() : ((PortableGrid) grid).getStack();
 
                 if (!stack.hasTagCompound()) {
-                    stack.setTagCompound(new NBTTagCompound());
+                    stack.setTagCompound(new CompoundNBT());
                 }
 
                 if (IGrid.isValidViewType(message.viewType)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_VIEW_TYPE, message.viewType);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_VIEW_TYPE, message.viewType);
                 }
 
                 if (IGrid.isValidSortingDirection(message.sortingDirection)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SORTING_DIRECTION, message.sortingDirection);
                 }
 
                 if (IGrid.isValidSortingType(message.sortingType)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, message.sortingType);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SORTING_TYPE, message.sortingType);
                 }
 
                 if (IGrid.isValidSearchBoxMode(message.searchBoxMode)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, message.searchBoxMode);
                 }
 
                 if (IGrid.isValidSize(message.size)) {
-                    stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SIZE, message.size);
+                    stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SIZE, message.size);
                 }
 
-                stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, message.tabSelected);
-                stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, message.tabPage);
+                stack.getTagCompound().putInt(NetworkNodeGrid.NBT_TAB_SELECTED, message.tabSelected);
+                stack.getTagCompound().putInt(NetworkNodeGrid.NBT_TAB_PAGE, message.tabPage);
             }
         }
     }

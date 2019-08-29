@@ -12,8 +12,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -44,18 +44,18 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound tag = new NBTTagCompound();
+    public CompoundNBT writeToNbt() {
+        CompoundNBT tag = new CompoundNBT();
 
-        NBTTagList list = new NBTTagList();
+        ListNBT list = new ListNBT();
 
         for (ItemStack stack : stacks.values()) {
-            list.appendTag(StackUtils.serializeStackToNbt(stack));
+            list.add(StackUtils.serializeStackToNbt(stack));
         }
 
-        tag.setString(NBT_VERSION, RS.VERSION);
-        tag.setTag(NBT_ITEMS, list);
-        tag.setInteger(NBT_CAPACITY, capacity);
+        tag.putString(NBT_VERSION, RS.VERSION);
+        tag.put(NBT_ITEMS, list);
+        tag.putInt(NBT_CAPACITY, capacity);
 
         return tag;
     }

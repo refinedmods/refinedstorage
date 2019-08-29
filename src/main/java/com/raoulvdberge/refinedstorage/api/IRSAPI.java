@@ -21,7 +21,6 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
@@ -195,15 +194,6 @@ public interface IRSAPI {
      * @return the request info
      */
     ICraftingRequestInfo createCraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException;
-
-    /**
-     * Returns a helper for the 1.6.x migration.
-     * Will be removed in 1.7.x!
-     *
-     * @return the 1.6.x migration helper
-     */
-    @Nonnull
-    IOneSixMigrationHelper getOneSixMigrationHelper();
 
     /**
      * @param renderHandler the render handler to add

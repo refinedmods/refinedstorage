@@ -28,7 +28,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public synchronized void invalidate() {
+    public void invalidate() {
         storages.clear();
 
         network.getNodeGraph().all().stream()
@@ -55,7 +55,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public synchronized void add(@Nonnull ItemStack stack, int size, boolean rebuilding, boolean batched) {
+    public void add(@Nonnull ItemStack stack, int size, boolean rebuilding, boolean batched) {
         list.add(stack, size);
 
         if (!rebuilding) {
@@ -68,7 +68,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public synchronized void remove(@Nonnull ItemStack stack, int size, boolean batched) {
+    public void remove(@Nonnull ItemStack stack, int size, boolean batched) {
         if (list.remove(stack, size)) {
             if (!batched) {
                 listeners.forEach(l -> l.onChanged(stack, -size));
@@ -79,7 +79,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public synchronized void flush() {
+    public void flush() {
         if (!batchedChanges.isEmpty()) {
             if (batchedChanges.size() > 1) {
                 listeners.forEach(l -> l.onChangedBulk(batchedChanges));

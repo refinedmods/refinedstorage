@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -24,7 +24,7 @@ public class MessageSlotFilterSet extends MessageHandlerPlayerToServer<MessageSl
     }
 
     @Override
-    protected void handle(MessageSlotFilterSet message, EntityPlayerMP player) {
+    protected void handle(MessageSlotFilterSet message, ServerPlayerEntity player) {
         if (message.stack.isEmpty() || message.stack.getCount() > message.stack.getMaxStackSize()) {
             return;
         }

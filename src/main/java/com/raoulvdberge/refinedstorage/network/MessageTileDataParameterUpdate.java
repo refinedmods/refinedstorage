@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -46,7 +46,7 @@ public class MessageTileDataParameterUpdate extends MessageHandlerPlayerToServer
     }
 
     @Override
-    public void handle(MessageTileDataParameterUpdate message, EntityPlayerMP player) {
+    public void handle(MessageTileDataParameterUpdate message, ServerPlayerEntity player) {
         Container c = player.openContainer;
 
         if (c instanceof ContainerBase) {

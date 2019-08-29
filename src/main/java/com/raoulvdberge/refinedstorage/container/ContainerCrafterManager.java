@@ -11,8 +11,8 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
@@ -31,14 +31,14 @@ import java.util.function.Predicate;
 
 public class ContainerCrafterManager extends ContainerBase {
     public class CrafterManagerListener implements IContainerListener {
-        private EntityPlayerMP base;
+        private ServerPlayerEntity base;
         private boolean receivedContainerData;
 
-        public CrafterManagerListener(EntityPlayerMP base) {
+        public CrafterManagerListener(ServerPlayerEntity base) {
             this.base = base;
         }
 
-        public EntityPlayerMP getPlayer() {
+        public ServerPlayerEntity getPlayer() {
             return base;
         }
 
@@ -80,8 +80,8 @@ public class ContainerCrafterManager extends ContainerBase {
 
     @Override
     public void addListener(IContainerListener listener) {
-        if (listener instanceof EntityPlayerMP) {
-            listener = new CrafterManagerListener((EntityPlayerMP) listener);
+        if (listener instanceof ServerPlayerEntity) {
+            listener = new CrafterManagerListener((ServerPlayerEntity) listener);
         }
 
         super.addListener(listener);
@@ -91,7 +91,7 @@ public class ContainerCrafterManager extends ContainerBase {
         return listeners;
     }
 
-    public ContainerCrafterManager(TileCrafterManager crafterManager, EntityPlayer player, IResizableDisplay display) {
+    public ContainerCrafterManager(TileCrafterManager crafterManager, PlayerEntity player, IResizableDisplay display) {
         super(crafterManager, player);
 
         this.display = display;
@@ -228,7 +228,7 @@ public class ContainerCrafterManager extends ContainerBase {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack stack = ItemStack.EMPTY;
 
         Slot slot = getSlot(index);

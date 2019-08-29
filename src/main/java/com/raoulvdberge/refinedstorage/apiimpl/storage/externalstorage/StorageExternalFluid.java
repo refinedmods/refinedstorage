@@ -8,7 +8,6 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,13 +33,6 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
         return connectedToInterface;
     }
 
-    @Nullable
-    private IFluidTankProperties[] getProperties() {
-        IFluidHandler handler = handlerSupplier.get();
-
-        return (handler != null && handler.getTankProperties() != null && handler.getTankProperties().length != 0) ? handler.getTankProperties() : null;
-    }
-
     @Override
     public void update(INetwork network) {
         if (getAccessType() == AccessType.INSERT) {
@@ -52,13 +44,13 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
 
     @Override
     public int getCapacity() {
-        IFluidTankProperties[] props = getProperties();
+        IFluidHandler fluidHandler = handlerSupplier.get();
 
-        if (props != null) {
+        if (fluidHandler != null) {
             int cap = 0;
 
-            for (IFluidTankProperties properties : props) {
-                cap += properties.getCapacity();
+            for (int i = 0; i < fluidHandler.getTanks(); ++i) {
+                cap += fluidHandler.getTankCapacity(i);
             }
 
             return cap;
@@ -69,17 +61,13 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
 
     @Override
     public Collection<FluidStack> getStacks() {
-        IFluidTankProperties[] props = getProperties();
+        IFluidHandler fluidHandler = handlerSupplier.get();
 
-        if (props != null) {
+        if (fluidHandler != null) {
             List<FluidStack> fluids = new ArrayList<>();
 
-            for (IFluidTankProperties properties : props) {
-                FluidStack stack = properties.getContents();
-
-                if (stack != null) {
-                    fluids.add(stack);
-                }
+            for (int i = 0; i < fluidHandler.getTanks(); ++i) {
+                fluids.add(fluidHandler.getFluidInTank(i));
             }
 
             return fluids;
@@ -92,7 +80,7 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
     @Override
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
         if (context.acceptsFluid(stack)) {
-            int filled = handlerSupplier.get().fill(StackUtils.copy(stack, size), action == Action.PERFORM);
+            int filled = handlerSupplier.get().fill(StackUtils.copy(stack, size), action == Action.PERFORM ? IFluidHandler.FluidAction.EXECUTE : IFluidHandler.FluidAction.SIMULATE);
 
             if (filled == size) {
                 return null;
@@ -113,22 +101,18 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
             return null;
         }
 
-        return handler.drain(StackUtils.copy(stack, size), action == Action.PERFORM);
+        return handler.drain(StackUtils.copy(stack, size), action == Action.PERFORM ? IFluidHandler.FluidAction.EXECUTE : IFluidHandler.FluidAction.SIMULATE);
     }
 
     @Override
     public int getStored() {
-        IFluidTankProperties[] props = getProperties();
+        IFluidHandler fluidHandler = handlerSupplier.get();
 
-        if (props != null) {
+        if (fluidHandler != null) {
             int stored = 0;
 
-            for (IFluidTankProperties properties : props) {
-                FluidStack contents = properties.getContents();
-
-                if (contents != null) {
-                    stored += contents.amount;
-                }
+            for (int i = 0; i < fluidHandler.getTanks(); ++i) {
+                stored += fluidHandler.getFluidInTank(i).getAmount();
             }
 
             return stored;
@@ -153,6 +137,6 @@ public class StorageExternalFluid implements IStorageExternal<FluidStack> {
             return 0;
         }
 
-        return remainder == null ? size : (size - remainder.amount);
+        return remainder == null ? size : (size - remainder.getAmount());
     }
 }

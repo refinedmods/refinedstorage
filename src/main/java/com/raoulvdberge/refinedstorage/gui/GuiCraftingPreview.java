@@ -19,7 +19,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -67,7 +67,7 @@ public class GuiCraftingPreview extends GuiBase {
     public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity, boolean fluids) {
         super(new Container() {
             @Override
-            public boolean canInteractWith(EntityPlayer player) {
+            public boolean canInteractWith(PlayerEntity player) {
                 return false;
             }
         }, 254, 201);

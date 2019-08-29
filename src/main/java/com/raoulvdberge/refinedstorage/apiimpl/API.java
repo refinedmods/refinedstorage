@@ -13,7 +13,6 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
@@ -38,16 +37,14 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
 import com.raoulvdberge.refinedstorage.apiimpl.util.*;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -66,7 +63,6 @@ public class API implements IRSAPI {
     private IGridManager gridManager = new GridManager();
     private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
     private IStorageDiskSync storageDiskSync = new StorageDiskSync();
-    private IOneSixMigrationHelper oneSixMigrationHelper = new OneSixMigrationHelper();
     private Map<StorageType, TreeSet<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
     private List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
 
@@ -74,7 +70,7 @@ public class API implements IRSAPI {
         return INSTANCE;
     }
 
-    public static void deliver(ASMDataTable asmDataTable) {
+    /* TODO API DELIVERY public static void deliver(ASMDataTable asmDataTable) {
         String annotationClassName = RSAPIInject.class.getCanonicalName();
 
         Set<ASMDataTable.ASMData> asmDataSet = asmDataTable.getAll(annotationClassName);
@@ -91,7 +87,7 @@ public class API implements IRSAPI {
                 throw new RuntimeException("Failed to set: {}" + asmData.getClassName() + "." + asmData.getObjectName(), e);
             }
         }
-    }
+    }*/
 
     @Nonnull
     @Override
@@ -117,6 +113,7 @@ public class API implements IRSAPI {
             throw new IllegalArgumentException("Attempting to access network node manager on the client");
         }
 
+        /* TODO: Saving
         MapStorage storage = world.getPerWorldStorage();
         NetworkNodeManager instance = (NetworkNodeManager) storage.getOrLoadData(NetworkNodeManager.class, NetworkNodeManager.NAME);
 
@@ -126,9 +123,9 @@ public class API implements IRSAPI {
             storage.setData(NetworkNodeManager.NAME, instance);
         } else {
             instance.tryReadNodes(world);
-        }
+        }*/
 
-        return instance;
+        return new NetworkNodeManager("ABC");
     }
 
     @Override
@@ -197,7 +194,7 @@ public class API implements IRSAPI {
         if (world.isRemote) {
             throw new IllegalArgumentException("Attempting to access storage disk manager on the client");
         }
-
+        /* TODO: Saving!
         MapStorage storage = world.getMapStorage();
         StorageDiskManager instance = (StorageDiskManager) storage.getOrLoadData(StorageDiskManager.class, StorageDiskManager.NAME);
 
@@ -207,9 +204,9 @@ public class API implements IRSAPI {
             storage.setData(StorageDiskManager.NAME, instance);
         } else {
             instance.tryReadDisks(world);
-        }
+        } */
 
-        return instance;
+        return new StorageDiskManager("ABC");
     }
 
     @Nonnull
@@ -253,14 +250,8 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(NBTTagCompound tag) throws CraftingTaskReadException {
+    public ICraftingRequestInfo createCraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException {
         return new CraftingRequestInfo(tag);
-    }
-
-    @Override
-    @Nonnull
-    public IOneSixMigrationHelper getOneSixMigrationHelper() {
-        return oneSixMigrationHelper;
     }
 
     @Override
@@ -275,18 +266,19 @@ public class API implements IRSAPI {
 
     @Override
     public void discoverNode(World world, BlockPos pos) {
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        for (Direction facing : Direction.values()) {
             TileEntity tile = world.getTileEntity(pos.offset(facing));
 
-            if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite())) {
-                INetworkNodeProxy nodeProxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite());
-                INetworkNode node = nodeProxy.getNode();
+            if (tile != null) {
+                tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite()).ifPresent(nodeProxy -> {
+                    INetworkNode node = nodeProxy.getNode();
 
-                if (node.getNetwork() != null) {
-                    node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
+                    if (node.getNetwork() != null) {
+                        node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
 
-                    return;
-                }
+                        return;
+                    }
+                });
             }
         }
     }
@@ -294,20 +286,19 @@ public class API implements IRSAPI {
     @Override
     public int getItemStackHashCode(ItemStack stack) {
         int result = stack.getItem().hashCode();
-        result = 31 * result + (stack.getItemDamage() + 1);
 
-        if (stack.hasTagCompound()) {
-            result = getHashCode(stack.getTagCompound(), result);
+        if (stack.hasTag()) {
+            result = getHashCode(stack.getTag(), result);
         }
 
         return result;
     }
 
-    private int getHashCode(NBTBase tag, int result) {
-        if (tag instanceof NBTTagCompound) {
-            result = getHashCode((NBTTagCompound) tag, result);
-        } else if (tag instanceof NBTTagList) {
-            result = getHashCode((NBTTagList) tag, result);
+    private int getHashCode(INBT tag, int result) {
+        if (tag instanceof CompoundNBT) {
+            result = getHashCode((CompoundNBT) tag, result);
+        } else if (tag instanceof ListNBT) {
+            result = getHashCode((ListNBT) tag, result);
         } else {
             result = 31 * result + tag.hashCode();
         }
@@ -315,17 +306,17 @@ public class API implements IRSAPI {
         return result;
     }
 
-    private int getHashCode(NBTTagCompound tag, int result) {
-        for (String key : tag.getKeySet()) {
+    private int getHashCode(CompoundNBT tag, int result) {
+        for (String key : tag.keySet()) {
             result = 31 * result + key.hashCode();
-            result = getHashCode(tag.getTag(key), result);
+            result = getHashCode(tag.get(key), result);
         }
 
         return result;
     }
 
-    private int getHashCode(NBTTagList tag, int result) {
-        for (int i = 0; i < tag.tagCount(); ++i) {
+    private int getHashCode(ListNBT tag, int result) {
+        for (int i = 0; i < tag.size(); ++i) {
             result = getHashCode(tag.get(i), result);
         }
 
@@ -336,8 +327,8 @@ public class API implements IRSAPI {
     public int getFluidStackHashCode(FluidStack stack) {
         int result = stack.getFluid().hashCode();
 
-        if (stack.tag != null) {
-            result = getHashCode(stack.tag, result);
+        if (stack.getTag() != null) {
+            result = getHashCode(stack.getTag(), result);
         }
 
         return result;
@@ -346,7 +337,7 @@ public class API implements IRSAPI {
     @Override
     public int getNetworkNodeHashCode(INetworkNode node) {
         int result = node.getPos().hashCode();
-        result = 31 * result + node.getWorld().provider.getDimension();
+        result = 31 * result + node.getWorld().getDimension().getType().getId();
 
         return result;
     }
@@ -363,7 +354,7 @@ public class API implements IRSAPI {
 
         INetworkNode rightNode = (INetworkNode) right;
 
-        if (left.getWorld().provider.getDimension() != rightNode.getWorld().provider.getDimension()) {
+        if (left.getWorld().getDimension().getType().getId() != rightNode.getWorld().getDimension().getType().getId()) {
             return false;
         }
 

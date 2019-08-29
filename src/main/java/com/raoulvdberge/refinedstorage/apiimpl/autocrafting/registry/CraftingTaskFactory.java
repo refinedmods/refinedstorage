@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInf
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTask;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 
@@ -21,7 +21,7 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
     }
 
     @Override
-    public ICraftingTask createFromNbt(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
+    public ICraftingTask createFromNbt(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         return new CraftingTask(network, tag);
     }
 }

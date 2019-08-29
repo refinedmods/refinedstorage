@@ -9,9 +9,8 @@ import javax.annotation.Nullable;
  * Utilities for comparing item and fluid stacks.
  */
 public interface IComparer {
-    int COMPARE_DAMAGE = 1;
-    int COMPARE_NBT = 2;
-    int COMPARE_QUANTITY = 4;
+    int COMPARE_NBT = 1;
+    int COMPARE_QUANTITY = 2;
 
     /**
      * Compares two stacks by the given flags.
@@ -31,7 +30,7 @@ public interface IComparer {
      * @return true if the left and right stack are the same, false otherwise
      */
     default boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right) {
-        return isEqual(left, right, COMPARE_NBT | COMPARE_DAMAGE | COMPARE_QUANTITY);
+        return isEqual(left, right, COMPARE_NBT | COMPARE_QUANTITY);
     }
 
     /**
@@ -42,7 +41,7 @@ public interface IComparer {
      * @return true if the left and right stack are the same, false otherwise
      */
     default boolean isEqualNoQuantity(@Nullable ItemStack left, @Nullable ItemStack right) {
-        return isEqual(left, right, COMPARE_NBT | COMPARE_DAMAGE);
+        return isEqual(left, right, COMPARE_NBT);
     }
 
     /**

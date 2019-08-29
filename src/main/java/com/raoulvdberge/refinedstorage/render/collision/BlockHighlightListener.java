@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
@@ -21,7 +21,7 @@ public class BlockHighlightListener {
             return;
         }
 
-        EntityPlayer player = e.getPlayer();
+        PlayerEntity player = e.getPlayer();
 
         BlockPos pos = e.getTarget().getBlockPos();
 

@@ -55,7 +55,7 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -309,7 +309,7 @@ public class ProxyCommon {
     @SubscribeEvent
     public void onPlayerLoginEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e) {
         if (!e.player.world.isRemote) {
-            RS.INSTANCE.network.sendTo(new MessageConfigSync(), (EntityPlayerMP) e.player);
+            RS.INSTANCE.network.sendTo(new MessageConfigSync(), (ServerPlayerEntity) e.player);
         }
     }
 

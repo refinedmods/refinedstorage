@@ -14,7 +14,7 @@ import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldNameable;
@@ -172,7 +172,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         // Fix cascading crafter invalidates while reading patterns
@@ -217,7 +217,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         StackUtils.writeItems(patternsInventory, 0, tag);
@@ -231,9 +231,9 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             tag.setUniqueId(NBT_UUID, uuid);
         }
 
-        tag.setInteger(NBT_MODE, mode.ordinal());
-        tag.setBoolean(NBT_LOCKED, locked);
-        tag.setBoolean(NBT_WAS_POWERED, wasPowered);
+        tag.putInt(NBT_MODE, mode.ordinal());
+        tag.putBoolean(NBT_LOCKED, locked);
+        tag.putBoolean(NBT_WAS_POWERED, wasPowered);
 
         return tag;
     }

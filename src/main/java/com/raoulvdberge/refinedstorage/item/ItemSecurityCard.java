@@ -7,9 +7,9 @@ import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -42,11 +42,11 @@ public class ItemSecurityCard extends ItemBase {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
 
             stack.getTagCompound().setString(NBT_OWNER, player.getGameProfile().getId().toString());
             stack.getTagCompound().setString(NBT_OWNER_NAME, player.getGameProfile().getName());
@@ -76,10 +76,10 @@ public class ItemSecurityCard extends ItemBase {
 
     public static void setPermission(ItemStack stack, Permission permission, boolean state) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
-        stack.getTagCompound().setBoolean(String.format(NBT_PERMISSION, permission.getId()), state);
+        stack.getTagCompound().putBoolean(String.format(NBT_PERMISSION, permission.getId()), state);
     }
 
     public static boolean isValid(ItemStack stack) {

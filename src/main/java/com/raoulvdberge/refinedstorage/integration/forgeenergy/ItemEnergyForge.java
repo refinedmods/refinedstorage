@@ -22,7 +22,7 @@ public class ItemEnergyForge extends EnergyStorage {
 
         if (received > 0 && !simulate) {
             if (!stack.hasTag()) {
-                stack.setTag(new CompoundNBT());
+                stack.put(new CompoundNBT());
             }
 
             stack.getTag().putInt(NBT_ENERGY, getEnergyStored());
@@ -37,7 +37,7 @@ public class ItemEnergyForge extends EnergyStorage {
 
         if (extracted > 0 && !simulate) {
             if (!stack.hasTag()) {
-                stack.setTag(new CompoundNBT());
+                stack.put(new CompoundNBT());
             }
 
             stack.getTag().putInt(NBT_ENERGY, getEnergyStored());

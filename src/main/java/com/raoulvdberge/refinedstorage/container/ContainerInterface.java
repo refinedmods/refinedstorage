@@ -3,11 +3,11 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.container.slot.SlotOutput;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerInterface extends ContainerBase {
-    public ContainerInterface(TileInterface tile, EntityPlayer player) {
+    public ContainerInterface(TileInterface tile, PlayerEntity player) {
         super(tile, player);
 
         for (int i = 0; i < 9; ++i) {

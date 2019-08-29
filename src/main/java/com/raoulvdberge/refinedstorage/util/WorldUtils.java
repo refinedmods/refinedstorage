@@ -1,11 +1,12 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.Style;
@@ -29,7 +30,7 @@ public final class WorldUtils {
         }
     }
 
-    public static IItemHandler getItemHandler(@Nullable TileEntity tile, EnumFacing side) {
+    public static IItemHandler getItemHandler(@Nullable TileEntity tile, Direction side) {
         if (tile == null) {
             return null;
         }
@@ -47,11 +48,11 @@ public final class WorldUtils {
         return handler;
     }
 
-    public static IFluidHandler getFluidHandler(@Nullable TileEntity tile, EnumFacing side) {
+    public static IFluidHandler getFluidHandler(@Nullable TileEntity tile, Direction side) {
         return (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) ? tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side) : null;
     }
 
-    public static void sendNoPermissionMessage(EntityPlayer player) {
+    public static void sendNoPermissionMessage(PlayerEntity player) {
         player.sendMessage(new TextComponentTranslation("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
     }
 

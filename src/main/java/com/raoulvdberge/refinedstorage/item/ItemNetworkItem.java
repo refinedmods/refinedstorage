@@ -8,9 +8,9 @@ import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -43,7 +43,7 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
@@ -79,22 +79,22 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(PlayerEntity player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = player.getHeldItem(hand);
 
         Block block = world.getBlockState(pos).getBlock();
 
         if (block == RSBlocks.CONTROLLER) {
-            NBTTagCompound tag = stack.getTagCompound();
+            CompoundNBT tag = stack.getTagCompound();
 
             if (tag == null) {
-                tag = new NBTTagCompound();
+                tag = new CompoundNBT();
             }
 
-            tag.setInteger(NBT_CONTROLLER_X, pos.getX());
-            tag.setInteger(NBT_CONTROLLER_Y, pos.getY());
-            tag.setInteger(NBT_CONTROLLER_Z, pos.getZ());
-            tag.setInteger(NBT_DIMENSION_ID, player.dimension);
+            tag.putInt(NBT_CONTROLLER_X, pos.getX());
+            tag.putInt(NBT_CONTROLLER_Y, pos.getY());
+            tag.putInt(NBT_CONTROLLER_Z, pos.getZ());
+            tag.putInt(NBT_DIMENSION_ID, player.dimension);
 
             stack.setTagCompound(tag);
 

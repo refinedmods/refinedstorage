@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -22,19 +21,19 @@ public class ExternalStorageCacheFluid {
         if (cache == null) {
             cache = new ArrayList<>();
 
-            for (IFluidTankProperties properties : handler.getTankProperties()) {
-                cache.add(properties.getContents() == null ? null : properties.getContents().copy());
+            for (int i = 0; i < handler.getTanks(); ++i) {
+                cache.add(handler.getFluidInTank(i));
             }
 
             return;
         }
 
-        for (int i = 0; i < handler.getTankProperties().length; ++i) {
-            FluidStack actual = handler.getTankProperties()[i].getContents();
+        for (int i = 0; i < handler.getTanks(); ++i) {
+            FluidStack actual = handler.getFluidInTank(i);
 
             if (i >= cache.size()) { // ENLARGED
                 if (actual != null) {
-                    network.getFluidStorageCache().add(actual, actual.amount, false, true);
+                    network.getFluidStorageCache().add(actual, actual.getAmount(), false, true);
 
                     cache.add(actual.copy());
                 }
@@ -49,35 +48,35 @@ public class ExternalStorageCacheFluid {
             }
 
             if (actual == null && cached != null) { // REMOVED
-                network.getFluidStorageCache().remove(cached, cached.amount, true);
+                network.getFluidStorageCache().remove(cached, cached.getAmount(), true);
 
                 cache.set(i, null);
             } else if (actual != null && cached == null) { // ADDED
-                network.getFluidStorageCache().add(actual, actual.amount, false, true);
+                network.getFluidStorageCache().add(actual, actual.getAmount(), false, true);
 
                 cache.set(i, actual.copy());
             } else if (!API.instance().getComparer().isEqual(actual, cached, IComparer.COMPARE_NBT)) { // CHANGED
-                network.getFluidStorageCache().remove(cached, cached.amount, true);
-                network.getFluidStorageCache().add(actual, actual.amount, false, true);
+                network.getFluidStorageCache().remove(cached, cached.getAmount(), true);
+                network.getFluidStorageCache().add(actual, actual.getAmount(), false, true);
 
                 cache.set(i, actual.copy());
-            } else if (actual.amount > cached.amount) { // COUNT_CHANGED
-                network.getFluidStorageCache().add(actual, actual.amount - cached.amount, false, true);
+            } else if (actual.getAmount() > cached.getAmount()) { // COUNT_CHANGED
+                network.getFluidStorageCache().add(actual, actual.getAmount() - cached.getAmount(), false, true);
 
-                cached.amount = actual.amount;
-            } else if (actual.amount < cached.amount) { // COUNT_CHANGED
-                network.getFluidStorageCache().remove(actual, cached.amount - actual.amount, true);
+                cached.setAmount(actual.getAmount());
+            } else if (actual.getAmount() < cached.getAmount()) { // COUNT_CHANGED
+                network.getFluidStorageCache().remove(actual, cached.getAmount() - actual.getAmount(), true);
 
-                cached.amount = actual.amount;
+                cached.setAmount(actual.getAmount());
             }
         }
 
-        if (cache.size() > handler.getTankProperties().length) { // SHRUNK
-            for (int i = cache.size() - 1; i >= handler.getTankProperties().length; --i) { // Reverse order for the remove call.
+        if (cache.size() > handler.getTanks()) { // SHRUNK
+            for (int i = cache.size() - 1; i >= handler.getTanks(); --i) { // Reverse order for the remove call.
                 FluidStack cached = cache.get(i);
 
                 if (cached != null) {
-                    network.getFluidStorageCache().remove(cached, cached.amount, true);
+                    network.getFluidStorageCache().remove(cached, cached.getAmount(), true);
                 }
 
                 cache.remove(i);

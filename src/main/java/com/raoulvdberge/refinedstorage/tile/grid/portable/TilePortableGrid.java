@@ -41,13 +41,13 @@ import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -149,7 +149,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
 
     private StorageTrackerItem storageTracker = new StorageTrackerItem(this::markDirty);
     private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
-    private NBTTagList enchants = null;
+    private ListNBT enchants = null;
 
     public TilePortableGrid() {
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -241,15 +241,15 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             this.redstoneMode = RedstoneMode.read(stack.getTagCompound());
 
             if (stack.getTagCompound().hasKey(PortableGrid.NBT_STORAGE_TRACKER)) {
-                storageTracker.readFromNbt(stack.getTagCompound().getTagList(PortableGrid.NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                storageTracker.readFromNbt(stack.getTagCompound().getList(PortableGrid.NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
             }
 
             if (stack.getTagCompound().hasKey(PortableGrid.NBT_FLUID_STORAGE_TRACKER)) {
-                fluidStorageTracker.readFromNbt(stack.getTagCompound().getTagList(PortableGrid.NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+                fluidStorageTracker.readFromNbt(stack.getTagCompound().getList(PortableGrid.NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
             }
 
             if (stack.getTagCompound().hasKey(NBT_ENCHANTMENTS)) {
-                enchants = stack.getTagCompound().getTagList(NBT_ENCHANTMENTS, Constants.NBT.TAG_COMPOUND);
+                enchants = stack.getTagCompound().getList(NBT_ENCHANTMENTS, Constants.NBT.TAG_COMPOUND);
             }
         }
 
@@ -265,20 +265,20 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     public ItemStack getAsItem() {
         ItemStack stack = new ItemStack(RSBlocks.PORTABLE_GRID, 1, getPortableType() == PortableGridType.NORMAL ? ItemBlockPortableGrid.TYPE_NORMAL : ItemBlockPortableGrid.TYPE_CREATIVE);
 
-        stack.setTagCompound(new NBTTagCompound());
+        stack.setTagCompound(new CompoundNBT());
 
-        stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, sortingDirection);
-        stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, sortingType);
-        stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
-        stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_SIZE, size);
-        stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
-        stack.getTagCompound().setInteger(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
+        stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SORTING_DIRECTION, sortingDirection);
+        stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SORTING_TYPE, sortingType);
+        stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
+        stack.getTagCompound().putInt(NetworkNodeGrid.NBT_SIZE, size);
+        stack.getTagCompound().putInt(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
+        stack.getTagCompound().putInt(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
 
-        stack.getTagCompound().setTag(PortableGrid.NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
-        stack.getTagCompound().setTag(PortableGrid.NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
+        stack.getTagCompound().put(PortableGrid.NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
+        stack.getTagCompound().put(PortableGrid.NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
         if (enchants != null) {
-            stack.getTagCompound().setTag(NBT_ENCHANTMENTS, enchants);
+            stack.getTagCompound().put(NBT_ENCHANTMENTS, enchants);
         }
 
         stack.getCapability(CapabilityEnergy.ENERGY, null).receiveEnergy(energyStorage.getEnergyStored(), false);
@@ -310,7 +310,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public IStorageCacheListener createListener(EntityPlayerMP player) {
+    public IStorageCacheListener createListener(ServerPlayerEntity player) {
         return getServerGridType() == GridType.FLUID ? new StorageCacheListenerGridPortableFluid(this, player) : new StorageCacheListenerGridPortable(this, player);
     }
 
@@ -483,22 +483,22 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public void onCrafted(EntityPlayer player) {
+    public void onCrafted(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onCraftedShift(EntityPlayer player) {
+    public void onCraftedShift(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
         // NO OP
     }
 
     @Override
-    public void onClosed(EntityPlayer player) {
+    public void onClosed(PlayerEntity player) {
         // NO OP
     }
 
@@ -592,35 +592,35 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.setInteger(NetworkNodeGrid.NBT_SORTING_DIRECTION, sortingDirection);
-        tag.setInteger(NetworkNodeGrid.NBT_SORTING_TYPE, sortingType);
-        tag.setInteger(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
-        tag.setInteger(NetworkNodeGrid.NBT_SIZE, size);
-        tag.setInteger(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
-        tag.setInteger(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
+        tag.putInt(NetworkNodeGrid.NBT_SORTING_DIRECTION, sortingDirection);
+        tag.putInt(NetworkNodeGrid.NBT_SORTING_TYPE, sortingType);
+        tag.putInt(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
+        tag.putInt(NetworkNodeGrid.NBT_SIZE, size);
+        tag.putInt(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
+        tag.putInt(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
 
         StackUtils.writeItems(disk, 0, tag);
         StackUtils.writeItems(filter, 1, tag);
 
-        tag.setInteger(NBT_ENERGY, energyStorage.getEnergyStored());
+        tag.putInt(NBT_ENERGY, energyStorage.getEnergyStored());
 
         redstoneMode.write(tag);
 
-        tag.setTag(NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
-        tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
+        tag.put(NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
+        tag.put(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
         if (enchants != null) {
-            tag.setTag(NBT_ENCHANTMENTS, enchants);
+            tag.put(NBT_ENCHANTMENTS, enchants);
         }
 
         return tag;
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         if (tag.hasKey(NetworkNodeGrid.NBT_SORTING_DIRECTION)) {
@@ -657,15 +657,15 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
         redstoneMode = RedstoneMode.read(tag);
 
         if (tag.hasKey(NBT_STORAGE_TRACKER)) {
-            storageTracker.readFromNbt(tag.getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            storageTracker.readFromNbt(tag.getList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
         if (tag.hasKey(NBT_FLUID_STORAGE_TRACKER)) {
-            fluidStorageTracker.readFromNbt(tag.getTagList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            fluidStorageTracker.readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
         if (tag.hasKey(NBT_ENCHANTMENTS)) {
-            enchants = tag.getTagList(NBT_ENCHANTMENTS, Constants.NBT.TAG_COMPOUND);
+            enchants = tag.getList(NBT_ENCHANTMENTS, Constants.NBT.TAG_COMPOUND);
         }
     }
 
@@ -680,16 +680,16 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
-        tag.setInteger(NBT_DISK_STATE, diskState.getId());
-        tag.setBoolean(NBT_CONNECTED, getEnergy() != 0);
-        tag.setInteger(NBT_TYPE, getServerGridType().ordinal());
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
+        tag.putInt(NBT_DISK_STATE, diskState.getId());
+        tag.putBoolean(NBT_CONNECTED, getEnergy() != 0);
+        tag.putInt(NBT_TYPE, getServerGridType().ordinal());
 
         return super.writeUpdate(tag);
     }
 
     @Override
-    public void readUpdate(NBTTagCompound tag) {
+    public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
         diskState = PortableGridDiskState.getById(tag.getInteger(NBT_DISK_STATE));

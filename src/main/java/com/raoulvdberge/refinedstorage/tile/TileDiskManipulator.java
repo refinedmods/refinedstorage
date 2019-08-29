@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +37,7 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     }
 
     @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
         TileDiskDrive.writeDiskState(tag, 6, getNode().canUpdate(), getNode().getItemDisks(), getNode().getFluidDisks());
@@ -46,7 +46,7 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     }
 
     @Override
-    public void readUpdate(NBTTagCompound tag) {
+    public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
         TileDiskDrive.readDiskState(tag, diskState);

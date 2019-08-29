@@ -27,7 +27,7 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -92,7 +92,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         tag.setUniqueId(NBT_ID, storageId);
@@ -101,7 +101,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         if (tag.hasUniqueId(NBT_ID)) {
@@ -139,13 +139,13 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
-        tag.setTag(NBT_FILTERS, filters.writeToNbt());
-        tag.setInteger(NBT_PRIORITY, priority);
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
+        tag.put(NBT_FILTERS, filters.writeToNbt());
+        tag.putInt(NBT_PRIORITY, priority);
+        tag.putInt(NBT_COMPARE, compare);
+        tag.putInt(NBT_MODE, mode);
 
         AccessTypeUtils.writeAccessType(tag, accessType);
 
@@ -153,11 +153,11 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         if (tag.hasKey(NBT_FILTERS)) {
-            filters.readFromNbt(tag.getCompoundTag(NBT_FILTERS));
+            filters.readFromNbt(tag.getCompound(NBT_FILTERS));
         }
 
         if (tag.hasKey(NBT_PRIORITY)) {

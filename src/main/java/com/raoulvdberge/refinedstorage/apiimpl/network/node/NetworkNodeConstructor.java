@@ -26,7 +26,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.tileentity.TileEntity;
@@ -221,10 +221,10 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                                 GameProfile playerInfo = null;
 
                                 if (item.hasTagCompound()) {
-                                    NBTTagCompound tag = item.getTagCompound();
+                                    CompoundNBT tag = item.getTagCompound();
 
                                     if (tag.hasKey("SkullOwner", 10)) {
-                                        playerInfo = NBTUtil.readGameProfileFromNBT(tag.getCompoundTag("SkullOwner"));
+                                        playerInfo = NBTUtil.readGameProfileFromNBT(tag.getCompound("SkullOwner"));
                                     } else if (tag.hasKey("SkullOwner", 8) && !tag.getString("SkullOwner").isEmpty()) {
                                         playerInfo = new GameProfile(null, tag.getString("SkullOwner"));
                                     }
@@ -287,7 +287,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         StackUtils.readItems(upgrades, 1, tag);
@@ -299,33 +299,33 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         StackUtils.writeItems(upgrades, 1, tag);
 
-        tag.setTag(NBT_COVERS, coverManager.writeToNbt());
+        tag.put(NBT_COVERS, coverManager.writeToNbt());
 
         return tag;
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_TYPE, type);
-        tag.setBoolean(NBT_DROP, drop);
+        tag.putInt(NBT_COMPARE, compare);
+        tag.putInt(NBT_TYPE, type);
+        tag.putBoolean(NBT_DROP, drop);
 
         StackUtils.writeItems(itemFilters, 0, tag);
 
-        tag.setTag(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
+        tag.put(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
 
         return tag;
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         if (tag.hasKey(NBT_COMPARE)) {
@@ -341,13 +341,13 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         }
 
         if (tag.hasKey(NBT_COVERS)) {
-            coverManager.readFromNbt(tag.getTagList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
+            coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
 
         StackUtils.readItems(itemFilters, 0, tag);
 
         if (tag.hasKey(NBT_FLUID_FILTERS)) {
-            fluidFilters.readFromNbt(tag.getCompoundTag(NBT_FLUID_FILTERS));
+            fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
     }
 

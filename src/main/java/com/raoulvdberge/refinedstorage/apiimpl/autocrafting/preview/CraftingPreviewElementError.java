@@ -3,11 +3,10 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.PacketBuffer;
 
 public class CraftingPreviewElementError implements ICraftingPreviewElement<ItemStack> {
     public static final String ID = "error";
@@ -45,28 +44,30 @@ public class CraftingPreviewElementError implements ICraftingPreviewElement<Item
         return false;
     }
 
+    // TODO: Rename to writeToBuffer.
     @Override
-    public void writeToByteBuf(ByteBuf buf) {
+    public void writeToByteBuf(PacketBuffer buf) {
         buf.writeInt(type.ordinal());
+        // TODO can't we use writeItemStack here?
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
-        buf.writeInt(stack.getMetadata());
-        ByteBufUtils.writeTag(buf, stack.getTagCompound());
+        buf.writeCompoundTag(stack.getTag());
     }
 
     public CraftingTaskErrorType getType() {
         return type;
     }
 
-    public static CraftingPreviewElementError fromByteBuf(ByteBuf buf) {
+    // TODO: Rename to fromBuffer
+    public static CraftingPreviewElementError fromByteBuf(PacketBuffer buf) {
         int errorIdx = buf.readInt();
         CraftingTaskErrorType error = errorIdx >= 0 && errorIdx < CraftingTaskErrorType.values().length ? CraftingTaskErrorType.values()[errorIdx] : CraftingTaskErrorType.TOO_COMPLEX;
 
+        // TODO can't we use readItemStack here?
         Item item = Item.getItemById(buf.readInt());
-        int meta = buf.readInt();
-        NBTTagCompound tag = ByteBufUtils.readTag(buf);
+        CompoundNBT tag = buf.readCompoundTag();
 
-        ItemStack stack = new ItemStack(item, 1, meta);
-        stack.setTagCompound(tag);
+        ItemStack stack = new ItemStack(item, 1);
+        stack.put(tag);
 
         return new CraftingPreviewElementError(error, stack);
     }

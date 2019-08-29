@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import mezz.jei.api.gui.IGuiIngredient;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -70,7 +70,7 @@ public class MessageGridTransfer extends MessageHandlerPlayerToServer<MessageGri
     }
 
     @Override
-    public void handle(MessageGridTransfer message, EntityPlayerMP player) {
+    public void handle(MessageGridTransfer message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 

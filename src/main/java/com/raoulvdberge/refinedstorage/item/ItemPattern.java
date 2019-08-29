@@ -17,9 +17,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -106,10 +106,10 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     public static void setInputSlot(ItemStack pattern, int slot, ItemStack stack) {
         if (!pattern.hasTagCompound()) {
-            pattern.setTagCompound(new NBTTagCompound());
+            pattern.setTagCompound(new CompoundNBT());
         }
 
-        pattern.getTagCompound().setTag(String.format(NBT_INPUT_SLOT, slot), stack.serializeNBT());
+        pattern.getTagCompound().put(String.format(NBT_INPUT_SLOT, slot), stack.serializeNBT());
     }
 
     @Nullable
@@ -120,7 +120,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             return null;
         }
 
-        ItemStack stack = new ItemStack(pattern.getTagCompound().getCompoundTag(id));
+        ItemStack stack = new ItemStack(pattern.getTagCompound().getCompound(id));
         if (stack.isEmpty()) {
             return null;
         }
@@ -130,10 +130,10 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     public static void setOutputSlot(ItemStack pattern, int slot, ItemStack stack) {
         if (!pattern.hasTagCompound()) {
-            pattern.setTagCompound(new NBTTagCompound());
+            pattern.setTagCompound(new CompoundNBT());
         }
 
-        pattern.getTagCompound().setTag(String.format(NBT_OUTPUT_SLOT, slot), stack.serializeNBT());
+        pattern.getTagCompound().put(String.format(NBT_OUTPUT_SLOT, slot), stack.serializeNBT());
     }
 
     @Nullable
@@ -144,7 +144,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             return null;
         }
 
-        ItemStack stack = new ItemStack(pattern.getTagCompound().getCompoundTag(id));
+        ItemStack stack = new ItemStack(pattern.getTagCompound().getCompound(id));
         if (stack.isEmpty()) {
             return null;
         }
@@ -154,10 +154,10 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     public static void setFluidInputSlot(ItemStack pattern, int slot, FluidStack stack) {
         if (!pattern.hasTagCompound()) {
-            pattern.setTagCompound(new NBTTagCompound());
+            pattern.setTagCompound(new CompoundNBT());
         }
 
-        pattern.getTagCompound().setTag(String.format(NBT_FLUID_INPUT_SLOT, slot), stack.writeToNBT(new NBTTagCompound()));
+        pattern.getTagCompound().put(String.format(NBT_FLUID_INPUT_SLOT, slot), stack.writeToNBT(new CompoundNBT()));
     }
 
     @Nullable
@@ -168,15 +168,15 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             return null;
         }
 
-        return FluidStack.loadFluidStackFromNBT(pattern.getTagCompound().getCompoundTag(id));
+        return FluidStack.loadFluidStackFromNBT(pattern.getTagCompound().getCompound(id));
     }
 
     public static void setFluidOutputSlot(ItemStack pattern, int slot, FluidStack stack) {
         if (!pattern.hasTagCompound()) {
-            pattern.setTagCompound(new NBTTagCompound());
+            pattern.setTagCompound(new CompoundNBT());
         }
 
-        pattern.getTagCompound().setTag(String.format(NBT_FLUID_OUTPUT_SLOT, slot), stack.writeToNBT(new NBTTagCompound()));
+        pattern.getTagCompound().put(String.format(NBT_FLUID_OUTPUT_SLOT, slot), stack.writeToNBT(new CompoundNBT()));
     }
 
     @Nullable
@@ -187,7 +187,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
             return null;
         }
 
-        return FluidStack.loadFluidStackFromNBT(pattern.getTagCompound().getCompoundTag(id));
+        return FluidStack.loadFluidStackFromNBT(pattern.getTagCompound().getCompound(id));
     }
 
     public static boolean isProcessing(ItemStack pattern) {
@@ -196,10 +196,10 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     public static void setProcessing(ItemStack pattern, boolean processing) {
         if (!pattern.hasTagCompound()) {
-            pattern.setTagCompound(new NBTTagCompound());
+            pattern.setTagCompound(new CompoundNBT());
         }
 
-        pattern.getTagCompound().setBoolean(NBT_PROCESSING, processing);
+        pattern.getTagCompound().putBoolean(NBT_PROCESSING, processing);
     }
 
     public static boolean isOredict(ItemStack pattern) {
@@ -208,22 +208,22 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
 
     public static void setOredict(ItemStack pattern, boolean oredict) {
         if (!pattern.hasTagCompound()) {
-            pattern.setTagCompound(new NBTTagCompound());
+            pattern.setTagCompound(new CompoundNBT());
         }
 
-        pattern.getTagCompound().setBoolean(NBT_OREDICT, oredict);
+        pattern.getTagCompound().putBoolean(NBT_OREDICT, oredict);
     }
 
     public static void setVersion(ItemStack pattern) {
         if (!pattern.hasTagCompound()) {
-            pattern.setTagCompound(new NBTTagCompound());
+            pattern.setTagCompound(new CompoundNBT());
         }
 
         pattern.getTagCompound().setString(NBT_VERSION, RS.VERSION);
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
         if (!world.isRemote && player.isSneaking()) {
             return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.PATTERN, player.getHeldItem(hand).getCount()));
         }

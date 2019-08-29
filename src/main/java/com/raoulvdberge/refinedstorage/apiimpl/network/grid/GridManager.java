@@ -8,8 +8,8 @@ import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.ResizableDisplayDummy;
 import com.raoulvdberge.refinedstorage.network.MessageGridOpen;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -42,16 +42,16 @@ public class GridManager implements IGridManager {
     }
 
     @Override
-    public void openGrid(int id, EntityPlayerMP player, BlockPos pos) {
+    public void openGrid(int id, ServerPlayerEntity player, BlockPos pos) {
         openGrid(id, player, null, pos);
     }
 
     @Override
-    public void openGrid(int id, EntityPlayerMP player, ItemStack stack) {
+    public void openGrid(int id, ServerPlayerEntity player, ItemStack stack) {
         openGrid(id, player, stack, null);
     }
 
-    private void openGrid(int id, EntityPlayerMP player, @Nullable ItemStack stack, @Nullable BlockPos pos) {
+    private void openGrid(int id, ServerPlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos) {
         Pair<IGrid, TileEntity> grid = createGrid(id, player, stack, pos);
         if (grid == null) {
             return;
@@ -65,7 +65,7 @@ public class GridManager implements IGridManager {
 
         // We first need to send the grid open packet with the window id.
 
-        // Then we set the openContainer so the slots are getting sent (EntityPlayerMP::update -> Container::detectAndSendChanges).
+        // Then we set the openContainer so the slots are getting sent (ServerPlayerEntity::update -> Container::detectAndSendChanges).
 
         // If the client window id mismatches with the server window id this causes problems with slots not being set.
         // If we would set the openContainer first, the slot packets would be sent first but wouldn't be able to be set
@@ -73,18 +73,18 @@ public class GridManager implements IGridManager {
         // So we first send the window id in MessageGridOpen.
 
         // The order is preserved by TCP.
-        RS.INSTANCE.network.sendTo(new MessageGridOpen(player.currentWindowId, pos, id, stack), player);
+        /* TODO ! RS.INSTANCE.network.sendTo(new MessageGridOpen(player.currentWindowId, pos, id, stack), player);
 
         player.openContainer = new ContainerGrid(grid.getLeft(), new ResizableDisplayDummy(), grid.getRight() instanceof TileBase ? (TileBase) grid.getRight() : null, player);
         player.openContainer.windowId = player.currentWindowId;
         player.openContainer.addListener(player);
 
-        MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.openContainer));
+        MinecraftForge.EVENT_BUS.post(new PlayerContainerEvent.Open(player, player.openContainer));*/
     }
 
     @Override
     @Nullable
-    public Pair<IGrid, TileEntity> createGrid(int id, EntityPlayer player, @Nullable ItemStack stack, @Nullable BlockPos pos) {
+    public Pair<IGrid, TileEntity> createGrid(int id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos) {
         IGridFactory factory = get(id);
 
         if (factory == null) {

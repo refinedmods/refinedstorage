@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -28,7 +28,7 @@ public class MessageGridItemInsertHeld extends MessageHandlerPlayerToServer<Mess
     }
 
     @Override
-    public void handle(MessageGridItemInsertHeld message, EntityPlayerMP player) {
+    public void handle(MessageGridItemInsertHeld message, ServerPlayerEntity player) {
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {

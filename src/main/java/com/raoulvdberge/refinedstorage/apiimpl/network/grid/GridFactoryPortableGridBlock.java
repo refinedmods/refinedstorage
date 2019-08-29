@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridFactoryType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridFactory;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -15,13 +15,13 @@ import javax.annotation.Nullable;
 public class GridFactoryPortableGridBlock implements IGridFactory {
     @Override
     @Nullable
-    public IGrid createFromStack(EntityPlayer player, ItemStack stack) {
+    public IGrid createFromStack(PlayerEntity player, ItemStack stack) {
         return null;
     }
 
     @Override
     @Nullable
-    public IGrid createFromBlock(EntityPlayer player, BlockPos pos) {
+    public IGrid createFromBlock(PlayerEntity player, BlockPos pos) {
         TileEntity tile = getRelevantTile(player.world, pos);
 
         if (tile instanceof TilePortableGrid) {

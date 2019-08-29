@@ -49,7 +49,7 @@ import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -511,7 +511,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         if (tag.hasKey(NBT_ENERGY)) {
@@ -525,19 +525,19 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         readerWriterManager.readFromNbt(tag);
 
         if (tag.hasKey(NBT_ITEM_STORAGE_TRACKER)) {
-            itemStorageTracker.readFromNbt(tag.getTagList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            itemStorageTracker.readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
         if (tag.hasKey(NBT_FLUID_STORAGE_TRACKER)) {
-            fluidStorageTracker.readFromNbt(tag.getTagList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            fluidStorageTracker.readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.setInteger(NBT_ENERGY, this.energy.getStored());
+        tag.putInt(NBT_ENERGY, this.energy.getStored());
 
         redstoneMode.write(tag);
 
@@ -545,23 +545,23 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         readerWriterManager.writeToNbt(tag);
 
-        tag.setTag(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNbt());
-        tag.setTag(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
+        tag.put(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNbt());
+        tag.put(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
         return tag;
     }
 
     @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
-        tag.setInteger(NBT_ENERGY_TYPE, getEnergyType().getId());
+        tag.putInt(NBT_ENERGY_TYPE, getEnergyType().getId());
 
         return tag;
     }
 
     @Override
-    public void readUpdate(NBTTagCompound tag) {
+    public void readUpdate(CompoundNBT tag) {
         if (tag.hasKey(NBT_ENERGY_TYPE)) {
             this.energyType = ControllerEnergyType.getById(tag.getInteger(NBT_ENERGY_TYPE));
         }

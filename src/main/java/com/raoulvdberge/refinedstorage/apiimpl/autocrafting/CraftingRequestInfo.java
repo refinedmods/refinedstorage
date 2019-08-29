@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadExc
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -16,15 +16,15 @@ public class CraftingRequestInfo implements ICraftingRequestInfo {
     private ItemStack item;
     private FluidStack fluid;
 
-    public CraftingRequestInfo(NBTTagCompound tag) throws CraftingTaskReadException {
+    public CraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException {
         if (!tag.getBoolean(NBT_FLUID)) {
-            item = StackUtils.deserializeStackFromNbt(tag.getCompoundTag(NBT_STACK));
+            item = StackUtils.deserializeStackFromNbt(tag.getCompound(NBT_STACK));
 
             if (item.isEmpty()) {
                 throw new CraftingTaskReadException("Extractor stack is empty");
             }
         } else {
-            fluid = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag(NBT_STACK));
+            fluid = FluidStack.loadFluidStackFromNBT(tag.getCompound(NBT_STACK));
 
             if (fluid == null) {
                 throw new CraftingTaskReadException("Extractor fluid stack is emty");
@@ -53,15 +53,15 @@ public class CraftingRequestInfo implements ICraftingRequestInfo {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound tag = new NBTTagCompound();
+    public CompoundNBT writeToNbt() {
+        CompoundNBT tag = new CompoundNBT();
 
-        tag.setBoolean(NBT_FLUID, fluid != null);
+        tag.putBoolean(NBT_FLUID, fluid != null);
 
         if (fluid != null) {
-            tag.setTag(NBT_STACK, fluid.writeToNBT(new NBTTagCompound()));
+            tag.put(NBT_STACK, fluid.writeToNBT(new CompoundNBT()));
         } else {
-            tag.setTag(NBT_STACK, StackUtils.serializeStackToNbt(item));
+            tag.put(NBT_STACK, StackUtils.serializeStackToNbt(item));
         }
 
         return tag;

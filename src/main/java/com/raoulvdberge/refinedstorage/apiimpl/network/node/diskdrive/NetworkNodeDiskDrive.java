@@ -25,7 +25,7 @@ import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -172,7 +172,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         StackUtils.readItems(disks, 0, tag);
@@ -188,7 +188,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         StackUtils.writeItems(disks, 0, tag);
@@ -197,16 +197,16 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(itemFilters, 1, tag);
 
-        tag.setTag(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
-        tag.setInteger(NBT_PRIORITY, priority);
-        tag.setInteger(NBT_COMPARE, compare);
-        tag.setInteger(NBT_MODE, mode);
-        tag.setInteger(NBT_TYPE, type);
+        tag.put(NBT_FLUID_FILTERS, fluidFilters.writeToNbt());
+        tag.putInt(NBT_PRIORITY, priority);
+        tag.putInt(NBT_COMPARE, compare);
+        tag.putInt(NBT_MODE, mode);
+        tag.putInt(NBT_TYPE, type);
 
         AccessTypeUtils.writeAccessType(tag, accessType);
 
@@ -214,13 +214,13 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         StackUtils.readItems(itemFilters, 1, tag);
 
         if (tag.hasKey(NBT_FLUID_FILTERS)) {
-            fluidFilters.readFromNbt(tag.getCompoundTag(NBT_FLUID_FILTERS));
+            fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
 
         if (tag.hasKey(NBT_PRIORITY)) {

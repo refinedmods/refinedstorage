@@ -6,7 +6,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -34,7 +34,7 @@ public abstract class ItemEnergyItem extends ItemBase {
     }
 
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound tag) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT tag) {
         return new CapabilityProviderEnergy(stack, energyCapacity);
     }
 

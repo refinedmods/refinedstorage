@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.gui.GuiDetector;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -37,17 +37,17 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
     }
 
     @Override
-    public void readUpdate(NBTTagCompound tag) {
+    public void readUpdate(CompoundNBT tag) {
         getNode().setPowered(tag.getBoolean(NBT_POWERED));
 
         super.readUpdate(tag);
     }
 
     @Override
-    public NBTTagCompound writeUpdate(NBTTagCompound tag) {
+    public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
-        tag.setBoolean(NBT_POWERED, getNode().isPowered());
+        tag.putBoolean(NBT_POWERED, getNode().isPowered());
 
         return tag;
     }

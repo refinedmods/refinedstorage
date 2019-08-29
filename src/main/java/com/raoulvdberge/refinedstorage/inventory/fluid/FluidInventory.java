@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.inventory.fluid;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -61,26 +61,26 @@ public class FluidInventory {
         updateEmptyState();
     }
 
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound tag = new NBTTagCompound();
+    public CompoundNBT writeToNbt() {
+        CompoundNBT tag = new CompoundNBT();
 
         for (int i = 0; i < getSlots(); ++i) {
             FluidStack stack = getFluid(i);
 
             if (stack != null) {
-                tag.setTag(String.format(NBT_SLOT, i), stack.writeToNBT(new NBTTagCompound()));
+                tag.put(String.format(NBT_SLOT, i), stack.writeToNBT(new CompoundNBT()));
             }
         }
 
         return tag;
     }
 
-    public void readFromNbt(NBTTagCompound tag) {
+    public void readFromNbt(CompoundNBT tag) {
         for (int i = 0; i < getSlots(); ++i) {
             String key = String.format(NBT_SLOT, i);
 
             if (tag.hasKey(key)) {
-                fluids[i] = FluidStack.loadFluidStackFromNBT(tag.getCompoundTag(key));
+                fluids[i] = FluidStack.loadFluidStackFromNBT(tag.getCompound(key));
             }
         }
 

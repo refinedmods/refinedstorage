@@ -15,8 +15,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,7 +42,7 @@ public class CraftingManager implements ICraftingManager {
     private Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private List<ICraftingTask> tasksToAdd = new ArrayList<>();
     private List<UUID> tasksToCancel = new ArrayList<>();
-    private NBTTagList tasksToRead;
+    private ListNBT tasksToRead;
 
     private Map<Object, Long> throttledRequesters = new HashMap<>();
 
@@ -127,11 +127,11 @@ public class CraftingManager implements ICraftingManager {
     public void update() {
         if (network.canRun()) {
             if (tasksToRead != null) {
-                for (int i = 0; i < tasksToRead.tagCount(); ++i) {
-                    NBTTagCompound taskTag = tasksToRead.getCompoundTagAt(i);
+                for (int i = 0; i < tasksToRead.size(); ++i) {
+                    CompoundNBT taskTag = tasksToRead.getCompound(i);
 
                     String taskType = taskTag.getString(NBT_TASK_TYPE);
-                    NBTTagCompound taskData = taskTag.getCompoundTag(NBT_TASK_DATA);
+                    CompoundNBT taskData = taskTag.getCompound(NBT_TASK_DATA);
 
                     ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(taskType);
                     if (factory != null) {
@@ -187,24 +187,24 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void readFromNbt(NBTTagCompound tag) {
-        this.tasksToRead = tag.getTagList(NBT_TASKS, Constants.NBT.TAG_COMPOUND);
+    public void readFromNbt(CompoundNBT tag) {
+        this.tasksToRead = tag.getList(NBT_TASKS, Constants.NBT.TAG_COMPOUND);
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
-        NBTTagList list = new NBTTagList();
+    public CompoundNBT writeToNbt(CompoundNBT tag) {
+        ListNBT list = new ListNBT();
 
         for (ICraftingTask task : tasks.values()) {
-            NBTTagCompound taskTag = new NBTTagCompound();
+            CompoundNBT taskTag = new CompoundNBT();
 
-            taskTag.setString(NBT_TASK_TYPE, task.getPattern().getId());
-            taskTag.setTag(NBT_TASK_DATA, task.writeToNbt(new NBTTagCompound()));
+            taskTag.putString(NBT_TASK_TYPE, task.getPattern().getId());
+            taskTag.put(NBT_TASK_DATA, task.writeToNbt(new CompoundNBT()));
 
-            list.appendTag(taskTag);
+            list.add(taskTag);
         }
 
-        tag.setTag(NBT_TASKS, list);
+        tag.put(NBT_TASKS, list);
 
         return tag;
     }
@@ -302,7 +302,7 @@ public class CraftingManager implements ICraftingManager {
         OneSixMigrationHelper.removalHook(); // Remove @Nullable source
 
         if (source != null) {
-            throttledRequesters.put(source, MinecraftServer.getCurrentTimeMillis());
+            throttledRequesters.put(source, System.currentTimeMillis());
         }
     }
 
@@ -318,7 +318,7 @@ public class CraftingManager implements ICraftingManager {
             return false;
         }
 
-        return MinecraftServer.getCurrentTimeMillis() - throttledSince < THROTTLE_DELAY_MS;
+        return System.currentTimeMillis() - throttledSince < THROTTLE_DELAY_MS;
     }
 
     @Override

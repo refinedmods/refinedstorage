@@ -8,8 +8,8 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorSettings;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -43,7 +43,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public void onCancelled(EntityPlayerMP player, @Nullable UUID id) {
+    public void onCancelled(ServerPlayerEntity player, @Nullable UUID id) {
         INetwork network = getNetwork();
 
         if (network != null) {
@@ -101,7 +101,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public void onClosed(EntityPlayer player) {
+    public void onClosed(PlayerEntity player) {
         INetwork network = getNetwork();
 
         if (network != null) {

@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.rwtema.funkylocomotion.api.IMoveFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -24,24 +24,24 @@ public class MoveFactoryNetworkNode implements IMoveFactory {
     private static final String NBT_TILE = "Tile";
 
     @Override
-    public NBTTagCompound destroyBlock(World world, BlockPos pos) {
+    public CompoundNBT destroyBlock(World world, BlockPos pos) {
         INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
 
         INetworkNode node = manager.getNode(pos);
 
         TileNode tile = (TileNode) world.getTileEntity(pos);
 
-        NBTTagCompound tag = new NBTTagCompound();
+        CompoundNBT tag = new CompoundNBT();
 
-        tag.setInteger(NBT_DIRECTION, tile.getDirection().ordinal());
-        tag.setTag(NBT_NODE, node.write(new NBTTagCompound()));
+        tag.putInt(NBT_DIRECTION, tile.getDirection().ordinal());
+        tag.put(NBT_NODE, node.write(new CompoundNBT()));
         tag.setString(NBT_NODE_ID, node.getId());
 
         // Funky Locomotion requires this
         IBlockState state = world.getBlockState(pos);
         tag.setString(NBT_BLOCK, Block.REGISTRY.getNameForObject(state.getBlock()).toString());
-        tag.setInteger(NBT_META, state.getBlock().getMetaFromState(state));
-        tag.setTag(NBT_TILE, tile.writeToNBT(new NBTTagCompound()));
+        tag.putInt(NBT_META, state.getBlock().getMetaFromState(state));
+        tag.put(NBT_TILE, tile.writeToNBT(new CompoundNBT()));
 
         manager.removeNode(pos); // Avoid inventory dropping
         manager.markForSaving();
@@ -51,8 +51,8 @@ public class MoveFactoryNetworkNode implements IMoveFactory {
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean recreateBlock(World world, BlockPos pos, NBTTagCompound tag) {
-        NetworkNode node = (NetworkNode) API.instance().getNetworkNodeRegistry().get(tag.getString(NBT_NODE_ID)).create(tag.getCompoundTag(NBT_NODE), world, pos);
+    public boolean recreateBlock(World world, BlockPos pos, CompoundNBT tag) {
+        NetworkNode node = (NetworkNode) API.instance().getNetworkNodeRegistry().get(tag.getString(NBT_NODE_ID)).create(tag.getCompound(NBT_NODE), world, pos);
         node.setThrottlingDisabled();
 
         INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);

@@ -16,7 +16,7 @@ import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -182,31 +182,31 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         StackUtils.writeItems(upgrades, 0, tag);
         StackUtils.writeItems(in, 1, tag);
 
-        tag.setTag(NBT_TANK_IN, tankIn.writeToNBT(new NBTTagCompound()));
-        tag.setTag(NBT_TANK_OUT, tankOut.writeToNBT(new NBTTagCompound()));
+        tag.put(NBT_TANK_IN, tankIn.writeToNBT(new CompoundNBT()));
+        tag.put(NBT_TANK_OUT, tankOut.writeToNBT(new CompoundNBT()));
 
         return tag;
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         StackUtils.readItems(upgrades, 0, tag);
         StackUtils.readItems(in, 1, tag);
 
         if (tag.hasKey(NBT_TANK_IN)) {
-            tankIn.readFromNBT(tag.getCompoundTag(NBT_TANK_IN));
+            tankIn.readFromNBT(tag.getCompound(NBT_TANK_IN));
         }
 
         if (tag.hasKey(NBT_TANK_OUT)) {
-            tankOut.readFromNBT(tag.getCompoundTag(NBT_TANK_OUT));
+            tankOut.readFromNBT(tag.getCompound(NBT_TANK_OUT));
         }
     }
 
@@ -216,20 +216,20 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
-        tag.setTag(NBT_OUT, out.writeToNbt());
+        tag.put(NBT_OUT, out.writeToNbt());
 
         return tag;
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         if (tag.hasKey(NBT_OUT)) {
-            out.readFromNbt(tag.getCompoundTag(NBT_OUT));
+            out.readFromNbt(tag.getCompound(NBT_OUT));
         }
     }
 

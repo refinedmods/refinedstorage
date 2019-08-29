@@ -6,9 +6,9 @@ import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -51,20 +51,20 @@ public class ItemBlockController extends ItemBlockBase {
     }
 
     @Override
-    public void onCreated(ItemStack stack, World world, EntityPlayer player) {
+    public void onCreated(ItemStack stack, World world, PlayerEntity player) {
         super.onCreated(stack, world, player);
 
         createStack(stack, 0);
     }
 
     public static ItemStack createStack(ItemStack stack, int energy) {
-        NBTTagCompound tag = stack.getTagCompound();
+        CompoundNBT tag = stack.getTagCompound();
 
         if (tag == null) {
-            tag = new NBTTagCompound();
+            tag = new CompoundNBT();
         }
 
-        tag.setInteger(TileController.NBT_ENERGY, stack.getMetadata() == ControllerType.CREATIVE.getId() ? RS.INSTANCE.config.controllerCapacity : energy);
+        tag.putInt(TileController.NBT_ENERGY, stack.getMetadata() == ControllerType.CREATIVE.getId() ? RS.INSTANCE.config.controllerCapacity : energy);
 
         stack.setTagCompound(tag);
 

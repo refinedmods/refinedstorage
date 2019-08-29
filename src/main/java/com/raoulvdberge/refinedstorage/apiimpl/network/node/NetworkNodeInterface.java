@@ -15,7 +15,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -162,7 +162,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         StackUtils.readItems(importItems, 0, tag);
@@ -176,7 +176,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         StackUtils.writeItems(importItems, 0, tag);
@@ -187,18 +187,18 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
         StackUtils.writeItems(exportFilterItems, 1, tag);
 
-        tag.setInteger(NBT_COMPARE, compare);
+        tag.putInt(NBT_COMPARE, compare);
 
         return tag;
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         StackUtils.readItems(exportFilterItems, 1, tag);

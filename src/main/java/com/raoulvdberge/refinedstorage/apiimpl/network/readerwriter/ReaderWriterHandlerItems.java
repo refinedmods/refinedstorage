@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter;
-
+/* TODO
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -51,12 +51,17 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
         public int getSlotLimit(int slot) {
             return 0;
         }
+
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return false;
+        }
     };
 
     private ItemStackHandler items;
     private ItemHandlerReaderWriter itemsReader, itemsWriter;
 
-    public ReaderWriterHandlerItems(@Nullable NBTTagCompound tag) {
+    public ReaderWriterHandlerItems(@Nullable CompoundNBT tag) {
         this.items = new ItemStackHandler(16);
         this.itemsWriter = new ItemHandlerReaderWriter(items, false, true);
         this.itemsReader = new ItemHandlerReaderWriter(items, true, false);
@@ -98,7 +103,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     @Override
     public <T> T getCapabilityWriter(IWriter writer, Capability<T> capability) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemsWriter);
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.(itemsWriter);
         }
 
         return null;
@@ -110,7 +115,7 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
+    public CompoundNBT writeToNbt(CompoundNBT tag) {
         StackUtils.writeItems(items, 0, tag);
 
         return tag;
@@ -184,3 +189,4 @@ public class ReaderWriterHandlerItems implements IReaderWriterHandler {
         }
     }
 }
+*/

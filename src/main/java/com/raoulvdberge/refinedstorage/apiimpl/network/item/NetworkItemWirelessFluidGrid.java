@@ -6,34 +6,35 @@ import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class NetworkItemWirelessFluidGrid implements INetworkItem {
     private INetworkItemHandler handler;
-    private EntityPlayer player;
+    private PlayerEntity player;
     private ItemStack stack;
 
-    public NetworkItemWirelessFluidGrid(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
+    public NetworkItemWirelessFluidGrid(INetworkItemHandler handler, PlayerEntity player, ItemStack stack) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
     }
 
     @Override
-    public EntityPlayer getPlayer() {
+    public PlayerEntity getPlayer() {
         return player;
     }
 
     @Override
     public boolean onOpen(INetwork network) {
-        if (RS.INSTANCE.config.wirelessFluidGridUsesEnergy && stack.getItemDamage() != ItemWirelessFluidGrid.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.wirelessFluidGridOpenUsage) {
+        IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
+
+        if (RS.INSTANCE.config.wirelessFluidGridUsesEnergy /* TODO && stack.getItemDamage() != ItemWirelessFluidGrid.TYPE_CREATIVE*/ && energy != null && energy.getEnergyStored() <= RS.INSTANCE.config.wirelessFluidGridOpenUsage) {
             return false;
         }
 
@@ -43,7 +44,7 @@ public class NetworkItemWirelessFluidGrid implements INetworkItem {
             return false;
         }
 
-        API.instance().getGridManager().openGrid(WirelessFluidGrid.ID, (EntityPlayerMP) player, stack);
+        API.instance().getGridManager().openGrid(WirelessFluidGrid.ID, (ServerPlayerEntity) player, stack);
 
         drainEnergy(RS.INSTANCE.config.wirelessFluidGridOpenUsage);
 
@@ -52,16 +53,16 @@ public class NetworkItemWirelessFluidGrid implements INetworkItem {
 
     @Override
     public void drainEnergy(int energy) {
-        if (RS.INSTANCE.config.wirelessFluidGridUsesEnergy && stack.getItemDamage() != ItemWirelessFluidGrid.TYPE_CREATIVE) {
-            IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
+        if (RS.INSTANCE.config.wirelessFluidGridUsesEnergy /* TODO && stack.getItemDamage() != ItemWirelessFluidGrid.TYPE_CREATIVE*/) {
+            stack.getCapability(CapabilityEnergy.ENERGY, null).ifPresent(energyStorage -> {
+                energyStorage.extractEnergy(energy, false);
 
-            energyStorage.extractEnergy(energy, false);
+                if (energyStorage.getEnergyStored() <= 0) {
+                    handler.close(player);
 
-            if (energyStorage.getEnergyStored() <= 0) {
-                handler.close(player);
-
-                player.closeScreen();
-            }
+                    player.closeScreen();
+                }
+            });
         }
     }
 }

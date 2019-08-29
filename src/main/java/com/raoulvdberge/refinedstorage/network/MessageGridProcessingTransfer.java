@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -97,7 +97,7 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
     }
 
     @Override
-    public void handle(MessageGridProcessingTransfer message, EntityPlayerMP player) {
+    public void handle(MessageGridProcessingTransfer message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerGrid) {
             IGrid grid = ((ContainerGrid) player.openContainer).getGrid();
 

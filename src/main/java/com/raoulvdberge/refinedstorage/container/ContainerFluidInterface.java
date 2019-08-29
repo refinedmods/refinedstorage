@@ -3,11 +3,11 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerFluidInterface extends ContainerBase {
-    public ContainerFluidInterface(TileFluidInterface fluidInterface, EntityPlayer player) {
+    public ContainerFluidInterface(TileFluidInterface fluidInterface, PlayerEntity player) {
         super(fluidInterface, player);
 
         for (int i = 0; i < 4; ++i) {

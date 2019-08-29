@@ -4,7 +4,7 @@ import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerAmount;
 import com.raoulvdberge.refinedstorage.network.MessageSlotFilterSet;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -13,7 +13,7 @@ public class GuiAmount extends GuiAmountSpecifying {
     private ItemStack stack;
     private int maxAmount;
 
-    public GuiAmount(GuiBase parent, EntityPlayer player, int containerSlot, ItemStack stack, int maxAmount) {
+    public GuiAmount(GuiBase parent, PlayerEntity player, int containerSlot, ItemStack stack, int maxAmount) {
         super(parent, new ContainerAmount(player, stack), 172, 99);
 
         this.containerSlot = containerSlot;

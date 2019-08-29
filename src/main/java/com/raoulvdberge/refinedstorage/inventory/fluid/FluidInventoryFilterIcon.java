@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.inventory.fluid;
 
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidInventoryFilterIcon extends FluidInventory {
@@ -11,7 +11,7 @@ public class FluidInventoryFilterIcon extends FluidInventory {
 
         this.listener = slot -> {
             if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
+                stack.setTagCompound(new CompoundNBT());
             }
 
             ItemFilter.setFluidIcon(stack, getFluid(slot));

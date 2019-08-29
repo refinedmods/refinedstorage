@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -27,7 +27,7 @@ public class MessageReaderWriterChannelAdd extends MessageHandlerPlayerToServer<
     }
 
     @Override
-    public void handle(MessageReaderWriterChannelAdd message, EntityPlayerMP player) {
+    public void handle(MessageReaderWriterChannelAdd message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerReaderWriter) {
             ((ContainerReaderWriter) player.openContainer).getReaderWriter().onAdd(message.name);
         }

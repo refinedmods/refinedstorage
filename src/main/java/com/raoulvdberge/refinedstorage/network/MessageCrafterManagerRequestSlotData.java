@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -16,7 +16,7 @@ public class MessageCrafterManagerRequestSlotData extends MessageHandlerPlayerTo
     }
 
     @Override
-    protected void handle(MessageCrafterManagerRequestSlotData message, EntityPlayerMP player) {
+    protected void handle(MessageCrafterManagerRequestSlotData message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerCrafterManager) {
             for (IContainerListener listener : ((ContainerCrafterManager) player.openContainer).getListeners()) {
                 if (listener instanceof ContainerCrafterManager.CrafterManagerListener) {

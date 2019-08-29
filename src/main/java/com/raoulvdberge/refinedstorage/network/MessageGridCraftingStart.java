@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -36,7 +36,7 @@ public class MessageGridCraftingStart extends MessageHandlerPlayerToServer<Messa
     }
 
     @Override
-    public void handle(MessageGridCraftingStart message, EntityPlayerMP player) {
+    public void handle(MessageGridCraftingStart message, ServerPlayerEntity player) {
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid) {

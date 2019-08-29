@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -33,7 +33,7 @@ public class StorageDiskFluidPortable implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
+    public CompoundNBT writeToNbt() {
         return parent.writeToNbt();
     }
 
@@ -66,7 +66,7 @@ public class StorageDiskFluidPortable implements IStorageDisk<FluidStack> {
         FluidStack extracted = parent.extract(stack, size, flags, action);
 
         if (action == Action.PERFORM && extracted != null) {
-            portableGrid.getFluidCache().remove(extracted, extracted.amount, false);
+            portableGrid.getFluidCache().remove(extracted, extracted.getAmount(), false);
         }
 
         return extracted;

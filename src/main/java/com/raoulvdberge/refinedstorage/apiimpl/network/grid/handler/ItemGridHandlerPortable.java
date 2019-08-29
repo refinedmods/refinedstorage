@@ -8,9 +8,9 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -28,7 +28,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(EntityPlayerMP player, int hash, int flags) {
+    public void onExtract(ServerPlayerEntity player, int hash, int flags) {
         if (portableGrid.getStorage() == null || !grid.isActive()) {
             return;
         }
@@ -82,9 +82,9 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
 
         if (took != null) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
-                IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+                IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
 
-                if (ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
+                if (playerInventory != null && ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
                     took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
 
                     ItemHandlerHelper.insertItem(playerInventory, took, false);
@@ -107,7 +107,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
 
     @Nullable
     @Override
-    public ItemStack onInsert(EntityPlayerMP player, ItemStack stack) {
+    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack) {
         if (portableGrid.getStorage() == null || !grid.isActive()) {
             return stack;
         }
@@ -122,7 +122,7 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
     }
 
     @Override
-    public void onInsertHeldItem(EntityPlayerMP player, boolean single) {
+    public void onInsertHeldItem(ServerPlayerEntity player, boolean single) {
         if (player.inventory.getItemStack().isEmpty() || portableGrid.getStorage() == null || !grid.isActive()) {
             return;
         }
@@ -152,22 +152,22 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
     }
 
     @Override
-    public ItemStack onShiftClick(EntityPlayerMP player, ItemStack stack) {
+    public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack) {
         return StackUtils.nullToEmpty(onInsert(player, stack));
     }
 
     @Override
-    public void onCraftingPreviewRequested(EntityPlayerMP player, int hash, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayerEntity player, int hash, int quantity, boolean noPreview) {
         // NO OP
     }
 
     @Override
-    public void onCraftingRequested(EntityPlayerMP player, int hash, int quantity) {
+    public void onCraftingRequested(ServerPlayerEntity player, int hash, int quantity) {
         // NO OP
     }
 
     @Override
-    public void onCraftingCancelRequested(EntityPlayerMP player, @Nullable UUID id) {
+    public void onCraftingCancelRequested(ServerPlayerEntity player, @Nullable UUID id) {
         // NO OP
     }
 }

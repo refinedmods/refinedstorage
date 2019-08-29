@@ -21,8 +21,8 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -40,7 +40,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
     private SlotGridCraftingResult craftingResultSlot;
     private SlotLegacyBase patternResultSlot;
 
-    public ContainerGrid(IGrid grid, IResizableDisplay display, @Nullable TileBase gridTile, EntityPlayer player) {
+    public ContainerGrid(IGrid grid, IResizableDisplay display, @Nullable TileBase gridTile, PlayerEntity player) {
         super(gridTile, player);
 
         this.grid = grid;
@@ -85,13 +85,13 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
                             IFluidGridHandler fluidHandler = grid.getFluidHandler();
 
                             if (fluidHandler != null) {
-                                slot.putStack(fluidHandler.onShiftClick((EntityPlayerMP) getPlayer(), stack));
+                                slot.putStack(fluidHandler.onShiftClick((ServerPlayerEntity) getPlayer(), stack));
                             }
                         } else {
                             IItemGridHandler itemHandler = grid.getItemHandler();
 
                             if (itemHandler != null) {
-                                slot.putStack(itemHandler.onShiftClick((EntityPlayerMP) getPlayer(), stack));
+                                slot.putStack(itemHandler.onShiftClick((ServerPlayerEntity) getPlayer(), stack));
                             } else if (slot instanceof SlotGridCrafting && mergeItemStack(stack, 14, 14 + (9 * 4), false)) {
                                 slot.onSlotChanged();
 
@@ -213,9 +213,9 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
 
             if (slot instanceof SlotGridCrafting || slot == craftingResultSlot || slot == patternResultSlot) {
                 for (IContainerListener listener : listeners) {
-                    // @Volatile: We can't use IContainerListener#sendSlotContents since EntityPlayerMP blocks SlotCrafting changes...
-                    if (listener instanceof EntityPlayerMP) {
-                        ((EntityPlayerMP) listener).connection.sendPacket(new SPacketSetSlot(windowId, i, slot.getStack()));
+                    // @Volatile: We can't use IContainerListener#sendSlotContents since ServerPlayerEntity blocks SlotCrafting changes...
+                    if (listener instanceof ServerPlayerEntity) {
+                        ((ServerPlayerEntity) listener).connection.sendPacket(new SPacketSetSlot(windowId, i, slot.getStack()));
                     }
                 }
             }
@@ -236,7 +236,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
                     cache = null;
                 }
             } else if (listener == null) { // The grid came online.
-                listener = grid.createListener((EntityPlayerMP) getPlayer());
+                listener = grid.createListener((ServerPlayerEntity) getPlayer());
                 cache = grid.getStorageCache();
 
                 cache.addListener(listener);
@@ -247,7 +247,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer player) {
+    public void onContainerClosed(PlayerEntity player) {
         super.onContainerClosed(player);
 
         if (!player.getEntityWorld().isRemote) {

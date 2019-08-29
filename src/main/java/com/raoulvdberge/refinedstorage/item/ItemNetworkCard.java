@@ -8,9 +8,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -41,16 +41,16 @@ public class ItemNetworkCard extends ItemBase {
     }
 
     @Override
-    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(PlayerEntity player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         Block block = world.getBlockState(pos).getBlock();
 
         if (block == RSBlocks.NETWORK_RECEIVER) {
-            NBTTagCompound tag = new NBTTagCompound();
+            CompoundNBT tag = new CompoundNBT();
 
-            tag.setInteger(NBT_RECEIVER_X, pos.getX());
-            tag.setInteger(NBT_RECEIVER_Y, pos.getY());
-            tag.setInteger(NBT_RECEIVER_Z, pos.getZ());
-            tag.setInteger(NBT_DIMENSION, world.provider.getDimension());
+            tag.putInt(NBT_RECEIVER_X, pos.getX());
+            tag.putInt(NBT_RECEIVER_Y, pos.getY());
+            tag.putInt(NBT_RECEIVER_Z, pos.getZ());
+            tag.putInt(NBT_DIMENSION, world.provider.getDimension());
 
             player.getHeldItem(hand).setTagCompound(tag);
 

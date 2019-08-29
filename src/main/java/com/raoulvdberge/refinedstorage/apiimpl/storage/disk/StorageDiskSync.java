@@ -31,7 +31,7 @@ public class StorageDiskSync implements IStorageDiskSync {
         long lastSync = syncTime.getOrDefault(id, 0L);
 
         if (System.currentTimeMillis() - lastSync > THROTTLE_MS) {
-            RS.INSTANCE.network.sendToServer(new MessageStorageDiskSizeRequest(id));
+            // TODO: Networking: RS.INSTANCE.network.sendToServer(new MessageStorageDiskSizeRequest(id));
 
             syncTime.put(id, System.currentTimeMillis());
         }

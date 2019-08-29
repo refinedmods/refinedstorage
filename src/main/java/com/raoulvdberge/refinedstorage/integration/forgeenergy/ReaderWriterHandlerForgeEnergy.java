@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -58,7 +58,7 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     private EnergyStorage storage;
     private EnergyStorageReaderWriter storageReader, storageWriter;
 
-    public ReaderWriterHandlerForgeEnergy(@Nullable NBTTagCompound tag) {
+    public ReaderWriterHandlerForgeEnergy(@Nullable CompoundNBT tag) {
         this.storage = new EnergyStorage(RS.INSTANCE.config.readerWriterChannelEnergyCapacity);
         this.storageReader = new EnergyStorageReaderWriter(storage, false, true);
         this.storageWriter = new EnergyStorageReaderWriter(storage, true, false);
@@ -128,8 +128,8 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
-        tag.setInteger(NBT_ENERGY_STORED, storage.getEnergyStored());
+    public CompoundNBT writeToNbt(CompoundNBT tag) {
+        tag.putInt(NBT_ENERGY_STORED, storage.getEnergyStored());
 
         return tag;
     }

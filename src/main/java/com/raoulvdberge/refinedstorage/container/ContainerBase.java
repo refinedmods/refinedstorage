@@ -12,8 +12,8 @@ import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import invtweaks.api.container.InventoryContainer;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -30,24 +30,24 @@ public abstract class ContainerBase extends Container {
     private TileBase tile;
     @Nullable
     private TileDataWatcher listener;
-    private EntityPlayer player;
+    private PlayerEntity player;
 
     protected TransferManager transferManager = new TransferManager(this);
 
     private List<SlotFilterFluid> fluidSlots = new ArrayList<>();
     private List<FluidStack> fluids = new ArrayList<>();
 
-    public ContainerBase(@Nullable TileBase tile, EntityPlayer player) {
+    public ContainerBase(@Nullable TileBase tile, PlayerEntity player) {
         this.tile = tile;
 
-        if (tile != null && player instanceof EntityPlayerMP) {
-            listener = new TileDataWatcher((EntityPlayerMP) player, tile.getDataManager());
+        if (tile != null && player instanceof ServerPlayerEntity) {
+            listener = new TileDataWatcher((ServerPlayerEntity) player, tile.getDataManager());
         }
 
         this.player = player;
     }
 
-    public EntityPlayer getPlayer() {
+    public PlayerEntity getPlayer() {
         return player;
     }
 
@@ -86,7 +86,7 @@ public abstract class ContainerBase extends Container {
     }
 
     @Override
-    public ItemStack slotClick(int id, int dragType, ClickType clickType, EntityPlayer player) {
+    public ItemStack slotClick(int id, int dragType, ClickType clickType, PlayerEntity player) {
         Slot slot = id >= 0 ? getSlot(id) : null;
 
         // Prevent swapping disabled held item with the number keys (dragType is the slot we're swapping with)
@@ -138,12 +138,12 @@ public abstract class ContainerBase extends Container {
     }
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
         return transferManager.transfer(slotIndex);
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player) {
+    public boolean canInteractWith(PlayerEntity player) {
         return true;
     }
 
@@ -178,7 +178,7 @@ public abstract class ContainerBase extends Container {
             listener.detectAndSendChanges();
         }
 
-        if (this.getPlayer() instanceof EntityPlayerMP) {
+        if (this.getPlayer() instanceof ServerPlayerEntity) {
             for (int i = 0; i < this.fluidSlots.size(); ++i) {
                 SlotFilterFluid slot = this.fluidSlots.get(i);
 
@@ -188,14 +188,14 @@ public abstract class ContainerBase extends Container {
                 if (!API.instance().getComparer().isEqual(cached, actual, IComparer.COMPARE_QUANTITY | IComparer.COMPARE_NBT)) {
                     this.fluids.set(i, actual);
 
-                    RS.INSTANCE.network.sendTo(new MessageSlotFilterFluidUpdate(slot.slotNumber, actual), (EntityPlayerMP) this.getPlayer());
+                    RS.INSTANCE.network.sendTo(new MessageSlotFilterFluidUpdate(slot.slotNumber, actual), (ServerPlayerEntity) this.getPlayer());
                 }
             }
         }
     }
 
     @Override
-    public void onContainerClosed(EntityPlayer player) {
+    public void onContainerClosed(PlayerEntity player) {
         super.onContainerClosed(player);
 
         if (listener != null) {

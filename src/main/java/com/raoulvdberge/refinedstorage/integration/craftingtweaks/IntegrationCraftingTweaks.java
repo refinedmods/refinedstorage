@@ -9,7 +9,7 @@ public final class IntegrationCraftingTweaks {
     }
 
     public static void register() {
-        NBTTagCompound tag = new NBTTagCompound();
+        CompoundNBT tag = new CompoundNBT();
 
         tag.setString("ContainerClass", ContainerGrid.class.getName());
         tag.setString("ValidContainerPredicate", ValidContainerPredicate.class.getName());

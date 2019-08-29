@@ -7,17 +7,15 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +56,8 @@ public class CraftingPattern implements ICraftingPattern {
 
                     ores.add(input.copy());
 
-                    for (int id : OreDictionary.getOreIDs(input)) {
+                    // TODO: OREDICT
+                    /*for (int id : OreDictionary.getOreIDs(input)) {
                         String name = OreDictionary.getOreName(id);
 
                         for (ItemStack ore : OreDictionary.getOres(name)) {
@@ -68,10 +67,10 @@ public class CraftingPattern implements ICraftingPattern {
                                 ores.add(ore.copy());
                             }
                         }
-                    }
+                    }*/
 
                     // Fix item count
-                    for (ItemStack ore: ores) {
+                    for (ItemStack ore : ores) {
                         ore.setCount(input.getCount());
                     }
 
@@ -102,7 +101,7 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }
         } else {
-            InventoryCrafting inv = new InventoryCraftingDummy();
+            CraftingInventory inv = new CraftingInventoryDummy();
 
             for (int i = 0; i < 9; ++i) {
                 ItemStack input = ItemPattern.getInputSlot(stack, i);
@@ -114,7 +113,8 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }
 
-            for (IRecipe r : CraftingManager.REGISTRY) {
+            // TODO: better way of collecting recipes
+            for (IRecipe r : world.getRecipeManager().getRecipes()) {
                 if (r.matches(inv, world)) {
                     this.recipe = r;
 
@@ -132,7 +132,7 @@ public class CraftingPattern implements ICraftingPattern {
                                 inputs.clear();
 
                                 for (int i = 0; i < recipe.getIngredients().size(); ++i) {
-                                    inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
+                                    inputs.add(i, NonNullList.from(ItemStack.EMPTY, ((Ingredient) recipe.getIngredients().get(i)).getMatchingStacks()));
                                 }
                             } else {
                                 this.valid = false;
@@ -190,7 +190,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
         }
 
-        InventoryCrafting inv = new InventoryCraftingDummy();
+        CraftingInventory inv = new CraftingInventoryDummy();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -223,7 +223,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
         }
 
-        InventoryCrafting inv = new InventoryCraftingDummy();
+        CraftingInventory inv = new CraftingInventoryDummy();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -349,11 +349,11 @@ public class CraftingPattern implements ICraftingPattern {
         return result;
     }
 
-    private class InventoryCraftingDummy extends InventoryCrafting {
-        public InventoryCraftingDummy() {
-            super(new Container() {
+    class CraftingInventoryDummy extends CraftingInventory {
+        public CraftingInventoryDummy() {
+            super(new Container(null, 0) {
                 @Override
-                public boolean canInteractWith(EntityPlayer player) {
+                public boolean canInteractWith(PlayerEntity player) {
                     return true;
                 }
             }, 3, 3);

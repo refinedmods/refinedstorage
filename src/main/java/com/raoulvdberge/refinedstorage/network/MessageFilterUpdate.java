@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -44,7 +44,7 @@ public class MessageFilterUpdate extends MessageHandlerPlayerToServer<MessageFil
     }
 
     @Override
-    public void handle(MessageFilterUpdate message, EntityPlayerMP player) {
+    public void handle(MessageFilterUpdate message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerFilter) {
             ItemFilter.setCompare(((ContainerFilter) player.openContainer).getStack(), message.compare);
             ItemFilter.setMode(((ContainerFilter) player.openContainer).getStack(), message.mode);

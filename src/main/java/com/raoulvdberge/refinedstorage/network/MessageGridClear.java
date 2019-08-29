@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,7 @@ public class MessageGridClear extends MessageHandlerPlayerToServer<MessageGridCl
     }
 
     @Override
-    public void handle(MessageGridClear message, EntityPlayerMP player) {
+    public void handle(MessageGridClear message, ServerPlayerEntity player) {
         Container container = player.openContainer;
 
         if (container instanceof ContainerGrid && ((ContainerGrid) container).getGrid() instanceof IGridNetworkAware) {

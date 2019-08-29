@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.inventory.fluid;
 
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -12,14 +12,14 @@ public class FluidInventoryFilter extends FluidInventory {
 
         this.listener = slot -> {
             if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
+                stack.setTagCompound(new CompoundNBT());
             }
 
-            stack.getTagCompound().setTag(ItemFilter.NBT_FLUID_FILTERS, writeToNbt());
+            stack.getTagCompound().put(ItemFilter.NBT_FLUID_FILTERS, writeToNbt());
         };
 
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey(ItemFilter.NBT_FLUID_FILTERS)) {
-            readFromNbt(stack.getTagCompound().getCompoundTag(ItemFilter.NBT_FLUID_FILTERS));
+            readFromNbt(stack.getTagCompound().getCompound(ItemFilter.NBT_FLUID_FILTERS));
         }
     }
 

@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -34,7 +34,7 @@ public class ItemWirelessGrid extends ItemNetworkItem {
 
     @Override
     @Nonnull
-    public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
+    public INetworkItem provide(INetworkItemHandler handler, PlayerEntity player, ItemStack stack) {
         return new NetworkItemWirelessGrid(handler, player, stack);
     }
 

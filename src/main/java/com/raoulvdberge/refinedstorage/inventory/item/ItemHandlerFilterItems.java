@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.inventory.item;
 
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -24,7 +24,7 @@ public class ItemHandlerFilterItems extends ItemStackHandler {
         super.onContentsChanged(slot);
 
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
         StackUtils.writeItems(this, 0, stack.getTagCompound());

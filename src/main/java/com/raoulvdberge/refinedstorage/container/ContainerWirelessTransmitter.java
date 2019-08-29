@@ -1,11 +1,11 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerWirelessTransmitter extends ContainerBase {
-    public ContainerWirelessTransmitter(TileWirelessTransmitter wirelessTransmitter, EntityPlayer player) {
+    public ContainerWirelessTransmitter(TileWirelessTransmitter wirelessTransmitter, PlayerEntity player) {
         super(wirelessTransmitter, player);
 
         for (int i = 0; i < 4; ++i) {

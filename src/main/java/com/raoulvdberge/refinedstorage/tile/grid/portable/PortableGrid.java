@@ -31,12 +31,12 @@ import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockPortableGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -61,7 +61,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     private ItemGridHandlerPortable itemHandler = new ItemGridHandlerPortable(this, this);
     private FluidGridHandlerPortable fluidHandler = new FluidGridHandlerPortable(this);
 
-    private EntityPlayer player;
+    private PlayerEntity player;
     private ItemStack stack;
 
     private int sortingType;
@@ -71,8 +71,8 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     private int tabPage;
     private int size;
 
-    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> stack.getTagCompound().setTag(NBT_STORAGE_TRACKER, getItemStorageTracker().serializeNbt()));
-    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(() -> stack.getTagCompound().setTag(NBT_FLUID_STORAGE_TRACKER, getFluidStorageTracker().serializeNbt()));
+    private StorageTrackerItem storageTracker = new StorageTrackerItem(() -> stack.getTagCompound().put(NBT_STORAGE_TRACKER, getItemStorageTracker().serializeNbt()));
+    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(() -> stack.getTagCompound().put(NBT_FLUID_STORAGE_TRACKER, getFluidStorageTracker().serializeNbt()));
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
@@ -82,7 +82,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             super.onContentsChanged(slot);
 
             if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
+                stack.setTagCompound(new CompoundNBT());
             }
 
             StackUtils.writeItems(this, 0, stack.getTagCompound());
@@ -132,7 +132,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         }
     };
 
-    public PortableGrid(EntityPlayer player, ItemStack stack) {
+    public PortableGrid(PlayerEntity player, ItemStack stack) {
         this.player = player;
         this.stack = stack;
 
@@ -146,15 +146,15 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         }
 
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
         if (stack.getTagCompound().hasKey(NBT_STORAGE_TRACKER)) {
-            storageTracker.readFromNbt(stack.getTagCompound().getTagList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            storageTracker.readFromNbt(stack.getTagCompound().getList(NBT_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
         if (stack.getTagCompound().hasKey(NBT_FLUID_STORAGE_TRACKER)) {
-            fluidStorageTracker.readFromNbt(stack.getTagCompound().getTagList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
+            fluidStorageTracker.readFromNbt(stack.getTagCompound().getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
         StackUtils.readItems(disk, 4, stack.getTagCompound());
@@ -205,7 +205,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         return disk;
     }
 
-    public EntityPlayer getPlayer() {
+    public PlayerEntity getPlayer() {
         return player;
     }
 
@@ -221,7 +221,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public IStorageCacheListener createListener(EntityPlayerMP player) {
+    public IStorageCacheListener createListener(ServerPlayerEntity player) {
         return getGridType() == GridType.FLUID ? new StorageCacheListenerGridPortableFluid(this, player) : new StorageCacheListenerGridPortable(this, player);
     }
 
@@ -392,22 +392,22 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public void onCrafted(EntityPlayer player) {
+    public void onCrafted(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onCraftedShift(EntityPlayer player) {
+    public void onCraftedShift(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
         // NO OP
     }
 
     @Override
-    public void onClosed(EntityPlayer player) {
+    public void onClosed(PlayerEntity player) {
         if (!player.getEntityWorld().isRemote) {
             StackUtils.writeItems(disk, 4, stack.getTagCompound());
         }

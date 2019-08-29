@@ -10,8 +10,8 @@ import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
@@ -39,10 +39,10 @@ public class RecipeUpgradeWithEnchantedBook extends ShapedRecipes {
     @Override
     public boolean matches(InventoryCrafting inv, World world) {
         if (super.matches(inv, world)) {
-            NBTTagList enchantments = ItemEnchantedBook.getEnchantments(inv.getStackInSlot(1));
+            ListNBT enchantments = ItemEnchantedBook.getEnchantments(inv.getStackInSlot(1));
 
-            for (int i = 0; i < enchantments.tagCount(); ++i) {
-                NBTTagCompound enchantmentNbt = enchantments.getCompoundTagAt(i);
+            for (int i = 0; i < enchantments.size(); ++i) {
+                CompoundNBT enchantmentNbt = enchantments.getCompound(i);
 
                 // @Volatile: NBT tags from ItemEnchantedBook
                 if (Enchantment.getEnchantmentByID(enchantmentNbt.getShort("id")) == enchant.enchantment && enchantmentNbt.getShort("lvl") == enchant.enchantmentLevel) {

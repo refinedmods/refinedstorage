@@ -11,7 +11,7 @@ import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +31,7 @@ public abstract class BlockNodeProxy extends BlockBase {
             INetworkNode node = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, null).getNode();
 
             if (node.getNetwork() != null) {
-                return entity instanceof EntityPlayer && node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, (EntityPlayer) entity);
+                return entity instanceof PlayerEntity && node.getNetwork().getSecurityManager().hasPermission(Permission.BUILD, (PlayerEntity) entity);
             }
         }
 
@@ -53,19 +53,19 @@ public abstract class BlockNodeProxy extends BlockBase {
         return super.rotateBlock(world, pos, axis);
     }
 
-    protected boolean openNetworkGui(int guiId, EntityPlayer player, World world, BlockPos pos, EnumFacing facing) {
+    protected boolean openNetworkGui(int guiId, PlayerEntity player, World world, BlockPos pos, EnumFacing facing) {
         return openNetworkGui(guiId, player, world, pos, facing, Permission.MODIFY);
     }
 
-    protected boolean openNetworkGui(int guiId, EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Permission... permissions) {
+    protected boolean openNetworkGui(int guiId, PlayerEntity player, World world, BlockPos pos, EnumFacing facing, Permission... permissions) {
         return openNetworkGui(player, world, pos, facing, () -> player.openGui(info.getModObject(), guiId, world, pos.getX(), pos.getY(), pos.getZ()), permissions);
     }
 
-    protected boolean openNetworkGui(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Runnable action) {
+    protected boolean openNetworkGui(PlayerEntity player, World world, BlockPos pos, EnumFacing facing, Runnable action) {
         return openNetworkGui(player, world, pos, facing, action, Permission.MODIFY);
     }
 
-    protected boolean openNetworkGui(EntityPlayer player, World world, BlockPos pos, EnumFacing facing, Runnable action, Permission... permissions) {
+    protected boolean openNetworkGui(PlayerEntity player, World world, BlockPos pos, EnumFacing facing, Runnable action, Permission... permissions) {
         if (world.isRemote) {
             return true;
         }

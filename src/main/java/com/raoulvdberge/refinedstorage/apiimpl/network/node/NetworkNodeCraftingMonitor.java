@@ -8,9 +8,9 @@ import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -53,7 +53,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public void onCancelled(EntityPlayerMP player, @Nullable UUID id) {
+    public void onCancelled(ServerPlayerEntity player, @Nullable UUID id) {
         if (network != null) {
             network.getItemGridHandler().onCraftingCancelRequested(player, id);
         }
@@ -76,10 +76,10 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.setInteger(NBT_TAB_PAGE, tabPage);
+        tag.putInt(NBT_TAB_PAGE, tabPage);
 
         if (tabSelected.isPresent()) {
             tag.setUniqueId(NBT_TAB_SELECTED, tabSelected.get());
@@ -89,7 +89,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         if (tag.hasKey(NBT_TAB_PAGE)) {
@@ -110,7 +110,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public void onClosed(EntityPlayer player) {
+    public void onClosed(PlayerEntity player) {
         // NO OP
     }
 

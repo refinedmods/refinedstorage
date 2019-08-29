@@ -28,13 +28,13 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -72,7 +72,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
     private Container craftingContainer = new Container() {
         @Override
-        public boolean canInteractWith(EntityPlayer player) {
+        public boolean canInteractWith(PlayerEntity player) {
             return false;
         }
 
@@ -234,7 +234,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public IStorageCacheListener createListener(EntityPlayerMP player) {
+    public IStorageCacheListener createListener(ServerPlayerEntity player) {
         return getGridType() == GridType.FLUID ? new StorageCacheListenerGridFluid(player, network) : new StorageCacheListenerGridItem(player, network);
     }
 
@@ -337,11 +337,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
         onRecipeTransfer(this, player, recipe);
     }
 
-    public static void onRecipeTransfer(IGridNetworkAware grid, EntityPlayer player, ItemStack[][] recipe) {
+    public static void onRecipeTransfer(IGridNetworkAware grid, PlayerEntity player, ItemStack[][] recipe) {
         INetwork network = grid.getNetwork();
 
         if (network != null && grid.getGridType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
@@ -445,16 +445,16 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public void onClosed(EntityPlayer player) {
+    public void onClosed(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onCrafted(EntityPlayer player) {
+    public void onCrafted(PlayerEntity player) {
         onCrafted(this, world, player);
     }
 
-    public static void onCrafted(IGridNetworkAware grid, World world, EntityPlayer player) {
+    public static void onCrafted(IGridNetworkAware grid, World world, PlayerEntity player) {
         NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(grid.getCraftingMatrix(), world);
 
         INetwork network = grid.getNetwork();
@@ -498,11 +498,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public void onCraftedShift(EntityPlayer player) {
+    public void onCraftedShift(PlayerEntity player) {
         onCraftedShift(this, player);
     }
 
-    public static void onCraftedShift(IGridNetworkAware grid, EntityPlayer player) {
+    public static void onCraftedShift(IGridNetworkAware grid, PlayerEntity player) {
         List<ItemStack> craftedItemsList = new ArrayList<>();
         int craftedItems = 0;
         ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
@@ -723,7 +723,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         super.read(tag);
 
         StackUtils.readItems(matrix, 0, tag);
@@ -732,7 +732,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
         StackUtils.readItems(processingMatrix, 3, tag);
 
         if (tag.hasKey(NBT_PROCESSING_MATRIX_FLUIDS)) {
-            processingMatrixFluids.readFromNbt(tag.getCompoundTag(NBT_PROCESSING_MATRIX_FLUIDS));
+            processingMatrixFluids.readFromNbt(tag.getCompound(NBT_PROCESSING_MATRIX_FLUIDS));
         }
 
         if (tag.hasKey(NBT_TAB_SELECTED)) {
@@ -750,7 +750,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
         StackUtils.writeItems(matrix, 0, tag);
@@ -758,32 +758,32 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
         StackUtils.writeItems(filter, 2, tag);
         StackUtils.writeItems(processingMatrix, 3, tag);
 
-        tag.setTag(NBT_PROCESSING_MATRIX_FLUIDS, processingMatrixFluids.writeToNbt());
-        tag.setInteger(NBT_TAB_SELECTED, tabSelected);
-        tag.setInteger(NBT_TAB_PAGE, tabPage);
+        tag.put(NBT_PROCESSING_MATRIX_FLUIDS, processingMatrixFluids.writeToNbt());
+        tag.putInt(NBT_TAB_SELECTED, tabSelected);
+        tag.putInt(NBT_TAB_PAGE, tabPage);
 
         return tag;
     }
 
     @Override
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         super.writeConfiguration(tag);
 
-        tag.setInteger(NBT_VIEW_TYPE, viewType);
-        tag.setInteger(NBT_SORTING_DIRECTION, sortingDirection);
-        tag.setInteger(NBT_SORTING_TYPE, sortingType);
-        tag.setInteger(NBT_SEARCH_BOX_MODE, searchBoxMode);
-        tag.setInteger(NBT_SIZE, size);
+        tag.putInt(NBT_VIEW_TYPE, viewType);
+        tag.putInt(NBT_SORTING_DIRECTION, sortingDirection);
+        tag.putInt(NBT_SORTING_TYPE, sortingType);
+        tag.putInt(NBT_SEARCH_BOX_MODE, searchBoxMode);
+        tag.putInt(NBT_SIZE, size);
 
-        tag.setBoolean(NBT_OREDICT_PATTERN, oredictPattern);
-        tag.setBoolean(NBT_PROCESSING_PATTERN, processingPattern);
-        tag.setInteger(NBT_PROCESSING_TYPE, processingType);
+        tag.putBoolean(NBT_OREDICT_PATTERN, oredictPattern);
+        tag.putBoolean(NBT_PROCESSING_PATTERN, processingPattern);
+        tag.putInt(NBT_PROCESSING_TYPE, processingType);
 
         return tag;
     }
 
     @Override
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         super.readConfiguration(tag);
 
         if (tag.hasKey(NBT_VIEW_TYPE)) {

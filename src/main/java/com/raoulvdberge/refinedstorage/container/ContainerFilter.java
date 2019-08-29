@@ -9,13 +9,13 @@ import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterIcon;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterItems;
 import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 public class ContainerFilter extends ContainerBase {
     private ItemStack stack;
 
-    public ContainerFilter(EntityPlayer player, ItemStack stack) {
+    public ContainerFilter(PlayerEntity player, ItemStack stack) {
         super(null, player);
 
         this.stack = stack;

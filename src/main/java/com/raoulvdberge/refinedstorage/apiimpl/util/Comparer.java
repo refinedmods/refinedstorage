@@ -2,29 +2,22 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.ActionResultType;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 
 public class Comparer implements IComparer {
     @Override
     public boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right, int flags) {
-        EnumActionResult validity = getResult(left, right);
+        ActionResultType validity = getResult(left, right);
 
-        if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
-            return validity == EnumActionResult.SUCCESS;
+        if (validity == ActionResultType.FAIL || validity == ActionResultType.SUCCESS) {
+            return validity == ActionResultType.SUCCESS;
         }
 
         if (left.getItem() != right.getItem()) {
             return false;
-        }
-
-        if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE && left.getItemDamage() != OreDictionary.WILDCARD_VALUE && right.getItemDamage() != OreDictionary.WILDCARD_VALUE) {
-            if (left.getItemDamage() != right.getItemDamage()) {
-                return false;
-            }
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
@@ -57,13 +50,13 @@ public class Comparer implements IComparer {
         }
 
         if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
-            if (left.amount != right.amount) {
+            if (left.getAmount() != right.getAmount()) {
                 return false;
             }
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (left.tag != null && !left.tag.equals(right.tag)) {
+            if (left.getTag() != null && !left.getTag().equals(right.getTag())) {
                 return false;
             }
         }
@@ -73,18 +66,18 @@ public class Comparer implements IComparer {
 
     @Override
     public boolean isEqualNbt(@Nullable ItemStack left, @Nullable ItemStack right) {
-        EnumActionResult validity = getResult(left, right);
+        ActionResultType validity = getResult(left, right);
 
-        if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
-            return validity == EnumActionResult.SUCCESS;
+        if (validity == ActionResultType.FAIL || validity == ActionResultType.SUCCESS) {
+            return validity == ActionResultType.SUCCESS;
         }
 
         if (!ItemStack.areItemStackTagsEqual(left, right)) {
-            if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().isEmpty()) {
+            if (left.hasTag() && !right.hasTag() && left.getTag().isEmpty()) {
                 return true;
-            } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().isEmpty()) {
+            } else if (!left.hasTag() && right.hasTag() && right.getTag().isEmpty()) {
                 return true;
-            } else if (!left.hasTagCompound() && !right.hasTagCompound()) {
+            } else if (!left.hasTag() && !right.hasTag()) {
                 return true;
             }
 
@@ -94,26 +87,26 @@ public class Comparer implements IComparer {
         return true;
     }
 
-    private EnumActionResult getResult(@Nullable ItemStack left, @Nullable ItemStack right) {
+    private ActionResultType getResult(@Nullable ItemStack left, @Nullable ItemStack right) {
         if (left == null && right == null) {
-            return EnumActionResult.SUCCESS;
+            return ActionResultType.SUCCESS;
         }
 
         if ((left == null && right != null) || (left != null && right == null)) {
-            return EnumActionResult.FAIL;
+            return ActionResultType.FAIL;
         }
 
         boolean leftEmpty = left.isEmpty();
         boolean rightEmpty = right.isEmpty();
 
         if (leftEmpty && rightEmpty) {
-            return EnumActionResult.SUCCESS;
+            return ActionResultType.SUCCESS;
         }
 
         if ((leftEmpty && !rightEmpty) || (!leftEmpty && rightEmpty)) {
-            return EnumActionResult.FAIL;
+            return ActionResultType.FAIL;
         }
 
-        return EnumActionResult.PASS;
+        return ActionResultType.PASS;
     }
 }

@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -35,7 +35,7 @@ public class MessageCraftingMonitorCancel extends MessageHandlerPlayerToServer<M
     }
 
     @Override
-    public void handle(MessageCraftingMonitorCancel message, EntityPlayerMP player) {
+    public void handle(MessageCraftingMonitorCancel message, ServerPlayerEntity player) {
         if (player.openContainer instanceof ContainerCraftingMonitor) {
             ((ContainerCraftingMonitor) player.openContainer).getCraftingMonitor().onCancelled(player, message.taskId);
         }

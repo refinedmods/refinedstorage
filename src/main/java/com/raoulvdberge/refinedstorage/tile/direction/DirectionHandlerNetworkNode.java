@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.direction;
 
 import com.raoulvdberge.refinedstorage.tile.TileNode;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.EnumFacing;
 
 public class DirectionHandlerNetworkNode implements IDirectionHandler {
@@ -22,12 +22,12 @@ public class DirectionHandlerNetworkNode implements IDirectionHandler {
     }
 
     @Override
-    public void writeToTileNbt(NBTTagCompound tag) {
+    public void writeToTileNbt(CompoundNBT tag) {
         // NO OP
     }
 
     @Override
-    public void readFromTileNbt(NBTTagCompound tag) {
+    public void readFromTileNbt(CompoundNBT tag) {
         // NO OP
     }
 }

@@ -8,9 +8,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessC
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,7 +33,7 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
 
     @Override
     @Nonnull
-    public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
+    public INetworkItem provide(INetworkItemHandler handler, PlayerEntity player, ItemStack stack) {
         int invIndex = 0;
         for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
             if (player.inventory.getStackInSlot(i) == stack) {
@@ -55,7 +55,7 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
 
     public static void setTabSelected(ItemStack stack, Optional<UUID> tabSelected) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
         if (tabSelected.isPresent()) {
@@ -76,9 +76,9 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
 
     public static void setTabPage(ItemStack stack, int tabPage) {
         if (!stack.hasTagCompound()) {
-            stack.setTagCompound(new NBTTagCompound());
+            stack.setTagCompound(new CompoundNBT());
         }
 
-        stack.getTagCompound().setInteger(NBT_TAB_PAGE, tabPage);
+        stack.getTagCompound().putInt(NBT_TAB_PAGE, tabPage);
     }
 }

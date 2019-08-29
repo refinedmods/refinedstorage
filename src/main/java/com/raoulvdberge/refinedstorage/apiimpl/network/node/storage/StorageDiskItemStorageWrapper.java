@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -76,7 +76,7 @@ public class StorageDiskItemStorageWrapper implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
+    public CompoundNBT writeToNbt() {
         return parent.writeToNbt();
     }
 
