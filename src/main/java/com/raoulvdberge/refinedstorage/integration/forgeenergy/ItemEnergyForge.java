@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.integration.forgeenergy;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.energy.EnergyStorage;
 
 public class ItemEnergyForge extends EnergyStorage {
@@ -13,7 +13,7 @@ public class ItemEnergyForge extends EnergyStorage {
         super(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
         this.stack = stack;
-        this.energy = stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ENERGY) ? stack.getTagCompound().getInteger(NBT_ENERGY) : 0;
+        this.energy = stack.hasTag() && stack.getTag().contains(NBT_ENERGY) ? stack.getTag().getInt(NBT_ENERGY) : 0;
     }
 
     @Override
@@ -21,11 +21,11 @@ public class ItemEnergyForge extends EnergyStorage {
         int received = super.receiveEnergy(maxReceive, simulate);
 
         if (received > 0 && !simulate) {
-            if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundNBT());
             }
 
-            stack.getTagCompound().setInteger(NBT_ENERGY, getEnergyStored());
+            stack.getTag().putInt(NBT_ENERGY, getEnergyStored());
         }
 
         return received;
@@ -36,11 +36,11 @@ public class ItemEnergyForge extends EnergyStorage {
         int extracted = super.extractEnergy(maxExtract, simulate);
 
         if (extracted > 0 && !simulate) {
-            if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundNBT());
             }
 
-            stack.getTagCompound().setInteger(NBT_ENERGY, getEnergyStored());
+            stack.getTag().putInt(NBT_ENERGY, getEnergyStored());
         }
 
         return extracted;
