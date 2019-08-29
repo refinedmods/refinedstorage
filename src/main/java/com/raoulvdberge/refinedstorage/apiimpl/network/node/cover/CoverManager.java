@@ -7,18 +7,11 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCable;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockGlass;
-import net.minecraft.block.BlockStainedGlass;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.Direction;
-import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -155,15 +148,16 @@ public class CoverManager {
 
         BlockState state = getBlockState(item);
 
-        return block != null && state != null && ((isModelSupported(state) && block.isTopSolid(state) && !block.getTickRandomly() && !block.hasTileEntity(state)) || block instanceof BlockGlass || block instanceof BlockStainedGlass);
+        // TODO: block.isSolid was isTopSolid! correct?
+        return block != null && state != null && ((isModelSupported(state) && block.isSolid(state) && !block.ticksRandomly(state) && !block.hasTileEntity(state)) || block instanceof GlassBlock || block instanceof StainedGlassBlock);
     }
 
-    private static boolean isModelSupported(IBlockState state) {
-        if (state.getRenderType() != EnumBlockRenderType.MODEL || state instanceof IExtendedBlockState) {
+    private static boolean isModelSupported(BlockState state) {
+        if (state.getRenderType() != BlockRenderType.MODEL) {
             return false;
         }
 
-        return state.isFullCube();
+        return state.isSolid(); // TODO: correct? was isFullCube
     }
 
     @Nullable
@@ -191,7 +185,7 @@ public class CoverManager {
         }
 
         try {
-            return block.getStateFromMeta(item.getItem().getMetadata(item));
+            return block.getDefaultState(); // TODO: is still correct?
         } catch (Exception e) {
             return null;
         }

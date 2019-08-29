@@ -20,9 +20,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -59,12 +60,6 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
     public NetworkNodeFluidInterface(World world, BlockPos pos) {
         super(world, pos);
-
-        tankIn.setCanDrain(false);
-        tankIn.setCanFill(true);
-
-        tankOut.setCanDrain(true);
-        tankOut.setCanFill(false);
     }
 
     @Override
@@ -77,24 +72,24 @@ public class NetworkNodeFluidInterface extends NetworkNode {
             if (!container.isEmpty()) {
                 Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
-                if (result.getValue() != null && tankIn.fillInternal(result.getValue(), false) == result.getValue().amount) {
+                if (result.getValue() != null && tankIn.fill(result.getValue(), IFluidHandler.FluidAction.SIMULATE) == result.getValue().getAmount()) {
                     result = StackUtils.getFluid(container, false);
 
-                    tankIn.fillInternal(result.getValue(), true);
+                    tankIn.fill(result.getValue(), IFluidHandler.FluidAction.EXECUTE);
 
                     in.setStackInSlot(0, result.getLeft());
                 }
             }
 
             if (ticks % upgrades.getSpeed() == 0) {
-                FluidStack drained = tankIn.drainInternal(Fluid.BUCKET_VOLUME * upgrades.getItemInteractCount(), true);
+                FluidStack drained = tankIn.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount(), IFluidHandler.FluidAction.EXECUTE);
 
                 // Drain in tank
                 if (drained != null) {
-                    FluidStack remainder = network.insertFluidTracked(drained, drained.amount);
+                    FluidStack remainder = network.insertFluidTracked(drained, drained.getAmount());
 
                     if (remainder != null) {
-                        tankIn.fillInternal(remainder, true);
+                        tankIn.fill(remainder, IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
             }
@@ -104,16 +99,16 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
             if (wanted == null) {
                 if (got != null) {
-                    tankOut.setFluid(network.insertFluidTracked(got, got.amount));
+                    tankOut.setFluid(network.insertFluidTracked(got, got.getAmount()));
 
                     onTankOutChanged();
                 }
             } else if (got != null && !API.instance().getComparer().isEqual(wanted, got, IComparer.COMPARE_NBT)) {
-                tankOut.setFluid(network.insertFluidTracked(got, got.amount));
+                tankOut.setFluid(network.insertFluidTracked(got, got.getAmount()));
 
                 onTankOutChanged();
             } else {
-                int delta = got == null ? wanted.amount : (wanted.amount - got.amount);
+                int delta = got == null ? wanted.getAmount() : (wanted.getAmount() - got.getAmount());
 
                 if (delta > 0) {
                     final boolean actingAsStorage = isActingAsStorage();
@@ -133,7 +128,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                         if (tankOut.getFluid() == null) {
                             tankOut.setFluid(result);
                         } else {
-                            tankOut.getFluid().amount += result.amount;
+                            tankOut.getFluid().grow(result.getAmount());
                         }
 
                         onTankOutChanged();
@@ -141,7 +136,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
                     // Example: our delta is 5, we extracted 3 fluids.
                     // That means we still have to autocraft 2 fluids.
-                    delta -= result == null ? 0 : result.amount;
+                    delta -= result == null ? 0 : result.getAmount();
 
                     if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
                         network.getCraftingManager().request(this, wanted, delta);
@@ -150,9 +145,9 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                     FluidStack remainder = network.insertFluidTracked(got, Math.abs(delta));
 
                     if (remainder == null) {
-                        tankOut.getFluid().amount -= Math.abs(delta);
+                        tankOut.getFluid().shrink(Math.abs(delta));
                     } else {
-                        tankOut.getFluid().amount -= Math.abs(delta) - remainder.amount;
+                        tankOut.getFluid().shrink(Math.abs(delta) - remainder.getAmount());
                     }
 
                     onTankOutChanged();
@@ -162,7 +157,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     }
 
     private boolean isActingAsStorage() {
-        for (Direction facing : Direction.VALUES) {
+        for (Direction facing : Direction.values()) {
             INetworkNode facingNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(facing));
 
             if (facingNode instanceof NetworkNodeExternalStorage &&

@@ -1,46 +1,56 @@
 package com.raoulvdberge.refinedstorage.inventory.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.capability.FluidTankPropertiesWrapper;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 public class FluidHandlerProxy implements IFluidHandler {
     private FluidTank insertHandler;
     private FluidTank extractHandler;
-    private IFluidTankProperties[] properties;
 
     public FluidHandlerProxy(FluidTank insertHandler, FluidTank extractHandler) {
         this.insertHandler = insertHandler;
         this.extractHandler = extractHandler;
-        this.properties = new IFluidTankProperties[]{
-            new FluidTankPropertiesWrapper(insertHandler),
-            new FluidTankPropertiesWrapper(extractHandler)
-        };
     }
 
     @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return properties;
+    public int getTanks() {
+        return 2;
+    }
+
+    @Nonnull
+    @Override
+    public FluidStack getFluidInTank(int tank) {
+        return tank == 0 ? insertHandler.getFluidInTank(0) : extractHandler.getFluidInTank(0);
     }
 
     @Override
-    public int fill(FluidStack resource, boolean doFill) {
-        return insertHandler.fill(resource, doFill);
+    public int getTankCapacity(int tank) {
+        return tank == 0 ? insertHandler.getTankCapacity(0) : extractHandler.getTankCapacity(0);
     }
 
-    @Nullable
     @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        return extractHandler.drain(resource, doDrain);
+    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+        return tank == 0 ? insertHandler.isFluidValid(0, stack) : extractHandler.isFluidValid(0, stack);
+
     }
 
-    @Nullable
     @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        return extractHandler.drain(maxDrain, doDrain);
+    public int fill(FluidStack resource, FluidAction action) {
+        return insertHandler.fill(resource, action);
+    }
+
+    @Nonnull
+    @Override
+    public FluidStack drain(FluidStack resource, FluidAction action) {
+        return extractHandler.drain(resource, action);
+    }
+
+    @Nonnull
+    @Override
+    public FluidStack drain(int maxDrain, FluidAction action) {
+        return extractHandler.drain(maxDrain, action);
     }
 }

@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
@@ -34,12 +33,6 @@ public class CraftingPattern implements ICraftingPattern {
     private NonNullList<FluidStack> fluidOutputs = NonNullList.create();
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
-        if (!OneSixMigrationHelper.isValidOneSixPattern(stack)) {
-            this.valid = false;
-
-            return;
-        }
-
         this.container = container;
         this.stack = stack;
         this.processing = ItemPattern.isProcessing(stack);

@@ -1,11 +1,13 @@
 package com.raoulvdberge.refinedstorage.container.slot.filter;
 
 import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SkullItem;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.IItemHandler;
 
@@ -32,7 +34,8 @@ public class SlotFilter extends SlotBase {
     public boolean isItemValid(@Nonnull ItemStack stack) {
         if (super.isItemValid(stack)) {
             if (isBlockAllowed()) {
-                return stack.getItem() instanceof ItemBlock || stack.getItem() instanceof ItemBlockSpecial || stack.getItem() instanceof IPlantable || stack.getItem() instanceof ItemSkull;
+                // TODO!
+                return stack.getItem() instanceof BlockItem || /*stack.getItem() instanceof ItemBlockSpecial ||*/ stack.getItem() instanceof IPlantable || stack.getItem() instanceof SkullItem;
             }
 
             return true;
@@ -59,18 +62,20 @@ public class SlotFilter extends SlotBase {
     }
 
     @Nullable
-    public static IBlockState getBlockState(IBlockAccess world, BlockPos pos, @Nullable ItemStack stack) {
+    public static BlockState getBlockState(World world, BlockPos pos, @Nullable ItemStack stack) {
         if (stack != null) {
             Item item = stack.getItem();
 
-            if (item instanceof ItemBlockSpecial) {
-                return ((ItemBlockSpecial) item).getBlock().getDefaultState();
-            } else if (item instanceof ItemBlock) {
-                return (((ItemBlock) item).getBlock()).getDefaultState();
+            // TODO if (item instanceof ItemBlockSpecial) {
+            //    return ((ItemBlockSpecial) item).getBlock().getDefaultState();
+            /*} else*/
+            /*if (item instanceof SkullItem) {
+                return Blocks.SKELETON_SKULL.getDefaultState();
+            } else */
+            if (item instanceof BlockItem) {
+                return (((BlockItem) item).getBlock()).getDefaultState();
             } else if (item instanceof IPlantable) {
                 return ((IPlantable) item).getPlant(world, pos);
-            } else if (item instanceof ItemSkull) {
-                return Blocks.SKULL.getDefaultState();
             }
         }
 

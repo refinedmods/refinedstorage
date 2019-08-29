@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
@@ -201,14 +202,14 @@ public interface IGrid {
      *
      * @param player the player that crafted the item
      */
-    void onCrafted(ServerPlayerEntity player);
+    void onCrafted(PlayerEntity player);
 
     /**
      * Called when an item is crafted with shift click (up to 64 items) in a crafting grid.
      *
      * @param player the player that crafted the item
      */
-    void onCraftedShift(ServerPlayerEntity player);
+    void onCraftedShift(PlayerEntity player);
 
     /**
      * Called when a JEI recipe transfer occurs.
@@ -216,14 +217,14 @@ public interface IGrid {
      * @param player the player
      * @param recipe a 9*x array stack array, where x is the possible combinations for the given slot
      */
-    void onRecipeTransfer(ServerPlayerEntity player, ItemStack[][] recipe);
+    void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe);
 
     /**
      * Called when the grid is closed.
      *
      * @param player the player
      */
-    void onClosed(ServerPlayerEntity player);
+    void onClosed(PlayerEntity player);
 
     /**
      * @return true if the grid is active, false otherwise

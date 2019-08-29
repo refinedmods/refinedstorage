@@ -15,36 +15,27 @@ import com.raoulvdberge.refinedstorage.tile.TileConstructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSkull;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.dispenser.BehaviorDefaultDispenseItem;
-import net.minecraft.dispenser.PositionImpl;
-import net.minecraft.entity.item.EntityFireworkRocket;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.dispenser.Position;
+import net.minecraft.entity.item.FireworkRocketEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.server.management.PlayerProfileCache;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.Direction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -91,7 +82,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             if (type == IType.ITEMS && !itemFilters.getStackInSlot(0).isEmpty()) {
                 ItemStack item = itemFilters.getStackInSlot(0);
 
-                IBlockState block = SlotFilter.getBlockState(world, pos.offset(getDirection()), item);
+                BlockState block = SlotFilter.getBlockState(world, pos.offset(getDirection()), item);
 
                 if (block != null) {
                     if (drop) {
@@ -100,23 +91,23 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                         placeBlock();
                     }
                 } else {
-                    if (item.getItem() == Items.FIREWORKS && !drop) {
+                    if (item.getItem() == Items.FIREWORK_ROCKET && !drop) {
                         ItemStack took = network.extractItem(item, 1, Action.PERFORM);
 
                         if (took != null) {
-                            world.spawnEntity(new EntityFireworkRocket(world, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
+                            world.addEntity(new FireworkRocketEntity(world, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
                         }
                     } else {
                         dropItem();
                     }
                 }
             } else if (type == IType.FLUIDS && fluidFilters.getFluid(0) != null) {
-                FluidStack stack = fluidFilters.getFluid(0);
+                /*TODO FluidStack stack = fluidFilters.getFluid(0);
 
-                if (stack != null && stack.getFluid().canBePlacedInWorld()) {
+                if (stack != null && stack.getFluid().getAttributes().canBePlacedInWorld()) {
                     BlockPos front = pos.offset(getDirection());
 
-                    Block block = stack.getFluid().getBlock();
+                    Block block = stack.getFluid().getAttributes();
 
                     if (world.isAirBlock(front) && block.canPlaceBlockAt(world, front)) {
                         FluidStack stored = network.getFluidStorageCache().getList().get(stack, compare);
@@ -143,25 +134,30 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                             network.getCraftingManager().request(this, stack, Fluid.BUCKET_VOLUME);
                         }
                     }
-                }
+                }*/
             }
         }
     }
 
     private FakePlayer getFakePlayer() {
-        WorldServer world = (WorldServer) this.world;
+        ServerWorld world = (ServerWorld) this.world;
+
         UUID owner = getOwner();
+
         if (owner != null) {
-            PlayerProfileCache profileCache = world.getMinecraftServer().getPlayerProfileCache();
+            PlayerProfileCache profileCache = world.getServer().getPlayerProfileCache();
+
             GameProfile profile = profileCache.getProfileByUUID(owner);
+
             if (profile != null) {
                 return FakePlayerFactory.get(world, profile);
             }
         }
+
         return FakePlayerFactory.getMinecraft(world);
     }
 
-    private boolean canPlace(BlockPos pos, IBlockState state) {
+    private boolean canPlace(BlockPos pos, BlockState state) {
         BlockEvent.EntityPlaceEvent e = new BlockEvent.EntityPlaceEvent(new BlockSnapshot(world, pos, state), world.getBlockState(pos), getFakePlayer());
 
         return !MinecraftForge.EVENT_BUS.post(e);
@@ -175,10 +171,11 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(item, 1, compare, Action.SIMULATE);
 
         if (took != null) {
-            IBlockState state = SlotFilter.getBlockState(world, front, took);
+            BlockState state = SlotFilter.getBlockState(world, front, took);
 
-            if (state != null && world.isAirBlock(front) && state.getBlock().canPlaceBlockAt(world, front)) {
-                state = state.getBlock().getStateForPlacement(world, front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) world), EnumHand.MAIN_HAND);
+            // TODO if (state != null && world.isAirBlock(front) && state.getBlock().canPlaceBlockAt(world, front)) {
+            if (false) {
+                // TODO state = state.getBlock().getStateForPlacement(world, front, getDirection(), 0.5F, 0.5F, 0.5F, took.getMetadata(), FakePlayerFactory.getMinecraft((WorldServer) world), EnumHand.MAIN_HAND);
 
                 if (!canPlace(front, state)) {
                     return;
@@ -187,8 +184,8 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                 took = network.extractItem(item, 1, compare, Action.PERFORM);
 
                 if (took != null) {
-                    if (item.getItem() instanceof ItemBlock) {
-                        ((ItemBlock) item.getItem()).placeBlockAt(
+                    if (item.getItem() instanceof BlockItem) {
+                        /*((BlockItem) item.getItem()).tryPlace(new BlockItemUseContext(
                             took,
                             getFakePlayer(),
                             world,
@@ -198,24 +195,25 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                             0,
                             0,
                             state
-                        );
+                        )); TODO! */
                     } else {
                         world.setBlockState(front, state, 1 | 2);
 
-                        state.getBlock().onBlockPlacedBy(world, front, state, FakePlayerFactory.getMinecraft((WorldServer) world), took);
+                        state.getBlock().onBlockPlacedBy(world, front, state, FakePlayerFactory.getMinecraft((ServerWorld) world), took);
                     }
 
                     // From ItemBlock#onItemUse
                     SoundType blockSound = state.getBlock().getSoundType(state, world, pos, null);
                     world.playSound(null, front, blockSound.getPlaceSound(), SoundCategory.BLOCKS, (blockSound.getVolume() + 1.0F) / 2.0F, blockSound.getPitch() * 0.8F);
 
+                    /* TODO
                     if (state.getBlock() == Blocks.SKULL) {
                         world.setBlockState(front, world.getBlockState(front).withProperty(BlockSkull.FACING, getDirection()));
 
                         TileEntity tile = world.getTileEntity(front);
 
-                        if (tile instanceof TileEntitySkull) {
-                            TileEntitySkull skullTile = (TileEntitySkull) tile;
+                        if (tile instanceof SkullTileEntity) {
+                            SkullTileEntity skullTile = (SkullTileEntity) tile;
 
                             if (item.getItemDamage() == 3) {
                                 GameProfile playerInfo = null;
@@ -237,7 +235,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
                             Blocks.SKULL.checkWitherSpawn(world, front, skullTile);
                         }
-                    }
+                    }*/
                 }
             }
         } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
@@ -251,7 +249,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), upgrades.getItemInteractCount(), Action.PERFORM);
 
         if (took != null) {
-            BehaviorDefaultDispenseItem.doDispense(world, took, 6, getDirection(), new PositionImpl(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
+            DefaultDispenseItemBehavior.doDispense(world, took, 6, getDirection(), new Position(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
         } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
 

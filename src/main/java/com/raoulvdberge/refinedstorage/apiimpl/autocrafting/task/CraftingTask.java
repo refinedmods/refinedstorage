@@ -23,10 +23,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFl
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItem;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
@@ -64,7 +62,7 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
 
-    private static final int DEFAULT_EXTRACT_FLAGS = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private static final int DEFAULT_EXTRACT_FLAGS = IComparer.COMPARE_NBT;
 
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -108,12 +106,6 @@ public class CraftingTask implements ICraftingTask {
     }
 
     public CraftingTask(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
-        OneSixMigrationHelper.removalHook();
-
-        if (!tag.contains(NBT_INTERNAL_STORAGE)) {
-            throw new CraftingTaskReadException("Couldn't read crafting task from before RS v1.6.4, skipping...");
-        }
-
         this.network = network;
 
         this.requested = API.instance().createCraftingRequestInfo(tag.getCompound(NBT_REQUESTED));
@@ -856,9 +848,9 @@ public class CraftingTask implements ICraftingTask {
 
                 toPerform.add(() -> {
                     if (remainder == null) {
-                        internalStorage.extract(stack, stack.getCount(), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                        internalStorage.extract(stack, stack.getCount(), IComparer.COMPARE_NBT, Action.PERFORM);
                     } else {
-                        internalStorage.extract(stack, stack.getCount() - remainder.getCount(), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                        internalStorage.extract(stack, stack.getCount() - remainder.getCount(), IComparer.COMPARE_NBT, Action.PERFORM);
                     }
                 });
             }
@@ -868,9 +860,9 @@ public class CraftingTask implements ICraftingTask {
 
                 toPerform.add(() -> {
                     if (remainder == null) {
-                        internalFluidStorage.extract(stack, stack.getAmount(), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                        internalFluidStorage.extract(stack, stack.getAmount(), IComparer.COMPARE_NBT, Action.PERFORM);
                     } else {
-                        internalFluidStorage.extract(stack, stack.getAmount() - remainder.getAmount(), IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                        internalFluidStorage.extract(stack, stack.getAmount() - remainder.getAmount(), IComparer.COMPARE_NBT, Action.PERFORM);
                     }
                 });
             }

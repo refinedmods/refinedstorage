@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
@@ -17,37 +16,26 @@ import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockShulkerBox;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerProfileCache;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityShulkerBox;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.wrappers.BlockLiquidWrapper;
-import net.minecraftforge.fluids.capability.wrappers.FluidBlockWrapper;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -74,7 +62,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH, ItemUpgrade.TYPE_FORTUNE_1, ItemUpgrade.TYPE_FORTUNE_2, ItemUpgrade.TYPE_FORTUNE_3);
 
-    private int compare = IComparer.COMPARE_NBT | IComparer.COMPARE_DAMAGE;
+    private int compare = IComparer.COMPARE_NBT;
     private int mode = IFilterable.BLACKLIST;
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
@@ -91,15 +79,20 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     }
 
     private FakePlayer getFakePlayer() {
-        WorldServer world = (WorldServer) this.world;
+        ServerWorld world = (ServerWorld) this.world;
+
         UUID owner = getOwner();
+
         if (owner != null) {
-            PlayerProfileCache profileCache = world.getMinecraftServer().getPlayerProfileCache();
+            PlayerProfileCache profileCache = world.getServer().getPlayerProfileCache();
+
             GameProfile profile = profileCache.getProfileByUUID(owner);
+
             if (profile != null) {
                 return FakePlayerFactory.get(world, profile);
             }
         }
+
         return FakePlayerFactory.getMinecraft(world);
     }
 
@@ -113,29 +106,30 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
             if (pickupItem && type == IType.ITEMS) {
                 List<Entity> droppedItems = new ArrayList<>();
 
-                Chunk chunk = world.getChunk(front);
+                Chunk chunk = world.getChunkAt(front);
                 chunk.getEntitiesWithinAABBForEntity(null, new AxisAlignedBB(front), droppedItems, null);
 
                 for (Entity entity : droppedItems) {
-                    if (entity instanceof EntityItem) {
-                        ItemStack droppedItem = ((EntityItem) entity).getItem();
+                    if (entity instanceof ItemEntity) {
+                        ItemStack droppedItem = ((ItemEntity) entity).getItem();
 
                         if (IFilterable.acceptsItem(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE) == null) {
                             network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
 
-                            world.removeEntity(entity);
+                            // TODO world.removeEntity(entity);
 
                             break;
                         }
                     }
                 }
             } else if (type == IType.ITEMS) {
-                IBlockState frontBlockState = world.getBlockState(front);
+                BlockState frontBlockState = world.getBlockState(front);
                 Block frontBlock = frontBlockState.getBlock();
 
                 ItemStack frontStack = frontBlock.getPickBlock(
                     frontBlockState,
-                    new RayTraceResult(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), getDirection().getOpposite()),
+                    null,
+                    // TODO    new BlockRayTraceResult(new Vec3d(pos.getX(), pos.getY(), pos.getZ()), getDirection().getOpposite()),
                     world,
                     front,
                     getFakePlayer()
@@ -145,7 +139,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                     if (IFilterable.acceptsItem(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(world, front) != -1.0) {
                         NonNullList<ItemStack> drops = NonNullList.create();
 
-                        if (frontBlock instanceof BlockShulkerBox) {
+                        /* TODO if (frontBlock instanceof ShulkerBoxTileEntity) {
                             drops.add(((BlockShulkerBox) frontBlock).getItem(world, front, frontBlockState));
 
                             TileEntity shulkerBoxTile = world.getTileEntity(front);
@@ -159,7 +153,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                             drops.add(frontStack);
                         } else {
                             frontBlock.getDrops(drops, world, front, frontBlockState, upgrades.getFortuneLevel());
-                        }
+                        }*/
 
                         for (ItemStack drop : drops) {
                             if (network.insertItem(drop, drop.getCount(), Action.SIMULATE) != null) {
@@ -171,7 +165,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
                         if (!MinecraftForge.EVENT_BUS.post(e)) {
                             world.playEvent(null, 2001, front, Block.getStateId(frontBlockState));
-                            world.setBlockToAir(front);
+                            world.removeBlock(front, false);
 
                             for (ItemStack drop : drops) {
                                 // We check if the controller isn't null here because when a destructor faces a node and removes it
@@ -189,7 +183,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 Block frontBlock = world.getBlockState(front).getBlock();
 
                 IFluidHandler handler = null;
-
+/* TODO
                 if (frontBlock instanceof BlockLiquid) {
                     handler = new BlockLiquidWrapper((BlockLiquid) frontBlock, world, front);
                 } else if (frontBlock instanceof IFluidBlock) {
@@ -204,7 +198,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
                         network.insertFluidTracked(drained, drained.amount);
                     }
-                }
+                }*/
             }
         }
     }
@@ -301,8 +295,6 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
         if (tag.contains(NBT_FLUID_FILTERS)) {
             fluidFilters.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
         }
-
-        OneSixMigrationHelper.migrateEmptyWhitelistToEmptyBlacklist(version, this, itemFilters);
     }
 
     public IItemHandler getUpgrades() {

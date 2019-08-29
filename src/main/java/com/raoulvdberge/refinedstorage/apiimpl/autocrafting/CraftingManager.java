@@ -12,12 +12,10 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -298,17 +296,13 @@ public class CraftingManager implements ICraftingManager {
         return null;
     }
 
-    private void throttle(@Nullable Object source) {
-        OneSixMigrationHelper.removalHook(); // Remove @Nullable source
-
+    private void throttle(Object source) {
         if (source != null) {
             throttledRequesters.put(source, System.currentTimeMillis());
         }
     }
 
-    private boolean isThrottled(@Nullable Object source) {
-        OneSixMigrationHelper.removalHook(); // Remove @Nullable source
-
+    private boolean isThrottled(Object source) {
         if (source == null) {
             return false;
         }
