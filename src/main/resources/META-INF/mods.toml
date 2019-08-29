@@ -1,0 +1,14 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/raoulvdberge/refinedstorage"
+[[mods]]
+modId="refinedstorage"
+version="${file.jarVersion}"
+displayName="Refined Storage"
+updateJSONURL="https://refinedstorage.raoulvdberge.com/update"
+displayURL="https://refinedstorage.raoulvdberge.com"
+logoFile="assets/refinedstorage/textures/logo.png"
+authors="Refined Storage authors"
+description='''
+An elegant solution to your hoarding problem
+'''

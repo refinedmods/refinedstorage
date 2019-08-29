@@ -1,137 +1,78 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.6.16"
-def env = System.getenv()
-if (env.BUILD_NUMBER) {
-    version = version + "-" + "${env.BUILD_NUMBER}"
-}
+version = '1.7'
+group = 'com.raoulvdberge'
+archivesBaseName = 'refinedstorage'
 
-group = "refinedstorage"
-archivesBaseName = "refinedstorage"
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    version = "1.12.2-14.23.5.2838"
-    runDir = "run"
-    useDepAts = true
-    mappings = "stable_39"
+    mappings channel: 'snapshot', version: '20190719-1.14.3'
 
-    replaceIn "RS.java"
-    replace "@version@", project.version
-}
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                refinedstorage {
+                    source sourceSets.main
+                }
+            }
+        }
 
-repositories {
-    maven {
-        url "http://dvs1.progwml6.com/files/maven"
-    }
-    maven {
-        url "http://maven.cil.li"
-    }
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                refinedstorage {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'refinedstorage', '--all', '--output', file('src/generated/resources/')
+            mods {
+                refinedstorage {
+                    source sourceSets.main
+                }
+            }
+        }
     }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.15.0.287:api"
-    runtime "mezz.jei:jei_1.12.2:4.15.0.287"
-    deobfCompile "li.cil.oc:OpenComputers:MC1.12.2-1.7.2.67:api"
-    compile "inventory-tweaks:InventoryTweaks:1.63:api"
-}
-
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        expand 'version': project.version, 'mcversion': project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.73'
 }
 
 jar {
-    include "com/raoulvdberge/refinedstorage/**"
-    include "assets/**"
-    include "mcmod.info"
-    include "pack.mcmeta"
-}
-
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier 'deobf'
-}
-
-task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
-    from sourceSets.main.allSource
-    from sourceSets.main.output
-    include 'com/raoulvdberge/refinedstorage/api/**/*'
-    classifier 'api'
-}
-
-task signJar(type: SignJar, dependsOn: reobfJar) {
-    onlyIf {
-        project.hasProperty('keyStore')
-    }
-
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
-}
-
-build.dependsOn signJar
-
-artifacts {
-    archives deobfJar
-    archives apiJar
-    archives sourceJar
-    archives jar
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = project.group
-            artifactId = project.archivesBaseName
-            version = project.version
-            artifact deobfJar
-            artifact sourceJar
-            artifact apiJar
-            artifact jar
-        }
-    }
-}
-
-publishing {
-    repositories {
-        maven {
-            url "/var/www/repo"
-        }
+    manifest {
+        attributes([
+            "Specification-Title": "refinedstorage",
+            "Specification-Vendor": "raoulvdberge",
+            "Specification-Version": "1",
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"raoulvdberge",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
 }
