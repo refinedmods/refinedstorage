@@ -4,24 +4,24 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -34,20 +34,21 @@ public final class StackUtils {
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
 
-    public static void writeItemStack(ByteBuf buf, ItemStack stack) {
+    // TODO: can we remove this?
+    public static void writeItemStack(PacketBuffer buf, ItemStack stack) {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getCount());
-        buf.writeShort(stack.getItemDamage());
-        ByteBufUtils.writeTag(buf, stack.getItem().getNBTShareTag(stack));
+        buf.writeCompoundTag(stack.getItem().getShareTag(stack));
     }
 
-    public static ItemStack readItemStack(ByteBuf buf) {
-        ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt(), buf.readShort());
-        stack.setTagCompound(ByteBufUtils.readTag(buf));
+    // TODO: Removal
+    public static ItemStack readItemStack(PacketBuffer buf) {
+        ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt());
+        stack.setTag(buf.readCompoundTag());
         return stack;
     }
 
-    public static void writeItemStack(ByteBuf buf, ItemStack stack, @Nullable INetwork network, boolean displayCraftText) {
+    public static void writeItemStack(PacketBuffer buf, ItemStack stack, @Nullable INetwork network, boolean displayCraftText) {
         writeItemStack(buf, stack);
 
         buf.writeInt(API.instance().getItemStackHashCode(stack));
@@ -61,23 +62,25 @@ public final class StackUtils {
         }
     }
 
-    public static void writeFluidStackAndHash(ByteBuf buf, FluidStack stack) {
+    public static void writeFluidStackAndHash(PacketBuffer buf, FluidStack stack) {
         buf.writeInt(API.instance().getFluidStackHashCode(stack));
 
         writeFluidStack(buf, stack);
     }
 
-    public static void writeFluidStack(ByteBuf buf, FluidStack stack) {
-        ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(stack.getFluid()));
-        buf.writeInt(stack.amount);
-        ByteBufUtils.writeTag(buf, stack.tag);
+    // TODO: Removal
+    public static void writeFluidStack(PacketBuffer buf, FluidStack stack) {
+        buf.writeResourceLocation(stack.getFluid().getRegistryName()); // TODO: Probably wrong
+        buf.writeInt(stack.getAmount());
+        buf.writeCompoundTag(stack.getTag());
     }
 
-    public static FluidStack readFluidStack(ByteBuf buf) {
-        return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf));
+    // TODO: Removal
+    public static FluidStack readFluidStack(PacketBuffer buf) {
+        return new FluidStack(ForgeRegistries.FLUIDS.getValue(buf.readResourceLocation()), buf.readInt(), buf.readCompoundTag());
     }
 
-    public static Pair<Integer, FluidStack> readFluidStackAndHash(ByteBuf buf) {
+    public static Pair<Integer, FluidStack> readFluidStackAndHash(PacketBuffer buf) {
         return Pair.of(buf.readInt(), readFluidStack(buf));
     }
 
@@ -133,17 +136,17 @@ public final class StackUtils {
     }
 
     public static void writeItems(IItemHandler handler, int id, CompoundNBT tag) {
-        writeItems(handler, id, tag, stack -> stack.writeToNBT(new CompoundNBT()));
+        writeItems(handler, id, tag, stack -> stack.write(new CompoundNBT()));
     }
 
     public static void readItems(IItemHandlerModifiable handler, int id, CompoundNBT tag, Function<CompoundNBT, ItemStack> deserializer) {
         String name = String.format(NBT_INVENTORY, id);
 
-        if (tag.hasKey(name)) {
+        if (tag.contains(name)) {
             ListNBT tagList = tag.getList(name, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < tagList.size(); i++) {
-                int slot = tagList.getCompound(i).getInteger(NBT_SLOT);
+                int slot = tagList.getCompound(i).getInt(NBT_SLOT);
 
                 if (slot >= 0 && slot < handler.getSlots()) {
                     handler.setStackInSlot(slot, deserializer.apply(tagList.getCompound(i)));
@@ -153,7 +156,7 @@ public final class StackUtils {
     }
 
     public static void readItems(IItemHandlerModifiable handler, int id, CompoundNBT tag) {
-        readItems(handler, id, tag, ItemStack::new);
+        readItems(handler, id, tag, ItemStack::read);
     }
 
     public static void writeItems(IInventory inventory, int id, CompoundNBT tag) {
@@ -165,7 +168,7 @@ public final class StackUtils {
 
                 stackTag.putInt(NBT_SLOT, i);
 
-                inventory.getStackInSlot(i).writeToNBT(stackTag);
+                inventory.getStackInSlot(i).write(stackTag);
 
                 tagList.add(stackTag);
             }
@@ -177,13 +180,13 @@ public final class StackUtils {
     public static void readItems(IInventory inventory, int id, CompoundNBT tag) {
         String name = String.format(NBT_INVENTORY, id);
 
-        if (tag.hasKey(name)) {
+        if (tag.contains(name)) {
             ListNBT tagList = tag.getList(name, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < tagList.size(); i++) {
-                int slot = tagList.getCompound(i).getInteger(NBT_SLOT);
+                int slot = tagList.getCompound(i).getInt(NBT_SLOT);
 
-                ItemStack stack = new ItemStack(tagList.getCompound(i));
+                ItemStack stack = ItemStack.read(tagList.getCompound(i));
 
                 if (!stack.isEmpty()) {
                     inventory.setInventorySlotContents(slot, stack);
@@ -193,7 +196,11 @@ public final class StackUtils {
     }
 
     public static boolean hasFluidBucket(FluidStack stack) {
-        return stack.getFluid() == FluidRegistry.WATER || stack.getFluid() == FluidRegistry.LAVA || stack.getFluid().getName().equals("milk") || FluidRegistry.getBucketFluids().contains(stack.getFluid());
+        return true; // TODO
+        /*return stack.getFluid() == Fluids.WATER ||
+            stack.getFluid() == Fluids.LAVA ||
+            //stack.getFluid().getName().equals("milk") ||
+            FluidRegistry.getBucketFluids().contains(stack.getFluid());*/
     }
 
     public static FluidStack copy(FluidStack stack, int size) {
@@ -212,12 +219,11 @@ public final class StackUtils {
             stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
         }
 
-        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-            IFluidHandlerItem fluidHandler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+        IFluidHandlerItem handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).orElse(null);
+        if (handler != null) {
+            FluidStack result = handler.drain(FluidAttributes.BUCKET_VOLUME, simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
 
-            FluidStack result = fluidHandler.drain(Fluid.BUCKET_VOLUME, !simulate);
-
-            return Pair.of(fluidHandler.getContainer(), result);
+            return Pair.of(handler.getContainer(), result);
         }
 
         return Pair.of(null, null);
@@ -225,7 +231,6 @@ public final class StackUtils {
 
     private static final String NBT_ITEM_TYPE = "Type";
     private static final String NBT_ITEM_QUANTITY = "Quantity";
-    private static final String NBT_ITEM_DAMAGE = "Damage";
     private static final String NBT_ITEM_NBT = "NBT";
     private static final String NBT_ITEM_CAPS = "Caps";
 
@@ -236,19 +241,19 @@ public final class StackUtils {
 
         itemTag.putInt(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
         itemTag.putInt(NBT_ITEM_QUANTITY, stack.getCount());
-        itemTag.putInt(NBT_ITEM_DAMAGE, stack.getItemDamage());
 
-        if (stack.hasTagCompound()) {
-            itemTag.put(NBT_ITEM_NBT, stack.getTagCompound());
+        if (stack.hasTag()) {
+            itemTag.put(NBT_ITEM_NBT, stack.getTag());
         }
 
-        stack.writeToNBT(dummy);
+        // TODO: Better way now?
+        stack.write(dummy);
 
-        if (dummy.hasKey("ForgeCaps")) {
-            itemTag.put(NBT_ITEM_CAPS, dummy.getTag("ForgeCaps"));
+        if (dummy.contains("ForgeCaps")) {
+            itemTag.put(NBT_ITEM_CAPS, dummy.get("ForgeCaps"));
         }
 
-        dummy.removeTag("ForgeCaps");
+        dummy.remove("ForgeCaps");
 
         return itemTag;
     }
@@ -256,13 +261,12 @@ public final class StackUtils {
     @Nonnull
     public static ItemStack deserializeStackFromNbt(CompoundNBT tag) {
         ItemStack stack = new ItemStack(
-            Item.getItemById(tag.getInteger(NBT_ITEM_TYPE)),
-            tag.getInteger(NBT_ITEM_QUANTITY),
-            tag.getInteger(NBT_ITEM_DAMAGE),
-            tag.hasKey(NBT_ITEM_CAPS) ? tag.getCompound(NBT_ITEM_CAPS) : null
+            Item.getItemById(tag.getInt(NBT_ITEM_TYPE)),
+            tag.getInt(NBT_ITEM_QUANTITY),
+            tag.contains(NBT_ITEM_CAPS) ? tag.getCompound(NBT_ITEM_CAPS) : null
         );
 
-        stack.setTagCompound(tag.hasKey(NBT_ITEM_NBT) ? tag.getCompound(NBT_ITEM_NBT) : null);
+        stack.setTag(tag.contains(NBT_ITEM_NBT) ? tag.getCompound(NBT_ITEM_NBT) : null);
 
         return stack;
     }

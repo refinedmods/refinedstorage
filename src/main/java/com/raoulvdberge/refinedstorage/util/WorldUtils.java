@@ -1,17 +1,16 @@
 package com.raoulvdberge.refinedstorage.util;
 
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -25,7 +24,8 @@ import javax.annotation.Nullable;
 public final class WorldUtils {
     public static void updateBlock(@Nullable World world, BlockPos pos) {
         if (world != null) {
-            IBlockState state = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
+
             world.notifyBlockUpdate(pos, state, state, 1 | 2);
         }
     }
@@ -35,8 +35,7 @@ public final class WorldUtils {
             return null;
         }
 
-        IItemHandler handler = tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side) ? tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side) : null;
-
+        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).orElse(null);
         if (handler == null) {
             if (side != null && tile instanceof ISidedInventory) {
                 handler = new SidedInvWrapper((ISidedInventory) tile, side);
@@ -49,11 +48,14 @@ public final class WorldUtils {
     }
 
     public static IFluidHandler getFluidHandler(@Nullable TileEntity tile, Direction side) {
-        return (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) ? tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side) : null;
+        if (tile != null) {
+            return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null);
+        }
+        return null;
     }
 
     public static void sendNoPermissionMessage(PlayerEntity player) {
-        player.sendMessage(new TextComponentTranslation("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
     }
 
     public static void dropInventory(World world, BlockPos pos, IItemHandler handler) {
