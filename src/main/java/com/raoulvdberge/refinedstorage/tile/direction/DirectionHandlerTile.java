@@ -1,20 +1,20 @@
 package com.raoulvdberge.refinedstorage.tile.direction;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public class DirectionHandlerTile implements IDirectionHandler {
     public static final String NBT_DIRECTION = "Direction";
 
-    private EnumFacing direction = EnumFacing.NORTH;
+    private Direction direction = Direction.NORTH;
 
     @Override
-    public void setDirection(EnumFacing direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 
     @Override
-    public EnumFacing getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
@@ -26,7 +26,7 @@ public class DirectionHandlerTile implements IDirectionHandler {
     @Override
     public void readFromTileNbt(CompoundNBT tag) {
         if (tag.hasKey(NBT_DIRECTION)) {
-            direction = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
+            direction = Direction.byIndex(tag.getInteger(NBT_DIRECTION));
         }
     }
 }

@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.direction;
 
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 public class DirectionHandlerNetworkNode implements IDirectionHandler {
     private TileNode tile;
@@ -12,12 +12,12 @@ public class DirectionHandlerNetworkNode implements IDirectionHandler {
     }
 
     @Override
-    public void setDirection(EnumFacing direction) {
+    public void setDirection(Direction direction) {
         tile.getNode().setDirection(direction);
     }
 
     @Override
-    public EnumFacing getDirection() {
+    public Direction getDirection() {
         return tile.getNode().getDirection();
     }
 

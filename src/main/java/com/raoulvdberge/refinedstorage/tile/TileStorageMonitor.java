@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -60,7 +60,7 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
 
     @Override
     protected boolean canCauseRenderUpdate(CompoundNBT tag) {
-        EnumFacing receivedDirection = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
+        Direction receivedDirection = Direction.byIndex(tag.getInteger(NBT_DIRECTION));
         boolean receivedActive = tag.getBoolean(NBT_ACTIVE);
 
         return receivedDirection != getDirection() || receivedActive != getNode().isActive();

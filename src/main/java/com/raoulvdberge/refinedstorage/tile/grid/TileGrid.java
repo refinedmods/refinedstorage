@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -101,12 +101,12 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction side) {
         return (getNode().getGridType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, side);
     }
 
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing side) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
         if (getNode().getGridType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getPatterns());
         }

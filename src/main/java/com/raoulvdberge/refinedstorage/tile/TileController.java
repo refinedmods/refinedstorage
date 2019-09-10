@@ -663,7 +663,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
         if (capability == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.cast(energyProxy);
         }
@@ -676,7 +676,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         return capability == CapabilityEnergy.ENERGY
             || capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY
             || super.hasCapability(capability, facing);
@@ -690,7 +690,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void visit(Operator operator) {
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        for (Direction facing : Direction.VALUES) {
             BlockPos pos = this.pos.offset(facing);
 
             TileEntity tile = world.getTileEntity(pos);

@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,7 +23,7 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
     }
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         if (super.hasCapability(capability, facing)) {
             return true;
         }
@@ -44,7 +44,7 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
     }
 
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
         T foundCapability = super.getCapability(capability, facing);
 
         if (foundCapability == null) {

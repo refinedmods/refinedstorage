@@ -13,7 +13,7 @@ import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.direction.DirectionHandlerNetworkNode;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -69,7 +69,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
         getNode().setActive(tag.getBoolean(NBT_ACTIVE));
     }
 
-    private EnumFacing directionToMigrate;
+    private Direction directionToMigrate;
 
     @Override
     public void read(CompoundNBT tag) {
@@ -77,7 +77,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
         OneSixMigrationHelper.removalHook();
         if (tag.hasKey(NBT_DIRECTION)) {
-            directionToMigrate = EnumFacing.byIndex(tag.getInteger("Direction"));
+            directionToMigrate = Direction.byIndex(tag.getInteger("Direction"));
         }
     }
 
@@ -125,7 +125,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public abstract String getNodeId();
 
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing side) {
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction side) {
         if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
             return true;
         }
@@ -134,7 +134,7 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     }
 
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing side) {
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
         if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
             return CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(this);
         }

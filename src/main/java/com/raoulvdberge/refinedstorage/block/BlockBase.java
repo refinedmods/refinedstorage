@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockBase;
@@ -13,7 +12,6 @@ import com.raoulvdberge.refinedstorage.util.CollisionUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,8 +25,9 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.chunk.BlockStateContainer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -41,17 +40,18 @@ public abstract class BlockBase extends Block {
     protected final IBlockInfo info;
 
     public BlockBase(IBlockInfo info) {
-        super(info.getMaterial());
+        super(Block.Properties
+            .create(info.getMaterial())
+            .hardnessAndResistance(info.getHardness())
+            .sound(info.getSoundType())
+        );
 
         this.info = info;
 
-        setHardness(info.getHardness());
         setRegistryName(info.getId());
-        setCreativeTab(RS.INSTANCE.tab);
-        setSoundType(info.getSoundType());
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
     }
 
@@ -191,6 +191,15 @@ public abstract class BlockBase extends Block {
         }
 
         return false;
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            worldIn.updateComparatorOutputLevel(pos, this);
+
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
     }
 
     public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
