@@ -34,9 +34,7 @@ public class SideButtonCompare extends SideButton {
     protected void drawButtonIcon(int x, int y) {
         int ty = 0;
 
-        if (mask == IComparer.COMPARE_DAMAGE) {
-            ty = 80;
-        } else if (mask == IComparer.COMPARE_NBT) {
+        if (mask == IComparer.COMPARE_NBT) {
             ty = 48;
         }
 

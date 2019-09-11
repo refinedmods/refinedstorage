@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui.control;
 
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import org.lwjgl.input.Mouse;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -60,7 +59,8 @@ public class Scrollbar {
             isScrolling = false;
             wasClicking = false;
         } else {
-            boolean down = Mouse.isButtonDown(0);
+            // TODO boolean down = Mouse.isButtonDown(0);
+            boolean down = false;
 
             if (!wasClicking && down && gui.inBounds(x, y, width, height, mouseX, mouseY)) {
                 isScrolling = true;

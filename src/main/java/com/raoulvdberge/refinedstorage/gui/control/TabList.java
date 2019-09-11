@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.gui.control;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,8 +30,8 @@ public class TabList {
 
     private List<ITabListListener> listeners = new LinkedList<>();
 
-    private GuiButton left;
-    private GuiButton right;
+    private Button left;
+    private Button right;
 
     private int width;
 
@@ -80,7 +80,7 @@ public class TabList {
         if (this.hadTabs != hasTabs) {
             this.hadTabs = hasTabs;
 
-            gui.initGui();
+            gui.init();
         }
 
         if (page.get() > pages.get()) {
@@ -89,8 +89,8 @@ public class TabList {
 
         left.visible = pages.get() > 0;
         right.visible = pages.get() > 0;
-        left.enabled = page.get() > 0;
-        right.enabled = page.get() < pages.get();
+        left.active = page.get() > 0; // TODO correct? active
+        right.active = page.get() < pages.get(); // TODO correct? active
     }
 
     public void drawBackground(int x, int y) {
@@ -124,7 +124,7 @@ public class TabList {
         int tx = x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * num);
         int ty = y;
 
-        GlStateManager.enableAlpha();
+        GlStateManager.enableAlphaTest();
 
         gui.bindTexture("icons.png");
 
@@ -171,7 +171,7 @@ public class TabList {
         return false;
     }
 
-    public void actionPerformed(GuiButton button) {
+    public void actionPerformed(Button button) {
         if (button == left) {
             listeners.forEach(t -> t.onPageChanged(page.get() - 1));
         } else if (button == right) {

@@ -1,10 +1,8 @@
 package com.raoulvdberge.refinedstorage.gui.control;
 
-import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -36,9 +34,8 @@ public class TextFieldSearch extends TextFieldWidget {
         listeners.add(listener);
     }
 
-
     @Override
-    public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         boolean wasFocused = isFocused();
 
         boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -58,13 +55,13 @@ public class TextFieldSearch extends TextFieldWidget {
     }
 
     @Override
-    public boolean textboxKeyTyped(char typedChar, int keyCode) {
-        @SuppressWarnings("deprecation") boolean canLoseFocus = ObfuscationReflectionHelper.getPrivateValue(GuiTextField.class, this, 10);
+    public boolean charTyped(char typedChar, int keyCode) {
+        // TODO @SuppressWarnings("deprecation") boolean canLoseFocus = ObfuscationReflectionHelper.getPrivateValue(GuiTextField.class, this, 10);
 
-        boolean result = super.textboxKeyTyped(typedChar, keyCode);
+        boolean result = super.charTyped(typedChar, keyCode);
 
         if (isFocused()) {
-            if (keyCode == Keyboard.KEY_UP) {
+            /* TODO if (keyCode == Keyboard.KEY_UP) {
                 updateSearchHistory(-1);
 
                 result = true;
@@ -80,10 +77,10 @@ public class TextFieldSearch extends TextFieldWidget {
                 }
 
                 result = true;
-            }
+            }*/
         }
 
-        if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && canLoseFocus) {
+        if (/*TODO keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && canLoseFocus*/false) {
             setFocused(!isFocused());
 
             saveHistory();
