@@ -35,11 +35,11 @@ public class GridViewFluid extends GridViewBase {
         GridStackFluid existing = (GridStackFluid) map.get(stack.getHash());
 
         if (existing == null) {
-            ((GridStackFluid) stack).getStack().amount = delta;
+            ((GridStackFluid) stack).getStack().setAmount(delta);
 
             map.put(stack.getHash(), stack);
         } else {
-            if (existing.getStack().amount + delta <= 0) {
+            if (existing.getStack().getAmount() + delta <= 0) {
                 if (existing.isCraftable()) {
                     existing.setDisplayCraftText(true);
                 } else {
@@ -49,9 +49,9 @@ public class GridViewFluid extends GridViewBase {
                 if (existing.doesDisplayCraftText()) {
                     existing.setDisplayCraftText(false);
 
-                    existing.getStack().amount = delta;
+                    existing.getStack().setAmount(delta);
                 } else {
-                    existing.getStack().amount += delta;
+                    existing.getStack().grow(delta);
                 }
             }
 

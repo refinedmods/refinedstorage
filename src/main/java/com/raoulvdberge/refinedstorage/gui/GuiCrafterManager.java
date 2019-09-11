@@ -23,7 +23,7 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
 
     private TextFieldSearch searchField;
 
-    public GuiCrafterManager(PlayerInventory inventory, NetworkNodeCrafterManager crafterManager) {
+    public GuiCrafterManager(NetworkNodeCrafterManager crafterManager, PlayerInventory inventory) {
         super(null, 193, 0, inventory, null);
 
         this.crafterManager = crafterManager;

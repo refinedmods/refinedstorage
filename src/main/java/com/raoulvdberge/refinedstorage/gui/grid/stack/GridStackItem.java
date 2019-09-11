@@ -4,18 +4,12 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.oredict.OreDictionary;
+import net.minecraft.network.PacketBuffer;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class GridStackItem implements IGridStack {
     private int hash;
@@ -34,7 +28,7 @@ public class GridStackItem implements IGridStack {
         this.stack = stack;
     }
 
-    public GridStackItem(ByteBuf buf) {
+    public GridStackItem(PacketBuffer buf) {
         this.stack = StackUtils.readItemStack(buf);
         this.hash = buf.readInt();
         this.craftable = buf.readBoolean();
@@ -48,12 +42,13 @@ public class GridStackItem implements IGridStack {
 
     @Nullable
     static String getModNameByModId(String modId) {
-        ModContainer container = Loader.instance().getActiveModList().stream()
+        /*ModContainer container = Loader.instance().getActiveModList().stream()
             .filter(m -> m.getModId().toLowerCase().equals(modId))
             .findFirst()
             .orElse(null);
 
-        return container == null ? null : container.getName();
+        return container == null ? null : container.getName();*/
+        return "dinosaur"; // TODO
     }
 
     public ItemStack getStack() {
@@ -88,7 +83,7 @@ public class GridStackItem implements IGridStack {
     public String getName() {
         try {
             if (cachedName == null) {
-                cachedName = stack.getDisplayName();
+                cachedName = stack.getDisplayName().getFormattedText(); // TODO
             }
 
             return cachedName;
@@ -129,7 +124,8 @@ public class GridStackItem implements IGridStack {
             if (stack.isEmpty()) {
                 oreIds = new String[]{};
             } else {
-                oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).toArray(String[]::new);
+                oreIds = new String[]{};//TODO OreDict
+                //oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).toArray(String[]::new);
             }
         }
 
@@ -140,7 +136,8 @@ public class GridStackItem implements IGridStack {
     public String getTooltip() {
         if (tooltip == null) {
             try {
-                tooltip = RenderUtils.getItemTooltip(stack).stream().collect(Collectors.joining("\n"));
+                tooltip = "dinosaur";//TODO
+                //tooltip = RenderUtils.getItemTooltip(stack).stream().collect(Collectors.joining("\n"));
             } catch (Throwable t) {
                 tooltip = "";
             }

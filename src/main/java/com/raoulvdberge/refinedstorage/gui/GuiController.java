@@ -22,7 +22,7 @@ public class GuiController extends GuiBase<ContainerController> {
     private int barWidth = 16;
     private int barHeight = 59;
 
-    public GuiController(ContainerController container, PlayerInventory inventory, TileController controller) {
+    public GuiController(ContainerController container, TileController controller, PlayerInventory inventory) {
         super(container, 176, 181, inventory, null);
 
         this.controller = controller;

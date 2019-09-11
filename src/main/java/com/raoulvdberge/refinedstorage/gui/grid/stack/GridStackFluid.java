@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -53,13 +52,14 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public String getName() {
-        return stack.getFluid().getLocalizedName(stack);
+        return stack.getDisplayName().getFormattedText(); // TODO correct method usage
     }
 
     @Override
     public String getModId() {
         if (modId == null) {
-            modId = FluidRegistry.getModId(stack);
+            // modId = FluidRegistry.getModId(stack);
+            modId = "dinosaur";//TODO
 
             if (modId == null) {
                 modId = "???";
@@ -84,17 +84,18 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public String[] getOreIds() {
-        return new String[]{stack.getFluid().getName()};
+        return new String[]{};
+        //return new String[]{stack.getFluid().getName()};
     }
 
     @Override
     public String getTooltip() {
-        return stack.getFluid().getLocalizedName(stack);
+        return stack.getDisplayName().getFormattedText();//TODO
     }
 
     @Override
     public int getQuantity() {
-        return stack.amount;
+        return stack.getAmount();
     }
 
     @Override
@@ -104,7 +105,7 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
-        GuiBase.FLUID_RENDERER.draw(gui.mc, x, y, stack);
+        GuiBase.FLUID_RENDERER.draw(gui.getMinecraft(), x, y, stack);
 
         String text;
 

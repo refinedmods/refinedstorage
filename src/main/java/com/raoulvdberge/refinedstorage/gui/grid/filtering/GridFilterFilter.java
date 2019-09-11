@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class GridFilterFilter implements Predicate<IGridStack> {
                 FluidStack stackInFilter = (FluidStack) filter.getStack();
 
                 if (filter.isModFilter()) {
-                    String stackInFilterModId = FluidRegistry.getModId(stackInFilter);
+                    String stackInFilterModId = /* TODO FluidRegistry.getModId(stackInFilter)*/"bla bla";
 
                     if (stackInFilterModId != null && stackInFilterModId.equalsIgnoreCase(stack.getModId())) {
                         return filter.getMode() == IFilter.MODE_WHITELIST;

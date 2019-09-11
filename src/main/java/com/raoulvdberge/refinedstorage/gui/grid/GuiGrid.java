@@ -1,12 +1,10 @@
 package com.raoulvdberge.refinedstorage.gui.grid;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
-import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.container.ContainerGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
@@ -18,31 +16,22 @@ import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.view.GridViewItem;
 import com.raoulvdberge.refinedstorage.gui.grid.view.IGridView;
-import com.raoulvdberge.refinedstorage.network.*;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.TimeUtils;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GuiGrid extends GuiBase implements IResizableDisplay {
+public class GuiGrid extends GuiBase<ContainerGrid> implements IResizableDisplay {
     private IGridView view;
 
     private TextFieldSearch searchField;
@@ -56,8 +45,8 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
     private int slotNumber;
 
-    public GuiGrid(ContainerGrid container, IGrid grid) {
-        super(container, 227, 0);
+    public GuiGrid(ContainerGrid container, IGrid grid, PlayerInventory inventory) {
+        super(container, 227, 0, inventory, null);
 
         this.grid = grid;
         this.view = grid.getGridType() == GridType.FLUID ? new GridViewFluid(this, getDefaultSorter(), getSorters()) : new GridViewItem(this, getDefaultSorter(), getSorters());
@@ -84,7 +73,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
     @Override
     public void init(int x, int y) {
-        ((ContainerGrid) this.inventorySlots).initSlots();
+        ((ContainerGrid) this.container).initSlots();
 
         this.tabs.init(xSize - 32);
 
@@ -98,7 +87,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         int sy = y + 6 + 1;
 
         if (searchField == null) {
-            searchField = new TextFieldSearch(0, fontRenderer, sx, sy, 88 - 6);
+            searchField = new TextFieldSearch(font, sx, sy, 88 - 6);
             searchField.addListener(() -> {
                 this.getView().sort(); // Use getter since this view can be replaced.
             });
@@ -126,7 +115,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             }
 
             if (showOredict) {
-                oredictPattern = addCheckBox(processingPattern.x + processingPattern.width + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
+                oredictPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, t("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue());
             }
 
             addSideButton(new SideButtonType(this, TileGrid.PROCESSING_TYPE));
@@ -309,13 +298,13 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, true);
 
         if (searchField != null) {
-            searchField.drawTextBox();
+            searchField.render(0, 0, 0);
         }
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
 
         // Drawn in here for bug #1844 (https://github.com/raoulvdberge/refinedstorage/issues/1844)
         // Item tooltips can't be rendered in the foreground layer due to the X offset translation.
@@ -351,14 +340,12 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
                 int color = grid.isActive() ? -2130706433 : 0xFF5B5B5B;
 
                 GlStateManager.disableLighting();
-                GlStateManager.disableDepth();
-                zLevel = 190;
+                GlStateManager.disableDepthTest();
                 GlStateManager.colorMask(true, true, true, false);
-                drawGradientRect(x, y, x + 16, y + 16, color, color);
-                zLevel = 0;
+                fillGradient(x, y, x + 16, y + 16, color, color);
                 GlStateManager.colorMask(true, true, true, true);
                 GlStateManager.enableLighting();
-                GlStateManager.enableDepth();
+                GlStateManager.enableDepthTest();
             }
 
             slot++;
@@ -379,7 +366,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
             drawTooltip(mouseX, mouseY, t("gui.refinedstorage:grid.pattern_create"));
         }
 
-        tabs.drawTooltip(fontRenderer, mouseX, mouseY);
+        tabs.drawTooltip(font, mouseX, mouseY);
     }
 
     private void drawGridTooltip(IGridStack gridStack, int mouseX, int mouseY) {
@@ -396,9 +383,10 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
 
         ItemStack stack = gridStack instanceof GridStackItem ? ((GridStackItem) gridStack).getStack() : ItemStack.EMPTY;
 
-        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, RS.INSTANCE.config.detailedTooltip, stack, mouseX, mouseY, screenWidth, screenHeight, fontRenderer);
+        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, RS.INSTANCE.config.detailedTooltip, stack, mouseX, mouseY, screenWidth, screenHeight, font);
     }
 
+    /* TODO
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
@@ -497,7 +485,7 @@ public class GuiGrid extends GuiBase implements IResizableDisplay {
         } else {
             super.keyTyped(character, keyCode);
         }
-    }
+    }*/
 
     public TextFieldSearch getSearchField() {
         return searchField;

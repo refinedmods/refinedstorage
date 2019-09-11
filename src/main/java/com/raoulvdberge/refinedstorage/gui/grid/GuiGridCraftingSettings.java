@@ -1,21 +1,19 @@
 package com.raoulvdberge.refinedstorage.gui.grid;
 
 import com.google.common.primitives.Ints;
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingSettings;
 import com.raoulvdberge.refinedstorage.gui.GuiAmountSpecifying;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.network.MessageGridCraftingPreview;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidAttributes;
 
-public class GuiGridCraftingSettings extends GuiAmountSpecifying {
+public class GuiGridCraftingSettings extends GuiAmountSpecifying<ContainerCraftingSettings> {
     private IGridStack stack;
 
     public GuiGridCraftingSettings(GuiBase parent, PlayerEntity player, IGridStack stack) {
-        super(parent, new ContainerCraftingSettings(player, stack), 172, 99);
+        super(parent, new ContainerCraftingSettings(player, stack), 172, 99, player.inventory);
 
         this.stack = stack;
     }
@@ -26,7 +24,7 @@ public class GuiGridCraftingSettings extends GuiAmountSpecifying {
     }
 
     @Override
-    protected String getTitle() {
+    protected String getGuiTitle() {
         return t("container.crafting");
     }
 
@@ -52,7 +50,7 @@ public class GuiGridCraftingSettings extends GuiAmountSpecifying {
 
     @Override
     protected int getDefaultAmount() {
-        return stack instanceof GridStackFluid ? Fluid.BUCKET_VOLUME : 1;
+        return stack instanceof GridStackFluid ? FluidAttributes.BUCKET_VOLUME : 1;
     }
 
     @Override
@@ -69,9 +67,9 @@ public class GuiGridCraftingSettings extends GuiAmountSpecifying {
         Integer quantity = Ints.tryParse(amountField.getText());
 
         if (quantity != null && quantity > 0) {
-            RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity, shiftDown, stack instanceof GridStackFluid));
+            // TODO RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity, shiftDown, stack instanceof GridStackFluid));
 
-            okButton.enabled = false;
+            okButton.active = false; // TODO is active correct
         }
     }
 }

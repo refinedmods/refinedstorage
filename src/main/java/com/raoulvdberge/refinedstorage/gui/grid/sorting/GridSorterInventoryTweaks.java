@@ -1,15 +1,23 @@
 package com.raoulvdberge.refinedstorage.gui.grid.sorting;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
-import invtweaks.api.InvTweaksAPI;
-import net.minecraftforge.fml.common.Loader;
 
+// TODO
 public class GridSorterInventoryTweaks implements IGridSorter {
     public static final String MOD_ID = "inventorytweaks";
 
-    private InvTweaksAPI api = null;
+    @Override
+    public boolean isApplicable(IGrid grid) {
+        return false;
+    }
+
+    @Override
+    public int compare(IGridStack left, IGridStack right, GridSorterDirection direction) {
+        return 0;
+    }
+
+/*    private InvTweaksAPI api = null;
 
     public GridSorterInventoryTweaks() {
         try {
@@ -35,6 +43,6 @@ public class GridSorterInventoryTweaks implements IGridSorter {
         }
 
         return 0;
-    }
+    }*/
 
 }
