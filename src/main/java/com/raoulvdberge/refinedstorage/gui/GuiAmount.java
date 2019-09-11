@@ -1,20 +1,17 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerAmount;
-import com.raoulvdberge.refinedstorage.network.MessageSlotFilterSet;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-public class GuiAmount extends GuiAmountSpecifying {
+public class GuiAmount extends GuiAmountSpecifying<ContainerAmount> {
     private int containerSlot;
     private ItemStack stack;
     private int maxAmount;
 
     public GuiAmount(GuiBase parent, PlayerEntity player, int containerSlot, ItemStack stack, int maxAmount) {
-        super(parent, new ContainerAmount(player, stack), 172, 99);
+        super(parent, new ContainerAmount(player, stack), 172, 99, player.inventory);
 
         this.containerSlot = containerSlot;
         this.stack = stack;
@@ -42,7 +39,7 @@ public class GuiAmount extends GuiAmountSpecifying {
     }
 
     @Override
-    protected String getTitle() {
+    protected String getGuiTitle() {
         return t("gui.refinedstorage:item_amount");
     }
 
@@ -64,7 +61,7 @@ public class GuiAmount extends GuiAmountSpecifying {
         Integer amount = Ints.tryParse(amountField.getText());
 
         if (amount != null) {
-            RS.INSTANCE.network.sendToServer(new MessageSlotFilterSet(containerSlot, ItemHandlerHelper.copyStackWithSize(stack, amount)));
+            // TODO RS.INSTANCE.network.sendToServer(new MessageSlotFilterSet(containerSlot, ItemHandlerHelper.copyStackWithSize(stack, amount)));
 
             close();
         }

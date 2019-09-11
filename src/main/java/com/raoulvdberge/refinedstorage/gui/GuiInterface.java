@@ -5,17 +5,17 @@ import com.raoulvdberge.refinedstorage.container.ContainerInterface;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiInterface extends GuiBase {
-    public GuiInterface(ContainerInterface container) {
-        super(container, 211, 217);
+public class GuiInterface extends GuiBase<ContainerInterface> {
+    public GuiInterface(ContainerInterface container, PlayerInventory inventory) {
+        super(container, 211, 217, inventory, null);
     }
 
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileInterface.REDSTONE_MODE));
 
-        addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_NBT));
     }
 

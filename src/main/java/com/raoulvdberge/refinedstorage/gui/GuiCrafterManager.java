@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
@@ -9,23 +10,21 @@ import com.raoulvdberge.refinedstorage.gui.control.*;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.inventory.Slot;
-import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Slot;
 
-import java.io.IOException;
 import java.util.Map;
 
-@MouseTweaksDisableWheelTweak
-public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
+// TODO @MouseTweaksDisableWheelTweak
+public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implements IResizableDisplay {
     private ContainerCrafterManager container;
     private NetworkNodeCrafterManager crafterManager;
 
     private TextFieldSearch searchField;
 
-    public GuiCrafterManager(NetworkNodeCrafterManager crafterManager) {
-        super(null, 193, 0);
+    public GuiCrafterManager(PlayerInventory inventory, NetworkNodeCrafterManager crafterManager) {
+        super(null, 193, 0, inventory, null);
 
         this.crafterManager = crafterManager;
     }
@@ -36,7 +35,6 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
 
     public void setContainer(ContainerCrafterManager container) {
         this.container = container;
-        this.inventorySlots = container;
     }
 
     @Override
@@ -110,7 +108,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
         int sy = y + 6 + 1;
 
         if (searchField == null) {
-            searchField = new TextFieldSearch(0, fontRenderer, sx, sy, 88 - 6);
+            searchField = new TextFieldSearch(font, sx, sy, 88 - 6);
             searchField.addListener(() -> container.initSlots(null));
             searchField.setMode(crafterManager.getSearchBoxMode());
         } else {
@@ -154,19 +152,22 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
         }
 
         if (searchField != null) {
-            searchField.drawTextBox();
+            // TODO render searchField.render();
         }
     }
 
     @Override
-    public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, clickedButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int clickedButton) {
+        boolean clicked = searchField.mouseClicked(mouseX, mouseY, clickedButton);
 
-        if (searchField != null) {
-            searchField.mouseClicked(mouseX, mouseY, clickedButton);
+        if (clicked) {
+            return true;
         }
+
+        return super.mouseClicked(mouseX, mouseY, clickedButton);
     }
 
+    /* TODO
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (searchField == null) {
@@ -180,7 +181,7 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
         } else {
             super.keyTyped(character, keyCode);
         }
-    }
+    }*/
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
@@ -193,11 +194,11 @@ public class GuiCrafterManager extends GuiBase implements IResizableDisplay {
 
                 if (y >= getTopHeight() - 1 && y < getTopHeight() + getVisibleRows() * 18 - 1) {
                     GlStateManager.disableLighting();
-                    GlStateManager.color(1, 1, 1);
+                    GlStateManager.color3f(1, 1, 1);
 
                     bindTexture("gui/crafter_manager.png");
 
-                    drawTexturedModalRect(7, y, 0, 174, 18 * 9, 18);
+                    drawTexture(7, y, 0, 174, 18 * 9, 18);
 
                     drawString(7 + 4, y + 6, RenderUtils.shorten(I18n.format(heading.getKey()), 25));
                 }

@@ -1,22 +1,20 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
-import com.raoulvdberge.refinedstorage.network.MessageNetworkItemOpen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class KeyInputListener {
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent e) {
-        InventoryPlayer inv = Minecraft.getMinecraft().player.inventory;
+        PlayerInventory inv = Minecraft.getInstance().player.inventory;
 
         if (RSKeyBindings.OPEN_WIRELESS_GRID.isKeyDown()) {
             findAndOpen(inv, RSItems.WIRELESS_GRID);
@@ -34,7 +32,7 @@ public class KeyInputListener {
             ItemStack slot = inv.getStackInSlot(i);
 
             if (slot.getItem() == search) {
-                RS.INSTANCE.network.sendToServer(new MessageNetworkItemOpen(i));
+                // TODO RS.INSTANCE.network.sendToServer(new MessageNetworkItemOpen(i));
 
                 return;
             }

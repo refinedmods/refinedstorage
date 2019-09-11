@@ -3,10 +3,11 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiCrafter extends GuiBase {
-    public GuiCrafter(ContainerCrafter container) {
-        super(container, 211, 137);
+public class GuiCrafter extends GuiBase<ContainerCrafter> {
+    public GuiCrafter(ContainerCrafter container, PlayerInventory inventory) {
+        super(container, 211, 137, inventory, null);
     }
 
     @Override

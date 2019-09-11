@@ -3,10 +3,11 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.container.ContainerRelay;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileRelay;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiRelay extends GuiBase {
-    public GuiRelay(ContainerRelay container) {
-        super(container, 176, 131);
+public class GuiRelay extends GuiBase<ContainerRelay> {
+    public GuiRelay(ContainerRelay container, PlayerInventory inventory) {
+        super(container, 176, 131, inventory, null);
     }
 
     @Override

@@ -5,32 +5,30 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.gui.control.*;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 
-import java.io.IOException;
-
-public class GuiStorage extends GuiBase {
+public class GuiStorage extends GuiBase<ContainerBase> {
     private IGuiStorage gui;
     private String texture;
 
-    private GuiButton priorityButton;
+    private Button priorityButton;
 
     private int barX = 8;
     private int barY = 54;
     private int barWidth = 16;
     private int barHeight = 70;
 
-    public GuiStorage(ContainerBase container, IGuiStorage gui, String texture) {
-        super(container, 176, 223);
+    public GuiStorage(ContainerBase container, IGuiStorage gui, String texture, PlayerInventory inventory) {
+        super(container, 176, 223, inventory, null);
 
         this.gui = gui;
         this.texture = texture;
     }
 
-    public GuiStorage(ContainerBase container, IGuiStorage gui) {
-        this(container, gui, "gui/storage.png");
+    public GuiStorage(ContainerBase container, IGuiStorage gui, PlayerInventory inventory) {
+        this(container, gui, "gui/storage.png", inventory);
     }
 
     @Override
@@ -48,7 +46,6 @@ public class GuiStorage extends GuiBase {
         }
 
         if (gui.getCompareParameter() != null) {
-            addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_DAMAGE));
             addSideButton(new SideButtonCompare(this, gui.getCompareParameter(), IComparer.COMPARE_NBT));
         }
 
@@ -56,7 +53,7 @@ public class GuiStorage extends GuiBase {
             addSideButton(new SideButtonAccessType(this, gui.getAccessTypeParameter()));
         }
 
-        int buttonWidth = 10 + fontRenderer.getStringWidth(t("misc.refinedstorage:priority"));
+        int buttonWidth = 10 + font.getStringWidth(t("misc.refinedstorage:priority"));
 
         priorityButton = addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, t("misc.refinedstorage:priority"));
     }
@@ -104,6 +101,7 @@ public class GuiStorage extends GuiBase {
         }
     }
 
+    /* TODO
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
@@ -111,5 +109,5 @@ public class GuiStorage extends GuiBase {
         if (button == priorityButton) {
             FMLCommonHandler.instance().showGuiScreen(new GuiPriority(this, gui.getPriorityParameter()));
         }
-    }
+    }*/
 }

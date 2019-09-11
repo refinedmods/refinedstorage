@@ -3,12 +3,13 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.container.ContainerNetworkTransmitter;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiNetworkTransmitter extends GuiBase {
+public class GuiNetworkTransmitter extends GuiBase<ContainerNetworkTransmitter> {
     private TileNetworkTransmitter networkTransmitter;
 
-    public GuiNetworkTransmitter(ContainerNetworkTransmitter container, TileNetworkTransmitter networkTransmitter) {
-        super(container, 176, 137);
+    public GuiNetworkTransmitter(ContainerNetworkTransmitter container, TileNetworkTransmitter networkTransmitter, PlayerInventory inventory) {
+        super(container, 176, 137, inventory, null);
 
         this.networkTransmitter = networkTransmitter;
     }
@@ -37,7 +38,7 @@ public class GuiNetworkTransmitter extends GuiBase {
 
         if (networkTransmitter.getNode().getNetworkCard().getStackInSlot(0).isEmpty()) {
             distance = t("gui.refinedstorage:network_transmitter.missing_card");
-        } else if (TileNetworkTransmitter.RECEIVER_DIMENSION.getValue() != networkTransmitter.getWorld().provider.getDimension()) {
+        } else if (TileNetworkTransmitter.RECEIVER_DIMENSION.getValue() != networkTransmitter.getWorld().getDimension().getType().getId()) {
             distance = t("gui.refinedstorage:network_transmitter.dimension", TileNetworkTransmitter.RECEIVER_DIMENSION.getValue());
         } else if (TileNetworkTransmitter.DISTANCE.getValue() != -1) {
             distance = t("gui.refinedstorage:network_transmitter.distance", TileNetworkTransmitter.DISTANCE.getValue());

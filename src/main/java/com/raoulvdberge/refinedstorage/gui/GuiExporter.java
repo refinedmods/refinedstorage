@@ -6,10 +6,11 @@ import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonType;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiExporter extends GuiBase {
-    public GuiExporter(ContainerExporter container) {
-        super(container, 211, 137);
+public class GuiExporter extends GuiBase<ContainerExporter> {
+    public GuiExporter(ContainerExporter container, PlayerInventory playerInventory) {
+        super(container, 211, 137, playerInventory, null);
     }
 
     @Override
@@ -18,7 +19,6 @@ public class GuiExporter extends GuiBase {
 
         addSideButton(new SideButtonType(this, TileExporter.TYPE));
 
-        addSideButton(new SideButtonCompare(this, TileExporter.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileExporter.COMPARE, IComparer.COMPARE_NBT));
     }
 

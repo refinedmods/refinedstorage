@@ -4,10 +4,11 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerDiskManipulator;
 import com.raoulvdberge.refinedstorage.gui.control.*;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiDiskManipulator extends GuiBase {
-    public GuiDiskManipulator(ContainerDiskManipulator container) {
-        super(container, 211, 211);
+public class GuiDiskManipulator extends GuiBase<ContainerDiskManipulator> {
+    public GuiDiskManipulator(ContainerDiskManipulator container, PlayerInventory playerInventory) {
+        super(container, 211, 211, playerInventory, null);
     }
 
     @Override
@@ -16,7 +17,6 @@ public class GuiDiskManipulator extends GuiBase {
         addSideButton(new SideButtonIOMode(this));
         addSideButton(new SideButtonType(this, TileDiskManipulator.TYPE));
         addSideButton(new SideButtonMode(this, TileDiskManipulator.MODE));
-        addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_NBT));
     }
 

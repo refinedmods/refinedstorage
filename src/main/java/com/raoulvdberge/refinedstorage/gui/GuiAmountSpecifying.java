@@ -1,34 +1,30 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.google.common.primitives.Ints;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.inventory.Container;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.input.Keyboard;
 
-import java.io.IOException;
-
-public abstract class GuiAmountSpecifying extends GuiBase {
-    protected GuiTextField amountField;
+public abstract class GuiAmountSpecifying<T extends Container> extends GuiBase<T> {
+    protected TextFieldWidget amountField;
 
     private GuiBase parent;
 
-    protected GuiButton okButton;
-    private GuiButton cancelButton;
+    protected Button okButton;
+    private Button cancelButton;
 
-    private GuiButton[] incrementButtons = new GuiButton[6];
+    private Button[] incrementButtons = new Button[6];
 
-    public GuiAmountSpecifying(GuiBase parent, Container container, int width, int height) {
-        super(container, width, height);
+    public GuiAmountSpecifying(GuiBase parent, T container, int width, int height, PlayerInventory playerInventory) {
+        super(container, width, height, playerInventory, null);
 
         this.parent = parent;
     }
 
     protected abstract String getOkButtonText();
 
-    protected abstract String getTitle();
+    protected abstract String getGuiTitle();
 
     protected abstract String getTexture();
 
@@ -55,13 +51,13 @@ public abstract class GuiAmountSpecifying extends GuiBase {
         okButton = addButton(x + pos.getLeft(), y + pos.getRight(), 50, 20, getOkButtonText());
         cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, 50, 20, t("gui.cancel"));
 
-        amountField = new GuiTextField(0, fontRenderer, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, fontRenderer.FONT_HEIGHT);
+        amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.FONT_HEIGHT, "");
         amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
         amountField.setText(String.valueOf(getDefaultAmount()));
         amountField.setTextColor(16777215);
         amountField.setCanLoseFocus(false);
-        amountField.setFocused(true);
+        amountField.setFocused2(true);
 
         int[] increments = getIncrements();
 
@@ -106,14 +102,15 @@ public abstract class GuiAmountSpecifying extends GuiBase {
 
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
-        amountField.drawTextBox();
+        amountField.renderButton(0, 0, 0);
     }
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, getTitle());
+        drawString(7, 7, getGuiTitle());
     }
 
+    /* TODO
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (!checkHotbarKeys(keyCode) && amountField.textboxKeyTyped(character, keyCode)) {
@@ -172,14 +169,14 @@ public abstract class GuiAmountSpecifying extends GuiBase {
                 }
             }
         }
-    }
+    }*/
 
     protected void onOkButtonPressed(boolean shiftDown) {
         // NO OP
     }
 
     public void close() {
-        FMLClientHandler.instance().showGuiScreen(parent);
+        // TODO FMLClientHandler.instance().showGuiScreen(parent);
     }
 
     public GuiBase getParent() {

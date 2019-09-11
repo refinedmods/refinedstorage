@@ -1,24 +1,20 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RS;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelAdd;
-import com.raoulvdberge.refinedstorage.network.MessageReaderWriterChannelRemove;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.input.Keyboard;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerInventory;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiReaderWriter extends GuiBase {
+public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
     private static final int VISIBLE_ROWS = 4;
 
     private static final int ITEM_WIDTH = 143;
@@ -27,17 +23,17 @@ public class GuiReaderWriter extends GuiBase {
     private List<String> channels = Collections.emptyList();
     private String currentChannelToSet;
 
-    private GuiButton add;
-    private GuiButton remove;
-    private GuiTextField name;
+    private Button add;
+    private Button remove;
+    private TextFieldWidget name;
     private IGuiReaderWriter readerWriter;
 
     private int itemSelected = -1;
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
-    public GuiReaderWriter(ContainerReaderWriter container, IGuiReaderWriter readerWriter) {
-        super(container, 176, 209);
+    public GuiReaderWriter(ContainerReaderWriter container, IGuiReaderWriter readerWriter, PlayerInventory inventory) {
+        super(container, 176, 209, inventory, null);
 
         this.readerWriter = readerWriter;
         this.scrollbar = new Scrollbar(157, 39, 12, 71);
@@ -49,12 +45,12 @@ public class GuiReaderWriter extends GuiBase {
 
         add = addButton(x + 128, y + 15, 20, 20, "+");
         remove = addButton(x + 150, y + 15, 20, 20, "-");
-        name = new GuiTextField(0, fontRenderer, x + 8 + 1, y + 20 + 1, 107, fontRenderer.FONT_HEIGHT);
+        name = new TextFieldWidget(font, x + 8 + 1, y + 20 + 1, 107, font.FONT_HEIGHT, "");
         name.setEnableBackgroundDrawing(false);
         name.setVisible(true);
         name.setTextColor(16777215);
         name.setCanLoseFocus(true);
-        name.setFocused(false);
+        name.setFocused2(false);
     }
 
     private List<String> getChannels() {
@@ -99,7 +95,7 @@ public class GuiReaderWriter extends GuiBase {
             drawTexture(x + itemSelectedX, y + itemSelectedY, 0, 216, ITEM_WIDTH, ITEM_HEIGHT);
         }
 
-        name.drawTextBox();
+        name.renderButton(0, 0, 0); // TODO is still needed with the new widget stuffs?
     }
 
     @Override
@@ -112,7 +108,7 @@ public class GuiReaderWriter extends GuiBase {
 
         int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
-        float scale = fontRenderer.getUnicodeFlag() ? 1F : 0.5F;
+        float scale = /*TODO fontRenderer.getUnicodeFlag() ? 1F :*/ 0.5F;
 
         for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getChannels().size()) {
@@ -122,7 +118,7 @@ public class GuiReaderWriter extends GuiBase {
                 }
 
                 GlStateManager.pushMatrix();
-                GlStateManager.scale(scale, scale, 1);
+                GlStateManager.scalef(scale, scale, 1);
 
                 drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 7, scale), getChannels().get(item));
 
@@ -135,11 +131,16 @@ public class GuiReaderWriter extends GuiBase {
         }
     }
 
-    @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        name.mouseClicked(mouseX, mouseY, mouseButton);
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        if (super.mouseClicked(mouseX, mouseY, mouseButton)) {
+            return true;
+        }
+
+        if (name.mouseClicked(mouseX, mouseY, mouseButton)) {
+            return true;
+        }
 
         if (inBounds(8, 39, 144, 73, mouseX - guiLeft, mouseY - guiTop)) {
             if (mouseButton == 0) {
@@ -158,9 +159,14 @@ public class GuiReaderWriter extends GuiBase {
             } else if (itemSelected != -1) {
                 TileDataManager.setParameter(readerWriter.getChannelParameter(), "");
             }
+
+            return true;
         }
+
+        return false;
     }
 
+    /* TODO
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (keyCode == Keyboard.KEY_DELETE) {
@@ -183,13 +189,13 @@ public class GuiReaderWriter extends GuiBase {
         } else if (button == remove) {
             onRemove();
         }
-    }
+    }*/
 
     private void onAdd() {
         String name = this.name.getText().trim();
 
         if (!name.isEmpty()) {
-            RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelAdd(name));
+            // TODO RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelAdd(name));
         }
     }
 
@@ -197,7 +203,7 @@ public class GuiReaderWriter extends GuiBase {
         String name = this.name.getText().trim();
 
         if (!name.isEmpty()) {
-            RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelRemove(name));
+            // TODO RS.INSTANCE.network.sendToServer(new MessageReaderWriterChannelRemove(name));
         }
     }
 

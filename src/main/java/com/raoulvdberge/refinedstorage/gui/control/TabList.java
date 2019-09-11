@@ -161,10 +161,14 @@ public class TabList {
         }
     }
 
-    public void mouseClicked() {
+    public boolean mouseClicked() {
         if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
             listeners.forEach(t -> t.onSelectionChanged(tabHovering));
+
+            return true;
         }
+
+        return false;
     }
 
     public void actionPerformed(GuiButton button) {

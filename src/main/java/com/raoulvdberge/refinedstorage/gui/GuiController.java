@@ -1,17 +1,18 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.container.ContainerController;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.ClientNode;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.PlayerInventory;
 
 import java.util.List;
 
-public class GuiController extends GuiBase {
+public class GuiController extends GuiBase<ContainerController> {
     private static final int VISIBLE_ROWS = 2;
 
     private TileController controller;
@@ -21,8 +22,8 @@ public class GuiController extends GuiBase {
     private int barWidth = 16;
     private int barHeight = 59;
 
-    public GuiController(ContainerController container, TileController controller) {
-        super(container, 176, 181);
+    public GuiController(ContainerController container, PlayerInventory inventory, TileController controller) {
+        super(container, 176, 181, inventory, null);
 
         this.controller = controller;
 
@@ -75,12 +76,16 @@ public class GuiController extends GuiBase {
 
                 drawItem(x, y + 5, node.getStack());
 
-                float scale = fontRenderer.getUnicodeFlag() ? 1F : 0.5F;
+                float scale = /*TODO fontRenderer.getUnicodeFlag() ? 1F :*/ 0.5F;
 
                 GlStateManager.pushMatrix();
-                GlStateManager.scale(scale, scale, 1);
+                GlStateManager.scalef(scale, scale, 1);
 
-                drawString(RenderUtils.getOffsetOnScale(x + 1, scale), RenderUtils.getOffsetOnScale(y - 2, scale), trimNameIfNeeded(!fontRenderer.getUnicodeFlag(), node.getStack().getDisplayName()));
+                drawString(
+                    RenderUtils.getOffsetOnScale(x + 1, scale),
+                    RenderUtils.getOffsetOnScale(y - 2, scale),
+                    trimNameIfNeeded(/*TODO !fontRenderer.getUnicodeFlag()*/false, node.getStack().getDisplayName().getString()) // TODO
+                );
                 drawString(RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
                 GlStateManager.popMatrix();

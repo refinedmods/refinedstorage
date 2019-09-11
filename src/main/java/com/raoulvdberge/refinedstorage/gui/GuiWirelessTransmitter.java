@@ -3,10 +3,11 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.container.ContainerWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiWirelessTransmitter extends GuiBase {
-    public GuiWirelessTransmitter(ContainerWirelessTransmitter container) {
-        super(container, 211, 137);
+public class GuiWirelessTransmitter extends GuiBase<ContainerWirelessTransmitter> {
+    public GuiWirelessTransmitter(ContainerWirelessTransmitter container, PlayerInventory inventory) {
+        super(container, 211, 137, inventory, null);
     }
 
     @Override

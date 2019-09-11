@@ -4,19 +4,20 @@ import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Container;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class GuiPriority extends GuiAmountSpecifying {
+public class GuiPriority extends GuiAmountSpecifying<Container> {
     private TileDataParameter<Integer, ?> priority;
 
-    public GuiPriority(GuiBase parent, TileDataParameter<Integer, ?> priority) {
-        super(parent, new Container() {
+    public GuiPriority(GuiBase parent, TileDataParameter<Integer, ?> priority, PlayerInventory inventory) {
+        super(parent, new Container(null, 0) { // TODO ctor
             @Override
             public boolean canInteractWith(PlayerEntity player) {
                 return false;
             }
-        }, 164, 92);
+        }, 164, 92, inventory);
 
         this.priority = priority;
     }
@@ -32,7 +33,7 @@ public class GuiPriority extends GuiAmountSpecifying {
     }
 
     @Override
-    protected String getTitle() {
+    protected String getGuiTitle() {
         return t("misc.refinedstorage:priority");
     }
 

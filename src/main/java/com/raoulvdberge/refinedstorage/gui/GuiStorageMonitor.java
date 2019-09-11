@@ -4,15 +4,15 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerStorageMonitor;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiStorageMonitor extends GuiBase {
-    public GuiStorageMonitor(ContainerStorageMonitor container) {
-        super(container, 211, 137);
+public class GuiStorageMonitor extends GuiBase<ContainerStorageMonitor> {
+    public GuiStorageMonitor(ContainerStorageMonitor container, PlayerInventory inventory) {
+        super(container, 211, 137, inventory, null);
     }
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonCompare(this, TileStorageMonitor.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileStorageMonitor.COMPARE, IComparer.COMPARE_NBT));
     }
 

@@ -75,7 +75,6 @@ public abstract class GuiBase<T extends Container> extends ContainerScreen {
     public GuiBase(T container, int screenWidth, int screenHeight, PlayerInventory inventory, ITextComponent title) {
         super(container, inventory, title);
 
-
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.xSize = screenWidth;
@@ -329,7 +328,7 @@ public abstract class GuiBase<T extends Container> extends ContainerScreen {
         return button;
     }
 
-    public boolean inBounds(int x, int y, int w, int h, int ox, int oy) {
+    public boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
         return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
     }
 

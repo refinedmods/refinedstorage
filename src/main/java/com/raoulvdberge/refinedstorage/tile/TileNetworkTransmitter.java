@@ -18,6 +18,7 @@ public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitt
 
         return (transmitter.getReceiver() != null && transmitter.isSameDimension()) ? transmitter.getDistance() : -1;
     });
+    // TODO Use dim here instead?
     public static final TileDataParameter<Integer, TileNetworkTransmitter> RECEIVER_DIMENSION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getReceiverDimension());
 
     public TileNetworkTransmitter() {

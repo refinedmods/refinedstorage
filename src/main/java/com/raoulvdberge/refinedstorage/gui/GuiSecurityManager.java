@@ -1,25 +1,21 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.ContainerSecurityManager;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
-import com.raoulvdberge.refinedstorage.network.MessageSecurityManagerUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-import java.io.IOException;
-
-public class GuiSecurityManager extends GuiBase {
+public class GuiSecurityManager extends GuiBase<ContainerSecurityManager> {
     private TileSecurityManager securityManager;
     private GuiCheckBox[] permissions = new GuiCheckBox[Permission.values().length];
 
-    public GuiSecurityManager(ContainerSecurityManager container, TileSecurityManager securityManager) {
-        super(container, 176, 234);
+    public GuiSecurityManager(ContainerSecurityManager container, TileSecurityManager securityManager, PlayerInventory inventory) {
+        super(container, 176, 234, inventory, null);
 
         this.securityManager = securityManager;
     }
@@ -47,6 +43,7 @@ public class GuiSecurityManager extends GuiBase {
         }
     }
 
+    /* TODO
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         super.actionPerformed(button);
@@ -56,7 +53,7 @@ public class GuiSecurityManager extends GuiBase {
                 RS.INSTANCE.network.sendToServer(new MessageSecurityManagerUpdate(securityManager, Permission.values()[i], permissions[i].isChecked()));
             }
         }
-    }
+    }*/
 
     @Override
     public void drawBackground(int x, int y, int mouseX, int mouseY) {
@@ -74,7 +71,7 @@ public class GuiSecurityManager extends GuiBase {
         for (int i = 0; i < permissions.length; ++i) {
             GuiCheckBox permission = permissions[i];
 
-            if (inBounds(permission.x - guiLeft, permission.y - guiTop, permission.width, permission.height, mouseX, mouseY)) {
+            if (inBounds(permission.x - guiLeft, permission.y - guiTop, permission.getWidth(), permission.getHeight(), mouseX, mouseY)) {
                 drawTooltip(mouseX, mouseY, I18n.format("gui.refinedstorage:security_manager.permission." + i + ".tooltip"));
             }
         }

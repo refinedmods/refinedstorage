@@ -2,18 +2,15 @@ package com.raoulvdberge.refinedstorage.gui.control;
 
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.integration.jei.IntegrationJEI;
-import com.raoulvdberge.refinedstorage.integration.jei.RSJEIPlugin;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TextFieldSearch extends GuiTextField {
+public class TextFieldSearch extends TextFieldWidget {
     private static final List<String> HISTORY = new ArrayList<>();
 
     private int mode;
@@ -21,23 +18,24 @@ public class TextFieldSearch extends GuiTextField {
 
     private List<Runnable> listeners = new LinkedList<>();
 
-    public TextFieldSearch(int componentId, FontRenderer fontRenderer, int x, int y, int width) {
-        super(componentId, fontRenderer, x, y, width, fontRenderer.FONT_HEIGHT);
+    public TextFieldSearch(FontRenderer fontRenderer, int x, int y, int width) {
+        super(fontRenderer, x, y, width, fontRenderer.FONT_HEIGHT, "");
 
         this.setEnableBackgroundDrawing(false);
         this.setVisible(true);
         this.setTextColor(16777215);
 
-        this.listeners.add(() -> {
+        /* TODO this.listeners.add(() -> {
             if (IntegrationJEI.isLoaded() && (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
                 RSJEIPlugin.INSTANCE.getRuntime().getIngredientFilter().setFilterText(getText());
             }
-        });
+        });*/
     }
 
     public void addListener(Runnable listener) {
         listeners.add(listener);
     }
+
 
     @Override
     public boolean mouseClicked(int mouseX, int mouseY, int mouseButton) {

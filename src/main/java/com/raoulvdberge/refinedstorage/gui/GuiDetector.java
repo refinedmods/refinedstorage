@@ -1,22 +1,19 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerDetector;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonDetectorMode;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonType;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.entity.player.PlayerInventory;
 
-import java.io.IOException;
+public class GuiDetector extends GuiBase<ContainerDetector> {
+    private TextFieldWidget amount;
 
-public class GuiDetector extends GuiBase {
-    private GuiTextField amount;
-
-    public GuiDetector(ContainerDetector container) {
-        super(container, 176, 137);
+    public GuiDetector(ContainerDetector container, PlayerInventory inventory) {
+        super(container, 176, 137, inventory, null);
     }
 
     @Override
@@ -25,16 +22,15 @@ public class GuiDetector extends GuiBase {
 
         addSideButton(new SideButtonDetectorMode(this));
 
-        addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_NBT));
 
-        amount = new GuiTextField(0, fontRenderer, x + 41 + 1, y + 23 + 1, 50, fontRenderer.FONT_HEIGHT);
+        amount = new TextFieldWidget(font, x + 41 + 1, y + 23 + 1, 50, font.FONT_HEIGHT, "");
         amount.setText(String.valueOf(TileDetector.AMOUNT.getValue()));
         amount.setEnableBackgroundDrawing(false);
         amount.setVisible(true);
         amount.setTextColor(16777215);
         amount.setCanLoseFocus(true);
-        amount.setFocused(false);
+        amount.setFocused2(false);
     }
 
     @Override
@@ -47,7 +43,7 @@ public class GuiDetector extends GuiBase {
 
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
-        amount.drawTextBox();
+        amount.renderButton(0, 0, 0);
     }
 
     @Override
@@ -56,6 +52,7 @@ public class GuiDetector extends GuiBase {
         drawString(7, 43, t("container.inventory"));
     }
 
+    /* TODO
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (!checkHotbarKeys(keyCode) && amount.textboxKeyTyped(character, keyCode)) {
@@ -74,9 +71,9 @@ public class GuiDetector extends GuiBase {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         amount.mouseClicked(mouseX, mouseY, mouseButton);
-    }
+    }*/
 
-    public GuiTextField getAmount() {
+    public TextFieldWidget getAmount() {
         return amount;
     }
 }

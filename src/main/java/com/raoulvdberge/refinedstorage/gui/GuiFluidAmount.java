@@ -1,19 +1,17 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerFluidAmount;
-import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidSetAmount;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GuiFluidAmount extends GuiAmountSpecifying {
+public class GuiFluidAmount extends GuiAmountSpecifying<ContainerFluidAmount> {
     private int containerSlot;
     private FluidStack stack;
     private int maxAmount;
 
     public GuiFluidAmount(GuiBase parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount) {
-        super(parent, new ContainerFluidAmount(player, stack), 172, 99);
+        super(parent, new ContainerFluidAmount(player, stack), 172, 99, player.inventory);
 
         this.containerSlot = containerSlot;
         this.stack = stack;
@@ -22,7 +20,7 @@ public class GuiFluidAmount extends GuiAmountSpecifying {
 
     @Override
     protected int getDefaultAmount() {
-        return stack.amount;
+        return stack.getAmount();
     }
 
     @Override
@@ -41,7 +39,7 @@ public class GuiFluidAmount extends GuiAmountSpecifying {
     }
 
     @Override
-    protected String getTitle() {
+    protected String getGuiTitle() {
         return t("gui.refinedstorage:fluid_amount");
     }
 
@@ -63,7 +61,7 @@ public class GuiFluidAmount extends GuiAmountSpecifying {
         Integer amount = Ints.tryParse(amountField.getText());
 
         if (amount != null) {
-            RS.INSTANCE.network.sendToServer(new MessageSlotFilterFluidSetAmount(containerSlot, amount));
+            // TODO RS.INSTANCE.network.sendToServer(new MessageSlotFilterFluidSetAmount(containerSlot, amount));
 
             close();
         }
