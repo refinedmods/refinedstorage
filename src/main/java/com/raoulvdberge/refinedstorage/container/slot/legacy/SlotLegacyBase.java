@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.container.slot.legacy;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 
 import java.util.function.Supplier;
 

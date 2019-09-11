@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.container.slot.grid;
 
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 
 public class SlotGridCrafting extends Slot {
     public SlotGridCrafting(IInventory inventory, int inventoryIndex, int x, int y) {

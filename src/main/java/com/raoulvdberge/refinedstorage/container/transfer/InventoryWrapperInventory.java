@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.container.transfer;
 
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
@@ -17,9 +17,9 @@ class InventoryWrapperInventory implements IInventoryWrapper {
     InventoryWrapperInventory(IInventory inventory) {
         this.inventory = inventory;
 
-        if (inventory instanceof InventoryPlayer) {
+        if (inventory instanceof PlayerInventory) {
             // Don't use PlayerMainInvWrapper to avoid stack animations.
-            this.wrapper = new RangedWrapper(new InvWrapper(inventory), 0, ((InventoryPlayer) inventory).mainInventory.size());
+            this.wrapper = new RangedWrapper(new InvWrapper(inventory), 0, ((PlayerInventory) inventory).mainInventory.size());
         } else {
             this.wrapper = new InvWrapper(inventory);
         }
