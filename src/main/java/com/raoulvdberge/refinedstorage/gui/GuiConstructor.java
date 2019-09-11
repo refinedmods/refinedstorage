@@ -7,10 +7,11 @@ import com.raoulvdberge.refinedstorage.gui.control.SideButtonConstuctorDrop;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonType;
 import com.raoulvdberge.refinedstorage.tile.TileConstructor;
+import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiConstructor extends GuiBase {
-    public GuiConstructor(ContainerConstructor container) {
-        super(container, 211, 137);
+public class GuiConstructor extends GuiBase<ContainerConstructor> {
+    public GuiConstructor(ContainerConstructor container, PlayerInventory inventory) {
+        super(container, 211, 137, inventory, null); // TODO TextComponent
     }
 
     @Override
@@ -19,7 +20,6 @@ public class GuiConstructor extends GuiBase {
 
         addSideButton(new SideButtonType(this, TileConstructor.TYPE));
 
-        addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileConstructor.COMPARE, IComparer.COMPARE_NBT));
         addSideButton(new SideButtonConstuctorDrop(this));
     }
