@@ -12,20 +12,20 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class ContainerCraftingSettings extends ContainerBase {
     public ContainerCraftingSettings(PlayerEntity player, IGridStack stack) {
-        super(null, player);
+        super(null, null, player, 0);
 
         if (stack instanceof GridStackFluid) {
             FluidInventory inventory = new FluidInventory(1);
 
             inventory.setFluid(0, ((GridStackFluid) stack).getStack());
 
-            addSlotToContainer(new SlotFilterFluidDisabled(inventory, 0, 89, 48));
+            addSlot(new SlotFilterFluidDisabled(inventory, 0, 89, 48));
         } else if (stack instanceof GridStackItem) {
             ItemStackHandler handler = new ItemStackHandler(1);
 
             handler.setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(((GridStackItem) stack).getStack(), 1));
 
-            addSlotToContainer(new SlotDisabled(handler, 0, 89, 48));
+            addSlot(new SlotDisabled(handler, 0, 89, 48));
         }
     }
 }

@@ -7,12 +7,12 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class ContainerFluidAmount extends ContainerBase {
     public ContainerFluidAmount(PlayerEntity player, FluidStack stack) {
-        super(null, player);
+        super(null, null, player, 0);
 
         FluidInventory inventory = new FluidInventory(1);
 
         inventory.setFluid(0, stack);
 
-        addSlotToContainer(new SlotFilterFluidDisabled(inventory, 0, 89, 48, 0));
+        addSlot(new SlotFilterFluidDisabled(inventory, 0, 89, 48, 0));
     }
 }

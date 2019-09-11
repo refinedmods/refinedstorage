@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
@@ -8,22 +9,22 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerDiskDrive extends ContainerBase {
-    public ContainerDiskDrive(TileDiskDrive diskDrive, PlayerEntity player) {
-        super(diskDrive, player);
+    public ContainerDiskDrive(TileDiskDrive diskDrive, PlayerEntity player, int windowId) {
+        super(RSContainers.DISK_DRIVE, diskDrive, player, windowId);
 
         int x = 80;
         int y = 54;
 
         for (int i = 0; i < 8; ++i) {
-            addSlotToContainer(new SlotItemHandler(diskDrive.getNode().getDisks(), i, x + ((i % 2) * 18), y + Math.floorDiv(i, 2) * 18));
+            addSlot(new SlotItemHandler(diskDrive.getNode().getDisks(), i, x + ((i % 2) * 18), y + Math.floorDiv(i, 2) * 18));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilter(diskDrive.getNode().getItemFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskDrive.getNode().getType() == IType.ITEMS));
+            addSlot(new SlotFilter(diskDrive.getNode().getItemFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskDrive.getNode().getType() == IType.ITEMS));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterFluid(diskDrive.getNode().getFluidFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskDrive.getNode().getType() == IType.FLUIDS));
+            addSlot(new SlotFilterFluid(diskDrive.getNode().getFluidFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskDrive.getNode().getType() == IType.FLUIDS));
         }
 
         addPlayerInventory(8, 141);

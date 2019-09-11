@@ -1,20 +1,18 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterListener;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
-import com.raoulvdberge.refinedstorage.network.MessageReaderWriterUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class ContainerReaderWriter extends ContainerBase implements IReaderWriterListener {
     private IGuiReaderWriter readerWriter;
     private boolean addedListener;
 
-    public ContainerReaderWriter(IGuiReaderWriter readerWriter, TileBase tile, PlayerEntity player) {
-        super(tile, player);
+    public ContainerReaderWriter(IGuiReaderWriter readerWriter, TileBase tile, PlayerEntity player, int windowId) {
+        super(RSContainers.READER_WRITER, tile, player, windowId);
 
         this.readerWriter = readerWriter;
 
@@ -58,6 +56,6 @@ public class ContainerReaderWriter extends ContainerBase implements IReaderWrite
 
     @Override
     public void onChanged() {
-        RS.INSTANCE.network.sendTo(new MessageReaderWriterUpdate(readerWriter.getNetwork().getReaderWriterManager().getChannels()), (ServerPlayerEntity) getPlayer());
+        // TODO RS.INSTANCE.network.sendTo(new MessageReaderWriterUpdate(readerWriter.getNetwork().getReaderWriterManager().getChannels()), (ServerPlayerEntity) getPlayer());
     }
 }

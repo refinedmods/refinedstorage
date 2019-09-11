@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
@@ -8,19 +9,19 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerExporter extends ContainerBase {
-    public ContainerExporter(TileExporter exporter, PlayerEntity player) {
-        super(exporter, player);
+    public ContainerExporter(TileExporter exporter, PlayerEntity player, int windowId) {
+        super(RSContainers.EXPORTER, exporter, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(exporter.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlot(new SlotItemHandler(exporter.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilter(exporter.getNode().getItemFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> exporter.getNode().getType() == IType.ITEMS));
+            addSlot(new SlotFilter(exporter.getNode().getItemFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> exporter.getNode().getType() == IType.ITEMS));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterFluid(exporter.getNode().getFluidFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> exporter.getNode().getType() == IType.FLUIDS));
+            addSlot(new SlotFilterFluid(exporter.getNode().getFluidFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> exporter.getNode().getType() == IType.FLUIDS));
         }
 
         addPlayerInventory(8, 55);

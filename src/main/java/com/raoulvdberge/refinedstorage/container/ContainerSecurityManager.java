@@ -1,18 +1,19 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerSecurityManager extends ContainerBase {
-    public ContainerSecurityManager(TileSecurityManager securityManager, PlayerEntity player) {
-        super(securityManager, player);
+    public ContainerSecurityManager(TileSecurityManager securityManager, PlayerEntity player, int windowId) {
+        super(RSContainers.SECURITY_MANAGER, securityManager, player, windowId);
 
         int x = 8;
         int y = 20;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlotToContainer(new SlotItemHandler(securityManager.getNode().getCardsItems(), i, x, y));
+            addSlot(new SlotItemHandler(securityManager.getNode().getCardsItems(), i, x, y));
 
             if (((i + 1) % 9) == 0) {
                 x = 8;
@@ -22,7 +23,7 @@ public class ContainerSecurityManager extends ContainerBase {
             }
         }
 
-        addSlotToContainer(new SlotItemHandler(securityManager.getNode().getEditCard(), 0, 80, 70));
+        addSlot(new SlotItemHandler(securityManager.getNode().getEditCard(), 0, 80, 70));
 
         addPlayerInventory(8, 152);
 

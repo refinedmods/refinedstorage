@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.container;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
@@ -8,13 +7,14 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyDisabled;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
 import com.raoulvdberge.refinedstorage.container.transfer.TransferManager;
-import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -34,8 +34,8 @@ public abstract class ContainerBase extends Container {
     private List<SlotFilterFluid> fluidSlots = new ArrayList<>();
     private List<FluidStack> fluids = new ArrayList<>();
 
-    public ContainerBase(@Nullable TileBase tile, PlayerEntity player, int windowId) {
-        super(ContainerType.CRAFTING, windowId);
+    public ContainerBase(@Nullable ContainerType<?> type, @Nullable TileBase tile, PlayerEntity player, int windowId) {
+        super(type, windowId);
 
         this.tile = tile;
 
@@ -63,9 +63,9 @@ public abstract class ContainerBase extends Container {
             int y = yInventory + 4 + (3 * 18);
 
             if (isHeldItemDisabled() && i == player.inventory.currentItem) {
-                addSlotToContainer(new SlotLegacyDisabled(player.inventory, id, x, y));
+                addSlot(new SlotLegacyDisabled(player.inventory, id, x, y));
             } else {
-                addSlotToContainer(new Slot(player.inventory, id, x, y));
+                addSlot(new Slot(player.inventory, id, x, y));
             }
 
             id++;
@@ -73,7 +73,7 @@ public abstract class ContainerBase extends Container {
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                addSlotToContainer(new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
+                addSlot(new Slot(player.inventory, id, xInventory + x * 18, yInventory + y * 18));
 
                 id++;
             }
@@ -160,13 +160,13 @@ public abstract class ContainerBase extends Container {
     }
 
     @Override
-    protected Slot addSlotToContainer(Slot slot) {
+    protected Slot addSlot(Slot slot) {
         if (slot instanceof SlotFilterFluid) {
             fluids.add(null);
             fluidSlots.add((SlotFilterFluid) slot);
         }
 
-        return super.addSlotToContainer(slot);
+        return super.addSlot(slot);
     }
 
     @Override
@@ -187,7 +187,7 @@ public abstract class ContainerBase extends Container {
                 if (!API.instance().getComparer().isEqual(cached, actual, IComparer.COMPARE_QUANTITY | IComparer.COMPARE_NBT)) {
                     this.fluids.set(i, actual);
 
-                    RS.INSTANCE.network.sendTo(new MessageSlotFilterFluidUpdate(slot.slotNumber, actual), (ServerPlayerEntity) this.getPlayer());
+                    // TODO RS.INSTANCE.network.sendTo(new MessageSlotFilterFluidUpdate(slot.slotNumber, actual), (ServerPlayerEntity) this.getPlayer());
                 }
             }
         }

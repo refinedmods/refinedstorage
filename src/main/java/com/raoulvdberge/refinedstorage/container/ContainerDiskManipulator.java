@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
@@ -8,27 +9,27 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerDiskManipulator extends ContainerBase {
-    public ContainerDiskManipulator(TileDiskManipulator diskManipulator, PlayerEntity player) {
-        super(diskManipulator, player);
+    public ContainerDiskManipulator(TileDiskManipulator diskManipulator, PlayerEntity player, int windowId) {
+        super(RSContainers.DISK_MANIPULATOR, diskManipulator, player, windowId);
 
         for (int i = 0; i < 4; ++i) {
-            addSlotToContainer(new SlotItemHandler(diskManipulator.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
+            addSlot(new SlotItemHandler(diskManipulator.getNode().getUpgrades(), i, 187, 6 + (i * 18)));
         }
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(diskManipulator.getNode().getInputDisks(), i, 44, 57 + (i * 18)));
+            addSlot(new SlotItemHandler(diskManipulator.getNode().getInputDisks(), i, 44, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 3; ++i) {
-            addSlotToContainer(new SlotItemHandler(diskManipulator.getNode().getOutputDisks(), i, 116, 57 + (i * 18)));
+            addSlot(new SlotItemHandler(diskManipulator.getNode().getOutputDisks(), i, 116, 57 + (i * 18)));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilter(diskManipulator.getNode().getItemFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskManipulator.getNode().getType() == IType.ITEMS));
+            addSlot(new SlotFilter(diskManipulator.getNode().getItemFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskManipulator.getNode().getType() == IType.ITEMS));
         }
 
         for (int i = 0; i < 9; ++i) {
-            addSlotToContainer(new SlotFilterFluid(diskManipulator.getNode().getFluidFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskManipulator.getNode().getType() == IType.FLUIDS));
+            addSlot(new SlotFilterFluid(diskManipulator.getNode().getFluidFilters(), i, 8 + (18 * i), 20).setEnableHandler(() -> diskManipulator.getNode().getType() == IType.FLUIDS));
         }
 
         addPlayerInventory(8, 129);

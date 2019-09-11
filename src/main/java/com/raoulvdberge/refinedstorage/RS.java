@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 @Mod(modid = RS.ID, version = RS.VERSION, acceptedMinecraftVersions = "[1.12.2,1.13)", guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON, certificateFingerprint = RS.FINGERPRINT, dependencies = RS.DEPENDENCIES)
 public final class RS {
@@ -59,6 +60,8 @@ public final class RS {
         config = new RSConfig(null, e.getSuggestedConfigurationFile());
 
         PROXY.preInit(e);
+
+        NetworkHooks.openGui();
     }
 
     @EventHandler

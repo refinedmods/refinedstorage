@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
@@ -13,20 +14,16 @@ import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
 public class ContainerCrafterManager extends ContainerBase {
@@ -64,11 +61,6 @@ public class ContainerCrafterManager extends ContainerBase {
         public void sendWindowProperty(Container container, int varToUpdate, int newValue) {
             base.sendWindowProperty(container, varToUpdate, newValue);
         }
-
-        @Override
-        public void sendAllWindowProperties(Container container, IInventory inventory) {
-            base.sendAllWindowProperties(container, inventory);
-        }
     }
 
     private IResizableDisplay display;
@@ -87,12 +79,13 @@ public class ContainerCrafterManager extends ContainerBase {
         super.addListener(listener);
     }
 
+    // TODO add AT for listeners
     public List<IContainerListener> getListeners() {
-        return listeners;
+        return new ArrayList<>();
     }
 
-    public ContainerCrafterManager(TileCrafterManager crafterManager, PlayerEntity player, IResizableDisplay display) {
-        super(crafterManager, player);
+    public ContainerCrafterManager(TileCrafterManager crafterManager, PlayerEntity player, IResizableDisplay display, int windowId) {
+        super(RSContainers.CRAFTER_MANAGER, crafterManager, player, windowId);
 
         this.display = display;
         this.crafterManager = crafterManager.getNode();
@@ -104,7 +97,7 @@ public class ContainerCrafterManager extends ContainerBase {
                 for (Map.Entry<String, List<IItemHandlerModifiable>> entry : crafterManager.getNode().getNetwork().getCraftingManager().getNamedContainers().entrySet()) {
                     for (IItemHandlerModifiable handler : entry.getValue()) {
                         for (int i = 0; i < handler.getSlots(); ++i) {
-                            addSlotToContainer(new SlotCrafterManager(handler, i, 0, 0, true, display, this.crafterManager));
+                            addSlot(new SlotCrafterManager(handler, i, 0, 0, true, display, this.crafterManager));
                         }
                     }
                 }
@@ -124,7 +117,7 @@ public class ContainerCrafterManager extends ContainerBase {
         }
 
         this.inventorySlots.clear();
-        this.inventoryItemStacks.clear();
+        // TODO at for inventoryItemStacks this.inventoryItemStacks.clear();
         this.headings.clear();
 
         rows = 0;
@@ -191,7 +184,7 @@ public class ContainerCrafterManager extends ContainerBase {
                     }
                 }
 
-                addSlotToContainer(new SlotCrafterManager(dummy, slot, x, y, visible, display, crafterManager));
+                addSlot(new SlotCrafterManager(dummy, slot, x, y, visible, display, crafterManager));
 
                 if (visible) {
                     foundItemsInCategory = true;

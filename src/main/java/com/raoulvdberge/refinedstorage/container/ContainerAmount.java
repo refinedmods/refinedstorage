@@ -8,12 +8,12 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class ContainerAmount extends ContainerBase {
     public ContainerAmount(PlayerEntity player, ItemStack stack) {
-        super(null, player);
+        super(null, null, player, 0);
 
         ItemStackHandler inventory = new ItemStackHandler(1);
 
         inventory.setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(stack, 1));
 
-        addSlotToContainer(new SlotDisabled(inventory, 0, 89, 48));
+        addSlot(new SlotDisabled(inventory, 0, 89, 48));
     }
 }
