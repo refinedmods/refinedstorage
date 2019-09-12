@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.render.tesr;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
-import com.sun.prism.TextureMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -85,8 +84,8 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntityRenderer<
         GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
         GlStateManager.depthMask(true);
         GlStateManager.scalef(0.4F, -0.4F, -0.015F);
-        Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+        // TODO Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        // TODO Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableAlphaTest();
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
@@ -103,8 +102,8 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntityRenderer<
         GlStateManager.disableAlphaTest();
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableLighting();
-        Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+        // TODO Minecraft.getInstance().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        // TODO Minecraft.getInstance().getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
         GlStateManager.disableBlend();
         GlStateManager.color4f(1F, 1F, 1F, 1F);
 

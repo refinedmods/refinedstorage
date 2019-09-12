@@ -1,22 +1,23 @@
 package com.raoulvdberge.refinedstorage.render.model;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelDiskDrive;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.IUnbakedModel;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.texture.ISprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.common.model.IModelState;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
-public class ModelDiskDrive implements IModel {
+public class ModelDiskDrive implements IUnbakedModel {
     private static final ResourceLocation MODEL_BASE = new ResourceLocation(RS.ID + ":block/disk_drive");
 
     private static final ResourceLocation MODEL_DISK = new ResourceLocation(RS.ID + ":block/disks/disk");
@@ -38,7 +39,13 @@ public class ModelDiskDrive implements IModel {
     }
 
     @Override
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+    public Collection<ResourceLocation> getTextures(Function<ResourceLocation, IUnbakedModel> modelGetter, Set<String> missingTextureErrors) {
+        return new ArrayList<>();
+    }
+
+    @Nullable
+    @Override
+    public IBakedModel bake(ModelBakery bakery, Function spriteGetter, ISprite sprite, VertexFormat format) {
         IModel baseModel;
         IModel diskModel;
         IModel diskModelNearCapacity;
@@ -54,13 +61,14 @@ public class ModelDiskDrive implements IModel {
         } catch (Exception e) {
             throw new Error("Unable to load disk drive models", e);
         }
-
+/*
         return new BakedModelDiskDrive(
-            baseModel.bake(state, format, bakedTextureGetter),
-            new BakedModelFullbright(diskModel.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
-            new BakedModelFullbright(diskModelNearCapacity.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
-            new BakedModelFullbright(diskModelFull.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
-            diskModelDisconnected.bake(state, format, bakedTextureGetter)
-        );
+            baseModel.bake(bakery, spriteGetter, sprite, format),
+            new BakedModelFullbright(diskModel.bake(bakery, spriteGetter, sprite, format), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            new BakedModelFullbright(diskModelNearCapacity.bake(bakery, spriteGetter, sprite, format), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            new BakedModelFullbright(diskModelFull.bake(bakery, spriteGetter, sprite, format), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            diskModelDisconnected.bake(bakery, spriteGetter, sprite, format)
+        );*/
+        return null;
     }
 }

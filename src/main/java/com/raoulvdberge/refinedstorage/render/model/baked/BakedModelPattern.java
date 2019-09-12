@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
-
+/*
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
@@ -75,3 +75,4 @@ public class BakedModelPattern extends BakedModelDelegate {
         return false;
     }
 }
+*/

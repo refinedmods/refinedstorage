@@ -1,23 +1,20 @@
 package com.raoulvdberge.refinedstorage.render.model;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelDiskManipulator;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.IUnbakedModel;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.texture.ISprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.common.model.IModelState;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import javax.annotation.Nullable;
+import java.util.*;
 import java.util.function.Function;
 
-public class ModelDiskManipulator implements IModel {
+public class ModelDiskManipulator implements IUnbakedModel {
     private static final ResourceLocation MODEL_BASE_CUTOUT = new ResourceLocation(RS.ID + ":block/cube_north_cutout");
     private static final ResourceLocation MODEL_BASE_CONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_connected");
     private static final ResourceLocation MODEL_BASE_DISCONNECTED = new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected");
@@ -43,12 +40,13 @@ public class ModelDiskManipulator implements IModel {
     }
 
     @Override
-    public Collection<ResourceLocation> getTextures() {
+    public Collection<ResourceLocation> getTextures(Function<ResourceLocation, IUnbakedModel> modelGetter, Set<String> missingTextureErrors) {
         return Collections.emptyList();
     }
 
+    @Nullable
     @Override
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
+    public IBakedModel bake(ModelBakery bakery, Function spriteGetter, ISprite sprite, VertexFormat format) {
         IModel baseModelConnected, baseModelDisconnected;
         IModel diskModel;
         IModel diskModelNearCapacity;
@@ -65,14 +63,15 @@ public class ModelDiskManipulator implements IModel {
         } catch (Exception e) {
             throw new Error("Unable to load disk manipulator models", e);
         }
-
+/*
         return new BakedModelDiskManipulator(
-            new BakedModelFullbright(baseModelConnected.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disk_manipulator/cutouts/connected"),
-            baseModelDisconnected.bake(state, format, bakedTextureGetter),
-            new BakedModelFullbright(diskModel.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
-            new BakedModelFullbright(diskModelNearCapacity.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
-            new BakedModelFullbright(diskModelFull.bake(state, format, bakedTextureGetter), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
-            diskModelDisconnected.bake(state, format, bakedTextureGetter)
-        );
+            new BakedModelFullbright(baseModelConnected.bake(bakery, spriteGetter, sprite, format), RS.ID + ":blocks/disk_manipulator/cutouts/connected"),
+            baseModelDisconnected.bake(bakery, spriteGetter, sprite, format),
+            new BakedModelFullbright(diskModel.bake(bakery, spriteGetter, sprite, format), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            new BakedModelFullbright(diskModelNearCapacity.bake(bakery, spriteGetter, sprite, format), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            new BakedModelFullbright(diskModelFull.bake(bakery, spriteGetter, sprite, format), RS.ID + ":blocks/disks/leds").setCacheDisabled(),
+            diskModelDisconnected.bake(bakery, spriteGetter, sprite, format)
+        );*/
+        return null;
     }
 }

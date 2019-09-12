@@ -1,5 +1,5 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
-
+/*
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.common.model.TRSRTransformation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,12 +29,12 @@ import java.util.Objects;
 
 public class BakedModelCover extends BakedModelCableCover {
     private class CacheKey {
-        private IBlockState state;
+        private BlockState state;
         private ItemStack stack;
-        private EnumFacing side;
+        private Direction side;
         private CoverType type;
 
-        CacheKey(IBlockState state, ItemStack stack, EnumFacing side, CoverType type) {
+        CacheKey(BlockState state, ItemStack stack, Direction side, CoverType type) {
             this.state = state;
             this.stack = stack;
             this.side = side;
@@ -72,7 +72,7 @@ public class BakedModelCover extends BakedModelCableCover {
         public List<BakedQuad> load(CacheKey key) {
             List<BakedQuad> quads = new ArrayList<>();
 
-            addCover(quads, new Cover(key.stack, key.type), EnumFacing.NORTH, key.side, 0, null, false);
+            addCover(quads, new Cover(key.stack, key.type), Direction.NORTH, key.side, 0, null, false);
 
             return quads;
         }
@@ -90,7 +90,7 @@ public class BakedModelCover extends BakedModelCableCover {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, long rand) {
         if (stack == null) {
             return Collections.emptyList();
         }
@@ -142,7 +142,7 @@ public class BakedModelCover extends BakedModelCableCover {
     }
 
     @Override
-    public boolean isAmbientOcclusion(IBlockState state) {
+    public boolean isAmbientOcclusion(BlockState state) {
         return true;
     }
 
@@ -151,4 +151,4 @@ public class BakedModelCover extends BakedModelCableCover {
     public ItemCameraTransforms getItemCameraTransforms() {
         return ItemCameraTransforms.DEFAULT;
     }
-}
+}*/

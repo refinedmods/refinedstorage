@@ -1,19 +1,24 @@
 package com.raoulvdberge.refinedstorage.render.model.loader;
 
-import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.renderer.model.IUnbakedModel;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
-import net.minecraftforge.client.model.IModel;
 
 import java.util.function.Supplier;
 
 public class CustomModelLoaderDefault implements ICustomModelLoader {
     private ResourceLocation modelLocation;
-    private Supplier<IModel> model;
+    private Supplier<IUnbakedModel> model;
 
-    public CustomModelLoaderDefault(ResourceLocation modelLocation, Supplier<IModel> model) {
+    public CustomModelLoaderDefault(ResourceLocation modelLocation, Supplier<IUnbakedModel> model) {
         this.modelLocation = modelLocation;
         this.model = model;
+    }
+
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager) {
+        // NO OP
     }
 
     @Override
@@ -22,12 +27,7 @@ public class CustomModelLoaderDefault implements ICustomModelLoader {
     }
 
     @Override
-    public IModel loadModel(ResourceLocation modelLocation) {
+    public IUnbakedModel loadModel(ResourceLocation modelLocation) {
         return model.get();
-    }
-
-    @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
-        // NO OP
     }
 }

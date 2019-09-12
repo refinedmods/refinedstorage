@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
-
+/*
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.client.model.pipeline.VertexTransformer;
@@ -26,9 +26,9 @@ import javax.vecmath.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+**
  * @link https://github.com/SlimeKnights/Mantle/blob/master/src/main/java/slimeknights/mantle/client/model/TRSRBakedModel.java
- */
+ *
 public class BakedModelTRSR implements IBakedModel {
     protected final IBakedModel original;
     public TRSRTransformation transformation;
@@ -57,14 +57,14 @@ public class BakedModelTRSR implements IBakedModel {
         this.faceOffset = 0;
     }
 
-    /**
+    **
      * Rotates around the Y axis and adjusts culling appropriately. South is default.
-     */
-    public BakedModelTRSR(IBakedModel original, EnumFacing facing) {
+     *
+    public BakedModelTRSR(IBakedModel original, Direction facing) {
         this.original = original;
         this.override = new TRSROverride(this);
 
-        this.faceOffset = 4 + EnumFacing.NORTH.getHorizontalIndex() - facing.getHorizontalIndex();
+        this.faceOffset = 4 + Direction.NORTH.getHorizontalIndex() - facing.getHorizontalIndex();
 
         double r = Math.PI * (360 - facing.getOpposite().getHorizontalIndex() * 90) / 180d;
         TRSRTransformation t = new TRSRTransformation(null, null, null, TRSRTransformation.quatFromXYZ(0, (float) r, 0));
@@ -73,7 +73,7 @@ public class BakedModelTRSR implements IBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+    public List<BakedQuad> getQuads(BlockState state, Direction side, long rand) {
         // transform quads obtained from parent
 
         List<BakedQuad> quads = new ArrayList<>();
@@ -82,7 +82,7 @@ public class BakedModelTRSR implements IBakedModel {
             try {
                 // adjust side to facing-rotation
                 if (side != null && side.getHorizontalIndex() > -1) {
-                    side = EnumFacing.byHorizontalIndex((side.getHorizontalIndex() + faceOffset) % 4);
+                    side = Direction.byHorizontalIndex((side.getHorizontalIndex() + faceOffset) % 4);
                 }
                 for (BakedQuad quad : original.getQuads(state, side, rand)) {
                     Transformer transformer = new Transformer(transformation, quad.getFormat());
@@ -188,4 +188,4 @@ public class BakedModelTRSR implements IBakedModel {
             return ((UnpackedBakedQuad.Builder) parent).build();
         }
     }
-}
+}*/

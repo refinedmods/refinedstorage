@@ -3,21 +3,26 @@ package com.raoulvdberge.refinedstorage.render.model.loader;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.raoulvdberge.refinedstorage.render.model.ModelCover;
-import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.renderer.model.IUnbakedModel;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
-import net.minecraftforge.client.model.IModel;
 
 import javax.annotation.Nullable;
 
 public class CustomModelLoaderCover implements ICustomModelLoader {
+    @Override
+    public void onResourceManagerReload(IResourceManager resourceManager) {
+        // NO OP
+    }
+
     @Override
     public boolean accepts(ResourceLocation modelLocation) {
         return modelLocation.getNamespace().equals(RS.ID) && getType(modelLocation) != null;
     }
 
     @Override
-    public IModel loadModel(ResourceLocation modelLocation) {
+    public IUnbakedModel loadModel(ResourceLocation modelLocation) {
         return new ModelCover(getType(modelLocation));
     }
 
@@ -31,10 +36,5 @@ public class CustomModelLoaderCover implements ICustomModelLoader {
             default:
                 return null;
         }
-    }
-
-    @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
-        // NO OP
     }
 }

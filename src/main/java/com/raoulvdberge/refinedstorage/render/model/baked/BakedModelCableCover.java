@@ -1,30 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.block.BlockCable;
-import com.raoulvdberge.refinedstorage.render.CubeBuilder;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import org.lwjgl.util.vector.Vector3f;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-
+/*
 public class BakedModelCableCover extends BakedModelDelegate {
     private static TextureAtlasSprite BORDER_SPRITE;
 
@@ -39,18 +15,18 @@ public class BakedModelCableCover extends BakedModelDelegate {
         if (state != null) {
             IExtendedBlockState extendedState = (IExtendedBlockState) state;
 
-            addCover(quads, extendedState.getValue(BlockCable.COVER_NORTH), EnumFacing.NORTH, side, rand, extendedState, true);
-            addCover(quads, extendedState.getValue(BlockCable.COVER_SOUTH), EnumFacing.SOUTH, side, rand, extendedState, true);
-            addCover(quads, extendedState.getValue(BlockCable.COVER_EAST), EnumFacing.EAST, side, rand, extendedState, true);
-            addCover(quads, extendedState.getValue(BlockCable.COVER_WEST), EnumFacing.WEST, side, rand, extendedState, true);
-            addCover(quads, extendedState.getValue(BlockCable.COVER_DOWN), EnumFacing.DOWN, side, rand, extendedState, true);
-            addCover(quads, extendedState.getValue(BlockCable.COVER_UP), EnumFacing.UP, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_NORTH), Direction.NORTH, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_SOUTH), Direction.SOUTH, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_EAST), Direction.EAST, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_WEST), Direction.WEST, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_DOWN), Direction.DOWN, side, rand, extendedState, true);
+            addCover(quads, extendedState.getValue(BlockCable.COVER_UP), Direction.UP, side, rand, extendedState, true);
         }
 
         return quads;
     }
 
-    private static int getHollowCoverSize(@Nullable IBlockState state, EnumFacing coverSide) {
+    private static int getHollowCoverSize(@Nullable BlockState state, Direction coverSide) {
         if (state == null) {
             return 6;
         }
@@ -70,12 +46,12 @@ public class BakedModelCableCover extends BakedModelDelegate {
         return 6;
     }
 
-    protected static void addCover(List<BakedQuad> quads, @Nullable Cover cover, EnumFacing coverSide, EnumFacing side, long rand, @Nullable IExtendedBlockState state, boolean handle) {
+    protected static void addCover(List<BakedQuad> quads, @Nullable Cover cover, Direction coverSide, Direction side, long rand, @Nullable IExtendedBlockState state, boolean handle) {
         if (cover == null) {
             return;
         }
 
-        IBlockState coverState = CoverManager.getBlockState(cover.getStack());
+        BlockState coverState = CoverManager.getBlockState(cover.getStack());
 
         if (coverState == null) {
             return;
@@ -102,13 +78,13 @@ public class BakedModelCableCover extends BakedModelDelegate {
         }
     }
 
-    private static void addNormalCover(List<BakedQuad> quads, TextureAtlasSprite sprite, EnumFacing coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle) {
+    private static void addNormalCover(List<BakedQuad> quads, TextureAtlasSprite sprite, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, boolean handle) {
         AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
 
         Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
         Vector3f to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
 
-        if (coverSide == EnumFacing.NORTH) {
+        if (coverSide == Direction.NORTH) {
             if (hasWest) {
                 from.setX(2);
             }
@@ -116,7 +92,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             if (hasEast) {
                 to.setX(14);
             }
-        } else if (coverSide == EnumFacing.SOUTH) {
+        } else if (coverSide == Direction.SOUTH) {
             if (hasWest) {
                 from.setX(2);
             }
@@ -126,7 +102,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
         }
 
-        if (coverSide.getAxis() != EnumFacing.Axis.Y) {
+        if (coverSide.getAxis() != Direction.Axis.Y) {
             if (hasDown) {
                 from.setY(2);
             }
@@ -152,13 +128,13 @@ public class BakedModelCableCover extends BakedModelDelegate {
         }
     }
 
-    private static void addHollowCover(List<BakedQuad> quads, TextureAtlasSprite sprite, EnumFacing coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, int size) {
+    private static void addHollowCover(List<BakedQuad> quads, TextureAtlasSprite sprite, Direction coverSide, boolean hasUp, boolean hasDown, boolean hasEast, boolean hasWest, int size) {
         AxisAlignedBB bounds = ConstantsCable.getCoverBounds(coverSide);
 
         Vector3f from = new Vector3f((float) bounds.minX * 16, (float) bounds.minY * 16, (float) bounds.minZ * 16);
         Vector3f to = new Vector3f((float) bounds.maxX * 16, (float) bounds.maxY * 16, (float) bounds.maxZ * 16);
 
-        if (coverSide.getAxis() != EnumFacing.Axis.Y) {
+        if (coverSide.getAxis() != Direction.Axis.Y) {
             if (hasDown) {
                 from.setY(2);
             }
@@ -169,7 +145,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
         }
 
         // Right
-        if (coverSide == EnumFacing.NORTH) {
+        if (coverSide == Direction.NORTH) {
             if (hasWest) {
                 from.setX(2);
             } else {
@@ -177,7 +153,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             to.setX(size);
-        } else if (coverSide == EnumFacing.SOUTH) {
+        } else if (coverSide == Direction.SOUTH) {
             if (hasEast) {
                 to.setX(14);
             } else {
@@ -185,13 +161,13 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             from.setX(16 - size);
-        } else if (coverSide == EnumFacing.EAST) {
+        } else if (coverSide == Direction.EAST) {
             from.setZ(0);
             to.setZ(size);
-        } else if (coverSide == EnumFacing.WEST) {
+        } else if (coverSide == Direction.WEST) {
             from.setZ(16 - size);
             to.setZ(16);
-        } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
+        } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
             from.setZ(16 - size);
             to.setZ(16);
         }
@@ -204,7 +180,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
         );
 
         // Left
-        if (coverSide == EnumFacing.NORTH) {
+        if (coverSide == Direction.NORTH) {
             if (hasEast) {
                 to.setX(14);
             } else {
@@ -212,7 +188,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             from.setX(16 - size);
-        } else if (coverSide == EnumFacing.SOUTH) {
+        } else if (coverSide == Direction.SOUTH) {
             if (hasWest) {
                 from.setX(2);
             } else {
@@ -220,13 +196,13 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             to.setX(size);
-        } else if (coverSide == EnumFacing.EAST) {
+        } else if (coverSide == Direction.EAST) {
             from.setZ(16 - size);
             to.setZ(16);
-        } else if (coverSide == EnumFacing.WEST) {
+        } else if (coverSide == Direction.WEST) {
             from.setZ(0);
             to.setZ(size);
-        } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
+        } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
             from.setZ(0);
             to.setZ(size);
         }
@@ -239,7 +215,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
         );
 
         // Bottom
-        if (coverSide == EnumFacing.NORTH) {
+        if (coverSide == Direction.NORTH) {
             from.setX(size);
             to.setX(16 - size);
 
@@ -250,7 +226,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             to.setY(size);
-        } else if (coverSide == EnumFacing.SOUTH) {
+        } else if (coverSide == Direction.SOUTH) {
             from.setX(size);
             to.setX(16 - size);
 
@@ -261,7 +237,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             to.setY(size);
-        } else if (coverSide == EnumFacing.EAST) {
+        } else if (coverSide == Direction.EAST) {
             from.setZ(size);
             to.setZ(16 - size);
 
@@ -272,7 +248,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             to.setY(size);
-        } else if (coverSide == EnumFacing.WEST) {
+        } else if (coverSide == Direction.WEST) {
             from.setZ(size);
             to.setZ(16 - size);
 
@@ -283,7 +259,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             to.setY(size);
-        } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
+        } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
             from.setZ(size);
             to.setZ(16 - size);
 
@@ -299,7 +275,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
         );
 
         // Up
-        if (coverSide == EnumFacing.NORTH) {
+        if (coverSide == Direction.NORTH) {
             from.setX(size);
             to.setX(16 - size);
 
@@ -310,7 +286,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             from.setY(16 - size);
-        } else if (coverSide == EnumFacing.SOUTH) {
+        } else if (coverSide == Direction.SOUTH) {
             from.setX(size);
             to.setX(16 - size);
 
@@ -321,7 +297,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             from.setY(16 - size);
-        } else if (coverSide == EnumFacing.EAST) {
+        } else if (coverSide == Direction.EAST) {
             from.setZ(size);
             to.setZ(16 - size);
 
@@ -332,7 +308,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             from.setY(16 - size);
-        } else if (coverSide == EnumFacing.WEST) {
+        } else if (coverSide == Direction.WEST) {
             from.setZ(size);
             to.setZ(16 - size);
 
@@ -343,7 +319,7 @@ public class BakedModelCableCover extends BakedModelDelegate {
             }
 
             from.setY(16 - size);
-        } else if (coverSide == EnumFacing.DOWN || coverSide == EnumFacing.UP) {
+        } else if (coverSide == Direction.DOWN || coverSide == Direction.UP) {
             from.setZ(size);
             to.setZ(16 - size);
 
@@ -359,3 +335,4 @@ public class BakedModelCableCover extends BakedModelDelegate {
         );
     }
 }
+*/
