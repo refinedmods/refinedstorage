@@ -1,24 +1,18 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
-public class ItemCuttingTool extends ItemBase {
+public class ItemCuttingTool extends Item {
     public ItemCuttingTool() {
-        super(new ItemInfo(RS.ID, "cutting_tool"));
+        super(new Item.Properties().group(RS.MAIN_GROUP).maxDamage(50 - 1));
 
-        //setMaxDamage(50 - 1);
-        //setMaxStackSize(1);
-    }
-/* TODO
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+        this.setRegistryName(RS.ID, "cutting_tool");
     }
 
     @Override
-    public boolean isRepairable() {
+    public boolean getIsRepairable(ItemStack a, ItemStack b) {
         return false;
     }
 
@@ -26,7 +20,7 @@ public class ItemCuttingTool extends ItemBase {
     public ItemStack getContainerItem(ItemStack stack) {
         ItemStack copy = stack.copy();
 
-        copy.setItemDamage(stack.getItemDamage() + 1);
+        copy.setDamage(stack.getDamage() + 1);
 
         return copy;
     }
@@ -35,9 +29,4 @@ public class ItemCuttingTool extends ItemBase {
     public boolean hasContainerItem(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public String getTranslationKey(ItemStack stack) {
-        return getTranslationKey(); // Ignore damage
-    }*/
 }

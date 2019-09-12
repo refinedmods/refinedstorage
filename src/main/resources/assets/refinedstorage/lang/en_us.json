@@ -273,7 +273,7 @@
   "item.refinedstorage:wrench": "Wrench",
   "item.refinedstorage.security_card": "Security Card",
   "item.refinedstorage.security_card.owner": "Bound to: %s",
-  "item.refinedstorage:cutting_tool": "Cutting Tool",
+  "item.refinedstorage.cutting_tool": "Cutting Tool",
   "item.refinedstorage:cover": "Cover",
   "item.refinedstorage:hollow_cover": "Hollow Cover",
   "item.refinedstorage.processor_binding": "Processor Binding",

@@ -46,6 +46,7 @@ public final class RS {
 
         e.getRegistry().register(new ItemSecurityCard());
         e.getRegistry().register(new ItemNetworkCard());
+        e.getRegistry().register(new ItemCuttingTool());
     }
 
     /* TODO

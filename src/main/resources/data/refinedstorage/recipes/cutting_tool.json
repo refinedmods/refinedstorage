@@ -1,5 +1,5 @@
 {
-  "type": "forge:ore_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "  E",
     " S ",
@@ -7,8 +7,7 @@
   ],
   "key": {
     "S": {
-      "type": "forge:ore_dict",
-      "ore": "stickWood"
+      "tag": "forge:rods/wooden"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"

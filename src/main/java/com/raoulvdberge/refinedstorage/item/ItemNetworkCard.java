@@ -16,6 +16,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ItemNetworkCard extends Item {
             tag.putInt(NBT_RECEIVER_X, ctx.getPos().getX());
             tag.putInt(NBT_RECEIVER_Y, ctx.getPos().getY());
             tag.putInt(NBT_RECEIVER_Z, ctx.getPos().getZ());
-            tag.putString(NBT_DIMENSION, ctx.getWorld().getDimension().getType().getRegistryName().toString());
+            tag.putString(NBT_DIMENSION, DimensionType.getKey(ctx.getWorld().getDimension().getType()).toString());
 
             ctx.getPlayer().getHeldItem(ctx.getHand()).setTag(tag);
 
@@ -72,7 +73,16 @@ public class ItemNetworkCard extends Item {
     }
 
     @Nullable
-    public static ResourceLocation getDimension(ItemStack stack) {
-        return (stack.hasTag() && stack.getTag().contains(NBT_DIMENSION)) ? ResourceLocation.tryCreate(stack.getTag().getString(NBT_DIMENSION)) : null;
+    public static DimensionType getDimension(ItemStack stack) {
+        if (stack.hasTag() && stack.getTag().contains(NBT_DIMENSION)) {
+            ResourceLocation name = ResourceLocation.tryCreate(stack.getTag().getString(NBT_DIMENSION));
+            if (name == null) {
+                return null;
+            }
+
+            return DimensionType.byName(name);
+        }
+
+        return null;
     }
 }

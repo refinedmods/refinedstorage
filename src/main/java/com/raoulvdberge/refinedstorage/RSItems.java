@@ -39,7 +39,8 @@ public final class RSItems {
     public static final ItemFluidStoragePart FLUID_STORAGE_PART = new ItemFluidStoragePart();
     @ObjectHolder(RS.ID + ":security_card")
     public static final ItemSecurityCard SECURITY_CARD = null;
-    public static final ItemCuttingTool CUTTING_TOOL = new ItemCuttingTool();
+    @ObjectHolder(RS.ID + ":cutting_tool")
+    public static final ItemCuttingTool CUTTING_TOOL = null;
     public static final ItemCover COVER = new ItemCover();
     public static final ItemHollowCover HOLLOW_COVER = new ItemHollowCover();
     public static final ItemWrench WRENCH = new ItemWrench();
