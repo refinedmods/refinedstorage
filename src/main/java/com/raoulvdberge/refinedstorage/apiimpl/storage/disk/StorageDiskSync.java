@@ -1,9 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.disk;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
-import com.raoulvdberge.refinedstorage.network.MessageStorageDiskSizeRequest;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;

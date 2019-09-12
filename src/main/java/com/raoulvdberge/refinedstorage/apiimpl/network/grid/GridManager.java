@@ -1,20 +1,13 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridFactory;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
-import com.raoulvdberge.refinedstorage.gui.ResizableDisplayDummy;
-import com.raoulvdberge.refinedstorage.network.MessageGridOpen;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;

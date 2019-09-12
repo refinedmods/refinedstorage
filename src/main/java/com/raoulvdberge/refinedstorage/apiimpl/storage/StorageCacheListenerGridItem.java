@@ -1,11 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
-import com.raoulvdberge.refinedstorage.network.MessageGridItemDelta;
-import com.raoulvdberge.refinedstorage.network.MessageGridItemUpdate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;

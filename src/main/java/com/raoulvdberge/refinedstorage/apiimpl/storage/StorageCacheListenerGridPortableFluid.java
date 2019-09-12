@@ -1,15 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
-import com.raoulvdberge.refinedstorage.network.MessageGridFluidDelta;
-import com.raoulvdberge.refinedstorage.network.MessageGridFluidUpdate;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -59,7 +53,7 @@ public class StorageCacheListenerGridPortableFluid implements IStorageCacheListe
 
     @Override
     public void onChangedBulk(@Nonnull List<Pair<FluidStack, Integer>> stacks) {
-        for(Pair<FluidStack, Integer> stack : stacks) {
+        for (Pair<FluidStack, Integer> stack : stacks) {
             onChanged(stack.getLeft(), stack.getRight());
         }
     }
