@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.data;
 
-import net.minecraft.network.datasync.DataSerializer;
+import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 public class TileDataParameter<T, E extends TileEntity> {
     private int id;
-    private DataSerializer<T> serializer;
+    private IDataSerializer<T> serializer;
     private Function<E, T> valueProducer;
     @Nullable
     private BiConsumer<E, T> valueConsumer;
@@ -17,15 +17,15 @@ public class TileDataParameter<T, E extends TileEntity> {
     private TileDataParameterClientListener<T> listener;
     private T value;
 
-    public TileDataParameter(DataSerializer<T> serializer, T defaultValue, Function<E, T> producer) {
+    public TileDataParameter(IDataSerializer<T> serializer, T defaultValue, Function<E, T> producer) {
         this(serializer, defaultValue, producer, null);
     }
 
-    public TileDataParameter(DataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer) {
+    public TileDataParameter(IDataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer) {
         this(serializer, defaultValue, producer, consumer, null);
     }
 
-    public TileDataParameter(DataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer, @Nullable TileDataParameterClientListener<T> listener) {
+    public TileDataParameter(IDataSerializer<T> serializer, T defaultValue, Function<E, T> producer, @Nullable BiConsumer<E, T> consumer, @Nullable TileDataParameterClientListener<T> listener) {
         this.value = defaultValue;
         this.serializer = serializer;
         this.valueProducer = producer;
@@ -41,7 +41,7 @@ public class TileDataParameter<T, E extends TileEntity> {
         return id;
     }
 
-    public DataSerializer<T> getSerializer() {
+    public IDataSerializer<T> getSerializer() {
         return serializer;
     }
 

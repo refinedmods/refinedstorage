@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
 public class DirectionHandlerTile implements IDirectionHandler {
-    public static final String NBT_DIRECTION = "Direction";
+    private static final String NBT_DIRECTION = "Direction";
 
     private Direction direction = Direction.NORTH;
 
@@ -25,8 +25,8 @@ public class DirectionHandlerTile implements IDirectionHandler {
 
     @Override
     public void readFromTileNbt(CompoundNBT tag) {
-        if (tag.hasKey(NBT_DIRECTION)) {
-            direction = Direction.byIndex(tag.getInteger(NBT_DIRECTION));
+        if (tag.contains(NBT_DIRECTION)) {
+            direction = Direction.byIndex(tag.getInt(NBT_DIRECTION));
         }
     }
 }

@@ -30,8 +30,8 @@ public enum RedstoneMode {
     }
 
     public static RedstoneMode read(CompoundNBT tag) {
-        if (tag.hasKey(RedstoneMode.NBT)) {
-            return getById(tag.getInteger(NBT));
+        if (tag.contains(RedstoneMode.NBT)) {
+            return getById(tag.getInt(NBT));
         }
 
         return IGNORE;

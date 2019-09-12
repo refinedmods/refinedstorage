@@ -1,7 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile.data;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.network.MessageTileDataParameter;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class TileDataWatcher {
@@ -54,6 +52,6 @@ public class TileDataWatcher {
     }
 
     public void sendParameter(boolean initial, TileDataParameter parameter) {
-        RS.INSTANCE.network.sendTo(new MessageTileDataParameter(manager.getTile(), parameter, initial), player);
+        // TODO RS.INSTANCE.network.sendTo(new MessageTileDataParameter(manager.getTile(), parameter, initial), player);
     }
 }
