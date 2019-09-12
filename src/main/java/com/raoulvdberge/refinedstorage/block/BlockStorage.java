@@ -1,40 +1,20 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeStorage;
 import com.raoulvdberge.refinedstorage.block.enums.ItemStorageType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockStorage;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.state.EnumProperty;
 
 public class BlockStorage extends BlockNode {
-    public static final PropertyEnum TYPE = PropertyEnum.create("type", ItemStorageType.class);
+    public static final EnumProperty TYPE = EnumProperty.create("type", ItemStorageType.class);
 
     public BlockStorage() {
         super(BlockInfoBuilder.forId("storage").tileEntity(TileStorage::new).hardness(5.8F).create());
     }
 
+    /*
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModel(this, ItemStorageType.TYPE_1K.getId(), new ModelResourceLocation(info.getId(), "type=1k"));
         modelRegistration.setModel(this, ItemStorageType.TYPE_4K.getId(), new ModelResourceLocation(info.getId(), "type=4k"));
@@ -58,17 +38,17 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta) {
+    public BlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(TYPE, ItemStorageType.getById(meta));
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
+    public int getMetaFromState(BlockState state) {
         return ((ItemStorageType) state.getValue(TYPE)).getId();
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, PlayerEntity player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
         return openNetworkGui(RSGui.STORAGE, player, world, pos, side);
     }
 
@@ -78,7 +58,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack) {
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, EntityLivingBase player, ItemStack stack) {
         if (!world.isRemote) {
             NetworkNodeStorage storage = ((TileStorage) world.getTileEntity(pos)).getNode();
 
@@ -94,7 +74,7 @@ public class BlockStorage extends BlockNode {
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, BlockState state, int fortune) {
         TileStorage storage = (TileStorage) world.getTileEntity(pos);
 
         ItemStack stack = new ItemStack(this, 1, getMetaFromState(state));
@@ -103,5 +83,5 @@ public class BlockStorage extends BlockNode {
         stack.getTagCompound().setUniqueId(NetworkNodeStorage.NBT_ID, storage.getNode().getStorageId());
 
         drops.add(stack);
-    }
+    }*/
 }

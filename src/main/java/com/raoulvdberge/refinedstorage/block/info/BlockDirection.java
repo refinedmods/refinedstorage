@@ -1,33 +1,34 @@
 package com.raoulvdberge.refinedstorage.block.info;
 
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EnumFacing;
+import com.raoulvdberge.refinedstorage.util.DirectionUtils;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Arrays;
 
 public enum BlockDirection {
-    ANY(EnumFacing.VALUES),
-    ANY_FACE_PLAYER(EnumFacing.VALUES),
-    HORIZONTAL(EnumFacing.NORTH, EnumFacing.EAST, EnumFacing.SOUTH, EnumFacing.WEST);
+    ANY(Direction.values()),
+    ANY_FACE_PLAYER(Direction.values()),
+    HORIZONTAL(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
 
-    private final PropertyDirection property;
+    private final DirectionProperty property;
 
-    BlockDirection(EnumFacing... allowed) {
-        this.property = PropertyDirection.create("direction", Arrays.asList(allowed));
+    BlockDirection(Direction... allowed) {
+        this.property = DirectionProperty.create("direction", Arrays.asList(allowed));
     }
 
-    public PropertyDirection getProperty() {
+    public DirectionProperty getProperty() {
         return property;
     }
 
-    public EnumFacing getFrom(EnumFacing facing, BlockPos pos, EntityLivingBase entity) {
+    public Direction getFrom(Direction facing, BlockPos pos, LivingEntity entity) {
         switch (this) {
             case ANY:
                 return facing.getOpposite();
             case ANY_FACE_PLAYER:
-                return EnumFacing.getDirectionFromEntityLiving(pos, entity);
+                return DirectionUtils.getFacingFromEntity(pos, entity);
             case HORIZONTAL:
                 return entity.getHorizontalFacing().getOpposite();
             default:
@@ -35,11 +36,11 @@ public enum BlockDirection {
         }
     }
 
-    public EnumFacing cycle(EnumFacing previous) {
+    public Direction cycle(Direction previous) {
         switch (this) {
             case ANY:
             case ANY_FACE_PLAYER:
-                return previous.ordinal() + 1 >= EnumFacing.VALUES.length ? EnumFacing.VALUES[0] : EnumFacing.VALUES[previous.ordinal() + 1];
+                return previous.ordinal() + 1 >= Direction.values().length ? Direction.values()[0] : Direction.values()[previous.ordinal() + 1];
             case HORIZONTAL:
                 return previous.rotateYCCW();
             default:

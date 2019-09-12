@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.collision;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 
 import javax.annotation.Nullable;
@@ -11,7 +11,7 @@ public class CollisionGroup {
     private List<AxisAlignedBB> items = new ArrayList<>();
     private boolean canAccessGui;
     @Nullable
-    private EnumFacing direction;
+    private Direction direction;
 
     public CollisionGroup addItem(AxisAlignedBB item) {
         items.add(item);
@@ -33,14 +33,14 @@ public class CollisionGroup {
         return this;
     }
 
-    public CollisionGroup setDirection(EnumFacing direction) {
+    public CollisionGroup setDirection(Direction direction) {
         this.direction = direction;
 
         return this;
     }
 
     @Nullable
-    public EnumFacing getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 }

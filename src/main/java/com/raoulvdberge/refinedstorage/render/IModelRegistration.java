@@ -1,12 +1,10 @@
 package com.raoulvdberge.refinedstorage.render;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -24,14 +22,10 @@ public interface IModelRegistration {
 
     void setModelVariants(Item item, ResourceLocation... variants);
 
-    void setModelMeshDefinition(Block block, ItemMeshDefinition meshDefinition);
-
     // Supplier needed to avoid server crash.
     void addModelLoader(Supplier<ICustomModelLoader> modelLoader);
 
-    void setStateMapper(Block block, IStateMapper stateMapper);
-
-    void setTesr(Class<? extends TileEntity> tile, TileEntitySpecialRenderer tesr);
+    <T extends TileEntity> void setTesr(Class<T> tile, TileEntityRenderer<T> tesr);
 
     void addItemColor(Item item, IItemColor itemColor);
 }

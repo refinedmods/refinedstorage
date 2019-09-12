@@ -1,54 +1,24 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockPortableGrid;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsPortableGrid;
-import com.raoulvdberge.refinedstorage.render.meshdefinition.ItemMeshDefinitionPortableGrid;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.EnumProperty;
 
 public class BlockPortableGrid extends BlockBase {
-    public static final PropertyEnum TYPE = PropertyEnum.create("type", PortableGridType.class);
-    public static final PropertyEnum DISK_STATE = PropertyEnum.create("disk_state", PortableGridDiskState.class);
-    public static final PropertyBool CONNECTED = PropertyBool.create("connected");
+    public static final EnumProperty TYPE = EnumProperty.create("type", PortableGridType.class);
+    public static final EnumProperty DISK_STATE = EnumProperty.create("disk_state", PortableGridDiskState.class);
+    public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
     public BlockPortableGrid() {
         super(BlockInfoBuilder.forId("portable_grid").tileEntity(TilePortableGrid::new).create());
     }
 
+    /*
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setStateMapper(this, new StateMap.Builder().ignore(TYPE).build());
         modelRegistration.setModelMeshDefinition(this, new ItemMeshDefinitionPortableGrid());
@@ -71,24 +41,24 @@ public class BlockPortableGrid extends BlockBase {
     }
 
     @Override
-    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+    public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
         return Collections.singletonList(ConstantsPortableGrid.COLLISION);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(BlockState state) {
         return false;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(BlockState state) {
         return false;
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, placer, stack);
 
         if (!world.isRemote) {
@@ -97,12 +67,12 @@ public class BlockPortableGrid extends BlockBase {
     }
 
     @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, BlockState state, int fortune) {
         drops.add(((TilePortableGrid) world.getTileEntity(pos)).getAsItem());
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockState getActualState(BlockState state, IBlockAccess world, BlockPos pos) {
         TilePortableGrid portableGrid = (TilePortableGrid) world.getTileEntity(pos);
 
         return super.getActualState(state, world, pos)
@@ -120,17 +90,17 @@ public class BlockPortableGrid extends BlockBase {
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta) {
+    public BlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(TYPE, meta == 0 ? PortableGridType.NORMAL : PortableGridType.CREATIVE);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
+    public int getMetaFromState(BlockState state) {
         return state.getValue(TYPE) == PortableGridType.NORMAL ? 0 : 1;
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, PlayerEntity player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
         if (!world.isRemote) {
             API.instance().getGridManager().openGrid(TilePortableGrid.FACTORY_ID, (ServerPlayerEntity) player, pos);
 
@@ -142,7 +112,7 @@ public class BlockPortableGrid extends BlockBase {
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face) {
         return BlockFaceShape.UNDEFINED;
-    }
+    }*/
 }

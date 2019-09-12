@@ -1,31 +1,17 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
-import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import net.minecraft.state.BooleanProperty;
 
 public abstract class BlockNode extends BlockNodeProxy {
-    public static final PropertyBool CONNECTED = PropertyBool.create("connected");
+    public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
     public BlockNode(IBlockInfo info) {
         super(info);
     }
-
+/* TODO
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, placer, stack);
 
         if (!world.isRemote) {
@@ -40,7 +26,7 @@ public abstract class BlockNode extends BlockNodeProxy {
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+    public void breakBlock(World world, BlockPos pos, BlockState state) {
         INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
 
         INetworkNode node = manager.getNode(pos);
@@ -74,7 +60,7 @@ public abstract class BlockNode extends BlockNodeProxy {
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockState getActualState(BlockState state, IBlockAccess world, BlockPos pos) {
         state = super.getActualState(state, world, pos);
 
         if (hasConnectedState()) {
@@ -86,7 +72,7 @@ public abstract class BlockNode extends BlockNodeProxy {
         }
 
         return state;
-    }
+    }*/
 
     public boolean hasConnectedState() {
         return false;

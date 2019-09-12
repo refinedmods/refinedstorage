@@ -1,37 +1,15 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockWriter extends BlockCable {
     public BlockWriter() {
         super(createBuilder("writer").tileEntity(TileWriter::new).create());
     }
 
+    /* TODO
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "connected=false,direction=north,down=false,east=true,north=false,south=false,up=false,west=true"));
 
@@ -45,12 +23,12 @@ public class BlockWriter extends BlockCable {
     }
 
     @Override
-    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+    public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
         return RSBlocks.CONSTRUCTOR.getCollisions(tile, state);
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, PlayerEntity player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
         if (!canAccessGui(state, world, pos, hitX, hitY, hitZ)) {
             return false;
         }
@@ -76,7 +54,7 @@ public class BlockWriter extends BlockCable {
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public int getWeakPower(BlockState state, IBlockAccess world, BlockPos pos, Direction side) {
         IWriter writer = ((TileWriter) world.getTileEntity(pos)).getNode();
 
         return side == writer.getDirection().getOpposite() ? writer.getRedstoneStrength() : 0;
@@ -84,22 +62,22 @@ public class BlockWriter extends BlockCable {
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public int getStrongPower(BlockState state, IBlockAccess world, BlockPos pos, Direction side) {
         return getWeakPower(state, world, pos, side);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canProvidePower(IBlockState state) {
+    public boolean canProvidePower(BlockState state) {
         return true;
     }
 
     @Override
-    public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public boolean canConnectRedstone(BlockState state, IBlockAccess world, BlockPos pos, Direction side) {
         TileEntity tile = world.getTileEntity(pos);
 
         return tile instanceof TileWriter && side == ((TileWriter) tile).getDirection().getOpposite();
-    }
+    }*/
 
     @Override
     public boolean hasConnectedState() {

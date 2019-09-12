@@ -1,41 +1,19 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSGui;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsDetector;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.Collections;
-import java.util.List;
+import net.minecraft.state.BooleanProperty;
 
 public class BlockDetector extends BlockNode {
-    private static final PropertyBool POWERED = PropertyBool.create("powered");
+    private static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
     public BlockDetector() {
         super(BlockInfoBuilder.forId("detector").tileEntity(TileDetector::new).create());
     }
 
+    /*
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
 
@@ -50,24 +28,24 @@ public class BlockDetector extends BlockNode {
     }
 
     @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public BlockState getActualState(BlockState state, IBlockAccess world, BlockPos pos) {
         return super.getActualState(state, world, pos)
             .withProperty(POWERED, ((TileDetector) world.getTileEntity(pos)).getNode().isPowered());
     }
 
     @Override
-    public List<CollisionGroup> getCollisions(TileEntity tile, IBlockState state) {
+    public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
         return Collections.singletonList(ConstantsDetector.COLLISION);
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, PlayerEntity player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
         return openNetworkGui(RSGui.DETECTOR, player, world, pos, side);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
+    public int getWeakPower(BlockState state, IBlockAccess world, BlockPos pos, Direction side) {
         TileEntity tile = world.getTileEntity(pos);
 
         return (tile instanceof TileDetector && ((TileDetector) tile).getNode().isPowered()) ? 15 : 0;
@@ -75,19 +53,19 @@ public class BlockDetector extends BlockNode {
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canProvidePower(IBlockState state) {
+    public boolean canProvidePower(BlockState state) {
         return true;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean isOpaqueCube(IBlockState state) {
+    public boolean isOpaqueCube(BlockState state) {
         return false;
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean isFullCube(IBlockState state) {
+    public boolean isFullCube(BlockState state) {
         return false;
     }
 
@@ -98,7 +76,7 @@ public class BlockDetector extends BlockNode {
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face) {
         return BlockFaceShape.UNDEFINED;
-    }
+    }*/
 }
