@@ -7,12 +7,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
-import com.raoulvdberge.refinedstorage.block.property.PropertyObject;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCableCover;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
 import com.raoulvdberge.refinedstorage.tile.TileCable;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.util.CollisionUtils;
@@ -35,12 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BlockCable extends BlockNode {
+    /* TODO
     public static final PropertyObject<Cover> COVER_NORTH = new PropertyObject<>("cover_north", Cover.class);
     public static final PropertyObject<Cover> COVER_EAST = new PropertyObject<>("cover_east", Cover.class);
     public static final PropertyObject<Cover> COVER_SOUTH = new PropertyObject<>("cover_south", Cover.class);
     public static final PropertyObject<Cover> COVER_WEST = new PropertyObject<>("cover_west", Cover.class);
     public static final PropertyObject<Cover> COVER_UP = new PropertyObject<>("cover_up", Cover.class);
-    public static final PropertyObject<Cover> COVER_DOWN = new PropertyObject<>("cover_down", Cover.class);
+    public static final PropertyObject<Cover> COVER_DOWN = new PropertyObject<>("cover_down", Cover.class);*/
 
     private static final BooleanProperty NORTH = BooleanProperty.create("north");
     private static final BooleanProperty EAST = BooleanProperty.create("east");
@@ -63,12 +61,12 @@ public class BlockCable extends BlockNode {
 
     @OnlyIn(Dist.CLIENT)
     void registerCover(IModelRegistration modelRegistration) {
-        modelRegistration.addBakedModelOverride(info.getId(), BakedModelCableCover::new);
+        // TODO modelRegistration.addBakedModelOverride(info.getId(), BakedModelCableCover::new);
     }
 
     @OnlyIn(Dist.CLIENT)
     void registerCoverAndFullbright(IModelRegistration modelRegistration, ResourceLocation... textures) {
-        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelCableCover(new BakedModelFullbright(base, textures)));
+        // TODO modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelCableCover(new BakedModelFullbright(base, textures)));
     }
 
     @Override

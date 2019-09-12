@@ -2,9 +2,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -40,7 +40,7 @@ public class CraftingMonitorElementError implements ICraftingMonitorElement {
     }
 
     @Override
-    public void write(ByteBuf buf) {
+    public void write(PacketBuffer buf) {
         ByteBufUtil.writeUtf8(buf, base.getId());
         ByteBufUtil.writeUtf8(buf, message);
 

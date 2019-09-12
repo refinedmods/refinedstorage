@@ -1,11 +1,10 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.block.property.PropertyObject;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 
 public class BlockDiskManipulator extends BlockNode {
-    public static final PropertyObject<Integer[]> DISK_STATE = new PropertyObject<>("disk_state", Integer[].class);
+    // TODO public static final PropertyObject<Integer[]> DISK_STATE = new PropertyObject<>("disk_state", Integer[].class);
 
     public BlockDiskManipulator() {
         super(BlockInfoBuilder.forId("disk_manipulator").tileEntity(TileDiskManipulator::new).create());
