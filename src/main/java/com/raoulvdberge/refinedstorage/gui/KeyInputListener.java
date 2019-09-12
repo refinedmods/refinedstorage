@@ -1,8 +1,5 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -16,7 +13,7 @@ public class KeyInputListener {
     public void onKeyInput(InputEvent.KeyInputEvent e) {
         PlayerInventory inv = Minecraft.getInstance().player.inventory;
 
-        if (RSKeyBindings.OPEN_WIRELESS_GRID.isKeyDown()) {
+        /*TODO if (RSKeyBindings.OPEN_WIRELESS_GRID.isKeyDown()) {
             findAndOpen(inv, RSItems.WIRELESS_GRID);
         } else if (RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.isKeyDown()) {
             findAndOpen(inv, RSItems.WIRELESS_FLUID_GRID);
@@ -24,7 +21,7 @@ public class KeyInputListener {
             findAndOpen(inv, Item.getItemFromBlock(RSBlocks.PORTABLE_GRID));
         } else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isKeyDown()) {
             findAndOpen(inv, RSItems.WIRELESS_CRAFTING_MONITOR);
-        }
+        }*/
     }
 
     private void findAndOpen(IInventory inv, Item search) {
