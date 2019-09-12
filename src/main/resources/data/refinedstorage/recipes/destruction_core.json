@@ -2,14 +2,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "#basic_processor"
+      "item": "refinedstorage:basic_processor"
     },
     {
       "item": "minecraft:quartz"
     }
   ],
   "result": {
-    "item": "refinedstorage:core",
-    "data": 1
+    "item": "refinedstorage:destruction_core"
   }
 }

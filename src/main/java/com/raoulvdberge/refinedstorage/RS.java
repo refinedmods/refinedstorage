@@ -1,8 +1,6 @@
 package com.raoulvdberge.refinedstorage;
 
-import com.raoulvdberge.refinedstorage.item.ItemCore;
-import com.raoulvdberge.refinedstorage.item.ItemProcessorBinding;
-import com.raoulvdberge.refinedstorage.item.ItemQuartzEnrichedIron;
+import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -36,6 +34,15 @@ public final class RS {
         e.getRegistry().register(new ItemCore(ItemCore.Type.DESTRUCTION));
         e.getRegistry().register(new ItemQuartzEnrichedIron());
         e.getRegistry().register(new ItemProcessorBinding());
+
+        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.RAW_BASIC));
+        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.RAW_IMPROVED));
+        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.RAW_ADVANCED));
+        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.BASIC));
+        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.IMPROVED));
+        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.ADVANCED));
+
+        e.getRegistry().register(new ItemSilicon());
     }
 
     /* TODO

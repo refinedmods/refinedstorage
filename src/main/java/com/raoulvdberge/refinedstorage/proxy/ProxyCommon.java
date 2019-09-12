@@ -175,12 +175,6 @@ public class ProxyCommon {
     }
 
     public void init(FMLInitializationEvent e) {
-        GameRegistry.addSmelting(Items.QUARTZ, new ItemStack(RSItems.SILICON), 0.5F);
-
-        GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_BASIC), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_BASIC), 0.5F);
-        GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_IMPROVED), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_IMPROVED), 0.5F);
-        GameRegistry.addSmelting(new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_CUT_ADVANCED), new ItemStack(RSItems.PROCESSOR, 1, ItemProcessor.TYPE_ADVANCED), 0.5F);
-
         if (IntegrationOC.isLoaded()) {
             DriverNetwork.register();
         }

@@ -8,15 +8,13 @@
       "item": "minecraft:diamond"
     },
     {
-      "type": "forge:ore_dict",
-      "ore": "itemSilicon"
+      "item": "refinedstorage:silicon"
     },
     {
       "item": "minecraft:redstone"
     }
   ],
   "result": {
-    "item": "refinedstorage:processor",
-    "data": 2
+    "item": "refinedstorage:raw_advanced_processor"
   }
 }

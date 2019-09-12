@@ -8,15 +8,13 @@
       "item": "minecraft:gold_ingot"
     },
     {
-      "type": "forge:ore_dict",
-      "ore": "itemSilicon"
+      "item": "refinedstorage:silicon"
     },
     {
       "item": "minecraft:redstone"
     }
   ],
   "result": {
-    "item": "refinedstorage:processor",
-    "data": 1
+    "item": "refinedstorage:raw_improved_processor"
   }
 }

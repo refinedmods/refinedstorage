@@ -10,8 +10,7 @@
       "item": "minecraft:string"
     },
     "L": {
-      "type": "forge:ore_dict",
-      "ore": "slimeball"
+      "item": "minecraft:slime_ball"
     }
   },
   "result": {

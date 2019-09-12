@@ -9,6 +9,12 @@ buildscript {
     }
 }
 
+repositories {
+    maven {
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
@@ -65,7 +71,7 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include 'META-INF/mods.toml'
 
-        expand 'version':project.version
+        expand 'version': project.version
     }
 
     from(sourceSets.main.resources.srcDirs) {
@@ -75,18 +81,20 @@ processResources {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.14.4-28.0.73'
+    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11")
 }
 
 jar {
     manifest {
         attributes([
-            "Specification-Title": "refinedstorage",
-            "Specification-Vendor": "raoulvdberge",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"raoulvdberge",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Specification-Title"     : "refinedstorage",
+                "Specification-Vendor"    : "raoulvdberge",
+                "Specification-Version"   : "1",
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "raoulvdberge",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
 }

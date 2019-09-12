@@ -2,14 +2,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "#basic_processor"
+      "item": "refinedstorage:basic_processor"
     },
     {
       "item": "minecraft:glowstone_dust"
     }
   ],
   "result": {
-    "item": "refinedstorage:core",
-    "data": 0
+    "item": "refinedstorage:construction_core"
   }
 }

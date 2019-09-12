@@ -10,10 +10,24 @@ public final class RSItems {
     public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = new ItemWirelessCraftingMonitor();
     @ObjectHolder(RS.ID + ":quartz_enriched_iron")
     public static final ItemQuartzEnrichedIron QUARTZ_ENRICHED_IRON = null;
-    @ObjectHolder(RS.ID + ":core")
-    public static final ItemCore CORE = null;
-    public static final ItemSilicon SILICON = new ItemSilicon();
-    public static final ItemProcessor PROCESSOR = new ItemProcessor();
+    @ObjectHolder(RS.ID + ":construction_core")
+    public static final ItemCore CONSTRUCTION_CORE = null;
+    @ObjectHolder(RS.ID + ":destruction_core")
+    public static final ItemCore DESTRUCTION_CORE = null;
+    @ObjectHolder(RS.ID + ":silicon")
+    public static final ItemSilicon SILICON = null;
+    @ObjectHolder(RS.ID + ":raw_basic_processor")
+    public static final ItemProcessor RAW_BASIC_PROCESSOR = null;
+    @ObjectHolder(RS.ID + ":raw_improved_processor")
+    public static final ItemProcessor RAW_IMPROVED_PROCESSOR = null;
+    @ObjectHolder(RS.ID + ":raw_advanced_processor")
+    public static final ItemProcessor RAW_ADVANCED_PROCESSOR = null;
+    @ObjectHolder(RS.ID + ":basic_processor")
+    public static final ItemProcessor BASIC_PROCESSOR = null;
+    @ObjectHolder(RS.ID + ":improved_processor")
+    public static final ItemProcessor IMPROVED_PROCESSOR = null;
+    @ObjectHolder(RS.ID + ":advanced_processor")
+    public static final ItemProcessor ADVANCED_PROCESSOR = null;
     public static final ItemStoragePart STORAGE_PART = new ItemStoragePart();
     public static final ItemPattern PATTERN = new ItemPattern();
     public static final ItemUpgrade UPGRADE = new ItemUpgrade();
