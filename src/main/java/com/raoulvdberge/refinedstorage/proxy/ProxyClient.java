@@ -1,45 +1,55 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSKeyBindings;
-import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.gui.KeyInputListener;
-import com.raoulvdberge.refinedstorage.item.ItemBase;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.collision.BlockHighlightListener;
-import com.raoulvdberge.refinedstorage.render.teisr.TileEntityItemStackRendererPattern;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelBakery;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.block.statemap.IStateMapper;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ICustomModelLoader;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ProxyClient extends ProxyCommon implements IModelRegistration {
+    @Override
+    public void addBakedModelOverride(ResourceLocation resource, Function<IBakedModel, IBakedModel> override) {
+
+    }
+
+    @Override
+    public void setModel(Block block, int meta, ModelResourceLocation resource) {
+
+    }
+
+    @Override
+    public void setModel(Item item, int meta, ModelResourceLocation resource) {
+
+    }
+
+    @Override
+    public void setModelVariants(Item item, ResourceLocation... variants) {
+
+    }
+
+    @Override
+    public void addModelLoader(Supplier<ICustomModelLoader> modelLoader) {
+
+    }
+
+    @Override
+    public <T extends TileEntity> void setTesr(Class<T> tile, TileEntityRenderer<T> tesr) {
+
+    }
+
+    @Override
+    public void addItemColor(Item item, IItemColor itemColor) {
+
+    }
+    /*
     private Map<ResourceLocation, Function<IBakedModel, IBakedModel>> bakedModelOverrides = new HashMap<>();
     private List<Pair<Item, IItemColor>> itemColors = new LinkedList<>();
 
@@ -130,4 +140,6 @@ public class ProxyClient extends ProxyCommon implements IModelRegistration {
     public void addItemColor(Item item, IItemColor itemColor) {
         itemColors.add(Pair.of(item, itemColor)); // ItemColors is only available in init.
     }
+
+     */
 }

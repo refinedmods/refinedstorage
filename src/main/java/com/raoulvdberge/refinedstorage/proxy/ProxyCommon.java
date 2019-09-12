@@ -1,86 +1,7 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.api.storage.StorageType;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.*;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerFluids;
-import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerItems;
-import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRedstone;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.ExternalStorageProviderFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.ExternalStorageProviderItem;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
-import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
-import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
-import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
-import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.GuiHandler;
-import com.raoulvdberge.refinedstorage.integration.craftingtweaks.IntegrationCraftingTweaks;
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.ReaderWriterHandlerForgeEnergy;
-import com.raoulvdberge.refinedstorage.integration.funkylocomotion.IntegrationFunkyLocomotion;
-import com.raoulvdberge.refinedstorage.integration.funkylocomotion.MoveFactoryRegisterer;
-import com.raoulvdberge.refinedstorage.integration.inventorysorter.IntegrationInventorySorter;
-import com.raoulvdberge.refinedstorage.integration.oc.DriverNetwork;
-import com.raoulvdberge.refinedstorage.integration.oc.IntegrationOC;
-import com.raoulvdberge.refinedstorage.item.ItemProcessor;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
-import com.raoulvdberge.refinedstorage.network.*;
-import com.raoulvdberge.refinedstorage.recipe.RecipeCover;
-import com.raoulvdberge.refinedstorage.recipe.RecipeHollowCover;
-import com.raoulvdberge.refinedstorage.recipe.RecipeUpgradeWithEnchantedBook;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.LinkedList;
-import java.util.List;
-
 public class ProxyCommon {
+/* TODO
     protected List<Item> itemsToRegister = new LinkedList<>();
     protected List<BlockBase> blocksToRegister = new LinkedList<>();
 
@@ -378,5 +299,5 @@ public class ProxyCommon {
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }

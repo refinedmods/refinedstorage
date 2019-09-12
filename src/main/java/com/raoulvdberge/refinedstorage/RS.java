@@ -1,50 +1,28 @@
 package com.raoulvdberge.refinedstorage;
 
-import com.raoulvdberge.refinedstorage.command.CommandCreateDisk;
 import com.raoulvdberge.refinedstorage.item.ItemCover;
 import com.raoulvdberge.refinedstorage.proxy.ProxyCommon;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.network.NetworkHooks;
 
-@Mod(modid = RS.ID, version = RS.VERSION, acceptedMinecraftVersions = "[1.12.2,1.13)", guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON, certificateFingerprint = RS.FINGERPRINT, dependencies = RS.DEPENDENCIES)
+@Mod(RS.ID)
 public final class RS {
-    static {
-        FluidRegistry.enableUniversalBucket();
-    }
-
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "@version@";
-    public static final String GUI_FACTORY = "com.raoulvdberge.refinedstorage.gui.config.ModGuiFactory";
-    public static final String UPDATE_JSON = "https://refinedstorage.raoulvdberge.com/update";
-    public static final String FINGERPRINT = "57893d5b90a7336e8c63fe1c1e1ce472c3d59578";
-    public static final String DEPENDENCIES = "after:forge@[14.23.3.2694,);";
 
-    @SidedProxy(clientSide = "com.raoulvdberge.refinedstorage.proxy.ProxyClient", serverSide = "com.raoulvdberge.refinedstorage.proxy.ProxyCommon")
     public static ProxyCommon PROXY;
 
-    @Instance
     public static RS INSTANCE;
 
     public RSConfig config;
-    public final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
-    public final CreativeTabs tab = new CreativeTabs(ID) {
+    public final ItemGroup tab = new ItemGroup(ID) {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(RSItems.STORAGE_HOUSING);
         }
     };
-    public final CreativeTabs coversTab = new CreativeTabs(ID + ".covers") {
+    public final ItemGroup coversTab = new ItemGroup(ID + ".covers") {
         @Override
         public ItemStack createIcon() {
             ItemStack stack = new ItemStack(RSItems.COVER);
@@ -55,6 +33,7 @@ public final class RS {
         }
     };
 
+    /* TODO
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
         config = new RSConfig(null, e.getSuggestedConfigurationFile());
@@ -82,5 +61,5 @@ public final class RS {
     @EventHandler
     public void onFingerprintViolation(FMLFingerprintViolationEvent e) {
         FMLLog.bigWarning("Invalid fingerprint detected for the Refined Storage jar file! The file " + e.getSource().getName() + " may have been tampered with. This version will NOT be supported!");
-    }
+    }*/
 }

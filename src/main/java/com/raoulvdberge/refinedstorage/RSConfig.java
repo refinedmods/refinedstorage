@@ -1,19 +1,12 @@
 package com.raoulvdberge.refinedstorage;
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.ConfigElement;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.config.IConfigElement;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RSConfig {
-    private Configuration config;
+    // private Configuration config;
     private RSConfig originalClientVersion;
 
     //region Energy
@@ -137,34 +130,35 @@ public class RSConfig {
     //endregion
 
     public RSConfig(@Nullable RSConfig originalClientVersion, File configFile) {
-        this(originalClientVersion, new Configuration(configFile));
+        this(originalClientVersion/*, new Configuration(configFile)*/);
     }
 
-    public RSConfig(@Nullable RSConfig originalClientVersion, Configuration config) {
+    public RSConfig(@Nullable RSConfig originalClientVersion/*, Configuration config*/) {
         this.originalClientVersion = originalClientVersion;
-        this.config = config;
+        // this.config = config;
 
         MinecraftForge.EVENT_BUS.register(this);
 
-        this.loadConfig();
+        // this.loadConfig();
     }
 
-    public Configuration getConfig() {
+    /*public Configuration getConfig() {
         return config;
-    }
+    }*/
 
     @Nullable
     public RSConfig getOriginalClientVersion() {
         return originalClientVersion;
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equalsIgnoreCase(RS.ID)) {
             loadConfig();
         }
-    }
+    }*/
 
+    /*
     private void loadConfig() {
         //region Energy
         controllerBaseUsage = config.getInt("controllerBase", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
@@ -270,29 +264,5 @@ public class RSConfig {
         //region Autocrafting
         calculationTimeoutMs = config.getInt("calculationTimeoutMs", AUTOCRAFTING, 5000, 5000, Integer.MAX_VALUE, "The autocrafting calculation timeout in milliseconds, tasks taking longer than this to calculate (NOT execute) are cancelled to avoid server strain");
         //endregion
-
-        if (config.hasChanged()) {
-            config.save();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<IConfigElement> getConfigElements() {
-        List<IConfigElement> list = new ArrayList<>();
-
-        list.add(new ConfigElement(config.getCategory(ENERGY)));
-        list.add(new ConfigElement(config.getCategory(CONTROLLER)));
-        list.add(new ConfigElement(config.getCategory(UPGRADES)));
-        list.add(new ConfigElement(config.getCategory(WIRELESS_TRANSMITTER)));
-        list.add(new ConfigElement(config.getCategory(GRID)));
-        list.add(new ConfigElement(config.getCategory(WIRELESS_GRID)));
-        list.add(new ConfigElement(config.getCategory(WIRELESS_FLUID_GRID)));
-        list.add(new ConfigElement(config.getCategory(WIRELESS_CRAFTING_MONITOR)));
-        list.add(new ConfigElement(config.getCategory(PORTABLE_GRID)));
-        list.add(new ConfigElement(config.getCategory(READER_WRITER)));
-        list.add(new ConfigElement(config.getCategory(COVERS)));
-        list.add(new ConfigElement(config.getCategory(AUTOCRAFTING)));
-
-        return list;
-    }
+    }*/
 }

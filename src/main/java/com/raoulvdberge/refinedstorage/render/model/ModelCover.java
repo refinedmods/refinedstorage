@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.model;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelCover;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.IUnbakedModel;
 import net.minecraft.client.renderer.model.ModelBakery;
@@ -25,7 +24,8 @@ public class ModelCover implements IUnbakedModel {
     @Nullable
     @Override
     public IBakedModel bake(ModelBakery bakery, Function spriteGetter, ISprite sprite, VertexFormat format) {
-        return new BakedModelCover(null, coverType);
+        return null;
+        //return new BakedModelCover(null, coverType);
     }
 
     @Override
