@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
@@ -27,6 +26,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_DIRECTION = "Direction";
     private static final String NBT_VERSION = "Version";
+    private static final int VERSION = 1;
 
     @Nullable
     protected INetwork network;
@@ -165,8 +165,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
             tag.putUniqueId(NBT_OWNER, owner);
         }
 
-        tag.putString(NBT_VERSION, RS.VERSION);
-
+        tag.putInt(NBT_VERSION, VERSION);
         tag.putInt(NBT_DIRECTION, direction.ordinal());
 
         writeConfiguration(tag);

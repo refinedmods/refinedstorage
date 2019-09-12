@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage.disk;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
@@ -24,6 +23,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     static final String NBT_VERSION = "Version";
     static final String NBT_CAPACITY = "Capacity";
     static final String NBT_FLUIDS = "Fluids";
+    static final int VERSION = 1;
 
     private World world;
     private int capacity;
@@ -52,7 +52,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
             list.add(stack.writeToNBT(new CompoundNBT()));
         }
 
-        tag.putString(NBT_VERSION, RS.VERSION);
+        tag.putInt(NBT_VERSION, VERSION);
         tag.put(NBT_FLUIDS, list);
         tag.putInt(NBT_CAPACITY, capacity);
 

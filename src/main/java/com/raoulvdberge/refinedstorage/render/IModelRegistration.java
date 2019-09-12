@@ -16,11 +16,11 @@ import java.util.function.Supplier;
 public interface IModelRegistration {
     void addBakedModelOverride(ResourceLocation resource, Function<IBakedModel, IBakedModel> override);
 
-    void setModel(Block block, int meta, ModelResourceLocation resource);
+    void setModel(Block block, int meta, ModelResourceLocation resource); //  ModelLoader.setCustomModelResourceLocation ->  no longer needed due to flattening, for custom, use custom baked model
 
-    void setModel(Item item, int meta, ModelResourceLocation resource);
+    void setModel(Item item, int meta, ModelResourceLocation resource); // same as above
 
-    void setModelVariants(Item item, ResourceLocation... variants);
+    void setModelVariants(Item item, ResourceLocation... variants); // no longer needed
 
     // Supplier needed to avoid server crash.
     void addModelLoader(Supplier<ICustomModelLoader> modelLoader);

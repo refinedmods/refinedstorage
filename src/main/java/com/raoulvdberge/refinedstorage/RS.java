@@ -1,36 +1,38 @@
 package com.raoulvdberge.refinedstorage;
 
-import com.raoulvdberge.refinedstorage.proxy.ProxyCommon;
+import com.raoulvdberge.refinedstorage.item.ItemCore;
+import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(RS.ID)
 public final class RS {
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "1.7"; // TODO keep in sync with build.gradle
-
-    public static ProxyCommon PROXY;
 
     public static RS INSTANCE;
-
     public RSConfig config;
-    public final ItemGroup tab = new ItemGroup(ID) {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(RSItems.STORAGE_HOUSING);
-        }
-    };
-    public final ItemGroup coversTab = new ItemGroup(ID + ".covers") {
-        @Override
-        public ItemStack createIcon() {
-            ItemStack stack = new ItemStack(RSItems.COVER);
 
-            // TODO ItemCover.setItem(stack, new ItemStack(Blocks.STONE));
+    public static final ItemGroup MAIN_GROUP = new MainItemGroup();
 
-            return stack;
-        }
-    };
+    public RS() {
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onRegisterItems);
+    }
+
+    @SubscribeEvent
+    public void onRegisterBlocks(RegistryEvent.Register<Block> e) {
+
+    }
+
+    @SubscribeEvent
+    public void onRegisterItems(RegistryEvent.Register<Item> e) {
+        e.getRegistry().register(new ItemCore(ItemCore.Type.CONSTRUCTION));
+        e.getRegistry().register(new ItemCore(ItemCore.Type.DESTRUCTION));
+    }
 
     /* TODO
     @EventHandler

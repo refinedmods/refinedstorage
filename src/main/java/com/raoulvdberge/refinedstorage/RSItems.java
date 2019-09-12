@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.item.*;
+import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSItems {
     public static final ItemStorageDisk STORAGE_DISK = new ItemStorageDisk();
@@ -8,7 +9,8 @@ public final class RSItems {
     public static final ItemWirelessFluidGrid WIRELESS_FLUID_GRID = new ItemWirelessFluidGrid();
     public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = new ItemWirelessCraftingMonitor();
     public static final ItemQuartzEnrichedIron QUARTZ_ENRICHED_IRON = new ItemQuartzEnrichedIron();
-    public static final ItemCore CORE = new ItemCore();
+    @ObjectHolder(RS.ID + ":core")
+    public static final ItemCore CORE = null;
     public static final ItemSilicon SILICON = new ItemSilicon();
     public static final ItemProcessor PROCESSOR = new ItemProcessor();
     public static final ItemStoragePart STORAGE_PART = new ItemStoragePart();
