@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 
 public class ItemWirelessGrid extends ItemNetworkItem {
     public ItemWirelessGrid(IItemInfo info) {
-        super(info, RS.INSTANCE.config.wirelessGridCapacity);
+        super(info, 0);
     }
 
     public ItemWirelessGrid() {

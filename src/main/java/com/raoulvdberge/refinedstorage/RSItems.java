@@ -8,7 +8,8 @@ public final class RSItems {
     public static final ItemWirelessGrid WIRELESS_GRID = new ItemWirelessGrid();
     public static final ItemWirelessFluidGrid WIRELESS_FLUID_GRID = new ItemWirelessFluidGrid();
     public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = new ItemWirelessCraftingMonitor();
-    public static final ItemQuartzEnrichedIron QUARTZ_ENRICHED_IRON = new ItemQuartzEnrichedIron();
+    @ObjectHolder(RS.ID + ":quartz_enriched_iron")
+    public static final ItemQuartzEnrichedIron QUARTZ_ENRICHED_IRON = null;
     @ObjectHolder(RS.ID + ":core")
     public static final ItemCore CORE = null;
     public static final ItemSilicon SILICON = new ItemSilicon();
@@ -26,5 +27,6 @@ public final class RSItems {
     public static final ItemCover COVER = new ItemCover();
     public static final ItemHollowCover HOLLOW_COVER = new ItemHollowCover();
     public static final ItemWrench WRENCH = new ItemWrench();
-    public static final ItemProcessorBinding PROCESSOR_BINDING = new ItemProcessorBinding();
+    @ObjectHolder(RS.ID + ":processor_binding")
+    public static final ItemProcessorBinding PROCESSOR_BINDING = null;
 }

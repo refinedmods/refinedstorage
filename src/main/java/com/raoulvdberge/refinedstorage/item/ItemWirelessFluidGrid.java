@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 
 public class ItemWirelessFluidGrid extends ItemNetworkItem {
     public ItemWirelessFluidGrid() {
-        super(new ItemInfo(RS.ID, "wireless_fluid_grid"), RS.INSTANCE.config.wirelessFluidGridCapacity);
+        super(new ItemInfo(RS.ID, "wireless_fluid_grid"), 0);
     }
 /* TODO
     @Override

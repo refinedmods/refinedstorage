@@ -8,7 +8,7 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     public static final String NBT_TAB_PAGE = "TabPage";
 
     public ItemWirelessCraftingMonitor() {
-        super(new ItemInfo(RS.ID, "wireless_crafting_monitor"), RS.INSTANCE.config.wirelessCraftingMonitorCapacity);
+        super(new ItemInfo(RS.ID, "wireless_crafting_monitor"), 0);
     }
 /* TODO
     @Override

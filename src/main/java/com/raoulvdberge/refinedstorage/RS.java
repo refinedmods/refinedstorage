@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.item.ItemCore;
+import com.raoulvdberge.refinedstorage.item.ItemProcessorBinding;
+import com.raoulvdberge.refinedstorage.item.ItemQuartzEnrichedIron;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -32,6 +34,8 @@ public final class RS {
     public void onRegisterItems(RegistryEvent.Register<Item> e) {
         e.getRegistry().register(new ItemCore(ItemCore.Type.CONSTRUCTION));
         e.getRegistry().register(new ItemCore(ItemCore.Type.DESTRUCTION));
+        e.getRegistry().register(new ItemQuartzEnrichedIron());
+        e.getRegistry().register(new ItemProcessorBinding());
     }
 
     /* TODO
