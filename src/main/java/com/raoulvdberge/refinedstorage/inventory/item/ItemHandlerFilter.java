@@ -3,21 +3,14 @@ package com.raoulvdberge.refinedstorage.inventory.item;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
-import com.raoulvdberge.refinedstorage.apiimpl.util.FilterFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.util.FilterItem;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
-import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -53,7 +46,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
     }
 
     private void addFilter(ItemStack filter) {
-        int compare = ItemFilter.getCompare(filter);
+        /* TODO int compare = ItemFilter.getCompare(filter);
         int mode = ItemFilter.getMode(filter);
         boolean modFilter = ItemFilter.isModFilter(filter);
 
@@ -82,6 +75,6 @@ public class ItemHandlerFilter extends ItemHandlerBase {
             this.filters.addAll(filters);
         } else {
             tabs.add(new GridTab(filters, ItemFilter.getName(filter), icon, fluidIcon));
-        }
+        }*/
     }
 }

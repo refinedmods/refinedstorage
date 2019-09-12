@@ -11,7 +11,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridI
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -60,7 +59,7 @@ public class WirelessGrid implements IGridNetworkAware {
     };
 
     public WirelessGrid(ItemStack stack) {
-        this.networkDimension = ItemWirelessGrid.getDimensionId(stack);
+        /* TODO this.networkDimension = ItemWirelessGrid.getDimensionId(stack);
         this.network = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
 
         this.stack = stack;
@@ -71,7 +70,7 @@ public class WirelessGrid implements IGridNetworkAware {
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
         this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
         this.tabPage = ItemWirelessGrid.getTabPage(stack);
-        this.size = ItemWirelessGrid.getSize(stack);
+        this.size = ItemWirelessGrid.getSize(stack);*/
 
         if (stack.hasTag()) {
             StackUtils.readItems(filter, 0, stack.getTag());

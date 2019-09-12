@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
@@ -59,7 +60,7 @@ public abstract class BlockBase extends Block {
     }
 
     public Item createItem() {
-        return new ItemBlockBase(this, false);
+        return new ItemBlockBase(this, new ItemInfo(info.getId().getNamespace(), info.getId().getPath()));
     }
 /* TODO
     @Override

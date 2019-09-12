@@ -1,38 +1,15 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.block.BlockCable;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTraceResult;
-import com.raoulvdberge.refinedstorage.render.collision.AdvancedRayTracer;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemWrench extends ItemBase {
     public ItemWrench() {
         super(new ItemInfo(RS.ID, "wrench"));
 
-        setMaxStackSize(1);
+        //setMaxStackSize(1);
     }
-
+/* TODO
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -94,5 +71,5 @@ public class ItemWrench extends ItemBase {
         block.rotateBlock(world, pos, player.getHorizontalFacing().getOpposite());
 
         return EnumActionResult.SUCCESS;
-    }
+    }*/
 }

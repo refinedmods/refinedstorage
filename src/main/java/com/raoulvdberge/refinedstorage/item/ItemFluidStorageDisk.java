@@ -1,31 +1,12 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.*;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
-import java.util.List;
 import java.util.UUID;
 
 public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvider {
@@ -40,11 +21,12 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     public ItemFluidStorageDisk() {
         super(new ItemInfo(RS.ID, "fluid_storage_disk"));
 
-        setMaxStackSize(1);
-        setHasSubtypes(true);
-        setMaxDamage(0);
+        //setMaxStackSize(1);
+        //setHasSubtypes(true);
+        //setMaxDamage(0);
     }
 
+    /* TODO
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -146,27 +128,28 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
     @Override
     public int getEntityLifespan(ItemStack stack, World world) {
         return Integer.MAX_VALUE;
-    }
+    }*/
 
     @Override
     public UUID getId(ItemStack disk) {
-        return disk.getTagCompound().getUniqueId(NBT_ID);
+        return disk.getTag().getUniqueId(NBT_ID);
     }
 
     @Override
     public void setId(ItemStack disk, UUID id) {
-        disk.setTagCompound(new CompoundNBT());
-        disk.getTagCompound().setUniqueId(NBT_ID, id);
+        disk.setTag(new CompoundNBT());
+        disk.getTag().putUniqueId(NBT_ID, id);
     }
 
     @Override
     public boolean isValid(ItemStack disk) {
-        return disk.hasTagCompound() && disk.getTagCompound().hasUniqueId(NBT_ID);
+        return disk.hasTag() && disk.getTag().hasUniqueId(NBT_ID);
     }
 
     @Override
     public int getCapacity(ItemStack disk) {
-        return FluidStorageType.getById(disk.getItemDamage()).getCapacity();
+        return 123;
+        // TODO return FluidStorageType.getById(disk.getItemDamage()).getCapacity();
     }
 
     @Override

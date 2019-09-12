@@ -1,8 +1,6 @@
 package com.raoulvdberge.refinedstorage;
 
-import com.raoulvdberge.refinedstorage.item.ItemCover;
 import com.raoulvdberge.refinedstorage.proxy.ProxyCommon;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
@@ -28,7 +26,7 @@ public final class RS {
         public ItemStack createIcon() {
             ItemStack stack = new ItemStack(RSItems.COVER);
 
-            ItemCover.setItem(stack, new ItemStack(Blocks.STONE));
+            // TODO ItemCover.setItem(stack, new ItemStack(Blocks.STONE));
 
             return stack;
         }

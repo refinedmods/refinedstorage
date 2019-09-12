@@ -1,21 +1,8 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
 
 public class ItemWirelessGrid extends ItemNetworkItem {
     public ItemWirelessGrid(IItemInfo info) {
@@ -25,7 +12,7 @@ public class ItemWirelessGrid extends ItemNetworkItem {
     public ItemWirelessGrid() {
         this(new ItemInfo(RS.ID, "wireless_grid"));
     }
-
+/* TODO
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -64,5 +51,5 @@ public class ItemWirelessGrid extends ItemNetworkItem {
 
     public static int getSize(ItemStack stack) {
         return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NetworkNodeGrid.NBT_SIZE)) ? stack.getTagCompound().getInteger(NetworkNodeGrid.NBT_SIZE) : IGrid.SIZE_STRETCH;
-    }
+    }*/
 }

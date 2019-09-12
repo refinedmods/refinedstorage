@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCable;
-import com.raoulvdberge.refinedstorage.item.ItemCover;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -130,7 +129,7 @@ public class CoverManager {
         for (Map.Entry<Direction, Cover> entry : covers.entrySet()) {
             ItemStack cover = entry.getValue().getType().createStack();
 
-            ItemCover.setItem(cover, entry.getValue().getStack());
+            // TODO ItemCover.setItem(cover, entry.getValue().getStack());
 
             handler.setStackInSlot(i++, cover);
         }

@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.gui.grid.filtering.GridFilterParser;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -167,7 +166,8 @@ public class ContainerCrafterManager extends ContainerBase {
                     if (stack.isEmpty()) {
                         visible = false;
                     } else {
-                        CraftingPattern pattern = ItemPattern.getPatternFromCache(crafterManager.getWorld(), stack);
+                        // TODO CraftingPattern pattern = ItemPattern.getPatternFromCache(crafterManager.getWorld(), stack);
+                        CraftingPattern pattern = null;
 
                         visible = false;
 

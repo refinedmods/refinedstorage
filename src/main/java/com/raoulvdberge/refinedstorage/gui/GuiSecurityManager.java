@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.ContainerSecurityManager;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -39,7 +38,7 @@ public class GuiSecurityManager extends GuiBase<ContainerSecurityManager> {
         ItemStack card = securityManager.getNode().getEditCard().getStackInSlot(0);
 
         for (Permission permission : Permission.values()) {
-            permissions[permission.getId()].setIsChecked(!card.isEmpty() && ItemSecurityCard.hasPermission(card, permission));
+            // TODO permissions[permission.getId()].setIsChecked(!card.isEmpty() && ItemSecurityCard.hasPermission(card, permission));
         }
     }
 

@@ -26,7 +26,6 @@ import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -133,12 +132,12 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         this.stack = stack;
 
         if (player != null) {
-            this.sortingType = ItemWirelessGrid.getSortingType(stack);
+            /* TODO this.sortingType = ItemWirelessGrid.getSortingType(stack);
             this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
             this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
             this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
             this.tabPage = ItemWirelessGrid.getTabPage(stack);
-            this.size = ItemWirelessGrid.getSize(stack);
+            this.size = ItemWirelessGrid.getSize(stack);*/
         }
 
         if (!stack.hasTag()) {

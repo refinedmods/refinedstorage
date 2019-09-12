@@ -2,20 +2,10 @@ package com.raoulvdberge.refinedstorage.item.itemblock;
 
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.item.capprovider.CapabilityProviderEnergy;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
+import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public abstract class ItemBlockEnergyItem extends ItemBlockBase {
     public static final int TYPE_NORMAL = 0;
@@ -23,20 +13,20 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
 
     private int energyCapacity;
 
-    public ItemBlockEnergyItem(BlockBase block, int energyCapacity) {
-        super(block, true);
+    public ItemBlockEnergyItem(BlockBase block, int energyCapacity, IItemInfo info) {
+        super(block, info);
 
         this.energyCapacity = energyCapacity;
 
-        setMaxDamage(energyCapacity);
-        setMaxStackSize(1);
+        //setMaxDamage(energyCapacity);
+        //setMaxStackSize(1);
     }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT tag) {
         return new CapabilityProviderEnergy(stack, energyCapacity);
     }
-
+/* TODO
     @Override
     public boolean isDamageable() {
         return true;
@@ -98,5 +88,5 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
 
             tooltip.add(I18n.format("misc.refinedstorage:energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()));
         }
-    }
+    }*/
 }

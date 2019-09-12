@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
@@ -35,12 +34,12 @@ public class CraftingPattern implements ICraftingPattern {
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         this.container = container;
         this.stack = stack;
-        this.processing = ItemPattern.isProcessing(stack);
-        this.oredict = ItemPattern.isOredict(stack);
+        // TODO  this.processing = ItemPattern.isProcessing(stack);
+        // TODO this.oredict = ItemPattern.isOredict(stack);
 
         if (processing) {
             for (int i = 0; i < 9; ++i) {
-                ItemStack input = ItemPattern.getInputSlot(stack, i);
+                ItemStack input = ItemStack.EMPTY;// TODO ItemPattern.getInputSlot(stack, i);
 
                 if (input == null) {
                     inputs.add(NonNullList.create());
@@ -72,7 +71,7 @@ public class CraftingPattern implements ICraftingPattern {
                     inputs.add(NonNullList.from(ItemStack.EMPTY, input));
                 }
 
-                ItemStack output = ItemPattern.getOutputSlot(stack, i);
+                /*ItemStack output = ItemPattern.getOutputSlot(stack, i);
                 if (output != null) {
                     this.valid = true; // As soon as we have one output, we are valid.
 
@@ -91,19 +90,19 @@ public class CraftingPattern implements ICraftingPattern {
                     this.valid = true;
 
                     fluidOutputs.add(fluidOutput);
-                }
+                }*/
             }
         } else {
             CraftingInventory inv = new CraftingInventoryDummy();
 
             for (int i = 0; i < 9; ++i) {
-                ItemStack input = ItemPattern.getInputSlot(stack, i);
+                // TODO ItemStack input = ItemPattern.getInputSlot(stack, i);
 
-                inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
+                // TODO inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
 
-                if (input != null) {
-                    inv.setInventorySlotContents(i, input);
-                }
+                // TODO  if (input != null) {
+                // TODO     inv.setInventorySlotContents(i, input);
+                // TODO }
             }
 
             // TODO: better way of collecting recipes

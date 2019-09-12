@@ -2,14 +2,6 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCore extends ItemBase {
     private static final int TYPE_CONSTRUCTION = 0;
@@ -18,10 +10,10 @@ public class ItemCore extends ItemBase {
     public ItemCore() {
         super(new ItemInfo(RS.ID, "core"));
 
-        setHasSubtypes(true);
-        setMaxDamage(0);
+        /*setHasSubtypes(true);
+        setMaxDamage(0);*/
     }
-
+/*
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -40,5 +32,5 @@ public class ItemCore extends ItemBase {
         for (int i = 0; i < 2; ++i) {
             items.add(new ItemStack(this, 1, i));
         }
-    }
+    }*/
 }

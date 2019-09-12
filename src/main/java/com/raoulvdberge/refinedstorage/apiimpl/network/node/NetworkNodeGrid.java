@@ -22,7 +22,6 @@ import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
@@ -102,7 +101,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
             ItemStack pattern = getStackInSlot(slot);
             if (slot == 1 && !pattern.isEmpty()) {
-                boolean isPatternProcessing = ItemPattern.isProcessing(pattern);
+                /* TODO boolean isPatternProcessing = ItemPattern.isProcessing(pattern);
 
                 if (isPatternProcessing && isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
@@ -118,7 +117,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
                     for (int i = 0; i < 9; ++i) {
                         matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
                     }
-                }
+                }*/
             }
         }
 
@@ -548,26 +547,26 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
-            ItemPattern.setVersion(pattern);
+            /*TODO ItemPattern.setVersion(pattern);
             ItemPattern.setOredict(pattern, oredictPattern);
             ItemPattern.setProcessing(pattern, processingPattern);
-
+*/
             if (processingPattern) {
                 for (int i = 0; i < 18; ++i) {
                     if (!processingMatrix.getStackInSlot(i).isEmpty()) {
                         if (i >= 9) {
-                            ItemPattern.setOutputSlot(pattern, i - 9, processingMatrix.getStackInSlot(i));
+                            // TODO ItemPattern.setOutputSlot(pattern, i - 9, processingMatrix.getStackInSlot(i));
                         } else {
-                            ItemPattern.setInputSlot(pattern, i, processingMatrix.getStackInSlot(i));
+                            // TODO ItemPattern.setInputSlot(pattern, i, processingMatrix.getStackInSlot(i));
                         }
                     }
 
                     FluidStack fluid = processingMatrixFluids.getFluid(i);
                     if (fluid != null) {
                         if (i >= 9) {
-                            ItemPattern.setFluidOutputSlot(pattern, i - 9, fluid);
+                            // TODO ItemPattern.setFluidOutputSlot(pattern, i - 9, fluid);
                         } else {
-                            ItemPattern.setFluidInputSlot(pattern, i, fluid);
+                            // TODO ItemPattern.setFluidInputSlot(pattern, i, fluid);
                         }
                     }
                 }
@@ -576,7 +575,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
                     ItemStack ingredient = matrix.getStackInSlot(i);
 
                     if (!ingredient.isEmpty()) {
-                        ItemPattern.setInputSlot(pattern, i, ingredient);
+                        // TODO ItemPattern.setInputSlot(pattern, i, ingredient);
                     }
                 }
             }

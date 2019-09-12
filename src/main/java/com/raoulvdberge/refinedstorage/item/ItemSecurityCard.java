@@ -1,26 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
 
 public class ItemSecurityCard extends ItemBase {
     private static final String NBT_OWNER = "Owner";
@@ -30,11 +11,11 @@ public class ItemSecurityCard extends ItemBase {
     public ItemSecurityCard() {
         super(new ItemInfo(RS.ID, "security_card"));
 
-        setMaxStackSize(1);
+        //setMaxStackSize(1);
 
-        addPropertyOverride(new ResourceLocation("active"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
+        //addPropertyOverride(new ResourceLocation("active"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
-
+    /* TODO
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -99,5 +80,5 @@ public class ItemSecurityCard extends ItemBase {
                 tooltip.add("- " + I18n.format("gui.refinedstorage:security_manager.permission." + permission.getId()));
             }
         }
-    }
+    }*/
 }

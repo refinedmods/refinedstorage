@@ -6,13 +6,11 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemNetworkCard;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -30,8 +28,8 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
             if (card.isEmpty()) {
                 receiver = null;
             } else {
-                receiver = ItemNetworkCard.getReceiver(card);
-                receiverDimension = ItemNetworkCard.getDimension(card);
+                // TODO receiver = ItemNetworkCard.getReceiver(card);
+                // TODO receiverDimension = ItemNetworkCard.getDimension(card);
             }
 
             if (network != null) {

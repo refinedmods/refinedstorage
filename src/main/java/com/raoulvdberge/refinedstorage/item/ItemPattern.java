@@ -1,42 +1,14 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.color.ItemColorPattern;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelPattern;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
+public class ItemPattern extends ItemBase/* implements ICraftingPatternProvider */ {
     private static Map<ItemStack, CraftingPattern> PATTERN_CACHE = new HashMap<>();
 
     private static final String NBT_VERSION = "Version";
@@ -50,7 +22,7 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
     public ItemPattern() {
         super(new ItemInfo(RS.ID, "pattern"));
     }
-
+/*
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -244,5 +216,5 @@ public class ItemPattern extends ItemBase implements ICraftingPatternProvider {
         if (!world.isRemote) {
             API.instance().getOneSixMigrationHelper().migratePattern(stack);
         }
-    }
+    }*/
 }

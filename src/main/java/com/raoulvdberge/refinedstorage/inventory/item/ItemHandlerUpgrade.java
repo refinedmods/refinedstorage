@@ -51,7 +51,7 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
         int usage = 0;
 
         for (int i = 0; i < getSlots(); ++i) {
-            usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i));
+            // TODO usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i));
         }
 
         return usage;
@@ -62,7 +62,8 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
 
         for (int i = 0; i < getSlots(); ++i) {
             if (!getStackInSlot(i).isEmpty()) {
-                int fortune = ItemUpgrade.getFortuneLevel(getStackInSlot(i));
+                // TODO int fortune = ItemUpgrade.getFortuneLevel(getStackInSlot(i));
+                int fortune = 0;
 
                 if (fortune > maxFortune) {
                     maxFortune = fortune;

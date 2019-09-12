@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityCard;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemSecurityCard;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -80,7 +79,8 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
             ItemStack stack = cardsInv.getStackInSlot(i);
 
             if (!stack.isEmpty()) {
-                UUID uuid = ItemSecurityCard.getOwner(stack);
+                UUID uuid = null;/*TODO ItemSecurityCard.getOwner(stack)*/
+                ;
 
                 if (uuid == null) {
                     this.globalCard = createCard(stack, null);
@@ -97,7 +97,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         SecurityCard card = new SecurityCard(uuid);
 
         for (Permission permission : Permission.values()) {
-            card.getPermissions().put(permission, ItemSecurityCard.hasPermission(stack, permission));
+            card.getPermissions().put(permission, /*TODO ItemSecurityCard.hasPermission(stack, permission)*/false);
         }
 
         return card;
@@ -145,7 +145,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         ItemStack card = getEditCard().getStackInSlot(0);
 
         if (!card.isEmpty()) {
-            ItemSecurityCard.setPermission(card, permission, state);
+            // TODO ItemSecurityCard.setPermission(card, permission, state);
         }
     }
 

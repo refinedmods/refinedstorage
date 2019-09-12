@@ -1,35 +1,14 @@
 package com.raoulvdberge.refinedstorage.item.itemblock;
 
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeStorage;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
-import com.raoulvdberge.refinedstorage.item.ItemProcessor;
-import com.raoulvdberge.refinedstorage.item.ItemStorageDisk;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 
 public class ItemBlockStorage extends ItemBlockBase {
     public ItemBlockStorage(BlockStorage storage) {
-        super(storage, true);
+        super(storage, new ItemInfo(RS.ID, "storage"));
     }
-
+/* TODO
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
@@ -113,5 +92,5 @@ public class ItemBlockStorage extends ItemBlockBase {
         if (!world.isRemote) {
             OneSixMigrationHelper.migrateItemStorageBlockItem(world, stack);
         }
-    }
+    }*/
 }

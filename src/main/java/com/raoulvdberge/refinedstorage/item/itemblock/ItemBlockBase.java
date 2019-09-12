@@ -1,46 +1,21 @@
 package com.raoulvdberge.refinedstorage.item.itemblock;
 
 import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.PlayerEntity;
+import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.item.Item;
 
 public class ItemBlockBase extends BlockItem {
     private BlockBase block;
 
-    public ItemBlockBase(BlockBase block, boolean subtypes) {
-        super(block);
+    public ItemBlockBase(BlockBase block, IItemInfo info) {
+        super(block, new Item.Properties());
 
         this.block = block;
 
         setRegistryName(block.getInfo().getId());
-
-        if (subtypes) {
-            setMaxDamage(0);
-            setHasSubtypes(true);
-        }
     }
-
-    @Override
-    public int getMetadata(int damage) {
-        return damage;
-    }
-
-    @Override
-    public String getTranslationKey(ItemStack stack) {
-        if (getHasSubtypes()) {
-            return getTranslationKey() + "." + stack.getItemDamage();
-        }
-
-        return getTranslationKey();
-    }
-
+/* TODO
     @Override
     public boolean placeBlockAt(ItemStack stack, PlayerEntity player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
         boolean result = super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
@@ -54,5 +29,5 @@ public class ItemBlockBase extends BlockItem {
         }
 
         return result;
-    }
+    }*/
 }

@@ -1,21 +1,7 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
-import java.util.Optional;
-import java.util.UUID;
 
 public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     public static final String NBT_TAB_SELECTED = "TabSelected";
@@ -24,7 +10,7 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     public ItemWirelessCraftingMonitor() {
         super(new ItemInfo(RS.ID, "wireless_crafting_monitor"), RS.INSTANCE.config.wirelessCraftingMonitorCapacity);
     }
-
+/* TODO
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -80,5 +66,5 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
         }
 
         stack.getTagCompound().putInt(NBT_TAB_PAGE, tabPage);
-    }
+    }*/
 }

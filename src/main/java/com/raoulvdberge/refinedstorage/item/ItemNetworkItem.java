@@ -1,30 +1,9 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.function.Consumer;
-
-public abstract class ItemNetworkItem extends ItemEnergyItem implements INetworkItemProvider {
+public abstract class ItemNetworkItem extends ItemEnergyItem /*implements INetworkItemProvider*/ {
     private static final String NBT_CONTROLLER_X = "ControllerX";
     private static final String NBT_CONTROLLER_Y = "ControllerY";
     private static final String NBT_CONTROLLER_Z = "ControllerZ";
@@ -33,15 +12,10 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
     public ItemNetworkItem(IItemInfo info, int energyCapacity) {
         super(info, energyCapacity);
 
-        addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
+        addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && /*isValid(stack)*/false) ? 1.0f : 0.0f);
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-
-    }
-
+    /* TODO
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
@@ -131,5 +105,5 @@ public abstract class ItemNetworkItem extends ItemEnergyItem implements INetwork
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Y)
             && stack.getTagCompound().hasKey(NBT_CONTROLLER_Z)
             && stack.getTagCompound().hasKey(NBT_DIMENSION_ID);
-    }
+    }*/
 }

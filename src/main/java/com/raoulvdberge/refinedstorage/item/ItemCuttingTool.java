@@ -2,20 +2,15 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemCuttingTool extends ItemBase {
     public ItemCuttingTool() {
         super(new ItemInfo(RS.ID, "cutting_tool"));
 
-        setMaxDamage(50 - 1);
-        setMaxStackSize(1);
+        //setMaxDamage(50 - 1);
+        //setMaxStackSize(1);
     }
-
+/* TODO
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -44,5 +39,5 @@ public class ItemCuttingTool extends ItemBase {
     @Override
     public String getTranslationKey(ItemStack stack) {
         return getTranslationKey(); // Ignore damage
-    }
+    }*/
 }

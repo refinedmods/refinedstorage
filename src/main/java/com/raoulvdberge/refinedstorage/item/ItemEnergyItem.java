@@ -2,20 +2,9 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.item.capprovider.CapabilityProviderEnergy;
 import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public abstract class ItemEnergyItem extends ItemBase {
     public static final int TYPE_NORMAL = 0;
@@ -27,10 +16,10 @@ public abstract class ItemEnergyItem extends ItemBase {
         super(info);
 
         this.energyCapacity = energyCapacity;
-
+/*
         setMaxDamage(energyCapacity);
         setMaxStackSize(1);
-        setHasSubtypes(true);
+        setHasSubtypes(true);*/
     }
 
     @Override
@@ -38,6 +27,7 @@ public abstract class ItemEnergyItem extends ItemBase {
         return new CapabilityProviderEnergy(stack, energyCapacity);
     }
 
+    /* TODO
     @Override
     public boolean isDamageable() {
         return true;
@@ -99,5 +89,5 @@ public abstract class ItemEnergyItem extends ItemBase {
 
             tooltip.add(I18n.format("misc.refinedstorage:energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()));
         }
-    }
+    }*/
 }

@@ -2,20 +2,6 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ItemUpgrade extends ItemBase {
     public static final int TYPE_RANGE = 1;
@@ -30,10 +16,10 @@ public class ItemUpgrade extends ItemBase {
     public ItemUpgrade() {
         super(new ItemInfo(RS.ID, "upgrade"));
 
-        setHasSubtypes(true);
-        setMaxDamage(0);
+        //setHasSubtypes(true);
+        //setMaxDamage(0);
     }
-
+/* TODO
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -118,5 +104,5 @@ public class ItemUpgrade extends ItemBase {
             default:
                 return 0;
         }
-    }
+    }*/
 }

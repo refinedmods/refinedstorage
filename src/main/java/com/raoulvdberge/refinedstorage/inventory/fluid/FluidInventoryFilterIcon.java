@@ -1,9 +1,7 @@
 package com.raoulvdberge.refinedstorage.inventory.fluid;
 
-import com.raoulvdberge.refinedstorage.item.ItemFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.fluids.FluidStack;
 
 public class FluidInventoryFilterIcon extends FluidInventory {
     public FluidInventoryFilterIcon(ItemStack stack) {
@@ -14,12 +12,12 @@ public class FluidInventoryFilterIcon extends FluidInventory {
                 stack.setTag(new CompoundNBT());
             }
 
-            ItemFilter.setFluidIcon(stack, getFluid(slot));
+            // TODO ItemFilter.setFluidIcon(stack, getFluid(slot));
         };
-
+/*
         FluidStack icon = ItemFilter.getFluidIcon(stack);
         if (icon != null) {
             setFluid(0, icon);
-        }
+        }*/
     }
 }

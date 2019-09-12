@@ -1,57 +1,25 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
 import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
 import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.model.loader.CustomModelLoaderCover;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ItemCover extends ItemBase {
     private static final String NBT_ITEM = "Item";
 
-    public static final ItemStack HIDDEN_COVER_ALTERNATIVE = new ItemStack(Blocks.STONEBRICK);
+    // public static final ItemStack HIDDEN_COVER_ALTERNATIVE = new ItemStack(Blocks.STONEBRICK);
 
     public ItemCover(IItemInfo info) {
         super(info);
 
-        setCreativeTab(RS.INSTANCE.coversTab);
+        //setCreativeTab(RS.INSTANCE.coversTab);
     }
 
     public ItemCover() {
         this(new ItemInfo(RS.ID, "cover"));
     }
 
+    /*
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -175,5 +143,5 @@ public class ItemCover extends ItemBase {
 
     protected Cover createCover(ItemStack stack) {
         return new Cover(stack, CoverType.NORMAL);
-    }
+    }*/
 }

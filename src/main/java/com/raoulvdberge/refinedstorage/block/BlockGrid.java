@@ -2,9 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.item.itemblock.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
-import net.minecraft.item.Item;
 import net.minecraft.state.EnumProperty;
 
 public class BlockGrid extends BlockNode {
@@ -74,10 +72,5 @@ public class BlockGrid extends BlockNode {
     @Override
     public boolean hasConnectedState() {
         return true;
-    }
-
-    @Override
-    public Item createItem() {
-        return new ItemBlockBase(this, true);
     }
 }

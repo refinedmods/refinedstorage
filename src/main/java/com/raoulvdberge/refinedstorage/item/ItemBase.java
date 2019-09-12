@@ -1,38 +1,28 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class ItemBase extends Item {
     protected final IItemInfo info;
 
     public ItemBase(IItemInfo info) {
+        super(new Item.Properties());
         this.info = info;
 
         setRegistryName(info.getId());
-        setCreativeTab(RS.INSTANCE.tab);
+        // TODO setCreativeTab(RS.INSTANCE.tab);
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
     }
 
     @Override
     public String getTranslationKey() {
         return "item." + info.getId().toString();
-    }
-
-    @Override
-    public String getTranslationKey(ItemStack stack) {
-        if (getHasSubtypes()) {
-            return getTranslationKey() + "." + stack.getItemDamage();
-        }
-
-        return getTranslationKey();
     }
 }

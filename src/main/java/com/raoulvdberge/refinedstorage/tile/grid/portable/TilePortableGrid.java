@@ -30,7 +30,6 @@ import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerTile;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
@@ -226,13 +225,13 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
     }
 
     public void onPassItemContext(ItemStack stack) {
-        this.sortingType = ItemWirelessGrid.getSortingType(stack);
+        /* TODO this.sortingType = ItemWirelessGrid.getSortingType(stack);
         this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
         this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
         this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
         this.tabPage = ItemWirelessGrid.getTabPage(stack);
         this.size = ItemWirelessGrid.getSize(stack);
-
+*/
         IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY).orElse(null);
 
         this.energyStorage = recreateEnergyStorage(energyStorage != null ? energyStorage.getEnergyStored() : 0);

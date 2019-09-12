@@ -2,9 +2,6 @@ package com.raoulvdberge.refinedstorage.recipe;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.item.ItemCover;
-import com.raoulvdberge.refinedstorage.item.ItemHollowCover;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -17,17 +14,17 @@ import javax.annotation.Nullable;
 
 public class RecipeHollowCover implements IRecipe<CraftingInventory> {
     protected boolean isValid(ItemStack slot, @Nullable ItemStack previousValidSlot) {
-        ItemStack currentCover = ItemCover.getItem(slot);
+        // TODO ItemStack currentCover = ItemCover.getItem(slot);
 
-        if (slot.getItem() == RSItems.COVER && CoverManager.isValidCover(currentCover)) {
+        /*if (slot.getItem() == RSItems.COVER && CoverManager.isValidCover(currentCover)) {
             if (previousValidSlot == null) {
                 return true;
             }
 
-            ItemStack previousCover = ItemCover.getItem(previousValidSlot);
+            // TODO ItemStack previousCover = ItemCover.getItem(previousValidSlot);
 
-            return previousCover.getItem() == currentCover.getItem();
-        }
+            // TODO return previousCover.getItem() == currentCover.getItem();
+        }*/
 
         return false;
     }
@@ -59,7 +56,7 @@ public class RecipeHollowCover implements IRecipe<CraftingInventory> {
     public ItemStack getCraftingResult(CraftingInventory inv) {
         ItemStack stack = new ItemStack(RSItems.HOLLOW_COVER, 8);
 
-        ItemHollowCover.setItem(stack, ItemCover.getItem(inv.getStackInSlot(0)));
+        // TODO ItemHollowCover.setItem(stack, ItemCover.getItem(inv.getStackInSlot(0)));
 
         return stack;
     }

@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -28,10 +27,10 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
     public WirelessCraftingMonitor(ItemStack stack) {
         this.stack = stack;
-        this.networkDimension = ItemWirelessCraftingMonitor.getDimensionId(stack);
+        /* TODO this.networkDimension = ItemWirelessCraftingMonitor.getDimensionId(stack);
         this.network = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
         this.tabPage = ItemWirelessCraftingMonitor.getTabPage(stack);
-        this.tabSelected = ItemWirelessCraftingMonitor.getTabSelected(stack);
+        this.tabSelected = ItemWirelessCraftingMonitor.getTabSelected(stack);*/
     }
 
     @Override

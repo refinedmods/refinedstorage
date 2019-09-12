@@ -1,30 +1,14 @@
 package com.raoulvdberge.refinedstorage.item.itemblock;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 
 public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
     public ItemBlockPortableGrid(BlockPortableGrid block) {
-        super(block, RS.INSTANCE.config.portableGridCapacity);
+        super(block, RS.INSTANCE.config.portableGridCapacity, new ItemInfo(RS.ID, "portable_grid"));
     }
-
+/* TODO
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
@@ -71,5 +55,5 @@ public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
         }
 
         return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
-    }
+    }*/
 }

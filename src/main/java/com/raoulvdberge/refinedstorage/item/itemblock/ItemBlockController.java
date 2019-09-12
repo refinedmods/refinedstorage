@@ -2,26 +2,15 @@ package com.raoulvdberge.refinedstorage.item.itemblock;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.BlockController;
-import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
-import com.raoulvdberge.refinedstorage.tile.TileController;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
+import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 
 public class ItemBlockController extends ItemBlockBase {
     public ItemBlockController(BlockController block) {
-        super(block, true);
+        super(block, new ItemInfo(RS.ID, "controller"));
 
-        setMaxStackSize(1);
+        // setMaxStackSize(1);
     }
-
+/* TODO
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
         return 1D - ((double) getEnergyStored(stack) / (double) RS.INSTANCE.config.controllerCapacity);
@@ -69,5 +58,5 @@ public class ItemBlockController extends ItemBlockBase {
         stack.setTagCompound(tag);
 
         return stack;
-    }
+    }*/
 }

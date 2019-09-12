@@ -11,7 +11,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridF
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -60,7 +59,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
     };
 
     public WirelessFluidGrid(ItemStack stack) {
-        this.networkDimension = ItemWirelessFluidGrid.getDimensionId(stack);
+        /* TODO this.networkDimension = ItemWirelessFluidGrid.getDimensionId(stack);
         this.network = new BlockPos(ItemWirelessFluidGrid.getX(stack), ItemWirelessFluidGrid.getY(stack), ItemWirelessFluidGrid.getZ(stack));
 
         this.stack = stack;
@@ -70,7 +69,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
         this.searchBoxMode = ItemWirelessFluidGrid.getSearchBoxMode(stack);
         this.tabSelected = ItemWirelessFluidGrid.getTabSelected(stack);
         this.tabPage = ItemWirelessFluidGrid.getTabPage(stack);
-        this.size = ItemWirelessFluidGrid.getSize(stack);
+        this.size = ItemWirelessFluidGrid.getSize(stack);*/
 
         if (stack.hasTag()) {
             StackUtils.readItems(filter, 0, stack.getTag());

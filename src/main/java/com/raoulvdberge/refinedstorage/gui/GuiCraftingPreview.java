@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
-import com.raoulvdberge.refinedstorage.item.ItemPattern;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -138,7 +137,7 @@ public class GuiCraftingPreview extends GuiBase {
 
                     GlStateManager.popMatrix();
 
-                    ICraftingPattern pattern = ItemPattern.getPatternFromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement());
+                    ICraftingPattern pattern = /* TODO ItemPattern.getPatternFromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement())*/null;
 
                     int yy = 83;
                     for (ItemStack output : pattern.getOutputs()) {
