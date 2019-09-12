@@ -25,12 +25,12 @@ public class GuiSecurityManager extends GuiBase<ContainerSecurityManager> {
 
         int padding = 15;
 
-        permissions[0] = addCheckBox(x + 7, y + 93, I18n.format("gui.refinedstorage:security_manager.permission.0"), false);
-        permissions[1] = addCheckBox(permissions[0].x, permissions[0].y + padding, I18n.format("gui.refinedstorage:security_manager.permission.1"), false);
-        permissions[2] = addCheckBox(permissions[1].x, permissions[1].y + padding, I18n.format("gui.refinedstorage:security_manager.permission.2"), false);
-        permissions[3] = addCheckBox(permissions[0].x + 90, permissions[0].y, I18n.format("gui.refinedstorage:security_manager.permission.3"), false);
-        permissions[4] = addCheckBox(permissions[3].x, permissions[3].y + padding, I18n.format("gui.refinedstorage:security_manager.permission.4"), false);
-        permissions[5] = addCheckBox(permissions[4].x, permissions[4].y + padding, I18n.format("gui.refinedstorage:security_manager.permission.5"), false);
+        permissions[0] = addCheckBox(x + 7, y + 93, I18n.format("gui.refinedstorage.security_manager.permission.0"), false);
+        permissions[1] = addCheckBox(permissions[0].x, permissions[0].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.1"), false);
+        permissions[2] = addCheckBox(permissions[1].x, permissions[1].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.2"), false);
+        permissions[3] = addCheckBox(permissions[0].x + 90, permissions[0].y, I18n.format("gui.refinedstorage.security_manager.permission.3"), false);
+        permissions[4] = addCheckBox(permissions[3].x, permissions[3].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.4"), false);
+        permissions[5] = addCheckBox(permissions[4].x, permissions[4].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.5"), false);
     }
 
     @Override

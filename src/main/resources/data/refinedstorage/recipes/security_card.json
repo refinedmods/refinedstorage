@@ -2,21 +2,21 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "EEE",
-    "PAP",
+    "CAC",
     "EEE"
   ],
   "key": {
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     },
-    "P": {
-      "item": "minecraft:paper"
+    "C": {
+      "item": "refinedstorage:network_card"
     },
     "A": {
-      "item": "#advanced_processor"
+      "item": "refinedstorage:advanced_processor"
     }
   },
   "result": {
-    "item": "refinedstorage:network_card"
+    "item": "refinedstorage:security_card"
   }
 }

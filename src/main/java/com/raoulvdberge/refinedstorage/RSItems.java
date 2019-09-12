@@ -33,10 +33,12 @@ public final class RSItems {
     public static final ItemUpgrade UPGRADE = new ItemUpgrade();
     public static final ItemStorageHousing STORAGE_HOUSING = new ItemStorageHousing();
     public static final ItemFilter FILTER = new ItemFilter();
-    public static final ItemNetworkCard NETWORK_CARD = new ItemNetworkCard();
+    @ObjectHolder(RS.ID + ":network_card")
+    public static final ItemNetworkCard NETWORK_CARD = null;
     public static final ItemFluidStorageDisk FLUID_STORAGE_DISK = new ItemFluidStorageDisk();
     public static final ItemFluidStoragePart FLUID_STORAGE_PART = new ItemFluidStoragePart();
-    public static final ItemSecurityCard SECURITY_CARD = new ItemSecurityCard();
+    @ObjectHolder(RS.ID + ":security_card")
+    public static final ItemSecurityCard SECURITY_CARD = null;
     public static final ItemCuttingTool CUTTING_TOOL = new ItemCuttingTool();
     public static final ItemCover COVER = new ItemCover();
     public static final ItemHollowCover HOLLOW_COVER = new ItemHollowCover();

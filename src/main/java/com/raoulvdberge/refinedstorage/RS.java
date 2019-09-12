@@ -43,6 +43,9 @@ public final class RS {
         e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.ADVANCED));
 
         e.getRegistry().register(new ItemSilicon());
+
+        e.getRegistry().register(new ItemSecurityCard());
+        e.getRegistry().register(new ItemNetworkCard());
     }
 
     /* TODO
