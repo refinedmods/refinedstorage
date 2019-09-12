@@ -34,7 +34,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private IItemHandler items = new ItemHandlerProxy(importItems, exportItems);
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/);
 
     private int compare = IComparer.COMPARE_NBT;
 

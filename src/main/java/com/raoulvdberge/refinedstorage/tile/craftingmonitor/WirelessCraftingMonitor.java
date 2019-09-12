@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
-import com.google.common.base.Optional;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
@@ -16,6 +15,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 public class WirelessCraftingMonitor implements ICraftingMonitor {
@@ -120,7 +120,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     @Override
     public void onTabSelectionChanged(Optional<UUID> taskId) {
         if (taskId.isPresent() && tabSelected.isPresent() && taskId.get().equals(tabSelected.get())) {
-            this.tabSelected = Optional.absent();
+            this.tabSelected = Optional.empty();
         } else {
             this.tabSelected = taskId;
         }

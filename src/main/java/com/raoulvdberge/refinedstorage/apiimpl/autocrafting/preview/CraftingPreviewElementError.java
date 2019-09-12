@@ -67,7 +67,7 @@ public class CraftingPreviewElementError implements ICraftingPreviewElement<Item
         CompoundNBT tag = buf.readCompoundTag();
 
         ItemStack stack = new ItemStack(item, 1);
-        stack.put(tag);
+        stack.setTag(tag);
 
         return new CraftingPreviewElementError(error, stack);
     }

@@ -5,10 +5,9 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -101,12 +100,12 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
     @Nullable
     @Override
     public String getTooltip() {
-        return RenderUtils.getItemTooltip(this.stack).stream().collect(Collectors.joining("\n"));
+        return RenderUtils.getItemTooltip(this.stack).stream().map(t -> t.getFormattedText()).collect(Collectors.joining("\n")); // TODO getFormattedText
     }
 
     @Override
-    public void write(ByteBuf buf) {
-        StackUtils.writeItemStack(buf, stack);
+    public void write(PacketBuffer buf) {
+        buf.writeItemStack(stack);
         buf.writeInt(stored);
         buf.writeInt(missing);
         buf.writeInt(processing);

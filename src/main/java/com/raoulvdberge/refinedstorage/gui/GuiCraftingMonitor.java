@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
@@ -27,6 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {

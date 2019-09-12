@@ -31,6 +31,7 @@ import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class ContainerGrid extends ContainerBase implements IGridCraftingListener {
     private IGrid grid;
@@ -54,7 +55,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
 
     public void initSlots() {
         this.inventorySlots.clear();
-        this.inventoryItemStacks.clear(); // TODO at
+        // this.inventoryItemStacks.clear(); // TODO at
 
         this.transferManager.clearTransfers();
 
@@ -213,7 +214,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
             Slot slot = inventorySlots.get(i);
 
             if (slot instanceof SlotGridCrafting || slot == craftingResultSlot || slot == patternResultSlot) {
-                for (IContainerListener listener : listeners) { // TODO AT for listeners
+                for (IContainerListener listener : new ArrayList<IContainerListener>()) { // TODO AT for listeners
                     // @Volatile: We can't use IContainerListener#sendSlotContents since ServerPlayerEntity blocks SlotCrafting changes...
                     if (listener instanceof ServerPlayerEntity) {
                         ((ServerPlayerEntity) listener).connection.sendPacket(new SSetSlotPacket(windowId, i, slot.getStack()));

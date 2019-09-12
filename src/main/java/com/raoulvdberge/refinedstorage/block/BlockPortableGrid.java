@@ -8,8 +8,8 @@ import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 
 public class BlockPortableGrid extends BlockBase {
-    public static final EnumProperty TYPE = EnumProperty.create("type", PortableGridType.class);
-    public static final EnumProperty DISK_STATE = EnumProperty.create("disk_state", PortableGridDiskState.class);
+    public static final EnumProperty<PortableGridType> TYPE = EnumProperty.create("type", PortableGridType.class);
+    public static final EnumProperty<PortableGridDiskState> DISK_STATE = EnumProperty.create("disk_state", PortableGridDiskState.class);
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
     public BlockPortableGrid() {

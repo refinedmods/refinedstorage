@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.google.common.base.Optional;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -15,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
@@ -46,8 +46,8 @@ public class ItemWirelessCraftingMonitor extends ItemNetworkItem {
     }
 
     public static Optional<UUID> getTabSelected(ItemStack stack) {
-        if (stack.hasTagCompound() && stack.getTagCompound().hasUniqueId(NBT_TAB_SELECTED)) {
-            return Optional.of(stack.getTagCompound().getUniqueId(NBT_TAB_SELECTED));
+        if (stack.hasTag() && stack.getTag().hasUniqueId(NBT_TAB_SELECTED)) {
+            return Optional.of(stack.getTag().getUniqueId(NBT_TAB_SELECTED));
         }
 
         return Optional.absent();

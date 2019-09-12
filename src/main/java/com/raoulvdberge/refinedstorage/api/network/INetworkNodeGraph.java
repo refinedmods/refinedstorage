@@ -15,23 +15,6 @@ public interface INetworkNodeGraph {
     /**
      * Rebuilds the network graph.
      *
-     * @deprecated Use {@link #invalidate(Action, World, BlockPos)} - needed to support simulating the calculation of network connections
-     */
-    @Deprecated
-    default void rebuild() {
-        invalidate(Action.PERFORM, getNetworkForBCReasons().world(), getNetworkForBCReasons().getPosition());
-    }
-
-    /**
-     * DON'T USE THIS!
-     * This method exists to support a default {@link #rebuild()} method to maintain backward compatibility.
-     */
-    @Deprecated
-    INetwork getNetworkForBCReasons();
-
-    /**
-     * Rebuilds the network graph.
-     *
      * @param action whether to perform or simulate
      * @param world  the origin world
      * @param origin the origin, usually the network position

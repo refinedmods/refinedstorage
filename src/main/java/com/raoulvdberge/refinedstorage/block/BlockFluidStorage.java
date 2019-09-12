@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import net.minecraft.state.EnumProperty;
 
 public class BlockFluidStorage extends BlockNode {
-    public static final EnumProperty TYPE = EnumProperty.create("type", FluidStorageType.class);
+    public static final EnumProperty<FluidStorageType> TYPE = EnumProperty.create("type", FluidStorageType.class);
 
     public BlockFluidStorage() {
         super(BlockInfoBuilder.forId("fluid_storage").hardness(5.8F).tileEntity(TileFluidStorage::new).create());

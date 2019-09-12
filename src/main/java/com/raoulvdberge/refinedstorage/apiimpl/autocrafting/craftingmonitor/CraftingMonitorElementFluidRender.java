@@ -5,9 +5,8 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -104,8 +103,8 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
     }
 
     @Override
-    public void write(ByteBuf buf) {
-        StackUtils.writeFluidStack(buf, stack);
+    public void write(PacketBuffer buf) {
+        stack.writeToPacket(buf);
         buf.writeInt(stored);
         buf.writeInt(missing);
         buf.writeInt(processing);

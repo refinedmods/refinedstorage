@@ -48,7 +48,7 @@ public interface IStackList<T> {
      */
     @Nullable
     default T get(@Nonnull T stack) {
-        return get(stack, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT);
+        return get(stack, IComparer.COMPARE_NBT);
     }
 
     /**

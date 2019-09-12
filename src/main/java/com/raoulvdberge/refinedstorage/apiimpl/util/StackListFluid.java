@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 import com.google.common.collect.ArrayListMultimap;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraftforge.fluids.Fluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -21,10 +21,10 @@ public class StackListFluid implements IStackList<FluidStack> {
 
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
-                if ((long) otherStack.amount + (long) size > Integer.MAX_VALUE) {
-                    otherStack.amount = Integer.MAX_VALUE;
+                if ((long) otherStack.getAmount() + (long) size > Integer.MAX_VALUE) {
+                    otherStack.setAmount(Integer.MAX_VALUE);
                 } else {
-                    otherStack.amount += size;
+                    otherStack.grow(size);
                 }
 
                 return;
@@ -32,24 +32,24 @@ public class StackListFluid implements IStackList<FluidStack> {
         }
 
         FluidStack newStack = stack.copy();
-        newStack.amount = size;
+        newStack.setAmount(size);
         stacks.put(stack.getFluid(), newStack);
     }
 
     @Override
     public void add(@Nonnull FluidStack stack) {
-        add(stack, stack.amount);
+        add(stack, stack.getAmount());
     }
 
     @Override
     public boolean remove(@Nonnull FluidStack stack, int size) {
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (stack.isFluidEqual(otherStack)) {
-                otherStack.amount -= size;
+                otherStack.shrink(size);
 
-                boolean success = otherStack.amount >= 0;
+                boolean success = otherStack.getAmount() >= 0;
 
-                if (otherStack.amount <= 0) {
+                if (otherStack.getAmount() <= 0) {
                     stacks.remove(otherStack.getFluid(), otherStack);
                 }
 
@@ -62,7 +62,7 @@ public class StackListFluid implements IStackList<FluidStack> {
 
     @Override
     public boolean remove(@Nonnull FluidStack stack) {
-        return remove(stack, stack.amount);
+        return remove(stack, stack.getAmount());
     }
 
     @Override

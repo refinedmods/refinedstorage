@@ -56,7 +56,7 @@ public class GuiController extends GuiBase<ContainerController> {
 
     @Override
     public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:controller." + controller.getType().getId()));
+        drawString(7, 7, t("gui.refinedstorage:controller." + controller.getControllerType().getId()));
         drawString(7, 87, t("container.inventory"));
 
         int x = 33;

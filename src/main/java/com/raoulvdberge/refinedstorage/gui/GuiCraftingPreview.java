@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RS;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
@@ -11,33 +11,28 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
 import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
 import com.raoulvdberge.refinedstorage.item.ItemPattern;
-import com.raoulvdberge.refinedstorage.network.MessageGridCraftingStart;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GuiCraftingPreview extends GuiBase {
     public class CraftingPreviewElementDrawers extends ElementDrawers {
         private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
-            GlStateManager.color(1, 1, 1, 1);
+            GlStateManager.color4f(1, 1, 1, 1);
             GlStateManager.disableLighting();
 
-            drawRect(x, y, x + 73, y + 29, colour);
+            fill(x, y, x + 73, y + 29, colour);
         };
 
         @Override
@@ -49,13 +44,13 @@ public class GuiCraftingPreview extends GuiBase {
     private static final int VISIBLE_ROWS = 5;
 
     private List<ICraftingPreviewElement> stacks;
-    private GuiScreen parent;
+    private Screen parent;
 
     private int hash;
     private int quantity;
 
-    private GuiButton startButton;
-    private GuiButton cancelButton;
+    private Button startButton;
+    private Button cancelButton;
 
     private ItemStack hoveringStack;
     private FluidStack hoveringFluid;
@@ -64,13 +59,13 @@ public class GuiCraftingPreview extends GuiBase {
 
     private boolean fluids;
 
-    public GuiCraftingPreview(GuiScreen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity, boolean fluids) {
-        super(new Container() {
+    public GuiCraftingPreview(Screen parent, List<ICraftingPreviewElement> stacks, int hash, int quantity, boolean fluids) {
+        super(new Container(null, 0) {
             @Override
-            public boolean canInteractWith(PlayerEntity player) {
+            public boolean canInteractWith(PlayerEntity playerIn) {
                 return false;
             }
-        }, 254, 201);
+        }, 254, 201, null, null);
 
         this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
@@ -86,7 +81,7 @@ public class GuiCraftingPreview extends GuiBase {
     public void init(int x, int y) {
         cancelButton = addButton(x + 55, y + 201 - 20 - 7, 50, 20, t("gui.cancel"));
         startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, t("misc.refinedstorage:start"));
-        startButton.enabled = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null;
+        startButton.active = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null; // TODO enabled?
     }
 
     @Override
@@ -113,7 +108,7 @@ public class GuiCraftingPreview extends GuiBase {
         drawTexture(x, y, 0, 0, screenWidth, screenHeight);
 
         if (getErrorType() != null) {
-            drawRect(x + 7, y + 20, x + 228, y + 169, 0xFFDBDBDB);
+            fill(x + 7, y + 20, x + 228, y + 169, 0xFFDBDBDB);
         }
     }
 
@@ -124,11 +119,11 @@ public class GuiCraftingPreview extends GuiBase {
         int x = 7;
         int y = 15;
 
-        float scale = fontRenderer.getUnicodeFlag() ? 1F : 0.5F;
+        float scale = /* TODO font.getUnicodeFlag() ? 1F :*/ 0.5F;
 
         if (getErrorType() != null) {
             GlStateManager.pushMatrix();
-            GlStateManager.scale(scale, scale, 1);
+            GlStateManager.scalef(scale, scale, 1);
 
             drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), t("gui.refinedstorage:crafting_preview.error"));
 
@@ -143,18 +138,18 @@ public class GuiCraftingPreview extends GuiBase {
 
                     GlStateManager.popMatrix();
 
-                    ICraftingPattern pattern = ItemPattern.getPatternFromCache(parent.mc.world, (ItemStack) stacks.get(0).getElement());
+                    ICraftingPattern pattern = ItemPattern.getPatternFromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement());
 
                     int yy = 83;
                     for (ItemStack output : pattern.getOutputs()) {
                         if (output != null) {
                             GlStateManager.pushMatrix();
-                            GlStateManager.scale(scale, scale, 1);
-                            drawString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName());
+                            GlStateManager.scalef(scale, scale, 1);
+                            drawString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getFormattedText()); // TODO getFOrmattedText
                             GlStateManager.popMatrix();
 
                             RenderHelper.enableGUIStandardItemLighting();
-                            GlStateManager.enableDepth();
+                            GlStateManager.enableDepthTest();
                             drawItem(x + 5, yy, output);
                             RenderHelper.disableStandardItemLighting();
 
@@ -177,7 +172,7 @@ public class GuiCraftingPreview extends GuiBase {
             int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 
             RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
 
             this.hoveringStack = null;
             this.hoveringFluid = null;
@@ -210,16 +205,17 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        super.render(mouseX, mouseY, partialTicks);
 
         if (hoveringStack != null) {
-            drawTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
+            drawTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getInstance().player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
         } else if (hoveringFluid != null) {
-            drawTooltip(mouseX, mouseY, hoveringFluid.getLocalizedName());
+            drawTooltip(mouseX, mouseY, hoveringFluid.getDisplayName().getFormattedText()); // TODO gft
         }
     }
 
+    /* TODO
     @Override
     protected void keyTyped(char character, int keyCode) throws IOException {
         if (keyCode == Keyboard.KEY_RETURN && startButton.enabled) {
@@ -240,10 +236,10 @@ public class GuiCraftingPreview extends GuiBase {
         } else if (button.id == cancelButton.id) {
             close();
         }
-    }
+    }*/
 
     private void startRequest() {
-        RS.INSTANCE.network.sendToServer(new MessageGridCraftingStart(hash, quantity, fluids));
+        // TODO RS.INSTANCE.network.sendToServer(new MessageGridCraftingStart(hash, quantity, fluids));
 
         close();
     }
@@ -253,6 +249,6 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     private void close() {
-        FMLClientHandler.instance().showGuiScreen(parent);
+        // TODO FMLClientHandler.instance().showGuiScreen(parent);
     }
 }

@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWirelessTransmitter {
     public static final String ID = "wireless_transmitter";
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_RANGE);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO , ItemUpgrade.TYPE_RANGE*/);
 
     public NetworkNodeWirelessTransmitter(World world, BlockPos pos) {
         super(world, pos);

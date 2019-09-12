@@ -156,7 +156,7 @@ public interface INetwork {
      */
     @Nullable
     default ItemStack extractItem(@Nonnull ItemStack stack, int size, Action action) {
-        return extractItem(stack, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, action);
+        return extractItem(stack, size, IComparer.COMPARE_NBT, action);
     }
 
     /**

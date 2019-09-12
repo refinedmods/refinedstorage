@@ -10,8 +10,8 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.util.BlockRenderLayer;
 
 public class BlockController extends BlockNodeProxy {
-    public static final EnumProperty TYPE = EnumProperty.create("type", ControllerType.class);
-    public static final EnumProperty ENERGY_TYPE = EnumProperty.create("energy_type", ControllerEnergyType.class);
+    public static final EnumProperty<ControllerType> TYPE = EnumProperty.create("type", ControllerType.class);
+    public static final EnumProperty<ControllerEnergyType> ENERGY_TYPE = EnumProperty.create("energy_type", ControllerEnergyType.class);
 
     public BlockController() {
         super(BlockInfoBuilder.forId("controller").tileEntity(TileController::new).create());

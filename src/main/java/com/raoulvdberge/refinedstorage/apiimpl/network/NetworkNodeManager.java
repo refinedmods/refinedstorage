@@ -33,8 +33,8 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     }
 
     @Override
-    public void readFromNBT(CompoundNBT tag) {
-        if (tag.hasKey(NBT_NODES)) {
+    public void read(CompoundNBT tag) {
+        if (tag.contains(NBT_NODES)) {
             this.nodesTag = tag.getList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
             this.canReadNodes = true;
         }
@@ -73,15 +73,15 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     }
 
     @Override
-    public CompoundNBT writeToNBT(CompoundNBT tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         ListNBT list = new ListNBT();
 
         for (INetworkNode node : all()) {
             try {
                 CompoundNBT nodeTag = new CompoundNBT();
 
-                nodeTag.setString(NBT_NODE_ID, node.getId());
-                nodeTag.setLong(NBT_NODE_POS, node.getPos().toLong());
+                nodeTag.putString(NBT_NODE_ID, node.getId());
+                nodeTag.putLong(NBT_NODE_POS, node.getPos().toLong());
                 nodeTag.put(NBT_NODE_DATA, node.write(new CompoundNBT()));
 
                 list.add(nodeTag);

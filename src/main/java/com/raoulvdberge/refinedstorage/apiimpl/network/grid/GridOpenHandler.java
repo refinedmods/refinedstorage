@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.network.MessageGridOpen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +25,7 @@ public class GridOpenHandler implements Runnable {
             return;
         }
 
-        GuiGrid gui = new GuiGrid(null, grid.getLeft());
+        //GuiGrid gui = new GuiGrid(null, null, grid.getLeft());
 
         // @Volatile: Just set the windowId: from OpenGuiHandler#process
         /*TODO player.openContainer = new ContainerGrid(grid.getLeft(), gui, grid.getRight() instanceof TileBase ? (TileBase) grid.getRight() : null, player);

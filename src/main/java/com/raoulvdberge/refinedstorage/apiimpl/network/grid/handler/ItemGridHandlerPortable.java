@@ -78,19 +78,19 @@ public class ItemGridHandlerPortable implements IItemGridHandler {
         // Do this before actually extracting, since portable grid sends updates as soon as a change happens (so before the storage tracker used to track)
         portableGrid.getItemStorageTracker().changed(player, item.copy());
 
-        ItemStack took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.SIMULATE);
+        ItemStack took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.SIMULATE);
 
         if (took != null) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
 
                 if (playerInventory != null && ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
-                    took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                    took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
 
                     ItemHandlerHelper.insertItem(playerInventory, took, false);
                 }
             } else {
-                took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_DAMAGE | IComparer.COMPARE_NBT, Action.PERFORM);
+                took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.PERFORM);
 
                 if (single && !held.isEmpty()) {
                     held.grow(1);

@@ -1,23 +1,6 @@
 package com.raoulvdberge.refinedstorage.integration.forgeenergy;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
-
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
-
+/* TODO
 public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
     public static final String ID = "forgeenergy";
 
@@ -198,3 +181,4 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
         }
     }
 }
+*/

@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import io.netty.buffer.ByteBuf;
+import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -39,7 +39,7 @@ public interface ICraftingMonitorElement {
      *
      * @param buf the buffer
      */
-    void write(ByteBuf buf);
+    void write(PacketBuffer buf);
 
     /**
      * Merge an element into the current element.

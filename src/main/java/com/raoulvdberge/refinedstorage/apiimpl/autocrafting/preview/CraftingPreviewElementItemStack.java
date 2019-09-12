@@ -55,7 +55,7 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
         int toCraft = buf.readInt();
 
         ItemStack stack = new ItemStack(item, 1);
-        stack.put(tag);
+        stack.setTag(tag);
 
         return new CraftingPreviewElementItemStack(stack, available, missing, toCraft);
     }

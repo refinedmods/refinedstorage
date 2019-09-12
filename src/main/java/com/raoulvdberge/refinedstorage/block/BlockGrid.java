@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.state.EnumProperty;
 
 public class BlockGrid extends BlockNode {
-    public static final EnumProperty TYPE = EnumProperty.create("type", GridType.class);
+    public static final EnumProperty<GridType> TYPE = EnumProperty.create("type", GridType.class);
 
     public BlockGrid() {
         super(BlockInfoBuilder.forId("grid").tileEntity(TileGrid::new).create());

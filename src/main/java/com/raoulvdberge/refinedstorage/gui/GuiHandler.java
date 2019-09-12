@@ -1,20 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.RSGui;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCraftingMonitor;
-import com.raoulvdberge.refinedstorage.container.*;
-import com.raoulvdberge.refinedstorage.tile.*;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.IGuiHandler;
-
-public class GuiHandler implements IGuiHandler {
+public class GuiHandler {
+    /*
     private Object getContainer(int ID, PlayerEntity player, TileEntity tile) {
         switch (ID) {
             case RSGui.CONTROLLER:
@@ -159,4 +146,6 @@ public class GuiHandler implements IGuiHandler {
     private ContainerFilter getFilterContainer(PlayerEntity player, int hand) {
         return new ContainerFilter(player, player.getHeldItem(Hand.values()[hand]));
     }
+
+     */
 }

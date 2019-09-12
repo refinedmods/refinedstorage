@@ -41,7 +41,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ListenerNetworkNode(this));
     private FluidInventory fluidFilters = new FluidInventory(9, new ListenerNetworkNode(this));
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this), ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK);
+    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK*/);
 
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
