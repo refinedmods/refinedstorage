@@ -1,23 +1,16 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeReader;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiReaderWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileReader extends TileNode<NetworkNodeReader> {
     static <T extends TileNode> TileDataParameter<String, T> createChannelParameter() {
@@ -31,9 +24,12 @@ public class TileReader extends TileNode<NetworkNodeReader> {
     public static final TileDataParameter<String, TileReader> CHANNEL = createChannelParameter();
 
     public TileReader() {
+        super(RSTiles.READER);
+
         dataManager.addWatchedParameter(CHANNEL);
     }
 
+    /*
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         if (super.hasCapability(capability, facing)) {
@@ -93,7 +89,7 @@ public class TileReader extends TileNode<NetworkNodeReader> {
         }
 
         return foundCapability;
-    }
+    }*/
 
     @Override
     @Nonnull

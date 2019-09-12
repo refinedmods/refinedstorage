@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -12,6 +13,8 @@ public class TileWirelessTransmitter extends TileNode<NetworkNodeWirelessTransmi
     public static final TileDataParameter<Integer, TileWirelessTransmitter> RANGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getRange());
 
     public TileWirelessTransmitter() {
+        super(RSTiles.WIRELESS_TRANSMITTER);
+        
         dataManager.addWatchedParameter(RANGE);
     }
 

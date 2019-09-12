@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.NetworkNodeDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -7,14 +8,10 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     public static final TileDataParameter<Integer, TileDiskManipulator> COMPARE = IComparable.createParameter();
@@ -28,6 +25,8 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     private Integer[] diskState = new Integer[6];
 
     public TileDiskManipulator() {
+        super(RSTiles.DISK_MANIPULATOR);
+
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);
@@ -56,7 +55,7 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
         return diskState;
     }
 
-    @Override
+   /* TODO  @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getDisks());
@@ -68,7 +67,7 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-    }
+    }*/
 
     @Override
     @Nonnull

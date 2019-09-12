@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
-import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
@@ -9,14 +9,10 @@ import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileGrid extends TileNode<NetworkNodeGrid> {
     public static final TileDataParameter<Integer, TileGrid> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getViewType(), (t, v) -> {
@@ -48,7 +44,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::init));
     public static final TileDataParameter<Integer, TileGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();
@@ -67,8 +63,8 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         t.getNode().setProcessingPattern(v);
         t.getNode().clearMatrix();
         t.getNode().markDirty();
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
-    public static final TileDataParameter<Integer, TileGrid> PROCESSING_TYPE = IType.createParameter((initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::initGui));
+    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::init));
+    public static final TileDataParameter<Integer, TileGrid> PROCESSING_TYPE = IType.createParameter((initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::init));
 
     public static void trySortGrid(boolean initial) {
         if (!initial) {
@@ -77,6 +73,8 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     }
 
     public TileGrid() {
+        super(RSTiles.GRID);
+
         dataManager.addWatchedParameter(VIEW_TYPE);
         dataManager.addWatchedParameter(SORTING_DIRECTION);
         dataManager.addWatchedParameter(SORTING_TYPE);
@@ -100,6 +98,7 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         return NetworkNodeGrid.ID;
     }
 
+    /* TODO
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction side) {
         return (getNode().getGridType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, side);
@@ -112,5 +111,5 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
         }
 
         return super.getCapability(capability, side);
-    }
+    }*/
 }

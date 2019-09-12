@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
@@ -38,7 +39,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
 import com.raoulvdberge.refinedstorage.block.BlockController;
 import com.raoulvdberge.refinedstorage.block.enums.ControllerEnergyType;
 import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
-import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
@@ -46,21 +46,25 @@ import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -69,7 +73,7 @@ import java.util.function.Predicate;
 import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
 
 // TODO: Change INetwork to be offloaded from the tile.
-public class TileController extends TileBase implements ITickable, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController>, INetworkNodeVisitor {
+public class TileController extends TileBase implements ITickableTileEntity, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController>, INetworkNodeVisitor {
     private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
         if (left.getEnergyUsage() == right.getEnergyUsage()) {
             return 0;
@@ -114,7 +118,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private static final int THROTTLE_ACTIVE_TO_INACTIVE = 4;
 
     public static final String NBT_ENERGY = "Energy";
-    public static final String NBT_ENERGY_TYPE = "EnergyType";
+    private static final String NBT_ENERGY_TYPE = "EnergyType";
 
     private static final String NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker";
     private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
@@ -141,6 +145,9 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private final IEnergy energy = new Energy(RS.INSTANCE.config.controllerCapacity);
     private final EnergyProxy energyProxy = new EnergyProxy(this.energy, RS.INSTANCE.config.controllerMaxReceive, 0);
 
+    private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> energyProxy);
+    private final LazyOptional<INetworkNodeProxy<TileController>> networkNodeProxyCap = LazyOptional.of(() -> this);
+
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
@@ -151,6 +158,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     public TileController() {
+        super(RSTiles.CONTROLLER);
+
         dataManager.addWatchedParameter(REDSTONE_MODE);
         dataManager.addWatchedParameter(ENERGY_USAGE);
         dataManager.addWatchedParameter(ENERGY_STORED);
@@ -202,7 +211,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public void update() {
+    public void tick() {
         if (!world.isRemote) {
             if (canRun()) {
                 craftingManager.update();
@@ -214,7 +223,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 }
             }
 
-            if (getType() == ControllerType.NORMAL) {
+            if (getControllerType() == ControllerType.NORMAL) {
                 if (!RS.INSTANCE.config.controllerUsesEnergy) {
                     this.energy.setStored(this.energy.getCapacity());
                 } else if (this.energy.extract(getEnergyUsage(), Action.SIMULATE) >= 0) {
@@ -222,7 +231,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 } else {
                     this.energy.setStored(0);
                 }
-            } else if (getType() == ControllerType.CREATIVE) {
+            } else if (getControllerType() == ControllerType.CREATIVE) {
                 this.energy.setStored(this.energy.getCapacity());
             }
 
@@ -274,8 +283,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
-    public void invalidate() {
-        super.invalidate();
+    public void remove() {
+        super.remove();
 
         if (world != null && !world.isRemote) {
             nodeGraph.disconnectAll();
@@ -430,13 +439,13 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 break;
             } else {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (size != remainder.amount && storage instanceof IStorageExternal && action == Action.PERFORM) {
+                if (size != remainder.getAmount() && storage instanceof IStorageExternal && action == Action.PERFORM) {
                     ((IStorageExternal) storage).update(this);
 
-                    insertedExternally += size - remainder.amount;
+                    insertedExternally += size - remainder.getAmount();
                 }
 
-                size = remainder.amount;
+                size = remainder.getAmount();
             }
         }
 
@@ -468,16 +477,16 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
                 if (storage instanceof IStorageExternal && action == Action.PERFORM) {
                     ((IStorageExternal) storage).update(this);
 
-                    extractedExternally += took.amount;
+                    extractedExternally += took.getAmount();
                 }
 
                 if (newStack == null) {
                     newStack = took;
                 } else {
-                    newStack.amount += took.amount;
+                    newStack.grow(took.getAmount());
                 }
 
-                received += took.amount;
+                received += took.getAmount();
             }
 
             if (requested == received) {
@@ -485,8 +494,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
             }
         }
 
-        if (newStack != null && newStack.amount - extractedExternally > 0 && action == Action.PERFORM) {
-            fluidStorage.remove(newStack, newStack.amount - extractedExternally, false);
+        if (newStack != null && newStack.getAmount() - extractedExternally > 0 && action == Action.PERFORM) {
+            fluidStorage.remove(newStack, newStack.getAmount() - extractedExternally, false);
         }
 
         return newStack;
@@ -511,8 +520,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.hasKey(NBT_ENERGY)) {
-            this.energy.setStored(tag.getInteger(NBT_ENERGY));
+        if (tag.contains(NBT_ENERGY)) {
+            this.energy.setStored(tag.getInt(NBT_ENERGY));
         }
 
         redstoneMode = RedstoneMode.read(tag);
@@ -521,11 +530,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         readerWriterManager.readFromNbt(tag);
 
-        if (tag.hasKey(NBT_ITEM_STORAGE_TRACKER)) {
+        if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) {
             itemStorageTracker.readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
 
-        if (tag.hasKey(NBT_FLUID_STORAGE_TRACKER)) {
+        if (tag.contains(NBT_FLUID_STORAGE_TRACKER)) {
             fluidStorageTracker.readFromNbt(tag.getList(NBT_FLUID_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
     }
@@ -559,8 +568,8 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void readUpdate(CompoundNBT tag) {
-        if (tag.hasKey(NBT_ENERGY_TYPE)) {
-            this.energyType = ControllerEnergyType.getById(tag.getInteger(NBT_ENERGY_TYPE));
+        if (tag.contains(NBT_ENERGY_TYPE)) {
+            this.energyType = ControllerEnergyType.getById(tag.getInt(NBT_ENERGY_TYPE));
         }
 
         super.readUpdate(tag);
@@ -624,11 +633,11 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
 
         Item item = Item.getItemFromBlock(state.getBlock());
 
-        return new ItemStack(item, 1, state.getBlock().getMetaFromState(state));
+        return new ItemStack(item, 1);
     }
 
     @Override
@@ -651,35 +660,35 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
         return this;
     }
 
-    public ControllerType getType() {
+    @Override
+    public void update() {
+        // This is update from INetworkNode
+    }
+
+    public ControllerType getControllerType() {
         if (type == null) {
-            IBlockState state = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
+
             if (state.getBlock() == RSBlocks.CONTROLLER) {
-                this.type = (ControllerType) state.getValue(BlockController.TYPE);
+                this.type = state.get(BlockController.TYPE);
             }
         }
 
         return type == null ? ControllerType.NORMAL : type;
     }
 
+    @Nonnull
     @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
-        if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(energyProxy);
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
+        if (cap == CapabilityEnergy.ENERGY) {
+            return energyProxyCap.cast();
         }
 
-        if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
-            return CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(this);
+        if (cap == NETWORK_NODE_PROXY_CAPABILITY) {
+            return networkNodeProxyCap.cast();
         }
 
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
-        return capability == CapabilityEnergy.ENERGY
-            || capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY
-            || super.hasCapability(capability, facing);
+        return super.getCapability(cap);
     }
 
     @Override
@@ -690,18 +699,21 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
     @Override
     public void visit(Operator operator) {
-        for (Direction facing : Direction.VALUES) {
+        for (Direction facing : Direction.values()) {
             BlockPos pos = this.pos.offset(facing);
 
             TileEntity tile = world.getTileEntity(pos);
 
             // Little hack to support not conducting through covers (if the cover is right next to the controller).
-            if (tile != null && tile.hasCapability(NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite())) {
-                INetworkNodeProxy otherNodeProxy = NETWORK_NODE_PROXY_CAPABILITY.cast(tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite()));
-                INetworkNode otherNode = otherNodeProxy.getNode();
+            if (tile != null) {
+                INetworkNodeProxy otherNodeProxy = tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
 
-                if (otherNode instanceof ICoverable && ((ICoverable) otherNode).getCoverManager().hasCover(facing.getOpposite())) {
-                    continue;
+                if (otherNodeProxy != null) {
+                    INetworkNode otherNode = otherNodeProxy.getNode();
+
+                    if (otherNode instanceof ICoverable && ((ICoverable) otherNode).getCoverManager().hasCover(facing.getOpposite())) {
+                        continue;
+                    }
                 }
             }
 
@@ -722,7 +734,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
 
         TileController otherController = (TileController) o;
 
-        if (world.provider.getDimension() != otherController.world.provider.getDimension()) {
+        if (world.getDimension().getType() != otherController.world.getDimension().getType()) {
             return false;
         }
 
@@ -732,7 +744,7 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     @Override
     public int hashCode() {
         int result = pos.hashCode();
-        result = 31 * result + world.provider.getDimension();
+        result = 31 * result + world.getDimension().getType().getId();
 
         return result;
     }

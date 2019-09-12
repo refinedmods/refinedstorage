@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.google.common.base.Optional;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
@@ -17,6 +16,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
@@ -25,7 +25,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     private static final String NBT_TAB_SELECTED = "TabSelected";
     private static final String NBT_TAB_PAGE = "TabPage";
 
-    private Optional<UUID> tabSelected = Optional.absent();
+    private Optional<UUID> tabSelected = Optional.empty();
     private int tabPage;
 
     public NetworkNodeCraftingMonitor(World world, BlockPos pos) {

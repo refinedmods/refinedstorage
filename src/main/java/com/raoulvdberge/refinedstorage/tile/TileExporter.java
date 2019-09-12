@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -14,6 +15,8 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
     public static final TileDataParameter<Integer, TileExporter> TYPE = IType.createParameter();
 
     public TileExporter() {
+        super(RSTiles.EXPORTER);
+        
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
     }

@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
@@ -15,7 +16,7 @@ public class TileCrafterManager extends TileNode<NetworkNodeCrafterManager> {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
-    }, (initial, p) -> GuiBase.executeLater(GuiCrafterManager.class, GuiBase::initGui));
+    }, (initial, p) -> GuiBase.executeLater(GuiCrafterManager.class, GuiBase::init));
     public static final TileDataParameter<Integer, TileCrafterManager> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSearchBoxMode(), (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.getNode().setSearchBoxMode(v);
@@ -24,6 +25,8 @@ public class TileCrafterManager extends TileNode<NetworkNodeCrafterManager> {
     }, (initial, p) -> GuiBase.executeLater(GuiCrafterManager.class, crafterManager -> crafterManager.getSearchField().setMode(p)));
 
     public TileCrafterManager() {
+        super(RSTiles.CRAFTER_MANAGER);
+
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(SEARCH_BOX_MODE);
     }

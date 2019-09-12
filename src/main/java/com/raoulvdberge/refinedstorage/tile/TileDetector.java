@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDetector;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiDetector;
@@ -30,6 +31,8 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
     }, (initial, p) -> GuiBase.executeLater(GuiDetector.class, detector -> detector.getAmount().setText(String.valueOf(p))));
 
     public TileDetector() {
+        super(RSTiles.DETECTOR);
+        
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(MODE);

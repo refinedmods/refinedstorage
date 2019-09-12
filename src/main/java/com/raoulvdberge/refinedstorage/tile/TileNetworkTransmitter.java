@@ -1,16 +1,13 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeNetworkTransmitter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitter> {
     public static final TileDataParameter<Integer, TileNetworkTransmitter> DISTANCE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> {
@@ -22,6 +19,8 @@ public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitt
     public static final TileDataParameter<Integer, TileNetworkTransmitter> RECEIVER_DIMENSION = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getReceiverDimension());
 
     public TileNetworkTransmitter() {
+        super(RSTiles.NETWORK_TRANSMITTER);
+
         dataManager.addWatchedParameter(DISTANCE);
         dataManager.addWatchedParameter(RECEIVER_DIMENSION);
     }
@@ -37,6 +36,7 @@ public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitt
         return NetworkNodeNetworkTransmitter.ID;
     }
 
+    /* TODO
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
@@ -49,5 +49,5 @@ public class TileNetworkTransmitter extends TileNode<NetworkNodeNetworkTransmitt
         }
 
         return super.getCapability(capability, facing);
-    }
+    }*/
 }

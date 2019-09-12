@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -22,6 +23,8 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
     private ItemStack itemStack;
 
     public TileStorageMonitor() {
+        super(RSTiles.STORAGE_MONITOR);
+
         dataManager.addWatchedParameter(COMPARE);
     }
 
@@ -42,7 +45,7 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
         ItemStack stack = getNode().getItemFilters().getStackInSlot(0);
 
         if (!stack.isEmpty()) {
-            tag.put(NBT_STACK, stack.writeToNBT(new CompoundNBT()));
+            tag.put(NBT_STACK, stack.write(new CompoundNBT()));
         }
 
         tag.putInt(NBT_AMOUNT, getNode().getAmount());
@@ -54,13 +57,13 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
     public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
-        itemStack = tag.hasKey(NBT_STACK) ? new ItemStack(tag.getCompound(NBT_STACK)) : null;
-        amount = tag.getInteger(NBT_AMOUNT);
+        itemStack = tag.contains(NBT_STACK) ? ItemStack.read(tag.getCompound(NBT_STACK)) : null;
+        amount = tag.getInt(NBT_AMOUNT);
     }
 
     @Override
     protected boolean canCauseRenderUpdate(CompoundNBT tag) {
-        Direction receivedDirection = Direction.byIndex(tag.getInteger(NBT_DIRECTION));
+        Direction receivedDirection = Direction.byIndex(tag.getInt(NBT_DIRECTION));
         boolean receivedActive = tag.getBoolean(NBT_ACTIVE);
 
         return receivedDirection != getDirection() || receivedActive != getNode().isActive();

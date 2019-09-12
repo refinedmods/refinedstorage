@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
-import com.google.common.base.Optional;
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.TileNode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -9,12 +9,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.UUID;
 
 public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
-    public static final TileDataParameter<Optional<UUID>, TileCraftingMonitor> TAB_SELECTED = new TileDataParameter<>(DataSerializers.OPTIONAL_UNIQUE_ID, Optional.absent(), t -> t.getNode().getTabSelected(), (t, v) -> {
+    public static final TileDataParameter<Optional<UUID>, TileCraftingMonitor> TAB_SELECTED = new TileDataParameter<>(DataSerializers.OPTIONAL_UNIQUE_ID, Optional.empty(), t -> t.getNode().getTabSelected(), (t, v) -> {
         if (v.isPresent() && t.getNode().getTabSelected().isPresent() && v.get().equals(t.getNode().getTabSelected().get())) {
-            t.getNode().setTabSelected(Optional.absent());
+            t.getNode().setTabSelected(Optional.empty());
         } else {
             t.getNode().setTabSelected(v);
         }
@@ -29,6 +30,8 @@ public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
     });
 
     public TileCraftingMonitor() {
+        super(RSTiles.CRAFTING_MONITOR);
+
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(TAB_PAGE);
     }

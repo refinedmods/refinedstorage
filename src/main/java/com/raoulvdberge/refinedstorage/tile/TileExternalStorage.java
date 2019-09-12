@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExternalStorage;
@@ -47,6 +48,8 @@ public class TileExternalStorage extends TileNode<NetworkNodeExternalStorage> {
     });
 
     public TileExternalStorage() {
+        super(RSTiles.EXTERNAL_STORAGE);
+        
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);

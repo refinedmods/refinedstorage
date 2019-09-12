@@ -1,24 +1,24 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileInterface extends TileNode<NetworkNodeInterface> {
     public static final TileDataParameter<Integer, TileInterface> COMPARE = IComparable.createParameter();
 
     public TileInterface() {
+        super(RSTiles.INTERFACE);
+
         dataManager.addWatchedParameter(COMPARE);
     }
 
+    /* TODO
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getItems()) : super.getCapability(capability, facing);
@@ -27,7 +27,7 @@ public class TileInterface extends TileNode<NetworkNodeInterface> {
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-    }
+    }*/
 
     @Override
     @Nonnull

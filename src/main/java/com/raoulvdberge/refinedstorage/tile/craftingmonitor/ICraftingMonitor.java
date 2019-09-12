@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
-import com.google.common.base.Optional;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -9,6 +8,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ICraftingMonitor {

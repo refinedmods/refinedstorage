@@ -1,27 +1,23 @@
 package com.raoulvdberge.refinedstorage.tile;
 
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerFactory;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileWriter extends TileNode<NetworkNodeWriter> {
     public static final TileDataParameter<String, TileWriter> CHANNEL = TileReader.createChannelParameter();
 
     public TileWriter() {
+        super(RSTiles.WRITER);
+
         dataManager.addWatchedParameter(CHANNEL);
     }
 
+    /* TODO
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         if (super.hasCapability(capability, facing)) {
@@ -81,7 +77,7 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
         }
 
         return foundCapability;
-    }
+    }*/
 
     @Override
     @Nonnull

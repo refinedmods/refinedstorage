@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
@@ -8,14 +9,10 @@ import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     public static final TileDataParameter<Integer, TileDiskDrive> PRIORITY = IPrioritizable.createParameter();
@@ -71,6 +68,8 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     private Integer[] diskState = new Integer[8];
 
     public TileDiskDrive() {
+        super(RSTiles.DISK_DRIVE);
+
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
@@ -123,7 +122,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
 
     public static void readDiskState(CompoundNBT tag, Integer[] diskState) {
         for (int i = 0; i < diskState.length; ++i) {
-            diskState[i] = tag.getInteger(String.format(NBT_DISK_STATE, i));
+            diskState[i] = tag.getInt(String.format(NBT_DISK_STATE, i));
         }
     }
 
@@ -133,7 +132,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
         }
     }
 
-    @Override
+    /* TODO @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
@@ -145,7 +144,7 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
         }
 
         return super.getCapability(capability, facing);
-    }
+    }*/
 
     @Override
     @Nonnull

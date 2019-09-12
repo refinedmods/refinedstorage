@@ -1,17 +1,14 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafter;
 import com.raoulvdberge.refinedstorage.gui.TileDataParameterClientListenerCrafter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TileCrafter extends TileNode<NetworkNodeCrafter> {
     public static final TileDataParameter<String, TileCrafter> NAME = new TileDataParameter<>(DataSerializers.STRING, NetworkNodeCrafter.DEFAULT_NAME, t -> t.getNode().getName());
@@ -19,6 +16,8 @@ public class TileCrafter extends TileNode<NetworkNodeCrafter> {
     private static final TileDataParameter<Boolean, TileCrafter> HAS_ROOT = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().getRootContainerNotSelf().isPresent(), null, (t, v) -> new TileDataParameterClientListenerCrafter().onChanged(t, v));
 
     public TileCrafter() {
+        super(RSTiles.CRAFTER);
+
         dataManager.addWatchedParameter(NAME);
         dataManager.addWatchedParameter(MODE);
         dataManager.addParameter(HAS_ROOT);
@@ -35,7 +34,7 @@ public class TileCrafter extends TileNode<NetworkNodeCrafter> {
         return NetworkNodeCrafter.ID;
     }
 
-    @Override
+    /* TODO @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }
@@ -47,5 +46,5 @@ public class TileCrafter extends TileNode<NetworkNodeCrafter> {
         }
 
         return super.getCapability(capability, facing);
-    }
+    }*/
 }

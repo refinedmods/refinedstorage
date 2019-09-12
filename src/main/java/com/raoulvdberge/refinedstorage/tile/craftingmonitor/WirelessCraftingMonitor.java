@@ -1,12 +1,10 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.google.common.base.Optional;
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.item.ItemWirelessCraftingMonitor;
-import com.raoulvdberge.refinedstorage.network.MessageWirelessCraftingMonitorSettings;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -14,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -80,7 +77,8 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     private INetwork getNetwork() {
-        World world = DimensionManager.getWorld(networkDimension);
+        // TODO World world = DimensionManager.getWorld(networkDimension);
+        World world = null;
 
         if (world != null) {
             TileEntity tile = world.getTileEntity(network);
@@ -127,7 +125,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
             this.tabSelected = taskId;
         }
 
-        RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(tabSelected, tabPage));
+        // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(tabSelected, tabPage));
     }
 
     @Override
@@ -135,7 +133,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         if (page >= 0) {
             this.tabPage = page;
 
-            RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(tabSelected, tabPage));
+            // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(tabSelected, tabPage));
         }
     }
 }

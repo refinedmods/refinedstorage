@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeImporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -16,6 +17,8 @@ public class TileImporter extends TileNode<NetworkNodeImporter> {
     public static final TileDataParameter<Integer, TileImporter> TYPE = IType.createParameter();
 
     public TileImporter() {
+        super(RSTiles.IMPORTER);
+        
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
         dataManager.addWatchedParameter(TYPE);

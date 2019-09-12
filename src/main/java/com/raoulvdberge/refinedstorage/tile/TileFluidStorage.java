@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.tile;
 
+import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.NetworkNodeFluidStorage;
 import com.raoulvdberge.refinedstorage.tile.config.IAccessType;
@@ -21,6 +22,8 @@ public class TileFluidStorage extends TileNode<NetworkNodeFluidStorage> {
     public static final TileDataParameter<Long, TileFluidStorage> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> t.getNode().getStorage() != null ? (long) t.getNode().getStorage().getStored() : 0);
 
     public TileFluidStorage() {
+        super(RSTiles.FLUID_STORAGE);
+        
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(MODE);
