@@ -6,18 +6,18 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.direction.DirectionHandlerNetworkNode;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -31,7 +31,11 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
     private N clientNode;
 
-    public TileNode() {
+    private LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
+
+    public TileNode(TileEntityType<?> tileType) {
+        super(tileType);
+
         directionHandler = new DirectionHandlerNetworkNode(this);
 
         dataManager.addWatchedParameter(REDSTONE_MODE);
@@ -62,23 +66,11 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
-        if (getNode() instanceof ICoverable && tag.hasKey(NBT_COVERS)) {
+        if (getNode() instanceof ICoverable && tag.contains(NBT_COVERS)) {
             ((ICoverable) getNode()).getCoverManager().readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
 
         getNode().setActive(tag.getBoolean(NBT_ACTIVE));
-    }
-
-    private Direction directionToMigrate;
-
-    @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
-
-        OneSixMigrationHelper.removalHook();
-        if (tag.hasKey(NBT_DIRECTION)) {
-            directionToMigrate = Direction.byIndex(tag.getInteger("Direction"));
-        }
     }
 
     @Override
@@ -108,15 +100,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             manager.markForSaving();
         }
 
-        OneSixMigrationHelper.removalHook();
-        if (directionToMigrate != null) {
-            ((NetworkNode) node).setDirection(directionToMigrate);
-
-            directionToMigrate = null;
-
-            markDirty();
-        }
-
         return (N) node;
     }
 
@@ -124,21 +107,13 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
     public abstract String getNodeId();
 
+    @Nonnull
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction side) {
-        if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
-            return true;
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
+        if (cap == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
+            return networkNodeProxy.cast();
         }
 
-        return super.hasCapability(capability, side);
-    }
-
-    @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
-        if (capability == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
-            return CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY.cast(this);
-        }
-
-        return super.getCapability(capability, side);
+        return super.getCapability(cap);
     }
 }

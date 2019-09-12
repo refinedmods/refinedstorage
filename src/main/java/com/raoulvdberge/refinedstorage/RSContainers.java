@@ -1,7 +1,10 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.container.*;
+import com.raoulvdberge.refinedstorage.container.factory.TileContainerFactory;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSContainers {
@@ -53,4 +56,8 @@ public final class RSContainers {
     public static final ContainerType<ContainerStorageMonitor> STORAGE_MONITOR = null;
     @ObjectHolder(RS.ID + ":wireless_transmitter")
     public static final ContainerType<ContainerSecurityManager> WIRELESS_TRANSMITTER = null;
+
+    public void registerContainers(final RegistryEvent.Register<ContainerType<?>> event) {
+        event.getRegistry().register(IForgeContainerType.create(new TileContainerFactory<>((ContainerConstructor::new))).setRegistryName(RS.ID, "constructor"));
+    }
 }

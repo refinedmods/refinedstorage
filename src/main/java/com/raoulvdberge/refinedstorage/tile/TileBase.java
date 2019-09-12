@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraftforge.items.IItemHandler;
 
@@ -19,6 +20,10 @@ public abstract class TileBase extends TileEntity {
     private Direction clientDirection = Direction.NORTH;
     protected IDirectionHandler directionHandler = new DirectionHandlerTile();
     protected TileDataManager dataManager = new TileDataManager(this);
+
+    public TileBase(TileEntityType<?> tileType) {
+        super(tileType);
+    }
 
     public void setDirection(Direction direction) {
         clientDirection = direction;
