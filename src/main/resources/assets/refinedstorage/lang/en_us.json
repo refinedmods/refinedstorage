@@ -267,7 +267,7 @@
   "item.refinedstorage:upgrade.7": "Fortune Upgrade",
   "item.refinedstorage:upgrade.8": "Fortune Upgrade",
   "item.refinedstorage:upgrade.9": "Fortune Upgrade",
-  "item.refinedstorage:storage_housing": "Storage Housing",
+  "item.refinedstorage.storage_housing": "Storage Housing",
   "item.refinedstorage:filter": "Filter",
   "item.refinedstorage.network_card": "Network Card",
   "item.refinedstorage:wrench": "Wrench",

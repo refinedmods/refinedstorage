@@ -57,6 +57,8 @@ public final class RS {
         for (FluidStorageType type : FluidStorageType.values()) {
             e.getRegistry().register(new ItemFluidStoragePart(type));
         }
+
+        e.getRegistry().register(new ItemStorageHousing());
     }
 
     /* TODO

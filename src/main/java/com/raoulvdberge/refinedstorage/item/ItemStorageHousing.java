@@ -1,16 +1,12 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import net.minecraft.item.Item;
 
-public class ItemStorageHousing extends ItemBase {
+public class ItemStorageHousing extends Item {
     public ItemStorageHousing() {
-        super(new ItemInfo(RS.ID, "storage_housing"));
+        super(new Item.Properties().group(RS.MAIN_GROUP));
+
+        this.setRegistryName(RS.ID, "storage_housing");
     }
-/* TODO
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
-    }*/
 }
