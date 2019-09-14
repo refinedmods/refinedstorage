@@ -8,7 +8,7 @@
       "item": "minecraft:iron_ingot"
     },
     {
-      "item": "refinedstorage:silicon"
+      "tag": "refinedstorage:silicons"
     },
     {
       "item": "minecraft:redstone"

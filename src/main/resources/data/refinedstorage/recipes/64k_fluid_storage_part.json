@@ -1,27 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "PEP",
-    "SRS",
-    "PSP"
+    "SES",
+    "GRG",
+    "SGS"
   ],
   "key": {
-    "P": {
-      "item": "#basic_processor"
+    "S": {
+      "tag": "refinedstorage:silicons"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     },
-    "S": {
-      "item": "refinedstorage:fluid_storage_part",
-      "data": 0
+    "G": {
+      "tag": "forge:glass"
     },
     "R": {
       "item": "minecraft:bucket"
     }
   },
   "result": {
-    "item": "refinedstorage:fluid_storage_part",
-    "data": 1
+    "item": "refinedstorage:64k_fluid_storage_part"
   }
 }

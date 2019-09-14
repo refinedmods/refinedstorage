@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage;
 
+import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import net.minecraft.block.Block;
@@ -47,6 +49,14 @@ public final class RS {
         e.getRegistry().register(new ItemSecurityCard());
         e.getRegistry().register(new ItemNetworkCard());
         e.getRegistry().register(new ItemCuttingTool());
+
+        for (ItemStorageType type : ItemStorageType.values()) {
+            e.getRegistry().register(new ItemStoragePart(type));
+        }
+
+        for (FluidStorageType type : FluidStorageType.values()) {
+            e.getRegistry().register(new ItemFluidStoragePart(type));
+        }
     }
 
     /* TODO

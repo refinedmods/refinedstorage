@@ -7,21 +7,19 @@
   ],
   "key": {
     "P": {
-      "item": "#advanced_processor"
+      "item": "refinedstorage:basic_processor"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "S": {
-      "item": "refinedstorage:fluid_storage_part",
-      "data": 2
+      "item": "refinedstorage:1k_storage_part"
     },
     "R": {
-      "item": "minecraft:bucket"
+      "item": "minecraft:redstone"
     }
   },
   "result": {
-    "item": "refinedstorage:fluid_storage_part",
-    "data": 3
+    "item": "refinedstorage:4k_storage_part"
   }
 }
