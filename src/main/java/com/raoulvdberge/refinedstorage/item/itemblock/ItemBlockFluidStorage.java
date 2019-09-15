@@ -21,9 +21,9 @@ public class ItemBlockFluidStorage extends ItemBlockBase {
             IStorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
             if (data != null) {
                 if (data.getCapacity() == -1) {
-                    tooltip.add(I18n.format("misc.refinedstorage:storage.stored", API.instance().getQuantityFormatter().format(data.getStored())));
+                    tooltip.add(I18n.format("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())));
                 } else {
-                    tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())));
+                    tooltip.add(I18n.format("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())));
                 }
             }
 

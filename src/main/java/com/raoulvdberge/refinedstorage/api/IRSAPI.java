@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -129,11 +130,11 @@ public interface IRSAPI {
     IStorageDiskRegistry getStorageDiskRegistry();
 
     /**
-     * @param world the world
+     * @param anyWorld any world associated with the server
      * @return the storage disk manager
      */
     @Nonnull
-    IStorageDiskManager getStorageDiskManager(World world);
+    IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld);
 
     /**
      * @return the storage disk sync manager
@@ -161,7 +162,7 @@ public interface IRSAPI {
      * @return a storage disk
      */
     @Nonnull
-    IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity);
+    IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity);
 
     /**
      * @param world    the world
@@ -169,7 +170,7 @@ public interface IRSAPI {
      * @return a fluid storage disk
      */
     @Nonnull
-    IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity);
+    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity);
 
     /**
      * Creates crafting request info for an item.

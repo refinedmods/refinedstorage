@@ -33,6 +33,7 @@ import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -95,7 +96,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     storage = null;
                     cache = null;
                 } else {
-                    IStorageDisk disk = API.instance().getStorageDiskManager(player.getEntityWorld()).getByStack(getDisk().getStackInSlot(0));
+                    IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) player.world).getByStack(getDisk().getStackInSlot(0));
 
                     if (disk != null) {
                         StorageType type = ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType();

@@ -66,110 +66,12 @@ public class ProxyCommon {
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerForgeEnergy.ID, ReaderWriterHandlerForgeEnergy::new);
 
-        API.instance().getStorageDiskRegistry().add(StorageDiskFactoryItem.ID, new StorageDiskFactoryItem());
-        API.instance().getStorageDiskRegistry().add(StorageDiskFactoryFluid.ID, new StorageDiskFactoryFluid());
-
         API.instance().addExternalStorageProvider(StorageType.ITEM, new ExternalStorageProviderItem());
         API.instance().addExternalStorageProvider(StorageType.FLUID, new ExternalStorageProviderFluid());
-
-        int id = 0;
-
-        RS.INSTANCE.network.registerMessage(MessageTileDataParameter.class, MessageTileDataParameter.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageTileDataParameterUpdate.class, MessageTileDataParameterUpdate.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridItemInsertHeld.class, MessageGridItemInsertHeld.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridItemPull.class, MessageGridItemPull.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridClear.class, MessageGridClear.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridTransfer.class, MessageGridTransfer.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridSettingsUpdate.class, MessageGridSettingsUpdate.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridCraftingStart.class, MessageGridCraftingStart.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridPatternCreate.class, MessageGridPatternCreate.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageCraftingMonitorCancel.class, MessageCraftingMonitorCancel.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageCraftingMonitorElements.class, MessageCraftingMonitorElements.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageGridItemUpdate.class, MessageGridItemUpdate.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageGridItemDelta.class, MessageGridItemDelta.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageGridFluidUpdate.class, MessageGridFluidUpdate.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageGridFluidDelta.class, MessageGridFluidDelta.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageGridFluidPull.class, MessageGridFluidPull.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridFluidInsertHeld.class, MessageGridFluidInsertHeld.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageFilterUpdate.class, MessageFilterUpdate.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridCraftingPreview.class, MessageGridCraftingPreview.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageGridCraftingPreviewResponse.class, MessageGridCraftingPreviewResponse.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageGridCraftingStartResponse.class, MessageGridCraftingStartResponse.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageGridProcessingTransfer.class, MessageGridProcessingTransfer.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageReaderWriterUpdate.class, MessageReaderWriterUpdate.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageReaderWriterChannelAdd.class, MessageReaderWriterChannelAdd.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageReaderWriterChannelRemove.class, MessageReaderWriterChannelRemove.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageSecurityManagerUpdate.class, MessageSecurityManagerUpdate.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageWirelessFluidGridSettingsUpdate.class, MessageWirelessFluidGridSettingsUpdate.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageCrafterManagerSlotSizes.class, MessageCrafterManagerSlotSizes.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageCrafterManagerRequestSlotData.class, MessageCrafterManagerRequestSlotData.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageWirelessCraftingMonitorSettings.class, MessageWirelessCraftingMonitorSettings.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeRequest.class, MessageStorageDiskSizeRequest.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageStorageDiskSizeResponse.class, MessageStorageDiskSizeResponse.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageConfigSync.class, MessageConfigSync.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageSlotFilterFluidSetAmount.class, MessageSlotFilterFluidSetAmount.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageSlotFilterSet.class, MessageSlotFilterSet.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageSlotFilterSetFluid.class, MessageSlotFilterSetFluid.class, id++, Side.SERVER);
-        RS.INSTANCE.network.registerMessage(MessageSlotFilterFluidUpdate.class, MessageSlotFilterFluidUpdate.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageGridOpen.class, MessageGridOpen.class, id++, Side.CLIENT);
-        RS.INSTANCE.network.registerMessage(MessageNetworkItemOpen.class, MessageNetworkItemOpen.class, id++, Side.SERVER);
 
         NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
         MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
-
-        registerBlock(RSBlocks.CONTROLLER);
-        registerBlock(RSBlocks.GRID);
-        registerBlock(RSBlocks.PORTABLE_GRID);
-        registerBlock(RSBlocks.CRAFTING_MONITOR);
-        registerBlock(RSBlocks.STORAGE_MONITOR);
-        registerBlock(RSBlocks.SECURITY_MANAGER);
-        registerBlock(RSBlocks.CRAFTER);
-        registerBlock(RSBlocks.DISK_DRIVE);
-        registerBlock(RSBlocks.STORAGE);
-        registerBlock(RSBlocks.FLUID_STORAGE);
-        registerBlock(RSBlocks.CABLE);
-        registerBlock(RSBlocks.IMPORTER);
-        registerBlock(RSBlocks.EXPORTER);
-        registerBlock(RSBlocks.EXTERNAL_STORAGE);
-        registerBlock(RSBlocks.CONSTRUCTOR);
-        registerBlock(RSBlocks.DESTRUCTOR);
-        registerBlock(RSBlocks.READER);
-        registerBlock(RSBlocks.WRITER);
-        registerBlock(RSBlocks.DETECTOR);
-        registerBlock(RSBlocks.RELAY);
-        registerBlock(RSBlocks.INTERFACE);
-        registerBlock(RSBlocks.FLUID_INTERFACE);
-        registerBlock(RSBlocks.WIRELESS_TRANSMITTER);
-        registerBlock(RSBlocks.MACHINE_CASING);
-        registerBlock(RSBlocks.QUARTZ_ENRICHED_IRON);
-        registerBlock(RSBlocks.NETWORK_TRANSMITTER);
-        registerBlock(RSBlocks.NETWORK_RECEIVER);
-        registerBlock(RSBlocks.DISK_MANIPULATOR);
-        registerBlock(RSBlocks.CRAFTER_MANAGER);
-
-        registerItem(RSItems.QUARTZ_ENRICHED_IRON);
-        registerItem(RSItems.PROCESSOR_BINDING);
-        registerItem(RSItems.CUTTING_TOOL);
-        registerItem(RSItems.STORAGE_DISK);
-        registerItem(RSItems.FLUID_STORAGE_DISK);
-        registerItem(RSItems.STORAGE_HOUSING);
-        registerItem(RSItems.PATTERN);
-        registerItem(RSItems.STORAGE_PART);
-        registerItem(RSItems.FLUID_STORAGE_PART);
-        registerItem(RSItems.WIRELESS_GRID);
-        registerItem(RSItems.WIRELESS_FLUID_GRID);
-        registerItem(RSItems.WIRELESS_CRAFTING_MONITOR);
-        registerItem(RSItems.PROCESSOR);
-        registerItem(RSItems.CORE);
-        registerItem(RSItems.SILICON);
-        registerItem(RSItems.UPGRADE);
-        registerItem(RSItems.FILTER);
-        registerItem(RSItems.NETWORK_CARD);
-        registerItem(RSItems.SECURITY_CARD);
-        registerItem(RSItems.COVER);
-        registerItem(RSItems.HOLLOW_COVER);
-        registerItem(RSItems.WRENCH);
 
         IntegrationInventorySorter.register();
     }
@@ -182,26 +84,6 @@ public class ProxyCommon {
         if (IntegrationCraftingTweaks.isLoaded()) {
             IntegrationCraftingTweaks.register();
         }
-    }
-
-    public void postInit(FMLPostInitializationEvent e) {
-        // NO OP
-    }
-
-    @SubscribeEvent
-    public void registerBlocks(RegistryEvent.Register<Block> e) {
-        blocksToRegister.forEach(e.getRegistry()::register);
-
-        if (IntegrationFunkyLocomotion.isLoaded()) {
-            MoveFactoryRegisterer.register(blocksToRegister);
-        }
-    }
-
-    @SubscribeEvent
-    public void registerItems(RegistryEvent.Register<Item> e) {
-        itemsToRegister.forEach(e.getRegistry()::register);
-
-        OreDictionary.registerOre("itemSilicon", RSItems.SILICON);
     }
 
     @SubscribeEvent
@@ -232,66 +114,6 @@ public class ProxyCommon {
     public void onPlayerLogoutEvent(WorldEvent.Unload e) {
         if (e.getWorld().isRemote && RS.INSTANCE.config.getOriginalClientVersion() != null) {
             RS.INSTANCE.config = RS.INSTANCE.config.getOriginalClientVersion();
-        }
-    }
-
-    @SubscribeEvent
-    public void fixItemMappings(RegistryEvent.MissingMappings<Item> e) {
-        OneSixMigrationHelper.removalHook();
-
-        for (RegistryEvent.MissingMappings.Mapping<Item> missing : e.getMappings()) {
-            if (missing.key.getNamespace().equals(RS.ID) && missing.key.getPath().equals("solderer")) {
-                missing.ignore();
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void fixBlockMappings(RegistryEvent.MissingMappings<Block> e) {
-        OneSixMigrationHelper.removalHook();
-
-        for (RegistryEvent.MissingMappings.Mapping<Block> missing : e.getMappings()) {
-            if (missing.key.getNamespace().equals(RS.ID) && missing.key.getPath().equals("solderer")) {
-                missing.ignore();
-            }
-        }
-    }
-
-    private void registerBlock(BlockBase block) {
-        blocksToRegister.add(block);
-
-        registerItem(block.createItem());
-
-        if (block.getInfo().hasTileEntity()) {
-            registerTile(block.getInfo());
-        }
-    }
-
-    private void registerItem(Item item) {
-        itemsToRegister.add(item);
-    }
-
-    private void registerTile(IBlockInfo info) {
-        Class<? extends TileBase> clazz = info.createTileEntity().getClass();
-
-        GameRegistry.registerTileEntity(clazz, info.getId());
-
-        try {
-            TileBase tileInstance = clazz.newInstance();
-
-            if (tileInstance instanceof TileNode) {
-                API.instance().getNetworkNodeRegistry().add(((TileNode) tileInstance).getNodeId(), (tag, world, pos) -> {
-                    NetworkNode node = ((TileNode) tileInstance).createNode(world, pos);
-
-                    node.read(tag);
-
-                    return node;
-                });
-            }
-
-            tileInstance.getDataManager().getParameters().forEach(TileDataManager::registerParameter);
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
         }
     }*/
 }

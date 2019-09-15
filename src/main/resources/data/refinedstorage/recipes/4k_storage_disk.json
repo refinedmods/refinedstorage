@@ -7,22 +7,19 @@
   ],
   "key": {
     "G": {
-      "type": "forge:ore_dict",
-      "ore": "blockGlass"
+      "tag": "forge:glass"
     },
     "R": {
       "item": "minecraft:redstone"
     },
     "P": {
-      "item": "refinedstorage:fluid_storage_part",
-      "data": 2
+      "item": "refinedstorage:4k_storage_part"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     }
   },
   "result": {
-    "item": "refinedstorage:fluid_storage_disk",
-    "data": 2
+    "item": "refinedstorage:4k_storage_disk"
   }
 }

@@ -5,12 +5,10 @@
       "item": "refinedstorage:storage_housing"
     },
     {
-      "item": "refinedstorage:storage_part",
-      "data": 0
+      "item": "refinedstorage:256k_fluid_storage_part"
     }
   ],
   "result": {
-    "item": "refinedstorage:storage_disk",
-    "data": 0
+    "item": "refinedstorage:256k_fluid_storage_disk"
   }
 }

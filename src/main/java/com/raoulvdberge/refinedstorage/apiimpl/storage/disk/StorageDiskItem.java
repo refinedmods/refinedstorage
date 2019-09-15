@@ -13,7 +13,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     static final String NBT_ITEMS = "Items";
     static final int VERSION = 1;
 
-    private World world;
+    private ServerWorld world;
     private int capacity;
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
 
@@ -34,7 +35,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public StorageDiskItem(World world, int capacity) {
+    public StorageDiskItem(ServerWorld world, int capacity) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
@@ -61,7 +62,7 @@ public class StorageDiskItem implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getFactoryId() {
         return StorageDiskFactoryItem.ID;
     }
 

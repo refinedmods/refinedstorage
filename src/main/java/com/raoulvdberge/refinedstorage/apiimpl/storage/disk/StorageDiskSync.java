@@ -1,7 +1,9 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.disk;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
+import com.raoulvdberge.refinedstorage.network.MessageStorageDiskSizeRequest;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class StorageDiskSync implements IStorageDiskSync {
         long lastSync = syncTime.getOrDefault(id, 0L);
 
         if (System.currentTimeMillis() - lastSync > THROTTLE_MS) {
-            // TODO: Networking: RS.INSTANCE.network.sendToServer(new MessageStorageDiskSizeRequest(id));
+            RS.NETWORK_HANDLER.sendToServer(new MessageStorageDiskSizeRequest(id));
 
             syncTime.put(id, System.currentTimeMillis());
         }

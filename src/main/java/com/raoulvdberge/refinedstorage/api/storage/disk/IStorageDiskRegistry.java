@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.storage.disk;
 
+import net.minecraft.util.ResourceLocation;
+
 import javax.annotation.Nullable;
 
 /**
@@ -12,7 +14,7 @@ public interface IStorageDiskRegistry {
      * @param id      the id of this factory
      * @param factory the factory
      */
-    void add(String id, IStorageDiskFactory factory);
+    void add(ResourceLocation id, IStorageDiskFactory factory);
 
     /**
      * Gets a factory.
@@ -21,5 +23,5 @@ public interface IStorageDiskRegistry {
      * @return the factory, or null if no factory was found
      */
     @Nullable
-    IStorageDiskFactory get(String id);
+    IStorageDiskFactory get(ResourceLocation id);
 }

@@ -8,14 +8,15 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class StorageDiskManager extends WorldSavedData implements IStorageDiskManager {
     public static final String NAME = "refinedstorage_disks";
@@ -25,13 +26,13 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     private static final String NBT_DISK_TYPE = "Type";
     private static final String NBT_DISK_DATA = "Data";
 
-    private boolean canReadDisks;
-    private ListNBT disksTag;
+    private final Map<UUID, IStorageDisk> disks = new HashMap<>();
+    private final ServerWorld world;
 
-    private ConcurrentHashMap<UUID, IStorageDisk> disks = new ConcurrentHashMap<>();
-
-    public StorageDiskManager(String name) {
+    public StorageDiskManager(String name, ServerWorld world) {
         super(name);
+
+        this.world = world;
     }
 
     @Override
@@ -95,14 +96,7 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     @Override
     public void read(CompoundNBT tag) {
         if (tag.contains(NBT_DISKS)) {
-            this.disksTag = tag.getList(NBT_DISKS, Constants.NBT.TAG_COMPOUND);
-            this.canReadDisks = true;
-        }
-    }
-
-    public void tryReadDisks(World world) {
-        if (this.canReadDisks) {
-            this.canReadDisks = false;
+            ListNBT disksTag = tag.getList(NBT_DISKS, Constants.NBT.TAG_COMPOUND);
 
             for (int i = 0; i < disksTag.size(); ++i) {
                 CompoundNBT diskTag = disksTag.getCompound(i);
@@ -111,7 +105,7 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
                 CompoundNBT data = diskTag.getCompound(NBT_DISK_DATA);
                 String type = diskTag.getString(NBT_DISK_TYPE);
 
-                IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(type);
+                IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(new ResourceLocation(type));
                 if (factory != null) {
                     disks.put(id, factory.createFromNbt(world, data));
                 }
@@ -128,7 +122,7 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
 
             diskTag.putUniqueId(NBT_DISK_ID, entry.getKey());
             diskTag.put(NBT_DISK_DATA, entry.getValue().writeToNbt());
-            diskTag.putString(NBT_DISK_TYPE, entry.getValue().getId());
+            diskTag.putString(NBT_DISK_TYPE, entry.getValue().getFactoryId().toString());
 
             disks.add(diskTag);
         }

@@ -48,6 +48,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -172,7 +173,7 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             this.storage = null;
             this.cache = null;
         } else {
-            IStorageDisk disk = API.instance().getStorageDiskManager(world).getByStack(getDisk().getStackInSlot(0));
+            IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(getDisk().getStackInSlot(0));
 
             if (disk != null) {
                 StorageType type = ((IStorageDiskProvider) getDisk().getStackInSlot(0).getItem()).getType();

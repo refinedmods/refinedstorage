@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -95,7 +96,7 @@ public class StorageDiskItemDriveWrapper implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public String getId() {
-        return parent.getId();
+    public ResourceLocation getFactoryId() {
+        return parent.getFactoryId();
     }
 }

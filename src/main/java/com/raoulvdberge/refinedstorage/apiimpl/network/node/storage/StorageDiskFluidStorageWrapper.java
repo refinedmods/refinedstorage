@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -81,7 +82,7 @@ public class StorageDiskFluidStorageWrapper implements IStorageDisk<FluidStack> 
     }
 
     @Override
-    public String getId() {
-        return parent.getId();
+    public ResourceLocation getFactoryId() {
+        return parent.getFactoryId();
     }
 }

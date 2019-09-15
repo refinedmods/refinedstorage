@@ -12,7 +12,8 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -25,7 +26,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     static final String NBT_FLUIDS = "Fluids";
     static final int VERSION = 1;
 
-    private World world;
+    private ServerWorld world;
     private int capacity;
     private Multimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
 
@@ -33,7 +34,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public StorageDiskFluid(World world, int capacity) {
+    public StorageDiskFluid(ServerWorld world, int capacity) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
@@ -182,7 +183,7 @@ public class StorageDiskFluid implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getFactoryId() {
         return StorageDiskFactoryFluid.ID;
     }
 

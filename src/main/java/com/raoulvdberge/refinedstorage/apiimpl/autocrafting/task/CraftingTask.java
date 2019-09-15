@@ -101,8 +101,8 @@ public class CraftingTask implements ICraftingTask {
         this.quantity = quantity;
         this.pattern = pattern;
 
-        this.internalStorage = new StorageDiskItem(network.world(), -1);
-        this.internalFluidStorage = new StorageDiskFluid(network.world(), -1);
+        this.internalStorage = new StorageDiskItem(null, -1);
+        this.internalFluidStorage = new StorageDiskFluid(null, -1);
     }
 
     public CraftingTask(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
@@ -122,8 +122,8 @@ public class CraftingTask implements ICraftingTask {
         StorageDiskFactoryItem factoryItem = new StorageDiskFactoryItem();
         StorageDiskFactoryFluid factoryFluid = new StorageDiskFactoryFluid();
 
-        this.internalStorage = factoryItem.createFromNbt(network.world(), tag.getCompound(NBT_INTERNAL_STORAGE));
-        this.internalFluidStorage = factoryFluid.createFromNbt(network.world(), tag.getCompound(NBT_INTERNAL_FLUID_STORAGE));
+        this.internalStorage = factoryItem.createFromNbt(null, tag.getCompound(NBT_INTERNAL_STORAGE));
+        this.internalFluidStorage = factoryFluid.createFromNbt(null, tag.getCompound(NBT_INTERNAL_FLUID_STORAGE));
 
         this.toExtractInitial = readItemStackList(tag.getList(NBT_TO_EXTRACT_INITIAL, Constants.NBT.TAG_COMPOUND));
         this.toExtractInitialFluids = readFluidStackList(tag.getList(NBT_TO_EXTRACT_INITIAL_FLUIDS, Constants.NBT.TAG_COMPOUND));

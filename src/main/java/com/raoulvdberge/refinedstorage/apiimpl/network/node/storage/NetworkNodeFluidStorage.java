@@ -29,6 +29,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -111,11 +112,11 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IGuiStorage,
     }
 
     public void loadStorage() {
-        IStorageDisk disk = API.instance().getStorageDiskManager(world).get(storageId);
+        IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).get(storageId);
 
         if (disk == null) {
-            API.instance().getStorageDiskManager(world).set(storageId, disk = API.instance().createDefaultFluidDisk(world, getType().getCapacity()));
-            API.instance().getStorageDiskManager(world).markForSaving();
+            API.instance().getStorageDiskManager((ServerWorld) world).set(storageId, disk = API.instance().createDefaultFluidDisk((ServerWorld) world, getType().getCapacity()));
+            API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 
         this.storage = new StorageDiskFluidStorageWrapper(this, disk);

@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -93,7 +94,7 @@ public class StorageDiskItemPortable implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public String getId() {
-        return parent.getId();
+    public ResourceLocation getFactoryId() {
+        return parent.getFactoryId();
     }
 }

@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl;
 
 import com.raoulvdberge.refinedstorage.api.IRSAPI;
-import com.raoulvdberge.refinedstorage.api.RSAPIInject;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
@@ -22,7 +21,10 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
-import com.raoulvdberge.refinedstorage.api.util.*;
+import com.raoulvdberge.refinedstorage.api.util.Action;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
@@ -34,20 +36,24 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
-import com.raoulvdberge.refinedstorage.apiimpl.util.*;
+import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
+import com.raoulvdberge.refinedstorage.apiimpl.util.QuantityFormatter;
+import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Field;
 import java.util.*;
 
 public class API implements IRSAPI {
@@ -190,23 +196,10 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IStorageDiskManager getStorageDiskManager(World world) {
-        if (world.isRemote) {
-            throw new IllegalArgumentException("Attempting to access storage disk manager on the client");
-        }
-        /* TODO: Saving!
-        MapStorage storage = world.getMapStorage();
-        StorageDiskManager instance = (StorageDiskManager) storage.getOrLoadData(StorageDiskManager.class, StorageDiskManager.NAME);
+    public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
+        ServerWorld world = anyWorld.getServer().getWorld(DimensionType.OVERWORLD);
 
-        if (instance == null) {
-            instance = new StorageDiskManager(StorageDiskManager.NAME);
-
-            storage.setData(StorageDiskManager.NAME, instance);
-        } else {
-            instance.tryReadDisks(world);
-        } */
-
-        return new StorageDiskManager("ABC");
+        return world.getSavedData().getOrCreate(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
     }
 
     @Nonnull
@@ -229,13 +222,13 @@ public class API implements IRSAPI {
 
     @Override
     @Nonnull
-    public IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity) {
+    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity) {
         return new StorageDiskItem(world, capacity);
     }
 
     @Override
     @Nonnull
-    public IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity) {
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity) {
         return new StorageDiskFluid(world, capacity);
     }
 

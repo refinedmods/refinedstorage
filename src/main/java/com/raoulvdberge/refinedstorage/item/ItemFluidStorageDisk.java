@@ -1,84 +1,60 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.text.*;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.UUID;
 
 public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvider {
     private static final String NBT_ID = "Id";
 
-    public static final int TYPE_64K = 0;
-    public static final int TYPE_256K = 1;
-    public static final int TYPE_1024K = 2;
-    public static final int TYPE_4096K = 3;
-    public static final int TYPE_CREATIVE = 4;
+    private final FluidStorageType type;
 
-    public ItemFluidStorageDisk() {
-        super(new ItemInfo(RS.ID, "fluid_storage_disk"));
+    public ItemFluidStorageDisk(FluidStorageType type) {
+        super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
-        //setMaxStackSize(1);
-        //setHasSubtypes(true);
-        //setMaxDamage(0);
-    }
+        this.type = type;
 
-    /* TODO
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModelVariants(
-            this,
-            new ResourceLocation(RS.ID, "64k_fluid_storage_disk"),
-            new ResourceLocation(RS.ID, "256k_fluid_storage_disk"),
-            new ResourceLocation(RS.ID, "1024k_fluid_storage_disk"),
-            new ResourceLocation(RS.ID, "4096k_fluid_storage_disk"),
-            new ResourceLocation(RS.ID, "creative_fluid_storage_disk")
-        );
-
-        modelRegistration.setModel(this, TYPE_64K, new ModelResourceLocation(RS.ID + ":64k_fluid_storage_disk", "inventory"));
-        modelRegistration.setModel(this, TYPE_256K, new ModelResourceLocation(RS.ID + ":256k_fluid_storage_disk", "inventory"));
-        modelRegistration.setModel(this, TYPE_1024K, new ModelResourceLocation(RS.ID + ":1024k_fluid_storage_disk", "inventory"));
-        modelRegistration.setModel(this, TYPE_4096K, new ModelResourceLocation(RS.ID + ":4096k_fluid_storage_disk", "inventory"));
-        modelRegistration.setModel(this, TYPE_CREATIVE, new ModelResourceLocation(RS.ID + ":creative_fluid_storage_disk", "inventory"));
+        this.setRegistryName(RS.ID, type.getName() + "_fluid_storage_disk");
     }
 
     @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!isInCreativeTab(tab)) {
-            return;
-        }
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        super.inventoryTick(stack, world, entity, slot, selected);
 
-        for (int i = 0; i < 5; ++i) {
-            items.add(new ItemStack(this, 1, i));
+        if (!world.isRemote && !stack.hasTag()) {
+            UUID id = UUID.randomUUID();
+
+            API.instance().getStorageDiskManager((ServerWorld) world).set(id, API.instance().createDefaultFluidDisk((ServerWorld) world, getCapacity(stack)));
+            API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
+
+            setId(stack, id);
         }
     }
 
     @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        super.onUpdate(stack, world, entity, slot, selected);
-
-        if (!world.isRemote) {
-            if (!isValid(stack)) {
-                API.instance().getOneSixMigrationHelper().migrateDisk(world, stack);
-            }
-
-            if (!stack.hasTagCompound()) {
-                UUID id = UUID.randomUUID();
-
-                API.instance().getStorageDiskManager(world).set(id, API.instance().createDefaultFluidDisk(world, getCapacity(stack)));
-                API.instance().getStorageDiskManager(world).markForSaving();
-
-                setId(stack, id);
-            }
-        }
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
+    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
@@ -89,46 +65,46 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
             IStorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
             if (data != null) {
                 if (data.getCapacity() == -1) {
-                    tooltip.add(I18n.format("misc.refinedstorage:storage.stored", API.instance().getQuantityFormatter().format(data.getStored())));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).setStyle(new Style().setColor(TextFormatting.GRAY)));
                 } else {
-                    tooltip.add(I18n.format("misc.refinedstorage:storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())));
+                    tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored_capacity", API.instance().getQuantityFormatter().format(data.getStored()), API.instance().getQuantityFormatter().format(data.getCapacity())).setStyle(new Style().setColor(TextFormatting.GRAY)));
                 }
             }
 
             if (flag.isAdvanced()) {
-                tooltip.add(id.toString());
+                tooltip.add(new StringTextComponent(id.toString()).setStyle(new Style().setColor(TextFormatting.GRAY)));
             }
         }
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack diskStack = player.getHeldItem(hand);
 
-        if (!world.isRemote && player.isSneaking() && diskStack.getMetadata() != TYPE_CREATIVE) {
-            IStorageDisk disk = API.instance().getStorageDiskManager(world).getByStack(diskStack);
+        if (!world.isRemote && player.isSneaking() && type != FluidStorageType.CREATIVE) {
+            IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(diskStack);
 
             if (disk != null && disk.getStored() == 0) {
-                ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, diskStack.getCount(), diskStack.getMetadata());
+                ItemStack storagePart = new ItemStack(ItemFluidStoragePart.getByType(type), diskStack.getCount());
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
                 }
 
-                API.instance().getStorageDiskManager(world).remove(getId(diskStack));
-                API.instance().getStorageDiskManager(world).markForSaving();
+                API.instance().getStorageDiskManager((ServerWorld) world).remove(getId(diskStack));
+                API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
 
-                return new ActionResult<>(EnumActionResult.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
+                return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.STORAGE_HOUSING));
             }
         }
 
-        return new ActionResult<>(EnumActionResult.PASS, diskStack);
+        return new ActionResult<>(ActionResultType.PASS, diskStack);
     }
 
     @Override
     public int getEntityLifespan(ItemStack stack, World world) {
         return Integer.MAX_VALUE;
-    }*/
+    }
 
     @Override
     public UUID getId(ItemStack disk) {
@@ -148,8 +124,7 @@ public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvid
 
     @Override
     public int getCapacity(ItemStack disk) {
-        return 123;
-        // TODO return FluidStorageType.getById(disk.getItemDamage()).getCapacity();
+        return type.getCapacity();
     }
 
     @Override

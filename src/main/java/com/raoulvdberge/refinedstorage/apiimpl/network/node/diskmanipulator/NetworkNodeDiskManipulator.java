@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.LogicalSide;
@@ -74,7 +75,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO: correct?
                 StackUtils.createStorages(
-                    world,
+                    (ServerWorld) world,
                     getStackInSlot(slot),
                     slot,
                     itemDisks,
@@ -95,7 +96,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO: correct?
                 StackUtils.createStorages(
-                    world,
+                    (ServerWorld) world,
                     getStackInSlot(slot),
                     3 + slot,
                     itemDisks,

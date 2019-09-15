@@ -1,18 +1,20 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.disk;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskFactory;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
 public class StorageDiskFactoryFluid implements IStorageDiskFactory<FluidStack> {
-    public static final String ID = "normal_fluid";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
 
     @Override
-    public IStorageDisk<FluidStack> createFromNbt(World world, CompoundNBT tag) {
+    public IStorageDisk<FluidStack> createFromNbt(ServerWorld world, CompoundNBT tag) {
         StorageDiskFluid disk = new StorageDiskFluid(world, tag.getInt(StorageDiskFluid.NBT_CAPACITY));
 
         ListNBT list = tag.getList(StorageDiskFluid.NBT_FLUIDS, Constants.NBT.TAG_COMPOUND);
@@ -29,7 +31,7 @@ public class StorageDiskFactoryFluid implements IStorageDiskFactory<FluidStack> 
     }
 
     @Override
-    public IStorageDisk<FluidStack> create(World world, int capacity) {
+    public IStorageDisk<FluidStack> create(ServerWorld world, int capacity) {
         return new StorageDiskFluid(world, capacity);
     }
 }

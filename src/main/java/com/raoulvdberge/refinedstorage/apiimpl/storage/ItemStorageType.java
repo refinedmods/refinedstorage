@@ -4,7 +4,8 @@ public enum ItemStorageType {
     ONE_K("1k", 1000),
     FOUR_K("4k", 4000),
     SIXTEEN_K("16k", 16_000),
-    SIXTY_FOUR_K("64k", 64_000);
+    SIXTY_FOUR_K("64k", 64_000),
+    CREATIVE("creative", -1);
 
     private String name;
     private int capacity;

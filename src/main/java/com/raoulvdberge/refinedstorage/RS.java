@@ -1,15 +1,20 @@
 package com.raoulvdberge.refinedstorage;
 
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
+import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(RS.ID)
@@ -19,10 +24,20 @@ public final class RS {
     public static RS INSTANCE;
     public RSConfig config;
 
+    public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
     public static final ItemGroup MAIN_GROUP = new MainItemGroup();
 
     public RS() {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onRegisterItems);
+    }
+
+    @SubscribeEvent
+    public void onCommonSetup(FMLCommonSetupEvent e) {
+        NETWORK_HANDLER.register();
+
+        API.instance().getStorageDiskRegistry().add(StorageDiskFactoryItem.ID, new StorageDiskFactoryItem());
+        API.instance().getStorageDiskRegistry().add(StorageDiskFactoryFluid.ID, new StorageDiskFactoryFluid());
     }
 
     @SubscribeEvent
@@ -51,11 +66,19 @@ public final class RS {
         e.getRegistry().register(new ItemCuttingTool());
 
         for (ItemStorageType type : ItemStorageType.values()) {
-            e.getRegistry().register(new ItemStoragePart(type));
+            if (type != ItemStorageType.CREATIVE) {
+                e.getRegistry().register(new ItemStoragePart(type));
+            }
+
+            e.getRegistry().register(new ItemStorageDisk(type));
         }
 
         for (FluidStorageType type : FluidStorageType.values()) {
-            e.getRegistry().register(new ItemFluidStoragePart(type));
+            if (type != FluidStorageType.CREATIVE) {
+                e.getRegistry().register(new ItemFluidStoragePart(type));
+            }
+
+            e.getRegistry().register(new ItemFluidStorageDisk(type));
         }
 
         e.getRegistry().register(new ItemStorageHousing());
@@ -67,8 +90,6 @@ public final class RS {
         config = new RSConfig(null, e.getSuggestedConfigurationFile());
 
         PROXY.preInit(e);
-
-        NetworkHooks.openGui();
     }
 
     @EventHandler

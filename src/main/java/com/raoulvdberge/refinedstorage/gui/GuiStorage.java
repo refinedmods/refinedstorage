@@ -77,8 +77,8 @@ public class GuiStorage extends GuiBase<ContainerBase> {
     public void drawForeground(int mouseX, int mouseY) {
         drawString(7, 7, t(gui.getGuiTitle()));
         drawString(7, 42, gui.getCapacity() == -1 ?
-            t("misc.refinedstorage:storage.stored_minimal", API.instance().getQuantityFormatter().formatWithUnits(gui.getStored())) :
-            t("misc.refinedstorage:storage.stored_capacity_minimal", API.instance().getQuantityFormatter().formatWithUnits(gui.getStored()), API.instance().getQuantityFormatter().formatWithUnits(gui.getCapacity()))
+            t("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().formatWithUnits(gui.getStored())) :
+            t("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().formatWithUnits(gui.getStored()), API.instance().getQuantityFormatter().formatWithUnits(gui.getCapacity()))
         );
 
         if (texture.contains("disk_drive")) { // HACK!
@@ -95,9 +95,9 @@ public class GuiStorage extends GuiBase<ContainerBase> {
             }
 
             drawTooltip(mouseX, mouseY, (gui.getCapacity() == -1 ?
-                t("misc.refinedstorage:storage.stored_minimal", API.instance().getQuantityFormatter().format(gui.getStored())) :
-                t("misc.refinedstorage:storage.stored_capacity_minimal", API.instance().getQuantityFormatter().format(gui.getStored()), API.instance().getQuantityFormatter().format(gui.getCapacity()))
-            ) + "\n" + TextFormatting.GRAY + t("misc.refinedstorage:storage.full", full));
+                t("misc.refinedstorage.storage.stored_minimal", API.instance().getQuantityFormatter().format(gui.getStored())) :
+                t("misc.refinedstorage.storage.stored_capacity_minimal", API.instance().getQuantityFormatter().format(gui.getStored()), API.instance().getQuantityFormatter().format(gui.getCapacity()))
+            ) + "\n" + TextFormatting.GRAY + t("misc.refinedstorage.storage.full", full));
         }
     }
 

@@ -26,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
@@ -58,7 +59,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
             if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO : correct?
                 StackUtils.createStorages(
-                    world,
+                    (ServerWorld) world,
                     getStackInSlot(slot),
                     slot,
                     itemDisks,
