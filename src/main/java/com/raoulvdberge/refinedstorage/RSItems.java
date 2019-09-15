@@ -22,6 +22,14 @@ public final class RSItems {
     @ObjectHolder(RS.ID + ":processor_binding")
     public static final ItemProcessorBinding PROCESSOR_BINDING = null;
 
+    @ObjectHolder(RS.ID + ":wrench")
+    public static final ItemWrench WRENCH = null;
+
+    @ObjectHolder(RS.ID + ":pattern")
+    public static final ItemPattern PATTERN = null;
+
+    public static final ItemFilter FILTER = new ItemFilter();
+
     @ObjectHolder(RS.ID + ":raw_basic_processor")
     public static final ItemProcessor RAW_BASIC_PROCESSOR = null;
     @ObjectHolder(RS.ID + ":raw_improved_processor")
@@ -55,9 +63,6 @@ public final class RSItems {
     public static final ItemStorageDisk SIXTY_FOUR_K_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":creative_storage_disk")
     public static final ItemStorageDisk CREATIVE_STORAGE_DISK = null;
-
-    public static final ItemPattern PATTERN = new ItemPattern();
-    public static final ItemFilter FILTER = new ItemFilter();
 
     @ObjectHolder(RS.ID + ":upgrade")
     public static final ItemUpgrade UPGRADE = null;
@@ -112,5 +117,4 @@ public final class RSItems {
 
     public static final ItemCover COVER = new ItemCover();
     public static final ItemHollowCover HOLLOW_COVER = new ItemHollowCover();
-    public static final ItemWrench WRENCH = new ItemWrench();
 }

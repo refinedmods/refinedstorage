@@ -24,6 +24,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -235,14 +236,14 @@ public final class RenderUtils {
         }
     }
 
-    public static void addCombinedItemsToTooltip(List<String> tooltip, boolean displayAmount, List<ItemStack> stacks) {
+    public static void addCombinedItemsToTooltip(List<ITextComponent> tooltip, boolean displayAmount, List<ItemStack> stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.size(); ++i) {
             if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
                 ItemStack stack = stacks.get(i);
 
-                String data = stack.getDisplayName().getString(); // TODO does this work
+                ITextComponent data = stack.getDisplayName();
 
                 int amount = stack.getCount();
 
@@ -254,21 +255,23 @@ public final class RenderUtils {
                     }
                 }
 
-                data = (displayAmount ? (String.valueOf(amount) + "x ") : "") + data;
+                if (displayAmount) {
+                    data = new StringTextComponent(amount + "x ").appendSibling(data);
+                }
 
                 tooltip.add(data);
             }
         }
     }
 
-    public static void addCombinedFluidsToTooltip(List<String> tooltip, boolean showMb, NonNullList<FluidStack> stacks) {
+    public static void addCombinedFluidsToTooltip(List<ITextComponent> tooltip, boolean displayMb, NonNullList<FluidStack> stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.size(); ++i) {
             if (!combinedIndices.contains(i)) {
                 FluidStack stack = stacks.get(i);
 
-                String data = stack.getDisplayName().getString(); // TODO does this work
+                ITextComponent data = stack.getDisplayName();
 
                 int amount = stack.getAmount();
 
@@ -280,7 +283,11 @@ public final class RenderUtils {
                     }
                 }
 
-                tooltip.add((showMb ? (API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ") : "") + data);
+                if (displayMb) {
+                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").appendSibling(data);
+                }
+
+                tooltip.add(data);
             }
         }
     }

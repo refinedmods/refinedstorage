@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import net.minecraft.item.Item;
 
-public class ItemStoragePart extends ItemBase {
+public class ItemStoragePart extends Item {
     public ItemStoragePart(ItemStorageType type) {
         super(new Item.Properties().group(RS.MAIN_GROUP));
 

@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemFluidStorageDisk extends ItemBase implements IStorageDiskProvider {
+public class ItemFluidStorageDisk extends Item implements IStorageDiskProvider {
     private static final String NBT_ID = "Id";
 
     private final FluidStorageType type;

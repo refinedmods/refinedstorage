@@ -10,7 +10,7 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "P": {
-      "item": "#basic_processor"
+      "item": "refinedstorage:basic_processor"
     }
   },
   "result": {

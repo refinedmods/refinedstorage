@@ -1,43 +1,47 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.tile.TileNode;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
+import net.minecraft.block.BlockState;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Rotation;
 
-public class ItemWrench extends ItemBase {
+public class ItemWrench extends Item {
     public ItemWrench() {
-        super(new ItemInfo(RS.ID, "wrench"));
+        super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
-        //setMaxStackSize(1);
-    }
-/* TODO
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
+        this.setRegistryName(RS.ID, "wrench");
     }
 
     @Override
-    public EnumActionResult onItemUse(PlayerEntity player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!player.isSneaking()) {
-            return EnumActionResult.FAIL;
+    public ActionResultType onItemUse(ItemUseContext ctx) {
+        if (!ctx.getPlayer().isSneaking()) {
+            return ActionResultType.FAIL;
         }
 
-        if (world.isRemote) {
-            return EnumActionResult.SUCCESS;
+        if (ctx.getWorld().isRemote) {
+            return ActionResultType.SUCCESS;
         }
 
-        TileEntity tile = world.getTileEntity(pos);
+        TileEntity tile = ctx.getWorld().getTileEntity(ctx.getPos());
 
-        if (tile instanceof TileNode && ((TileNode) tile).getNode().getNetwork() != null && !((TileNode) tile).getNode().getNetwork().getSecurityManager().hasPermission(Permission.BUILD, player)) {
-            WorldUtils.sendNoPermissionMessage(player);
+        // TODO - Better INetworkNode check
+        if (tile instanceof TileNode &&
+            ((TileNode) tile).getNode().getNetwork() != null &&
+            !((TileNode) tile).getNode().getNetwork().getSecurityManager().hasPermission(Permission.BUILD, ctx.getPlayer())) {
+            WorldUtils.sendNoPermissionMessage(ctx.getPlayer());
 
-            return EnumActionResult.FAIL;
+            return ActionResultType.FAIL;
         }
 
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = ctx.getWorld().getBlockState(ctx.getPos());
 
-        Block block = state.getBlock();
-
+        /* TODO - Covers
         if (block instanceof BlockCable && tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable) {
             CoverManager manager = ((ICoverable) ((TileNode) tile).getNode()).getCoverManager();
 
@@ -63,13 +67,13 @@ public class ItemWrench extends ItemBase {
 
                     InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), cover);
 
-                    return EnumActionResult.SUCCESS;
+                    return ActionResultType.SUCCESS;
                 }
             }
-        }
+        }*/
 
-        block.rotateBlock(world, pos, player.getHorizontalFacing().getOpposite());
+        ctx.getWorld().setBlockState(ctx.getPos(), state.rotate(Rotation.CLOCKWISE_90));
 
-        return EnumActionResult.SUCCESS;
-    }*/
+        return ActionResultType.SUCCESS;
+    }
 }

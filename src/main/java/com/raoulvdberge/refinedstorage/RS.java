@@ -60,12 +60,9 @@ public final class RS {
         e.getRegistry().register(new ItemQuartzEnrichedIron());
         e.getRegistry().register(new ItemProcessorBinding());
 
-        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.RAW_BASIC));
-        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.RAW_IMPROVED));
-        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.RAW_ADVANCED));
-        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.BASIC));
-        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.IMPROVED));
-        e.getRegistry().register(new ItemProcessor(ItemProcessor.Type.ADVANCED));
+        for (ItemProcessor.Type type : ItemProcessor.Type.values()) {
+            e.getRegistry().register(new ItemProcessor(type));
+        }
 
         e.getRegistry().register(new ItemSilicon());
 
@@ -94,6 +91,9 @@ public final class RS {
         for (ItemUpgrade.Type type : ItemUpgrade.Type.values()) {
             e.getRegistry().register(new ItemUpgrade(type));
         }
+
+        e.getRegistry().register(new ItemWrench());
+        e.getRegistry().register(new ItemPattern());
     }
 
     /* TODO
