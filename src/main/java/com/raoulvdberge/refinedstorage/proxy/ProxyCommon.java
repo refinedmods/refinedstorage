@@ -90,10 +90,6 @@ public class ProxyCommon {
     public void registerRecipes(RegistryEvent.Register<IRecipe> e) {
         e.getRegistry().register(new RecipeCover().setRegistryName(new ResourceLocation(RS.ID, "cover")));
         e.getRegistry().register(new RecipeHollowCover().setRegistryName(new ResourceLocation(RS.ID, "hollow_cover")));
-        e.getRegistry().register(new RecipeUpgradeWithEnchantedBook("fortune", 1, ItemUpgrade.TYPE_FORTUNE_1).setRegistryName(new ResourceLocation(RS.ID, "fortune_1_upgrade")));
-        e.getRegistry().register(new RecipeUpgradeWithEnchantedBook("fortune", 2, ItemUpgrade.TYPE_FORTUNE_2).setRegistryName(new ResourceLocation(RS.ID, "fortune_2_upgrade")));
-        e.getRegistry().register(new RecipeUpgradeWithEnchantedBook("fortune", 3, ItemUpgrade.TYPE_FORTUNE_3).setRegistryName(new ResourceLocation(RS.ID, "fortune_3_upgrade")));
-        e.getRegistry().register(new RecipeUpgradeWithEnchantedBook("silk_touch", 1, ItemUpgrade.TYPE_SILK_TOUCH).setRegistryName(new ResourceLocation(RS.ID, "silk_touch_upgrade")));
     }
 
     @SubscribeEvent

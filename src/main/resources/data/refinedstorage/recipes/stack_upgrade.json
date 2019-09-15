@@ -10,12 +10,10 @@
       "item": "minecraft:sugar"
     },
     "S": {
-      "item": "refinedstorage:upgrade",
-      "data": 2
+      "item": "refinedstorage:speed_upgrade"
     }
   },
   "result": {
-    "item": "refinedstorage:upgrade",
-    "data": 4
+    "item": "refinedstorage:stack_upgrade"
   }
 }

@@ -57,8 +57,26 @@ public final class RSItems {
     public static final ItemStorageDisk CREATIVE_STORAGE_DISK = null;
 
     public static final ItemPattern PATTERN = new ItemPattern();
-    public static final ItemUpgrade UPGRADE = new ItemUpgrade();
     public static final ItemFilter FILTER = new ItemFilter();
+
+    @ObjectHolder(RS.ID + ":upgrade")
+    public static final ItemUpgrade UPGRADE = null;
+    @ObjectHolder(RS.ID + ":speed_upgrade")
+    public static final ItemUpgrade SPEED_UPGRADE = null;
+    @ObjectHolder(RS.ID + ":range_upgrade")
+    public static final ItemUpgrade RANGE_UPGRADE = null;
+    @ObjectHolder(RS.ID + ":crafting_upgrade")
+    public static final ItemUpgrade CRAFTING_UPGRADE = null;
+    @ObjectHolder(RS.ID + ":stack_upgrade")
+    public static final ItemUpgrade STACK_UPGRADE = null;
+    @ObjectHolder(RS.ID + ":silk_touch_upgrade")
+    public static final ItemUpgrade SILK_TOUCH_UPGRADE = null;
+    @ObjectHolder(RS.ID + ":fortune_1_upgrade")
+    public static final ItemUpgrade FORTUNE_1_UPGRADE = null;
+    @ObjectHolder(RS.ID + ":fortune_2_upgrade")
+    public static final ItemUpgrade FORTUNE_2_UPGRADE = null;
+    @ObjectHolder(RS.ID + ":fortune_3_upgrade")
+    public static final ItemUpgrade FORTUNE_3_UPGRADE = null;
 
     @ObjectHolder(RS.ID + ":network_card")
     public static final ItemNetworkCard NETWORK_CARD = null;

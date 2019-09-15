@@ -236,7 +236,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public int getUpdateInterval() {
-        switch (upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED)) {
+        switch (upgrades.getUpgradeCount(ItemUpgrade.Type.SPEED)) {
             case 0:
                 return 10;
             case 1:
@@ -254,7 +254,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public int getMaximumSuccessfulCraftingUpdates() {
-        switch (upgrades.getUpgradeCount(ItemUpgrade.TYPE_SPEED)) {
+        switch (upgrades.getUpgradeCount(ItemUpgrade.Type.SPEED)) {
             case 0:
                 return 1;
             case 1:

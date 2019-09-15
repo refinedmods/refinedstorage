@@ -97,7 +97,9 @@ public class RSConfig {
     public int craftingUpgradeUsage;
     public int stackUpgradeUsage;
     public int silkTouchUpgradeUsage;
-    public int fortuneUpgradeUsagePerFortune;
+    public int fortune1UpgradeUsagePerFortune;
+    public int fortune2UpgradeUsagePerFortune;
+    public int fortune3UpgradeUsagePerFortune;
     //endregion
 
     //region Readers and Writers
@@ -248,7 +250,9 @@ public class RSConfig {
         craftingUpgradeUsage = config.getInt("crafting", UPGRADES, 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
         stackUpgradeUsage = config.getInt("stack", UPGRADES, 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
         silkTouchUpgradeUsage = config.getInt("silkTouch", UPGRADES, 15, 0, Integer.MAX_VALUE, "The additional energy used by the Silk Touch Upgrade");
-        fortuneUpgradeUsagePerFortune = config.getInt("fortune", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune Upgrade, multiplied by the level of the enchantment");
+        fortune1UpgradeUsagePerFortune = config.getInt("fortune1", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune 1 Upgrade");
+        fortune2UpgradeUsagePerFortune = config.getInt("fortune2", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune 2 Upgrade");
+        fortune3UpgradeUsagePerFortune = config.getInt("fortune3", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune 3 Upgrade");
         //endregion
 
         //region Readers and Writers

@@ -1,108 +1,112 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 
-public class ItemUpgrade extends ItemBase {
-    public static final int TYPE_RANGE = 1;
-    public static final int TYPE_SPEED = 2;
-    public static final int TYPE_CRAFTING = 3;
-    public static final int TYPE_STACK = 4;
-    public static final int TYPE_SILK_TOUCH = 6;
-    public static final int TYPE_FORTUNE_1 = 7;
-    public static final int TYPE_FORTUNE_2 = 8;
-    public static final int TYPE_FORTUNE_3 = 9;
+import javax.annotation.Nullable;
+import java.util.List;
 
-    public ItemUpgrade() {
-        super(new ItemInfo(RS.ID, "upgrade"));
+public class ItemUpgrade extends Item {
+    public enum Type {
+        NORMAL("normal"),
+        SPEED("speed"),
+        RANGE("range"),
+        CRAFTING("crafting"),
+        STACK("stack"),
+        SILK_TOUCH("silk_touch"),
+        FORTUNE_1("fortune_1"),
+        FORTUNE_2("fortune_2"),
+        FORTUNE_3("fortune_3");
 
-        //setHasSubtypes(true);
-        //setMaxDamage(0);
+        private final String name;
+
+        Type(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getEnergyUsage() {
+            switch (this) {
+                case NORMAL:
+                    return 0;
+                case RANGE:
+                    return RS.INSTANCE.config.rangeUpgradeUsage;
+                case SPEED:
+                    return RS.INSTANCE.config.speedUpgradeUsage;
+                case CRAFTING:
+                    return RS.INSTANCE.config.craftingUpgradeUsage;
+                case STACK:
+                    return RS.INSTANCE.config.stackUpgradeUsage;
+                case SILK_TOUCH:
+                    return RS.INSTANCE.config.silkTouchUpgradeUsage;
+                case FORTUNE_1:
+                    return RS.INSTANCE.config.fortune1UpgradeUsagePerFortune;
+                case FORTUNE_2:
+                    return RS.INSTANCE.config.fortune2UpgradeUsagePerFortune;
+                case FORTUNE_3:
+                    return RS.INSTANCE.config.fortune3UpgradeUsagePerFortune;
+                default:
+                    throw new IllegalStateException("What even am I?");
+            }
+        }
+
+        public int getFortuneLevel() {
+            switch (this) {
+                case FORTUNE_1:
+                    return 1;
+                case FORTUNE_2:
+                    return 2;
+                case FORTUNE_3:
+                    return 3;
+                default:
+                    return 0;
+            }
+        }
     }
-/* TODO
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModelVariants(
-            this,
-            new ResourceLocation(RS.ID, "upgrade"),
-            new ResourceLocation(RS.ID, "range_upgrade"),
-            new ResourceLocation(RS.ID, "speed_upgrade"),
-            new ResourceLocation(RS.ID, "stack_upgrade"),
-            new ResourceLocation(RS.ID, "silk_touch_upgrade"),
-            new ResourceLocation(RS.ID, "fortune_upgrade")
-        );
 
-        modelRegistration.setModel(this, 0, new ModelResourceLocation(RS.ID + ":upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_RANGE, new ModelResourceLocation(RS.ID + ":range_upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_SPEED, new ModelResourceLocation(RS.ID + ":speed_upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_CRAFTING, new ModelResourceLocation(RS.ID + ":crafting_upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_STACK, new ModelResourceLocation(RS.ID + ":stack_upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_SILK_TOUCH, new ModelResourceLocation(RS.ID + ":silk_touch_upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_FORTUNE_1, new ModelResourceLocation(RS.ID + ":fortune_upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_FORTUNE_2, new ModelResourceLocation(RS.ID + ":fortune_upgrade", "inventory"));
-        modelRegistration.setModel(this, TYPE_FORTUNE_3, new ModelResourceLocation(RS.ID + ":fortune_upgrade", "inventory"));
+    private final Type type;
+
+    public ItemUpgrade(Type type) {
+        super(new Item.Properties().group(RS.MAIN_GROUP));
+
+        this.type = type;
+
+        this.setRegistryName(RS.ID, type == Type.NORMAL ? "upgrade" : type.getName() + "_upgrade");
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
+
+        if (type.getFortuneLevel() > 0) {
+            tooltip.add(
+                new TranslationTextComponent("enchantment.minecraft.fortune")
+                    .appendText(" ")
+                    .appendSibling(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
+                    .setStyle(new Style().setColor(TextFormatting.GRAY))
+            );
+        }
     }
 
     @Override
     public boolean hasEffect(ItemStack stack) {
-        return stack.getMetadata() == TYPE_SILK_TOUCH || getFortuneLevel(stack) > 0;
+        return type == Type.SILK_TOUCH ||
+            type == Type.FORTUNE_1 ||
+            type == Type.FORTUNE_2 ||
+            type == Type.FORTUNE_3;
     }
 
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
-
-        if (getFortuneLevel(stack) > 0) {
-            tooltip.add(I18n.format("enchantment.lootBonusDigger") + " " + I18n.format("enchantment.level." + getFortuneLevel(stack)));
-        }
+    public Type getType() {
+        return type;
     }
-
-    @Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (!isInCreativeTab(tab)) {
-            return;
-        }
-
-        for (int i = 0; i <= 9; ++i) {
-            if (i != 5) { // Removal of interdimensional upgrade
-                items.add(new ItemStack(this, 1, i));
-            }
-        }
-    }
-
-    public static int getFortuneLevel(@Nullable ItemStack stack) {
-        if (stack != null) {
-            if (stack.getMetadata() == TYPE_FORTUNE_1) {
-                return 1;
-            } else if (stack.getMetadata() == TYPE_FORTUNE_2) {
-                return 2;
-            } else if (stack.getMetadata() == TYPE_FORTUNE_3) {
-                return 3;
-            }
-        }
-
-        return 0;
-    }
-
-    public static int getEnergyUsage(ItemStack stack) {
-        switch (stack.getItemDamage()) {
-            case TYPE_RANGE:
-                return RS.INSTANCE.config.rangeUpgradeUsage;
-            case TYPE_SPEED:
-                return RS.INSTANCE.config.speedUpgradeUsage;
-            case TYPE_CRAFTING:
-                return RS.INSTANCE.config.craftingUpgradeUsage;
-            case TYPE_STACK:
-                return RS.INSTANCE.config.stackUpgradeUsage;
-            case TYPE_SILK_TOUCH:
-                return RS.INSTANCE.config.silkTouchUpgradeUsage;
-            case TYPE_FORTUNE_1:
-            case TYPE_FORTUNE_2:
-            case TYPE_FORTUNE_3:
-                return RS.INSTANCE.config.fortuneUpgradeUsagePerFortune * getFortuneLevel(stack);
-            default:
-                return 0;
-        }
-    }*/
 }

@@ -1,36 +1,29 @@
 package com.raoulvdberge.refinedstorage.recipe;
-/*
 
-TODO
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import net.minecraft.block.Blocks;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
-import net.minecraft.init.Blocks;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ForgeRegistries;
 
-// MC JSON recipes don't like comparing to NBT, that's why we need a custom recipe class.
-// We need to compare to NBT for the enchanted book.
-public class RecipeUpgradeWithEnchantedBook extends ShapedRecipe {
+public class UpgradeWithEnchantedBookRecipe extends ShapedRecipe {
     private EnchantmentData enchant;
+    private ItemStack result;
 
-    public RecipeUpgradeWithEnchantedBook(String enchantmentId, int enchantmentLevel, int upgradeId) {
-        super(RS.ID, 3, 3, NonNullList.from(Ingredient.EMPTY,
+    public UpgradeWithEnchantedBookRecipe(ResourceLocation recipeId, Enchantment enchantment, int enchantmentLevel, ItemStack result) {
+        super(recipeId, "", 3, 3, NonNullList.from(Ingredient.EMPTY,
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
-            Ingredient.fromStacks(EnchantedBookItem.getEnchantedItemStack(new EnchantmentData(Registry.ENCHANTMENT.getOrDefault(new ResourceLocation("minecraft", enchantmentId)), enchantmentLevel))),
+            Ingredient.fromStacks(EnchantedBookItem.getEnchantedItemStack(new EnchantmentData(enchantment, enchantmentLevel))),
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
             Ingredient.fromStacks(new ItemStack(Blocks.BOOKSHELF)),
             Ingredient.fromStacks(new ItemStack(RSItems.UPGRADE)),
@@ -38,21 +31,30 @@ public class RecipeUpgradeWithEnchantedBook extends ShapedRecipe {
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON)),
             Ingredient.fromStacks(new ItemStack(RSItems.QUARTZ_ENRICHED_IRON))
-        ), new ItemStack(RSItems.UPGRADE, 1));
+        ), result);
 
-        this.enchant = new EnchantmentData(Enchantment.getEnchantmentByLocation(enchantmentId), enchantmentLevel);
+        this.enchant = new EnchantmentData(enchantment, enchantmentLevel);
+        this.result = result;
+    }
+
+    public EnchantmentData getEnchant() {
+        return enchant;
+    }
+
+    public ItemStack getResult() {
+        return result;
     }
 
     @Override
-    public boolean matches(InventoryCrafting inv, World world) {
+    public boolean matches(CraftingInventory inv, World world) {
         if (super.matches(inv, world)) {
-            ListNBT enchantments = ItemEnchantedBook.getEnchantments(inv.getStackInSlot(1));
+            ListNBT enchantments = EnchantedBookItem.getEnchantments(inv.getStackInSlot(1));
 
             for (int i = 0; i < enchantments.size(); ++i) {
                 CompoundNBT enchantmentNbt = enchantments.getCompound(i);
 
                 // @Volatile: NBT tags from ItemEnchantedBook
-                if (Enchantment.getEnchantmentByID(enchantmentNbt.getShort("id")) == enchant.enchantment && enchantmentNbt.getShort("lvl") == enchant.enchantmentLevel) {
+                if (ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantmentNbt.getString("id"))) == enchant.enchantment && enchantmentNbt.getShort("lvl") == enchant.enchantmentLevel) {
                     return true;
                 }
             }
@@ -61,4 +63,3 @@ public class RecipeUpgradeWithEnchantedBook extends ShapedRecipe {
         return false;
     }
 }
-*/

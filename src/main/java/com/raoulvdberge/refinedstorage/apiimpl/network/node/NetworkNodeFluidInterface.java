@@ -138,7 +138,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                     // That means we still have to autocraft 2 fluids.
                     delta -= result == null ? 0 : result.getAmount();
 
-                    if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                    if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
                         network.getCraftingManager().request(this, wanted, delta);
                     }
                 } else if (delta < 0) {

@@ -10,15 +10,13 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "G": {
-      "type": "forge:ore_dict",
-      "ore": "blockGlass"
+      "tag": "forge:glass"
     },
     "P": {
-      "item": "#improved_processor"
+      "item": "refinedstorage:improved_processor"
     }
   },
   "result": {
-    "item": "refinedstorage:upgrade",
-    "data": 0
+    "item": "refinedstorage:upgrade"
   }
 }

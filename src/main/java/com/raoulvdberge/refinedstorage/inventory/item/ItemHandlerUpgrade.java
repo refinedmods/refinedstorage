@@ -1,17 +1,19 @@
 package com.raoulvdberge.refinedstorage.inventory.item;
 
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorUpgrade;
 import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class ItemHandlerUpgrade extends ItemHandlerBase {
-    public ItemHandlerUpgrade(int size, @Nullable Consumer<Integer> listener, ItemUpgrade... supportedUpgrades) {
+    public ItemHandlerUpgrade(int size, @Nullable Consumer<Integer> listener, ItemUpgrade.Type... supportedUpgrades) {
         super(size, listener, new ItemValidatorBasic[supportedUpgrades.length]);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {
-            this.validators[i] = new ItemValidatorBasic(supportedUpgrades[i]);
+            this.validators[i] = new ItemValidatorUpgrade(supportedUpgrades[i]);
         }
     }
 
@@ -21,8 +23,9 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
 
     public int getSpeed(int speed, int speedIncrease) {
         for (int i = 0; i < getSlots(); ++i) {
-            /*TODO if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == ItemUpgrade.TYPE_SPEED) {*/
-            if (false) {
+            ItemStack slot = getStackInSlot(i);
+
+            if (slot.getItem() instanceof ItemUpgrade && ((ItemUpgrade) slot.getItem()).getType() == ItemUpgrade.Type.SPEED) {
                 speed -= speedIncrease;
             }
         }
@@ -30,16 +33,25 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
         return speed;
     }
 
-    public boolean hasUpgrade(int type) {
-        return getUpgradeCount(type) > 0;
+    public boolean hasUpgrade(ItemUpgrade.Type type) {
+        for (int i = 0; i < getSlots(); ++i) {
+            ItemStack slot = getStackInSlot(i);
+
+            if (slot.getItem() instanceof ItemUpgrade && ((ItemUpgrade) slot.getItem()).getType() == type) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public int getUpgradeCount(int type) {
+    public int getUpgradeCount(ItemUpgrade.Type type) {
         int upgrades = 0;
 
         for (int i = 0; i < getSlots(); ++i) {
-            /*TODO if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getItemDamage() == type) {*/
-            if (false) {
+            ItemStack slot = getStackInSlot(i);
+
+            if (slot.getItem() instanceof ItemUpgrade && ((ItemUpgrade) slot.getItem()).getType() == type) {
                 upgrades++;
             }
         }
@@ -51,7 +63,11 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
         int usage = 0;
 
         for (int i = 0; i < getSlots(); ++i) {
-            // TODO usage += ItemUpgrade.getEnergyUsage(getStackInSlot(i));
+            ItemStack slot = getStackInSlot(i);
+
+            if (slot.getItem() instanceof ItemUpgrade) {
+                usage += ((ItemUpgrade) slot.getItem()).getType().getEnergyUsage();
+            }
         }
 
         return usage;
@@ -61,9 +77,10 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
         int maxFortune = 0;
 
         for (int i = 0; i < getSlots(); ++i) {
-            if (!getStackInSlot(i).isEmpty()) {
-                // TODO int fortune = ItemUpgrade.getFortuneLevel(getStackInSlot(i));
-                int fortune = 0;
+            ItemStack slot = getStackInSlot(i);
+
+            if (slot.getItem() instanceof ItemUpgrade) {
+                int fortune = ((ItemUpgrade) slot.getItem()).getType().getFortuneLevel();
 
                 if (fortune > maxFortune) {
                     maxFortune = fortune;
@@ -75,7 +92,7 @@ public class ItemHandlerUpgrade extends ItemHandlerBase {
     }
 
     public int getItemInteractCount() {
-        return hasUpgrade(ItemUpgrade.TYPE_STACK) ? 64 : 1;
+        return hasUpgrade(ItemUpgrade.Type.STACK) ? 64 : 1;
     }
 
     @Override

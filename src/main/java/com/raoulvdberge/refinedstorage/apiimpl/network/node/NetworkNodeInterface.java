@@ -118,7 +118,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                     // That means we still have to autocraft 2 items.
                     delta -= result == null ? 0 : result.getCount();
 
-                    if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+                    if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
                         network.getCraftingManager().request(new SlottedCraftingRequest(this, i), wanted, delta);
                     }
                 } else if (delta < 0) {

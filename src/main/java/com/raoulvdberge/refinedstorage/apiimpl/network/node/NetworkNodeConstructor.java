@@ -238,7 +238,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                     }*/
                 }
             }
-        } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+        } else if (upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
 
             network.getCraftingManager().request(this, craft, 1);
@@ -250,7 +250,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
         if (took != null) {
             DefaultDispenseItemBehavior.doDispense(world, took, 6, getDirection(), new Position(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
-        } else if (upgrades.hasUpgrade(ItemUpgrade.TYPE_CRAFTING)) {
+        } else if (upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
 
             network.getCraftingManager().request(this, craft, 1);
