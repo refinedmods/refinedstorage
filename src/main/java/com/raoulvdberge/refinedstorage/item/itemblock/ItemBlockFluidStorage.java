@@ -1,12 +1,10 @@
 package com.raoulvdberge.refinedstorage.item.itemblock;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 
 public class ItemBlockFluidStorage extends ItemBlockBase {
     public ItemBlockFluidStorage(BlockFluidStorage block) {
-        super(block, new ItemInfo(RS.ID, "fluid_storage"));
+        super(block);
     }
 /* TODO
     @Override

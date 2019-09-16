@@ -12,7 +12,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.stream.Collectors;
 
 public class CraftingMonitorElementItemRender implements ICraftingMonitorElement {
     private static final int COLOR_PROCESSING = 0xFFD9EDF7;
@@ -100,7 +99,7 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
     @Nullable
     @Override
     public String getTooltip() {
-        return RenderUtils.getItemTooltip(this.stack).stream().map(t -> t.getFormattedText()).collect(Collectors.joining("\n")); // TODO getFormattedText
+        return String.join("\n", RenderUtils.getTooltipFromItem(this.stack));
     }
 
     @Override

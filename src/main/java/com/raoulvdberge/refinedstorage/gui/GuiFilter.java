@@ -78,11 +78,6 @@ public class GuiFilter extends GuiBase<ContainerFilter> {
         addSideButton(new SideButtonFilterType(this));
     }
 
-    @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        return nameField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
-    }
-
     private void updateModeButton(int mode) {
         String text = mode == IFilter.MODE_WHITELIST ? I18n.format("sidebutton.refinedstorage.mode.whitelist") : I18n.format("sidebutton.refinedstorage.mode.blacklist");
 
@@ -97,7 +92,7 @@ public class GuiFilter extends GuiBase<ContainerFilter> {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/filter.png");
+        bindTexture(RS.ID, "gui/filter.png");
 
         blit(x, y, 0, 0, xSize, ySize);
     }

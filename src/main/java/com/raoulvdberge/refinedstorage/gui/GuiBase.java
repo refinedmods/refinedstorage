@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.gui.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButton;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -144,7 +145,7 @@ public abstract class GuiBase<T extends Container> extends ContainerScreen<T> {
             if (slot.isEnabled() && slot instanceof SlotFilterFluid) {
                 FluidStack stack = ((SlotFilterFluid) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
-                if (!stack.isEmpty() && inBounds(slot.xPos, slot.yPos, 17, 17, mouseX, mouseY)) {
+                if (!stack.isEmpty() && RenderUtils.inBounds(slot.xPos, slot.yPos, 17, 17, mouseX, mouseY)) {
                     renderTooltip(mouseX, mouseY, stack.getDisplayName().getFormattedText());
                 }
             }
@@ -226,16 +227,8 @@ public abstract class GuiBase<T extends Container> extends ContainerScreen<T> {
         return button;
     }
 
-    public boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
-        return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
-    }
-
-    public void bindTexture(String file) {
-        bindTexture(RS.ID, file);
-    }
-
-    public void bindTexture(String base, String file) {
-        minecraft.getTextureManager().bindTexture(TEXTURE_CACHE.computeIfAbsent(base + ":" + file, (newId) -> new ResourceLocation(base, "textures/" + file)));
+    public void bindTexture(String namespace, String filenameInTexturesFolder) {
+        minecraft.getTextureManager().bindTexture(TEXTURE_CACHE.computeIfAbsent(namespace + ":" + filenameInTexturesFolder, (newId) -> new ResourceLocation(namespace, "textures/" + filenameInTexturesFolder)));
     }
 
     public void renderItem(int x, int y, ItemStack stack) {

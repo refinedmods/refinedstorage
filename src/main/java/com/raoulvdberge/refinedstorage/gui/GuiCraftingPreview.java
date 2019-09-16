@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
@@ -95,7 +96,7 @@ public class GuiCraftingPreview extends GuiBase {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/crafting_preview.png");
+        bindTexture(RS.ID, "gui/crafting_preview.png");
 
         blit(x, y, 0, 0, xSize, ySize);
 
@@ -175,7 +176,7 @@ public class GuiCraftingPreview extends GuiBase {
 
                     stack.draw(x, y + 5, drawers);
 
-                    if (inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
+                    if (RenderUtils.inBounds(x + 5, y + 7, 16, 16, mouseX, mouseY)) {
                         this.hoveringStack = stack.getId().equals(CraftingPreviewElementItemStack.ID) ? (ItemStack) stack.getElement() : null;
 
                         if (this.hoveringStack == null) {

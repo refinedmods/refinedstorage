@@ -1,11 +1,8 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
-
 public class ItemHollowCover extends ItemCover {
     public ItemHollowCover() {
-        super(new ItemInfo(RS.ID, "hollow_cover"));
+        super();
     }
 /* TODO
     @Override

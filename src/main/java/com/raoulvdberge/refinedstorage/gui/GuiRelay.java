@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerRelay;
 import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileRelay;
@@ -22,7 +23,7 @@ public class GuiRelay extends GuiBase<ContainerRelay> {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/relay.png");
+        bindTexture(RS.ID, "gui/relay.png");
 
         blit(x, y, 0, 0, xSize, ySize);
     }

@@ -1,10 +1,12 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
 import com.raoulvdberge.refinedstorage.container.ContainerBase;
 import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.*;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -66,7 +68,7 @@ public class GuiStorage extends GuiBase<ContainerBase> {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture(texture);
+        bindTexture(RS.ID, texture);
 
         blit(x, y, 0, 0, xSize, ySize);
 
@@ -89,7 +91,7 @@ public class GuiStorage extends GuiBase<ContainerBase> {
 
         renderString(7, 129, I18n.format("container.inventory"));
 
-        if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
+        if (RenderUtils.inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
             int full = 0;
 
             if (gui.getCapacity() >= 0) {

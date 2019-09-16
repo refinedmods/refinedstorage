@@ -4,11 +4,11 @@ import com.raoulvdberge.refinedstorage.item.*;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSItems {
-    public static final ItemWirelessGrid WIRELESS_GRID = new ItemWirelessGrid();
-    public static final ItemWirelessFluidGrid WIRELESS_FLUID_GRID = new ItemWirelessFluidGrid();
-    public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = new ItemWirelessCraftingMonitor();
-    public static final ItemCover COVER = new ItemCover();
-    public static final ItemHollowCover HOLLOW_COVER = new ItemHollowCover();
+    public static final ItemWirelessGrid WIRELESS_GRID = null;
+    public static final ItemWirelessFluidGrid WIRELESS_FLUID_GRID = null;
+    public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = null;
+    public static final ItemCover COVER = null;
+    public static final ItemHollowCover HOLLOW_COVER = null;
 
     @ObjectHolder(RS.ID + ":quartz_enriched_iron")
     public static final ItemQuartzEnrichedIron QUARTZ_ENRICHED_IRON = null;

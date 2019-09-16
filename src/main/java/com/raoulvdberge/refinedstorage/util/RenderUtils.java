@@ -1,15 +1,14 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -58,33 +57,6 @@ public final class RenderUtils {
             text = text.substring(0, length) + "...";
         }
         return text;
-    }
-
-    private static void setGLColorFromInt(int color) {
-        float red = (color >> 16 & 0xFF) / 255.0F;
-        float green = (color >> 8 & 0xFF) / 255.0F;
-        float blue = (color & 0xFF) / 255.0F;
-
-        GlStateManager.color4f(red, green, blue, 1.0F);
-    }
-
-    private static void drawFluidTexture(double xCoord, double yCoord, TextureAtlasSprite textureSprite, int maskTop, int maskRight, double zLevel) {
-        double uMin = (double) textureSprite.getMinU();
-        double uMax = (double) textureSprite.getMaxU();
-        double vMin = (double) textureSprite.getMinV();
-        double vMax = (double) textureSprite.getMaxV();
-        uMax = uMax - (maskRight / 16.0 * (uMax - uMin));
-        vMax = vMax - (maskTop / 16.0 * (vMax - vMin));
-
-        Tessellator tessellator = Tessellator.getInstance();
-
-        BufferBuilder vertexBuffer = tessellator.getBuffer();
-        vertexBuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vertexBuffer.pos(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
-        vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
-        vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
-        vertexBuffer.pos(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
-        tessellator.draw();
     }
 
     private static TRSRTransformation leftifyTransform(TRSRTransformation transform) {
@@ -326,20 +298,16 @@ public final class RenderUtils {
         }
     }
 
-    // @Volatile: From GuiScreen#getItemToolTip
-    public static List<ITextComponent> getItemTooltip(ItemStack stack) {
-        // TODO
-        List<ITextComponent> lines = stack.getTooltip(Minecraft.getInstance().player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+    // @Volatile: From Screen#getTooltipFromItem
+    public static List<String> getTooltipFromItem(ItemStack stack) {
+        List<ITextComponent> tooltip = stack.getTooltip(Minecraft.getInstance().player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+        List<String> tooltipStrings = Lists.newArrayList();
 
-        for (int i = 0; i < lines.size(); ++i) {
-            if (i == 0) {
-                //lines.set(i, stack.getItem().getRarity(stack).color + lines.get(i));
-            } else {
-                //lines.set(i, TextFormatting.GRAY + lines.get(i));
-            }
+        for (ITextComponent itextcomponent : tooltip) {
+            tooltipStrings.add(itextcomponent.getFormattedText());
         }
 
-        return lines;
+        return tooltipStrings;
     }
 
     public static boolean isLightMapDisabled() {
@@ -409,5 +377,9 @@ public final class RenderUtils {
         }
 
         return sprite;
+    }
+
+    public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
+        return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
     }
 }

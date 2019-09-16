@@ -1,9 +1,11 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.ContainerSecurityManager;
 import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -67,7 +69,7 @@ public class GuiSecurityManager extends GuiBase<ContainerSecurityManager> {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/security_manager.png");
+        bindTexture(RS.ID, "gui/security_manager.png");
 
         blit(x, y, 0, 0, xSize, ySize);
     }
@@ -81,7 +83,7 @@ public class GuiSecurityManager extends GuiBase<ContainerSecurityManager> {
         for (int i = 0; i < permissions.length; ++i) {
             GuiCheckBox permission = permissions[i];
 
-            if (inBounds(permission.x - guiLeft, permission.y - guiTop, permission.getWidth(), permission.getHeight(), mouseX, mouseY)) {
+            if (RenderUtils.inBounds(permission.x - guiLeft, permission.y - guiTop, permission.getWidth(), permission.getHeight(), mouseX, mouseY)) {
                 renderTooltip(mouseX, mouseY, I18n.format("gui.refinedstorage:security_manager.permission." + i + ".tooltip"));
             }
         }

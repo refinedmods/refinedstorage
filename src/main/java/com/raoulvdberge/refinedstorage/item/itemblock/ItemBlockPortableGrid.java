@@ -2,11 +2,10 @@ package com.raoulvdberge.refinedstorage.item.itemblock;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 
 public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
     public ItemBlockPortableGrid(BlockPortableGrid block) {
-        super(block, RS.INSTANCE.config.portableGridCapacity, new ItemInfo(RS.ID, "portable_grid"));
+        super(block, RS.INSTANCE.config.portableGridCapacity);
     }
 /* TODO
     @Override

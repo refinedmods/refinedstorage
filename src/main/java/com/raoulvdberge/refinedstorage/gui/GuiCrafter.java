@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -21,7 +22,7 @@ public class GuiCrafter extends GuiBase<ContainerCrafter> {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/crafter.png");
+        bindTexture(RS.ID, "gui/crafter.png");
 
         blit(x, y, 0, 0, xSize, ySize);
     }

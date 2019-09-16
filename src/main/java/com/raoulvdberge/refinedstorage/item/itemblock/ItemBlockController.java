@@ -1,12 +1,10 @@
 package com.raoulvdberge.refinedstorage.item.itemblock;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.BlockController;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
 
 public class ItemBlockController extends ItemBlockBase {
     public ItemBlockController(BlockController block) {
-        super(block, new ItemInfo(RS.ID, "controller"));
+        super(block);
 
         // setMaxStackSize(1);
     }
@@ -31,7 +29,7 @@ public class ItemBlockController extends ItemBlockBase {
         super.addInformation(stack, world, tooltip, flag);
 
         if (stack.getMetadata() != ControllerType.CREATIVE.getId()) {
-            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", getEnergyStored(stack), RS.INSTANCE.config.controllerCapacity));
+            tooltip.add(I18n.format("misc.refinedstorage.energy_stored", getEnergyStored(stack), RS.INSTANCE.config.controllerCapacity));
         }
     }
 

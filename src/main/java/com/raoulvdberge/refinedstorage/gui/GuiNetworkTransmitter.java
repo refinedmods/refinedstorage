@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerNetworkTransmitter;
 import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
@@ -26,7 +27,7 @@ public class GuiNetworkTransmitter extends GuiBase<ContainerNetworkTransmitter> 
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/network_transmitter.png");
+        bindTexture(RS.ID, "gui/network_transmitter.png");
 
         blit(x, y, 0, 0, xSize, ySize);
     }

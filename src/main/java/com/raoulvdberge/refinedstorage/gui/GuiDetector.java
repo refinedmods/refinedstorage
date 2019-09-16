@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerDetector;
 import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonCompare;
@@ -40,7 +41,7 @@ public class GuiDetector extends GuiBase<ContainerDetector> {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/detector.png");
+        bindTexture(RS.ID, "gui/detector.png");
 
         blit(x, y, 0, 0, xSize, ySize);
 

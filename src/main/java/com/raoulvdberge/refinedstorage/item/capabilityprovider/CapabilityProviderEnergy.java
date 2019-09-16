@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.item.capprovider;
+package com.raoulvdberge.refinedstorage.item.capabilityprovider;
 
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.ItemEnergyForge;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 public class CapabilityProviderEnergy implements ICapabilityProvider {
     private ItemStack stack;
     private int energyCapacity;
-    private LazyOptional<IEnergyStorage> cap = LazyOptional.of(() -> new ItemEnergyForge(stack, energyCapacity));
+    private LazyOptional<IEnergyStorage> capability = LazyOptional.of(() -> new ItemEnergyForge(stack, energyCapacity));
 
     public CapabilityProviderEnergy(ItemStack stack, int energyCapacity) {
         this.stack = stack;
@@ -32,7 +32,7 @@ public class CapabilityProviderEnergy implements ICapabilityProvider {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
         if (cap == CapabilityEnergy.ENERGY) {
-            return this.cap.cast();
+            return capability.cast();
         }
 
         return LazyOptional.empty();

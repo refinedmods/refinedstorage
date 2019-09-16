@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
 import com.raoulvdberge.refinedstorage.gui.widget.ScrollbarWidget;
@@ -91,7 +92,7 @@ public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/readerwriter.png");
+        bindTexture(RS.ID, "gui/readerwriter.png");
 
         blit(x, y, 0, 0, xSize, ySize);
 
@@ -149,7 +150,7 @@ public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
             return true;
         }
 
-        if (inBounds(8, 39, 144, 73, mouseX - guiLeft, mouseY - guiTop)) {
+        if (RenderUtils.inBounds(8, 39, 144, 73, mouseX - guiLeft, mouseY - guiTop)) {
             if (mouseButton == 0) {
                 int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
@@ -157,7 +158,7 @@ public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
                     int ix = 8;
                     int iy = 39 + (i * ITEM_HEIGHT);
 
-                    if (inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getChannels().size()) {
+                    if (RenderUtils.inBounds(ix, iy, ITEM_WIDTH, ITEM_HEIGHT, mouseX - guiLeft, mouseY - guiTop) && (item + i) < getChannels().size()) {
                         itemSelected = item + i;
 
                         TileDataManager.setParameter(readerWriter.getChannelParameter(), getChannels().get(itemSelected));

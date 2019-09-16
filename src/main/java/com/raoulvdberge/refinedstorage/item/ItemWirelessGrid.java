@@ -1,17 +1,23 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 
-public class ItemWirelessGrid extends ItemNetworkItem {
-    public ItemWirelessGrid(IItemInfo info) {
-        super(info, 0);
+import javax.annotation.Nonnull;
+
+public class ItemWirelessGrid extends ItemWithNetwork {
+    public ItemWirelessGrid(Properties item, boolean creative, int energyCapacity) {
+        super(item, creative, energyCapacity);
     }
 
-    public ItemWirelessGrid() {
-        this(new ItemInfo(RS.ID, "wireless_grid"));
+    @Nonnull
+    @Override
+    public INetworkItem provide(INetworkItemHandler handler, PlayerEntity player, ItemStack stack) {
+        return null;
     }
+
 /* TODO
     @Override
     @SideOnly(Side.CLIENT)

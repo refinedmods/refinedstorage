@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ContainerController;
 import com.raoulvdberge.refinedstorage.gui.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
@@ -48,7 +49,7 @@ public class GuiController extends GuiBase<ContainerController> {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/controller.png");
+        bindTexture(RS.ID, "gui/controller.png");
 
         blit(x, y, 0, 0, xSize, ySize);
 
@@ -93,7 +94,7 @@ public class GuiController extends GuiBase<ContainerController> {
 
                 GlStateManager.popMatrix();
 
-                if (inBounds(x, y, 16, 16, mouseX, mouseY)) {
+                if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY)) {
                     nodeHovering = node;
                 }
             }
@@ -109,11 +110,11 @@ public class GuiController extends GuiBase<ContainerController> {
         }
 
         if (nodeHovering != null) {
-            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage:energy_usage_minimal", nodeHovering.getEnergyUsage()));
+            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage_minimal", nodeHovering.getEnergyUsage()));
         }
 
-        if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
-            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage:energy_usage", TileController.ENERGY_USAGE.getValue()) + "\n" + I18n.format("misc.refinedstorage:energy_stored", TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue()));
+        if (RenderUtils.inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
+            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage", TileController.ENERGY_USAGE.getValue()) + "\n" + I18n.format("misc.refinedstorage.energy_stored", TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue()));
         }
     }
 

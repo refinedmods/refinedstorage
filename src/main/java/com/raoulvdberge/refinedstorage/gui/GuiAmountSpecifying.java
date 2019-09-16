@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui;
 
+import com.raoulvdberge.refinedstorage.RS;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -103,7 +104,7 @@ public abstract class GuiAmountSpecifying<T extends Container> extends GuiBase<T
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture(getTexture());
+        bindTexture(RS.ID, getTexture());
 
         blit(x, y, 0, 0, xSize, ySize);
 

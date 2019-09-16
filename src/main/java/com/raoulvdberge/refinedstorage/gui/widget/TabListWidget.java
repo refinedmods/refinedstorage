@@ -1,9 +1,11 @@
 package com.raoulvdberge.refinedstorage.gui.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
 
@@ -67,7 +69,7 @@ public class TabListWidget {
                 if (i < tabs.get().size()) {
                     drawTab(tabs.get().get(i), true, x, y, i, j);
 
-                    if (gui.inBounds(x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * j), y, IGridTab.TAB_WIDTH, IGridTab.TAB_HEIGHT - (i == selected.get() ? 2 : 7), mouseX, mouseY)) {
+                    if (RenderUtils.inBounds(x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * j), y, IGridTab.TAB_WIDTH, IGridTab.TAB_HEIGHT - (i == selected.get() ? 2 : 7), mouseX, mouseY)) {
                         this.tabHovering = i;
                     }
 
@@ -130,7 +132,7 @@ public class TabListWidget {
 
         GlStateManager.enableAlphaTest();
 
-        gui.bindTexture("icons.png");
+        gui.bindTexture(RS.ID, "icons.png");
 
         if (!isSelected) {
             ty += 3;

@@ -131,7 +131,7 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture("gui/crafter_manager.png");
+        bindTexture(RS.ID, "gui/crafter_manager.png");
 
         blit(x, y, 0, 0, xSize, getTopHeight());
 
@@ -202,7 +202,7 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
                     GlStateManager.disableLighting();
                     GlStateManager.color3f(1, 1, 1);
 
-                    bindTexture("gui/crafter_manager.png");
+                    bindTexture(RS.ID, "gui/crafter_manager.png");
 
                     blit(7, y, 0, 174, 18 * 9, 18);
 

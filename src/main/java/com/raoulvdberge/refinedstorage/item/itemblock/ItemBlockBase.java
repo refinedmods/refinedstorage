@@ -1,14 +1,13 @@
 package com.raoulvdberge.refinedstorage.item.itemblock;
 
 import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
 public class ItemBlockBase extends BlockItem {
     private BlockBase block;
 
-    public ItemBlockBase(BlockBase block, IItemInfo info) {
+    public ItemBlockBase(BlockBase block) {
         super(block, new Item.Properties());
 
         this.block = block;

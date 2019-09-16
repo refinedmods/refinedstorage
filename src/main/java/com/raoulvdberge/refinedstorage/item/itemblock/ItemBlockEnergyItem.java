@@ -1,8 +1,7 @@
 package com.raoulvdberge.refinedstorage.item.itemblock;
 
 import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.item.capprovider.CapabilityProviderEnergy;
-import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
+import com.raoulvdberge.refinedstorage.item.capabilityprovider.CapabilityProviderEnergy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -13,8 +12,8 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
 
     private int energyCapacity;
 
-    public ItemBlockEnergyItem(BlockBase block, int energyCapacity, IItemInfo info) {
-        super(block, info);
+    public ItemBlockEnergyItem(BlockBase block, int energyCapacity) {
+        super(block);
 
         this.energyCapacity = energyCapacity;
 
@@ -86,7 +85,7 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
         if (stack.getItemDamage() != TYPE_CREATIVE) {
             IEnergyStorage energy = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
-            tooltip.add(I18n.format("misc.refinedstorage:energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()));
+            tooltip.add(I18n.format("misc.refinedstorage.energy_stored", energy.getEnergyStored(), energy.getMaxEnergyStored()));
         }
     }*/
 }

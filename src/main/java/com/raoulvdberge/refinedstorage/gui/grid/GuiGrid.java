@@ -229,7 +229,7 @@ public class GuiGrid extends GuiBase<ContainerGrid> implements IResizableDisplay
     }
 
     public boolean isOverSlotArea(int mouseX, int mouseY) {
-        return inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
+        return RenderUtils.inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
     public int getSlotNumber() {
@@ -241,20 +241,20 @@ public class GuiGrid extends GuiBase<ContainerGrid> implements IResizableDisplay
 
         switch (grid.getGridType()) {
             case CRAFTING:
-                return inBounds(82, y, 7, 7, mouseX, mouseY);
+                return RenderUtils.inBounds(82, y, 7, 7, mouseX, mouseY);
             case PATTERN:
                 if (((NetworkNodeGrid) grid).isProcessingPattern()) {
-                    return inBounds(154, y, 7, 7, mouseX, mouseY);
+                    return RenderUtils.inBounds(154, y, 7, 7, mouseX, mouseY);
                 }
 
-                return inBounds(82, y, 7, 7, mouseX, mouseY);
+                return RenderUtils.inBounds(82, y, 7, 7, mouseX, mouseY);
             default:
                 return false;
         }
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getGridType() == GridType.PATTERN && inBounds(172, getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
+        return grid.getGridType() == GridType.PATTERN && RenderUtils.inBounds(172, getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
     }
 
     @Override
@@ -262,13 +262,13 @@ public class GuiGrid extends GuiBase<ContainerGrid> implements IResizableDisplay
         tabs.drawBackground(x, y - tabs.getHeight());
 
         if (grid instanceof IPortableGrid) {
-            bindTexture("gui/portable_grid.png");
+            bindTexture(RS.ID, "gui/portable_grid.png");
         } else if (grid.getGridType() == GridType.CRAFTING) {
-            bindTexture("gui/crafting_grid.png");
+            bindTexture(RS.ID, "gui/crafting_grid.png");
         } else if (grid.getGridType() == GridType.PATTERN) {
-            bindTexture("gui/pattern_grid" + (((NetworkNodeGrid) grid).isProcessingPattern() ? "_processing" : "") + ".png");
+            bindTexture(RS.ID, "gui/pattern_grid" + (((NetworkNodeGrid) grid).isProcessingPattern() ? "_processing" : "") + ".png");
         } else {
-            bindTexture("gui/grid.png");
+            bindTexture(RS.ID, "gui/grid.png");
         }
 
         int yy = y;
@@ -337,7 +337,7 @@ public class GuiGrid extends GuiBase<ContainerGrid> implements IResizableDisplay
         RenderHelper.enableGUIStandardItemLighting();
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
-            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
+            if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
                 this.slotNumber = slot;
             }
 
@@ -345,7 +345,7 @@ public class GuiGrid extends GuiBase<ContainerGrid> implements IResizableDisplay
                 view.getStacks().get(slot).draw(this, x, y);
             }
 
-            if (inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
+            if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
                 int color = grid.isActive() ? -2130706433 : 0xFF5B5B5B;
 
                 GlStateManager.disableLighting();

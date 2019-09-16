@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
@@ -231,7 +232,7 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
             tabs.drawBackground(x, y - tabs.getHeight());
         }
 
-        bindTexture("gui/crafting_preview.png");
+        bindTexture(RS.ID, "gui/crafting_preview.png");
 
         blit(x, y, 0, 0, xSize, ySize);
 
@@ -257,7 +258,7 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
 
                 element.draw(x, y, drawers);
 
-                if (inBounds(x, y, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
+                if (RenderUtils.inBounds(x, y, ITEM_WIDTH, ITEM_HEIGHT, mouseX, mouseY)) {
                     itemSelectedTooltip = element.getTooltip();
                 }
 

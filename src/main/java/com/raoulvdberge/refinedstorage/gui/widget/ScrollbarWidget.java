@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.gui.widget;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +52,7 @@ public class ScrollbarWidget {
     }
 
     public void draw(GuiBase gui) {
-        gui.bindTexture("icons.png");
+        gui.bindTexture(RS.ID, "icons.png");
         gui.blit(gui.getGuiLeft() + x, gui.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
     }
 
@@ -62,7 +64,7 @@ public class ScrollbarWidget {
             // TODO boolean down = Mouse.isButtonDown(0);
             boolean down = false;
 
-            if (!wasClicking && down && gui.inBounds(x, y, width, height, mouseX, mouseY)) {
+            if (!wasClicking && down && RenderUtils.inBounds(x, y, width, height, mouseX, mouseY)) {
                 isScrolling = true;
             }
 

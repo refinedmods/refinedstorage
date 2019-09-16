@@ -1,25 +1,19 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.item.info.IItemInfo;
-import com.raoulvdberge.refinedstorage.item.info.ItemInfo;
+import net.minecraft.item.Item;
 
-public class ItemCover extends ItemBase {
+public class ItemCover extends Item {
     private static final String NBT_ITEM = "Item";
 
     // public static final ItemStack HIDDEN_COVER_ALTERNATIVE = new ItemStack(Blocks.STONEBRICK);
 
-    public ItemCover(IItemInfo info) {
-        super(info);
+    public ItemCover() {
+        super(null);
 
         //setCreativeTab(RS.INSTANCE.coversTab);
     }
 
-    public ItemCover() {
-        this(new ItemInfo(RS.ID, "cover"));
-    }
-
-    /*
+    /* TODO
     @Override
     @SideOnly(Side.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {

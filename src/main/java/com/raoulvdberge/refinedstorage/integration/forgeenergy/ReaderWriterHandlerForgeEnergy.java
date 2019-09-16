@@ -137,7 +137,7 @@ public class ReaderWriterHandlerForgeEnergy implements IReaderWriterHandler {
             return Collections.emptyList();
         }
 
-        return Collections.singletonList(new TextComponentTranslation("misc.refinedstorage:energy_stored", storage.getEnergyStored(), storage.getMaxEnergyStored()));
+        return Collections.singletonList(new TextComponentTranslation("misc.refinedstorage.energy_stored", storage.getEnergyStored(), storage.getMaxEnergyStored()));
     }
 
     private class EnergyStorageReaderWriter implements IEnergyStorage {
