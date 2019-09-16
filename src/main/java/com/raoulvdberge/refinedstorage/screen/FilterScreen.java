@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
+import org.lwjgl.glfw.GLFW;
 
 public class FilterScreen extends BaseScreen<ContainerFilter> {
     private ItemStack stack;
@@ -84,6 +85,19 @@ public class FilterScreen extends BaseScreen<ContainerFilter> {
         toggleMode.setWidth(font.getStringWidth(text) + 12);
         toggleMode.setMessage(text);
         toggleModFilter.x = toggleMode.x + toggleMode.getWidth() + 4;
+    }
+
+    @Override
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if (key == GLFW.GLFW_KEY_ESCAPE) {
+            minecraft.player.closeScreen();
+        }
+
+        if (nameField.keyPressed(key, scanCode, modifiers) || nameField.func_212955_f()) {
+            return true;
+        }
+
+        return super.keyPressed(key, scanCode, modifiers);
     }
 
     @Override
