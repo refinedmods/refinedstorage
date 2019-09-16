@@ -124,16 +124,6 @@ public final class RS {
     }
 
     @EventHandler
-    public void init(FMLInitializationEvent e) {
-        PROXY.init(e);
-    }
-
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent e) {
-        PROXY.postInit(e);
-    }
-
-    @EventHandler
     public void onServerStarting(FMLServerStartingEvent e) {
         e.registerServerCommand(new CommandCreateDisk());
     }

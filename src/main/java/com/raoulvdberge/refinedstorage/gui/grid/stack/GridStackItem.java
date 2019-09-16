@@ -2,12 +2,9 @@ package com.raoulvdberge.refinedstorage.gui.grid.stack;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
 
 import javax.annotation.Nullable;
 
@@ -28,16 +25,12 @@ public class GridStackItem implements IGridStack {
         this.stack = stack;
     }
 
-    public GridStackItem(PacketBuffer buf) {
-        this.stack = StackUtils.readItemStack(buf);
-        this.hash = buf.readInt();
-        this.craftable = buf.readBoolean();
-
-        setDisplayCraftText(buf.readBoolean());
-
-        if (buf.readBoolean()) {
-            this.entry = new StorageTrackerEntry(buf);
-        }
+    public GridStackItem(int hash, ItemStack stack, boolean craftable, boolean displayCraftText, IStorageTracker.IStorageTrackerEntry entry) {
+        this.hash = hash;
+        this.stack = stack;
+        this.craftable = craftable;
+        this.displayCraftText = displayCraftText;
+        this.entry = entry;
     }
 
     @Nullable

@@ -37,43 +37,41 @@ public class FluidGridHandler implements IFluidGridHandler {
             return;
         }
 
-        if (StackUtils.hasFluidBucket(stack)) {
-            ItemStack bucket = null;
+        ItemStack bucket = ItemStack.EMPTY;
 
-            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-                ItemStack slot = player.inventory.getStackInSlot(i);
+        for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+            ItemStack slot = player.inventory.getStackInSlot(i);
 
-                if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
-                    bucket = StackUtils.EMPTY_BUCKET.copy();
+            if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
+                bucket = StackUtils.EMPTY_BUCKET.copy();
 
-                    player.inventory.decrStackSize(i, 1);
+                player.inventory.decrStackSize(i, 1);
 
-                    break;
-                }
+                break;
             }
+        }
 
-            if (bucket == null) {
-                bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM);
-            }
+        if (bucket.isEmpty()) {
+            bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM);
+        }
 
-            if (bucket != null) {
-                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
-                    network.getFluidStorageTracker().changed(player, stack.copy());
+        if (!bucket.isEmpty()) {
+            bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
+                network.getFluidStorageTracker().changed(player, stack.copy());
 
-                    fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
+                fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
-                    if (shift) {
-                        if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                            InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
-                        }
-                    } else {
-                        player.inventory.setItemStack(fluidHandler.getContainer());
-                        player.updateHeldItem();
+                if (shift) {
+                    if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
+                        InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
                     }
+                } else {
+                    player.inventory.setItemStack(fluidHandler.getContainer());
+                    player.updateHeldItem();
+                }
 
-                    network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridExtractUsage);
-                });
-            }
+                network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridExtractUsage);
+            });
         }
     }
 

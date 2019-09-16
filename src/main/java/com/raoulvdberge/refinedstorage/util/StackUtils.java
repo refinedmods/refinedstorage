@@ -1,9 +1,13 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,7 +25,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -34,21 +37,45 @@ public final class StackUtils {
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
 
-    // TODO: can we remove this?
-    public static void writeItemStack(PacketBuffer buf, ItemStack stack) {
-        buf.writeInt(Item.getIdFromItem(stack.getItem()));
-        buf.writeInt(stack.getCount());
-        buf.writeCompoundTag(stack.getItem().getShareTag(stack));
+    // @Volatile: from PacketBuffer#writeItemStack, with some tweaks to allow int stack counts
+    public static void writeItemStack(PacketBuffer buf, @Nonnull ItemStack stack) {
+        if (stack.isEmpty()) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+
+            Item item = stack.getItem();
+
+            buf.writeVarInt(Item.getIdFromItem(item));
+            buf.writeByte(stack.getCount());
+
+            CompoundNBT tag = null;
+
+            if (item.isDamageable() || item.shouldSyncTag()) {
+                tag = stack.getTag();
+            }
+
+            buf.writeCompoundTag(tag);
+        }
     }
 
-    // TODO: Removal
+    // @Volatile: from PacketBuffer#readItemStack, with some tweaks to allow int stack counts
     public static ItemStack readItemStack(PacketBuffer buf) {
-        ItemStack stack = new ItemStack(Item.getItemById(buf.readInt()), buf.readInt());
-        stack.setTag(buf.readCompoundTag());
-        return stack;
+        if (!buf.readBoolean()) {
+            return ItemStack.EMPTY;
+        } else {
+            int id = buf.readVarInt();
+            int count = buf.readByte();
+
+            ItemStack stack = new ItemStack(Item.getItemById(id), count);
+
+            stack.readShareTag(buf.readCompoundTag());
+
+            return stack;
+        }
     }
 
-    public static void writeItemStack(PacketBuffer buf, ItemStack stack, @Nullable INetwork network, boolean displayCraftText) {
+    public static void writeItemGridStack(PacketBuffer buf, ItemStack stack, @Nullable INetwork network, boolean displayCraftText, @Nullable IStorageTracker.IStorageTrackerEntry entry) {
         writeItemStack(buf, stack);
 
         buf.writeInt(API.instance().getItemStackHashCode(stack));
@@ -60,28 +87,66 @@ public final class StackUtils {
             buf.writeBoolean(false);
             buf.writeBoolean(false);
         }
+
+        if (entry == null) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+
+            buf.writeLong(entry.getTime());
+            buf.writeString(entry.getName());
+        }
     }
 
-    public static void writeFluidStackAndHash(PacketBuffer buf, FluidStack stack) {
+    public static GridStackItem readItemGridStack(PacketBuffer buf) {
+        ItemStack stack = readItemStack(buf);
+        int hash = buf.readInt();
+        boolean craftable = buf.readBoolean();
+        boolean displayCraftText = buf.readBoolean();
+
+        IStorageTracker.IStorageTrackerEntry entry = null;
+        if (buf.readBoolean()) {
+            entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
+        }
+
+        return new GridStackItem(hash, stack, craftable, displayCraftText, entry);
+    }
+
+    public static void writeFluidGridStack(PacketBuffer buf, FluidStack stack, @Nullable INetwork network, boolean displayCraftText, @Nullable IStorageTracker.IStorageTrackerEntry entry) {
+        stack.writeToPacket(buf);
+
         buf.writeInt(API.instance().getFluidStackHashCode(stack));
 
-        writeFluidStack(buf, stack);
+        if (network != null) {
+            buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
+            buf.writeBoolean(displayCraftText);
+        } else {
+            buf.writeBoolean(false);
+            buf.writeBoolean(false);
+        }
+
+        if (entry == null) {
+            buf.writeBoolean(false);
+        } else {
+            buf.writeBoolean(true);
+
+            buf.writeLong(entry.getTime());
+            buf.writeString(entry.getName());
+        }
     }
 
-    // TODO: Removal
-    public static void writeFluidStack(PacketBuffer buf, FluidStack stack) {
-        buf.writeResourceLocation(stack.getFluid().getRegistryName()); // TODO: Probably wrong
-        buf.writeInt(stack.getAmount());
-        buf.writeCompoundTag(stack.getTag());
-    }
+    public static GridStackFluid readFluidGridStack(PacketBuffer buf) {
+        FluidStack stack = FluidStack.readFromPacket(buf);
+        int hash = buf.readInt();
+        boolean craftable = buf.readBoolean();
+        boolean displayCraftText = buf.readBoolean();
 
-    // TODO: Removal
-    public static FluidStack readFluidStack(PacketBuffer buf) {
-        return new FluidStack(ForgeRegistries.FLUIDS.getValue(buf.readResourceLocation()), buf.readInt(), buf.readCompoundTag());
-    }
+        IStorageTracker.IStorageTrackerEntry entry = null;
+        if (buf.readBoolean()) {
+            entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
+        }
 
-    public static Pair<Integer, FluidStack> readFluidStackAndHash(PacketBuffer buf) {
-        return Pair.of(buf.readInt(), readFluidStack(buf));
+        return new GridStackFluid(hash, stack, entry, craftable, displayCraftText);
     }
 
     public static ItemStack nullToEmpty(@Nullable ItemStack stack) {
@@ -195,14 +260,6 @@ public final class StackUtils {
         }
     }
 
-    public static boolean hasFluidBucket(FluidStack stack) {
-        return true; // TODO
-        /*return stack.getFluid() == Fluids.WATER ||
-            stack.getFluid() == Fluids.LAVA ||
-            //stack.getFluid().getName().equals("milk") ||
-            FluidRegistry.getBucketFluids().contains(stack.getFluid());*/
-    }
-
     public static FluidStack copy(FluidStack stack, int size) {
         FluidStack copy = stack.copy();
         copy.setAmount(size);
@@ -249,7 +306,6 @@ public final class StackUtils {
             itemTag.put(NBT_ITEM_NBT, stack.getTag());
         }
 
-        // TODO: Better way now?
         stack.write(dummy);
 
         if (dummy.contains("ForgeCaps")) {
