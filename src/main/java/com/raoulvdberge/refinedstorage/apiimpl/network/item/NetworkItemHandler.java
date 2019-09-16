@@ -41,7 +41,7 @@ public class NetworkItemHandler implements INetworkItemHandler {
         }
 
         if (!inRange) {
-            player.sendMessage(new TranslationTextComponent("misc.refinedstorage:network_item.out_of_range"));
+            player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_range"));
 
             return;
         }

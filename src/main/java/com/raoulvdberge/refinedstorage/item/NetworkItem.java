@@ -54,7 +54,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
 
     private void applyNetwork(MinecraftServer server, ItemStack stack, Consumer<INetwork> onNetwork, Consumer<ITextComponent> onError) {
         if (!isValid(stack)) {
-            onError.accept(new TranslationTextComponent("misc.refinedstorage:network_item.not_found"));
+            onError.accept(new TranslationTextComponent("misc.refinedstorage.network_item.not_found"));
         } else {
             World networkWorld = DimensionManager.getWorld(server, getDimension(stack), true, true);
 
@@ -63,7 +63,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             if (networkWorld != null && ((network = networkWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof INetwork)) {
                 onNetwork.accept((INetwork) network);
             } else {
-                onError.accept(new TranslationTextComponent("misc.refinedstorage:network_item.not_found"));
+                onError.accept(new TranslationTextComponent("misc.refinedstorage.network_item.not_found"));
             }
         }
     }
@@ -73,7 +73,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         super.addInformation(stack, world, tooltip, flag);
 
         if (isValid(stack)) {
-            tooltip.add(new TranslationTextComponent("misc.refinedstorage:network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(new Style().setColor(TextFormatting.GRAY)));
+            tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_item.tooltip", getX(stack), getY(stack), getZ(stack)).setStyle(new Style().setColor(TextFormatting.GRAY)));
         }
     }
 
