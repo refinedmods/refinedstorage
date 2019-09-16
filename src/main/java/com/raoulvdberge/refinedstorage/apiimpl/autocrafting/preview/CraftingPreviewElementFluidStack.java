@@ -4,8 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -78,13 +78,13 @@ public class CraftingPreviewElementFluidStack implements ICraftingPreviewElement
 
         if (getToCraft() > 0) {
             String format = hasMissing() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), GuiBase.t(format, API.instance().getQuantityFormatter().formatInBucketForm(getToCraft())));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, API.instance().getQuantityFormatter().formatInBucketForm(getToCraft())));
 
             y += 7;
         }
 
         if (getAvailable() > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), GuiBase.t("gui.refinedstorage:crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(getAvailable())));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage:crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(getAvailable())));
         }
 
         GlStateManager.popMatrix();

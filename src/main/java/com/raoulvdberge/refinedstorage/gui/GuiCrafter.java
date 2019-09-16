@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 public class GuiCrafter extends GuiBase<ContainerCrafter> {
@@ -15,19 +16,19 @@ public class GuiCrafter extends GuiBase<ContainerCrafter> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/crafter.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, RenderUtils.shorten(t(TileCrafter.NAME.getValue()), 26));
-        drawString(7, 43, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, RenderUtils.shorten(I18n.format(TileCrafter.NAME.getValue()), 26));
+        renderString(7, 43, I18n.format("container.inventory"));
     }
 }

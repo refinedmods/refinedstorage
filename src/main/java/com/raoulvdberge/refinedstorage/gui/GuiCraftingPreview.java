@@ -4,17 +4,18 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
-import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementError;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
-import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
+import com.raoulvdberge.refinedstorage.apiimpl.render.CraftingPreviewElementDrawers;
+import com.raoulvdberge.refinedstorage.gui.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
@@ -26,24 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiCraftingPreview extends GuiBase {
-    public class CraftingPreviewElementDrawers extends ElementDrawers {
-        private IElementDrawer<Integer> overlayDrawer = (x, y, colour) -> {
-            GlStateManager.color4f(1, 1, 1, 1);
-            GlStateManager.disableLighting();
-
-            fill(x, y, x + 73, y + 29, colour);
-        };
-
-        @Override
-        public IElementDrawer<Integer> getOverlayDrawer() {
-            return overlayDrawer;
-        }
-    }
-
     private static final int VISIBLE_ROWS = 5;
 
     private List<ICraftingPreviewElement> stacks;
     private Screen parent;
+
+    private ScrollbarWidget scrollbar;
 
     private int hash;
     private int quantity;
@@ -54,7 +43,7 @@ public class GuiCraftingPreview extends GuiBase {
     private ItemStack hoveringStack;
     private FluidStack hoveringFluid;
 
-    private IElementDrawers drawers = new CraftingPreviewElementDrawers();
+    private IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
 
     private boolean fluids;
 
@@ -73,18 +62,22 @@ public class GuiCraftingPreview extends GuiBase {
         this.quantity = quantity;
         this.fluids = fluids;
 
-        this.scrollbar = new Scrollbar(235, 20, 12, 149);
+        this.scrollbar = new ScrollbarWidget(235, 20, 12, 149);
     }
 
     @Override
     public void init(int x, int y) {
-        cancelButton = addButton(x + 55, y + 201 - 20 - 7, 50, 20, t("gui.cancel"));
-        startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, t("misc.refinedstorage:start"));
-        startButton.active = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null; // TODO enabled?
+        cancelButton = addButton(x + 55, y + 201 - 20 - 7, 50, 20, I18n.format("gui.cancel"), true, true, btn -> {
+        });
+
+        startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, I18n.format("misc.refinedstorage:start"), true, true, btn -> {
+        });
+
+        startButton.active = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null;
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
         if (scrollbar != null) {
             scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
             scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
@@ -101,10 +94,10 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/crafting_preview.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
 
         if (getErrorType() != null) {
             fill(x + 7, y + 20, x + 228, y + 169, 0xFFDBDBDB);
@@ -112,8 +105,8 @@ public class GuiCraftingPreview extends GuiBase {
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:crafting_preview"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:crafting_preview"));
 
         int x = 7;
         int y = 15;
@@ -124,16 +117,16 @@ public class GuiCraftingPreview extends GuiBase {
             GlStateManager.pushMatrix();
             GlStateManager.scalef(scale, scale, 1);
 
-            drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), t("gui.refinedstorage:crafting_preview.error"));
+            renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), I18n.format("gui.refinedstorage:crafting_preview.error"));
 
             switch (getErrorType()) {
                 case RECURSIVE: {
-                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), t("gui.refinedstorage:crafting_preview.error.recursive.0"));
-                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), t("gui.refinedstorage:crafting_preview.error.recursive.1"));
-                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 41, scale), t("gui.refinedstorage:crafting_preview.error.recursive.2"));
-                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 51, scale), t("gui.refinedstorage:crafting_preview.error.recursive.3"));
+                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage:crafting_preview.error.recursive.0"));
+                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage:crafting_preview.error.recursive.1"));
+                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 41, scale), I18n.format("gui.refinedstorage:crafting_preview.error.recursive.2"));
+                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 51, scale), I18n.format("gui.refinedstorage:crafting_preview.error.recursive.3"));
 
-                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), t("gui.refinedstorage:crafting_preview.error.recursive.4"));
+                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), I18n.format("gui.refinedstorage:crafting_preview.error.recursive.4"));
 
                     GlStateManager.popMatrix();
 
@@ -144,12 +137,12 @@ public class GuiCraftingPreview extends GuiBase {
                         if (output != null) {
                             GlStateManager.pushMatrix();
                             GlStateManager.scalef(scale, scale, 1);
-                            drawString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getFormattedText()); // TODO getFOrmattedText
+                            renderString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getFormattedText()); // TODO getFOrmattedText
                             GlStateManager.popMatrix();
 
                             RenderHelper.enableGUIStandardItemLighting();
                             GlStateManager.enableDepthTest();
-                            drawItem(x + 5, yy, output);
+                            renderItem(x + 5, yy, output);
                             RenderHelper.disableStandardItemLighting();
 
                             yy += 17;
@@ -159,8 +152,8 @@ public class GuiCraftingPreview extends GuiBase {
                     break;
                 }
                 case TOO_COMPLEX: {
-                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), t("gui.refinedstorage:crafting_preview.error.too_complex.0"));
-                    drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), t("gui.refinedstorage:crafting_preview.error.too_complex.1"));
+                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage:crafting_preview.error.too_complex.0"));
+                    renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage:crafting_preview.error.too_complex.1"));
 
                     GlStateManager.popMatrix();
 
@@ -208,9 +201,9 @@ public class GuiCraftingPreview extends GuiBase {
         super.render(mouseX, mouseY, partialTicks);
 
         if (hoveringStack != null) {
-            drawTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getInstance().player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
+            renderTooltip(hoveringStack, mouseX, mouseY, hoveringStack.getTooltip(Minecraft.getInstance().player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL));
         } else if (hoveringFluid != null) {
-            drawTooltip(mouseX, mouseY, hoveringFluid.getDisplayName().getFormattedText()); // TODO gft
+            renderTooltip(mouseX, mouseY, hoveringFluid.getDisplayName().getFormattedText()); // TODO gft
         }
     }
 

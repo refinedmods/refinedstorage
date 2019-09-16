@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.gui;
 
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonCrafterMode;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonCrafterMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameterClientListener;
 
 public class TileDataParameterClientListenerCrafter implements TileDataParameterClientListener<Boolean> {

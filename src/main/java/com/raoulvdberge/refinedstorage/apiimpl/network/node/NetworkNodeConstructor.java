@@ -101,7 +101,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                         dropItem();
                     }
                 }
-            } else if (type == IType.FLUIDS && fluidFilters.getFluid(0) != null) {
+            } else if (type == IType.FLUIDS && !fluidFilters.getFluid(0).isEmpty()) {
                 /*TODO FluidStack stack = fluidFilters.getFluid(0);
 
                 if (stack != null && stack.getFluid().getAttributes().canBePlacedInWorld()) {

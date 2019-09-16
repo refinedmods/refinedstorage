@@ -2,11 +2,12 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerDetector;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonDetectorMode;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonType;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonCompare;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonDetectorMode;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonType;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 public class GuiDetector extends GuiBase<ContainerDetector> {
@@ -34,22 +35,22 @@ public class GuiDetector extends GuiBase<ContainerDetector> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/detector.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
 
         amount.renderButton(0, 0, 0);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:detector"));
-        drawString(7, 43, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:detector"));
+        renderString(7, 43, I18n.format("container.inventory"));
     }
 
     /* TODO

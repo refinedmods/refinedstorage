@@ -1,7 +1,8 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonGridViewType extends SideButton {
@@ -15,16 +16,16 @@ public class SideButtonGridViewType extends SideButton {
 
     @Override
     public String getTooltip() {
-        return GuiBase.t("sidebutton.refinedstorage:grid.view_type") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:grid.view_type." + grid.getViewType());
+        return I18n.format("sidebutton.refinedstorage:grid.view_type") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:grid.view_type." + grid.getViewType());
     }
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, (grid.getViewType() - (grid.getViewType() >= 3 ? 3 : 0)) * 16, 112, 16, 16);
+        gui.blit(x, y, (grid.getViewType() - (grid.getViewType() >= 3 ? 3 : 0)) * 16, 112, 16, 16);
     }
 
     @Override
-    public void actionPerformed() {
+    public void onPress() {
         int type = grid.getViewType();
 
         if (type == IGrid.VIEW_TYPE_NORMAL) {

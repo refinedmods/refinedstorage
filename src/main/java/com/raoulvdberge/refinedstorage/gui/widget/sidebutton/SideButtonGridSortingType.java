@@ -1,9 +1,10 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonGridSortingType extends SideButton {
@@ -17,20 +18,20 @@ public class SideButtonGridSortingType extends SideButton {
 
     @Override
     public String getTooltip() {
-        return GuiBase.t("sidebutton.refinedstorage:grid.sorting.type") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:grid.sorting.type." + grid.getSortingType());
+        return I18n.format("sidebutton.refinedstorage:grid.sorting.type") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:grid.sorting.type." + grid.getSortingType());
     }
 
     @Override
     protected void drawButtonIcon(int x, int y) {
         if (grid.getSortingType() == IGrid.SORTING_TYPE_LAST_MODIFIED) {
-            gui.drawTexture(x, y, 48, 48, 16, 16);
+            gui.blit(x, y, 48, 48, 16, 16);
         } else {
-            gui.drawTexture(x, y, grid.getSortingType() * 16, 32, 16, 16);
+            gui.blit(x, y, grid.getSortingType() * 16, 32, 16, 16);
         }
     }
 
     @Override
-    public void actionPerformed() {
+    public void onPress() {
         int type = grid.getSortingType();
 
         if (type == IGrid.SORTING_TYPE_QUANTITY) {

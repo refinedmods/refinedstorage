@@ -74,7 +74,7 @@ public class FluidGridHandlerPortable implements IFluidGridHandler {
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack container) {
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
-        if (result.getValue() != null && portableGrid.getFluidStorage().insert(result.getValue(), result.getValue().getAmount(), Action.SIMULATE) == null) {
+        if (portableGrid.getFluidStorage().insert(result.getValue(), result.getValue().getAmount(), Action.SIMULATE) == null) {
             portableGrid.getFluidStorageTracker().changed(player, result.getValue().copy());
 
             result = StackUtils.getFluid(container, false);

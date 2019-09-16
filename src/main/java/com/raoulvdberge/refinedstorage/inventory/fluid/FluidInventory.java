@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.inventory.fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
@@ -18,6 +19,11 @@ public class FluidInventory {
 
     public FluidInventory(int size, int maxAmount, @Nullable Consumer<Integer> listener) {
         this.fluids = new FluidStack[size];
+
+        for (int i = 0; i < size; ++i) {
+            fluids[i] = FluidStack.EMPTY;
+        }
+
         this.maxAmount = maxAmount;
         this.listener = listener;
     }
@@ -42,13 +48,17 @@ public class FluidInventory {
         return fluids;
     }
 
-    @Nullable
+    @Nonnull
     public FluidStack getFluid(int slot) {
         return fluids[slot];
     }
 
-    public void setFluid(int slot, @Nullable FluidStack stack) {
-        if (stack != null && stack.getAmount() <= 0 && stack.getAmount() > maxAmount) {
+    public void setFluid(int slot, @Nonnull FluidStack stack) {
+        if (stack == null) {
+            throw new IllegalArgumentException("Stack can't be null");
+        }
+
+        if (stack.getAmount() > maxAmount) {
             throw new IllegalArgumentException("Fluid size is invalid (given: " + stack.getAmount() + ", max size: " + maxAmount + ")");
         }
 
@@ -67,7 +77,7 @@ public class FluidInventory {
         for (int i = 0; i < getSlots(); ++i) {
             FluidStack stack = getFluid(i);
 
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 tag.put(String.format(NBT_SLOT, i), stack.writeToNBT(new CompoundNBT()));
             }
         }
@@ -91,7 +101,7 @@ public class FluidInventory {
         this.empty = true;
 
         for (FluidStack fluid : fluids) {
-            if (fluid != null) {
+            if (!fluid.isEmpty()) {
                 this.empty = false;
 
                 return;

@@ -1,9 +1,10 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.NetworkNodeDiskManipulator;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonIOMode extends SideButton {
@@ -13,16 +14,16 @@ public class SideButtonIOMode extends SideButton {
 
     @Override
     public String getTooltip() {
-        return GuiBase.t("sidebutton.refinedstorage:iomode") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:iomode." + (TileDiskManipulator.IO_MODE.getValue() == NetworkNodeDiskManipulator.IO_MODE_INSERT ? "insert" : "extract"));
+        return I18n.format("sidebutton.refinedstorage:iomode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:iomode." + (TileDiskManipulator.IO_MODE.getValue() == NetworkNodeDiskManipulator.IO_MODE_INSERT ? "insert" : "extract"));
     }
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, TileDiskManipulator.IO_MODE.getValue() == NetworkNodeDiskManipulator.IO_MODE_EXTRACT ? 0 : 16, 160, 16, 16);
+        gui.blit(x, y, TileDiskManipulator.IO_MODE.getValue() == NetworkNodeDiskManipulator.IO_MODE_EXTRACT ? 0 : 16, 160, 16, 16);
     }
 
     @Override
-    public void actionPerformed() {
+    public void onPress() {
         TileDataManager.setParameter(TileDiskManipulator.IO_MODE, TileDiskManipulator.IO_MODE.getValue() == NetworkNodeDiskManipulator.IO_MODE_INSERT ? NetworkNodeDiskManipulator.IO_MODE_EXTRACT : NetworkNodeDiskManipulator.IO_MODE_INSERT);
     }
 }

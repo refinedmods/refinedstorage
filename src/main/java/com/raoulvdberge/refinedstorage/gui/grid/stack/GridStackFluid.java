@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui.grid.stack;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -105,7 +106,7 @@ public class GridStackFluid implements IGridStack {
 
     @Override
     public void draw(GuiBase gui, int x, int y) {
-        GuiBase.FLUID_RENDERER.draw(gui.getMinecraft(), x, y, stack);
+        FluidRenderer.INSTANCE.render(x, y, stack);
 
         String text;
 
@@ -115,7 +116,7 @@ public class GridStackFluid implements IGridStack {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
         }
 
-        gui.drawQuantity(x, y, text);
+        gui.renderQuantity(x, y, text);
     }
 
     @Override

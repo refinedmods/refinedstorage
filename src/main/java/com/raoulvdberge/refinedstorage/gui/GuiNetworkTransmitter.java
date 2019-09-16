@@ -1,8 +1,9 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.container.ContainerNetworkTransmitter;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 public class GuiNetworkTransmitter extends GuiBase<ContainerNetworkTransmitter> {
@@ -20,33 +21,33 @@ public class GuiNetworkTransmitter extends GuiBase<ContainerNetworkTransmitter> 
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/network_transmitter.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:network_transmitter"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:network_transmitter"));
 
         String distance;
 
         if (networkTransmitter.getNode().getNetworkCard().getStackInSlot(0).isEmpty()) {
-            distance = t("gui.refinedstorage:network_transmitter.missing_card");
+            distance = I18n.format("gui.refinedstorage:network_transmitter.missing_card");
         } else if (TileNetworkTransmitter.RECEIVER_DIMENSION.getValue() != networkTransmitter.getWorld().getDimension().getType().getId()) {
-            distance = t("gui.refinedstorage:network_transmitter.dimension", TileNetworkTransmitter.RECEIVER_DIMENSION.getValue());
+            distance = I18n.format("gui.refinedstorage:network_transmitter.dimension", TileNetworkTransmitter.RECEIVER_DIMENSION.getValue());
         } else if (TileNetworkTransmitter.DISTANCE.getValue() != -1) {
-            distance = t("gui.refinedstorage:network_transmitter.distance", TileNetworkTransmitter.DISTANCE.getValue());
+            distance = I18n.format("gui.refinedstorage:network_transmitter.distance", TileNetworkTransmitter.DISTANCE.getValue());
         } else {
-            distance = t("gui.refinedstorage:network_transmitter.missing_card");
+            distance = I18n.format("gui.refinedstorage:network_transmitter.missing_card");
         }
 
-        drawString(51, 24, distance);
-        drawString(7, 42, t("container.inventory"));
+        renderString(51, 24, distance);
+        renderString(7, 42, I18n.format("container.inventory"));
     }
 }

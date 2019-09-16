@@ -1,7 +1,8 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
+import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
@@ -10,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class TabList {
+public class TabListWidget {
     public interface ITabListListener {
         void onSelectionChanged(int tab);
 
@@ -18,7 +19,7 @@ public class TabList {
     }
 
     private GuiBase gui;
-    private GuiBase.ElementDrawers drawers;
+    private ElementDrawers drawers;
 
     private Supplier<List<IGridTab>> tabs;
     private int tabHovering;
@@ -35,7 +36,7 @@ public class TabList {
 
     private int width;
 
-    public TabList(GuiBase gui, GuiBase.ElementDrawers drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
+    public TabListWidget(GuiBase gui, ElementDrawers drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
         this.gui = gui;
         this.drawers = drawers;
         this.tabs = tabs;
@@ -47,8 +48,10 @@ public class TabList {
 
     public void init(int width) {
         this.width = width;
-        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 22, 20, 20, "<", true, pages.get() > 0);
-        this.right = gui.addButton(gui.getGuiLeft() + width - 22, gui.getGuiTop() - 22, 20, 20, ">", true, pages.get() > 0);
+        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 22, 20, 20, "<", true, pages.get() > 0, btn -> {
+        });
+        this.right = gui.addButton(gui.getGuiLeft() + width - 22, gui.getGuiTop() - 22, 20, 20, ">", true, pages.get() > 0, btn -> {
+        });
     }
 
     public void addListener(ITabListListener listener) {
@@ -89,8 +92,9 @@ public class TabList {
 
         left.visible = pages.get() > 0;
         right.visible = pages.get() > 0;
-        left.active = page.get() > 0; // TODO correct? active
-        right.active = page.get() < pages.get(); // TODO correct? active
+
+        left.active = page.get() > 0;
+        right.active = page.get() < pages.get();
     }
 
     public void drawBackground(int x, int y) {
@@ -150,14 +154,14 @@ public class TabList {
             uvx = 199;
         }
 
-        gui.drawTexture(tx, ty, uvx, uvy, tbw, IGridTab.TAB_HEIGHT);
+        gui.blit(tx, ty, uvx, uvy, tbw, IGridTab.TAB_HEIGHT);
 
         tab.drawIcon(otx + 6, ty + 9 - (!isSelected ? 3 : 0), drawers.getItemDrawer(), drawers.getFluidDrawer());
     }
 
     public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY) {
         if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
-            tabs.get().get(tabHovering).drawTooltip(mouseX, mouseY, gui.getScreenWidth(), gui.getScreenHeight(), fontRenderer);
+            tabs.get().get(tabHovering).drawTooltip(mouseX, mouseY, gui.getXSize(), gui.getYSize(), fontRenderer);
         }
     }
 

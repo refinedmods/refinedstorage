@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.ContainerSecurityManager;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -25,16 +25,27 @@ public class GuiSecurityManager extends GuiBase<ContainerSecurityManager> {
 
         int padding = 15;
 
-        permissions[0] = addCheckBox(x + 7, y + 93, I18n.format("gui.refinedstorage.security_manager.permission.0"), false);
-        permissions[1] = addCheckBox(permissions[0].x, permissions[0].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.1"), false);
-        permissions[2] = addCheckBox(permissions[1].x, permissions[1].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.2"), false);
-        permissions[3] = addCheckBox(permissions[0].x + 90, permissions[0].y, I18n.format("gui.refinedstorage.security_manager.permission.3"), false);
-        permissions[4] = addCheckBox(permissions[3].x, permissions[3].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.4"), false);
-        permissions[5] = addCheckBox(permissions[4].x, permissions[4].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.5"), false);
+        permissions[0] = addCheckBox(x + 7, y + 93, I18n.format("gui.refinedstorage.security_manager.permission.0"), false, btn -> {
+        });
+
+        permissions[1] = addCheckBox(permissions[0].x, permissions[0].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.1"), false, btn -> {
+        });
+
+        permissions[2] = addCheckBox(permissions[1].x, permissions[1].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.2"), false, btn -> {
+        });
+
+        permissions[3] = addCheckBox(permissions[0].x + 90, permissions[0].y, I18n.format("gui.refinedstorage.security_manager.permission.3"), false, btn -> {
+        });
+
+        permissions[4] = addCheckBox(permissions[3].x, permissions[3].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.4"), false, btn -> {
+        });
+
+        permissions[5] = addCheckBox(permissions[4].x, permissions[4].y + padding, I18n.format("gui.refinedstorage.security_manager.permission.5"), false, btn -> {
+        });
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
         ItemStack card = securityManager.getNode().getEditCard().getStackInSlot(0);
 
         for (Permission permission : Permission.values()) {
@@ -55,23 +66,23 @@ public class GuiSecurityManager extends GuiBase<ContainerSecurityManager> {
     }*/
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/security_manager.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:security_manager"));
-        drawString(7, 59, t("gui.refinedstorage:security_manager.configure"));
-        drawString(7, 140, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:security_manager"));
+        renderString(7, 59, I18n.format("gui.refinedstorage:security_manager.configure"));
+        renderString(7, 140, I18n.format("container.inventory"));
 
         for (int i = 0; i < permissions.length; ++i) {
             GuiCheckBox permission = permissions[i];
 
             if (inBounds(permission.x - guiLeft, permission.y - guiTop, permission.getWidth(), permission.getHeight(), mouseX, mouseY)) {
-                drawTooltip(mouseX, mouseY, I18n.format("gui.refinedstorage:security_manager.permission." + i + ".tooltip"));
+                renderTooltip(mouseX, mouseY, I18n.format("gui.refinedstorage:security_manager.permission." + i + ".tooltip"));
             }
         }
     }

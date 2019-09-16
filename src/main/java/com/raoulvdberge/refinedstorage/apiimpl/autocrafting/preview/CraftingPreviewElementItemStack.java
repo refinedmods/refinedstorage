@@ -3,8 +3,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -87,13 +87,13 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
 
         if (getToCraft() > 0) {
             String format = hasMissing() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), GuiBase.t(format, getToCraft()));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, getToCraft()));
 
             y += 7;
         }
 
         if (getAvailable() > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), GuiBase.t("gui.refinedstorage:crafting_preview.available", getAvailable()));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage:crafting_preview.available", getAvailable()));
         }
 
         GlStateManager.popMatrix();

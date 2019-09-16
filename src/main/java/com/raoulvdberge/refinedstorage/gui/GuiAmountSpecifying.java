@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import org.apache.commons.lang3.tuple.Pair;
@@ -48,8 +49,10 @@ public abstract class GuiAmountSpecifying<T extends Container> extends GuiBase<T
     public void init(int x, int y) {
         Pair<Integer, Integer> pos = getOkCancelPos();
 
-        okButton = addButton(x + pos.getLeft(), y + pos.getRight(), 50, 20, getOkButtonText());
-        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, 50, 20, t("gui.cancel"));
+        okButton = addButton(x + pos.getLeft(), y + pos.getRight(), 50, 20, getOkButtonText(), true, true, btn -> {
+        });
+        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, 50, 20, I18n.format("gui.cancel"), true, true, btn -> {
+        });
 
         amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.FONT_HEIGHT, "");
         amountField.setEnableBackgroundDrawing(false);
@@ -71,7 +74,8 @@ public abstract class GuiAmountSpecifying<T extends Container> extends GuiBase<T
                 text = "+1B";
             }
 
-            incrementButtons[i] = addButton(x + xx, y + 20, width, 20, text);
+            incrementButtons[i] = addButton(x + xx, y + 20, width, 20, text, true, true, btn -> {
+            });
 
             xx += width + 3;
         }
@@ -85,29 +89,30 @@ public abstract class GuiAmountSpecifying<T extends Container> extends GuiBase<T
                 text = "-1B";
             }
 
-            incrementButtons[3 + i] = addButton(x + xx, y + screenHeight - 20 - 7, width, 20, text);
+            incrementButtons[3 + i] = addButton(x + xx, y + ySize - 20 - 7, width, 20, text, true, true, btn -> {
+            });
 
             xx += width + 3;
         }
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
         // NO OP
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture(getTexture());
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
 
         amountField.renderButton(0, 0, 0);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, getGuiTitle());
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, getGuiTitle());
     }
 
     /* TODO

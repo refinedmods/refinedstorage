@@ -2,11 +2,12 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerConstructor;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonConstuctorDrop;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonType;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonCompare;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonConstuctorDrop;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonType;
 import com.raoulvdberge.refinedstorage.tile.TileConstructor;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 public class GuiConstructor extends GuiBase<ContainerConstructor> {
@@ -25,19 +26,19 @@ public class GuiConstructor extends GuiBase<ContainerConstructor> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/constructor.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:constructor"));
-        drawString(7, 43, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:constructor"));
+        renderString(7, 43, I18n.format("container.inventory"));
     }
 }

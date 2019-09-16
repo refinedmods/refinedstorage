@@ -5,17 +5,23 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
+import com.raoulvdberge.refinedstorage.container.ContainerFilter;
+import com.raoulvdberge.refinedstorage.gui.GuiFilter;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -31,8 +37,10 @@ public final class RS {
 
     public RS() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onRegisterItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer.class, this::onRegisterRecipeSerializers);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, this::onRegisterContainers);
     }
 
     @SubscribeEvent
@@ -44,6 +52,11 @@ public final class RS {
     }
 
     @SubscribeEvent
+    public void onClientSetup(FMLClientSetupEvent e) {
+        ScreenManager.registerFactory(RSContainers.FILTER, GuiFilter::new);
+    }
+
+    @SubscribeEvent
     public void onRegisterRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> e) {
         e.getRegistry().register(new UpgradeWithEnchantedBookRecipeSerializer().setRegistryName(RS.ID, "upgrade_with_enchanted_book"));
     }
@@ -51,6 +64,11 @@ public final class RS {
     @SubscribeEvent
     public void onRegisterBlocks(RegistryEvent.Register<Block> e) {
 
+    }
+
+    @SubscribeEvent
+    public void onRegisterContainers(RegistryEvent.Register<ContainerType<?>> e) {
+        e.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new ContainerFilter(inv.player, inv.getCurrentItem(), windowId)).setRegistryName(RS.ID, "filter"));
     }
 
     @SubscribeEvent
@@ -94,6 +112,7 @@ public final class RS {
 
         e.getRegistry().register(new ItemWrench());
         e.getRegistry().register(new ItemPattern());
+        e.getRegistry().register(new ItemFilter());
     }
 
     /* TODO

@@ -1,7 +1,8 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.function.Consumer;
@@ -19,7 +20,7 @@ public class SideButtonGridSize extends SideButton {
 
     @Override
     public String getTooltip() {
-        return GuiBase.t("sidebutton.refinedstorage:grid.size") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:grid.size." + this.size.get());
+        return I18n.format("sidebutton.refinedstorage:grid.size") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:grid.size." + this.size.get());
     }
 
     @Override
@@ -38,11 +39,11 @@ public class SideButtonGridSize extends SideButton {
             tx = 32;
         }
 
-        gui.drawTexture(x, y, 64 + tx, 64, 16, 16);
+        gui.blit(x, y, 64 + tx, 64, 16, 16);
     }
 
     @Override
-    public void actionPerformed() {
+    public void onPress() {
         int size = this.size.get();
 
         if (size == IGrid.SIZE_STRETCH) {

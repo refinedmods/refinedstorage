@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget.sidebutton;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
@@ -12,8 +12,7 @@ public abstract class SideButton extends Button {
     protected GuiBase gui;
 
     public SideButton(GuiBase gui) {
-        super(-1, -1, 18, 18, "", (btn) -> {
-            // TODO: call ActionPerformed
+        super(-1, -1, 18, 18, "", btn -> {
         });
 
         this.gui = gui;
@@ -27,7 +26,7 @@ public abstract class SideButton extends Button {
         isHovered = gui.inBounds(x, y, width, height, mouseX, mouseY);
 
         gui.bindTexture("icons.png");
-        gui.drawTexture(x, y, 238, isHovered ? 35 : 16, 18, 18);
+        gui.blit(x, y, 238, isHovered ? 35 : 16, 18, 18);
 
         drawButtonIcon(x + 1, y + 1);
 
@@ -35,7 +34,7 @@ public abstract class SideButton extends Button {
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GlStateManager.color4f(1.0f, 1.0f, 1.0f, 0.5f);
-            gui.drawTexture(x, y, 238, 54, 18, 18);
+            gui.blit(x, y, 238, 54, 18, 18);
             GlStateManager.disableBlend();
         }
     }
@@ -43,6 +42,4 @@ public abstract class SideButton extends Button {
     protected abstract void drawButtonIcon(int x, int y);
 
     public abstract String getTooltip();
-
-    public abstract void actionPerformed();
 }

@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.container.slot.SlotBase;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -32,15 +31,7 @@ public class SlotFilterFluid extends SlotBase {
     }
 
     public void onContainerClicked(@Nonnull ItemStack stack) {
-        if (stack.isEmpty()) {
-            fluidInventory.setFluid(getSlotIndex(), null);
-        } else {
-            FluidStack fluid = StackUtils.getFluid(stack, true).getValue();
-
-            if (fluid != null) {
-                fluidInventory.setFluid(getSlotIndex(), fluid);
-            }
-        }
+        fluidInventory.setFluid(getSlotIndex(), StackUtils.getFluid(stack, true).getValue());
     }
 
     public boolean isSizeAllowed() {

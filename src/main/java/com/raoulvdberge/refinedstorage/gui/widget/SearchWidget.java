@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import net.minecraft.client.gui.FontRenderer;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TextFieldSearch extends TextFieldWidget {
+public class SearchWidget extends TextFieldWidget {
     private static final List<String> HISTORY = new ArrayList<>();
 
     private int mode;
@@ -16,7 +16,7 @@ public class TextFieldSearch extends TextFieldWidget {
 
     private List<Runnable> listeners = new LinkedList<>();
 
-    public TextFieldSearch(FontRenderer fontRenderer, int x, int y, int width) {
+    public SearchWidget(FontRenderer fontRenderer, int x, int y, int width) {
         super(fontRenderer, x, y, width, fontRenderer.FONT_HEIGHT, "");
 
         this.setEnableBackgroundDrawing(false);

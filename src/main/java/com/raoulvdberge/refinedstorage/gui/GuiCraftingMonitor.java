@@ -9,10 +9,12 @@ import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.render.CraftingMonitorElementDrawers;
+import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
-import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.gui.control.TabList;
+import com.raoulvdberge.refinedstorage.gui.widget.ScrollbarWidget;
+import com.raoulvdberge.refinedstorage.gui.widget.TabListWidget;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
@@ -30,33 +32,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
-    public class CraftingMonitorElementDrawers extends ElementDrawers {
-        private IElementDrawer<Integer> overlayDrawer = (x, y, color) -> {
-            GlStateManager.color4f(1, 1, 1, 1);
-            GlStateManager.disableLighting();
-            fill(x, y, x + ITEM_WIDTH, y + ITEM_HEIGHT, color);
-        };
-
-        private IElementDrawer errorDrawer = (x, y, nothing) -> {
-            GlStateManager.color4f(1, 1, 1, 1);
-            GlStateManager.disableLighting();
-
-            bindTexture("gui/crafting_preview.png");
-
-            drawTexture(x + ITEM_WIDTH - 12 - 2, y + ITEM_HEIGHT - 12 - 2, 0, 244, 12, 12);
-        };
-
-        @Override
-        public IElementDrawer<Integer> getOverlayDrawer() {
-            return overlayDrawer;
-        }
-
-        @Override
-        public IElementDrawer getErrorDrawer() {
-            return errorDrawer;
-        }
-    }
-
     public static class CraftingMonitorTask implements IGridTab {
         private UUID id;
         private ICraftingRequestInfo requested;
@@ -80,7 +55,7 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
         }
 
         @Override
-        public void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
+        public void drawTooltip(int x, int y, int xSize, int ySize, FontRenderer fontRenderer) {
             List<String> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getDisplayName().getFormattedText() : requested.getFluid().getDisplayName().getFormattedText()); // TODO
             List<String> smallTextLines = Lists.newArrayList();
 
@@ -92,7 +67,7 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
             smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
             smallTextLines.add(String.format("%d%%", completionPercentage));
 
-            RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
+            RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, ItemStack.EMPTY, x, y, xSize, ySize, fontRenderer);
         }
 
         @Override
@@ -117,19 +92,21 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
     private Button cancelButton;
     private Button cancelAllButton;
 
+    private ScrollbarWidget scrollbar;
+
     private ICraftingMonitor craftingMonitor;
 
     private List<IGridTab> tasks = Collections.emptyList();
-    private TabList tabs;
+    private TabListWidget tabs;
 
-    private IElementDrawers drawers = new CraftingMonitorElementDrawers();
+    private IElementDrawers drawers = new CraftingMonitorElementDrawers(this, font, ITEM_WIDTH, ITEM_HEIGHT);
 
     public GuiCraftingMonitor(ContainerCraftingMonitor container, ICraftingMonitor craftingMonitor, PlayerInventory inventory) {
         super(container, 254, 201, inventory, null);
 
         this.craftingMonitor = craftingMonitor;
 
-        this.tabs = new TabList(this, new ElementDrawers(), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
+        this.tabs = new TabListWidget(this, new ElementDrawers(this, font), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
             IGridTab tab = getCurrentTab();
 
             if (tab == null) {
@@ -139,7 +116,7 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
             return tasks.indexOf(tab);
         }, ICraftingMonitor.TABS_PER_PAGE);
 
-        this.tabs.addListener(new TabList.ITabListListener() {
+        this.tabs.addListener(new TabListWidget.ITabListListener() {
             @Override
             public void onSelectionChanged(int tab) {
                 craftingMonitor.onTabSelectionChanged(Optional.of(((CraftingMonitorTask) tasks.get(tab)).id));
@@ -176,20 +153,22 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
     public void init(int x, int y) {
         this.tabs.init(xSize);
 
-        this.scrollbar = new Scrollbar(235, 20, 12, 149);
+        this.scrollbar = new ScrollbarWidget(235, 20, 12, 149);
 
         if (craftingMonitor.getRedstoneModeParameter() != null) {
             addSideButton(new SideButtonRedstoneMode(this, craftingMonitor.getRedstoneModeParameter()));
         }
 
-        String cancel = t("gui.cancel");
-        String cancelAll = t("misc.refinedstorage:cancel_all");
+        String cancel = I18n.format("gui.cancel");
+        String cancelAll = I18n.format("misc.refinedstorage:cancel_all");
 
         int cancelButtonWidth = 14 + font.getStringWidth(cancel);
         int cancelAllButtonWidth = 14 + font.getStringWidth(cancelAll);
 
-        this.cancelButton = addButton(x + 7, y + 201 - 20 - 7, cancelButtonWidth, 20, cancel, false, true);
-        this.cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 201 - 20 - 7, cancelAllButtonWidth, 20, cancelAll, false, true);
+        this.cancelButton = addButton(x + 7, y + 201 - 20 - 7, cancelButtonWidth, 20, cancel, false, true, btn -> {
+        });
+        this.cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 201 - 20 - 7, cancelAllButtonWidth, 20, cancelAll, false, true, btn -> {
+        });
     }
 
     private void updateScrollbar() {
@@ -204,17 +183,17 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
         updateScrollbar();
 
         this.tabs.update();
 
         if (cancelButton != null) {
-            cancelButton.active = hasValidTabSelected(); // TODO is it active?
+            cancelButton.active = hasValidTabSelected();
         }
 
         if (cancelAllButton != null) {
-            cancelAllButton.active = tasks.size() > 0; // TODO is it active?
+            cancelAllButton.active = tasks.size() > 0;
         }
     }
 
@@ -247,21 +226,21 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         if (craftingMonitor.isActive()) {
             tabs.drawBackground(x, y - tabs.getHeight());
         }
 
         bindTexture("gui/crafting_preview.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
 
         tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActive());
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t(craftingMonitor.getGuiTitle()));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format(craftingMonitor.getGuiTitle()));
 
         int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
@@ -294,7 +273,7 @@ public class GuiCraftingMonitor extends GuiBase<ContainerCraftingMonitor> {
         }
 
         if (itemSelectedTooltip != null && !itemSelectedTooltip.isEmpty()) {
-            drawTooltip(mouseX, mouseY, I18n.format(itemSelectedTooltip));
+            renderTooltip(mouseX, mouseY, I18n.format(itemSelectedTooltip));
         }
 
         tabs.drawTooltip(font, mouseX, mouseY);

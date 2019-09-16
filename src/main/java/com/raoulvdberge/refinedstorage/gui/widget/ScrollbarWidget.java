@@ -1,11 +1,11 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget;
 
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class Scrollbar {
+public class ScrollbarWidget {
     private static final int SCROLLER_HEIGHT = 15;
 
     private int x;
@@ -20,16 +20,16 @@ public class Scrollbar {
     private boolean wasClicking = false;
     private boolean isScrolling = false;
 
-    private List<ScrollbarListener> listeners = new LinkedList<>();
+    private List<ScrollbarWidgetListener> listeners = new LinkedList<>();
 
-    public Scrollbar(int x, int y, int width, int height) {
+    public ScrollbarWidget(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
 
-    public void addListener(ScrollbarListener listener) {
+    public void addListener(ScrollbarWidgetListener listener) {
         listeners.add(listener);
     }
 
@@ -51,7 +51,7 @@ public class Scrollbar {
 
     public void draw(GuiBase gui) {
         gui.bindTexture("icons.png");
-        gui.drawTexture(gui.getGuiLeft() + x, gui.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
+        gui.blit(gui.getGuiLeft() + x, gui.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
     }
 
     public void update(GuiBase gui, int mouseX, int mouseY) {

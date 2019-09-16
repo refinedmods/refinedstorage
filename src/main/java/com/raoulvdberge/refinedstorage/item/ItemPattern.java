@@ -232,7 +232,7 @@ public class ItemPattern extends Item implements ICraftingPatternProvider {
         pattern.getTag().putBoolean(NBT_OREDICT, oredict);
     }
 
-    public static void setVersion(ItemStack pattern) {
+    public static void setToCurrentVersion(ItemStack pattern) {
         if (!pattern.hasTag()) {
             pattern.setTag(new CompoundNBT());
         }

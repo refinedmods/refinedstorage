@@ -1,8 +1,9 @@
 package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.container.ContainerWirelessTransmitter;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 public class GuiWirelessTransmitter extends GuiBase<ContainerWirelessTransmitter> {
@@ -16,20 +17,20 @@ public class GuiWirelessTransmitter extends GuiBase<ContainerWirelessTransmitter
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/wireless_transmitter.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:wireless_transmitter"));
-        drawString(28, 25, t("gui.refinedstorage:wireless_transmitter.distance", TileWirelessTransmitter.RANGE.getValue()));
-        drawString(7, 43, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:wireless_transmitter"));
+        renderString(28, 25, I18n.format("gui.refinedstorage:wireless_transmitter.distance", TileWirelessTransmitter.RANGE.getValue()));
+        renderString(7, 43, I18n.format("container.inventory"));
     }
 }

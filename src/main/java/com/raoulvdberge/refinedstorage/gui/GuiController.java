@@ -2,12 +2,13 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.container.ContainerController;
-import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.widget.ScrollbarWidget;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.ClientNode;
 import com.raoulvdberge.refinedstorage.tile.TileController;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 import java.util.List;
@@ -22,12 +23,14 @@ public class GuiController extends GuiBase<ContainerController> {
     private int barWidth = 16;
     private int barHeight = 59;
 
+    private ScrollbarWidget scrollbar;
+
     public GuiController(ContainerController container, TileController controller, PlayerInventory inventory) {
         super(container, 176, 181, inventory, null);
 
         this.controller = controller;
 
-        this.scrollbar = new Scrollbar(157, 20, 12, 59);
+        this.scrollbar = new ScrollbarWidget(157, 20, 12, 59);
     }
 
     @Override
@@ -36,7 +39,7 @@ public class GuiController extends GuiBase<ContainerController> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
         if (scrollbar != null) {
             scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
             scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
@@ -44,20 +47,20 @@ public class GuiController extends GuiBase<ContainerController> {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/controller.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
 
         int barHeightNew = TileController.getEnergyScaled(TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue(), barHeight);
 
-        drawTexture(x + barX, y + barY + barHeight - barHeightNew, 178, barHeight - barHeightNew, barWidth, barHeightNew);
+        blit(x + barX, y + barY + barHeight - barHeightNew, 178, barHeight - barHeightNew, barWidth, barHeightNew);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:controller." + controller.getControllerType().getId()));
-        drawString(7, 87, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:controller." + controller.getControllerType().getId()));
+        renderString(7, 87, I18n.format("container.inventory"));
 
         int x = 33;
         int y = 26;
@@ -74,19 +77,19 @@ public class GuiController extends GuiBase<ContainerController> {
             if (slot < nodes.size()) {
                 ClientNode node = nodes.get(slot);
 
-                drawItem(x, y + 5, node.getStack());
+                renderItem(x, y + 5, node.getStack());
 
                 float scale = /*TODO fontRenderer.getUnicodeFlag() ? 1F :*/ 0.5F;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scalef(scale, scale, 1);
 
-                drawString(
+                renderString(
                     RenderUtils.getOffsetOnScale(x + 1, scale),
                     RenderUtils.getOffsetOnScale(y - 2, scale),
                     trimNameIfNeeded(/*TODO !fontRenderer.getUnicodeFlag()*/false, node.getStack().getDisplayName().getString()) // TODO
                 );
-                drawString(RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
+                renderString(RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
                 GlStateManager.popMatrix();
 
@@ -106,11 +109,11 @@ public class GuiController extends GuiBase<ContainerController> {
         }
 
         if (nodeHovering != null) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage_minimal", nodeHovering.getEnergyUsage()));
+            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage:energy_usage_minimal", nodeHovering.getEnergyUsage()));
         }
 
         if (inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
-            drawTooltip(mouseX, mouseY, t("misc.refinedstorage:energy_usage", TileController.ENERGY_USAGE.getValue()) + "\n" + t("misc.refinedstorage:energy_stored", TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue()));
+            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage:energy_usage", TileController.ENERGY_USAGE.getValue()) + "\n" + I18n.format("misc.refinedstorage:energy_stored", TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue()));
         }
     }
 

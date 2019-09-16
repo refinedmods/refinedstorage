@@ -1,9 +1,10 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonCompare extends SideButton {
@@ -19,12 +20,12 @@ public class SideButtonCompare extends SideButton {
 
     @Override
     public String getTooltip() {
-        String tooltip = GuiBase.t("sidebutton.refinedstorage:compare." + mask) + "\n" + TextFormatting.GRAY;
+        String tooltip = I18n.format("sidebutton.refinedstorage:compare." + mask) + "\n" + TextFormatting.GRAY;
 
         if ((parameter.getValue() & mask) == mask) {
-            tooltip += GuiBase.t("gui.yes");
+            tooltip += I18n.format("gui.yes");
         } else {
-            tooltip += GuiBase.t("gui.no");
+            tooltip += I18n.format("gui.no");
         }
 
         return tooltip;
@@ -40,11 +41,11 @@ public class SideButtonCompare extends SideButton {
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;
 
-        gui.drawTexture(x, y, tx, ty, 16, 16);
+        gui.blit(x, y, tx, ty, 16, 16);
     }
 
     @Override
-    public void actionPerformed() {
+    public void onPress() {
         TileDataManager.setParameter(parameter, parameter.getValue() ^ mask);
     }
 }

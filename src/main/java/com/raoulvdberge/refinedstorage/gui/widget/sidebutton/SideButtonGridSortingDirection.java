@@ -1,7 +1,8 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonGridSortingDirection extends SideButton {
@@ -15,16 +16,16 @@ public class SideButtonGridSortingDirection extends SideButton {
 
     @Override
     public String getTooltip() {
-        return GuiBase.t("sidebutton.refinedstorage:grid.sorting.direction") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:grid.sorting.direction." + grid.getSortingDirection());
+        return I18n.format("sidebutton.refinedstorage:grid.sorting.direction") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:grid.sorting.direction." + grid.getSortingDirection());
     }
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, grid.getSortingDirection() * 16, 16, 16, 16);
+        gui.blit(x, y, grid.getSortingDirection() * 16, 16, 16, 16);
     }
 
     @Override
-    public void actionPerformed() {
+    public void onPress() {
         int dir = grid.getSortingDirection();
 
         if (dir == IGrid.SORTING_DIRECTION_ASCENDING) {

@@ -344,13 +344,13 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
         } else {
             while (fluidFilters.getSlots() > i && extracted == null) {
-                FluidStack filterStack = null;
+                FluidStack filterStack = FluidStack.EMPTY;
 
-                while (fluidFilters.getSlots() > i && filterStack == null) {
+                while (fluidFilters.getSlots() > i && filterStack.isEmpty()) {
                     filterStack = fluidFilters.getFluid(i++);
                 }
 
-                if (filterStack != null) {
+                if (!filterStack.isEmpty()) {
                     extracted = network.extractFluid(filterStack, upgrades.getItemInteractCount(), compare, Action.PERFORM);
                 }
             }

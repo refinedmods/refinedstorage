@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.container.ContainerAmount;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
@@ -35,12 +36,12 @@ public class GuiAmount extends GuiAmountSpecifying<ContainerAmount> {
 
     @Override
     protected String getOkButtonText() {
-        return t("misc.refinedstorage:set");
+        return I18n.format("misc.refinedstorage:set");
     }
 
     @Override
     protected String getGuiTitle() {
-        return t("gui.refinedstorage:item_amount");
+        return I18n.format("gui.refinedstorage:item_amount");
     }
 
     @Override

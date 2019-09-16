@@ -2,8 +2,9 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerDiskManipulator;
-import com.raoulvdberge.refinedstorage.gui.control.*;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 public class GuiDiskManipulator extends GuiBase<ContainerDiskManipulator> {
@@ -21,22 +22,22 @@ public class GuiDiskManipulator extends GuiBase<ContainerDiskManipulator> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
 
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/disk_manipulator.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("block.refinedstorage:disk_manipulator.name"));
-        drawString(7, 117, t("container.inventory"));
-        drawString(43, 45, t("gui.refinedstorage:fluid_interface.in"));
-        drawString(115, 45, t("gui.refinedstorage:fluid_interface.out"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("block.refinedstorage:disk_manipulator.name"));
+        renderString(7, 117, I18n.format("container.inventory"));
+        renderString(43, 45, I18n.format("gui.refinedstorage:fluid_interface.in"));
+        renderString(115, 45, I18n.format("gui.refinedstorage:fluid_interface.out"));
     }
 }

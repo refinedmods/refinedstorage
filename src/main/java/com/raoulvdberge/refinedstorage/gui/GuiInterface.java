@@ -2,9 +2,10 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerInterface;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonCompare;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 public class GuiInterface extends GuiBase<ContainerInterface> {
@@ -20,20 +21,20 @@ public class GuiInterface extends GuiBase<ContainerInterface> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/interface.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:interface.import"));
-        drawString(7, 42, t("gui.refinedstorage:interface.export"));
-        drawString(7, 122, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:interface.import"));
+        renderString(7, 42, I18n.format("gui.refinedstorage:interface.export"));
+        renderString(7, 122, I18n.format("container.inventory"));
     }
 }

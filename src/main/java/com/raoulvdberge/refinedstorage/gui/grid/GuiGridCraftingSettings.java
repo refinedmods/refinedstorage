@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.gui.GuiAmountSpecifying;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.gui.grid.stack.IGridStack;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fluids.FluidAttributes;
 
@@ -20,12 +21,12 @@ public class GuiGridCraftingSettings extends GuiAmountSpecifying<ContainerCrafti
 
     @Override
     protected String getOkButtonText() {
-        return t("misc.refinedstorage:start");
+        return I18n.format("misc.refinedstorage:start");
     }
 
     @Override
     protected String getGuiTitle() {
-        return t("container.crafting");
+        return I18n.format("container.crafting");
     }
 
     @Override
@@ -69,7 +70,7 @@ public class GuiGridCraftingSettings extends GuiAmountSpecifying<ContainerCrafti
         if (quantity != null && quantity > 0) {
             // TODO RS.INSTANCE.network.sendToServer(new MessageGridCraftingPreview(stack.getHash(), quantity, shiftDown, stack instanceof GridStackFluid));
 
-            okButton.active = false; // TODO is active correct
+            okButton.active = false;
         }
     }
 }

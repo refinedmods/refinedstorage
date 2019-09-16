@@ -18,13 +18,13 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -139,103 +139,6 @@ public final class RenderUtils {
         return (int) multiplier;
     }
 
-    public static class FluidRenderer {
-        private static final int TEX_WIDTH = 16;
-        private static final int TEX_HEIGHT = 16;
-        private static final int MIN_FLUID_HEIGHT = 1;
-
-        private final int capacityMb;
-        private final int width;
-        private final int height;
-
-        public FluidRenderer(int capacityMb, int width, int height) {
-            this.capacityMb = capacityMb;
-            this.width = width;
-            this.height = height;
-        }
-
-        public void draw(Minecraft minecraft, int xPosition, int yPosition, FluidStack fluidStack) {
-            GlStateManager.enableBlend();
-            GlStateManager.enableAlphaTest();
-            GlStateManager.disableLighting();
-
-            drawFluid(minecraft, xPosition, yPosition, fluidStack);
-
-            GlStateManager.color4f(1, 1, 1, 1);
-
-            GlStateManager.disableAlphaTest();
-            GlStateManager.disableBlend();
-        }
-
-        private void drawFluid(Minecraft minecraft, int xPosition, int yPosition, FluidStack fluidStack) {
-            if (fluidStack == null) {
-                return;
-            }
-
-            Fluid fluid = fluidStack.getFluid();
-
-            if (fluid == null) {
-                return;
-            }
-
-            /* TODO
-            TextureMap textureMapBlocks = minecraft.getTextureMapBlocks();
-            ResourceLocation fluidStill = fluid.getStill();
-            TextureAtlasSprite fluidStillSprite = null;
-
-            if (fluidStill != null) {
-                fluidStillSprite = textureMapBlocks.getTextureExtry(fluidStill.toString());
-            }
-
-            if (fluidStillSprite == null) {
-                fluidStillSprite = textureMapBlocks.getMissingSprite();
-            }
-
-            int fluidColor = fluid.getColor(fluidStack);
-
-            int scaledAmount = height;
-
-            if (capacityMb != -1) {
-                scaledAmount = (fluidStack.amount * height) / capacityMb;
-
-                if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
-                    scaledAmount = MIN_FLUID_HEIGHT;
-                }
-
-                if (scaledAmount > height) {
-                    scaledAmount = height;
-                }
-            }
-
-            minecraft.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            setGLColorFromInt(fluidColor);
-
-            int xTileCount = width / TEX_WIDTH;
-            int xRemainder = width - (xTileCount * TEX_WIDTH);
-            int yTileCount = scaledAmount / TEX_HEIGHT;
-            int yRemainder = scaledAmount - (yTileCount * TEX_HEIGHT);
-
-            int yStart = yPosition + height;
-
-            for (int xTile = 0; xTile <= xTileCount; xTile++) {
-                for (int yTile = 0; yTile <= yTileCount; yTile++) {
-                    int width = (xTile == xTileCount) ? xRemainder : TEX_WIDTH;
-                    int height = (yTile == yTileCount) ? yRemainder : TEX_HEIGHT;
-                    int x = xPosition + (xTile * TEX_WIDTH);
-                    int y = yStart - ((yTile + 1) * TEX_HEIGHT);
-
-                    if (width > 0 && height > 0) {
-                        int maskTop = TEX_HEIGHT - height;
-                        int maskRight = TEX_WIDTH - width;
-
-                        drawFluidTexture(x, y, fluidStillSprite, maskTop, maskRight, 100);
-                    }
-                }
-            }
-        }*/
-        }
-    }
-
     public static void addCombinedItemsToTooltip(List<ITextComponent> tooltip, boolean displayAmount, List<ItemStack> stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
@@ -259,7 +162,7 @@ public final class RenderUtils {
                     data = new StringTextComponent(amount + "x ").appendSibling(data);
                 }
 
-                tooltip.add(data);
+                tooltip.add(data.setStyle(new Style().setColor(TextFormatting.GRAY)));
             }
         }
     }
@@ -268,7 +171,7 @@ public final class RenderUtils {
         Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.size(); ++i) {
-            if (!combinedIndices.contains(i)) {
+            if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
                 FluidStack stack = stacks.get(i);
 
                 ITextComponent data = stack.getDisplayName();
@@ -287,7 +190,7 @@ public final class RenderUtils {
                     data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").appendSibling(data);
                 }
 
-                tooltip.add(data);
+                tooltip.add(data.setStyle(new Style().setColor(TextFormatting.GRAY)));
             }
         }
     }

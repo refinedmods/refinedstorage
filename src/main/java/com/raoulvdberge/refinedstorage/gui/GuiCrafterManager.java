@@ -6,7 +6,11 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
-import com.raoulvdberge.refinedstorage.gui.control.*;
+import com.raoulvdberge.refinedstorage.gui.widget.ScrollbarWidget;
+import com.raoulvdberge.refinedstorage.gui.widget.SearchWidget;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonCrafterManagerSearchBoxMode;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonGridSize;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -21,7 +25,8 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
     private ContainerCrafterManager container;
     private NetworkNodeCrafterManager crafterManager;
 
-    private TextFieldSearch searchField;
+    private ScrollbarWidget scrollbar;
+    private SearchWidget searchField;
 
     public GuiCrafterManager(NetworkNodeCrafterManager crafterManager, PlayerInventory inventory) {
         super(null, 193, 0, inventory, null);
@@ -37,11 +42,12 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
         this.container = container;
     }
 
+    /* TODO
     @Override
     protected void calcHeight() {
         this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
-        this.screenHeight = ySize;
-    }
+        this.ySize = ySize;
+    }*/
 
     @Override
     public int getTopHeight() {
@@ -95,7 +101,7 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
         addSideButton(new SideButtonCrafterManagerSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, () -> crafterManager.getSize(), size -> TileDataManager.setParameter(TileCrafterManager.SIZE, size)));
 
-        this.scrollbar = new Scrollbar(174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
+        this.scrollbar = new ScrollbarWidget(174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
         this.scrollbar.addListener((oldOffset, newOffset) -> {
             if (container != null) {
                 container.initSlots(null);
@@ -108,7 +114,7 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
         int sy = y + 6 + 1;
 
         if (searchField == null) {
-            searchField = new TextFieldSearch(font, sx, sy, 88 - 6);
+            searchField = new SearchWidget(font, sx, sy, 88 - 6);
             searchField.addListener(() -> container.initSlots(null));
             searchField.setMode(crafterManager.getSearchBoxMode());
         } else {
@@ -118,16 +124,16 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
         scrollbar.setEnabled((getRows() - 1) >= getVisibleRows());
         scrollbar.setMaxOffset(getRows() - getVisibleRows());
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/crafter_manager.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, getTopHeight());
+        blit(x, y, 0, 0, xSize, getTopHeight());
 
         int rows = getVisibleRows();
 
@@ -136,17 +142,17 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
         for (int i = 0; i < rows; ++i) {
             yy += 18;
 
-            drawTexture(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), screenWidth, 18);
+            blit(x, yy, 0, getTopHeight() + (i > 0 ? (i == rows - 1 ? 18 * 2 : 18) : 0), xSize, 18);
         }
 
         yy += 18;
 
-        drawTexture(x, yy, 0, getTopHeight() + (18 * 3), screenWidth, getBottomHeight());
+        blit(x, yy, 0, getTopHeight() + (18 * 3), xSize, getBottomHeight());
 
         if (container != null && crafterManager.isActive()) {
             for (Slot slot : container.inventorySlots) {
                 if (slot instanceof SlotCrafterManager && slot.isEnabled()) {
-                    drawTexture(x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
+                    blit(x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
                 }
             }
         }
@@ -184,9 +190,9 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
     }*/
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:crafter_manager"));
-        drawString(7, getYPlayerInventory() - 12, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:crafter_manager"));
+        renderString(7, getYPlayerInventory() - 12, I18n.format("container.inventory"));
 
         if (container != null && crafterManager.isActive()) {
             for (Map.Entry<String, Integer> heading : container.getHeadings().entrySet()) {
@@ -198,15 +204,15 @@ public class GuiCrafterManager extends GuiBase<ContainerCrafterManager> implemen
 
                     bindTexture("gui/crafter_manager.png");
 
-                    drawTexture(7, y, 0, 174, 18 * 9, 18);
+                    blit(7, y, 0, 174, 18 * 9, 18);
 
-                    drawString(7 + 4, y + 6, RenderUtils.shorten(I18n.format(heading.getKey()), 25));
+                    renderString(7 + 4, y + 6, RenderUtils.shorten(I18n.format(heading.getKey()), 25));
                 }
             }
         }
     }
 
-    public TextFieldSearch getSearchField() {
+    public SearchWidget getSearchField() {
         return searchField;
     }
 }

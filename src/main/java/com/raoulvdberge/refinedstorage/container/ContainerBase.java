@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
@@ -7,6 +8,7 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyDisabled;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
 import com.raoulvdberge.refinedstorage.container.transfer.TransferManager;
+import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidUpdate;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import net.minecraft.entity.player.PlayerEntity;
@@ -187,7 +189,7 @@ public abstract class ContainerBase extends Container {
                 if (!API.instance().getComparer().isEqual(cached, actual, IComparer.COMPARE_QUANTITY | IComparer.COMPARE_NBT)) {
                     this.fluids.set(i, actual);
 
-                    // TODO RS.INSTANCE.network.sendTo(new MessageSlotFilterFluidUpdate(slot.slotNumber, actual), (ServerPlayerEntity) this.getPlayer());
+                    RS.NETWORK_HANDLER.sendTo((ServerPlayerEntity) getPlayer(), new MessageSlotFilterFluidUpdate(slot.slotNumber, actual));
                 }
             }
         }

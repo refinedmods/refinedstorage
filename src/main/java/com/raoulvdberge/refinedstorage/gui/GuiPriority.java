@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -29,12 +30,12 @@ public class GuiPriority extends GuiAmountSpecifying<Container> {
 
     @Override
     protected String getOkButtonText() {
-        return t("misc.refinedstorage:set");
+        return I18n.format("misc.refinedstorage:set");
     }
 
     @Override
     protected String getGuiTitle() {
-        return t("misc.refinedstorage:priority");
+        return I18n.format("misc.refinedstorage:priority");
     }
 
     @Override

@@ -2,8 +2,9 @@ package com.raoulvdberge.refinedstorage.gui;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerDestructor;
-import com.raoulvdberge.refinedstorage.gui.control.*;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 public class GuiDestructor extends GuiBase<ContainerDestructor> {
@@ -25,19 +26,19 @@ public class GuiDestructor extends GuiBase<ContainerDestructor> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/destructor.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t("gui.refinedstorage:destructor"));
-        drawString(7, 43, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format("gui.refinedstorage:destructor"));
+        renderString(7, 43, I18n.format("container.inventory"));
     }
 }

@@ -166,7 +166,7 @@ public class GridStackItem implements IGridStack {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }
 
-        gui.drawItem(x, y, stack, true, text);
+        gui.renderItem(x, y, stack, true, text);
     }
 
     @Override

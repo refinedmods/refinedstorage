@@ -1,9 +1,10 @@
-package com.raoulvdberge.refinedstorage.gui.control;
+package com.raoulvdberge.refinedstorage.gui.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class SideButtonMode extends SideButton {
@@ -17,16 +18,16 @@ public class SideButtonMode extends SideButton {
 
     @Override
     public String getTooltip() {
-        return GuiBase.t("sidebutton.refinedstorage:mode") + "\n" + TextFormatting.GRAY + GuiBase.t("sidebutton.refinedstorage:mode." + (parameter.getValue() == IFilterable.WHITELIST ? "whitelist" : "blacklist"));
+        return I18n.format("sidebutton.refinedstorage.mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.mode." + (parameter.getValue() == IFilterable.WHITELIST ? "whitelist" : "blacklist"));
     }
 
     @Override
     protected void drawButtonIcon(int x, int y) {
-        gui.drawTexture(x, y, parameter.getValue() == IFilterable.WHITELIST ? 0 : 16, 64, 16, 16);
+        gui.blit(x, y, parameter.getValue() == IFilterable.WHITELIST ? 0 : 16, 64, 16, 16);
     }
 
     @Override
-    public void actionPerformed() {
+    public void onPress() {
         TileDataManager.setParameter(parameter, parameter.getValue() == IFilterable.WHITELIST ? IFilterable.BLACKLIST : IFilterable.WHITELIST);
     }
 }

@@ -86,7 +86,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
-        if (result.getValue() != null && network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE) == null) {
+        if (network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE) == null) {
             network.getFluidStorageTracker().changed(player, result.getValue().copy());
 
             result = StackUtils.getFluid(container, false);

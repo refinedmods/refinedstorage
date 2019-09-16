@@ -82,7 +82,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
             } else if (type == IType.FLUIDS) {
                 FluidStack slot = fluidFilters.getFluid(0);
 
-                if (slot != null) {
+                if (!slot.isEmpty()) {
                     FluidStack stack = network.getFluidStorageCache().getList().get(slot, compare);
 
                     powered = isPowered(stack == null ? null : stack.getAmount());

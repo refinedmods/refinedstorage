@@ -53,7 +53,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
     private FluidHandlerProxy tank = new FluidHandlerProxy(tankIn, tankOut);
 
-    private ItemHandlerBase in = new ItemHandlerBase(1, new ListenerNetworkNode(this), stack -> StackUtils.getFluid(stack, true).getRight() != null);
+    private ItemHandlerBase in = new ItemHandlerBase(1, new ListenerNetworkNode(this), stack -> StackUtils.getFluid(stack, true).getValue() != null);
     private FluidInventory out = new FluidInventory(1, TANK_CAPACITY, new ListenerNetworkNode(this));
 
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/);
@@ -72,7 +72,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
             if (!container.isEmpty()) {
                 Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
-                if (result.getValue() != null && tankIn.fill(result.getValue(), IFluidHandler.FluidAction.SIMULATE) == result.getValue().getAmount()) {
+                if (tankIn.fill(result.getValue(), IFluidHandler.FluidAction.SIMULATE) == result.getValue().getAmount()) {
                     result = StackUtils.getFluid(container, false);
 
                     tankIn.fill(result.getValue(), IFluidHandler.FluidAction.EXECUTE);
@@ -97,18 +97,18 @@ public class NetworkNodeFluidInterface extends NetworkNode {
             FluidStack wanted = out.getFluid(0);
             FluidStack got = tankOut.getFluid();
 
-            if (wanted == null) {
-                if (got != null) {
+            if (!wanted.isEmpty()) {
+                if (!got.isEmpty()) {
                     tankOut.setFluid(network.insertFluidTracked(got, got.getAmount()));
 
                     onTankOutChanged();
                 }
-            } else if (got != null && !API.instance().getComparer().isEqual(wanted, got, IComparer.COMPARE_NBT)) {
+            } else if (!got.isEmpty() && !API.instance().getComparer().isEqual(wanted, got, IComparer.COMPARE_NBT)) {
                 tankOut.setFluid(network.insertFluidTracked(got, got.getAmount()));
 
                 onTankOutChanged();
             } else {
-                int delta = got == null ? wanted.getAmount() : (wanted.getAmount() - got.getAmount());
+                int delta = got.isEmpty() ? wanted.getAmount() : (wanted.getAmount() - got.getAmount());
 
                 if (delta > 0) {
                     final boolean actingAsStorage = isActingAsStorage();

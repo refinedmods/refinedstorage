@@ -214,7 +214,10 @@ public final class StackUtils {
     }
 
     public static Pair<ItemStack, FluidStack> getFluid(ItemStack stack, boolean simulate) {
-        // We won't have the capability on stacks with size bigger than 1.
+        if (stack.isEmpty()) {
+            return Pair.of(ItemStack.EMPTY, FluidStack.EMPTY);
+        }
+
         if (stack.getCount() > 1) {
             stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
         }
@@ -226,7 +229,7 @@ public final class StackUtils {
             return Pair.of(handler.getContainer(), result);
         }
 
-        return Pair.of(null, null);
+        return Pair.of(ItemStack.EMPTY, FluidStack.EMPTY);
     }
 
     private static final String NBT_ITEM_TYPE = "Type";

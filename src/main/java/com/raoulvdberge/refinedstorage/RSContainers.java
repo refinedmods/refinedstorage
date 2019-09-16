@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.container.factory.TileContainerFactory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSContainers {
     //@ObjectHolder(RS.ID + ":constructor")
@@ -29,8 +30,10 @@ public final class RSContainers {
     public static final ContainerType<ContainerExporter> EXPORTER = null;
     //@ObjectHolder(RS.ID + ":external_storage")
     public static final ContainerType<ContainerExternalStorage> EXTERNAL_STORAGE = null;
-    //@ObjectHolder(RS.ID + ":filter")
+
+    @ObjectHolder(RS.ID + ":filter")
     public static final ContainerType<ContainerFilter> FILTER = null;
+
     //@ObjectHolder(RS.ID + ":fluid_interface")
     public static final ContainerType<ContainerFluidInterface> FLUID_INTERFACE = null;
     //@ObjectHolder(RS.ID + ":fluid_storage")

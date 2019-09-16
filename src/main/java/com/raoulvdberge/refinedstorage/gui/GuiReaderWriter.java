@@ -3,12 +3,13 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
-import com.raoulvdberge.refinedstorage.gui.control.Scrollbar;
-import com.raoulvdberge.refinedstorage.gui.control.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.gui.widget.ScrollbarWidget;
+import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
 import java.util.Collections;
@@ -26,6 +27,8 @@ public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
     private Button add;
     private Button remove;
     private TextFieldWidget name;
+    private ScrollbarWidget scrollbar;
+
     private IGuiReaderWriter readerWriter;
 
     private int itemSelected = -1;
@@ -36,15 +39,19 @@ public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
         super(container, 176, 209, inventory, null);
 
         this.readerWriter = readerWriter;
-        this.scrollbar = new Scrollbar(157, 39, 12, 71);
+        this.scrollbar = new ScrollbarWidget(157, 39, 12, 71);
     }
 
     @Override
     public void init(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, readerWriter.getRedstoneModeParameter()));
 
-        add = addButton(x + 128, y + 15, 20, 20, "+");
-        remove = addButton(x + 150, y + 15, 20, 20, "-");
+        add = addButton(x + 128, y + 15, 20, 20, "+", true, true, btn -> {
+        });
+
+        remove = addButton(x + 150, y + 15, 20, 20, "-", true, true, btn -> {
+        });
+
         name = new TextFieldWidget(font, x + 8 + 1, y + 20 + 1, 107, font.FONT_HEIGHT, "");
         name.setEnableBackgroundDrawing(false);
         name.setVisible(true);
@@ -67,7 +74,7 @@ public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
     }
 
     @Override
-    public void update(int x, int y) {
+    public void tick(int x, int y) {
         if (scrollbar != null) {
             scrollbar.setEnabled(getRows() > VISIBLE_ROWS);
             scrollbar.setMaxOffset(getRows() - VISIBLE_ROWS);
@@ -83,25 +90,25 @@ public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
     }
 
     @Override
-    public void drawBackground(int x, int y, int mouseX, int mouseY) {
+    public void renderBackground(int x, int y, int mouseX, int mouseY) {
         bindTexture("gui/readerwriter.png");
 
-        drawTexture(x, y, 0, 0, screenWidth, screenHeight);
+        blit(x, y, 0, 0, xSize, ySize);
 
         if (itemSelectedX != -1 &&
             itemSelectedY != -1 &&
             itemSelected >= 0 &&
             itemSelected < getChannels().size()) {
-            drawTexture(x + itemSelectedX, y + itemSelectedY, 0, 216, ITEM_WIDTH, ITEM_HEIGHT);
+            blit(x + itemSelectedX, y + itemSelectedY, 0, 216, ITEM_WIDTH, ITEM_HEIGHT);
         }
 
         name.renderButton(0, 0, 0); // TODO is still needed with the new widget stuffs?
     }
 
     @Override
-    public void drawForeground(int mouseX, int mouseY) {
-        drawString(7, 7, t(readerWriter.getTitle()));
-        drawString(7, 115, t("container.inventory"));
+    public void renderForeground(int mouseX, int mouseY) {
+        renderString(7, 7, I18n.format(readerWriter.getTitle()));
+        renderString(7, 115, I18n.format("container.inventory"));
 
         int x = 8;
         int y = 39;
@@ -120,7 +127,7 @@ public class GuiReaderWriter extends GuiBase<ContainerReaderWriter> {
                 GlStateManager.pushMatrix();
                 GlStateManager.scalef(scale, scale, 1);
 
-                drawString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 7, scale), getChannels().get(item));
+                renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 7, scale), getChannels().get(item));
 
                 GlStateManager.popMatrix();
 

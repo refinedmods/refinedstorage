@@ -53,7 +53,7 @@ public interface IFilterable {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 FluidStack slot = filters.getFluid(i);
 
-                if (slot != null && API.instance().getComparer().isEqual(slot, stack, compare)) {
+                if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, compare)) {
                     return true;
                 }
             }
@@ -63,7 +63,7 @@ public interface IFilterable {
             for (int i = 0; i < filters.getSlots(); ++i) {
                 FluidStack slot = filters.getFluid(i);
 
-                if (slot != null && API.instance().getComparer().isEqual(slot, stack, compare)) {
+                if (!slot.isEmpty() && API.instance().getComparer().isEqual(slot, stack, compare)) {
                     return false;
                 }
             }

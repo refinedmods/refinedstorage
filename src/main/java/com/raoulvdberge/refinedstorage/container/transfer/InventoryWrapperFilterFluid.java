@@ -21,7 +21,7 @@ class InventoryWrapperFilterFluid implements IInventoryWrapper {
 
         FluidStack fluidInContainer = StackUtils.getFluid(stack, true).getValue();
 
-        if (fluidInContainer == null) {
+        if (fluidInContainer.isEmpty()) {
             return stop;
         }
 
@@ -32,7 +32,7 @@ class InventoryWrapperFilterFluid implements IInventoryWrapper {
         }
 
         for (int i = 0; i < filterInv.getSlots(); ++i) {
-            if (filterInv.getFluid(i) == null) {
+            if (filterInv.getFluid(i).isEmpty()) {
                 filterInv.setFluid(i, StackUtils.copy(fluidInContainer, FluidAttributes.BUCKET_VOLUME));
 
                 return stop;
