@@ -8,9 +8,9 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -189,7 +189,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
         this.viewType = type;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -198,7 +198,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
         this.sortingType = type;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -207,7 +207,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
         this.sortingDirection = direction;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -234,7 +234,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
         // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override

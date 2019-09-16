@@ -16,7 +16,7 @@ import com.raoulvdberge.refinedstorage.container.slot.grid.SlotGridCraftingResul
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyBase;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyDisabled;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
-import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.screen.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;

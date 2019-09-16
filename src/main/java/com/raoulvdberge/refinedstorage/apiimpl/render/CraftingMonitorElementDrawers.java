@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.render;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -26,7 +26,7 @@ public class CraftingMonitorElementDrawers extends ElementDrawers {
         gui.blit(x + itemWidth - 12 - 2, y + itemHeight - 12 - 2, 0, 244, 12, 12);
     };
 
-    public CraftingMonitorElementDrawers(GuiBase gui, FontRenderer fontRenderer, int itemWidth, int itemHeight) {
+    public CraftingMonitorElementDrawers(BaseScreen gui, FontRenderer fontRenderer, int itemWidth, int itemHeight) {
         super(gui, fontRenderer);
 
         this.itemWidth = itemWidth;

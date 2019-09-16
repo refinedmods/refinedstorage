@@ -22,10 +22,10 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNod
 import com.raoulvdberge.refinedstorage.apiimpl.storage.*;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluidPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPortable;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -298,7 +298,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
         this.sortingType = type;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -307,7 +307,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
         this.sortingDirection = direction;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -334,7 +334,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
         // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override

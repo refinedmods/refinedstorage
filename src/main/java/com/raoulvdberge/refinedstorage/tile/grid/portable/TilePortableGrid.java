@@ -25,12 +25,12 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPorta
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerTile;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
@@ -85,17 +85,17 @@ public class TilePortableGrid extends TileBase implements IGrid, IPortableGrid, 
             t.setSearchBoxMode(v);
             t.markDirty();
         }
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getSearchField().setMode(p)));
+    }, (initial, p) -> BaseScreen.executeLater(GuiGrid.class, grid -> grid.getSearchField().setMode(p)));
     private static final TileDataParameter<Integer, TilePortableGrid> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSize, (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.setSize(v);
             t.markDirty();
         }
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, GuiBase::init));
+    }, (initial, p) -> BaseScreen.executeLater(GuiGrid.class, BaseScreen::init));
     private static final TileDataParameter<Integer, TilePortableGrid> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabSelected, (t, v) -> {
         t.setTabSelected(v == t.getTabSelected() ? -1 : v);
         t.markDirty();
-    }, (initial, p) -> GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
     private static final TileDataParameter<Integer, TilePortableGrid> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getTabPage, (t, v) -> {
         if (v >= 0 && v <= t.getTotalTabPages()) {
             t.setTabPage(v);

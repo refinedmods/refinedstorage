@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafter;
-import com.raoulvdberge.refinedstorage.gui.TileDataParameterClientListenerCrafter;
+import com.raoulvdberge.refinedstorage.screen.TileDataParameterClientListenerCrafter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;

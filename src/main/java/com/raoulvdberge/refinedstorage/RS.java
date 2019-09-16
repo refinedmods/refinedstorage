@@ -6,11 +6,11 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
-import com.raoulvdberge.refinedstorage.gui.GuiFilter;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
+import com.raoulvdberge.refinedstorage.screen.FilterScreen;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
@@ -53,7 +53,7 @@ public final class RS {
 
     @SubscribeEvent
     public void onClientSetup(FMLClientSetupEvent e) {
-        ScreenManager.registerFactory(RSContainers.FILTER, GuiFilter::new);
+        ScreenManager.registerFactory(RSContainers.FILTER, FilterScreen::new);
     }
 
     @SubscribeEvent

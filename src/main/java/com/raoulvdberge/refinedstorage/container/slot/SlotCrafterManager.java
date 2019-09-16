@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
-import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.screen.IResizableDisplay;
 import net.minecraftforge.items.IItemHandler;
 
 public class SlotCrafterManager extends SlotBase {

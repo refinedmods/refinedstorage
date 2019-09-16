@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
-import com.raoulvdberge.refinedstorage.gui.GuiCraftingPreview;
+import com.raoulvdberge.refinedstorage.screen.GuiCraftingPreview;
 import net.minecraft.client.gui.FontRenderer;
 
 public class CraftingPreviewElementDrawers extends ElementDrawers {

@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.FluidStack;
@@ -28,7 +28,7 @@ public class MessageSlotFilterFluidUpdate {
     }
 
     public static void handle(MessageSlotFilterFluidUpdate message, Supplier<NetworkEvent.Context> ctx) {
-        GuiBase.executeLater(gui -> {
+        BaseScreen.executeLater(gui -> {
             if (message.containerSlot >= 0 && message.containerSlot < gui.getContainer().inventorySlots.size()) {
                 Slot slot = gui.getContainer().getSlot(message.containerSlot);
 

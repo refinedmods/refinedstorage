@@ -8,9 +8,9 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -193,7 +193,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
 
         this.sortingType = type;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -202,7 +202,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
 
         this.sortingDirection = direction;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -229,7 +229,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
 
         // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
     }
 
     @Override

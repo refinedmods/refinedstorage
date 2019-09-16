@@ -5,11 +5,11 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.util.FilterFluid;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.LogicalSide;
@@ -47,7 +47,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
         }
 
         if (EffectiveSide.get() == LogicalSide.CLIENT) { // TODO check
-            GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+            BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
         }
     }
 
