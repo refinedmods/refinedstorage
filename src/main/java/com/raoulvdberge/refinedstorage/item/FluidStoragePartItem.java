@@ -5,14 +5,14 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import net.minecraft.item.Item;
 
-public class ItemFluidStoragePart extends Item {
-    public ItemFluidStoragePart(FluidStorageType type) {
+public class FluidStoragePartItem extends Item {
+    public FluidStoragePartItem(FluidStorageType type) {
         super(new Item.Properties().group(RS.MAIN_GROUP));
 
         this.setRegistryName(RS.ID, type.getName() + "_fluid_storage_part");
     }
 
-    public static ItemFluidStoragePart getByType(FluidStorageType type) {
+    public static FluidStoragePartItem getByType(FluidStorageType type) {
         switch (type) {
             case SIXTY_FOUR_K:
                 return RSItems.SIXTY_FOUR_K_FLUID_STORAGE_PART;

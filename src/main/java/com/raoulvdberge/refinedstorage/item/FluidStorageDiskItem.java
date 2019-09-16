@@ -26,12 +26,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemFluidStorageDisk extends Item implements IStorageDiskProvider {
+public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
     private static final String NBT_ID = "Id";
 
     private final FluidStorageType type;
 
-    public ItemFluidStorageDisk(FluidStorageType type) {
+    public FluidStorageDiskItem(FluidStorageType type) {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
         this.type = type;
@@ -85,7 +85,7 @@ public class ItemFluidStorageDisk extends Item implements IStorageDiskProvider {
             IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(diskStack);
 
             if (disk != null && disk.getStored() == 0) {
-                ItemStack storagePart = new ItemStack(ItemFluidStoragePart.getByType(type), diskStack.getCount());
+                ItemStack storagePart = new ItemStack(FluidStoragePartItem.getByType(type), diskStack.getCount());
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);

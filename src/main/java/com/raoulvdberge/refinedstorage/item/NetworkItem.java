@@ -29,13 +29,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public abstract class ItemWithNetwork extends ItemWithEnergy implements INetworkItemProvider {
+public abstract class NetworkItem extends EnergyItem implements INetworkItemProvider {
     private static final String NBT_CONTROLLER_X = "ControllerX";
     private static final String NBT_CONTROLLER_Y = "ControllerY";
     private static final String NBT_CONTROLLER_Z = "ControllerZ";
     private static final String NBT_DIMENSION = "Dimension";
 
-    public ItemWithNetwork(Item.Properties item, boolean creative, int energyCapacity) {
+    public NetworkItem(Item.Properties item, boolean creative, int energyCapacity) {
         super(item, creative, energyCapacity);
 
         addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);

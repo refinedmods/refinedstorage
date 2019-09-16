@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -88,7 +88,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                         ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, Action.SIMULATE);
 
                         if (took == null) {
-                            if (upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
+                            if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                                 network.getCraftingManager().request(new SlottedCraftingRequest(this, filterSlot), slot, stackSize);
                             }
                         } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
@@ -141,7 +141,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                                     handler.fill(took, IFluidHandler.FluidAction.EXECUTE);
                                 }
                             }
-                        } else if (upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
+                        } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                             network.getCraftingManager().request(this, stack, toExtract);
                         }
                     }

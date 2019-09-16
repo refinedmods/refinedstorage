@@ -18,11 +18,11 @@ import net.minecraftforge.energy.IEnergyStorage;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class ItemWithEnergy extends Item {
+public abstract class EnergyItem extends Item {
     private final int energyCapacity;
     private final boolean creative;
 
-    public ItemWithEnergy(Item.Properties properties, boolean creative, int energyCapacity) {
+    public EnergyItem(Item.Properties properties, boolean creative, int energyCapacity) {
         super(properties.maxDamage(energyCapacity).maxStackSize(1));
 
         this.creative = creative;

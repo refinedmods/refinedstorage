@@ -18,12 +18,12 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemSecurityCard extends Item {
+public class SecurityCardItem extends Item {
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_OWNER_NAME = "OwnerName";
     private static final String NBT_PERMISSION = "Permission_%d";
 
-    public ItemSecurityCard() {
+    public SecurityCardItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
         this.setRegistryName(RS.ID, "security_card");

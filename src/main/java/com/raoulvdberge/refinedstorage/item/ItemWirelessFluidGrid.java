@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class ItemWirelessFluidGrid extends ItemWithNetwork {
+public class ItemWirelessFluidGrid extends NetworkItem {
     public ItemWirelessFluidGrid(Properties item, boolean creative, int energyCapacity) {
         super(item, creative, energyCapacity);
     }

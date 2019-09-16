@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemUpgrade extends Item {
+public class UpgradeItem extends Item {
     public enum Type {
         NORMAL("normal"),
         SPEED("speed"),
@@ -76,7 +76,7 @@ public class ItemUpgrade extends Item {
 
     private final Type type;
 
-    public ItemUpgrade(Type type) {
+    public UpgradeItem(Type type) {
         super(new Item.Properties().group(RS.MAIN_GROUP));
 
         this.type = type;

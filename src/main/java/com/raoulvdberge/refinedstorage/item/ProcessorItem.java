@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.item;
 import com.raoulvdberge.refinedstorage.RS;
 import net.minecraft.item.Item;
 
-public class ItemProcessor extends Item {
+public class ProcessorItem extends Item {
     public enum Type {
 
         RAW_BASIC("raw_basic"),
@@ -20,7 +20,7 @@ public class ItemProcessor extends Item {
         }
     }
 
-    public ItemProcessor(Type type) {
+    public ProcessorItem(Type type) {
         super(new Item.Properties().group(RS.MAIN_GROUP));
 
         this.setRegistryName(RS.ID, type.name + "_processor");

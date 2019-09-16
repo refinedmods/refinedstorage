@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.TileConstructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -238,7 +238,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                     }*/
                 }
             }
-        } else if (upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
+        } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
 
             network.getCraftingManager().request(this, craft, 1);
@@ -250,7 +250,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
         if (took != null) {
             DefaultDispenseItemBehavior.doDispense(world, took, 6, getDirection(), new Position(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
-        } else if (upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
+        } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
 
             network.getCraftingManager().request(this, craft, 1);

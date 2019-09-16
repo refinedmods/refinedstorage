@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.inventory.item;
 
-import com.raoulvdberge.refinedstorage.item.ItemFilter;
+import com.raoulvdberge.refinedstorage.item.FilterItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -12,13 +12,13 @@ public class ItemHandlerFilterIcon extends ItemStackHandler {
 
         this.stack = stack;
 
-        setStackInSlot(0, ItemFilter.getIcon(stack));
+        setStackInSlot(0, FilterItem.getIcon(stack));
     }
 
     @Override
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
 
-        ItemFilter.setIcon(stack, getStackInSlot(0));
+        FilterItem.setIcon(stack, getStackInSlot(0));
     }
 }

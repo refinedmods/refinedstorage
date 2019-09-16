@@ -21,13 +21,13 @@ import net.minecraft.world.dimension.DimensionType;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemNetworkCard extends Item {
+public class NetworkCardItem extends Item {
     private static final String NBT_RECEIVER_X = "ReceiverX";
     private static final String NBT_RECEIVER_Y = "ReceiverY";
     private static final String NBT_RECEIVER_Z = "ReceiverZ";
     private static final String NBT_DIMENSION = "Dimension";
 
-    public ItemNetworkCard() {
+    public NetworkCardItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
         this.setRegistryName(RS.ID, "network_card");

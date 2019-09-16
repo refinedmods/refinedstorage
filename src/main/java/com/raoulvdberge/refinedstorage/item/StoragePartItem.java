@@ -5,14 +5,14 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import net.minecraft.item.Item;
 
-public class ItemStoragePart extends Item {
-    public ItemStoragePart(ItemStorageType type) {
+public class StoragePartItem extends Item {
+    public StoragePartItem(ItemStorageType type) {
         super(new Item.Properties().group(RS.MAIN_GROUP));
 
         this.setRegistryName(RS.ID, type.getName() + "_storage_part");
     }
 
-    public static ItemStoragePart getByType(ItemStorageType type) {
+    public static StoragePartItem getByType(ItemStorageType type) {
         switch (type) {
             case ONE_K:
                 return RSItems.ONE_K_STORAGE_PART;

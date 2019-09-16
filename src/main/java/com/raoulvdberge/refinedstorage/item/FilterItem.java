@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemFilter extends Item {
+public class FilterItem extends Item {
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_MOD_FILTER = "ModFilter";
@@ -41,7 +41,7 @@ public class ItemFilter extends Item {
     private static final String NBT_TYPE = "Type";
     public static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    public ItemFilter() {
+    public FilterItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1));
 
         this.setRegistryName(RS.ID, "filter");

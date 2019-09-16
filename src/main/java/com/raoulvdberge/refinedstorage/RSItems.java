@@ -11,101 +11,101 @@ public final class RSItems {
     public static final ItemHollowCover HOLLOW_COVER = null;
 
     @ObjectHolder(RS.ID + ":quartz_enriched_iron")
-    public static final ItemQuartzEnrichedIron QUARTZ_ENRICHED_IRON = null;
+    public static final QuartzEnrichedIronItem QUARTZ_ENRICHED_IRON = null;
     @ObjectHolder(RS.ID + ":silicon")
-    public static final ItemSilicon SILICON = null;
+    public static final SiliconItem SILICON = null;
     @ObjectHolder(RS.ID + ":processor_binding")
-    public static final ItemProcessorBinding PROCESSOR_BINDING = null;
+    public static final ProcessorBindingItem PROCESSOR_BINDING = null;
     @ObjectHolder(RS.ID + ":wrench")
-    public static final ItemWrench WRENCH = null;
+    public static final WrenchItem WRENCH = null;
     @ObjectHolder(RS.ID + ":pattern")
-    public static final ItemPattern PATTERN = null;
+    public static final PatternItem PATTERN = null;
     @ObjectHolder(RS.ID + ":filter")
-    public static final ItemFilter FILTER = null;
+    public static final FilterItem FILTER = null;
     @ObjectHolder(RS.ID + ":storage_housing")
-    public static final ItemStorageHousing STORAGE_HOUSING = null;
+    public static final StorageHousingItem STORAGE_HOUSING = null;
     @ObjectHolder(RS.ID + ":cutting_tool")
-    public static final ItemCuttingTool CUTTING_TOOL = null;
+    public static final CuttingToolItem CUTTING_TOOL = null;
     @ObjectHolder(RS.ID + ":network_card")
-    public static final ItemNetworkCard NETWORK_CARD = null;
+    public static final NetworkCardItem NETWORK_CARD = null;
     @ObjectHolder(RS.ID + ":security_card")
-    public static final ItemSecurityCard SECURITY_CARD = null;
+    public static final SecurityCardItem SECURITY_CARD = null;
 
     @ObjectHolder(RS.ID + ":construction_core")
-    public static final ItemCore CONSTRUCTION_CORE = null;
+    public static final CoreItem CONSTRUCTION_CORE = null;
     @ObjectHolder(RS.ID + ":destruction_core")
-    public static final ItemCore DESTRUCTION_CORE = null;
+    public static final CoreItem DESTRUCTION_CORE = null;
 
     @ObjectHolder(RS.ID + ":raw_basic_processor")
-    public static final ItemProcessor RAW_BASIC_PROCESSOR = null;
+    public static final ProcessorItem RAW_BASIC_PROCESSOR = null;
     @ObjectHolder(RS.ID + ":raw_improved_processor")
-    public static final ItemProcessor RAW_IMPROVED_PROCESSOR = null;
+    public static final ProcessorItem RAW_IMPROVED_PROCESSOR = null;
     @ObjectHolder(RS.ID + ":raw_advanced_processor")
-    public static final ItemProcessor RAW_ADVANCED_PROCESSOR = null;
+    public static final ProcessorItem RAW_ADVANCED_PROCESSOR = null;
 
     @ObjectHolder(RS.ID + ":basic_processor")
-    public static final ItemProcessor BASIC_PROCESSOR = null;
+    public static final ProcessorItem BASIC_PROCESSOR = null;
     @ObjectHolder(RS.ID + ":improved_processor")
-    public static final ItemProcessor IMPROVED_PROCESSOR = null;
+    public static final ProcessorItem IMPROVED_PROCESSOR = null;
     @ObjectHolder(RS.ID + ":advanced_processor")
-    public static final ItemProcessor ADVANCED_PROCESSOR = null;
+    public static final ProcessorItem ADVANCED_PROCESSOR = null;
 
     @ObjectHolder(RS.ID + ":upgrade")
-    public static final ItemUpgrade UPGRADE = null;
+    public static final UpgradeItem UPGRADE = null;
     @ObjectHolder(RS.ID + ":speed_upgrade")
-    public static final ItemUpgrade SPEED_UPGRADE = null;
+    public static final UpgradeItem SPEED_UPGRADE = null;
     @ObjectHolder(RS.ID + ":range_upgrade")
-    public static final ItemUpgrade RANGE_UPGRADE = null;
+    public static final UpgradeItem RANGE_UPGRADE = null;
     @ObjectHolder(RS.ID + ":crafting_upgrade")
-    public static final ItemUpgrade CRAFTING_UPGRADE = null;
+    public static final UpgradeItem CRAFTING_UPGRADE = null;
     @ObjectHolder(RS.ID + ":stack_upgrade")
-    public static final ItemUpgrade STACK_UPGRADE = null;
+    public static final UpgradeItem STACK_UPGRADE = null;
     @ObjectHolder(RS.ID + ":silk_touch_upgrade")
-    public static final ItemUpgrade SILK_TOUCH_UPGRADE = null;
+    public static final UpgradeItem SILK_TOUCH_UPGRADE = null;
     @ObjectHolder(RS.ID + ":fortune_1_upgrade")
-    public static final ItemUpgrade FORTUNE_1_UPGRADE = null;
+    public static final UpgradeItem FORTUNE_1_UPGRADE = null;
     @ObjectHolder(RS.ID + ":fortune_2_upgrade")
-    public static final ItemUpgrade FORTUNE_2_UPGRADE = null;
+    public static final UpgradeItem FORTUNE_2_UPGRADE = null;
     @ObjectHolder(RS.ID + ":fortune_3_upgrade")
-    public static final ItemUpgrade FORTUNE_3_UPGRADE = null;
+    public static final UpgradeItem FORTUNE_3_UPGRADE = null;
 
     @ObjectHolder(RS.ID + ":1k_storage_part")
-    public static final ItemStoragePart ONE_K_STORAGE_PART = null;
+    public static final StoragePartItem ONE_K_STORAGE_PART = null;
     @ObjectHolder(RS.ID + ":4k_storage_part")
-    public static final ItemStoragePart FOUR_K_STORAGE_PART = null;
+    public static final StoragePartItem FOUR_K_STORAGE_PART = null;
     @ObjectHolder(RS.ID + ":16k_storage_part")
-    public static final ItemStoragePart SIXTEEN_K_STORAGE_PART = null;
+    public static final StoragePartItem SIXTEEN_K_STORAGE_PART = null;
     @ObjectHolder(RS.ID + ":64k_storage_part")
-    public static final ItemStoragePart SIXTY_FOUR_K_STORAGE_PART = null;
+    public static final StoragePartItem SIXTY_FOUR_K_STORAGE_PART = null;
 
     @ObjectHolder(RS.ID + ":1k_storage_disk")
-    public static final ItemStorageDisk ONE_K_STORAGE_DISK = null;
+    public static final StorageDiskItem ONE_K_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":4k_storage_disk")
-    public static final ItemStorageDisk FOUR_K_STORAGE_DISK = null;
+    public static final StorageDiskItem FOUR_K_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":16k_storage_disk")
-    public static final ItemStorageDisk SIXTEEN_K_STORAGE_DISK = null;
+    public static final StorageDiskItem SIXTEEN_K_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":64k_storage_disk")
-    public static final ItemStorageDisk SIXTY_FOUR_K_STORAGE_DISK = null;
+    public static final StorageDiskItem SIXTY_FOUR_K_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":creative_storage_disk")
-    public static final ItemStorageDisk CREATIVE_STORAGE_DISK = null;
+    public static final StorageDiskItem CREATIVE_STORAGE_DISK = null;
 
     @ObjectHolder(RS.ID + ":64k_fluid_storage_part")
-    public static final ItemFluidStoragePart SIXTY_FOUR_K_FLUID_STORAGE_PART = null;
+    public static final FluidStoragePartItem SIXTY_FOUR_K_FLUID_STORAGE_PART = null;
     @ObjectHolder(RS.ID + ":256k_fluid_storage_part")
-    public static final ItemFluidStoragePart TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_PART = null;
+    public static final FluidStoragePartItem TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_PART = null;
     @ObjectHolder(RS.ID + ":1024k_fluid_storage_part")
-    public static final ItemFluidStoragePart THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_PART = null;
+    public static final FluidStoragePartItem THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_PART = null;
     @ObjectHolder(RS.ID + ":4096k_fluid_storage_part")
-    public static final ItemFluidStoragePart FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_PART = null;
+    public static final FluidStoragePartItem FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_PART = null;
 
     @ObjectHolder(RS.ID + ":64k_fluid_storage_disk")
-    public static final ItemFluidStorageDisk SIXTY_FOUR_K_FLUID_STORAGE_DISK = null;
+    public static final FluidStorageDiskItem SIXTY_FOUR_K_FLUID_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":256k_fluid_storage_disk")
-    public static final ItemFluidStorageDisk TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_DISK = null;
+    public static final FluidStorageDiskItem TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":1024k_fluid_storage_disk")
-    public static final ItemFluidStorageDisk THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_DISK = null;
+    public static final FluidStorageDiskItem THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":4096k_fluid_storage_disk")
-    public static final ItemFluidStorageDisk FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_DISK = null;
+    public static final FluidStorageDiskItem FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":creative_fluid_storage_disk")
-    public static final ItemFluidStorageDisk CREATIVE_FLUID_STORAGE_DISK = null;
+    public static final FluidStorageDiskItem CREATIVE_FLUID_STORAGE_DISK = null;
 }

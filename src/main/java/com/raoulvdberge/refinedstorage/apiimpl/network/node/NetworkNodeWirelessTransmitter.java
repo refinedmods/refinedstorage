@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -52,7 +52,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
 
     @Override
     public int getRange() {
-        return RS.INSTANCE.config.wirelessTransmitterBaseRange + (upgrades.getUpgradeCount(ItemUpgrade.Type.RANGE) * RS.INSTANCE.config.wirelessTransmitterRangePerUpgrade);
+        return RS.INSTANCE.config.wirelessTransmitterBaseRange + (upgrades.getUpgradeCount(UpgradeItem.Type.RANGE) * RS.INSTANCE.config.wirelessTransmitterRangePerUpgrade);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.inventory.fluid;
 
-import com.raoulvdberge.refinedstorage.item.ItemFilter;
+import com.raoulvdberge.refinedstorage.item.FilterItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
@@ -15,11 +15,11 @@ public class FluidInventoryFilter extends FluidInventory {
                 stack.setTag(new CompoundNBT());
             }
 
-            stack.getTag().put(ItemFilter.NBT_FLUID_FILTERS, writeToNbt());
+            stack.getTag().put(FilterItem.NBT_FLUID_FILTERS, writeToNbt());
         };
 
-        if (stack.hasTag() && stack.getTag().contains(ItemFilter.NBT_FLUID_FILTERS)) {
-            readFromNbt(stack.getTag().getCompound(ItemFilter.NBT_FLUID_FILTERS));
+        if (stack.hasTag() && stack.getTag().contains(FilterItem.NBT_FLUID_FILTERS)) {
+            readFromNbt(stack.getTag().getCompound(FilterItem.NBT_FLUID_FILTERS));
         }
     }
 

@@ -4,8 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class ItemCuttingTool extends Item {
-    public ItemCuttingTool() {
+public class CuttingToolItem extends Item {
+    public CuttingToolItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP).maxDamage(50 - 1));
 
         this.setRegistryName(RS.ID, "cutting_tool");

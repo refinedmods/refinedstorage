@@ -11,7 +11,7 @@ import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -138,7 +138,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                     // That means we still have to autocraft 2 fluids.
                     delta -= result == null ? 0 : result.getAmount();
 
-                    if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
+                    if (delta > 0 && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                         network.getCraftingManager().request(this, wanted, delta);
                     }
                 } else if (delta < 0) {

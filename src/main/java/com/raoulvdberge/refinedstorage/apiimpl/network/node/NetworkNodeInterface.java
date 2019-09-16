@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -118,7 +118,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                     // That means we still have to autocraft 2 items.
                     delta -= result == null ? 0 : result.getCount();
 
-                    if (delta > 0 && upgrades.hasUpgrade(ItemUpgrade.Type.CRAFTING)) {
+                    if (delta > 0 && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                         network.getCraftingManager().request(new SlottedCraftingRequest(this, i), wanted, delta);
                     }
                 } else if (delta < 0) {

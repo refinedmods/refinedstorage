@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
 import com.raoulvdberge.refinedstorage.gui.widget.sidebutton.SideButtonFilterType;
-import com.raoulvdberge.refinedstorage.item.ItemFilter;
+import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.network.MessageFilterUpdate;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -33,11 +33,11 @@ public class GuiFilter extends GuiBase<ContainerFilter> {
 
         this.stack = container.getStack();
 
-        this.compare = ItemFilter.getCompare(container.getStack());
-        this.mode = ItemFilter.getMode(container.getStack());
-        this.modFilter = ItemFilter.isModFilter(container.getStack());
-        this.name = ItemFilter.getName(container.getStack());
-        this.type = ItemFilter.getType(container.getStack());
+        this.compare = FilterItem.getCompare(container.getStack());
+        this.mode = FilterItem.getMode(container.getStack());
+        this.modFilter = FilterItem.isModFilter(container.getStack());
+        this.name = FilterItem.getName(container.getStack());
+        this.type = FilterItem.getType(container.getStack());
     }
 
     @Override
@@ -110,7 +110,7 @@ public class GuiFilter extends GuiBase<ContainerFilter> {
     public void setType(int type) {
         this.type = type;
 
-        ItemFilter.setType(stack, type);
+        FilterItem.setType(stack, type);
     }
 
     public void sendUpdate() {

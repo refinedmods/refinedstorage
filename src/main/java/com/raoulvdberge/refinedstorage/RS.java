@@ -73,46 +73,46 @@ public final class RS {
 
     @SubscribeEvent
     public void onRegisterItems(RegistryEvent.Register<Item> e) {
-        e.getRegistry().register(new ItemCore(ItemCore.Type.CONSTRUCTION));
-        e.getRegistry().register(new ItemCore(ItemCore.Type.DESTRUCTION));
-        e.getRegistry().register(new ItemQuartzEnrichedIron());
-        e.getRegistry().register(new ItemProcessorBinding());
+        e.getRegistry().register(new CoreItem(CoreItem.Type.CONSTRUCTION));
+        e.getRegistry().register(new CoreItem(CoreItem.Type.DESTRUCTION));
+        e.getRegistry().register(new QuartzEnrichedIronItem());
+        e.getRegistry().register(new ProcessorBindingItem());
 
-        for (ItemProcessor.Type type : ItemProcessor.Type.values()) {
-            e.getRegistry().register(new ItemProcessor(type));
+        for (ProcessorItem.Type type : ProcessorItem.Type.values()) {
+            e.getRegistry().register(new ProcessorItem(type));
         }
 
-        e.getRegistry().register(new ItemSilicon());
+        e.getRegistry().register(new SiliconItem());
 
-        e.getRegistry().register(new ItemSecurityCard());
-        e.getRegistry().register(new ItemNetworkCard());
-        e.getRegistry().register(new ItemCuttingTool());
+        e.getRegistry().register(new SecurityCardItem());
+        e.getRegistry().register(new NetworkCardItem());
+        e.getRegistry().register(new CuttingToolItem());
 
         for (ItemStorageType type : ItemStorageType.values()) {
             if (type != ItemStorageType.CREATIVE) {
-                e.getRegistry().register(new ItemStoragePart(type));
+                e.getRegistry().register(new StoragePartItem(type));
             }
 
-            e.getRegistry().register(new ItemStorageDisk(type));
+            e.getRegistry().register(new StorageDiskItem(type));
         }
 
         for (FluidStorageType type : FluidStorageType.values()) {
             if (type != FluidStorageType.CREATIVE) {
-                e.getRegistry().register(new ItemFluidStoragePart(type));
+                e.getRegistry().register(new FluidStoragePartItem(type));
             }
 
-            e.getRegistry().register(new ItemFluidStorageDisk(type));
+            e.getRegistry().register(new FluidStorageDiskItem(type));
         }
 
-        e.getRegistry().register(new ItemStorageHousing());
+        e.getRegistry().register(new StorageHousingItem());
 
-        for (ItemUpgrade.Type type : ItemUpgrade.Type.values()) {
-            e.getRegistry().register(new ItemUpgrade(type));
+        for (UpgradeItem.Type type : UpgradeItem.Type.values()) {
+            e.getRegistry().register(new UpgradeItem(type));
         }
 
-        e.getRegistry().register(new ItemWrench());
-        e.getRegistry().register(new ItemPattern());
-        e.getRegistry().register(new ItemFilter());
+        e.getRegistry().register(new WrenchItem());
+        e.getRegistry().register(new PatternItem());
+        e.getRegistry().register(new FilterItem());
     }
 
     /* TODO

@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.item.ItemUpgrade;
+import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
@@ -236,7 +236,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public int getUpdateInterval() {
-        switch (upgrades.getUpgradeCount(ItemUpgrade.Type.SPEED)) {
+        switch (upgrades.getUpgradeCount(UpgradeItem.Type.SPEED)) {
             case 0:
                 return 10;
             case 1:
@@ -254,7 +254,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
 
     @Override
     public int getMaximumSuccessfulCraftingUpdates() {
-        switch (upgrades.getUpgradeCount(ItemUpgrade.Type.SPEED)) {
+        switch (upgrades.getUpgradeCount(UpgradeItem.Type.SPEED)) {
             case 0:
                 return 1;
             case 1:

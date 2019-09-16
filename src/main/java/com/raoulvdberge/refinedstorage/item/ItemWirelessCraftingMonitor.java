@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class ItemWirelessCraftingMonitor extends ItemWithNetwork {
+public class ItemWirelessCraftingMonitor extends NetworkItem {
     public static final String NBT_TAB_SELECTED = "TabSelected";
     public static final String NBT_TAB_PAGE = "TabPage";
 

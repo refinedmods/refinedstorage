@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ItemPattern extends Item implements ICraftingPatternProvider {
+public class PatternItem extends Item implements ICraftingPatternProvider {
     private static Map<ItemStack, CraftingPattern> CACHE = new HashMap<>();
 
     private static final String NBT_VERSION = "Version";
@@ -43,7 +43,7 @@ public class ItemPattern extends Item implements ICraftingPatternProvider {
 
     private static final int VERSION = 1;
 
-    public ItemPattern() {
+    public PatternItem() {
         super(new Item.Properties().group(RS.MAIN_GROUP));
 
         this.setRegistryName(RS.ID, "pattern");
