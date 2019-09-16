@@ -18,8 +18,8 @@ public class SideButtonDetectorMode extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
-        gui.blit(x, y, TileDetector.MODE.getValue() * 16, 176, 16, 16);
+    protected void renderButtonIcon(int x, int y) {
+        screen.blit(x, y, TileDetector.MODE.getValue() * 16, 176, 16, 16);
     }
 
     @Override

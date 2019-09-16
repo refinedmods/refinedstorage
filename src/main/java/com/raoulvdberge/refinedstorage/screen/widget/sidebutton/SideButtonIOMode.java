@@ -18,8 +18,8 @@ public class SideButtonIOMode extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
-        gui.blit(x, y, TileDiskManipulator.IO_MODE.getValue() == NetworkNodeDiskManipulator.IO_MODE_EXTRACT ? 0 : 16, 160, 16, 16);
+    protected void renderButtonIcon(int x, int y) {
+        screen.blit(x, y, TileDiskManipulator.IO_MODE.getValue() == NetworkNodeDiskManipulator.IO_MODE_EXTRACT ? 0 : 16, 160, 16, 16);
     }
 
     @Override

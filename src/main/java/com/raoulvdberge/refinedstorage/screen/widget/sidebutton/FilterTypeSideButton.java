@@ -5,13 +5,13 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
-public class SideButtonFilterType extends SideButton {
+public class FilterTypeSideButton extends SideButton {
     private FilterScreen gui;
 
-    public SideButtonFilterType(FilterScreen gui) {
-        super(gui);
+    public FilterTypeSideButton(FilterScreen screen) {
+        super(screen);
 
-        this.gui = gui;
+        this.gui = screen;
     }
 
     @Override
@@ -20,7 +20,7 @@ public class SideButtonFilterType extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
+    protected void renderButtonIcon(int x, int y) {
         gui.blit(x, y, 16 * gui.getType(), 128, 16, 16);
     }
 

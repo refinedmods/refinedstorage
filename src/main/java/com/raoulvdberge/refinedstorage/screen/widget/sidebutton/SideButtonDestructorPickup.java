@@ -12,8 +12,8 @@ public class SideButtonDestructorPickup extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
-        gui.blit(x, y, 64 + (!TileDestructor.PICKUP.getValue() ? 16 : 0), 0, 16, 16);
+    protected void renderButtonIcon(int x, int y) {
+        screen.blit(x, y, 64 + (!TileDestructor.PICKUP.getValue() ? 16 : 0), 0, 16, 16);
     }
 
     @Override

@@ -11,13 +11,13 @@ public abstract class SideButton extends Button {
     public static final int WIDTH = 18;
     public static final int HEIGHT = 18;
 
-    protected BaseScreen gui;
+    protected BaseScreen screen;
 
-    public SideButton(BaseScreen gui) {
+    public SideButton(BaseScreen screen) {
         super(-1, -1, 18, 18, "", btn -> {
         });
 
-        this.gui = gui;
+        this.screen = screen;
     }
 
     @Override
@@ -27,21 +27,21 @@ public abstract class SideButton extends Button {
 
         isHovered = RenderUtils.inBounds(x, y, width, height, mouseX, mouseY);
 
-        gui.bindTexture(RS.ID, "icons.png");
-        gui.blit(x, y, 238, isHovered ? 35 : 16, 18, 18);
+        screen.bindTexture(RS.ID, "icons.png");
+        screen.blit(x, y, 238, isHovered ? 35 : 16, 18, 18);
 
-        drawButtonIcon(x + 1, y + 1);
+        renderButtonIcon(x + 1, y + 1);
 
         if (isHovered) {
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GlStateManager.color4f(1.0f, 1.0f, 1.0f, 0.5f);
-            gui.blit(x, y, 238, 54, 18, 18);
+            screen.blit(x, y, 238, 54, 18, 18);
             GlStateManager.disableBlend();
         }
     }
 
-    protected abstract void drawButtonIcon(int x, int y);
+    protected abstract void renderButtonIcon(int x, int y);
 
     public abstract String getTooltip();
 }

@@ -14,19 +14,19 @@ public class SideButtonCrafterManagerSearchBoxMode extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage:grid.search_box_mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:grid.search_box_mode." + ((GuiCrafterManager) gui).getCrafterManager().getSearchBoxMode());
+        return I18n.format("sidebutton.refinedstorage:grid.search_box_mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:grid.search_box_mode." + ((GuiCrafterManager) screen).getCrafterManager().getSearchBoxMode());
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
-        int mode = ((GuiCrafterManager) gui).getCrafterManager().getSearchBoxMode();
+    protected void renderButtonIcon(int x, int y) {
+        int mode = ((GuiCrafterManager) screen).getCrafterManager().getSearchBoxMode();
 
-        gui.blit(x, y, mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ? 16 : 0, 96, 16, 16);
+        screen.blit(x, y, mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ? 16 : 0, 96, 16, 16);
     }
 
     @Override
     public void onPress() {
-        int mode = ((GuiCrafterManager) gui).getCrafterManager().getSearchBoxMode();
+        int mode = ((GuiCrafterManager) screen).getCrafterManager().getSearchBoxMode();
 
         if (mode == IGrid.SEARCH_BOX_MODE_NORMAL) {
             mode = IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED;

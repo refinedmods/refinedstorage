@@ -12,19 +12,19 @@ public class SideButtonGridSearchBoxMode extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage:grid.search_box_mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:grid.search_box_mode." + ((GuiGrid) gui).getGrid().getSearchBoxMode());
+        return I18n.format("sidebutton.refinedstorage:grid.search_box_mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:grid.search_box_mode." + ((GuiGrid) screen).getGrid().getSearchBoxMode());
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
-        int mode = ((GuiGrid) gui).getGrid().getSearchBoxMode();
+    protected void renderButtonIcon(int x, int y) {
+        int mode = ((GuiGrid) screen).getGrid().getSearchBoxMode();
 
-        gui.blit(x, y, mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ? 16 : 0, 96, 16, 16);
+        screen.blit(x, y, mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ? 16 : 0, 96, 16, 16);
     }
 
     @Override
     public void onPress() {
-        int mode = ((GuiGrid) gui).getGrid().getSearchBoxMode();
+        int mode = ((GuiGrid) screen).getGrid().getSearchBoxMode();
 
         if (mode == IGrid.SEARCH_BOX_MODE_NORMAL) {
             mode = IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED;
@@ -40,8 +40,8 @@ public class SideButtonGridSearchBoxMode extends SideButton {
             mode = IGrid.SEARCH_BOX_MODE_NORMAL;
         }
 
-        ((GuiGrid) gui).getGrid().onSearchBoxModeChanged(mode);
+        ((GuiGrid) screen).getGrid().onSearchBoxModeChanged(mode);
 
-        ((GuiGrid) gui).getSearchField().setMode(mode);
+        ((GuiGrid) screen).getSearchField().setMode(mode);
     }
 }

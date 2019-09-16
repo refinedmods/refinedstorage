@@ -22,11 +22,11 @@ public class SideButtonGridSortingType extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
+    protected void renderButtonIcon(int x, int y) {
         if (grid.getSortingType() == IGrid.SORTING_TYPE_LAST_MODIFIED) {
-            gui.blit(x, y, 48, 48, 16, 16);
+            screen.blit(x, y, 48, 48, 16, 16);
         } else {
-            gui.blit(x, y, grid.getSortingType() * 16, 32, 16, 16);
+            screen.blit(x, y, grid.getSortingType() * 16, 32, 16, 16);
         }
     }
 

@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.network.MessageFilterUpdate;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonFilterType;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.FilterTypeSideButton;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -25,8 +25,8 @@ public class FilterScreen extends BaseScreen<ContainerFilter> {
     private String name;
     private int type;
 
-    private GuiCheckBox toggleModFilter;
-    private Button toggleMode;
+    private GuiCheckBox modFilterCheckBox;
+    private Button modeButton;
     private TextFieldWidget nameField;
 
     public FilterScreen(ContainerFilter container, PlayerInventory inventory, ITextComponent title) {
@@ -49,13 +49,13 @@ public class FilterScreen extends BaseScreen<ContainerFilter> {
             sendUpdate();
         });
 
-        toggleModFilter = addCheckBox(0, y + 71 + 25, I18n.format("gui.refinedstorage.filter.mod_filter"), modFilter, btn -> {
+        modFilterCheckBox = addCheckBox(0, y + 71 + 25, I18n.format("gui.refinedstorage.filter.mod_filter"), modFilter, btn -> {
             modFilter = !modFilter;
 
             sendUpdate();
         });
 
-        toggleMode = addButton(x + 7, y + 71 + 21, 0, 20, "", true, true, btn -> {
+        modeButton = addButton(x + 7, y + 71 + 21, 0, 20, "", true, true, btn -> {
             mode = mode == IFilter.MODE_WHITELIST ? IFilter.MODE_BLACKLIST : IFilter.MODE_WHITELIST;
 
             updateModeButton(mode);
@@ -76,15 +76,15 @@ public class FilterScreen extends BaseScreen<ContainerFilter> {
 
         addButton(nameField);
 
-        addSideButton(new SideButtonFilterType(this));
+        addSideButton(new FilterTypeSideButton(this));
     }
 
     private void updateModeButton(int mode) {
         String text = mode == IFilter.MODE_WHITELIST ? I18n.format("sidebutton.refinedstorage.mode.whitelist") : I18n.format("sidebutton.refinedstorage.mode.blacklist");
 
-        toggleMode.setWidth(font.getStringWidth(text) + 12);
-        toggleMode.setMessage(text);
-        toggleModFilter.x = toggleMode.x + toggleMode.getWidth() + 4;
+        modeButton.setWidth(font.getStringWidth(text) + 12);
+        modeButton.setMessage(text);
+        modFilterCheckBox.x = modeButton.x + modeButton.getWidth() + 4;
     }
 
     @Override

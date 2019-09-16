@@ -22,8 +22,8 @@ public class SideButtonMode extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
-        gui.blit(x, y, parameter.getValue() == IFilterable.WHITELIST ? 0 : 16, 64, 16, 16);
+    protected void renderButtonIcon(int x, int y) {
+        screen.blit(x, y, parameter.getValue() == IFilterable.WHITELIST ? 0 : 16, 64, 16, 16);
     }
 
     @Override

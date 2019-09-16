@@ -20,8 +20,8 @@ public class SideButtonGridSortingDirection extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
-        gui.blit(x, y, grid.getSortingDirection() * 16, 16, 16, 16);
+    protected void renderButtonIcon(int x, int y) {
+        screen.blit(x, y, grid.getSortingDirection() * 16, 16, 16, 16);
     }
 
     @Override

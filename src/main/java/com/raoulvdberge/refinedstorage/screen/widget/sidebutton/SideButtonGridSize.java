@@ -24,7 +24,7 @@ public class SideButtonGridSize extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
+    protected void renderButtonIcon(int x, int y) {
         int size = this.size.get();
 
         int tx = 0;
@@ -39,7 +39,7 @@ public class SideButtonGridSize extends SideButton {
             tx = 32;
         }
 
-        gui.blit(x, y, 64 + tx, 64, 16, 16);
+        screen.blit(x, y, 64 + tx, 64, 16, 16);
     }
 
     @Override

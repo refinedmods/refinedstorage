@@ -20,8 +20,8 @@ public class SideButtonGridViewType extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
-        gui.blit(x, y, (grid.getViewType() - (grid.getViewType() >= 3 ? 3 : 0)) * 16, 112, 16, 16);
+    protected void renderButtonIcon(int x, int y) {
+        screen.blit(x, y, (grid.getViewType() - (grid.getViewType() >= 3 ? 3 : 0)) * 16, 112, 16, 16);
     }
 
     @Override

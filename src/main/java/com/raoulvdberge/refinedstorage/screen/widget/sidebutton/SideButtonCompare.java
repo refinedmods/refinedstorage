@@ -32,7 +32,7 @@ public class SideButtonCompare extends SideButton {
     }
 
     @Override
-    protected void drawButtonIcon(int x, int y) {
+    protected void renderButtonIcon(int x, int y) {
         int ty = 0;
 
         if (mask == IComparer.COMPARE_NBT) {
@@ -41,7 +41,7 @@ public class SideButtonCompare extends SideButton {
 
         int tx = (parameter.getValue() & mask) == mask ? 0 : 16;
 
-        gui.blit(x, y, tx, ty, 16, 16);
+        screen.blit(x, y, tx, ty, 16, 16);
     }
 
     @Override
