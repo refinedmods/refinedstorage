@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.item.capabilityprovider.CapabilityProviderEnergy;
+import com.raoulvdberge.refinedstorage.item.capabilityprovider.EnergyCapabilityProvider;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ public abstract class EnergyItem extends Item {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT tag) {
-        return new CapabilityProviderEnergy(stack, energyCapacity);
+        return new EnergyCapabilityProvider(stack, energyCapacity);
     }
 
     @Override

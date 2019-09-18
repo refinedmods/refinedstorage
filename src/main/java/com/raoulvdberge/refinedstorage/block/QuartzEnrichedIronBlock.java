@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 
-// TODO DROPS
 public class QuartzEnrichedIronBlock extends Block {
     public QuartzEnrichedIronBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);

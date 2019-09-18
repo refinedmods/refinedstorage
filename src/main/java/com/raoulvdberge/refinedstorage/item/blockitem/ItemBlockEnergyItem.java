@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.item.blockitem;
 
 import com.raoulvdberge.refinedstorage.block.BlockBase;
-import com.raoulvdberge.refinedstorage.item.capabilityprovider.CapabilityProviderEnergy;
+import com.raoulvdberge.refinedstorage.item.capabilityprovider.EnergyCapabilityProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -23,7 +23,7 @@ public abstract class ItemBlockEnergyItem extends ItemBlockBase {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT tag) {
-        return new CapabilityProviderEnergy(stack, energyCapacity);
+        return new EnergyCapabilityProvider(stack, energyCapacity);
     }
 /* TODO
     @Override

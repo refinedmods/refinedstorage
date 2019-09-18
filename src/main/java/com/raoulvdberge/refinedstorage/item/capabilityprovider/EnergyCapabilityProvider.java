@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.item.capabilityprovider;
 
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.ItemEnergyForge;
+import com.raoulvdberge.refinedstorage.integration.forgeenergy.ItemEnergyStorage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -12,12 +12,12 @@ import net.minecraftforge.energy.IEnergyStorage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class CapabilityProviderEnergy implements ICapabilityProvider {
+public class EnergyCapabilityProvider implements ICapabilityProvider {
     private ItemStack stack;
     private int energyCapacity;
-    private LazyOptional<IEnergyStorage> capability = LazyOptional.of(() -> new ItemEnergyForge(stack, energyCapacity));
+    private LazyOptional<IEnergyStorage> capability = LazyOptional.of(() -> new ItemEnergyStorage(stack, energyCapacity));
 
-    public CapabilityProviderEnergy(ItemStack stack, int energyCapacity) {
+    public EnergyCapabilityProvider(ItemStack stack, int energyCapacity) {
         this.stack = stack;
         this.energyCapacity = energyCapacity;
     }
