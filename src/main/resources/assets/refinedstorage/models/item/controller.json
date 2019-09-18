@@ -1,3 +1,28 @@
 {
-  "parent": "refinedstorage:block/controller/controller_off"
+  "overrides": [
+    {
+      "predicate": {
+        "energy_type": 0
+      },
+      "model": "refinedstorage:block/controller/controller_off"
+    },
+    {
+      "predicate": {
+        "energy_type": 1
+      },
+      "model": "refinedstorage:block/controller/controller_nearly_off"
+    },
+    {
+      "predicate": {
+        "energy_type": 2
+      },
+      "model": "refinedstorage:block/controller/controller_nearly_on"
+    },
+    {
+      "predicate": {
+        "energy_type": 3
+      },
+      "model": "refinedstorage:block/controller/controller_on"
+    }
+  ]
 }

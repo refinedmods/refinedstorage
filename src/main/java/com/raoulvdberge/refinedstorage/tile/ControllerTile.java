@@ -221,7 +221,6 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
                 }
             }
 
-            /*
             if (type == ControllerBlock.Type.NORMAL) {
                 if (!RS.CONFIG.getController().getUseEnergy()) {
                     this.energy.setStored(this.energy.getCapacity());
@@ -232,8 +231,7 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
                 }
             } else if (type == ControllerBlock.Type.CREATIVE) {
                 this.energy.setStored(this.energy.getCapacity());
-            }*/
-            this.energy.setStored(5000);
+            }
 
             boolean canRun = canRun();
 
@@ -587,7 +585,7 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
         return getEnergyType(this.energy.getStored(), this.energy.getCapacity());
     }
 
-    private static ControllerBlock.EnergyType getEnergyType(int stored, int capacity) {
+    public static ControllerBlock.EnergyType getEnergyType(int stored, int capacity) {
         int energy = getEnergyScaled(stored, capacity, 100);
 
         if (energy <= 0) {
