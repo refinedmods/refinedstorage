@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.container.ContainerConstructor;
+import com.raoulvdberge.refinedstorage.container.ConstructorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonConstuctorDrop;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
@@ -11,8 +11,8 @@ import com.raoulvdberge.refinedstorage.tile.TileConstructor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiConstructor extends BaseScreen<ContainerConstructor> {
-    public GuiConstructor(ContainerConstructor container, PlayerInventory inventory) {
+public class GuiConstructor extends BaseScreen<ConstructorContainer> {
+    public GuiConstructor(ConstructorContainer container, PlayerInventory inventory) {
         super(container, 211, 137, inventory, null); // TODO TextComponent
     }
 

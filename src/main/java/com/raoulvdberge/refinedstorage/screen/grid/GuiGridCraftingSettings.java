@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen.grid;
 
 import com.google.common.primitives.Ints;
-import com.raoulvdberge.refinedstorage.container.ContainerCraftingSettings;
+import com.raoulvdberge.refinedstorage.container.CraftingSettingsContainer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.GuiAmountSpecifying;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackFluid;
@@ -10,11 +10,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fluids.FluidAttributes;
 
-public class GuiGridCraftingSettings extends GuiAmountSpecifying<ContainerCraftingSettings> {
+public class GuiGridCraftingSettings extends GuiAmountSpecifying<CraftingSettingsContainer> {
     private IGridStack stack;
 
     public GuiGridCraftingSettings(BaseScreen parent, PlayerEntity player, IGridStack stack) {
-        super(parent, new ContainerCraftingSettings(player, stack), 172, 99, player.inventory);
+        super(parent, new CraftingSettingsContainer(player, stack), 172, 99, player.inventory);
 
         this.stack = stack;
     }

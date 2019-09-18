@@ -2,14 +2,14 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.container.ContainerStorageMonitor;
+import com.raoulvdberge.refinedstorage.container.StorageMonitorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiStorageMonitor extends BaseScreen<ContainerStorageMonitor> {
-    public GuiStorageMonitor(ContainerStorageMonitor container, PlayerInventory inventory) {
+public class GuiStorageMonitor extends BaseScreen<StorageMonitorContainer> {
+    public GuiStorageMonitor(StorageMonitorContainer container, PlayerInventory inventory) {
         super(container, 211, 137, inventory, null);
     }
 

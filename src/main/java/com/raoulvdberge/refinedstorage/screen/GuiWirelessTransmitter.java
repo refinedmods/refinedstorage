@@ -1,14 +1,14 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.container.ContainerWirelessTransmitter;
+import com.raoulvdberge.refinedstorage.container.WirelessTransmitterContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileWirelessTransmitter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiWirelessTransmitter extends BaseScreen<ContainerWirelessTransmitter> {
-    public GuiWirelessTransmitter(ContainerWirelessTransmitter container, PlayerInventory inventory) {
+public class GuiWirelessTransmitter extends BaseScreen<WirelessTransmitterContainer> {
+    public GuiWirelessTransmitter(WirelessTransmitterContainer container, PlayerInventory inventory) {
         super(container, 211, 137, inventory, null);
     }
 

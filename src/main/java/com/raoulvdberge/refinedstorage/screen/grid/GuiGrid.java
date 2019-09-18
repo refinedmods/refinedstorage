@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.container.GridContainer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.*;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.client.config.GuiCheckBox;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GuiGrid extends BaseScreen<ContainerGrid> implements IResizableDisplay {
+public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisplay {
     private IGridView view;
 
     private SearchWidget searchField;
@@ -51,7 +51,7 @@ public class GuiGrid extends BaseScreen<ContainerGrid> implements IResizableDisp
 
     private int slotNumber;
 
-    public GuiGrid(ContainerGrid container, IGrid grid, PlayerInventory inventory) {
+    public GuiGrid(GridContainer container, IGrid grid, PlayerInventory inventory) {
         super(container, 227, 0, inventory, null);
 
         this.grid = grid;
@@ -84,7 +84,7 @@ public class GuiGrid extends BaseScreen<ContainerGrid> implements IResizableDisp
 
         this.tabs.init(xSize - 32);
 
-        this.scrollbar = new ScrollbarWidget(174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
+        this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
         if (grid instanceof NetworkNodeGrid || grid instanceof TilePortableGrid) {
             addSideButton(new SideButtonRedstoneMode(this, grid instanceof NetworkNodeGrid ? TileGrid.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));

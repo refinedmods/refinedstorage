@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.container.ContainerSecurityManager;
+import com.raoulvdberge.refinedstorage.container.SecurityManagerContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -11,11 +11,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
-public class GuiSecurityManager extends BaseScreen<ContainerSecurityManager> {
+public class GuiSecurityManager extends BaseScreen<SecurityManagerContainer> {
     private TileSecurityManager securityManager;
     private GuiCheckBox[] permissions = new GuiCheckBox[Permission.values().length];
 
-    public GuiSecurityManager(ContainerSecurityManager container, TileSecurityManager securityManager, PlayerInventory inventory) {
+    public GuiSecurityManager(SecurityManagerContainer container, TileSecurityManager securityManager, PlayerInventory inventory) {
         super(container, 176, 234, inventory, null);
 
         this.securityManager = securityManager;

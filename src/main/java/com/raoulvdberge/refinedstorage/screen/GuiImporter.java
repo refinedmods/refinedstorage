@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.container.ContainerImporter;
+import com.raoulvdberge.refinedstorage.container.ImporterContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonMode;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
@@ -11,8 +11,8 @@ import com.raoulvdberge.refinedstorage.tile.TileImporter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiImporter extends BaseScreen<ContainerImporter> {
-    public GuiImporter(ContainerImporter container, PlayerInventory inventory) {
+public class GuiImporter extends BaseScreen<ImporterContainer> {
+    public GuiImporter(ImporterContainer container, PlayerInventory inventory) {
         super(container, 211, 137, inventory, null);
     }
 

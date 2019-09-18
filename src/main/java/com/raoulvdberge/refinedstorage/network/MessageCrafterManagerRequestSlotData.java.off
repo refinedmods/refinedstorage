@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
+import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IContainerListener;

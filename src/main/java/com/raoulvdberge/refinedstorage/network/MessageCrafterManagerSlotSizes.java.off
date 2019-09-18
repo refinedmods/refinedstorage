@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
+import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
 import com.raoulvdberge.refinedstorage.gui.GuiBase;
 import com.raoulvdberge.refinedstorage.gui.GuiCrafterManager;
 import io.netty.buffer.ByteBuf;

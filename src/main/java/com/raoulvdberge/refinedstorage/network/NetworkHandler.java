@@ -24,6 +24,8 @@ public class NetworkHandler {
         handler.registerMessage(id++, MessageStorageDiskSizeResponse.class, MessageStorageDiskSizeResponse::encode, MessageStorageDiskSizeResponse::decode, MessageStorageDiskSizeResponse::handle);
         handler.registerMessage(id++, MessageFilterUpdate.class, MessageFilterUpdate::encode, MessageFilterUpdate::decode, MessageFilterUpdate::handle);
         handler.registerMessage(id++, MessageSlotFilterFluidUpdate.class, MessageSlotFilterFluidUpdate::encode, MessageSlotFilterFluidUpdate::decode, MessageSlotFilterFluidUpdate::handle);
+        handler.registerMessage(id++, MessageTileDataParameter.class, MessageTileDataParameter::encode, MessageTileDataParameter::decode, MessageTileDataParameter::handle);
+        handler.registerMessage(id++, MessageTileDataParameterUpdate.class, MessageTileDataParameterUpdate::encode, MessageTileDataParameterUpdate::decode, MessageTileDataParameterUpdate::handle);
     }
 
     public void sendToServer(Object message) {

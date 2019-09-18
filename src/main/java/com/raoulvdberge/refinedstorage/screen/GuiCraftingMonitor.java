@@ -12,7 +12,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.render.CraftingMonitorElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
-import com.raoulvdberge.refinedstorage.container.ContainerCraftingMonitor;
+import com.raoulvdberge.refinedstorage.container.CraftingMonitorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.TabListWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class GuiCraftingMonitor extends BaseScreen<ContainerCraftingMonitor> {
+public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
     public static class CraftingMonitorTask implements IGridTab {
         private UUID id;
         private ICraftingRequestInfo requested;
@@ -102,7 +102,7 @@ public class GuiCraftingMonitor extends BaseScreen<ContainerCraftingMonitor> {
 
     private IElementDrawers drawers = new CraftingMonitorElementDrawers(this, font, ITEM_WIDTH, ITEM_HEIGHT);
 
-    public GuiCraftingMonitor(ContainerCraftingMonitor container, ICraftingMonitor craftingMonitor, PlayerInventory inventory) {
+    public GuiCraftingMonitor(CraftingMonitorContainer container, ICraftingMonitor craftingMonitor, PlayerInventory inventory) {
         super(container, 254, 201, inventory, null);
 
         this.craftingMonitor = craftingMonitor;
@@ -154,7 +154,7 @@ public class GuiCraftingMonitor extends BaseScreen<ContainerCraftingMonitor> {
     public void init(int x, int y) {
         this.tabs.init(xSize);
 
-        this.scrollbar = new ScrollbarWidget(235, 20, 12, 149);
+        this.scrollbar = new ScrollbarWidget(this, 235, 20, 12, 149);
 
         if (craftingMonitor.getRedstoneModeParameter() != null) {
             addSideButton(new SideButtonRedstoneMode(this, craftingMonitor.getRedstoneModeParameter()));

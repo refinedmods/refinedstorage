@@ -1,16 +1,16 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.container.ContainerNetworkTransmitter;
+import com.raoulvdberge.refinedstorage.container.NetworkTransmitterContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiNetworkTransmitter extends BaseScreen<ContainerNetworkTransmitter> {
+public class GuiNetworkTransmitter extends BaseScreen<NetworkTransmitterContainer> {
     private TileNetworkTransmitter networkTransmitter;
 
-    public GuiNetworkTransmitter(ContainerNetworkTransmitter container, TileNetworkTransmitter networkTransmitter, PlayerInventory inventory) {
+    public GuiNetworkTransmitter(NetworkTransmitterContainer container, TileNetworkTransmitter networkTransmitter, PlayerInventory inventory) {
         super(container, 176, 137, inventory, null);
 
         this.networkTransmitter = networkTransmitter;

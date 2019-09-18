@@ -2,14 +2,14 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.container.ContainerDestructor;
+import com.raoulvdberge.refinedstorage.container.DestructorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiDestructor extends BaseScreen<ContainerDestructor> {
-    public GuiDestructor(ContainerDestructor container, PlayerInventory playerInventory) {
+public class GuiDestructor extends BaseScreen<DestructorContainer> {
+    public GuiDestructor(DestructorContainer container, PlayerInventory playerInventory) {
         super(container, 211, 137, playerInventory, null);
     }
 

@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.container.ContainerDetector;
+import com.raoulvdberge.refinedstorage.container.DetectorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonCompare;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonDetectorMode;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonType;
@@ -11,10 +11,10 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiDetector extends BaseScreen<ContainerDetector> {
+public class GuiDetector extends BaseScreen<DetectorContainer> {
     private TextFieldWidget amount;
 
-    public GuiDetector(ContainerDetector container, PlayerInventory inventory) {
+    public GuiDetector(DetectorContainer container, PlayerInventory inventory) {
         super(container, 176, 137, inventory, null);
     }
 

@@ -1,18 +1,18 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.google.common.primitives.Ints;
-import com.raoulvdberge.refinedstorage.container.ContainerAmount;
+import com.raoulvdberge.refinedstorage.container.AmountContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
-public class GuiAmount extends GuiAmountSpecifying<ContainerAmount> {
+public class GuiAmount extends GuiAmountSpecifying<AmountContainer> {
     private int containerSlot;
     private ItemStack stack;
     private int maxAmount;
 
     public GuiAmount(BaseScreen parent, PlayerEntity player, int containerSlot, ItemStack stack, int maxAmount) {
-        super(parent, new ContainerAmount(player, stack), 172, 99, player.inventory);
+        super(parent, new AmountContainer(player, stack), 172, 99, player.inventory);
 
         this.containerSlot = containerSlot;
         this.stack = stack;

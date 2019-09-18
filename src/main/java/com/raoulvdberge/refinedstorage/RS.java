@@ -8,19 +8,23 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryIt
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
 import com.raoulvdberge.refinedstorage.block.MachineCasingBlock;
 import com.raoulvdberge.refinedstorage.block.QuartzEnrichedIronBlock;
-import com.raoulvdberge.refinedstorage.container.ContainerFilter;
+import com.raoulvdberge.refinedstorage.container.ControllerContainer;
+import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.raoulvdberge.refinedstorage.tile.ControllerTile;
+import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -76,13 +80,27 @@ public final class RS {
 
     @SubscribeEvent
     public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> e) {
-        e.getRegistry().register(TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.NORMAL), RSBlocks.CONTROLLER).build(null).setRegistryName(RS.ID, "controller"));
-        e.getRegistry().register(TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.CREATIVE), RSBlocks.CREATIVE_CONTROLLER).build(null).setRegistryName(RS.ID, "creative_controller"));
+        e.getRegistry().register(registerTileDataParameters(
+            TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.NORMAL), RSBlocks.CONTROLLER).build(null).setRegistryName(RS.ID, "controller")
+        ));
+
+        e.getRegistry().register(registerTileDataParameters(
+            TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.CREATIVE), RSBlocks.CREATIVE_CONTROLLER).build(null).setRegistryName(RS.ID, "creative_controller")
+        ));
+    }
+
+    private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
+        TileBase tile = (TileBase) t.create();
+
+        tile.getDataManager().getParameters().forEach(TileDataManager::registerParameter);
+
+        return t;
     }
 
     @SubscribeEvent
     public void onRegisterContainers(RegistryEvent.Register<ContainerType<?>> e) {
-        e.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new ContainerFilter(inv.player, inv.getCurrentItem(), windowId)).setRegistryName(RS.ID, "filter"));
+        e.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new FilterContainer(inv.player, inv.getCurrentItem(), windowId)).setRegistryName(RS.ID, "filter"));
+        e.getRegistry().register(IForgeContainerType.create(((windowId, inv, data) -> new ControllerContainer(null, inv.player, windowId))).setRegistryName(RS.ID, "controller"));
     }
 
     @SubscribeEvent

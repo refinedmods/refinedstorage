@@ -2,14 +2,14 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.container.ContainerDiskManipulator;
+import com.raoulvdberge.refinedstorage.container.DiskManipulatorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiDiskManipulator extends BaseScreen<ContainerDiskManipulator> {
-    public GuiDiskManipulator(ContainerDiskManipulator container, PlayerInventory playerInventory) {
+public class GuiDiskManipulator extends BaseScreen<DiskManipulatorContainer> {
+    public GuiDiskManipulator(DiskManipulatorContainer container, PlayerInventory playerInventory) {
         super(container, 211, 211, playerInventory, null);
     }
 

@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
+import com.raoulvdberge.refinedstorage.container.ReaderWriterContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fml.common.network.ByteBufUtils;

@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilterFluid;
+import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButton;
@@ -106,13 +106,13 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         for (int i = 0; i < this.container.inventorySlots.size(); ++i) {
             Slot slot = container.inventorySlots.get(i);
 
-            if (slot.isEnabled() && slot instanceof SlotFilterFluid) {
-                FluidStack stack = ((SlotFilterFluid) slot).getFluidInventory().getFluid(slot.getSlotIndex());
+            if (slot.isEnabled() && slot instanceof FluidFilterSlot) {
+                FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!stack.isEmpty()) {
                     FluidRenderer.INSTANCE.render(guiLeft + slot.xPos, guiTop + slot.yPos, stack);
 
-                    if (((SlotFilterFluid) slot).isSizeAllowed()) {
+                    if (((FluidFilterSlot) slot).isSizeAllowed()) {
                         renderQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()));
 
                         GL11.glDisable(GL11.GL_LIGHTING);
@@ -142,8 +142,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         for (int i = 0; i < this.container.inventorySlots.size(); ++i) {
             Slot slot = container.inventorySlots.get(i);
 
-            if (slot.isEnabled() && slot instanceof SlotFilterFluid) {
-                FluidStack stack = ((SlotFilterFluid) slot).getFluidInventory().getFluid(slot.getSlotIndex());
+            if (slot.isEnabled() && slot instanceof FluidFilterSlot) {
+                FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!stack.isEmpty() && RenderUtils.inBounds(slot.xPos, slot.yPos, 17, 17, mouseX, mouseY)) {
                     renderTooltip(mouseX, mouseY, stack.getDisplayName().getFormattedText());

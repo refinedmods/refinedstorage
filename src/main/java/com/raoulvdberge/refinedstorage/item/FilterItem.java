@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import com.raoulvdberge.refinedstorage.container.ContainerFilter;
+import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterItems;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -65,7 +65,7 @@ public class FilterItem extends Item {
                 @Nullable
                 @Override
                 public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
-                    return new ContainerFilter(player, inventory.getCurrentItem(), windowId);
+                    return new FilterContainer(player, inventory.getCurrentItem(), windowId);
                 }
             });
 

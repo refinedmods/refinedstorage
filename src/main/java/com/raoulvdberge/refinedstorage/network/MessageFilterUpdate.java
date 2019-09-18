@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.container.ContainerFilter;
+import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -45,12 +45,12 @@ public class MessageFilterUpdate {
         ctx.get().enqueueWork(() -> {
             PlayerEntity player = ctx.get().getSender();
 
-            if (player != null && player.openContainer instanceof ContainerFilter) {
-                FilterItem.setCompare(((ContainerFilter) player.openContainer).getStack(), message.compare);
-                FilterItem.setMode(((ContainerFilter) player.openContainer).getStack(), message.mode);
-                FilterItem.setModFilter(((ContainerFilter) player.openContainer).getStack(), message.modFilter);
-                FilterItem.setName(((ContainerFilter) player.openContainer).getStack(), message.name);
-                FilterItem.setType(((ContainerFilter) player.openContainer).getStack(), message.type);
+            if (player != null && player.openContainer instanceof FilterContainer) {
+                FilterItem.setCompare(((FilterContainer) player.openContainer).getStack(), message.compare);
+                FilterItem.setMode(((FilterContainer) player.openContainer).getStack(), message.mode);
+                FilterItem.setModFilter(((FilterContainer) player.openContainer).getStack(), message.modFilter);
+                FilterItem.setName(((FilterContainer) player.openContainer).getStack(), message.name);
+                FilterItem.setType(((FilterContainer) player.openContainer).getStack(), message.type);
             }
         });
         ctx.get().setPacketHandled(true);

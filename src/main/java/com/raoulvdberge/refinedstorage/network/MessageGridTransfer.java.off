@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
+import com.raoulvdberge.refinedstorage.container.GridContainer;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import io.netty.buffer.ByteBuf;
 import mezz.jei.api.gui.IGuiIngredient;

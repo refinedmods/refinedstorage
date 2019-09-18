@@ -1,14 +1,14 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.container.ContainerRelay;
+import com.raoulvdberge.refinedstorage.container.RelayContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileRelay;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiRelay extends BaseScreen<ContainerRelay> {
-    public GuiRelay(ContainerRelay container, PlayerInventory inventory) {
+public class GuiRelay extends BaseScreen<RelayContainer> {
+    public GuiRelay(RelayContainer container, PlayerInventory inventory) {
         super(container, 176, 131, inventory, null);
     }
 

@@ -43,6 +43,7 @@ import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -64,6 +65,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
 import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
@@ -84,6 +86,11 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
     public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getCapacity());
     public static final TileDataParameter<List<ClientNode>, ControllerTile> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), t -> {
         List<ClientNode> nodes = new ArrayList<>();
+
+        Random r = new Random();
+        for (int i = 0; i < 50; ++i) {
+            nodes.add(new ClientNode(new ItemStack(r.nextBoolean() ? Blocks.DIRT : (r.nextBoolean() ? Blocks.BOOKSHELF : (r.nextBoolean() ? Blocks.STONE : Blocks.GLASS))), 10, 10));
+        }
 
         for (INetworkNode node : t.nodeGraph.all()) {
             if (node.canUpdate()) {

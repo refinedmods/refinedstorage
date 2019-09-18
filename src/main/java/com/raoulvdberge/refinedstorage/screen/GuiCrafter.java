@@ -1,14 +1,14 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.container.ContainerCrafter;
+import com.raoulvdberge.refinedstorage.container.CrafterContainer;
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 
-public class GuiCrafter extends BaseScreen<ContainerCrafter> {
-    public GuiCrafter(ContainerCrafter container, PlayerInventory inventory) {
+public class GuiCrafter extends BaseScreen<CrafterContainer> {
+    public GuiCrafter(CrafterContainer container, PlayerInventory inventory) {
         super(container, 211, 137, inventory, null);
     }
 

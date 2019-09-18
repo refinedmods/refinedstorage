@@ -1,18 +1,18 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.google.common.primitives.Ints;
-import com.raoulvdberge.refinedstorage.container.ContainerFluidAmount;
+import com.raoulvdberge.refinedstorage.container.FluidAmountContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GuiFluidAmount extends GuiAmountSpecifying<ContainerFluidAmount> {
+public class GuiFluidAmount extends GuiAmountSpecifying<FluidAmountContainer> {
     private int containerSlot;
     private FluidStack stack;
     private int maxAmount;
 
     public GuiFluidAmount(BaseScreen parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount) {
-        super(parent, new ContainerFluidAmount(player, stack), 172, 99, player.inventory);
+        super(parent, new FluidAmountContainer(player, stack), 172, 99, player.inventory);
 
         this.containerSlot = containerSlot;
         this.stack = stack;

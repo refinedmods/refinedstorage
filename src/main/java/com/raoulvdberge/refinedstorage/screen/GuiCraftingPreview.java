@@ -63,7 +63,7 @@ public class GuiCraftingPreview extends BaseScreen {
         this.quantity = quantity;
         this.fluids = fluids;
 
-        this.scrollbar = new ScrollbarWidget(235, 20, 12, 149);
+        this.scrollbar = new ScrollbarWidget(this, 235, 20, 12, 149);
     }
 
     @Override

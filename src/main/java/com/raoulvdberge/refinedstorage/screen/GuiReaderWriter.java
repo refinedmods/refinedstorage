@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
-import com.raoulvdberge.refinedstorage.container.ContainerReaderWriter;
+import com.raoulvdberge.refinedstorage.container.ReaderWriterContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -16,7 +16,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import java.util.Collections;
 import java.util.List;
 
-public class GuiReaderWriter extends BaseScreen<ContainerReaderWriter> {
+public class GuiReaderWriter extends BaseScreen<ReaderWriterContainer> {
     private static final int VISIBLE_ROWS = 4;
 
     private static final int ITEM_WIDTH = 143;
@@ -36,11 +36,11 @@ public class GuiReaderWriter extends BaseScreen<ContainerReaderWriter> {
     private int itemSelectedX = -1;
     private int itemSelectedY = -1;
 
-    public GuiReaderWriter(ContainerReaderWriter container, IGuiReaderWriter readerWriter, PlayerInventory inventory) {
+    public GuiReaderWriter(ReaderWriterContainer container, IGuiReaderWriter readerWriter, PlayerInventory inventory) {
         super(container, 176, 209, inventory, null);
 
         this.readerWriter = readerWriter;
-        this.scrollbar = new ScrollbarWidget(157, 39, 12, 71);
+        this.scrollbar = new ScrollbarWidget(this, 157, 39, 12, 71);
     }
 
     @Override

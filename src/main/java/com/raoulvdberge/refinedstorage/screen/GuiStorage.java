@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
-import com.raoulvdberge.refinedstorage.container.ContainerBase;
+import com.raoulvdberge.refinedstorage.container.BaseContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.widget.button.Button;
@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.TextFormatting;
 
-public class GuiStorage extends BaseScreen<ContainerBase> {
+public class GuiStorage extends BaseScreen<BaseContainer> {
     private IGuiStorage gui;
     private String texture;
 
@@ -23,14 +23,14 @@ public class GuiStorage extends BaseScreen<ContainerBase> {
     private int barWidth = 16;
     private int barHeight = 70;
 
-    public GuiStorage(ContainerBase container, IGuiStorage gui, String texture, PlayerInventory inventory) {
+    public GuiStorage(BaseContainer container, IGuiStorage gui, String texture, PlayerInventory inventory) {
         super(container, 176, 223, inventory, null);
 
         this.gui = gui;
         this.texture = texture;
     }
 
-    public GuiStorage(ContainerBase container, IGuiStorage gui, PlayerInventory inventory) {
+    public GuiStorage(BaseContainer container, IGuiStorage gui, PlayerInventory inventory) {
         this(container, gui, "gui/storage.png", inventory);
     }
 

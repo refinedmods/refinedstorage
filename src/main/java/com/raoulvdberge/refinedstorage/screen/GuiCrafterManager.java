@@ -4,8 +4,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
-import com.raoulvdberge.refinedstorage.container.ContainerCrafterManager;
-import com.raoulvdberge.refinedstorage.container.slot.SlotCrafterManager;
+import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
+import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.SearchWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonCrafterManagerSearchBoxMode;
@@ -21,8 +21,8 @@ import net.minecraft.inventory.container.Slot;
 import java.util.Map;
 
 // TODO @MouseTweaksDisableWheelTweak
-public class GuiCrafterManager extends BaseScreen<ContainerCrafterManager> implements IResizableDisplay {
-    private ContainerCrafterManager container;
+public class GuiCrafterManager extends BaseScreen<CrafterManagerContainer> implements IResizableDisplay {
+    private CrafterManagerContainer container;
     private NetworkNodeCrafterManager crafterManager;
 
     private ScrollbarWidget scrollbar;
@@ -38,7 +38,7 @@ public class GuiCrafterManager extends BaseScreen<ContainerCrafterManager> imple
         return crafterManager;
     }
 
-    public void setContainer(ContainerCrafterManager container) {
+    public void setContainer(CrafterManagerContainer container) {
         this.container = container;
     }
 
@@ -101,7 +101,7 @@ public class GuiCrafterManager extends BaseScreen<ContainerCrafterManager> imple
         addSideButton(new SideButtonCrafterManagerSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, () -> crafterManager.getSize(), size -> TileDataManager.setParameter(TileCrafterManager.SIZE, size)));
 
-        this.scrollbar = new ScrollbarWidget(174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
+        this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
         this.scrollbar.addListener((oldOffset, newOffset) -> {
             if (container != null) {
                 container.initSlots(null);
@@ -151,7 +151,7 @@ public class GuiCrafterManager extends BaseScreen<ContainerCrafterManager> imple
 
         if (container != null && crafterManager.isActive()) {
             for (Slot slot : container.inventorySlots) {
-                if (slot instanceof SlotCrafterManager && slot.isEnabled()) {
+                if (slot instanceof CrafterManagerSlot && slot.isEnabled()) {
                     blit(x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
                 }
             }

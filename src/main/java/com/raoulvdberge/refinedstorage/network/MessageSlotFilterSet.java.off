@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
-import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
-import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
+import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.FilterLegacySlot;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Container;

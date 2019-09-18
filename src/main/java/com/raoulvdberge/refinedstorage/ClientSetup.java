@@ -1,11 +1,15 @@
 package com.raoulvdberge.refinedstorage;
 
+import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.render.BakedModelOverrideRegistry;
 import com.raoulvdberge.refinedstorage.render.model.baked.FullbrightBakedModel;
+import com.raoulvdberge.refinedstorage.screen.ControllerScreen;
 import com.raoulvdberge.refinedstorage.screen.FilterScreen;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -38,6 +42,12 @@ public class ClientSetup {
     @SubscribeEvent
     public void onClientSetup(FMLClientSetupEvent e) {
         ScreenManager.registerFactory(RSContainers.FILTER, FilterScreen::new);
+        ScreenManager.registerFactory(RSContainers.CONTROLLER, new ScreenManager.IScreenFactory<ControllerContainer, ControllerScreen>() {
+            @Override
+            public ControllerScreen create(ControllerContainer p_create_1_, PlayerInventory p_create_2_, ITextComponent p_create_3_) {
+                return new ControllerScreen(p_create_1_, p_create_2_, p_create_3_);
+            }
+        });
     }
 
     @SubscribeEvent

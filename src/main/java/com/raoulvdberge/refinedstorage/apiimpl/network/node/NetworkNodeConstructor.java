@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.container.slot.filter.SlotFilter;
+import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
@@ -82,7 +82,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             if (type == IType.ITEMS && !itemFilters.getStackInSlot(0).isEmpty()) {
                 ItemStack item = itemFilters.getStackInSlot(0);
 
-                BlockState block = SlotFilter.getBlockState(world, pos.offset(getDirection()), item);
+                BlockState block = FilterSlot.getBlockState(world, pos.offset(getDirection()), item);
 
                 if (block != null) {
                     if (drop) {
@@ -171,7 +171,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
         ItemStack took = network.extractItem(item, 1, compare, Action.SIMULATE);
 
         if (took != null) {
-            BlockState state = SlotFilter.getBlockState(world, front, took);
+            BlockState state = FilterSlot.getBlockState(world, front, took);
 
             // TODO if (state != null && world.isAirBlock(front) && state.getBlock().canPlaceBlockAt(world, front)) {
             if (false) {

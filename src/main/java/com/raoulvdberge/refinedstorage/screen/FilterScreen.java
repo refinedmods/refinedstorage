@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import com.raoulvdberge.refinedstorage.container.ContainerFilter;
+import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.network.MessageFilterUpdate;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.FilterTypeSideButton;
@@ -16,7 +16,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.lwjgl.glfw.GLFW;
 
-public class FilterScreen extends BaseScreen<ContainerFilter> {
+public class FilterScreen extends BaseScreen<FilterContainer> {
     private ItemStack stack;
 
     private int compare;
@@ -29,7 +29,7 @@ public class FilterScreen extends BaseScreen<ContainerFilter> {
     private Button modeButton;
     private TextFieldWidget nameField;
 
-    public FilterScreen(ContainerFilter container, PlayerInventory inventory, ITextComponent title) {
+    public FilterScreen(FilterContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 176, 231, inventory, title);
 
         this.stack = container.getStack();

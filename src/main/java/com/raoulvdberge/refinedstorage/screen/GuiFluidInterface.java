@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
-import com.raoulvdberge.refinedstorage.container.ContainerFluidInterface;
+import com.raoulvdberge.refinedstorage.container.FluidInterfaceContainer;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
@@ -12,10 +12,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.TextFormatting;
 
-public class GuiFluidInterface extends BaseScreen<ContainerFluidInterface> {
+public class GuiFluidInterface extends BaseScreen<FluidInterfaceContainer> {
     private static final FluidRenderer TANK_RENDERER = new FluidRenderer(NetworkNodeFluidInterface.TANK_CAPACITY, 12, 47);
 
-    public GuiFluidInterface(ContainerFluidInterface container, PlayerInventory inventory) {
+    public GuiFluidInterface(FluidInterfaceContainer container, PlayerInventory inventory) {
         super(container, 211, 204, inventory, null);
     }
 
