@@ -1,7 +1,9 @@
-package com.raoulvdberge.refinedstorage.item;
+package com.raoulvdberge.refinedstorage.item.blockitem;
 
 import com.raoulvdberge.refinedstorage.item.capabilityprovider.CapabilityProviderEnergy;
+import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,13 +19,14 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
-public abstract class EnergyItem extends Item {
-    private final int energyCapacity;
+public abstract class EnergyBlockItem extends BlockItem {
+    private final Supplier<Integer> energyCapacity;
     private final boolean creative;
 
-    public EnergyItem(Item.Properties properties, boolean creative, int energyCapacity) {
-        super(properties);
+    public EnergyBlockItem(Block block, Item.Properties properties, boolean creative, Supplier<Integer> energyCapacity) {
+        super(block, properties);
 
         this.creative = creative;
         this.energyCapacity = energyCapacity;
@@ -31,7 +34,7 @@ public abstract class EnergyItem extends Item {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT tag) {
-        return new CapabilityProviderEnergy(stack, energyCapacity);
+        return new CapabilityProviderEnergy(stack, energyCapacity.get());
     }
 
     @Override

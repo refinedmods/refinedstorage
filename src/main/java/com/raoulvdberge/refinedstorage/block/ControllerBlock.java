@@ -5,16 +5,22 @@ import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nullable;
 
 // TODO - Fullbright models
+// TODO DROPS
 public class ControllerBlock extends Block {
     public enum Type {
         NORMAL,
@@ -83,25 +89,25 @@ public class ControllerBlock extends Block {
         return new ControllerTile(type);
     }
 
+    @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, entity, stack);
+
+        if (!world.isRemote) {
+            stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromStack -> {
+                TileEntity tile = world.getTileEntity(pos);
+
+                if (tile != null) {
+                    tile.getCapability(CapabilityEnergy.ENERGY).ifPresent(energyFromTile -> energyFromTile.receiveEnergy(energyFromStack.getEnergyStored(), false));
+                }
+            });
+        }
+    }
+
     /*
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
         return openNetworkGui(RSGui.CONTROLLER, player, world, pos, side);
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, EntityLivingBase player, ItemStack stack) {
-        if (!world.isRemote) {
-            TileController controller = (TileController) world.getTileEntity(pos);
-
-            CompoundNBT tag = stack.getTagCompound();
-
-            if (tag != null && tag.hasKey(TileController.NBT_ENERGY)) {
-                controller.getEnergy().setStored(tag.getInteger(TileController.NBT_ENERGY));
-            }
-        }
-
-        super.onBlockPlacedBy(world, pos, state, player, stack);
     }
 
     @Override
