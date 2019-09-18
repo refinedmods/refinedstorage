@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "refinedstorage:items/wireless_grid_disconnected"
+    "layer0": "refinedstorage:item/wireless_grid_disconnected"
   },
   "overrides": [
     {

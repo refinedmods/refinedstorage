@@ -5,12 +5,14 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
+import com.raoulvdberge.refinedstorage.block.QuartzEnrichedIronBlock;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.raoulvdberge.refinedstorage.screen.FilterScreen;
+import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
@@ -38,6 +40,7 @@ public final class RS {
     public RS() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::onRegisterBlocks);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onRegisterItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer.class, this::onRegisterRecipeSerializers);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, this::onRegisterContainers);
@@ -63,7 +66,7 @@ public final class RS {
 
     @SubscribeEvent
     public void onRegisterBlocks(RegistryEvent.Register<Block> e) {
-
+        e.getRegistry().register(new QuartzEnrichedIronBlock());
     }
 
     @SubscribeEvent
@@ -113,6 +116,8 @@ public final class RS {
         e.getRegistry().register(new WrenchItem());
         e.getRegistry().register(new PatternItem());
         e.getRegistry().register(new FilterItem());
+
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON));
     }
 
     /* TODO

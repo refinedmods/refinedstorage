@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.block.*;
+import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
     public static final BlockController CONTROLLER = new BlockController();
@@ -28,7 +29,10 @@ public final class RSBlocks {
     public static final BlockReader READER = new BlockReader();
     public static final BlockWriter WRITER = new BlockWriter();
     public static final BlockSecurityManager SECURITY_MANAGER = new BlockSecurityManager();
-    public static final BlockQuartzEnrichedIron QUARTZ_ENRICHED_IRON = new BlockQuartzEnrichedIron();
+
+    @ObjectHolder(RS.ID + ":quartz_enriched_iron_block")
+    public static final QuartzEnrichedIronBlock QUARTZ_ENRICHED_IRON = null;
+
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();
     public static final BlockCrafterManager CRAFTER_MANAGER = new BlockCrafterManager();

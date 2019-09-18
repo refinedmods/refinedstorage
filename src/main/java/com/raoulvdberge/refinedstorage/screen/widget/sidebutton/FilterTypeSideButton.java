@@ -6,27 +6,27 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class FilterTypeSideButton extends SideButton {
-    private FilterScreen gui;
+    private FilterScreen screen;
 
     public FilterTypeSideButton(FilterScreen screen) {
         super(screen);
 
-        this.gui = screen;
+        this.screen = screen;
     }
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage:type") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:type." + gui.getType());
+        return I18n.format("sidebutton.refinedstorage:type") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage:type." + screen.getType());
     }
 
     @Override
     protected void renderButtonIcon(int x, int y) {
-        gui.blit(x, y, 16 * gui.getType(), 128, 16, 16);
+        screen.blit(x, y, 16 * screen.getType(), 128, 16, 16);
     }
 
     @Override
     public void onPress() {
-        gui.setType(gui.getType() == IType.ITEMS ? IType.FLUIDS : IType.ITEMS);
-        gui.sendUpdate();
+        screen.setType(screen.getType() == IType.ITEMS ? IType.FLUIDS : IType.ITEMS);
+        screen.sendUpdate();
     }
 }

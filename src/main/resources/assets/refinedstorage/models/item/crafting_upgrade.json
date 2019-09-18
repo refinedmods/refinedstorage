@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "refinedstorage:items/crafting_upgrade"
+    "layer0": "refinedstorage:item/crafting_upgrade"
   }
 }

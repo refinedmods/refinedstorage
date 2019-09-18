@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "refinedstorage:items/improved_processor"
+    "layer0": "refinedstorage:item/improved_processor"
   }
 }

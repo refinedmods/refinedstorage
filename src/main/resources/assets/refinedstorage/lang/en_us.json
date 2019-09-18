@@ -214,7 +214,7 @@
   "block.refinedstorage:reader": "Reader",
   "block.refinedstorage:writer": "Writer",
   "block.refinedstorage:security_manager": "Security Manager",
-  "block.refinedstorage:quartz_enriched_iron_block": "Block of Quartz Enriched Iron",
+  "block.refinedstorage.quartz_enriched_iron_block": "Block of Quartz Enriched Iron",
   "block.refinedstorage:storage_monitor": "Storage Monitor",
   "block.refinedstorage:portable_grid.0": "Portable Grid",
   "block.refinedstorage:portable_grid.1": "Creative Portable Grid",

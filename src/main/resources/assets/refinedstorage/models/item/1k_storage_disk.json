@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "refinedstorage:items/1k_storage_disk"
+    "layer0": "refinedstorage:item/1k_storage_disk"
   }
 }
