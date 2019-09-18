@@ -28,6 +28,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fluids.FluidStack;
@@ -311,8 +312,7 @@ public final class RenderUtils {
     }
 
     public static boolean isLightMapDisabled() {
-        return false;
-        // TODO return FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled;
+        return !ForgeMod.forgeLightPipelineEnabled;
     }
 
     public static VertexFormat getFormatWithLightMap(VertexFormat format) {

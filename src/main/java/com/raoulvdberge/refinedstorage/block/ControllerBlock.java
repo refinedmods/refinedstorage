@@ -19,8 +19,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nullable;
 
-// TODO - Fullbright models
-// TODO DROPS
 public class ControllerBlock extends Block {
     public enum Type {
         NORMAL,
@@ -104,7 +102,7 @@ public class ControllerBlock extends Block {
         }
     }
 
-    /*
+    /* TODO Controller
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
         return openNetworkGui(RSGui.CONTROLLER, player, world, pos, side);

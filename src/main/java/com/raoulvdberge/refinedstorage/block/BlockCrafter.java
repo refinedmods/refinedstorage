@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.model.baked.BakedModelFullbright;
+import com.raoulvdberge.refinedstorage.render.model.baked.FullbrightBakedModel;
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.util.BlockRenderLayer;
@@ -24,7 +24,7 @@ public class BlockCrafter extends BlockNode {
     public void registerModels(IModelRegistration modelRegistration) {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "connected=false,direction=north"));
 
-        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(
+        modelRegistration.addBakedModelOverride(info.getId(), base -> new FullbrightBakedModel(
             base,
             new ResourceLocation(RS.ID, "blocks/crafter/cutouts/side_connected"),
             new ResourceLocation(RS.ID, "blocks/crafter/cutouts/side_connected_90"),

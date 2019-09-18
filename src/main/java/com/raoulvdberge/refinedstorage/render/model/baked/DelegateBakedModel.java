@@ -14,14 +14,15 @@ import javax.vecmath.Matrix4f;
 import java.util.List;
 import java.util.Random;
 
-public class BakedModelDelegate implements IBakedModel {
+public class DelegateBakedModel implements IBakedModel {
     protected final IBakedModel base;
 
-    public BakedModelDelegate(IBakedModel base) {
+    public DelegateBakedModel(IBakedModel base) {
         this.base = base;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
         return base.getQuads(state, side, rand);
     }
@@ -29,11 +30,6 @@ public class BakedModelDelegate implements IBakedModel {
     @Override
     public boolean isAmbientOcclusion() {
         return base.isAmbientOcclusion();
-    }
-
-    @Override
-    public boolean isAmbientOcclusion(BlockState state) {
-        return base.isAmbientOcclusion(state);
     }
 
     @Override
@@ -47,6 +43,7 @@ public class BakedModelDelegate implements IBakedModel {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public TextureAtlasSprite getParticleTexture() {
         return base.getParticleTexture();
     }
@@ -63,6 +60,7 @@ public class BakedModelDelegate implements IBakedModel {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
         return base.handlePerspective(cameraTransformType);
     }

@@ -14,21 +14,20 @@ import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
-import com.raoulvdberge.refinedstorage.screen.FilterScreen;
 import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -44,8 +43,9 @@ public final class RS {
     public static final Config CONFIG = new Config();
 
     public RS() {
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSetup::new);
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::onRegisterBlocks);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::onRegisterTiles);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onRegisterItems);
@@ -59,11 +59,6 @@ public final class RS {
 
         API.instance().getStorageDiskRegistry().add(StorageDiskFactoryItem.ID, new StorageDiskFactoryItem());
         API.instance().getStorageDiskRegistry().add(StorageDiskFactoryFluid.ID, new StorageDiskFactoryFluid());
-    }
-
-    @SubscribeEvent
-    public void onClientSetup(FMLClientSetupEvent e) {
-        ScreenManager.registerFactory(RSContainers.FILTER, FilterScreen::new);
     }
 
     @SubscribeEvent
