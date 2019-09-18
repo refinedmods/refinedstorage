@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.direction.DirectionHandlerTile;
 import com.raoulvdberge.refinedstorage.tile.direction.IDirectionHandler;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -66,13 +65,13 @@ public abstract class TileBase extends TileEntity {
     }
 
     public void readUpdate(CompoundNBT tag) {
-        boolean doRender = canCauseRenderUpdate(tag);
+        /*boolean doRender = canCauseRenderUpdate(tag);
 
         clientDirection = Direction.byIndex(tag.getInt(NBT_DIRECTION));
 
         if (doRender) {
             WorldUtils.updateBlock(world, pos);
-        }
+        }*/
     }
 
     protected boolean canCauseRenderUpdate(CompoundNBT tag) {

@@ -10,18 +10,16 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "P": {
-      "item": "#advanced_processor"
+      "item": "refinedstorage:advanced_processor"
     },
     "S": {
-      "type": "forge:ore_dict",
-      "ore": "itemSilicon"
+      "tag": "refinedstorage:silicons"
     },
     "M": {
       "item": "refinedstorage:machine_casing"
     }
   },
   "result": {
-    "item": "refinedstorage:controller",
-    "data": 0
+    "item": "refinedstorage:controller"
   }
 }

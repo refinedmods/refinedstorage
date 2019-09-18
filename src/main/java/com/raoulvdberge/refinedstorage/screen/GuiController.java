@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.container.ContainerController;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.ClientNode;
-import com.raoulvdberge.refinedstorage.tile.TileController;
+import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -17,7 +17,7 @@ import java.util.List;
 public class GuiController extends BaseScreen<ContainerController> {
     private static final int VISIBLE_ROWS = 2;
 
-    private TileController controller;
+    private ControllerTile controller;
 
     private int barX = 8;
     private int barY = 20;
@@ -26,7 +26,7 @@ public class GuiController extends BaseScreen<ContainerController> {
 
     private ScrollbarWidget scrollbar;
 
-    public GuiController(ContainerController container, TileController controller, PlayerInventory inventory) {
+    public GuiController(ContainerController container, ControllerTile controller, PlayerInventory inventory) {
         super(container, 176, 181, inventory, null);
 
         this.controller = controller;
@@ -36,7 +36,7 @@ public class GuiController extends BaseScreen<ContainerController> {
 
     @Override
     public void init(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, TileController.REDSTONE_MODE));
+        addSideButton(new SideButtonRedstoneMode(this, ControllerTile.REDSTONE_MODE));
     }
 
     @Override
@@ -53,14 +53,14 @@ public class GuiController extends BaseScreen<ContainerController> {
 
         blit(x, y, 0, 0, xSize, ySize);
 
-        int barHeightNew = TileController.getEnergyScaled(TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue(), barHeight);
+        int barHeightNew = ControllerTile.getEnergyScaled(ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue(), barHeight);
 
         blit(x + barX, y + barY + barHeight - barHeightNew, 178, barHeight - barHeightNew, barWidth, barHeightNew);
     }
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, I18n.format("gui.refinedstorage:controller." + controller.getControllerType().getId()));
+        // TODO renderString(7, 7, I18n.format("gui.refinedstorage:controller." + controller.getControllerType().getId()));
         renderString(7, 87, I18n.format("container.inventory"));
 
         int x = 33;
@@ -70,7 +70,7 @@ public class GuiController extends BaseScreen<ContainerController> {
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        List<ClientNode> nodes = TileController.NODES.getValue();
+        List<ClientNode> nodes = ControllerTile.NODES.getValue();
 
         ClientNode nodeHovering = null;
 
@@ -114,12 +114,12 @@ public class GuiController extends BaseScreen<ContainerController> {
         }
 
         if (RenderUtils.inBounds(barX, barY, barWidth, barHeight, mouseX, mouseY)) {
-            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage", TileController.ENERGY_USAGE.getValue()) + "\n" + I18n.format("misc.refinedstorage.energy_stored", TileController.ENERGY_STORED.getValue(), TileController.ENERGY_CAPACITY.getValue()));
+            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage.energy_usage", ControllerTile.ENERGY_USAGE.getValue()) + "\n" + I18n.format("misc.refinedstorage.energy_stored", ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue()));
         }
     }
 
     private int getRows() {
-        return Math.max(0, (int) Math.ceil((float) TileController.NODES.getValue().size() / 2F));
+        return Math.max(0, (int) Math.ceil((float) ControllerTile.NODES.getValue().size() / 2F));
     }
 
     private String trimNameIfNeeded(boolean scaled, String name) {

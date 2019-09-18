@@ -1,0 +1,43 @@
+{
+  "parent": "refinedstorage:block/cube_all_cutout",
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#cutout_gray",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cutout_gray",
+          "cullface": "down"
+        },
+        "north": {
+          "texture": "#cutout_gray",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cutout_gray",
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#cutout_gray",
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#cutout_gray",
+          "cullface": "east"
+        }
+      }
+    }
+  ]
+}

@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.block.*;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
-    public static final BlockController CONTROLLER = new BlockController();
     public static final BlockCable CABLE = new BlockCable();
     public static final BlockGrid GRID = new BlockGrid();
     public static final BlockDiskDrive DISK_DRIVE = new BlockDiskDrive();
@@ -12,7 +11,6 @@ public final class RSBlocks {
     public static final BlockImporter IMPORTER = new BlockImporter();
     public static final BlockExporter EXPORTER = new BlockExporter();
     public static final BlockDetector DETECTOR = new BlockDetector();
-    public static final BlockMachineCasing MACHINE_CASING = new BlockMachineCasing();
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
     public static final BlockStorage STORAGE = new BlockStorage();
@@ -32,6 +30,14 @@ public final class RSBlocks {
 
     @ObjectHolder(RS.ID + ":quartz_enriched_iron_block")
     public static final QuartzEnrichedIronBlock QUARTZ_ENRICHED_IRON = null;
+
+    @ObjectHolder(RS.ID + ":machine_casing")
+    public static final MachineCasingBlock MACHINE_CASING = null;
+
+    @ObjectHolder(RS.ID + ":controller")
+    public static final ControllerBlock CONTROLLER = null;
+    @ObjectHolder(RS.ID + ":creative_controller")
+    public static final ControllerBlock CREATIVE_CONTROLLER = null;
 
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();

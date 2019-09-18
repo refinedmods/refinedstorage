@@ -5,13 +5,17 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
+import com.raoulvdberge.refinedstorage.block.ControllerBlock;
+import com.raoulvdberge.refinedstorage.block.MachineCasingBlock;
 import com.raoulvdberge.refinedstorage.block.QuartzEnrichedIronBlock;
 import com.raoulvdberge.refinedstorage.container.ContainerFilter;
 import com.raoulvdberge.refinedstorage.item.*;
+import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.raoulvdberge.refinedstorage.screen.FilterScreen;
+import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
@@ -19,6 +23,7 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,15 +37,17 @@ public final class RS {
     public static final String ID = "refinedstorage";
 
     public static RS INSTANCE;
-    public RSConfig config;
+    public RSOldConfig config = new RSOldConfig();
 
     public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
     public static final ItemGroup MAIN_GROUP = new MainItemGroup();
+    public static final Config CONFIG = new Config();
 
     public RS() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::onRegisterBlocks);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::onRegisterTiles);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onRegisterItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer.class, this::onRegisterRecipeSerializers);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, this::onRegisterContainers);
@@ -67,6 +74,15 @@ public final class RS {
     @SubscribeEvent
     public void onRegisterBlocks(RegistryEvent.Register<Block> e) {
         e.getRegistry().register(new QuartzEnrichedIronBlock());
+        e.getRegistry().register(new ControllerBlock(ControllerBlock.Type.NORMAL));
+        e.getRegistry().register(new ControllerBlock(ControllerBlock.Type.CREATIVE));
+        e.getRegistry().register(new MachineCasingBlock());
+    }
+
+    @SubscribeEvent
+    public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> e) {
+        e.getRegistry().register(TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.NORMAL), RSBlocks.CONTROLLER).build(null).setRegistryName(RS.ID, "controller"));
+        e.getRegistry().register(TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.CREATIVE), RSBlocks.CREATIVE_CONTROLLER).build(null).setRegistryName(RS.ID, "creative_controller"));
     }
 
     @SubscribeEvent
@@ -118,6 +134,9 @@ public final class RS {
         e.getRegistry().register(new FilterItem());
 
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON));
+        e.getRegistry().register(new ControllerBlockItem(RSBlocks.CONTROLLER));
+        e.getRegistry().register(new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.MACHINE_CASING));
     }
 
     /* TODO

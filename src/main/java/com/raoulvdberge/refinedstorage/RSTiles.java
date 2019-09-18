@@ -5,12 +5,18 @@ import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.registries.ObjectHolder;
 
 public class RSTiles {
     //@ObjectHolder(RS.ID + ":constructor")
     public static final TileEntityType<TileConstructor> CONSTRUCTOR = null;
-    //@ObjectHolder(RS.ID + ":controller")
-    public static final TileEntityType<TileController> CONTROLLER = null;
+
+    @ObjectHolder(RS.ID + ":controller")
+    public static final TileEntityType<ControllerTile> CONTROLLER = null;
+
+    @ObjectHolder(RS.ID + ":creative_controller")
+    public static final TileEntityType<ControllerTile> CREATIVE_CONTROLLER = null;
+
     //@ObjectHolder(RS.ID + ":crafter")
     public static final TileEntityType<TileCrafter> CRAFTER = null;
     //@ObjectHolder(RS.ID + ":crafter_manager")

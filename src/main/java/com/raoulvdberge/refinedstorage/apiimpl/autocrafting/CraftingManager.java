@@ -12,7 +12,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.tile.TileController;
+import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -31,7 +31,7 @@ public class CraftingManager implements ICraftingManager {
     private static final String NBT_TASK_TYPE = "Type";
     private static final String NBT_TASK_DATA = "Task";
 
-    private TileController network;
+    private ControllerTile network;
 
     private Map<String, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
 
@@ -46,7 +46,7 @@ public class CraftingManager implements ICraftingManager {
 
     private Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
-    public CraftingManager(TileController network) {
+    public CraftingManager(ControllerTile network) {
         this.network = network;
     }
 

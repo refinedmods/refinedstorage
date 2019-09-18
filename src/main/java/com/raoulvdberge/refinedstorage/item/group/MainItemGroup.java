@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.item.group;
 
 import com.raoulvdberge.refinedstorage.RS;
-import net.minecraft.block.Blocks;
+import com.raoulvdberge.refinedstorage.RSBlocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
@@ -12,6 +12,6 @@ public class MainItemGroup extends ItemGroup {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(Blocks.DIRT);
+        return new ItemStack(RSBlocks.CREATIVE_CONTROLLER);
     }
 }

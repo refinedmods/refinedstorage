@@ -22,6 +22,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import javax.annotation.Nullable;
 
 public final class WorldUtils {
+    // TODO REMOVE. Can just use setBlockState now.
     public static void updateBlock(@Nullable World world, BlockPos pos) {
         if (world != null) {
             BlockState state = world.getBlockState(pos);

@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
@@ -36,16 +35,13 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
-import com.raoulvdberge.refinedstorage.block.BlockController;
-import com.raoulvdberge.refinedstorage.block.enums.ControllerEnergyType;
-import com.raoulvdberge.refinedstorage.block.enums.ControllerType;
+import com.raoulvdberge.refinedstorage.block.ControllerBlock;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -73,7 +69,7 @@ import java.util.function.Predicate;
 import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
 
 // TODO: Change INetwork to be offloaded from the tile.
-public class TileController extends TileBase implements ITickableTileEntity, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<TileController>, INetworkNodeVisitor {
+public class ControllerTile extends TileBase implements ITickableTileEntity, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<ControllerTile>, INetworkNodeVisitor {
     private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
         if (left.getEnergyUsage() == right.getEnergyUsage()) {
             return 0;
@@ -82,11 +78,11 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
         return (left.getEnergyUsage() > right.getEnergyUsage()) ? -1 : 1;
     };
 
-    public static final TileDataParameter<Integer, TileController> REDSTONE_MODE = RedstoneMode.createParameter();
-    public static final TileDataParameter<Integer, TileController> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, TileController::getEnergyUsage);
-    public static final TileDataParameter<Integer, TileController> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getStored());
-    public static final TileDataParameter<Integer, TileController> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getCapacity());
-    public static final TileDataParameter<List<ClientNode>, TileController> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), t -> {
+    public static final TileDataParameter<Integer, ControllerTile> REDSTONE_MODE = RedstoneMode.createParameter();
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, ControllerTile::getEnergyUsage);
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getStored());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getCapacity());
+    public static final TileDataParameter<List<ClientNode>, ControllerTile> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), t -> {
         List<ClientNode> nodes = new ArrayList<>();
 
         for (INetworkNode node : t.nodeGraph.all()) {
@@ -142,23 +138,25 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
 
     private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this);
 
-    private final IEnergy energy = new Energy(RS.INSTANCE.config.controllerCapacity);
-    private final EnergyProxy energyProxy = new EnergyProxy(this.energy, RS.INSTANCE.config.controllerMaxReceive, 0);
+    private final IEnergy energy = new Energy(RS.CONFIG.getController().getCapacity());
+    private final EnergyProxy energyProxy = new EnergyProxy(this.energy, RS.CONFIG.getController().getMaxReceive());
 
     private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> energyProxy);
-    private final LazyOptional<INetworkNodeProxy<TileController>> networkNodeProxyCap = LazyOptional.of(() -> this);
+    private final LazyOptional<INetworkNodeProxy<ControllerTile>> networkNodeProxyCap = LazyOptional.of(() -> this);
 
     private boolean throttlingDisabled = true; // Will be enabled after first update
     private boolean couldRun;
     private int ticksSinceUpdateChanged;
 
-    private ControllerType type;
-    private ControllerEnergyType energyType = ControllerEnergyType.OFF;
+    private ControllerBlock.Type type;
+    private ControllerBlock.EnergyType lastEnergyType = ControllerBlock.EnergyType.OFF;
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
-    public TileController() {
-        super(RSTiles.CONTROLLER);
+    public ControllerTile(ControllerBlock.Type type) {
+        super(type == ControllerBlock.Type.CREATIVE ? RSTiles.CREATIVE_CONTROLLER : RSTiles.CONTROLLER);
+
+        this.type = type;
 
         dataManager.addWatchedParameter(REDSTONE_MODE);
         dataManager.addWatchedParameter(ENERGY_USAGE);
@@ -177,7 +175,7 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
             }
         });
 
-        nodeGraph.addListener(() -> dataManager.sendParameterToWatchers(TileController.NODES));
+        nodeGraph.addListener(() -> dataManager.sendParameterToWatchers(ControllerTile.NODES));
     }
 
     @Override
@@ -223,15 +221,15 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
                 }
             }
 
-            if (getControllerType() == ControllerType.NORMAL) {
-                if (!RS.INSTANCE.config.controllerUsesEnergy) {
+            if (type == ControllerBlock.Type.NORMAL) {
+                if (!RS.CONFIG.getController().getUseEnergy()) {
                     this.energy.setStored(this.energy.getCapacity());
                 } else if (this.energy.extract(getEnergyUsage(), Action.SIMULATE) >= 0) {
                     this.energy.extract(getEnergyUsage(), Action.PERFORM);
                 } else {
                     this.energy.setStored(0);
                 }
-            } else if (getControllerType() == ControllerType.CREATIVE) {
+            } else if (type == ControllerBlock.Type.CREATIVE) {
                 this.energy.setStored(this.energy.getCapacity());
             }
 
@@ -252,12 +250,12 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
                 ticksSinceUpdateChanged = 0;
             }
 
-            ControllerEnergyType energyType = getEnergyType();
+            ControllerBlock.EnergyType energyType = getEnergyType();
 
-            if (this.energyType != energyType) {
-                this.energyType = energyType;
+            if (lastEnergyType != energyType) {
+                lastEnergyType = energyType;
 
-                WorldUtils.updateBlock(world, pos);
+                world.setBlockState(pos, world.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, energyType));
             }
         }
     }
@@ -561,7 +559,7 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
     public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
-        tag.putInt(NBT_ENERGY_TYPE, getEnergyType().getId());
+        tag.putInt(NBT_ENERGY_TYPE, getEnergyType().ordinal());
 
         return tag;
     }
@@ -569,7 +567,7 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
     @Override
     public void readUpdate(CompoundNBT tag) {
         if (tag.contains(NBT_ENERGY_TYPE)) {
-            this.energyType = ControllerEnergyType.getById(tag.getInt(NBT_ENERGY_TYPE));
+            world.setBlockState(pos, world.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, ControllerBlock.EnergyType.values()[tag.getInt(NBT_ENERGY_TYPE)]));
         }
 
         super.readUpdate(tag);
@@ -579,30 +577,26 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
         return (int) ((float) stored / (float) capacity * (float) scale);
     }
 
-    public static ControllerEnergyType getEnergyType(int stored, int capacity) {
-        int energy = getEnergyScaled(stored, capacity, 100);
-
-        if (energy <= 0) {
-            return ControllerEnergyType.OFF;
-        } else if (energy <= 10) {
-            return ControllerEnergyType.NEARLY_OFF;
-        } else if (energy <= 20) {
-            return ControllerEnergyType.NEARLY_ON;
-        }
-
-        return ControllerEnergyType.ON;
-    }
-
-    public ControllerEnergyType getEnergyType() {
-        if (world.isRemote) {
-            return energyType;
-        }
-
+    private ControllerBlock.EnergyType getEnergyType() {
         if (!redstoneMode.isEnabled(world, pos)) {
-            return ControllerEnergyType.OFF;
+            return ControllerBlock.EnergyType.OFF;
         }
 
         return getEnergyType(this.energy.getStored(), this.energy.getCapacity());
+    }
+
+    private static ControllerBlock.EnergyType getEnergyType(int stored, int capacity) {
+        int energy = getEnergyScaled(stored, capacity, 100);
+
+        if (energy <= 0) {
+            return ControllerBlock.EnergyType.OFF;
+        } else if (energy <= 10) {
+            return ControllerBlock.EnergyType.NEARLY_OFF;
+        } else if (energy <= 20) {
+            return ControllerBlock.EnergyType.NEARLY_ON;
+        }
+
+        return ControllerBlock.EnergyType.ON;
     }
 
     @Override
@@ -619,7 +613,7 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
 
     @Override
     public int getEnergyUsage() {
-        int usage = RS.INSTANCE.config.controllerBaseUsage;
+        int usage = RS.CONFIG.getController().getBaseUsage();
 
         for (INetworkNode node : nodeGraph.all()) {
             if (node.canUpdate()) {
@@ -665,18 +659,6 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
         // This is update from INetworkNode
     }
 
-    public ControllerType getControllerType() {
-        if (type == null) {
-            BlockState state = world.getBlockState(pos);
-
-            if (state.getBlock() == RSBlocks.CONTROLLER) {
-                this.type = state.get(BlockController.TYPE);
-            }
-        }
-
-        return type == null ? ControllerType.NORMAL : type;
-    }
-
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
@@ -693,7 +675,7 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
 
     @Override
     @Nonnull
-    public TileController getNode() {
+    public ControllerTile getNode() {
         return this;
     }
 
@@ -724,7 +706,7 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
     // Cannot use API#getNetworkNodeHashCode or API#isNetworkNodeEqual: it will crash with a AbstractMethodError (getPos).
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof TileController)) {
+        if (!(o instanceof ControllerTile)) {
             return false;
         }
 
@@ -732,7 +714,7 @@ public class TileController extends TileBase implements ITickableTileEntity, INe
             return true;
         }
 
-        TileController otherController = (TileController) o;
+        ControllerTile otherController = (ControllerTile) o;
 
         if (world.getDimension().getType() != otherController.world.getDimension().getType()) {
             return false;

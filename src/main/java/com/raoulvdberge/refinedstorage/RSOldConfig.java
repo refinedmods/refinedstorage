@@ -1,17 +1,12 @@
 package com.raoulvdberge.refinedstorage;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import javax.annotation.Nullable;
-import java.io.File;
 
-public class RSConfig {
+public class RSOldConfig {
     // private Configuration config;
-    private RSConfig originalClientVersion;
+    private RSOldConfig originalClientVersion;
 
     //region Energy
-    public int controllerBaseUsage;
-    public int controllerMaxReceive;
     public int cableUsage;
     public int constructorUsage;
     public int crafterUsage;
@@ -41,11 +36,6 @@ public class RSConfig {
     public int diskManipulatorUsage;
     public int securityManagerUsage;
     public int securityManagerPerSecurityCardUsage;
-    //endregion
-
-    //region Controller
-    public int controllerCapacity;
-    public boolean controllerUsesEnergy;
     //endregion
 
     //region Grid
@@ -131,25 +121,26 @@ public class RSConfig {
     private static final String AUTOCRAFTING = "autocrafting";
     //endregion
 
+    /*
     public RSConfig(@Nullable RSConfig originalClientVersion, File configFile) {
-        this(originalClientVersion/*, new Configuration(configFile)*/);
+        this(originalClientVersion, new Configuration(configFile));
     }
 
-    public RSConfig(@Nullable RSConfig originalClientVersion/*, Configuration config*/) {
+    public RSConfig(@Nullable RSConfig originalClientVersion, Configuration config) {
         this.originalClientVersion = originalClientVersion;
         // this.config = config;
 
         MinecraftForge.EVENT_BUS.register(this);
 
         // this.loadConfig();
-    }
+    }*/
 
     /*public Configuration getConfig() {
         return config;
     }*/
 
     @Nullable
-    public RSConfig getOriginalClientVersion() {
+    public RSOldConfig getOriginalClientVersion() {
         return originalClientVersion;
     }
 

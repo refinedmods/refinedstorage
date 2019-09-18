@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.item.itemblock;
+package com.raoulvdberge.refinedstorage.item.blockitem;
 
 import com.raoulvdberge.refinedstorage.block.BlockBase;
 import com.raoulvdberge.refinedstorage.item.capabilityprovider.CapabilityProviderEnergy;

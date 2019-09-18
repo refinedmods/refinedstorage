@@ -1,10 +1,10 @@
-package com.raoulvdberge.refinedstorage.item.itemblock;
+package com.raoulvdberge.refinedstorage.item.blockitem;
 
-import com.raoulvdberge.refinedstorage.block.BlockStorage;
+import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 
-public class ItemBlockStorage extends ItemBlockBase {
-    public ItemBlockStorage(BlockStorage storage) {
-        super(storage);
+public class ItemBlockFluidStorage extends ItemBlockBase {
+    public ItemBlockFluidStorage(BlockFluidStorage block) {
+        super(block);
     }
 /* TODO
     @Override
@@ -35,7 +35,7 @@ public class ItemBlockStorage extends ItemBlockBase {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, EnumHand hand) {
         ItemStack storageStack = player.getHeldItem(hand);
 
-        if (!world.isRemote && player.isSneaking() && storageStack.getMetadata() != ItemStorageDisk.TYPE_CREATIVE) {
+        if (!world.isRemote && player.isSneaking() && storageStack.getMetadata() != ItemFluidStorageDisk.TYPE_CREATIVE) {
             UUID diskId = null;
             IStorageDisk disk = null;
 
@@ -46,7 +46,7 @@ public class ItemBlockStorage extends ItemBlockBase {
 
             // Newly created storages won't have a tag yet, so allow invalid disks as well.
             if (disk == null || disk.getStored() == 0) {
-                ItemStack storagePart = new ItemStack(RSItems.STORAGE_PART, storageStack.getCount(), storageStack.getMetadata());
+                ItemStack storagePart = new ItemStack(RSItems.FLUID_STORAGE_PART, storageStack.getCount(), storageStack.getMetadata());
 
                 if (!player.inventory.addItemStackToInventory(storagePart.copy())) {
                     InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
@@ -76,11 +76,11 @@ public class ItemBlockStorage extends ItemBlockBase {
     }
 
     private UUID getId(ItemStack disk) {
-        return disk.getTagCompound().getUniqueId(NetworkNodeStorage.NBT_ID);
+        return disk.getTagCompound().getUniqueId(NetworkNodeFluidStorage.NBT_ID);
     }
 
     private boolean isValid(ItemStack disk) {
-        return disk.hasTagCompound() && disk.getTagCompound().hasUniqueId(NetworkNodeStorage.NBT_ID);
+        return disk.hasTagCompound() && disk.getTagCompound().hasUniqueId(NetworkNodeFluidStorage.NBT_ID);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ItemBlockStorage extends ItemBlockBase {
         super.onUpdate(stack, world, entity, itemSlot, isSelected);
 
         if (!world.isRemote) {
-            OneSixMigrationHelper.migrateItemStorageBlockItem(world, stack);
+            OneSixMigrationHelper.migrateFluidStorageBlockItem(world, stack);
         }
     }*/
 }
