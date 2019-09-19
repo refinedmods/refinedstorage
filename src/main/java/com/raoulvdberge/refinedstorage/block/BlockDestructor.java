@@ -1,13 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.tile.TileDestructor;
-
-public class BlockDestructor extends BlockCable {
+public class BlockDestructor extends CableBlock {
+    /* TODO
     public BlockDestructor() {
         super(createBuilder("destructor").tileEntity(TileDestructor::new).create());
     }
 
-    /* TODO
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -34,10 +32,10 @@ public class BlockDestructor extends BlockCable {
         }
 
         return openNetworkGui(RSGui.DESTRUCTOR, player, world, pos, side);
-    }*/
+    }
 
     @Override
     public boolean hasConnectedState() {
         return true;
-    }
+    }*/
 }

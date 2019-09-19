@@ -1,61 +1,62 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "cable": "refinedstorage:blocks/cable",
-      "particle": "refinedstorage:blocks/cable"
-    },
-    "model": "refinedstorage:cable_core",
-    "uvlock": true,
-    "transform": "forge:default-block"
-  },
-  "variants": {
-    "north": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension"
-      },
-      "false": {
+  "multipart": [
+    {
+      "apply": {
+        "model": "refinedstorage:block/cable_core"
       }
     },
-    "east": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "north": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/cable_extension"
+      }
+    },
+    {
+      "when": {
+        "east": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "y": 90
-      },
-      "false": {
       }
     },
-    "south": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "south": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "x": 180
-      },
-      "false": {
       }
     },
-    "west": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "west": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "y": 270
-      },
-      "false": {
       }
     },
-    "up": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "up": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "x": 270
-      },
-      "false": {
       }
     },
-    "down": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
-        "x": 90
+    {
+      "when": {
+        "down": true
       },
-      "false": {
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
+        "x": 90
       }
     }
-  }
+  ]
 }

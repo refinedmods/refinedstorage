@@ -1,13 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.tile.TileExternalStorage;
-
-public class BlockExternalStorage extends BlockCable {
+public class BlockExternalStorage extends CableBlock {
+    /* TODO
     public BlockExternalStorage() {
         super(createBuilder("external_storage").tileEntity(TileExternalStorage::new).create());
     }
 
-    /* TODO
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {

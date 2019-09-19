@@ -8,14 +8,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import javax.annotation.Nonnull;
 
 public final class ConstantsCable {
-    public static final CollisionGroup CORE = new CollisionGroup().addItem(CollisionUtils.getBounds(6, 6, 6, 10, 10, 10));
-    public static final CollisionGroup NORTH = new CollisionGroup().addItem(CollisionUtils.getBounds(6, 6, 0, 10, 10, 6));
-    public static final CollisionGroup EAST = new CollisionGroup().addItem(CollisionUtils.getBounds(10, 6, 6, 16, 10, 10));
-    public static final CollisionGroup SOUTH = new CollisionGroup().addItem(CollisionUtils.getBounds(6, 6, 10, 10, 10, 16));
-    public static final CollisionGroup WEST = new CollisionGroup().addItem(CollisionUtils.getBounds(0, 6, 6, 6, 10, 10));
-    public static final CollisionGroup UP = new CollisionGroup().addItem(CollisionUtils.getBounds(6, 10, 6, 10, 16, 10));
-    public static final CollisionGroup DOWN = new CollisionGroup().addItem(CollisionUtils.getBounds(6, 0, 6, 10, 6, 10));
-
     public static final CollisionGroup HOLDER_NORTH = new CollisionGroup().addItem(getHolderBounds(Direction.NORTH));
     public static final CollisionGroup HOLDER_EAST = new CollisionGroup().addItem(getHolderBounds(Direction.EAST));
     public static final CollisionGroup HOLDER_SOUTH = new CollisionGroup().addItem(getHolderBounds(Direction.SOUTH));

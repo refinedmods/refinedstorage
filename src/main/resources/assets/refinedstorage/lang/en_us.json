@@ -178,7 +178,7 @@
   "sidebutton.refinedstorage:access_type.2": "Extract only",
   "block.refinedstorage.controller": "Controller",
   "block.refinedstorage.creative_controller": "Creative Controller",
-  "block.refinedstorage:cable": "Cable",
+  "block.refinedstorage.cable": "Cable",
   "block.refinedstorage:grid.0": "Grid",
   "block.refinedstorage:grid.1": "Crafting Grid",
   "block.refinedstorage:grid.2": "Pattern Grid",

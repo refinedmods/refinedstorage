@@ -1,13 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.tile.TileReader;
-
-public class BlockReader extends BlockCable {
+public class BlockReader extends CableBlock {
+    /* TODO
     public BlockReader() {
         super(createBuilder("reader").tileEntity(TileReader::new).create());
     }
 
-    /* TODO
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -57,10 +55,10 @@ public class BlockReader extends BlockCable {
         TileEntity tile = world.getTileEntity(pos);
 
         return tile instanceof TileReader && side == ((TileReader) tile).getDirection().getOpposite();
-    }*/
+    }
 
     @Override
     public boolean hasConnectedState() {
         return true;
-    }
+    }*/
 }

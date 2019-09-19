@@ -1,37 +1,24 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.Cover;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverType;
-import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsCable;
-import com.raoulvdberge.refinedstorage.tile.TileCable;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
-import com.raoulvdberge.refinedstorage.util.CollisionUtils;
+import com.raoulvdberge.refinedstorage.RS;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nullable;
 
-public class BlockCable extends BlockNode {
+public class CableBlock extends Block {
     /* TODO
     public static final PropertyObject<Cover> COVER_NORTH = new PropertyObject<>("cover_north", Cover.class);
     public static final PropertyObject<Cover> COVER_EAST = new PropertyObject<>("cover_east", Cover.class);
@@ -47,26 +34,93 @@ public class BlockCable extends BlockNode {
     private static final BooleanProperty UP = BooleanProperty.create("up");
     private static final BooleanProperty DOWN = BooleanProperty.create("down");
 
-    public BlockCable(IBlockInfo info) {
-        super(info);
+    private static final VoxelShape SHAPE_CORE = makeCuboidShape(6, 6, 6, 10, 10, 10);
+    private static final VoxelShape SHAPE_NORTH = makeCuboidShape(6, 6, 0, 10, 10, 6);
+    private static final VoxelShape SHAPE_EAST = makeCuboidShape(10, 6, 6, 16, 10, 10);
+    private static final VoxelShape SHAPE_SOUTH = makeCuboidShape(6, 6, 10, 10, 10, 16);
+    private static final VoxelShape SHAPE_WEST = makeCuboidShape(0, 6, 6, 6, 10, 10);
+    private static final VoxelShape SHAPE_UP = makeCuboidShape(6, 10, 6, 10, 16, 10);
+    private static final VoxelShape SHAPE_DOWN = makeCuboidShape(6, 0, 6, 10, 6, 10);
+
+    public CableBlock() {
+        super(Block.Properties.create(Material.GLASS).sound(SoundType.GLASS).hardnessAndResistance(0.35F));
+
+        this.setRegistryName(RS.ID, "cable");
+        this.setDefaultState(getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
     }
 
-    public BlockCable() {
-        super(createBuilder("cable").tileEntity(TileCable::new).create());
+    @Override
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+
+        world.setBlockState(pos, getState(world, pos));
     }
 
-    static BlockInfoBuilder createBuilder(String id) {
-        return BlockInfoBuilder.forId(id).material(Material.GLASS).soundType(SoundType.GLASS).hardness(0.35F);
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
+        VoxelShape shape = SHAPE_CORE;
+
+        if (state.get(NORTH)) {
+            shape = VoxelShapes.or(shape, SHAPE_NORTH);
+        }
+
+        if (state.get(EAST)) {
+            shape = VoxelShapes.or(shape, SHAPE_EAST);
+        }
+
+        if (state.get(SOUTH)) {
+            shape = VoxelShapes.or(shape, SHAPE_SOUTH);
+        }
+
+        if (state.get(WEST)) {
+            shape = VoxelShapes.or(shape, SHAPE_WEST);
+        }
+
+        if (state.get(UP)) {
+            shape = VoxelShapes.or(shape, SHAPE_UP);
+        }
+
+        if (state.get(DOWN)) {
+            shape = VoxelShapes.or(shape, SHAPE_DOWN);
+        }
+
+        return shape;
     }
 
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+        return getState(ctx.getWorld(), ctx.getPos());
+    }
+
+    private BlockState getState(World world, BlockPos pos) {
+        Block north = world.getBlockState(pos.north()).getBlock();
+        Block east = world.getBlockState(pos.east()).getBlock();
+        Block south = world.getBlockState(pos.south()).getBlock();
+        Block west = world.getBlockState(pos.west()).getBlock();
+        Block up = world.getBlockState(pos.up()).getBlock();
+        Block down = world.getBlockState(pos.down()).getBlock();
+
+        return getDefaultState()
+            .with(NORTH, north instanceof CableBlock)
+            .with(EAST, east instanceof CableBlock)
+            .with(SOUTH, south instanceof CableBlock)
+            .with(WEST, west instanceof CableBlock)
+            .with(UP, up instanceof CableBlock)
+            .with(DOWN, down instanceof CableBlock);
+    }
+
+    /* TODO
     @OnlyIn(Dist.CLIENT)
     void registerCover(IModelRegistration modelRegistration) {
-        // TODO modelRegistration.addBakedModelOverride(info.getId(), BakedModelCableCover::new);
+        modelRegistration.addBakedModelOverride(info.getId(), BakedModelCableCover::new);
     }
 
     @OnlyIn(Dist.CLIENT)
     void registerCoverAndFullbright(IModelRegistration modelRegistration, ResourceLocation... textures) {
-        // TODO modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelCableCover(new BakedModelFullbright(base, textures)));
+        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelCableCover(new BakedModelFullbright(base, textures)));
     }
 
     @Override
@@ -75,12 +129,7 @@ public class BlockCable extends BlockNode {
         modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "down=false,east=true,north=false,south=false,up=false,west=true"));
 
         registerCover(modelRegistration);
-    }
-
-    @Override
-    public boolean hasConnectedState() {
-        return false;
-    }
+    }*/
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
@@ -90,22 +139,6 @@ public class BlockCable extends BlockNode {
     }
 
     /* TODO
-    @Override
-    @SuppressWarnings("deprecation")
-    public BlockState getActualState(BlockState state, IBlockAccess world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
-
-        state = super.getActualState(state, world, pos)
-            .withProperty(NORTH, hasConnectionWith(world, pos, this, tile, Direction.NORTH))
-            .withProperty(EAST, hasConnectionWith(world, pos, this, tile, Direction.EAST))
-            .withProperty(SOUTH, hasConnectionWith(world, pos, this, tile, Direction.SOUTH))
-            .withProperty(WEST, hasConnectionWith(world, pos, this, tile, Direction.WEST))
-            .withProperty(UP, hasConnectionWith(world, pos, this, tile, Direction.UP))
-            .withProperty(DOWN, hasConnectionWith(world, pos, this, tile, Direction.DOWN));
-
-        return state;
-    }
-
     @Override
     public BlockState getExtendedState(BlockState state, IBlockAccess world, BlockPos pos) {
         BlockState s = super.getExtendedState(state, world, pos);
@@ -124,6 +157,7 @@ public class BlockCable extends BlockNode {
         return s;
     }*/
 
+    /* TODO
     private static boolean hasConnectionWith(World world, BlockPos pos, BlockBase block, TileEntity tile, Direction direction) {
         if (!(tile instanceof TileNode)) {
             return false;
@@ -149,7 +183,6 @@ public class BlockCable extends BlockNode {
             }
         }
 
-        /* TODO
         if (otherTile != null && otherTile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, direction.getOpposite())) {
             // Prevent the block adding connections in itself
             // For example: importer cable connection on the importer face
@@ -158,18 +191,19 @@ public class BlockCable extends BlockNode {
             }
 
             return true;
-        } */
+        }
 
         return false;
-    }
+    }*/
 
+    /* TODO
     @Override
     public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
         List<CollisionGroup> groups = getCoverCollisions(tile);
 
         groups.add(ConstantsCable.CORE);
 
-        /* TODO if (state.getValue(NORTH)) {
+        if (state.getValue(NORTH)) {
             groups.add(ConstantsCable.NORTH);
         }
 
@@ -191,11 +225,12 @@ public class BlockCable extends BlockNode {
 
         if (state.getValue(DOWN)) {
             groups.add(ConstantsCable.DOWN);
-        } */
+        }
 
         return groups;
-    }
+    }*/
 
+    /* TODO
     private List<CollisionGroup> getCoverCollisions(TileEntity tile) {
         List<CollisionGroup> groups = new ArrayList<>();
 
@@ -277,41 +312,10 @@ public class BlockCable extends BlockNode {
         }
 
         return groups;
-    }
-
-    /* TODO
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isOpaqueCube(BlockState state) {
-        return false;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isFullCube(BlockState state) {
-        return false;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public BlockState getStateForPlacement(World world, BlockPos pos, Direction facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase entity) {
-        BlockState state = super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, entity);
-
-        if (getDirection() != null) {
-            return state.withProperty(getDirection().getProperty(), getDirection().getFrom(facing, pos, entity));
-        }
-
-        return state;
-    }
+    }*/
 
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face) {
-        return BlockFaceShape.UNDEFINED;
-    }*/
 }

@@ -1,13 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.tile.TileWriter;
-
-public class BlockWriter extends BlockCable {
+public class BlockWriter extends CableBlock {
+    /* TODO
     public BlockWriter() {
         super(createBuilder("writer").tileEntity(TileWriter::new).create());
     }
 
-    /* TODO
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -77,10 +75,10 @@ public class BlockWriter extends BlockCable {
         TileEntity tile = world.getTileEntity(pos);
 
         return tile instanceof TileWriter && side == ((TileWriter) tile).getDirection().getOpposite();
-    }*/
+    }
 
     @Override
     public boolean hasConnectedState() {
         return true;
-    }
+    }*/
 }

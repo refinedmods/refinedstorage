@@ -1,5 +1,8 @@
 {
-  "__comment": "Model generated using MrCrayfish's Model Creator (http://mrcrayfish.com/modelcreator/)",
+  "textures": {
+    "cable": "refinedstorage:block/cable",
+    "particle": "refinedstorage:block/cable"
+  },
   "elements": [
     {
       "name": "Core",

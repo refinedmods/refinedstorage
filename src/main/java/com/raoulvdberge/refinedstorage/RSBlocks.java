@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.block.*;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
-    public static final BlockCable CABLE = new BlockCable();
     public static final BlockGrid GRID = new BlockGrid();
     public static final BlockDiskDrive DISK_DRIVE = new BlockDiskDrive();
     public static final BlockExternalStorage EXTERNAL_STORAGE = new BlockExternalStorage();
@@ -38,6 +37,9 @@ public final class RSBlocks {
     public static final ControllerBlock CONTROLLER = null;
     @ObjectHolder(RS.ID + ":creative_controller")
     public static final ControllerBlock CREATIVE_CONTROLLER = null;
+
+    @ObjectHolder(RS.ID + ":cable")
+    public static final CableBlock CABLE = null;
 
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();

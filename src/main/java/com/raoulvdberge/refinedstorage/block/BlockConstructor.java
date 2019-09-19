@@ -1,16 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
-import com.raoulvdberge.refinedstorage.tile.TileConstructor;
-
-import javax.annotation.Nullable;
-
-public class BlockConstructor extends BlockCable {
+public class BlockConstructor extends CableBlock {
+    /* TODO
     public BlockConstructor() {
         super(createBuilder("constructor").tileEntity(TileConstructor::new).create());
     }
 
-    /* TODO
         @Override
         @OnlyIn(Dist.CLIENT)
         public void registerModels(IModelRegistration modelRegistration) {
@@ -18,14 +13,13 @@ public class BlockConstructor extends BlockCable {
 
             registerCoverAndFullbright(modelRegistration, RS.ID + ":blocks/constructor/cutouts/connected");
         }
-    */
+
     @Override
     @Nullable
     public BlockDirection getDirection() {
         return BlockDirection.ANY;
     }
 
-    /* TODO
         @Override
         public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
             List<CollisionGroup> groups = super.getCollisions(tile, state);
@@ -68,9 +62,10 @@ public class BlockConstructor extends BlockCable {
 
             return openNetworkGui(RSGui.CONSTRUCTOR, player, world, pos, side);
         }
-    */
+
     @Override
     public boolean hasConnectedState() {
         return true;
     }
+     */
 }

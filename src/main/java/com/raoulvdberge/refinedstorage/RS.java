@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
+import com.raoulvdberge.refinedstorage.block.CableBlock;
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
 import com.raoulvdberge.refinedstorage.block.MachineCasingBlock;
 import com.raoulvdberge.refinedstorage.block.QuartzEnrichedIronBlock;
@@ -81,6 +82,7 @@ public final class RS {
         e.getRegistry().register(new ControllerBlock(ControllerBlock.Type.NORMAL));
         e.getRegistry().register(new ControllerBlock(ControllerBlock.Type.CREATIVE));
         e.getRegistry().register(new MachineCasingBlock());
+        e.getRegistry().register(new CableBlock());
     }
 
     @SubscribeEvent
@@ -155,6 +157,7 @@ public final class RS {
         e.getRegistry().register(new ControllerBlockItem(RSBlocks.CONTROLLER));
         e.getRegistry().register(new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.MACHINE_CASING));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CABLE));
     }
 
     /* TODO

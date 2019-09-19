@@ -10,8 +10,7 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "G": {
-      "type": "forge:ore_dict",
-      "ore": "blockGlass"
+      "tag": "forge:glass"
     },
     "R": {
       "item": "minecraft:redstone"

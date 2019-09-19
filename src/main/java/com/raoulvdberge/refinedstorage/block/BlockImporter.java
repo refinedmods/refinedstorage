@@ -1,13 +1,11 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.tile.TileImporter;
-
-public class BlockImporter extends BlockCable {
+public class BlockImporter extends CableBlock {
+    /* TODO
     public BlockImporter() {
         super(createBuilder("importer").tileEntity(TileImporter::new).create());
     }
 
-    /* TODO
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
