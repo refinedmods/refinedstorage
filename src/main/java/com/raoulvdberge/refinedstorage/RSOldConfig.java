@@ -1,11 +1,6 @@
 package com.raoulvdberge.refinedstorage;
 
-import javax.annotation.Nullable;
-
 public class RSOldConfig {
-    // private Configuration config;
-    private RSOldConfig originalClientVersion;
-
     //region Energy
     public int cableUsage;
     public int constructorUsage;
@@ -81,17 +76,6 @@ public class RSOldConfig {
     public int wirelessCraftingMonitorCancelAllUsage;
     //endregion
 
-    //region Upgrades
-    public int rangeUpgradeUsage;
-    public int speedUpgradeUsage;
-    public int craftingUpgradeUsage;
-    public int stackUpgradeUsage;
-    public int silkTouchUpgradeUsage;
-    public int fortune1UpgradeUsagePerFortune;
-    public int fortune2UpgradeUsagePerFortune;
-    public int fortune3UpgradeUsagePerFortune;
-    //endregion
-
     //region Readers and Writers
     public int readerUsage;
     public int writerUsage;
@@ -115,44 +99,12 @@ public class RSOldConfig {
     private static final String PORTABLE_GRID = "portableGrid";
     private static final String WIRELESS_FLUID_GRID = "wirelessFluidGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
-    private static final String UPGRADES = "upgrades";
     private static final String READER_WRITER = "readerWriter";
     private static final String COVERS = "covers";
     private static final String AUTOCRAFTING = "autocrafting";
     //endregion
 
-    /*
-    public RSConfig(@Nullable RSConfig originalClientVersion, File configFile) {
-        this(originalClientVersion, new Configuration(configFile));
-    }
-
-    public RSConfig(@Nullable RSConfig originalClientVersion, Configuration config) {
-        this.originalClientVersion = originalClientVersion;
-        // this.config = config;
-
-        MinecraftForge.EVENT_BUS.register(this);
-
-        // this.loadConfig();
-    }*/
-
-    /*public Configuration getConfig() {
-        return config;
-    }*/
-
-    @Nullable
-    public RSOldConfig getOriginalClientVersion() {
-        return originalClientVersion;
-    }
-
-    /*@SubscribeEvent
-    public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equalsIgnoreCase(RS.ID)) {
-            loadConfig();
-        }
-    }*/
-
-    /*
-    private void loadConfig() {
+    /*private void loadConfig() {
         //region Energy
         controllerBaseUsage = config.getInt("controllerBase", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
         controllerMaxReceive = config.getInt("controllerMaxReceive", ENERGY, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, "The maximum energy the controller receives per tick");
@@ -233,17 +185,6 @@ public class RSOldConfig {
         wirelessCraftingMonitorOpenUsage = config.getInt("open", WIRELESS_CRAFTING_MONITOR, 35, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to open");
         wirelessCraftingMonitorCancelUsage = config.getInt("cancel", WIRELESS_CRAFTING_MONITOR, 4, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to cancel a task");
         wirelessCraftingMonitorCancelAllUsage = config.getInt("cancelAll", WIRELESS_CRAFTING_MONITOR, 5, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to cancel all tasks");
-        //endregion
-
-        //region Upgrades
-        rangeUpgradeUsage = config.getInt("range", UPGRADES, 8, 0, Integer.MAX_VALUE, "The additional energy used per Range Upgrade");
-        speedUpgradeUsage = config.getInt("speed", UPGRADES, 2, 0, Integer.MAX_VALUE, "The additional energy used per Speed Upgrade");
-        craftingUpgradeUsage = config.getInt("crafting", UPGRADES, 5, 0, Integer.MAX_VALUE, "The additional energy used per Crafting Upgrade");
-        stackUpgradeUsage = config.getInt("stack", UPGRADES, 12, 0, Integer.MAX_VALUE, "The additional energy used per Stack Upgrade");
-        silkTouchUpgradeUsage = config.getInt("silkTouch", UPGRADES, 15, 0, Integer.MAX_VALUE, "The additional energy used by the Silk Touch Upgrade");
-        fortune1UpgradeUsagePerFortune = config.getInt("fortune1", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune 1 Upgrade");
-        fortune2UpgradeUsagePerFortune = config.getInt("fortune2", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune 2 Upgrade");
-        fortune3UpgradeUsagePerFortune = config.getInt("fortune3", UPGRADES, 10, 0, Integer.MAX_VALUE, "The additional energy used by the Fortune 3 Upgrade");
         //endregion
 
         //region Readers and Writers

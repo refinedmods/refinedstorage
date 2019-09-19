@@ -10,7 +10,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 public class ControllerBlockItem extends EnergyBlockItem {
     public ControllerBlockItem(ControllerBlock block) {
-        super(block, new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), block.getType() == ControllerBlock.Type.CREATIVE, () -> RS.CONFIG.getController().getCapacity());
+        super(block, new Item.Properties().group(RS.MAIN_GROUP).maxStackSize(1), block.getType() == ControllerBlock.Type.CREATIVE, () -> RS.SERVER_CONFIG.getController().getCapacity());
 
         this.setRegistryName(block.getRegistryName());
         this.addPropertyOverride(new ResourceLocation("energy_type"), (stack, world, entity) -> {

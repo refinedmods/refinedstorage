@@ -1,10 +1,7 @@
 package com.raoulvdberge.refinedstorage.proxy;
 
 public class ProxyCommon {
-/* TODO
-    protected List<Item> itemsToRegister = new LinkedList<>();
-    protected List<BlockBase> blocksToRegister = new LinkedList<>();
-
+    /* TODO
     public void preInit(FMLPreInitializationEvent e) {
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -68,8 +65,6 @@ public class ProxyCommon {
 
         API.instance().addExternalStorageProvider(StorageType.ITEM, new ExternalStorageProviderItem());
         API.instance().addExternalStorageProvider(StorageType.FLUID, new ExternalStorageProviderFluid());
-
-        NetworkRegistry.INSTANCE.registerGuiHandler(RS.INSTANCE, new GuiHandler());
 
         MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
 

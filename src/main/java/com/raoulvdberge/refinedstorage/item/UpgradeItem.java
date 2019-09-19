@@ -40,21 +40,21 @@ public class UpgradeItem extends Item {
                 case NORMAL:
                     return 0;
                 case RANGE:
-                    return RS.INSTANCE.config.rangeUpgradeUsage;
+                    return RS.SERVER_CONFIG.getUpgrades().getRangeUpgradeUsage();
                 case SPEED:
-                    return RS.INSTANCE.config.speedUpgradeUsage;
+                    return RS.SERVER_CONFIG.getUpgrades().getSpeedUpgradeUsage();
                 case CRAFTING:
-                    return RS.INSTANCE.config.craftingUpgradeUsage;
+                    return RS.SERVER_CONFIG.getUpgrades().getCraftingUpgradeUsage();
                 case STACK:
-                    return RS.INSTANCE.config.stackUpgradeUsage;
+                    return RS.SERVER_CONFIG.getUpgrades().getStackUpgradeUsage();
                 case SILK_TOUCH:
-                    return RS.INSTANCE.config.silkTouchUpgradeUsage;
+                    return RS.SERVER_CONFIG.getUpgrades().getSilkTouchUpgradeUsage();
                 case FORTUNE_1:
-                    return RS.INSTANCE.config.fortune1UpgradeUsagePerFortune;
+                    return RS.SERVER_CONFIG.getUpgrades().getFortune1UpgradeUsage();
                 case FORTUNE_2:
-                    return RS.INSTANCE.config.fortune2UpgradeUsagePerFortune;
+                    return RS.SERVER_CONFIG.getUpgrades().getFortune2UpgradeUsage();
                 case FORTUNE_3:
-                    return RS.INSTANCE.config.fortune3UpgradeUsagePerFortune;
+                    return RS.SERVER_CONFIG.getUpgrades().getFortune3UpgradeUsage();
                 default:
                     throw new IllegalStateException("What even am I?");
             }

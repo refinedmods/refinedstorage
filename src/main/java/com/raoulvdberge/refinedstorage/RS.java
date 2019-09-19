@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryIt
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
 import com.raoulvdberge.refinedstorage.block.MachineCasingBlock;
 import com.raoulvdberge.refinedstorage.block.QuartzEnrichedIronBlock;
+import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.item.*;
@@ -31,7 +32,9 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -44,10 +47,12 @@ public final class RS {
 
     public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
     public static final ItemGroup MAIN_GROUP = new MainItemGroup();
-    public static final Config CONFIG = new Config();
+    public static final ServerConfig SERVER_CONFIG = new ServerConfig();
 
     public RS() {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSetup::new);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec());
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::onRegisterBlocks);
@@ -153,13 +158,6 @@ public final class RS {
     }
 
     /* TODO
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent e) {
-        config = new RSConfig(null, e.getSuggestedConfigurationFile());
-
-        PROXY.preInit(e);
-    }
-
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent e) {
         e.registerServerCommand(new CommandCreateDisk());

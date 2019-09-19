@@ -145,8 +145,8 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
 
     private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this);
 
-    private final IEnergy energy = new Energy(RS.CONFIG.getController().getCapacity());
-    private final EnergyProxy energyProxy = new EnergyProxy(this.energy, RS.CONFIG.getController().getMaxReceive());
+    private final IEnergy energy = new Energy(RS.SERVER_CONFIG.getController().getCapacity());
+    private final EnergyProxy energyProxy = new EnergyProxy(this.energy, RS.SERVER_CONFIG.getController().getMaxReceive());
 
     private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> energyProxy);
     private final LazyOptional<INetworkNodeProxy<ControllerTile>> networkNodeProxyCap = LazyOptional.of(() -> this);
@@ -229,7 +229,7 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
             }
 
             if (type == ControllerBlock.Type.NORMAL) {
-                if (!RS.CONFIG.getController().getUseEnergy()) {
+                if (!RS.SERVER_CONFIG.getController().getUseEnergy()) {
                     this.energy.setStored(this.energy.getCapacity());
                 } else if (this.energy.extract(getEnergyUsage(), Action.SIMULATE) >= 0) {
                     this.energy.extract(getEnergyUsage(), Action.PERFORM);
@@ -620,7 +620,7 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
 
     @Override
     public int getEnergyUsage() {
-        int usage = RS.CONFIG.getController().getBaseUsage();
+        int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
 
         for (INetworkNode node : nodeGraph.all()) {
             if (node.canUpdate()) {
