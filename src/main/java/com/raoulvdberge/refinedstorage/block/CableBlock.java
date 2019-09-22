@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
+import com.raoulvdberge.refinedstorage.tile.CableTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -8,7 +10,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -18,7 +22,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class CableBlock extends Block {
+public class CableBlock extends NodeBlock {
     /* TODO
     public static final PropertyObject<Cover> COVER_NORTH = new PropertyObject<>("cover_north", Cover.class);
     public static final PropertyObject<Cover> COVER_EAST = new PropertyObject<>("cover_east", Cover.class);
@@ -95,21 +99,41 @@ public class CableBlock extends Block {
         return getState(ctx.getWorld(), ctx.getPos());
     }
 
+    private static boolean hasNode(World world, BlockPos pos, Direction direction) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile == null) {
+            return false;
+        }
+
+        return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent();
+    }
+
     private BlockState getState(World world, BlockPos pos) {
-        Block north = world.getBlockState(pos.north()).getBlock();
-        Block east = world.getBlockState(pos.east()).getBlock();
-        Block south = world.getBlockState(pos.south()).getBlock();
-        Block west = world.getBlockState(pos.west()).getBlock();
-        Block up = world.getBlockState(pos.up()).getBlock();
-        Block down = world.getBlockState(pos.down()).getBlock();
+        boolean north = hasNode(world, pos.offset(Direction.NORTH), Direction.SOUTH);
+        boolean east = hasNode(world, pos.offset(Direction.EAST), Direction.WEST);
+        boolean south = hasNode(world, pos.offset(Direction.SOUTH), Direction.NORTH);
+        boolean west = hasNode(world, pos.offset(Direction.WEST), Direction.EAST);
+        boolean up = hasNode(world, pos.offset(Direction.UP), Direction.DOWN);
+        boolean down = hasNode(world, pos.offset(Direction.DOWN), Direction.UP);
 
         return getDefaultState()
-            .with(NORTH, north instanceof CableBlock)
-            .with(EAST, east instanceof CableBlock)
-            .with(SOUTH, south instanceof CableBlock)
-            .with(WEST, west instanceof CableBlock)
-            .with(UP, up instanceof CableBlock)
-            .with(DOWN, down instanceof CableBlock);
+            .with(NORTH, north)
+            .with(EAST, east)
+            .with(SOUTH, south)
+            .with(WEST, west)
+            .with(UP, up)
+            .with(DOWN, down);
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new CableTile();
     }
 
     /* TODO

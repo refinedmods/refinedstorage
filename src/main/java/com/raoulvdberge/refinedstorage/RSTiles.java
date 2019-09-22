@@ -63,8 +63,10 @@ public class RSTiles {
     public static final TileEntityType<TileStorageMonitor> STORAGE_MONITOR = null;
     //@ObjectHolder(RS.ID + ":wireless_transmitter")
     public static final TileEntityType<TileSecurityManager> WIRELESS_TRANSMITTER = null;
-    //@ObjectHolder(RS.ID + ":cable")
-    public static final TileEntityType<TileCable> CABLE = null;
+
+    @ObjectHolder(RS.ID + ":cable")
+    public static final TileEntityType<CableTile> CABLE = null;
+
     //@ObjectHolder(RS.ID + ":portable_grid")
     public static final TileEntityType<TilePortableGrid> PORTABLE_GRID = null;
 }

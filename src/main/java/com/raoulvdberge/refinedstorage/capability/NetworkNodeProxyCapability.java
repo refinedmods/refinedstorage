@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.Callable;
 
-public class CapabilityNetworkNodeProxy {
+public class NetworkNodeProxyCapability {
     @CapabilityInject(INetworkNodeProxy.class)
     public static Capability<INetworkNodeProxy> NETWORK_NODE_PROXY_CAPABILITY = null;
 

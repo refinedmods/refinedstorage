@@ -17,7 +17,7 @@ import com.raoulvdberge.refinedstorage.container.slot.legacy.BaseLegacySlot;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.DisabledLegacySlot;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.FilterLegacySlot;
 import com.raoulvdberge.refinedstorage.screen.IResizableDisplay;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
@@ -42,7 +42,7 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
     private ResultCraftingGridSlot craftingResultSlot;
     private BaseLegacySlot patternResultSlot;
 
-    public GridContainer(IGrid grid, IResizableDisplay display, @Nullable TileBase gridTile, PlayerEntity player, int windowId) {
+    public GridContainer(IGrid grid, IResizableDisplay display, @Nullable BaseTile gridTile, PlayerEntity player, int windowId) {
         super(RSContainers.GRID, gridTile, player, windowId);
 
         this.grid = grid;

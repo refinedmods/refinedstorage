@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileWirelessTransmitter extends TileNode<NetworkNodeWirelessTransmitter> {
+public class TileWirelessTransmitter extends NetworkNodeTile<NetworkNodeWirelessTransmitter> {
     public static final TileDataParameter<Integer, TileWirelessTransmitter> RANGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getRange());
 
     public TileWirelessTransmitter() {
@@ -22,10 +22,5 @@ public class TileWirelessTransmitter extends TileNode<NetworkNodeWirelessTransmi
     @Nonnull
     public NetworkNodeWirelessTransmitter createNode(World world, BlockPos pos) {
         return new NetworkNodeWirelessTransmitter(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeWirelessTransmitter.ID;
     }
 }

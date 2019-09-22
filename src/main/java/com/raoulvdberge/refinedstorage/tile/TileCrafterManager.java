@@ -10,7 +10,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class TileCrafterManager extends TileNode<NetworkNodeCrafterManager> {
+public class TileCrafterManager extends NetworkNodeTile<NetworkNodeCrafterManager> {
     public static final TileDataParameter<Integer, TileCrafterManager> SIZE = new TileDataParameter<>(DataSerializers.VARINT, IGrid.SIZE_STRETCH, t -> t.getNode().getSize(), (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);
@@ -34,10 +34,5 @@ public class TileCrafterManager extends TileNode<NetworkNodeCrafterManager> {
     @Override
     public NetworkNodeCrafterManager createNode(World world, BlockPos pos) {
         return new NetworkNodeCrafterManager(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeCrafterManager.ID;
     }
 }

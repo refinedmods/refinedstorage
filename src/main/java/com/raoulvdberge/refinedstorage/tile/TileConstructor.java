@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileConstructor extends TileNode<NetworkNodeConstructor> {
+public class TileConstructor extends NetworkNodeTile<NetworkNodeConstructor> {
     public static final TileDataParameter<Integer, TileConstructor> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileConstructor> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean, TileConstructor> DROP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isDrop(), (t, v) -> {
@@ -31,10 +31,5 @@ public class TileConstructor extends TileNode<NetworkNodeConstructor> {
     @Nonnull
     public NetworkNodeConstructor createNode(World world, BlockPos pos) {
         return new NetworkNodeConstructor(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeConstructor.ID;
     }
 }

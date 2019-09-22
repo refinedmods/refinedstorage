@@ -1,13 +1,19 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 
 public abstract class BlockNodeProxy extends BlockBase {
     public BlockNodeProxy(IBlockInfo info) {
-        super(info);
+        this(Block.Properties.create(Material.ROCK));
     }
 
-    /* TODO
+    public BlockNodeProxy(Properties p_i48440_1_) {
+        super(p_i48440_1_);
+    }
+
+    /* TODO - Remove this class...
     @Override
     public boolean canEntityDestroy(BlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
         TileEntity tile = world.getTileEntity(pos);

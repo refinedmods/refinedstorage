@@ -1,16 +1,9 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
-import com.raoulvdberge.refinedstorage.render.model.baked.FullbrightBakedModel;
 import com.raoulvdberge.refinedstorage.tile.TileCrafter;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
@@ -19,6 +12,7 @@ public class BlockCrafter extends BlockNode {
         super(BlockInfoBuilder.forId("crafter").tileEntity(TileCrafter::new).create());
     }
 
+    /*
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
@@ -32,14 +26,14 @@ public class BlockCrafter extends BlockNode {
             new ResourceLocation(RS.ID, "blocks/crafter/cutouts/side_connected_270"),
             new ResourceLocation(RS.ID, "blocks/crafter/cutouts/front_connected")
         ));
-    }
+    }*/
 
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
-    @Override
+    //@Override
     @Nullable
     public BlockDirection getDirection() {
         return BlockDirection.ANY_FACE_PLAYER;

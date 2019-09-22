@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
+import com.raoulvdberge.refinedstorage.tile.NetworkNodeTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
@@ -12,7 +12,7 @@ import javax.annotation.Nonnull;
 import java.util.Optional;
 import java.util.UUID;
 
-public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
+public class TileCraftingMonitor extends NetworkNodeTile<NetworkNodeCraftingMonitor> {
     public static final TileDataParameter<Optional<UUID>, TileCraftingMonitor> TAB_SELECTED = new TileDataParameter<>(DataSerializers.OPTIONAL_UNIQUE_ID, Optional.empty(), t -> t.getNode().getTabSelected(), (t, v) -> {
         if (v.isPresent() && t.getNode().getTabSelected().isPresent() && v.get().equals(t.getNode().getTabSelected().get())) {
             t.getNode().setTabSelected(Optional.empty());
@@ -40,10 +40,5 @@ public class TileCraftingMonitor extends TileNode<NetworkNodeCraftingMonitor> {
     @Nonnull
     public NetworkNodeCraftingMonitor createNode(World world, BlockPos pos) {
         return new NetworkNodeCraftingMonitor(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeCraftingMonitor.ID;
     }
 }

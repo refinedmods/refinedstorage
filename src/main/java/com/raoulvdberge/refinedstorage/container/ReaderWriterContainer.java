@@ -4,14 +4,14 @@ import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterListener;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class ReaderWriterContainer extends BaseContainer implements IReaderWriterListener {
     private IGuiReaderWriter readerWriter;
     private boolean addedListener;
 
-    public ReaderWriterContainer(IGuiReaderWriter readerWriter, TileBase tile, PlayerEntity player, int windowId) {
+    public ReaderWriterContainer(IGuiReaderWriter readerWriter, BaseTile tile, PlayerEntity player, int windowId) {
         super(RSContainers.READER_WRITER, tile, player, windowId);
 
         this.readerWriter = readerWriter;

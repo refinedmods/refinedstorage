@@ -19,6 +19,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -136,7 +137,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private boolean isActingAsStorage() {
         for (Direction facing : Direction.values()) {
-            INetworkNode facingNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(facing));
+            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(facing));
 
             if (facingNode instanceof NetworkNodeExternalStorage &&
                 facingNode.canUpdate() &&

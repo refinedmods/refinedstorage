@@ -26,7 +26,7 @@ public abstract class BlockBase extends Block {
     private static final CollisionGroup DEFAULT_COLLISION_GROUP = new CollisionGroup().addItem(new AxisAlignedBB(0, 0, 0, 1, 1, 1)).setCanAccessGui(true);
     private static final List<CollisionGroup> DEFAULT_COLLISION_GROUPS = Collections.singletonList(DEFAULT_COLLISION_GROUP);
 
-    protected final IBlockInfo info;
+    protected IBlockInfo info;
 
     public BlockBase(IBlockInfo info) {
         super(Block.Properties
@@ -38,6 +38,10 @@ public abstract class BlockBase extends Block {
         this.info = info;
 
         setRegistryName(info.getId());
+    }
+
+    public BlockBase(Properties p_i48440_1_) {
+        super(p_i48440_1_);
     }
 
     @OnlyIn(Dist.CLIENT)

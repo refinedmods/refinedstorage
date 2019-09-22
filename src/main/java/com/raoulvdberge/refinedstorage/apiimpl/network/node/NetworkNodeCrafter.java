@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -384,7 +385,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             return null;
         }
 
-        INetworkNode facing = API.instance().getNetworkNodeManager(world).getNode(pos.offset(getDirection()));
+        INetworkNode facing = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(getDirection()));
         if (!(facing instanceof ICraftingPatternContainer) || facing.getNetwork() != network) {
             return this;
         }

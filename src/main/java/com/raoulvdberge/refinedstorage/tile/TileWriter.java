@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileWriter extends TileNode<NetworkNodeWriter> {
+public class TileWriter extends NetworkNodeTile<NetworkNodeWriter> {
     public static final TileDataParameter<String, TileWriter> CHANNEL = TileReader.createChannelParameter();
 
     public TileWriter() {
@@ -83,10 +83,5 @@ public class TileWriter extends TileNode<NetworkNodeWriter> {
     @Nonnull
     public NetworkNodeWriter createNode(World world, BlockPos pos) {
         return new NetworkNodeWriter(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeWriter.ID;
     }
 }

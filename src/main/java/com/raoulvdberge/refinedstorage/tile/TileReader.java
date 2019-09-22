@@ -12,8 +12,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileReader extends TileNode<NetworkNodeReader> {
-    static <T extends TileNode> TileDataParameter<String, T> createChannelParameter() {
+public class TileReader extends NetworkNodeTile<NetworkNodeReader> {
+    static <T extends NetworkNodeTile> TileDataParameter<String, T> createChannelParameter() {
         return new TileDataParameter<>(DataSerializers.STRING, "", t -> ((IGuiReaderWriter) t.getNode()).getChannel(), (t, v) -> {
             ((IGuiReaderWriter) t.getNode()).setChannel(v);
 
@@ -95,10 +95,5 @@ public class TileReader extends TileNode<NetworkNodeReader> {
     @Nonnull
     public NetworkNodeReader createNode(World world, BlockPos pos) {
         return new NetworkNodeReader(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeReader.ID;
     }
 }

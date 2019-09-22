@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileCrafter extends TileNode<NetworkNodeCrafter> {
+public class TileCrafter extends NetworkNodeTile<NetworkNodeCrafter> {
     public static final TileDataParameter<String, TileCrafter> NAME = new TileDataParameter<>(DataSerializers.STRING, NetworkNodeCrafter.DEFAULT_NAME, t -> t.getNode().getName());
     public static final TileDataParameter<Integer, TileCrafter> MODE = new TileDataParameter<>(DataSerializers.VARINT, NetworkNodeCrafter.CrafterMode.IGNORE.ordinal(), t -> t.getNode().getMode().ordinal(), (t, v) -> t.getNode().setMode(NetworkNodeCrafter.CrafterMode.getById(v)));
     private static final TileDataParameter<Boolean, TileCrafter> HAS_ROOT = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().getRootContainerNotSelf().isPresent(), null, (t, v) -> new TileDataParameterClientListenerCrafter().onChanged(t, v));
@@ -27,11 +27,6 @@ public class TileCrafter extends TileNode<NetworkNodeCrafter> {
     @Nonnull
     public NetworkNodeCrafter createNode(World world, BlockPos pos) {
         return new NetworkNodeCrafter(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeCrafter.ID;
     }
 
     /* TODO @Override

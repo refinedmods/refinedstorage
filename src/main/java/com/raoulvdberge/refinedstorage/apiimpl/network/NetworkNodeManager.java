@@ -23,26 +23,20 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    private boolean canReadNodes;
-    private ListNBT nodesTag;
+    private final World world;
 
     private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
-    public NetworkNodeManager(String name) {
+    public NetworkNodeManager(String name, World world) {
         super(name);
+
+        this.world = world;
     }
 
     @Override
     public void read(CompoundNBT tag) {
         if (tag.contains(NBT_NODES)) {
-            this.nodesTag = tag.getList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
-            this.canReadNodes = true;
-        }
-    }
-
-    public void tryReadNodes(World world) {
-        if (this.canReadNodes) {
-            this.canReadNodes = false;
+            ListNBT nodesTag = tag.getList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
 
             this.nodes.clear();
 

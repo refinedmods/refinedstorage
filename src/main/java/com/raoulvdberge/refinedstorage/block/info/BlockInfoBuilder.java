@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.block.info;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 
@@ -14,7 +14,7 @@ public final class BlockInfoBuilder {
     private Object modObject;
     private float hardness = 1.9F;
     private SoundType soundType = SoundType.STONE;
-    private Supplier<TileBase> tileSupplier;
+    private Supplier<BaseTile> tileSupplier;
 
     private BlockInfoBuilder() {
     }
@@ -51,7 +51,7 @@ public final class BlockInfoBuilder {
         return this;
     }
 
-    public BlockInfoBuilder tileEntity(Supplier<TileBase> tileSupplier) {
+    public BlockInfoBuilder tileEntity(Supplier<BaseTile> tileSupplier) {
         this.tileSupplier = tileSupplier;
 
         return this;

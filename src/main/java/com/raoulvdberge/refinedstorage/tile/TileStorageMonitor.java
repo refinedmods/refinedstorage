@@ -6,13 +6,12 @@ import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
+public class TileStorageMonitor extends NetworkNodeTile<NetworkNodeStorageMonitor> {
     public static final TileDataParameter<Integer, TileStorageMonitor> COMPARE = IComparable.createParameter();
 
     private static final String NBT_STACK = "Stack";
@@ -31,11 +30,6 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
     @Override
     public NetworkNodeStorageMonitor createNode(World world, BlockPos pos) {
         return new NetworkNodeStorageMonitor(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeStorageMonitor.ID;
     }
 
     @Override
@@ -59,14 +53,6 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
 
         itemStack = tag.contains(NBT_STACK) ? ItemStack.read(tag.getCompound(NBT_STACK)) : null;
         amount = tag.getInt(NBT_AMOUNT);
-    }
-
-    @Override
-    protected boolean canCauseRenderUpdate(CompoundNBT tag) {
-        Direction receivedDirection = Direction.byIndex(tag.getInt(NBT_DIRECTION));
-        boolean receivedActive = tag.getBoolean(NBT_ACTIVE);
-
-        return receivedDirection != getDirection() || receivedActive != getNode().isActive();
     }
 
     public int getAmount() {

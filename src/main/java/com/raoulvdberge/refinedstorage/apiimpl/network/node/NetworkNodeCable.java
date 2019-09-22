@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeCable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import net.minecraft.nbt.CompoundNBT;
@@ -25,7 +24,8 @@ public class NetworkNodeCable extends NetworkNode implements ICoverable, INetwor
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.cableUsage;
+        return 0;
+        //return RS.INSTANCE.config.cableUsage;
     }
 
     @Override

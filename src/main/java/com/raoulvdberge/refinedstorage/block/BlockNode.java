@@ -9,7 +9,7 @@ public abstract class BlockNode extends BlockNodeProxy {
     public BlockNode(IBlockInfo info) {
         super(info);
     }
-/* TODO
+/* TODO - Remove this class.
     @Override
     public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, placer, stack);

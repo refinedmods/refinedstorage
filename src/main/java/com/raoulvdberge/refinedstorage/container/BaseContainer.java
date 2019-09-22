@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.container.slot.legacy.DisabledLegacySlot;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.FilterLegacySlot;
 import com.raoulvdberge.refinedstorage.container.transfer.TransferManager;
 import com.raoulvdberge.refinedstorage.network.MessageSlotFilterFluidUpdate;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataWatcher;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -26,7 +26,7 @@ import java.util.List;
 
 public abstract class BaseContainer extends Container {
     @Nullable
-    private TileBase tile;
+    private BaseTile tile;
     @Nullable
     private TileDataWatcher listener;
     private PlayerEntity player;
@@ -36,7 +36,7 @@ public abstract class BaseContainer extends Container {
     private List<FluidFilterSlot> fluidSlots = new ArrayList<>();
     private List<FluidStack> fluids = new ArrayList<>();
 
-    public BaseContainer(@Nullable ContainerType<?> type, @Nullable TileBase tile, PlayerEntity player, int windowId) {
+    public BaseContainer(@Nullable ContainerType<?> type, @Nullable BaseTile tile, PlayerEntity player, int windowId) {
         super(type, windowId);
 
         this.tile = tile;
@@ -53,7 +53,7 @@ public abstract class BaseContainer extends Container {
     }
 
     @Nullable
-    public TileBase getTile() {
+    public BaseTile getTile() {
         return tile;
     }
 

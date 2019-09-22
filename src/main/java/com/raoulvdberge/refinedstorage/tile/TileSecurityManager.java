@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileSecurityManager extends TileNode<NetworkNodeSecurityManager> {
+public class TileSecurityManager extends NetworkNodeTile<NetworkNodeSecurityManager> {
     public TileSecurityManager() {
         super(RSTiles.SECURITY_MANAGER);
     }
@@ -16,10 +16,5 @@ public class TileSecurityManager extends TileNode<NetworkNodeSecurityManager> {
     @Nonnull
     public NetworkNodeSecurityManager createNode(World world, BlockPos pos) {
         return new NetworkNodeSecurityManager(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeSecurityManager.ID;
     }
 }

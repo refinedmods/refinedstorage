@@ -30,6 +30,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -1023,7 +1024,7 @@ public class CraftingTask implements ICraftingTask {
     static ICraftingPattern readPatternFromNbt(CompoundNBT tag, World world) throws CraftingTaskReadException {
         BlockPos containerPos = BlockPos.fromLong(tag.getLong(NBT_PATTERN_CONTAINER_POS));
 
-        INetworkNode node = API.instance().getNetworkNodeManager(world).getNode(containerPos);
+        INetworkNode node = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(containerPos);
 
         if (node instanceof ICraftingPatternContainer) {
             ItemStack stack = ItemStack.read(tag.getCompound(NBT_PATTERN_STACK));

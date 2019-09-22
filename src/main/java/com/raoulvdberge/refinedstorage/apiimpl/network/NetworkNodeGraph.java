@@ -7,13 +7,10 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraphListener;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,7 +18,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
+import static com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY;
 
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private INetwork network;
@@ -44,7 +41,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         TileEntity tile = world.getTileEntity(origin);
         if (tile != null) {
-            tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, null).ifPresent(proxy -> {
+            tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, null).ifPresent(proxy -> {
                 INetworkNode node = proxy.getNode();
 
                 if (node instanceof INetworkNodeVisitor) {
@@ -113,16 +110,9 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
     private void dropConflictingBlock(World world, BlockPos pos) {
         if (!network.getPosition().equals(pos)) {
-            BlockState state = world.getBlockState(pos);
+            Block.spawnDrops(world.getBlockState(pos), world, pos, world.getTileEntity(pos));
 
-            NonNullList<ItemStack> drops = NonNullList.create();
-            // TODO: state.getBlock().getDrops(drops, world, pos, state, 0);
-
-            world.removeBlock(pos, false); // TODO: correct?
-
-            for (ItemStack drop : drops) {
-                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), drop);
-            }
+            world.removeBlock(pos, false);
         }
     }
 

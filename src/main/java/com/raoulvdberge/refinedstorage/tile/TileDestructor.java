@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileDestructor extends TileNode<NetworkNodeDestructor> {
+public class TileDestructor extends NetworkNodeTile<NetworkNodeDestructor> {
     public static final TileDataParameter<Integer, TileDestructor> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileDestructor> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer, TileDestructor> TYPE = IType.createParameter();
@@ -34,10 +34,5 @@ public class TileDestructor extends TileNode<NetworkNodeDestructor> {
     @Nonnull
     public NetworkNodeDestructor createNode(World world, BlockPos pos) {
         return new NetworkNodeDestructor(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeDestructor.ID;
     }
 }

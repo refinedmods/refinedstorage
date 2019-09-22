@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileDetector extends TileNode<NetworkNodeDetector> {
+public class TileDetector extends NetworkNodeTile<NetworkNodeDetector> {
     private static final String NBT_POWERED = "Powered";
 
     public static final TileDataParameter<Integer, TileDetector> COMPARE = IComparable.createParameter();
@@ -59,10 +59,5 @@ public class TileDetector extends TileNode<NetworkNodeDetector> {
     @Nonnull
     public NetworkNodeDetector createNode(World world, BlockPos pos) {
         return new NetworkNodeDetector(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeDetector.ID;
     }
 }

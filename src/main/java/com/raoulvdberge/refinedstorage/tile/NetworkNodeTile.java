@@ -6,37 +6,35 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.tile.direction.DirectionHandlerNetworkNode;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileNode<N extends NetworkNode> extends TileBase implements INetworkNodeProxy<N>, IRedstoneConfigurable {
-    public static final TileDataParameter<Integer, TileNode> REDSTONE_MODE = RedstoneMode.createParameter();
+public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile implements INetworkNodeProxy<N>, IRedstoneConfigurable {
+    public static final TileDataParameter<Integer, NetworkNodeTile> REDSTONE_MODE = RedstoneMode.createParameter();
 
-    protected static final String NBT_ACTIVE = "Active";
+    private static final String NBT_ACTIVE = "Active";
     private static final String NBT_COVERS = "Cover";
 
     private N clientNode;
 
     private LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
 
-    public TileNode(TileEntityType<?> tileType) {
+    public NetworkNodeTile(TileEntityType<?> tileType) {
         super(tileType);
-
-        directionHandler = new DirectionHandlerNetworkNode(this);
 
         dataManager.addWatchedParameter(REDSTONE_MODE);
     }
@@ -74,12 +72,6 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
     }
 
     @Override
-    @Nullable
-    public IItemHandler getDrops() {
-        return getNode().getDrops();
-    }
-
-    @Override
     @Nonnull
     @SuppressWarnings("unchecked")
     public N getNode() {
@@ -91,11 +83,11 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
             return clientNode;
         }
 
-        INetworkNodeManager manager = API.instance().getNetworkNodeManager(world);
+        INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) world);
 
         INetworkNode node = manager.getNode(pos);
 
-        if (node == null || !node.getId().equals(getNodeId())) {
+        if (node == null) {
             manager.setNode(pos, node = createNode(world, pos));
             manager.markForSaving();
         }
@@ -105,12 +97,10 @@ public abstract class TileNode<N extends NetworkNode> extends TileBase implement
 
     public abstract N createNode(World world, BlockPos pos);
 
-    public abstract String getNodeId();
-
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
-        if (cap == CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
+        if (cap == NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY) {
             return networkNodeProxy.cast();
         }
 

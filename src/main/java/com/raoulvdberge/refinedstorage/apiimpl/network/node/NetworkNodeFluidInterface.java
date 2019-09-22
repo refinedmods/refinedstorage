@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -158,7 +159,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
     private boolean isActingAsStorage() {
         for (Direction facing : Direction.values()) {
-            INetworkNode facingNode = API.instance().getNetworkNodeManager(world).getNode(pos.offset(facing));
+            INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(facing));
 
             if (facingNode instanceof NetworkNodeExternalStorage &&
                 facingNode.canUpdate() &&

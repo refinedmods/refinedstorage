@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
@@ -9,6 +10,7 @@ import com.raoulvdberge.refinedstorage.block.CableBlock;
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
 import com.raoulvdberge.refinedstorage.block.MachineCasingBlock;
 import com.raoulvdberge.refinedstorage.block.QuartzEnrichedIronBlock;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
@@ -17,8 +19,9 @@ import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
+import com.raoulvdberge.refinedstorage.tile.BaseTile;
+import com.raoulvdberge.refinedstorage.tile.CableTile;
 import com.raoulvdberge.refinedstorage.tile.ControllerTile;
-import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
@@ -29,6 +32,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -67,6 +71,10 @@ public final class RS {
     public void onCommonSetup(FMLCommonSetupEvent e) {
         NETWORK_HANDLER.register();
 
+        NetworkNodeProxyCapability.register();
+
+        MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
+
         API.instance().getStorageDiskRegistry().add(StorageDiskFactoryItem.ID, new StorageDiskFactoryItem());
         API.instance().getStorageDiskRegistry().add(StorageDiskFactoryFluid.ID, new StorageDiskFactoryFluid());
     }
@@ -94,10 +102,12 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(
             TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.CREATIVE), RSBlocks.CREATIVE_CONTROLLER).build(null).setRegistryName(RS.ID, "creative_controller")
         ));
+
+        e.getRegistry().register(TileEntityType.Builder.create(CableTile::new, RSBlocks.CABLE).build(null).setRegistryName(RS.ID, "cable"));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
-        TileBase tile = (TileBase) t.create();
+        BaseTile tile = (BaseTile) t.create();
 
         tile.getDataManager().getParameters().forEach(TileDataManager::registerParameter);
 

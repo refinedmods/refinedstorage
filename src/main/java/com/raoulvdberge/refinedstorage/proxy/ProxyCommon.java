@@ -5,8 +5,6 @@ public class ProxyCommon {
     public void preInit(FMLPreInitializationEvent e) {
         MinecraftForge.EVENT_BUS.register(this);
 
-        CapabilityNetworkNodeProxy.register();
-
         API.deliver(e.getAsmData());
 
         NetworkNodeGrid.FACTORY_ID = API.instance().getGridManager().add(new GridFactoryGridBlock());
@@ -65,8 +63,6 @@ public class ProxyCommon {
 
         API.instance().addExternalStorageProvider(StorageType.ITEM, new ExternalStorageProviderItem());
         API.instance().addExternalStorageProvider(StorageType.FLUID, new ExternalStorageProviderFluid());
-
-        MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
 
         IntegrationInventorySorter.register();
     }

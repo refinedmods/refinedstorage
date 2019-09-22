@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileRelay extends TileNode<NetworkNodeRelay> {
+public class TileRelay extends NetworkNodeTile<NetworkNodeRelay> {
     public TileRelay() {
         super(RSTiles.RELAY);
     }
@@ -16,10 +16,5 @@ public class TileRelay extends TileNode<NetworkNodeRelay> {
     @Nonnull
     public NetworkNodeRelay createNode(World world, BlockPos pos) {
         return new NetworkNodeRelay(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeRelay.ID;
     }
 }

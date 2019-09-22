@@ -26,7 +26,7 @@ import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -59,13 +59,11 @@ public interface IRSAPI {
 
     /**
      * Gets a network node manager for a given world.
-     * This can only be called on the server side!
-     * There is no such concept of a network node manager on the client.
      *
-     * @param world the world
-     * @return the network node manager for the given world
+     * @param world world
+     * @return the network node manager for a given world
      */
-    INetworkNodeManager getNetworkNodeManager(World world);
+    INetworkNodeManager getNetworkNodeManager(ServerWorld world);
 
     /**
      * @return the crafting task registry
@@ -212,7 +210,7 @@ public interface IRSAPI {
      * @param world the world
      * @param pos   the position of the node
      */
-    void discoverNode(World world, BlockPos pos);
+    void discoverNode(IWorld world, BlockPos pos);
 
     /**
      * @param stack the stack

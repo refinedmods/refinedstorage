@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 
-public class TileFluidInterface extends TileNode<NetworkNodeFluidInterface> {
+public class TileFluidInterface extends NetworkNodeTile<NetworkNodeFluidInterface> {
     public static final TileDataParameter<FluidStack, TileFluidInterface> TANK_IN = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, t -> t.getNode().getTankIn().getFluid());
     public static final TileDataParameter<FluidStack, TileFluidInterface> TANK_OUT = new TileDataParameter<>(RSSerializers.FLUID_STACK_SERIALIZER, null, t -> t.getNode().getTankOut().getFluid());
 
@@ -42,10 +42,5 @@ public class TileFluidInterface extends TileNode<NetworkNodeFluidInterface> {
     @Nonnull
     public NetworkNodeFluidInterface createNode(World world, BlockPos pos) {
         return new NetworkNodeFluidInterface(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeFluidInterface.ID;
     }
 }

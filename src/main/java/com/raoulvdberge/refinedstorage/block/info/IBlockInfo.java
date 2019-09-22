@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.block.info;
 
-import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
@@ -19,7 +19,7 @@ public interface IBlockInfo {
     float getHardness();
 
     @Nullable
-    TileBase createTileEntity();
+    BaseTile createTileEntity();
 
     boolean hasTileEntity();
 }

@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.tile.TileNode;
+import com.raoulvdberge.refinedstorage.tile.NetworkNodeTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileGrid extends TileNode<NetworkNodeGrid> {
+public class TileGrid extends NetworkNodeTile<NetworkNodeGrid> {
     public static final TileDataParameter<Integer, TileGrid> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getViewType(), (t, v) -> {
         if (IGrid.isValidViewType(v)) {
             t.getNode().setViewType(v);
@@ -91,11 +91,6 @@ public class TileGrid extends TileNode<NetworkNodeGrid> {
     @Nonnull
     public NetworkNodeGrid createNode(World world, BlockPos pos) {
         return new NetworkNodeGrid(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeGrid.ID;
     }
 
     /* TODO

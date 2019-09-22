@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileExporter extends TileNode<NetworkNodeExporter> {
+public class TileExporter extends NetworkNodeTile<NetworkNodeExporter> {
     public static final TileDataParameter<Integer, TileExporter> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileExporter> TYPE = IType.createParameter();
 
@@ -25,10 +25,5 @@ public class TileExporter extends TileNode<NetworkNodeExporter> {
     @Nonnull
     public NetworkNodeExporter createNode(World world, BlockPos pos) {
         return new NetworkNodeExporter(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeExporter.ID;
     }
 }

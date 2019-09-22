@@ -7,8 +7,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileCable extends TileNode<NetworkNodeCable> {
-    public TileCable() {
+public class CableTile extends NetworkNodeTile<NetworkNodeCable> {
+    public CableTile() {
         super(RSTiles.CABLE);
     }
 
@@ -16,10 +16,5 @@ public class TileCable extends TileNode<NetworkNodeCable> {
     @Nonnull
     public NetworkNodeCable createNode(World world, BlockPos pos) {
         return new NetworkNodeCable(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeCable.ID;
     }
 }

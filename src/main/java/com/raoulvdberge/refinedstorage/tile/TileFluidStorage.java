@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileFluidStorage extends TileNode<NetworkNodeFluidStorage> {
+public class TileFluidStorage extends NetworkNodeTile<NetworkNodeFluidStorage> {
     public static final TileDataParameter<Integer, TileFluidStorage> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer, TileFluidStorage> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileFluidStorage> MODE = IFilterable.createParameter();
@@ -35,11 +35,6 @@ public class TileFluidStorage extends TileNode<NetworkNodeFluidStorage> {
     @Nonnull
     public NetworkNodeFluidStorage createNode(World world, BlockPos pos) {
         return new NetworkNodeFluidStorage(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeFluidStorage.ID;
     }
 }
 

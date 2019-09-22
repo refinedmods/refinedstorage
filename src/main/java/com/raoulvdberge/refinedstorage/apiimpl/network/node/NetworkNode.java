@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -101,7 +102,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void markDirty() {
         if (!world.isRemote) {
-            API.instance().getNetworkNodeManager(world).markForSaving();
+            API.instance().getNetworkNodeManager((ServerWorld) world).markForSaving();
         }
     }
 

@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
+public class TileDiskDrive extends NetworkNodeTile<NetworkNodeDiskDrive> {
     public static final TileDataParameter<Integer, TileDiskDrive> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer, TileDiskDrive> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileDiskDrive> MODE = IFilterable.createParameter();
@@ -150,10 +150,5 @@ public class TileDiskDrive extends TileNode<NetworkNodeDiskDrive> {
     @Nonnull
     public NetworkNodeDiskDrive createNode(World world, BlockPos pos) {
         return new NetworkNodeDiskDrive(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeDiskDrive.ID;
     }
 }

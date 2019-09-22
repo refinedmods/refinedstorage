@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
@@ -40,7 +41,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.QuantityFormatter;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
-import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -48,7 +49,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
@@ -114,24 +115,10 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public INetworkNodeManager getNetworkNodeManager(World world) {
-        if (world.isRemote) {
-            throw new IllegalArgumentException("Attempting to access network node manager on the client");
-        }
+    public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
+        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkNodeManager.NAME;
 
-        /* TODO: Saving
-        MapStorage storage = world.getPerWorldStorage();
-        NetworkNodeManager instance = (NetworkNodeManager) storage.getOrLoadData(NetworkNodeManager.class, NetworkNodeManager.NAME);
-
-        if (instance == null) {
-            instance = new NetworkNodeManager(NetworkNodeManager.NAME);
-
-            storage.setData(NetworkNodeManager.NAME, instance);
-        } else {
-            instance.tryReadNodes(world);
-        }*/
-
-        return new NetworkNodeManager("ABC");
+        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(name, world), name);
     }
 
     @Override
@@ -258,20 +245,21 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public void discoverNode(World world, BlockPos pos) {
+    public void discoverNode(IWorld world, BlockPos pos) {
         for (Direction facing : Direction.values()) {
             TileEntity tile = world.getTileEntity(pos.offset(facing));
 
             if (tile != null) {
-                tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite()).ifPresent(nodeProxy -> {
-                    INetworkNode node = nodeProxy.getNode();
+                INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite()).orElse(null);
+                if (proxy != null) {
+                    INetworkNode node = proxy.getNode();
 
                     if (node.getNetwork() != null) {
                         node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
 
                         return;
                     }
-                });
+                }
             }
         }
     }

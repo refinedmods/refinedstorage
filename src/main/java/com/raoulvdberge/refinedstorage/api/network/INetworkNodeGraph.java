@@ -26,18 +26,6 @@ public interface INetworkNodeGraph {
      * If the network is rebuilding it's graph, the action will be executed after the graph was built.
      *
      * @param handler the action to run
-     * @deprecated Use {@link #runActionWhenPossible(Consumer)} - just a method rename
-     */
-    @Deprecated
-    default void addPostRebuildHandler(Consumer<INetwork> handler) {
-        runActionWhenPossible(handler);
-    }
-
-    /**
-     * Runs an action on the network.
-     * If the network is rebuilding it's graph, the action will be executed after the graph was built.
-     *
-     * @param handler the action to run
      */
     void runActionWhenPossible(Consumer<INetwork> handler);
 

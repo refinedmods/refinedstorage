@@ -14,7 +14,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 
-public class TileExternalStorage extends TileNode<NetworkNodeExternalStorage> {
+public class TileExternalStorage extends NetworkNodeTile<NetworkNodeExternalStorage> {
     public static final TileDataParameter<Integer, TileExternalStorage> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer, TileExternalStorage> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileExternalStorage> MODE = IFilterable.createParameter();
@@ -63,10 +63,5 @@ public class TileExternalStorage extends TileNode<NetworkNodeExternalStorage> {
     @Nonnull
     public NetworkNodeExternalStorage createNode(World world, BlockPos pos) {
         return new NetworkNodeExternalStorage(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeExternalStorage.ID;
     }
 }

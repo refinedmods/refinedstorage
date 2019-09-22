@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileInterface extends TileNode<NetworkNodeInterface> {
+public class TileInterface extends NetworkNodeTile<NetworkNodeInterface> {
     public static final TileDataParameter<Integer, TileInterface> COMPARE = IComparable.createParameter();
 
     public TileInterface() {
@@ -33,10 +33,5 @@ public class TileInterface extends TileNode<NetworkNodeInterface> {
     @Nonnull
     public NetworkNodeInterface createNode(World world, BlockPos pos) {
         return new NetworkNodeInterface(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeInterface.ID;
     }
 }

@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
+public class TileDiskManipulator extends NetworkNodeTile<NetworkNodeDiskManipulator> {
     public static final TileDataParameter<Integer, TileDiskManipulator> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileDiskManipulator> MODE = IFilterable.createParameter();
     public static final TileDataParameter<Integer, TileDiskManipulator> TYPE = IType.createParameter();
@@ -73,10 +73,5 @@ public class TileDiskManipulator extends TileNode<NetworkNodeDiskManipulator> {
     @Nonnull
     public NetworkNodeDiskManipulator createNode(World world, BlockPos pos) {
         return new NetworkNodeDiskManipulator(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeDiskManipulator.ID;
     }
 }

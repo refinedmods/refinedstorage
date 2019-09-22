@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileStorage extends TileNode<NetworkNodeStorage> {
+public class TileStorage extends NetworkNodeTile<NetworkNodeStorage> {
     public static final TileDataParameter<Integer, TileStorage> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer, TileStorage> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileStorage> MODE = IFilterable.createParameter();
@@ -35,10 +35,5 @@ public class TileStorage extends TileNode<NetworkNodeStorage> {
     @Nonnull
     public NetworkNodeStorage createNode(World world, BlockPos pos) {
         return new NetworkNodeStorage(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeStorage.ID;
     }
 }

@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.util.Direction;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
@@ -38,6 +37,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntityRenderer<
             }
         }
 
+        /* TODO
         if (tile.getDirection() == Direction.NORTH) {
             disX = 0.5F;
             disXText = disX + textWidth;
@@ -72,7 +72,7 @@ public class TileEntitySpecialRendererStorageMonitor extends TileEntityRenderer<
 
             rotZ = 1F;
             rotX = -1F;
-        }
+        }*/
 
         GlStateManager.pushMatrix();
         GlStateManager.translated(x + disX, y + disY, z + disZ);

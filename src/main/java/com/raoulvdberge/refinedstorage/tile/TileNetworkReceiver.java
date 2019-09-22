@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileNetworkReceiver extends TileNode<NetworkNodeNetworkReceiver> {
+public class TileNetworkReceiver extends NetworkNodeTile<NetworkNodeNetworkReceiver> {
     public TileNetworkReceiver() {
         super(RSTiles.NETWORK_RECEIVER);
     }
@@ -16,10 +16,5 @@ public class TileNetworkReceiver extends TileNode<NetworkNodeNetworkReceiver> {
     @Nonnull
     public NetworkNodeNetworkReceiver createNode(World world, BlockPos pos) {
         return new NetworkNodeNetworkReceiver(world, pos);
-    }
-
-    @Override
-    public String getNodeId() {
-        return NetworkNodeNetworkReceiver.ID;
     }
 }

@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.block.info;
 
-import com.raoulvdberge.refinedstorage.tile.TileBase;
+import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
@@ -15,9 +15,9 @@ public class BlockInfo implements IBlockInfo {
     private final ResourceLocation id;
     private final Object modObject;
     @Nullable
-    private final Supplier<TileBase> tileSupplier;
+    private final Supplier<BaseTile> tileSupplier;
 
-    public BlockInfo(Material material, SoundType soundType, float hardness, String id, String modId, Object modObject, Supplier<TileBase> tileSupplier) {
+    public BlockInfo(Material material, SoundType soundType, float hardness, String id, String modId, Object modObject, Supplier<BaseTile> tileSupplier) {
         this.material = material;
         this.soundType = soundType;
         this.hardness = hardness;
@@ -53,7 +53,7 @@ public class BlockInfo implements IBlockInfo {
 
     @Nullable
     @Override
-    public TileBase createTileEntity() {
+    public BaseTile createTileEntity() {
         return tileSupplier.get();
     }
 

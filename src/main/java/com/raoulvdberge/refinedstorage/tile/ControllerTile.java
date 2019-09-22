@@ -43,7 +43,6 @@ import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -62,16 +61,16 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
-import static com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY;
+import static com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY;
 
 // TODO: Change INetwork to be offloaded from the tile.
-public class ControllerTile extends TileBase implements ITickableTileEntity, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<ControllerTile>, INetworkNodeVisitor {
+public class ControllerTile extends BaseTile implements ITickableTileEntity, INetwork, IRedstoneConfigurable, INetworkNode, INetworkNodeProxy<ControllerTile>, INetworkNodeVisitor {
     private static final Comparator<ClientNode> CLIENT_NODE_COMPARATOR = (left, right) -> {
         if (left.getEnergyUsage() == right.getEnergyUsage()) {
             return 0;
@@ -86,11 +85,6 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
     public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getCapacity());
     public static final TileDataParameter<List<ClientNode>, ControllerTile> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), t -> {
         List<ClientNode> nodes = new ArrayList<>();
-
-        Random r = new Random();
-        for (int i = 0; i < 50; ++i) {
-            nodes.add(new ClientNode(new ItemStack(r.nextBoolean() ? Blocks.DIRT : (r.nextBoolean() ? Blocks.BOOKSHELF : (r.nextBoolean() ? Blocks.STONE : Blocks.GLASS))), 10, 10));
-        }
 
         for (INetworkNode node : t.nodeGraph.all()) {
             if (node.canUpdate()) {
@@ -668,7 +662,7 @@ public class ControllerTile extends TileBase implements ITickableTileEntity, INe
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
         if (cap == CapabilityEnergy.ENERGY) {
             return energyProxyCap.cast();
         }
