@@ -1,68 +1,62 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
-/*
+
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.client.model.pipeline.VertexTransformer;
 import net.minecraftforge.common.model.TRSRTransformation;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-**
- * @link https://github.com/SlimeKnights/Mantle/blob/master/src/main/java/slimeknights/mantle/client/model/TRSRBakedModel.java
- *
-public class BakedModelTRSR implements IBakedModel {
+/**
+ * @link https://github.com/SlimeKnights/Mantle/blob/1.14/src/main/java/slimeknights/mantle/client/model/TRSRBakedModel.java
+ */
+// for those wondering TRSR stands for Translation Rotation Scale Rotation
+public class TRSRBakedModel implements IBakedModel {
     protected final IBakedModel original;
-    public TRSRTransformation transformation;
-    private final TRSROverride override;
+    protected TRSRTransformation transformation;
     private final int faceOffset;
 
-    public BakedModelTRSR(IBakedModel original, float x, float y, float z, float scale) {
+    public TRSRBakedModel(IBakedModel original, float x, float y, float z, float scale) {
         this(original, x, y, z, 0, 0, 0, scale, scale, scale);
     }
 
-    public BakedModelTRSR(IBakedModel original, float x, float y, float z, float rotX, float rotY, float rotZ, float scale) {
+    public TRSRBakedModel(IBakedModel original, float x, float y, float z, float rotX, float rotY, float rotZ, float scale) {
         this(original, x, y, z, rotX, rotY, rotZ, scale, scale, scale);
     }
 
-    public BakedModelTRSR(IBakedModel original, float x, float y, float z, float rotX, float rotY, float rotZ, float scaleX, float scaleY, float scaleZ) {
+    public TRSRBakedModel(IBakedModel original, float x, float y, float z, float rotX, float rotY, float rotZ, float scaleX, float scaleY, float scaleZ) {
         this(original, new TRSRTransformation(new Vector3f(x, y, z),
             null,
             new Vector3f(scaleX, scaleY, scaleZ),
             TRSRTransformation.quatFromXYZ(rotX, rotY, rotZ)));
     }
 
-    public BakedModelTRSR(IBakedModel original, TRSRTransformation transform) {
+    public TRSRBakedModel(IBakedModel original, TRSRTransformation transform) {
         this.original = original;
         this.transformation = TRSRTransformation.blockCenterToCorner(transform);
-        this.override = new TRSROverride(this);
         this.faceOffset = 0;
     }
 
-    **
+    /**
      * Rotates around the Y axis and adjusts culling appropriately. South is default.
-     *
-    public BakedModelTRSR(IBakedModel original, Direction facing) {
+     */
+    public TRSRBakedModel(IBakedModel original, Direction facing) {
         this.original = original;
-        this.override = new TRSROverride(this);
 
         this.faceOffset = 4 + Direction.NORTH.getHorizontalIndex() - facing.getHorizontalIndex();
 
@@ -73,10 +67,10 @@ public class BakedModelTRSR implements IBakedModel {
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(BlockState state, Direction side, long rand) {
+    public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
         // transform quads obtained from parent
 
-        List<BakedQuad> quads = new ArrayList<>();
+        ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
 
         if (!original.isBuiltInRenderer()) {
             try {
@@ -87,14 +81,14 @@ public class BakedModelTRSR implements IBakedModel {
                 for (BakedQuad quad : original.getQuads(state, side, rand)) {
                     Transformer transformer = new Transformer(transformation, quad.getFormat());
                     quad.pipe(transformer);
-                    quads.add(transformer.build());
+                    builder.add(transformer.build());
                 }
             } catch (Exception e) {
                 // do nothing. Seriously, why are you using immutable lists?!
             }
         }
 
-        return quads;
+        return builder.build();
     }
 
     @Override
@@ -120,7 +114,6 @@ public class BakedModelTRSR implements IBakedModel {
 
     @Nonnull
     @Override
-    @SuppressWarnings("deprecation")
     public ItemCameraTransforms getItemCameraTransforms() {
         return original.getItemCameraTransforms();
     }
@@ -128,25 +121,7 @@ public class BakedModelTRSR implements IBakedModel {
     @Nonnull
     @Override
     public ItemOverrideList getOverrides() {
-        return override;
-    }
-
-    private static class TRSROverride extends ItemOverrideList {
-        private final BakedModelTRSR model;
-
-        public TRSROverride(BakedModelTRSR model) {
-            super(ImmutableList.of());
-
-            this.model = model;
-        }
-
-        @Nonnull
-        @Override
-        public IBakedModel handleItemState(@Nonnull IBakedModel originalModel, ItemStack stack, @Nullable World world, @Nullable EntityLivingBase entity) {
-            IBakedModel baked = model.original.getOverrides().handleItemState(originalModel, stack, world, entity);
-
-            return new BakedModelTRSR(baked, model.transformation);
-        }
+        return original.getOverrides();
     }
 
     private static class Transformer extends VertexTransformer {
@@ -156,7 +131,7 @@ public class BakedModelTRSR implements IBakedModel {
         public Transformer(TRSRTransformation transformation, VertexFormat format) {
             super(new UnpackedBakedQuad.Builder(format));
             // position transform
-            this.transformation = transformation.getMatrix();
+            this.transformation = transformation.getMatrixVec();
             // normal transform
             this.normalTransformation = new Matrix3f();
             this.transformation.getRotationScale(this.normalTransformation);
@@ -166,15 +141,15 @@ public class BakedModelTRSR implements IBakedModel {
 
         @Override
         public void put(int element, float... data) {
-            VertexFormatElement.EnumUsage usage = parent.getVertexFormat().getElement(element).getUsage();
+            VertexFormatElement.Usage usage = parent.getVertexFormat().getElement(element).getUsage();
 
             // transform normals and position
-            if (usage == VertexFormatElement.EnumUsage.POSITION && data.length >= 3) {
+            if (usage == VertexFormatElement.Usage.POSITION && data.length >= 3) {
                 Vector4f vec = new Vector4f(data[0], data[1], data[2], 1f);
                 transformation.transform(vec);
                 data = new float[4];
                 vec.get(data);
-            } else if (usage == VertexFormatElement.EnumUsage.NORMAL && data.length >= 3) {
+            } else if (usage == VertexFormatElement.Usage.NORMAL && data.length >= 3) {
                 Vector3f vec = new Vector3f(data);
                 normalTransformation.transform(vec);
                 vec.normalize();
@@ -188,4 +163,4 @@ public class BakedModelTRSR implements IBakedModel {
             return ((UnpackedBakedQuad.Builder) parent).build();
         }
     }
-}*/
+}

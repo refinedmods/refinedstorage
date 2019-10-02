@@ -183,7 +183,7 @@
   "block.refinedstorage:grid.1": "Crafting Grid",
   "block.refinedstorage:grid.2": "Pattern Grid",
   "block.refinedstorage:grid.3": "Fluid Grid",
-  "block.refinedstorage:disk_drive": "Disk Drive",
+  "block.refinedstorage.disk_drive": "Disk Drive",
   "block.refinedstorage:disk_manipulator": "Disk Manipulator",
   "block.refinedstorage:external_storage": "External Storage",
   "block.refinedstorage:importer": "Importer",

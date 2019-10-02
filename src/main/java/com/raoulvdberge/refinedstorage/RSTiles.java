@@ -27,8 +27,10 @@ public class RSTiles {
     public static final TileEntityType<TileDestructor> DESTRUCTOR = null;
     //@ObjectHolder(RS.ID + ":detector")
     public static final TileEntityType<TileDetector> DETECTOR = null;
-    //@ObjectHolder(RS.ID + ":disk_drive")
-    public static final TileEntityType<TileDiskDrive> DISK_DRIVE = null;
+
+    @ObjectHolder(RS.ID + ":disk_drive")
+    public static final TileEntityType<DiskDriveTile> DISK_DRIVE = null;
+
     //@ObjectHolder(RS.ID + ":disk_manipulator")
     public static final TileEntityType<TileDiskManipulator> DISK_MANIPULATOR = null;
     //@ObjectHolder(RS.ID + ":exporter")

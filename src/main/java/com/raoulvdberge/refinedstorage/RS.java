@@ -6,10 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
-import com.raoulvdberge.refinedstorage.block.CableBlock;
-import com.raoulvdberge.refinedstorage.block.ControllerBlock;
-import com.raoulvdberge.refinedstorage.block.MachineCasingBlock;
-import com.raoulvdberge.refinedstorage.block.QuartzEnrichedIronBlock;
+import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
@@ -22,6 +19,7 @@ import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSeri
 import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import com.raoulvdberge.refinedstorage.tile.CableTile;
 import com.raoulvdberge.refinedstorage.tile.ControllerTile;
+import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
@@ -91,6 +89,7 @@ public final class RS {
         e.getRegistry().register(new ControllerBlock(ControllerBlock.Type.CREATIVE));
         e.getRegistry().register(new MachineCasingBlock());
         e.getRegistry().register(new CableBlock());
+        e.getRegistry().register(new DiskDriveBlock());
     }
 
     @SubscribeEvent
@@ -104,6 +103,9 @@ public final class RS {
         ));
 
         e.getRegistry().register(TileEntityType.Builder.create(CableTile::new, RSBlocks.CABLE).build(null).setRegistryName(RS.ID, "cable"));
+        e.getRegistry().register(registerTileDataParameters(
+            TileEntityType.Builder.create(DiskDriveTile::new, RSBlocks.DISK_DRIVE).build(null).setRegistryName(RS.ID, "disk_drive")
+        ));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -168,6 +170,7 @@ public final class RS {
         e.getRegistry().register(new ControllerBlockItem(RSBlocks.CREATIVE_CONTROLLER));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.MACHINE_CASING));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CABLE));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DISK_DRIVE));
     }
 
     /* TODO

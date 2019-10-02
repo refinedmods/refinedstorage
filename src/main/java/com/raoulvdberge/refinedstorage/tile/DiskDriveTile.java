@@ -14,13 +14,13 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileDiskDrive extends NetworkNodeTile<NetworkNodeDiskDrive> {
-    public static final TileDataParameter<Integer, TileDiskDrive> PRIORITY = IPrioritizable.createParameter();
-    public static final TileDataParameter<Integer, TileDiskDrive> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileDiskDrive> MODE = IFilterable.createParameter();
-    public static final TileDataParameter<Integer, TileDiskDrive> TYPE = IType.createParameter();
-    public static final TileDataParameter<AccessType, TileDiskDrive> ACCESS_TYPE = IAccessType.createParameter();
-    public static final TileDataParameter<Long, TileDiskDrive> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
+public class DiskDriveTile extends NetworkNodeTile<NetworkNodeDiskDrive> {
+    public static final TileDataParameter<Integer, DiskDriveTile> PRIORITY = IPrioritizable.createParameter();
+    public static final TileDataParameter<Integer, DiskDriveTile> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer, DiskDriveTile> MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer, DiskDriveTile> TYPE = IType.createParameter();
+    public static final TileDataParameter<AccessType, DiskDriveTile> ACCESS_TYPE = IAccessType.createParameter();
+    public static final TileDataParameter<Long, DiskDriveTile> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
         long stored = 0;
 
         for (IStorageDisk storage : t.getNode().getItemDisks()) {
@@ -37,7 +37,7 @@ public class TileDiskDrive extends NetworkNodeTile<NetworkNodeDiskDrive> {
 
         return stored;
     });
-    public static final TileDataParameter<Long, TileDiskDrive> CAPACITY = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
+    public static final TileDataParameter<Long, DiskDriveTile> CAPACITY = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
         long capacity = 0;
 
         for (IStorageDisk storage : t.getNode().getItemDisks()) {
@@ -67,7 +67,7 @@ public class TileDiskDrive extends NetworkNodeTile<NetworkNodeDiskDrive> {
 
     private Integer[] diskState = new Integer[8];
 
-    public TileDiskDrive() {
+    public DiskDriveTile() {
         super(RSTiles.DISK_DRIVE);
 
         dataManager.addWatchedParameter(PRIORITY);
@@ -132,7 +132,8 @@ public class TileDiskDrive extends NetworkNodeTile<NetworkNodeDiskDrive> {
         }
     }
 
-    /* TODO @Override
+    /* TODO
+    @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
         return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
     }

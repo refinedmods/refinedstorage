@@ -10,14 +10,13 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "C": {
-      "type": "forge:ore_dict",
-      "ore": "chest"
+      "tag": "forge:chests"
     },
     "M": {
       "item": "refinedstorage:machine_casing"
     },
     "P": {
-      "item": "#advanced_processor"
+      "item": "refinedstorage:advanced_processor"
     }
   },
   "result": {

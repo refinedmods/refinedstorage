@@ -1,14 +1,34 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
+import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
+import com.raoulvdberge.refinedstorage.util.BlockUtils;
+import net.minecraft.block.BlockState;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockReader;
 
-public class BlockDiskDrive extends BlockNode {
+import javax.annotation.Nullable;
+
+public class DiskDriveBlock extends NodeBlock {
     // TODO public static final PropertyObject<Integer[]> DISK_STATE = new PropertyObject<>("disk_state", Integer[].class);
 
-    public BlockDiskDrive() {
-        super(BlockInfoBuilder.forId("disk_drive").tileEntity(TileDiskDrive::new).create());
+    public DiskDriveBlock() {
+        super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
+
+        this.setRegistryName(RS.ID, "disk_drive");
     }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new DiskDriveTile();
+    }
+
 /* TODO
     @Override
     @OnlyIn(Dist.CLIENT)

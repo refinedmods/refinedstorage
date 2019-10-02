@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -16,7 +15,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
+import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
@@ -104,6 +103,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     @Override
     public int getEnergyUsage() {
+        /*TODO
         int usage = RS.INSTANCE.config.diskDriveUsage;
 
         for (IStorage storage : itemDisks) {
@@ -117,7 +117,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
             }
         }
 
-        return usage;
+        return usage;*/
+        return 0;
     }
 
     @Override
@@ -268,42 +269,42 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     @Override
     public TileDataParameter<Integer, ?> getTypeParameter() {
-        return TileDiskDrive.TYPE;
+        return DiskDriveTile.TYPE;
     }
 
     @Override
     public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return TileDiskDrive.REDSTONE_MODE;
+        return DiskDriveTile.REDSTONE_MODE;
     }
 
     @Override
     public TileDataParameter<Integer, ?> getCompareParameter() {
-        return TileDiskDrive.COMPARE;
+        return DiskDriveTile.COMPARE;
     }
 
     @Override
     public TileDataParameter<Integer, ?> getFilterParameter() {
-        return TileDiskDrive.MODE;
+        return DiskDriveTile.MODE;
     }
 
     @Override
     public TileDataParameter<Integer, ?> getPriorityParameter() {
-        return TileDiskDrive.PRIORITY;
+        return DiskDriveTile.PRIORITY;
     }
 
     @Override
     public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
-        return TileDiskDrive.ACCESS_TYPE;
+        return DiskDriveTile.ACCESS_TYPE;
     }
 
     @Override
     public long getStored() {
-        return TileDiskDrive.STORED.getValue();
+        return DiskDriveTile.STORED.getValue();
     }
 
     @Override
     public long getCapacity() {
-        return TileDiskDrive.CAPACITY.getValue();
+        return DiskDriveTile.CAPACITY.getValue();
     }
 
     @Override
@@ -346,7 +347,7 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
 
     @Override
     public int getType() {
-        return world.isRemote ? TileDiskDrive.TYPE.getValue() : type;
+        return world.isRemote ? DiskDriveTile.TYPE.getValue() : type;
     }
 
     @Override

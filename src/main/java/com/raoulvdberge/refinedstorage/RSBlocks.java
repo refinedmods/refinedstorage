@@ -5,7 +5,6 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
     public static final BlockGrid GRID = new BlockGrid();
-    public static final BlockDiskDrive DISK_DRIVE = new BlockDiskDrive();
     public static final BlockExternalStorage EXTERNAL_STORAGE = new BlockExternalStorage();
     public static final BlockImporter IMPORTER = new BlockImporter();
     public static final BlockExporter EXPORTER = new BlockExporter();
@@ -40,6 +39,9 @@ public final class RSBlocks {
 
     @ObjectHolder(RS.ID + ":cable")
     public static final CableBlock CABLE = null;
+
+    @ObjectHolder(RS.ID + ":disk_drive")
+    public static final DiskDriveBlock DISK_DRIVE = null;
 
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();

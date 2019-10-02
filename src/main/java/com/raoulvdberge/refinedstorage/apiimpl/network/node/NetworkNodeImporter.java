@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
+import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
@@ -74,7 +74,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
             TileEntity facing = getFacingTile();
             IItemHandler handler = WorldUtils.getItemHandler(facing, getDirection().getOpposite());
 
-            if (facing instanceof TileDiskDrive || handler == null) {
+            if (facing instanceof DiskDriveTile || handler == null) {
                 return;
             }
 

@@ -1,14 +1,28 @@
 package com.raoulvdberge.refinedstorage.render.model.baked;
 
-/*
-public class BakedModelDiskDrive extends BakedModelDelegate {
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.util.Direction;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.common.model.TRSRTransformation;
 
+import javax.annotation.Nullable;
+import javax.vecmath.Vector3f;
+import java.util.*;
+
+public class DiskDriveBakedModel extends DelegateBakedModel {
     private class CacheKey {
         private BlockState state;
         private Direction side;
         private Integer[] diskState;
+        private Random random;
 
-        CacheKey(BlockState state, @Nullable Direction side, Integer[] diskState) {
+        CacheKey(BlockState state, @Nullable Direction side, Integer[] diskState, Random random) {
             this.state = state;
             this.side = side;
             this.diskState = diskState;
@@ -52,13 +66,14 @@ public class BakedModelDiskDrive extends BakedModelDelegate {
     private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         public List<BakedQuad> load(CacheKey key) {
-            Direction facing = key.state.get(RSBlocks.DISK_DRIVE.getDirection().getProperty());
+            // TODO Direction facing = key.state.get(RSBlocks.DISK_DRIVE.getDirection().getProperty());
+            Direction facing = Direction.NORTH;
 
-            List<BakedQuad> quads = models.get(facing).getQuads(key.state, key.side, new Random());
+            List<BakedQuad> quads = new ArrayList<>(models.get(facing).getQuads(key.state, key.side, key.random));
 
             for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != ConstantsDisk.DISK_STATE_NONE) {
-                    quads.addAll(disks.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, 0));
+                    quads.addAll(disks.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, key.random));
                 }
             }
 
@@ -66,11 +81,15 @@ public class BakedModelDiskDrive extends BakedModelDelegate {
         }
     });
 
-    public BakedModelDiskDrive(IBakedModel base, IBakedModel disk, IBakedModel diskNearCapacity, IBakedModel diskFull, IBakedModel diskDisconnected) {
+    public DiskDriveBakedModel(IBakedModel base,
+                               IBakedModel disk,
+                               IBakedModel diskNearCapacity,
+                               IBakedModel diskFull,
+                               IBakedModel diskDisconnected) {
         super(base);
 
         for (Direction facing : Direction.values()) { // TODO only horizontals
-            models.put(facing, new BakedModelTRSR(base, facing));
+            models.put(facing, new TRSRBakedModel(base, facing));
 
             disks.put(facing, new HashMap<>());
 
@@ -89,7 +108,7 @@ public class BakedModelDiskDrive extends BakedModelDelegate {
     private void initDiskModels(IBakedModel disk, int type, Direction facing) {
         for (int y = 0; y < 4; ++y) {
             for (int x = 0; x < 2; ++x) {
-                BakedModelTRSR model = new BakedModelTRSR(disk, facing);
+                TRSRBakedModel model = new TRSRBakedModel(disk, facing);
 
                 Vector3f trans = model.transformation.getTranslation();
 
@@ -108,21 +127,27 @@ public class BakedModelDiskDrive extends BakedModelDelegate {
         }
     }
 
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, long rand) {
-        if (!(state instanceof IExtendedBlockState)) {
-            return base.getQuads(state, side, rand);
-        }
+    private static Integer[] TEST_STATE = {
+        ConstantsDisk.DISK_STATE_FULL,
+        ConstantsDisk.DISK_STATE_NEAR_CAPACITY,
+        ConstantsDisk.DISK_STATE_NONE,
+        ConstantsDisk.DISK_STATE_NORMAL,
+        ConstantsDisk.DISK_STATE_NORMAL,
+        ConstantsDisk.DISK_STATE_NONE,
+        ConstantsDisk.DISK_STATE_NONE,
+        ConstantsDisk.DISK_STATE_NONE,
+    };
 
-        Integer[] diskState = ((IExtendedBlockState) state).getValue(BlockDiskDrive.DISK_STATE);
+    @Override
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand, IModelData data) {
+        Integer[] diskState = TEST_STATE;
 
         if (diskState == null) {
-            return base.getQuads(state, side, rand);
+            return base.getQuads(state, side, rand, data);
         }
 
-        CacheKey key = new CacheKey(((IExtendedBlockState) state).getClean(), side, diskState);
+        CacheKey key = new CacheKey(state, side, diskState, rand);
 
         return cache.getUnchecked(key);
     }
 }
-*/

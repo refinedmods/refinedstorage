@@ -3,13 +3,13 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.raoulvdberge.refinedstorage.tile.TileDiskDrive;
+import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class DiskDriveContainer extends BaseContainer {
-    public DiskDriveContainer(TileDiskDrive diskDrive, PlayerEntity player, int windowId) {
+    public DiskDriveContainer(DiskDriveTile diskDrive, PlayerEntity player, int windowId) {
         super(RSContainers.DISK_DRIVE, diskDrive, player, windowId);
 
         int x = 80;

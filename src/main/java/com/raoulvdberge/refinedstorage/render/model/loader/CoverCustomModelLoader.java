@@ -10,7 +10,7 @@ import net.minecraftforge.client.model.ICustomModelLoader;
 
 import javax.annotation.Nullable;
 
-public class CustomModelLoaderCover implements ICustomModelLoader {
+public class CoverCustomModelLoader implements ICustomModelLoader {
     @Override
     public void onResourceManagerReload(IResourceManager resourceManager) {
         // NO OP

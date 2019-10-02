@@ -1,7 +1,7 @@
 {
   "textures": {
-    "disk": "refinedstorage:blocks/disks/portable_grid_disk",
-    "led": "refinedstorage:blocks/disks/portable_grid_leds"
+    "disk": "refinedstorage:block/disks/portable_grid_disk",
+    "led": "refinedstorage:block/disks/portable_grid_leds"
   },
   "elements": [
     {
