@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.item.blockitem.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
-import com.raoulvdberge.refinedstorage.util.CollisionUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -137,7 +136,7 @@ public abstract class BlockBase extends Block {
     }
 
     protected boolean canAccessGui(BlockState state, World world, BlockPos pos, float hitX, float hitY, float hitZ) {
-        for (CollisionGroup group : getCollisions(world.getTileEntity(pos), state)) {
+        /*for (CollisionGroup group : getCollisions(world.getTileEntity(pos), state)) {
             if (group.canAccessGui()) {
                 for (AxisAlignedBB aabb : group.getItems()) {
                     if (CollisionUtils.isInBounds(aabb, hitX, hitY, hitZ)) {
@@ -145,7 +144,7 @@ public abstract class BlockBase extends Block {
                     }
                 }
             }
-        }
+        }*/
 
         return false;
     }
@@ -158,27 +157,4 @@ public abstract class BlockBase extends Block {
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
     }
-
-    public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
-        return DEFAULT_COLLISION_GROUPS;
-    }
-
-    /* TODO
-    @Override
-    @SuppressWarnings("deprecation")
-    public void addCollisionBoxToList(BlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, Entity entityIn, boolean isActualState) {
-        for (CollisionGroup group : getCollisions(world.getTileEntity(pos), this.getActualState(state, world, pos))) {
-            for (AxisAlignedBB aabb : group.getItems()) {
-                addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
-            }
-        }
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public RayTraceResult collisionRayTrace(BlockState state, World world, BlockPos pos, Vec3d start, Vec3d end) {
-        AdvancedRayTraceResult result = AdvancedRayTracer.rayTrace(pos, start, end, getCollisions(world.getTileEntity(pos), this.getActualState(state, world, pos)));
-
-        return result != null ? result.getHit() : null;
-    }*/
 }

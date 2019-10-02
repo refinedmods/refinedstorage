@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
 
-public abstract class NodeBlock extends Block {
+public abstract class NodeBlock extends BaseBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
     public NodeBlock(Block.Properties props) {

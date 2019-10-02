@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.block.BaseBlock;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
@@ -25,7 +26,6 @@ import java.util.UUID;
 // TODO: getId: return a ResourceLocation.
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
-    private static final String NBT_DIRECTION = "Direction";
     private static final String NBT_VERSION = "Version";
     private static final int VERSION = 1;
 
@@ -75,10 +75,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        BlockState state = world.getBlockState(pos);
-
-        // TODO: Fix.
-        return new ItemStack(Item.getItemFromBlock(state.getBlock()), 1);
+        return new ItemStack(Item.BLOCK_TO_ITEM.get(world.getBlockState(pos).getBlock()), 1);
     }
 
     @Override
@@ -167,7 +164,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         }
 
         tag.putInt(NBT_VERSION, VERSION);
-        tag.putInt(NBT_DIRECTION, direction.ordinal());
 
         writeConfiguration(tag);
 
@@ -183,10 +179,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     public void read(CompoundNBT tag) {
         if (tag.hasUniqueId(NBT_OWNER)) {
             owner = tag.getUniqueId(NBT_OWNER);
-        }
-
-        if (tag.contains(NBT_DIRECTION)) {
-            direction = Direction.byIndex(tag.getInt(NBT_DIRECTION));
         }
 
         if (tag.contains(NBT_VERSION)) {
@@ -235,19 +227,15 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     public Direction getDirection() {
+        if (direction == null) {
+            BlockState state = world.getBlockState(pos);
+
+            if (state.getBlock() instanceof BaseBlock) {
+                direction = state.get(((BaseBlock) state.getBlock()).getDirection().getProperty());
+            }
+        }
+
         return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-
-        onDirectionChanged();
-
-        markDirty();
-    }
-
-    protected void onDirectionChanged() {
-        // NO OP
     }
 
     @Nullable

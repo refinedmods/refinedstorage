@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.render.model.baked;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -26,6 +27,7 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
             this.state = state;
             this.side = side;
             this.diskState = diskState;
+            this.random = random;
         }
 
         @Override
@@ -60,20 +62,19 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
         }
     }
 
-    private Map<Direction, IBakedModel> models = new HashMap<>();
-    private Map<Direction, Map<Integer, List<IBakedModel>>> disks = new HashMap<>();
+    private Map<Direction, IBakedModel> baseByFacing = new HashMap<>();
+    private Map<Direction, Map<Integer, List<IBakedModel>>> disksByFacing = new HashMap<>();
 
     private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         public List<BakedQuad> load(CacheKey key) {
-            // TODO Direction facing = key.state.get(RSBlocks.DISK_DRIVE.getDirection().getProperty());
-            Direction facing = Direction.NORTH;
+            Direction facing = key.state.get(RSBlocks.DISK_DRIVE.getDirection().getProperty());
 
-            List<BakedQuad> quads = new ArrayList<>(models.get(facing).getQuads(key.state, key.side, key.random));
+            List<BakedQuad> quads = new ArrayList<>(baseByFacing.get(facing).getQuads(key.state, key.side, key.random));
 
             for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != ConstantsDisk.DISK_STATE_NONE) {
-                    quads.addAll(disks.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, key.random));
+                    quads.addAll(disksByFacing.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, key.random));
                 }
             }
 
@@ -88,24 +89,25 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
                                IBakedModel diskDisconnected) {
         super(base);
 
-        for (Direction facing : Direction.values()) { // TODO only horizontals
-            models.put(facing, new TRSRBakedModel(base, facing));
+        for (Direction facing : Direction.values()) {
+            if (facing.getHorizontalIndex() == -1) {
+                continue;
+            }
 
-            disks.put(facing, new HashMap<>());
+            baseByFacing.put(facing, new TRSRBakedModel(base, facing));
 
-            disks.get(facing).put(ConstantsDisk.DISK_STATE_NORMAL, new ArrayList<>());
-            disks.get(facing).put(ConstantsDisk.DISK_STATE_NEAR_CAPACITY, new ArrayList<>());
-            disks.get(facing).put(ConstantsDisk.DISK_STATE_FULL, new ArrayList<>());
-            disks.get(facing).put(ConstantsDisk.DISK_STATE_DISCONNECTED, new ArrayList<>());
+            disksByFacing.put(facing, new HashMap<>());
 
-            initDiskModels(disk, ConstantsDisk.DISK_STATE_NORMAL, facing);
-            initDiskModels(diskNearCapacity, ConstantsDisk.DISK_STATE_NEAR_CAPACITY, facing);
-            initDiskModels(diskFull, ConstantsDisk.DISK_STATE_FULL, facing);
-            initDiskModels(diskDisconnected, ConstantsDisk.DISK_STATE_DISCONNECTED, facing);
+            addDiskModels(disk, ConstantsDisk.DISK_STATE_NORMAL, facing);
+            addDiskModels(diskNearCapacity, ConstantsDisk.DISK_STATE_NEAR_CAPACITY, facing);
+            addDiskModels(diskFull, ConstantsDisk.DISK_STATE_FULL, facing);
+            addDiskModels(diskDisconnected, ConstantsDisk.DISK_STATE_DISCONNECTED, facing);
         }
     }
 
-    private void initDiskModels(IBakedModel disk, int type, Direction facing) {
+    private void addDiskModels(IBakedModel disk, int type, Direction facing) {
+        disksByFacing.get(facing).put(type, new ArrayList<>());
+
         for (int y = 0; y < 4; ++y) {
             for (int x = 0; x < 2; ++x) {
                 TRSRBakedModel model = new TRSRBakedModel(disk, facing);
@@ -122,7 +124,7 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
 
                 model.transformation = new TRSRTransformation(trans, model.transformation.getLeftRot(), model.transformation.getScale(), model.transformation.getRightRot());
 
-                disks.get(facing).get(type).add(model);
+                disksByFacing.get(facing).get(type).add(model);
             }
         }
     }

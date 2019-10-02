@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
@@ -16,6 +17,11 @@ public class DiskDriveBlock extends NodeBlock {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.setRegistryName(RS.ID, "disk_drive");
+    }
+
+    @Override
+    public BlockDirection getDirection() {
+        return BlockDirection.HORIZONTAL;
     }
 
     @Override

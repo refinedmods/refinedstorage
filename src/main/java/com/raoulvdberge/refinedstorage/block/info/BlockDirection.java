@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.Arrays;
 
 public enum BlockDirection {
+    NONE(),
     ANY(Direction.values()),
     ANY_FACE_PLAYER(Direction.values()),
     HORIZONTAL(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
@@ -32,7 +33,7 @@ public enum BlockDirection {
             case HORIZONTAL:
                 return entity.getHorizontalFacing().getOpposite();
             default:
-                return null;
+                throw new RuntimeException("Unknown direction type");
         }
     }
 
