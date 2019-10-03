@@ -4,7 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.raoulvdberge.refinedstorage.RSBlocks;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
+import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -20,10 +21,10 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
     private class CacheKey {
         private BlockState state;
         private Direction side;
-        private Integer[] diskState;
+        private DiskDriveNetworkNode.DiskState[] diskState;
         private Random random;
 
-        CacheKey(BlockState state, @Nullable Direction side, Integer[] diskState, Random random) {
+        CacheKey(BlockState state, @Nullable Direction side, DiskDriveNetworkNode.DiskState[] diskState, Random random) {
             this.state = state;
             this.side = side;
             this.diskState = diskState;
@@ -63,7 +64,7 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
     }
 
     private Map<Direction, IBakedModel> baseByFacing = new HashMap<>();
-    private Map<Direction, Map<Integer, List<IBakedModel>>> disksByFacing = new HashMap<>();
+    private Map<Direction, Map<DiskDriveNetworkNode.DiskState, List<IBakedModel>>> disksByFacing = new HashMap<>();
 
     private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
@@ -73,7 +74,7 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
             List<BakedQuad> quads = new ArrayList<>(baseByFacing.get(facing).getQuads(key.state, key.side, key.random));
 
             for (int i = 0; i < 8; ++i) {
-                if (key.diskState[i] != ConstantsDisk.DISK_STATE_NONE) {
+                if (key.diskState[i] != DiskDriveNetworkNode.DiskState.NONE) {
                     quads.addAll(disksByFacing.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, key.random));
                 }
             }
@@ -98,14 +99,14 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
 
             disksByFacing.put(facing, new HashMap<>());
 
-            addDiskModels(disk, ConstantsDisk.DISK_STATE_NORMAL, facing);
-            addDiskModels(diskNearCapacity, ConstantsDisk.DISK_STATE_NEAR_CAPACITY, facing);
-            addDiskModels(diskFull, ConstantsDisk.DISK_STATE_FULL, facing);
-            addDiskModels(diskDisconnected, ConstantsDisk.DISK_STATE_DISCONNECTED, facing);
+            addDiskModels(disk, DiskDriveNetworkNode.DiskState.NORMAL, facing);
+            addDiskModels(diskNearCapacity, DiskDriveNetworkNode.DiskState.NEAR_CAPACITY, facing);
+            addDiskModels(diskFull, DiskDriveNetworkNode.DiskState.FULL, facing);
+            addDiskModels(diskDisconnected, DiskDriveNetworkNode.DiskState.DISCONNECTED, facing);
         }
     }
 
-    private void addDiskModels(IBakedModel disk, int type, Direction facing) {
+    private void addDiskModels(IBakedModel disk, DiskDriveNetworkNode.DiskState type, Direction facing) {
         disksByFacing.get(facing).put(type, new ArrayList<>());
 
         for (int y = 0; y < 4; ++y) {
@@ -129,20 +130,9 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
         }
     }
 
-    private static Integer[] TEST_STATE = {
-        ConstantsDisk.DISK_STATE_FULL,
-        ConstantsDisk.DISK_STATE_NEAR_CAPACITY,
-        ConstantsDisk.DISK_STATE_NONE,
-        ConstantsDisk.DISK_STATE_NORMAL,
-        ConstantsDisk.DISK_STATE_NORMAL,
-        ConstantsDisk.DISK_STATE_NONE,
-        ConstantsDisk.DISK_STATE_NONE,
-        ConstantsDisk.DISK_STATE_NONE,
-    };
-
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand, IModelData data) {
-        Integer[] diskState = TEST_STATE;
+        DiskDriveNetworkNode.DiskState[] diskState = data.getData(DiskDriveTile.DISK_STATE_PROPERTY);
 
         if (diskState == null) {
             return base.getQuads(state, side, rand, data);

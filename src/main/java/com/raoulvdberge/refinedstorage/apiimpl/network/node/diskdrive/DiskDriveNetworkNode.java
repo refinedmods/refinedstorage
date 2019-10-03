@@ -34,6 +34,26 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class DiskDriveNetworkNode extends NetworkNode implements IStorageScreen, IStorageProvider, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IStorageDiskContainerContext {
+    public enum DiskState {
+        NONE,
+        NORMAL,
+        DISCONNECTED,
+        NEAR_CAPACITY,
+        FULL;
+
+        public static final int DISK_NEAR_CAPACITY_THRESHOLD = 75;
+
+        public static DiskState get(int stored, int capacity) {
+            if (stored == capacity) {
+                return FULL;
+            } else if ((int) ((float) stored / (float) capacity * 100F) >= DISK_NEAR_CAPACITY_THRESHOLD) {
+                return NEAR_CAPACITY;
+            } else {
+                return NORMAL;
+            }
+        }
+    }
+
     public static final Predicate<ItemStack> VALIDATOR_STORAGE_DISK = s -> s.getItem() instanceof IStorageDiskProvider && ((IStorageDiskProvider) s.getItem()).isValid(s);
 
     public static final String ID = "disk_drive";
@@ -337,6 +357,29 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageScreen,
             network.getItemStorageCache().sort();
             network.getFluidStorageCache().sort();
         }
+    }
+
+    public DiskState[] getDiskState() {
+        DiskState[] diskStates = new DiskState[8];
+
+        for (int i = 0; i < 8; ++i) {
+            DiskState state = DiskState.NONE;
+
+            if (itemDisks[i] != null || fluidDisks[i] != null) {
+                if (network == null) {
+                    state = DiskState.DISCONNECTED;
+                } else {
+                    state = DiskState.get(
+                        itemDisks[i] != null ? itemDisks[i].getStored() : fluidDisks[i].getStored(),
+                        itemDisks[i] != null ? itemDisks[i].getCapacity() : fluidDisks[i].getCapacity()
+                    );
+                }
+            }
+
+            diskStates[i] = state;
+        }
+
+        return diskStates;
     }
 
     public IItemHandler getDisks() {

@@ -32,14 +32,14 @@ public class TileDiskManipulator extends NetworkNodeTile<NetworkNodeDiskManipula
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(IO_MODE);
 
-        DiskDriveTile.initDiskState(diskState);
+        // DiskDriveTile.initDiskState(diskState);
     }
 
     @Override
     public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
-        DiskDriveTile.writeDiskState(tag, 6, getNode().canUpdate(), getNode().getItemDisks(), getNode().getFluidDisks());
+        // DiskDriveTile.writeDiskState(tag, 6, getNode().canUpdate(), getNode().getItemDisks(), getNode().getFluidDisks());
 
         return tag;
     }
@@ -48,7 +48,7 @@ public class TileDiskManipulator extends NetworkNodeTile<NetworkNodeDiskManipula
     public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
-        DiskDriveTile.readDiskState(tag, diskState);
+        // DiskDriveTile.readDiskState(tag, diskState);
     }
 
     public Integer[] getDiskState() {

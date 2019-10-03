@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
@@ -20,14 +20,14 @@ import java.util.Collection;
 public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack> {
     private NetworkNodeDiskManipulator diskManipulator;
     private IStorageDisk<ItemStack> parent;
-    private int lastState;
+    private DiskDriveNetworkNode.DiskState lastState;
 
     public StorageDiskItemManipulatorWrapper(NetworkNodeDiskManipulator diskManipulator, IStorageDisk<ItemStack> parent) {
         this.diskManipulator = diskManipulator;
         this.parent = parent;
         this.setSettings(
             () -> {
-                int currentState = ConstantsDisk.getDiskState(getStored(), getCapacity());
+                DiskDriveNetworkNode.DiskState currentState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
 
                 if (lastState != currentState) {
                     lastState = currentState;
@@ -37,7 +37,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
             },
             diskManipulator
         );
-        this.lastState = ConstantsDisk.getDiskState(getStored(), getCapacity());
+        this.lastState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
     }
 
     @Override

@@ -4,15 +4,22 @@ import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
     public static final TileDataParameter<Integer, DiskDriveTile> PRIORITY = IPrioritizable.createParameter();
@@ -63,9 +70,10 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
         return capacity;
     });
 
-    private static final String NBT_DISK_STATE = "DiskState_%d";
+    private static final String NBT_DISK_STATE = "DiskStates";
+    public static final ModelProperty<DiskDriveNetworkNode.DiskState[]> DISK_STATE_PROPERTY = new ModelProperty<>();
 
-    private Integer[] diskState = new Integer[8];
+    private DiskDriveNetworkNode.DiskState[] diskState = new DiskDriveNetworkNode.DiskState[8];
 
     public DiskDriveTile() {
         super(RSTiles.DISK_DRIVE);
@@ -78,14 +86,20 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
         dataManager.addWatchedParameter(STORED);
         dataManager.addWatchedParameter(CAPACITY);
 
-        initDiskState(diskState);
+        Arrays.fill(diskState, DiskDriveNetworkNode.DiskState.NONE);
     }
 
     @Override
     public CompoundNBT writeUpdate(CompoundNBT tag) {
         super.writeUpdate(tag);
 
-        writeDiskState(tag, 8, getNode().canUpdate(), getNode().getItemDisks(), getNode().getFluidDisks());
+        ListNBT list = new ListNBT();
+
+        for (DiskDriveNetworkNode.DiskState state : getNode().getDiskState()) {
+            list.add(new IntNBT(state.ordinal()));
+        }
+
+        tag.put(NBT_DISK_STATE, list);
 
         return tag;
     }
@@ -94,42 +108,21 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
     public void readUpdate(CompoundNBT tag) {
         super.readUpdate(tag);
 
-        readDiskState(tag, diskState);
-    }
+        ListNBT list = tag.getList(NBT_DISK_STATE, Constants.NBT.TAG_INT);
 
-    public Integer[] getDiskState() {
-        return diskState;
-    }
-
-    public static void writeDiskState(CompoundNBT tag, int disks, boolean connected, IStorageDisk[] itemStorages, IStorageDisk[] fluidStorages) {
-        for (int i = 0; i < disks; ++i) {
-            int state = ConstantsDisk.DISK_STATE_NONE;
-
-            if (itemStorages[i] != null || fluidStorages[i] != null) {
-                if (!connected) {
-                    state = ConstantsDisk.DISK_STATE_DISCONNECTED;
-                } else {
-                    state = ConstantsDisk.getDiskState(
-                        itemStorages[i] != null ? itemStorages[i].getStored() : fluidStorages[i].getStored(),
-                        itemStorages[i] != null ? itemStorages[i].getCapacity() : fluidStorages[i].getCapacity()
-                    );
-                }
-            }
-
-            tag.putInt(String.format(NBT_DISK_STATE, i), state);
+        for (int i = 0; i < list.size(); ++i) {
+            diskState[i] = DiskDriveNetworkNode.DiskState.values()[list.getInt(i)];
         }
+
+        requestModelDataUpdate();
+
+        WorldUtils.updateBlock(world, pos);
     }
 
-    public static void readDiskState(CompoundNBT tag, Integer[] diskState) {
-        for (int i = 0; i < diskState.length; ++i) {
-            diskState[i] = tag.getInt(String.format(NBT_DISK_STATE, i));
-        }
-    }
-
-    public static void initDiskState(Integer[] diskState) {
-        for (int i = 0; i < diskState.length; ++i) {
-            diskState[i] = ConstantsDisk.DISK_STATE_NONE;
-        }
+    @Nonnull
+    @Override
+    public IModelData getModelData() {
+        return new ModelDataMap.Builder().withInitial(DISK_STATE_PROPERTY, diskState).build();
     }
 
     /* TODO

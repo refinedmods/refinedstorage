@@ -65,20 +65,6 @@ public class DiskDriveBlock extends NodeBlock {
 
 /* TODO
     @Override
-    @OnlyIn(Dist.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
-
-        modelRegistration.addModelLoader(() -> new CustomModelLoaderDefault(info.getId(), ModelDiskDrive::new));
-    }
-
-    @Override
-    @Nullable
-    public BlockDirection getDirection() {
-        return BlockDirection.HORIZONTAL;
-    }
-
-    @Override
     public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
         return openNetworkGui(RSGui.DISK_DRIVE, player, world, pos, side);
     }

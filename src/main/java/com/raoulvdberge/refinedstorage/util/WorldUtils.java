@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +21,6 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import javax.annotation.Nullable;
 
 public final class WorldUtils {
-    // TODO REMOVE. Can just use setBlockState now.
     public static void updateBlock(@Nullable World world, BlockPos pos) {
         if (world != null) {
             BlockState state = world.getBlockState(pos);
@@ -57,13 +55,5 @@ public final class WorldUtils {
 
     public static void sendNoPermissionMessage(PlayerEntity player) {
         player.sendMessage(new TranslationTextComponent("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
-    }
-
-    public static void dropInventory(World world, BlockPos pos, IItemHandler handler) {
-        for (int i = 0; i < handler.getSlots(); ++i) {
-            if (!handler.getStackInSlot(i).isEmpty()) {
-                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
-            }
-        }
     }
 }

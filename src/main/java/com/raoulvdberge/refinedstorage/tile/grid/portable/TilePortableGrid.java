@@ -28,7 +28,6 @@ import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerTile;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
 import com.raoulvdberge.refinedstorage.tile.BaseTile;
@@ -741,7 +740,7 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
 
         if (renderInfo.getStored() == renderInfo.getCapacity()) {
             return PortableGridDiskState.FULL;
-        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= ConstantsDisk.DISK_NEAR_CAPACITY_THRESHOLD) {
+        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= DiskDriveNetworkNode.DiskState.DISK_NEAR_CAPACITY_THRESHOLD) {
             return PortableGridDiskState.NEAR_CAPACITY;
         } else {
             return PortableGridDiskState.NORMAL;
