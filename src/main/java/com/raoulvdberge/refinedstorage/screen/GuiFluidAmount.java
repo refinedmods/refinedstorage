@@ -4,15 +4,16 @@ import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.container.FluidAmountContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GuiFluidAmount extends GuiAmountSpecifying<FluidAmountContainer> {
+public class GuiFluidAmount extends AmountSpecifyingScreen<FluidAmountContainer> {
     private int containerSlot;
     private FluidStack stack;
     private int maxAmount;
 
     public GuiFluidAmount(BaseScreen parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount) {
-        super(parent, new FluidAmountContainer(player, stack), 172, 99, player.inventory);
+        super(parent, new FluidAmountContainer(player, stack), 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage:fluid_amount"));
 
         this.containerSlot = containerSlot;
         this.stack = stack;
@@ -37,11 +38,6 @@ public class GuiFluidAmount extends GuiAmountSpecifying<FluidAmountContainer> {
     @Override
     protected String getOkButtonText() {
         return I18n.format("misc.refinedstorage:set");
-    }
-
-    @Override
-    protected String getGuiTitle() {
-        return I18n.format("gui.refinedstorage:fluid_amount");
     }
 
     @Override

@@ -84,6 +84,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
         int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage:priority"));
 
         priorityButton = addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, I18n.format("misc.refinedstorage:priority"), true, true, btn -> {
+            minecraft.displayGuiScreen(new PriorityScreen(this, priorityParameter, playerInventory));
         });
     }
 
@@ -125,14 +126,4 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
             ) + "\n" + TextFormatting.GRAY + I18n.format("misc.refinedstorage.storage.full", full));
         }
     }
-
-    /* TODO
-    @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        super.actionPerformed(button);
-
-        if (button == priorityButton) {
-            FMLCommonHandler.instance().showGuiScreen(new GuiPriority(this, gui.getPriorityParameter()));
-        }
-    }*/
 }

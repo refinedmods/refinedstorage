@@ -32,13 +32,16 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/controller/cutouts/on")
         ));
 
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new DiskDriveBakedModel(
-            base,
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/disk")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
-        ));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
+            new DiskDriveBakedModel(
+                base,
+                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk")),
+                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity")),
+                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
+                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
+            ),
+            new ResourceLocation(RS.ID, "block/disks/leds")
+        ).disableCache());
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity"));

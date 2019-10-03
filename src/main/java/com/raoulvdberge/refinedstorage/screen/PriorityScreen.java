@@ -1,24 +1,24 @@
 package com.raoulvdberge.refinedstorage.screen;
 
-import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class GuiPriority extends GuiAmountSpecifying<Container> {
+public class PriorityScreen extends AmountSpecifyingScreen<Container> {
     private TileDataParameter<Integer, ?> priority;
 
-    public GuiPriority(BaseScreen parent, TileDataParameter<Integer, ?> priority, PlayerInventory inventory) {
-        super(parent, new Container(null, 0) { // TODO ctor
+    public PriorityScreen(BaseScreen parent, TileDataParameter<Integer, ?> priority, PlayerInventory inventory) {
+        super(parent, new Container(null, 0) {
             @Override
             public boolean canInteractWith(PlayerEntity player) {
                 return false;
             }
-        }, 164, 92, inventory);
+        }, 164, 92, inventory, new TranslationTextComponent("misc.refinedstorage:priority"));
 
         this.priority = priority;
     }
@@ -31,11 +31,6 @@ public class GuiPriority extends GuiAmountSpecifying<Container> {
     @Override
     protected String getOkButtonText() {
         return I18n.format("misc.refinedstorage:set");
-    }
-
-    @Override
-    protected String getGuiTitle() {
-        return I18n.format("misc.refinedstorage:priority");
     }
 
     @Override
@@ -73,12 +68,14 @@ public class GuiPriority extends GuiAmountSpecifying<Container> {
 
     @Override
     protected void onOkButtonPressed(boolean noPreview) {
-        Integer amount = Ints.tryParse(amountField.getText());
+        try {
+            int amount = Integer.parseInt(amountField.getText());
 
-        if (amount != null) {
             TileDataManager.setParameter(priority, amount);
 
             close();
+        } catch (NumberFormatException e) {
+            // NO OP
         }
     }
 }

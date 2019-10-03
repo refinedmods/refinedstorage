@@ -5,14 +5,15 @@ import com.raoulvdberge.refinedstorage.container.AmountContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TranslationTextComponent;
 
-public class GuiAmount extends GuiAmountSpecifying<AmountContainer> {
+public class GuiAmount extends AmountSpecifyingScreen<AmountContainer> {
     private int containerSlot;
     private ItemStack stack;
     private int maxAmount;
 
     public GuiAmount(BaseScreen parent, PlayerEntity player, int containerSlot, ItemStack stack, int maxAmount) {
-        super(parent, new AmountContainer(player, stack), 172, 99, player.inventory);
+        super(parent, new AmountContainer(player, stack), 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage:item_amount"));
 
         this.containerSlot = containerSlot;
         this.stack = stack;
@@ -37,11 +38,6 @@ public class GuiAmount extends GuiAmountSpecifying<AmountContainer> {
     @Override
     protected String getOkButtonText() {
         return I18n.format("misc.refinedstorage:set");
-    }
-
-    @Override
-    protected String getGuiTitle() {
-        return I18n.format("gui.refinedstorage:item_amount");
     }
 
     @Override
