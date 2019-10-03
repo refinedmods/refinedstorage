@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -8,7 +9,6 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.IStorageScreen;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
@@ -17,7 +17,6 @@ import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.config.*;
-import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -33,7 +32,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class DiskDriveNetworkNode extends NetworkNode implements IStorageScreen, IStorageProvider, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IStorageDiskContainerContext {
+public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvider, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IStorageDiskContainerContext {
     public enum DiskState {
         NONE,
         NORMAL,
@@ -121,22 +120,20 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageScreen,
 
     @Override
     public int getEnergyUsage() {
-        /*TODO
-        int usage = RS.INSTANCE.config.diskDriveUsage;
+        int usage = RS.SERVER_CONFIG.getDiskDrive().getUsage();
 
         for (IStorage storage : itemDisks) {
             if (storage != null) {
-                usage += RS.INSTANCE.config.diskDrivePerDiskUsage;
+                usage += RS.SERVER_CONFIG.getDiskDrive().getDiskUsage();
             }
         }
         for (IStorage storage : fluidDisks) {
             if (storage != null) {
-                usage += RS.INSTANCE.config.diskDrivePerDiskUsage;
+                usage += RS.SERVER_CONFIG.getDiskDrive().getDiskUsage();
             }
         }
 
-        return usage;*/
-        return 0;
+        return usage;
     }
 
     @Override
@@ -278,51 +275,6 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageScreen,
         this.mode = mode;
 
         markDirty();
-    }
-
-    @Override
-    public String getGuiTitle() {
-        return "block.refinedstorage:disk_drive.name";
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getTypeParameter() {
-        return DiskDriveTile.TYPE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return DiskDriveTile.REDSTONE_MODE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getCompareParameter() {
-        return DiskDriveTile.COMPARE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
-        return DiskDriveTile.WHITELIST_BLACKLIST;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getPriorityParameter() {
-        return DiskDriveTile.PRIORITY;
-    }
-
-    @Override
-    public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
-        return DiskDriveTile.ACCESS_TYPE;
-    }
-
-    @Override
-    public long getStored() {
-        return DiskDriveTile.STORED.getValue();
-    }
-
-    @Override
-    public long getCapacity() {
-        return DiskDriveTile.CAPACITY.getValue();
     }
 
     @Override

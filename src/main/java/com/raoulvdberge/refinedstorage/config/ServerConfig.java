@@ -7,10 +7,14 @@ public class ServerConfig {
     private ForgeConfigSpec spec;
 
     private Controller controller;
+    private Cable cable;
+    private DiskDrive diskDrive;
     private Upgrades upgrades;
 
     public ServerConfig() {
         controller = new Controller();
+        cable = new Cable();
+        diskDrive = new DiskDrive();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -18,6 +22,14 @@ public class ServerConfig {
 
     public Controller getController() {
         return controller;
+    }
+
+    public Cable getCable() {
+        return cable;
+    }
+
+    public DiskDrive getDiskDrive() {
+        return diskDrive;
     }
 
     public Upgrades getUpgrades() {
@@ -59,6 +71,44 @@ public class ServerConfig {
 
         public boolean getUseEnergy() {
             return useEnergy.get();
+        }
+    }
+
+    public class Cable {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public Cable() {
+            builder.push("cable");
+
+            usage = builder.comment("The energy used by the Cable").defineInRange("usage", 0, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class DiskDrive {
+        private final ForgeConfigSpec.IntValue usage;
+        private final ForgeConfigSpec.IntValue diskUsage;
+
+        public DiskDrive() {
+            builder.push("diskdrive");
+
+            usage = builder.comment("The energy used by the Disk Drive").defineInRange("usage", 0, 0, Integer.MAX_VALUE);
+            diskUsage = builder.comment("The energy used per disk in the Disk Drive").defineInRange("diskUsage", 1, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+
+        public int getDiskUsage() {
+            return diskUsage.get();
         }
     }
 
