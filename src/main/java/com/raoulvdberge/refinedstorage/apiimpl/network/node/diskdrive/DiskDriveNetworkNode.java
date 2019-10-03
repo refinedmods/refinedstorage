@@ -318,7 +318,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
             DiskState state = DiskState.NONE;
 
             if (itemDisks[i] != null || fluidDisks[i] != null) {
-                if (network == null) {
+                if (!canUpdate()) {
                     state = DiskState.DISCONNECTED;
                 } else {
                     state = DiskState.get(
