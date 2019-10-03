@@ -14,11 +14,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     private BaseScreen parent;
 
     protected TextFieldWidget amountField;
-
     protected Button okButton;
-    private Button cancelButton;
-
-    private Button[] incrementButtons = new Button[6];
 
     public AmountSpecifyingScreen(BaseScreen parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
         super(container, width, height, playerInventory, title);
@@ -51,7 +47,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         Pair<Integer, Integer> pos = getOkCancelPos();
 
         okButton = addButton(x + pos.getLeft(), y + pos.getRight(), 50, 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
-        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
+        addButton(x + pos.getLeft(), y + pos.getRight() + 24, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
 
         amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.FONT_HEIGHT, "");
         amountField.setEnableBackgroundDrawing(false);
@@ -79,7 +75,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
                 text = "+1B";
             }
 
-            incrementButtons[i] = addButton(x + xx, y + 20, width, 20, text, true, true, btn -> onIncrementButtonClicked(increment));
+            addButton(x + xx, y + 20, width, 20, text, true, true, btn -> onIncrementButtonClicked(increment));
 
             xx += width + 3;
         }
@@ -95,7 +91,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
                 text = "-1B";
             }
 
-            incrementButtons[3 + i] = addButton(x + xx, y + ySize - 20 - 7, width, 20, text, true, true, btn -> onIncrementButtonClicked(-increment));
+            addButton(x + xx, y + ySize - 20 - 7, width, 20, text, true, true, btn -> onIncrementButtonClicked(-increment));
 
             xx += width + 3;
         }

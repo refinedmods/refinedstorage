@@ -64,56 +64,6 @@ public abstract class BlockBase extends Block {
     public Item createItem() {
         return new ItemBlockBase(this);
     }
-/* TODO
-    @Override
-    public boolean rotateBlock(World world, BlockPos pos, Direction axis) {
-        if (!world.isRemote && getDirection() != null) {
-            TileBase tile = (TileBase) world.getTileEntity(pos);
-
-            Direction newDirection = getDirection().cycle(tile.getDirection());
-
-            tile.setDirection(newDirection);
-
-            WorldUtils.updateBlock(world, pos);
-
-            return true;
-        }
-
-        return false;
-    } */
-
-/* TODO
-    @Override
-    public void breakBlock(World world, BlockPos pos, BlockState state) {
-        dropContents(world, pos);
-        removeTile(world, pos, state);
-    }
-
-    void removeTile(World world, BlockPos pos, BlockState state) {
-        if (hasTileEntity(state)) {
-            world.removeTileEntity(pos);
-        }
-    }
-
-    void dropContents(World world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
-
-        if (tile instanceof TileBase && ((TileBase) tile).getDrops() != null) {
-            WorldUtils.dropInventory(world, pos, ((TileBase) tile).getDrops());
-        }
-    }
-
-    @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest) {
-        return willHarvest || super.removedByPlayer(state, world, pos, player, willHarvest);
-    }
-
-    @Override
-    public void harvestBlock(World world, PlayerEntity player, BlockPos pos, BlockState state, TileEntity tile, ItemStack stack) {
-        super.harvestBlock(world, player, pos, state, tile, stack);
-
-        world.setBlockToAir(pos);
-    }*/
 
     @Override
     public final boolean hasTileEntity(BlockState state) {

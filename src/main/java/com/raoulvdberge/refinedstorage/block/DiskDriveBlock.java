@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.container.DiskDriveContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -47,7 +48,7 @@ public class DiskDriveBlock extends NodeBlock {
     @SuppressWarnings("deprecation")
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
-            NetworkHooks.openGui(
+            return NetworkUtils.attemptModify(world, pos, rayTraceResult.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DiskDriveTile>(
                     new TranslationTextComponent("gui.refinedstorage.disk_drive"),
@@ -55,15 +56,9 @@ public class DiskDriveBlock extends NodeBlock {
                     pos
                 ),
                 pos
-            );
+            ));
         }
 
         return true;
     }
-
-    /* TODO
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
-        return openNetworkGui(RSGui.DISK_DRIVE, player, world, pos, side);
-    }*/
 }

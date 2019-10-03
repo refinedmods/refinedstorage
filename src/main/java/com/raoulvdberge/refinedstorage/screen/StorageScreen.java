@@ -81,9 +81,9 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
             addSideButton(new SideButtonAccessType(this, accessTypeParameter));
         }
 
-        int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage:priority"));
+        int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage.priority"));
 
-        priorityButton = addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, I18n.format("misc.refinedstorage:priority"), true, true, btn -> {
+        priorityButton = addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, I18n.format("misc.refinedstorage.priority"), true, true, btn -> {
             minecraft.displayGuiScreen(new PriorityScreen(this, priorityParameter, playerInventory));
         });
     }

@@ -37,7 +37,7 @@ public class GuiAmount extends AmountSpecifyingScreen<AmountContainer> {
 
     @Override
     protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage:set");
+        return I18n.format("misc.refinedstorage.set");
     }
 
     @Override

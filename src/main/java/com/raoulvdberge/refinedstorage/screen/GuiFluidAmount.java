@@ -37,7 +37,7 @@ public class GuiFluidAmount extends AmountSpecifyingScreen<FluidAmountContainer>
 
     @Override
     protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage:set");
+        return I18n.format("misc.refinedstorage.set");
     }
 
     @Override

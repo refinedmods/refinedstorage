@@ -18,7 +18,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<Container> {
             public boolean canInteractWith(PlayerEntity player) {
                 return false;
             }
-        }, 164, 92, inventory, new TranslationTextComponent("misc.refinedstorage:priority"));
+        }, 164, 92, inventory, new TranslationTextComponent("misc.refinedstorage.priority"));
 
         this.priority = priority;
     }
@@ -30,7 +30,7 @@ public class PriorityScreen extends AmountSpecifyingScreen<Container> {
 
     @Override
     protected String getOkButtonText() {
-        return I18n.format("misc.refinedstorage:set");
+        return I18n.format("misc.refinedstorage.set");
     }
 
     @Override

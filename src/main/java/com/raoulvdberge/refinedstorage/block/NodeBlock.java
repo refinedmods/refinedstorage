@@ -76,6 +76,22 @@ public abstract class NodeBlock extends BaseBlock {
         }
     }
 
+    /* TODO - Covers needed for this one
+    @Override
+    public boolean rotateBlock(World world, BlockPos pos, Direction axis) {
+        if (!world.isRemote && getDirection() != null) {
+            TileBase tile = (TileBase) world.getTileEntity(pos);
+
+            Direction newDirection = getDirection().cycle(tile.getDirection());
+
+            if (tile instanceof TileNode && ((TileNode) tile).getNode() instanceof ICoverable && ((ICoverable) ((TileNode) tile).getNode()).getCoverManager().hasCover(newDirection)) {
+                return false;
+            }
+        }
+
+        return super.rotateBlock(world, pos, axis);
+    }*/
+
     public boolean hasConnectedState() {
         return false;
     }
