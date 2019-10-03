@@ -11,14 +11,20 @@ import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
@@ -73,6 +79,8 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
     private static final String NBT_DISK_STATE = "DiskStates";
     public static final ModelProperty<DiskDriveNetworkNode.DiskState[]> DISK_STATE_PROPERTY = new ModelProperty<>();
 
+    private LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getDisks());
+
     private DiskDriveNetworkNode.DiskState[] diskState = new DiskDriveNetworkNode.DiskState[8];
 
     public DiskDriveTile() {
@@ -125,20 +133,15 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
         return new ModelDataMap.Builder().withInitial(DISK_STATE_PROPERTY, diskState).build();
     }
 
-    /* TODO
+    @Nonnull
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction facing) {
-        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getDisks());
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return diskCapability.cast();
         }
 
-        return super.getCapability(capability, facing);
-    }*/
+        return super.getCapability(cap, direction);
+    }
 
     @Override
     @Nonnull

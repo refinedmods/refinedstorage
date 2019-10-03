@@ -21,8 +21,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class DiskDriveBlock extends NodeBlock {
-    // TODO public static final PropertyObject<Integer[]> DISK_STATE = new PropertyObject<>("disk_state", Integer[].class);
-
     public DiskDriveBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
@@ -63,27 +61,9 @@ public class DiskDriveBlock extends NodeBlock {
         return true;
     }
 
-/* TODO
+    /* TODO
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
         return openNetworkGui(RSGui.DISK_DRIVE, player, world, pos, side);
-    }
-
-    @Override
-    protected BlockStateContainer.Builder createBlockStateBuilder() {
-        return super.createBlockStateBuilder().add(DISK_STATE);
-    }
-
-    @Override
-    public BlockState getExtendedState(BlockState state, IBlockAccess world, BlockPos pos) {
-        BlockState s = super.getExtendedState(state, world, pos);
-
-        TileEntity tile = world.getTileEntity(pos);
-
-        if (tile instanceof TileDiskDrive) {
-            s = ((IExtendedBlockState) s).withProperty(DISK_STATE, ((TileDiskDrive) tile).getDiskState());
-        }
-
-        return s;
     }*/
 }
