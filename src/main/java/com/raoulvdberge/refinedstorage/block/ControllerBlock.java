@@ -112,6 +112,7 @@ public class ControllerBlock extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         if (!world.isRemote) {
             player.openContainer(new INamedContainerProvider() {
@@ -120,7 +121,6 @@ public class ControllerBlock extends Block {
                     return new TranslationTextComponent("gui.refinedstorage." + (ControllerBlock.this.getType() == Type.CREATIVE ? "creative_" : "") + "controller");
                 }
 
-                @Nullable
                 @Override
                 public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity player) {
                     return new ControllerContainer((ControllerTile) world.getTileEntity(pos), player, i);

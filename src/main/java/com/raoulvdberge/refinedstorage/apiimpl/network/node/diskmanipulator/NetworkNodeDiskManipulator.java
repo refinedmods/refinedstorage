@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerProxy;
@@ -15,8 +15,8 @@ import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
@@ -35,7 +35,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IFilterable, IType, IStorageDiskContainerContext {
+public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, IStorageDiskContainerContext {
     public static final String ID = "disk_manipulator";
 
     public static final int IO_MODE_INSERT = 0;
@@ -48,7 +48,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private int compare = IComparer.COMPARE_NBT;
-    private int mode = IFilterable.BLACKLIST;
+    private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
 
@@ -68,7 +68,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
+    private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ListenerNetworkNode(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -89,7 +89,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerBase outputDisks = new ItemHandlerBase(3, new ListenerNetworkNode(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
+    private ItemHandlerBase outputDisks = new ItemHandlerBase(3, new ListenerNetworkNode(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -416,12 +416,12 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     @Override
-    public void setMode(int mode) {
+    public void setWhitelistBlacklistMode(int mode) {
         this.mode = mode;
     }
 
     @Override
-    public int getMode() {
+    public int getWhitelistBlacklistMode() {
         return this.mode;
     }
 

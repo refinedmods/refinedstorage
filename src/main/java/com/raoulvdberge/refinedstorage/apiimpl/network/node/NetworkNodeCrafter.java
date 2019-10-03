@@ -165,7 +165,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
             .forEach(task -> network.getCraftingManager().cancel(task.getId()));
     }
 
-    @Override
+    // @TODO @Override
     protected void onDirectionChanged() {
         if (network != null) {
             network.getCraftingManager().rebuild();

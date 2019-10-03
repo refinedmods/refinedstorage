@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.CableNetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
@@ -10,7 +12,9 @@ import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
+import com.raoulvdberge.refinedstorage.container.DiskDriveContainer;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
+import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerFactory;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
@@ -75,6 +79,14 @@ public final class RS {
 
         API.instance().getStorageDiskRegistry().add(StorageDiskFactoryItem.ID, new StorageDiskFactoryItem());
         API.instance().getStorageDiskRegistry().add(StorageDiskFactoryFluid.ID, new StorageDiskFactoryFluid());
+
+        API.instance().getNetworkNodeRegistry().add(DiskDriveNetworkNode.ID, (tag, world, pos) -> {
+            DiskDriveNetworkNode drive = new DiskDriveNetworkNode(world, pos);
+            drive.read(tag);
+            return drive;
+        });
+
+        API.instance().getNetworkNodeRegistry().add(CableNetworkNode.ID, (tag, world, pos) -> new CableNetworkNode(world, pos));
     }
 
     @SubscribeEvent
@@ -120,6 +132,7 @@ public final class RS {
     public void onRegisterContainers(RegistryEvent.Register<ContainerType<?>> e) {
         e.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new FilterContainer(inv.player, inv.getCurrentItem(), windowId)).setRegistryName(RS.ID, "filter"));
         e.getRegistry().register(IForgeContainerType.create(((windowId, inv, data) -> new ControllerContainer(null, inv.player, windowId))).setRegistryName(RS.ID, "controller"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DiskDriveContainer, DiskDriveTile>((windowId, inv, tile) -> new DiskDriveContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "disk_drive"));
     }
 
     @SubscribeEvent

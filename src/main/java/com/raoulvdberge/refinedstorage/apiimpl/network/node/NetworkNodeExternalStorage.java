@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IGuiStorage, IComparable, IFilterable, IPrioritizable, IType, IAccessType, IExternalStorageContext, ICoverable {
+public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IStorageScreen, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IExternalStorageContext, ICoverable {
     public static final String ID = "external_storage";
 
     private static final String NBT_PRIORITY = "Priority";
@@ -52,7 +52,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
-    private int mode = IFilterable.BLACKLIST;
+    private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
@@ -99,9 +99,9 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
         }
     }
 
-    @Override
+    // @TODO @Override
     protected void onDirectionChanged() {
-        super.onDirectionChanged();
+        // super.onDirectionChanged();
 
         if (network != null) {
             updateStorage(network);
@@ -191,12 +191,12 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public int getMode() {
+    public int getWhitelistBlacklistMode() {
         return mode;
     }
 
     @Override
-    public void setMode(int mode) {
+    public void setWhitelistBlacklistMode(int mode) {
         this.mode = mode;
 
         markDirty();
@@ -275,7 +275,7 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     }
 
     @Override
-    public TileDataParameter<Integer, ?> getFilterParameter() {
+    public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
         return TileExternalStorage.MODE;
     }
 
@@ -306,12 +306,12 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     @Override
     public boolean acceptsItem(ItemStack stack) {
-        return IFilterable.acceptsItem(itemFilters, mode, compare, stack);
+        return IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, stack);
     }
 
     @Override
     public boolean acceptsFluid(FluidStack stack) {
-        return IFilterable.acceptsFluid(fluidFilters, mode, compare, stack);
+        return IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack);
     }
 
     @Override

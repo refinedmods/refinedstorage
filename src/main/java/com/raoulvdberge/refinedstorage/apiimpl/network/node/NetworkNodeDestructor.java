@@ -11,8 +11,8 @@ import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class NetworkNodeDestructor extends NetworkNode implements IComparable, IFilterable, IType, ICoverable {
+public class NetworkNodeDestructor extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, ICoverable {
     public static final String ID = "destructor";
 
     private static final String NBT_COMPARE = "Compare";
@@ -62,7 +62,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH, ItemUpgrade.TYPE_FORTUNE_1, ItemUpgrade.TYPE_FORTUNE_2, ItemUpgrade.TYPE_FORTUNE_3*/);
 
     private int compare = IComparer.COMPARE_NBT;
-    private int mode = IFilterable.BLACKLIST;
+    private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
     private boolean pickupItem = false;
 
@@ -112,7 +112,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                     if (entity instanceof ItemEntity) {
                         ItemStack droppedItem = ((ItemEntity) entity).getItem();
 
-                        if (IFilterable.acceptsItem(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE) == null) {
+                        if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE) == null) {
                             network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
 
                             // TODO world.removeEntity(entity);
@@ -135,7 +135,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 );
 
                 if (!frontStack.isEmpty()) {
-                    if (IFilterable.acceptsItem(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(world, front) != -1.0) {
+                    if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, frontStack) && frontBlockState.getBlockHardness(world, front) != -1.0) {
                         NonNullList<ItemStack> drops = NonNullList.create();
 
                         /* TODO if (frontBlock instanceof ShulkerBoxTileEntity) {
@@ -192,7 +192,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                 if (handler != null) {
                     FluidStack stack = handler.drain(Fluid.BUCKET_VOLUME, false);
 
-                    if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, Action.SIMULATE) == null) {
+                    if (stack != null && IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.amount, Action.SIMULATE) == null) {
                         FluidStack drained = handler.drain(Fluid.BUCKET_VOLUME, true);
 
                         network.insertFluidTracked(drained, drained.amount);
@@ -215,12 +215,12 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     }
 
     @Override
-    public int getMode() {
+    public int getWhitelistBlacklistMode() {
         return mode;
     }
 
     @Override
-    public void setMode(int mode) {
+    public void setWhitelistBlacklistMode(int mode) {
         this.mode = mode;
 
         markDirty();

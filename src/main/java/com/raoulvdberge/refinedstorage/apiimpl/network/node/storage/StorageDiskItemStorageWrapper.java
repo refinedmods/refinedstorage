@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +43,7 @@ public class StorageDiskItemStorageWrapper implements IStorageDisk<ItemStack> {
     @Override
     @Nullable
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
-        if (!IFilterable.acceptsItem(storage.getFilters(), storage.getMode(), storage.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsItem(storage.getFilters(), storage.getWhitelistBlacklistMode(), storage.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 

@@ -10,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -24,6 +26,8 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_POS = "Pos";
 
     private final World world;
+
+    private Logger logger = LogManager.getLogger(getClass());
 
     private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
@@ -55,12 +59,14 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                     try {
                         node = factory.create(data, world, pos);
                     } catch (Throwable t) {
-                        t.printStackTrace();
+                        logger.error("Could not read network node", t);
                     }
 
                     if (node != null) {
                         this.nodes.put(pos, node);
                     }
+                } else {
+                    logger.warn("Factory for " + id + " not found in network node registry");
                 }
             }
         }
@@ -80,7 +86,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
                 list.add(nodeTag);
             } catch (Throwable t) {
-                t.printStackTrace();
+                logger.error("Error while saving", t);
             }
         }
 

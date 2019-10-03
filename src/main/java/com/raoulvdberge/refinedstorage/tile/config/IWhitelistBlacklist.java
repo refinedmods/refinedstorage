@@ -10,14 +10,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 
-public interface IFilterable {
+public interface IWhitelistBlacklist {
     int WHITELIST = 0;
     int BLACKLIST = 1;
 
     static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Integer, T> createParameter() {
-        return new TileDataParameter<>(DataSerializers.VARINT, 0, t -> ((IFilterable) t.getNode()).getMode(), (t, v) -> {
+        return new TileDataParameter<>(DataSerializers.VARINT, 0, t -> ((IWhitelistBlacklist) t.getNode()).getWhitelistBlacklistMode(), (t, v) -> {
             if (v == WHITELIST || v == BLACKLIST) {
-                ((IFilterable) t.getNode()).setMode(v);
+                ((IWhitelistBlacklist) t.getNode()).setWhitelistBlacklistMode(v);
             }
         });
     }
@@ -74,7 +74,7 @@ public interface IFilterable {
         return false;
     }
 
-    void setMode(int mode);
+    void setWhitelistBlacklistMode(int mode);
 
-    int getMode();
+    int getWhitelistBlacklistMode();
 }

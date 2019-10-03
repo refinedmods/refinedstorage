@@ -3,8 +3,8 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.NetworkNodeDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 
 public class TileDiskManipulator extends NetworkNodeTile<NetworkNodeDiskManipulator> {
     public static final TileDataParameter<Integer, TileDiskManipulator> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileDiskManipulator> MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer, TileDiskManipulator> MODE = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, TileDiskManipulator> TYPE = IType.createParameter();
     public static final TileDataParameter<Integer, TileDiskManipulator> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, NetworkNodeDiskManipulator.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
         t.getNode().setIoMode(v);

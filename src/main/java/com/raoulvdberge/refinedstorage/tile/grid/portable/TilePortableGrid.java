@@ -18,7 +18,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.*;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluidPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPortable;
@@ -129,7 +129,7 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ListenerTile(this));
-    private ItemHandlerBase disk = new ItemHandlerBase(1, new ListenerTile(this), NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
+    private ItemHandlerBase disk = new ItemHandlerBase(1, new ListenerTile(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

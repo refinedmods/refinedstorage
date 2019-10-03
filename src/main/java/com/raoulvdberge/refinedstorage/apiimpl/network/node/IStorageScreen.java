@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 
-public interface IGuiStorage {
+public interface IStorageScreen {
     String getGuiTitle();
 
     TileDataParameter<Integer, ?> getTypeParameter();
@@ -12,7 +12,7 @@ public interface IGuiStorage {
 
     TileDataParameter<Integer, ?> getCompareParameter();
 
-    TileDataParameter<Integer, ?> getFilterParameter();
+    TileDataParameter<Integer, ?> getWhitelistBlacklistParameter();
 
     TileDataParameter<Integer, ?> getPriorityParameter();
 

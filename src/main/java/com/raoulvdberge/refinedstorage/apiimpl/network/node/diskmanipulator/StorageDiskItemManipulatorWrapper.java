@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -63,7 +63,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     @Override
     @Nullable
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
-        if (!IFilterable.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
@@ -73,7 +73,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     @Override
     @Nullable
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
-        if (!IFilterable.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return null;
         }
 

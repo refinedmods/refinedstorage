@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeCable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -11,14 +10,14 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class NetworkNodeCable extends NetworkNode implements ICoverable, INetworkNodeCable {
+public class CableNetworkNode extends NetworkNode implements ICoverable {
     public static final String ID = "cable";
 
     private static final String NBT_COVERS = "Covers";
 
     private CoverManager coverManager = new CoverManager(this);
 
-    public NetworkNodeCable(World world, BlockPos pos) {
+    public CableNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 

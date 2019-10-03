@@ -3,9 +3,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node.cover;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.CableNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCable;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -61,7 +61,7 @@ public class CoverManager {
     public boolean setCover(Direction facing, @Nullable Cover cover) {
         if (cover == null || (isValidCover(cover.getStack()) && !hasCover(facing))) {
             if (cover != null) {
-                if (facing == node.getDirection() && !(node instanceof NetworkNodeCable) && cover.getType() != CoverType.HOLLOW) {
+                if (facing == node.getDirection() && !(node instanceof CableNetworkNode) && cover.getType() != CoverType.HOLLOW) {
                     return false;
                 }
             }

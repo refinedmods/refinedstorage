@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -17,11 +17,11 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class StorageDiskItemDriveWrapper implements IStorageDisk<ItemStack> {
-    private NetworkNodeDiskDrive diskDrive;
+    private DiskDriveNetworkNode diskDrive;
     private IStorageDisk<ItemStack> parent;
     private int lastState;
 
-    public StorageDiskItemDriveWrapper(NetworkNodeDiskDrive diskDrive, IStorageDisk<ItemStack> parent) {
+    public StorageDiskItemDriveWrapper(DiskDriveNetworkNode diskDrive, IStorageDisk<ItemStack> parent) {
         this.diskDrive = diskDrive;
         this.parent = parent;
         this.setSettings(
@@ -57,7 +57,7 @@ public class StorageDiskItemDriveWrapper implements IStorageDisk<ItemStack> {
     @Override
     @Nullable
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
-        if (!IFilterable.acceptsItem(diskDrive.getItemFilters(), diskDrive.getMode(), diskDrive.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsItem(diskDrive.getItemFilters(), diskDrive.getWhitelistBlacklistMode(), diskDrive.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 

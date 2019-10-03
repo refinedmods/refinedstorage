@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
@@ -14,10 +14,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class DiskDriveTile extends NetworkNodeTile<NetworkNodeDiskDrive> {
+public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
     public static final TileDataParameter<Integer, DiskDriveTile> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer, DiskDriveTile> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, DiskDriveTile> MODE = IFilterable.createParameter();
+    public static final TileDataParameter<Integer, DiskDriveTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, DiskDriveTile> TYPE = IType.createParameter();
     public static final TileDataParameter<AccessType, DiskDriveTile> ACCESS_TYPE = IAccessType.createParameter();
     public static final TileDataParameter<Long, DiskDriveTile> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
@@ -72,7 +72,7 @@ public class DiskDriveTile extends NetworkNodeTile<NetworkNodeDiskDrive> {
 
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(ACCESS_TYPE);
         dataManager.addWatchedParameter(STORED);
@@ -149,7 +149,7 @@ public class DiskDriveTile extends NetworkNodeTile<NetworkNodeDiskDrive> {
 
     @Override
     @Nonnull
-    public NetworkNodeDiskDrive createNode(World world, BlockPos pos) {
-        return new NetworkNodeDiskDrive(world, pos);
+    public DiskDriveNetworkNode createNode(World world, BlockPos pos) {
+        return new DiskDriveNetworkNode(world, pos);
     }
 }

@@ -17,6 +17,8 @@ public class ItemHandlerBase extends ItemStackHandler {
 
     protected Predicate<ItemStack>[] validators;
 
+    private boolean reading;
+
     public ItemHandlerBase(int size, @Nullable Consumer<Integer> listener, Predicate<ItemStack>... validators) {
         super(size);
 
@@ -48,7 +50,7 @@ public class ItemHandlerBase extends ItemStackHandler {
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
 
-        if (listener != null) {
+        if (!reading && listener != null) {
             listener.accept(slot);
         }
 
@@ -64,5 +66,9 @@ public class ItemHandlerBase extends ItemStackHandler {
 
     public boolean isEmpty() {
         return empty;
+    }
+
+    public void setReading(boolean reading) {
+        this.reading = reading;
     }
 }

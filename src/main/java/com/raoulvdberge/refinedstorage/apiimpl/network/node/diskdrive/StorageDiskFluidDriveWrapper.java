@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -17,11 +17,11 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class StorageDiskFluidDriveWrapper implements IStorageDisk<FluidStack> {
-    private NetworkNodeDiskDrive diskDrive;
+    private DiskDriveNetworkNode diskDrive;
     private IStorageDisk<FluidStack> parent;
     private int lastState;
 
-    public StorageDiskFluidDriveWrapper(NetworkNodeDiskDrive diskDrive, IStorageDisk<FluidStack> parent) {
+    public StorageDiskFluidDriveWrapper(DiskDriveNetworkNode diskDrive, IStorageDisk<FluidStack> parent) {
         this.diskDrive = diskDrive;
         this.parent = parent;
         this.setSettings(
@@ -57,7 +57,7 @@ public class StorageDiskFluidDriveWrapper implements IStorageDisk<FluidStack> {
     @Override
     @Nullable
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
-        if (!IFilterable.acceptsFluid(diskDrive.getFluidFilters(), diskDrive.getMode(), diskDrive.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsFluid(diskDrive.getFluidFilters(), diskDrive.getWhitelistBlacklistMode(), diskDrive.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 

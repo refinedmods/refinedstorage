@@ -18,7 +18,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.NetworkNodeDiskDrive;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.*;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluidPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPortable;
@@ -84,7 +84,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             StackUtils.writeItems(this, 0, stack.getTag());
         }
     };
-    private ItemHandlerBase disk = new ItemHandlerBase(1, NetworkNodeDiskDrive.VALIDATOR_STORAGE_DISK) {
+    private ItemHandlerBase disk = new ItemHandlerBase(1, DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

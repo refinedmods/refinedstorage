@@ -45,7 +45,7 @@ public enum BlockDirection {
             case HORIZONTAL:
                 return previous.rotateYCCW();
             default:
-                return previous;
+                throw new RuntimeException("Unknown direction type");
         }
     }
 }

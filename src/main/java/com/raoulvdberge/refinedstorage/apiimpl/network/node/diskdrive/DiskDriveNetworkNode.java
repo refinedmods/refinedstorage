@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IStorageScreen;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
@@ -27,15 +27,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.List;
 import java.util.function.Predicate;
 
-public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IType, IAccessType, IStorageDiskContainerContext {
+public class DiskDriveNetworkNode extends NetworkNode implements IStorageScreen, IStorageProvider, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IStorageDiskContainerContext {
     public static final Predicate<ItemStack> VALIDATOR_STORAGE_DISK = s -> s.getItem() instanceof IStorageDiskProvider && ((IStorageDiskProvider) s.getItem()).isValid(s);
 
     public static final String ID = "disk_drive";
@@ -56,15 +54,15 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO : correct?
+            if (!world.isRemote) {
                 StackUtils.createStorages(
                     (ServerWorld) world,
                     getStackInSlot(slot),
                     slot,
                     itemDisks,
                     fluidDisks,
-                    s -> new StorageDiskItemDriveWrapper(NetworkNodeDiskDrive.this, s),
-                    s -> new StorageDiskFluidDriveWrapper(NetworkNodeDiskDrive.this, s)
+                    s -> new StorageDiskItemDriveWrapper(DiskDriveNetworkNode.this, s),
+                    s -> new StorageDiskFluidDriveWrapper(DiskDriveNetworkNode.this, s)
                 );
 
                 if (network != null) {
@@ -86,10 +84,10 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
-    private int mode = IFilterable.BLACKLIST;
+    private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
 
-    public NetworkNodeDiskDrive(World world, BlockPos pos) {
+    public DiskDriveNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -251,12 +249,12 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public int getMode() {
+    public int getWhitelistBlacklistMode() {
         return mode;
     }
 
     @Override
-    public void setMode(int mode) {
+    public void setWhitelistBlacklistMode(int mode) {
         this.mode = mode;
 
         markDirty();
@@ -283,8 +281,8 @@ public class NetworkNodeDiskDrive extends NetworkNode implements IGuiStorage, IS
     }
 
     @Override
-    public TileDataParameter<Integer, ?> getFilterParameter() {
-        return DiskDriveTile.MODE;
+    public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
+        return DiskDriveTile.WHITELIST_BLACKLIST;
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.nbt.CompoundNBT;
@@ -68,7 +68,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     @Override
     @Nullable
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
-        if (!IFilterable.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 
@@ -78,7 +78,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     @Override
     @Nullable
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
-        if (!IFilterable.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return null;
         }
 

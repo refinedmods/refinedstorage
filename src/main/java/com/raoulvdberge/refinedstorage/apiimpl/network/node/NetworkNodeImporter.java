@@ -11,8 +11,8 @@ import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.TileImporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nullable;
 
-public class NetworkNodeImporter extends NetworkNode implements IComparable, IFilterable, IType, ICoverable {
+public class NetworkNodeImporter extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, ICoverable {
     public static final String ID = "importer";
 
     private static final String NBT_COMPARE = "Compare";
@@ -46,7 +46,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK*/);
 
     private int compare = IComparer.COMPARE_NBT;
-    private int mode = IFilterable.BLACKLIST;
+    private int mode = IWhitelistBlacklist.BLACKLIST;
     private int type = IType.ITEMS;
 
     private CoverManager coverManager = new CoverManager(this);
@@ -89,7 +89,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
 
                 ItemStack stack = handler.getStackInSlot(currentSlot);
 
-                if (!IFilterable.acceptsItem(itemFilters, mode, compare, stack)) {
+                if (!IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, stack)) {
                     currentSlot++;
                 } else if (ticks % upgrades.getSpeed() == 0) {
                     ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
@@ -111,7 +111,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
             if (handler != null) {
                 FluidStack stack = handler.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
 
-                if (stack != null && IFilterable.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.getAmount(), Action.SIMULATE) == null) {
+                if (stack != null && IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.getAmount(), Action.SIMULATE) == null) {
                     FluidStack toDrain = handler.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount(), IFluidHandler.FluidAction.EXECUTE); // TODO: is this execute?
 
                     if (toDrain != null) {
@@ -141,12 +141,12 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IFi
     }
 
     @Override
-    public int getMode() {
+    public int getWhitelistBlacklistMode() {
         return mode;
     }
 
     @Override
-    public void setMode(int mode) {
+    public void setWhitelistBlacklistMode(int mode) {
         this.mode = mode;
 
         markDirty();

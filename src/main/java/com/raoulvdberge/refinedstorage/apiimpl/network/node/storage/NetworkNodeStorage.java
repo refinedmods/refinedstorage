@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiStorage;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.IStorageScreen;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
 import com.raoulvdberge.refinedstorage.block.BlockStorage;
@@ -20,8 +20,8 @@ import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.TileStorage;
 import com.raoulvdberge.refinedstorage.tile.config.IAccessType;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
 import com.raoulvdberge.refinedstorage.tile.config.IPrioritizable;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -36,7 +36,7 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.List;
 import java.util.UUID;
 
-public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, IStorageProvider, IComparable, IFilterable, IPrioritizable, IAccessType, IStorageDiskContainerContext {
+public class NetworkNodeStorage extends NetworkNode implements IStorageScreen, IStorageProvider, IComparable, IWhitelistBlacklist, IPrioritizable, IAccessType, IStorageDiskContainerContext {
     public static final String ID = "storage";
 
     private static final String NBT_PRIORITY = "Priority";
@@ -51,7 +51,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
-    private int mode = IFilterable.BLACKLIST;
+    private int mode = IWhitelistBlacklist.BLACKLIST;
 
     private UUID storageId = UUID.randomUUID();
     private IStorageDisk<ItemStack> storage;
@@ -197,12 +197,12 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public int getMode() {
+    public int getWhitelistBlacklistMode() {
         return mode;
     }
 
     @Override
-    public void setMode(int mode) {
+    public void setWhitelistBlacklistMode(int mode) {
         this.mode = mode;
 
         markDirty();
@@ -233,7 +233,7 @@ public class NetworkNodeStorage extends NetworkNode implements IGuiStorage, ISto
     }
 
     @Override
-    public TileDataParameter<Integer, ?> getFilterParameter() {
+    public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
         return TileStorage.MODE;
     }
 

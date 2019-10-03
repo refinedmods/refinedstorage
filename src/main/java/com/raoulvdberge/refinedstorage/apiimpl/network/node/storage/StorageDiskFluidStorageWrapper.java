@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -43,7 +43,7 @@ public class StorageDiskFluidStorageWrapper implements IStorageDisk<FluidStack> 
     @Override
     @Nullable
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
-        if (!IFilterable.acceptsFluid(storage.getFilters(), storage.getMode(), storage.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsFluid(storage.getFilters(), storage.getWhitelistBlacklistMode(), storage.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 

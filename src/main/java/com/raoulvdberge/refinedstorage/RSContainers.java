@@ -21,8 +21,7 @@ public final class RSContainers {
     public static final ContainerType<DestructorContainer> DESTRUCTOR = null;
     //@ObjectHolder(RS.ID + ":detector")
     public static final ContainerType<DetectorContainer> DETECTOR = null;
-    //@ObjectHolder(RS.ID + ":disk_drive")
-    public static final ContainerType<DiskDriveContainer> DISK_DRIVE = null;
+
     //@ObjectHolder(RS.ID + ":disk_manipulator")
     public static final ContainerType<DiskManipulatorContainer> DISK_MANIPULATOR = null;
     //@ObjectHolder(RS.ID + ":exporter")
@@ -51,8 +50,10 @@ public final class RSContainers {
     public static final ContainerType<RelayContainer> RELAY = null;
     //@ObjectHolder(RS.ID + ":security_manager")
     public static final ContainerType<SecurityManagerContainer> SECURITY_MANAGER = null;
-    //@ObjectHolder(RS.ID + ":storage")
-    public static final ContainerType<StorageContainer> STORAGE = null;
+
+    @ObjectHolder(RS.ID + ":disk_drive")
+    public static final ContainerType<DiskDriveContainer> DISK_DRIVE = null;
+
     //@ObjectHolder(RS.ID + ":storage_monitor")
     public static final ContainerType<StorageMonitorContainer> STORAGE_MONITOR = null;
     //@ObjectHolder(RS.ID + ":wireless_transmitter")
