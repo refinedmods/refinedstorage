@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
@@ -60,6 +61,11 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
     @Override
     public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return TileReader.REDSTONE_MODE;
+    }
+
+    @Override
+    public boolean isActive() {
+        return world.getBlockState(pos).get(NodeBlock.CONNECTED);
     }
 
     @Override

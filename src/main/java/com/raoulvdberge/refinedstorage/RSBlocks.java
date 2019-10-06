@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.block.*;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
-    public static final BlockGrid GRID = new BlockGrid();
     public static final BlockExternalStorage EXTERNAL_STORAGE = new BlockExternalStorage();
     public static final BlockImporter IMPORTER = new BlockImporter();
     public static final BlockExporter EXPORTER = new BlockExporter();
@@ -42,6 +41,9 @@ public final class RSBlocks {
 
     @ObjectHolder(RS.ID + ":disk_drive")
     public static final DiskDriveBlock DISK_DRIVE = null;
+
+    @ObjectHolder(RS.ID + ":grid")
+    public static final GridBlock GRID = null;
 
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();

@@ -1,7 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.*;
@@ -16,7 +14,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
-import com.raoulvdberge.refinedstorage.block.BlockGrid;
+import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
@@ -25,9 +23,8 @@ import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.item.PatternItem;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
@@ -58,7 +55,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, IType {
+public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, IType {
     public static final String ID = "grid";
     public static int FACTORY_ID = 0;
 
@@ -102,23 +99,23 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
             ItemStack pattern = getStackInSlot(slot);
             if (slot == 1 && !pattern.isEmpty()) {
-                /* TODO boolean isPatternProcessing = ItemPattern.isProcessing(pattern);
+                boolean isPatternProcessing = PatternItem.isProcessing(pattern);
 
                 if (isPatternProcessing && isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
-                        processingMatrix.setStackInSlot(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
-                        processingMatrixFluids.setFluid(i, ItemPattern.getFluidInputSlot(pattern, i));
+                        processingMatrix.setStackInSlot(i, StackUtils.nullToEmpty(PatternItem.getInputSlot(pattern, i)));
+                        processingMatrixFluids.setFluid(i, PatternItem.getFluidInputSlot(pattern, i));
                     }
 
                     for (int i = 0; i < 9; ++i) {
-                        processingMatrix.setStackInSlot(9 + i, StackUtils.nullToEmpty(ItemPattern.getOutputSlot(pattern, i)));
-                        processingMatrixFluids.setFluid(9 + i, ItemPattern.getFluidOutputSlot(pattern, i));
+                        processingMatrix.setStackInSlot(9 + i, StackUtils.nullToEmpty(PatternItem.getOutputSlot(pattern, i)));
+                        processingMatrixFluids.setFluid(9 + i, PatternItem.getFluidOutputSlot(pattern, i));
                     }
                 } else if (!isPatternProcessing && !isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
-                        matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(ItemPattern.getInputSlot(pattern, i)));
+                        matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(PatternItem.getInputSlot(pattern, i)));
                     }
-                }*/
+                }
             }
         }
 
@@ -161,13 +158,17 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     private boolean processingPattern = false;
     private int processingType = IType.ITEMS;
 
-    public NetworkNodeGrid(World world, BlockPos pos) {
+    private final GridType gridType;
+
+    public GridNetworkNode(World world, BlockPos pos, GridType gridType) {
         super(world, pos);
+
+        this.gridType = gridType;
     }
 
     @Override
     public int getEnergyUsage() {
-        switch (getGridType()) {
+        /* @TODO switch (getGridType()) {
             case NORMAL:
                 return RS.INSTANCE.config.gridUsage;
             case CRAFTING:
@@ -178,7 +179,8 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
                 return RS.INSTANCE.config.fluidGridUsage;
             default:
                 return 0;
-        }
+        }*/
+        return 0;
     }
 
     public void setViewType(int viewType) {
@@ -218,7 +220,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     public boolean isProcessingPattern() {
-        return world.isRemote ? TileGrid.PROCESSING_PATTERN.getValue() : processingPattern;
+        return world.isRemote ? GridTile.PROCESSING_PATTERN.getValue() : processingPattern;
     }
 
     public void setProcessingPattern(boolean processingPattern) {
@@ -227,15 +229,7 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public GridType getGridType() {
-        if (type == null) {
-            BlockState state = world.getBlockState(pos);
-
-            if (state.getBlock() == RSBlocks.GRID) {
-                type = state.get(BlockGrid.TYPE);
-            }
-        }
-
-        return type == null ? GridType.NORMAL : type;
+        return gridType;
     }
 
     @Override
@@ -455,6 +449,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
+    public boolean isActive() {
+        return world.getBlockState(pos).get(NodeBlock.CONNECTED);
+    }
+
+    @Override
     public void onCrafted(PlayerEntity player) {
         onCrafted(this, world, player);
     }
@@ -626,37 +625,37 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public int getViewType() {
-        return world.isRemote ? TileGrid.VIEW_TYPE.getValue() : viewType;
+        return world.isRemote ? GridTile.VIEW_TYPE.getValue() : viewType;
     }
 
     @Override
     public int getSortingDirection() {
-        return world.isRemote ? TileGrid.SORTING_DIRECTION.getValue() : sortingDirection;
+        return world.isRemote ? GridTile.SORTING_DIRECTION.getValue() : sortingDirection;
     }
 
     @Override
     public int getSortingType() {
-        return world.isRemote ? TileGrid.SORTING_TYPE.getValue() : sortingType;
+        return world.isRemote ? GridTile.SORTING_TYPE.getValue() : sortingType;
     }
 
     @Override
     public int getSearchBoxMode() {
-        return world.isRemote ? TileGrid.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return world.isRemote ? GridTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     @Override
     public int getSize() {
-        return world.isRemote ? TileGrid.SIZE.getValue() : size;
+        return world.isRemote ? GridTile.SIZE.getValue() : size;
     }
 
     @Override
     public int getTabSelected() {
-        return world.isRemote ? TileGrid.TAB_SELECTED.getValue() : tabSelected;
+        return world.isRemote ? GridTile.TAB_SELECTED.getValue() : tabSelected;
     }
 
     @Override
     public int getTabPage() {
-        return world.isRemote ? TileGrid.TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
+        return world.isRemote ? GridTile.TAB_PAGE.getValue() : Math.min(tabPage, getTotalTabPages());
     }
 
     @Override
@@ -666,44 +665,44 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public void onViewTypeChanged(int type) {
-        TileDataManager.setParameter(TileGrid.VIEW_TYPE, type);
+        TileDataManager.setParameter(GridTile.VIEW_TYPE, type);
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        TileDataManager.setParameter(TileGrid.SORTING_TYPE, type);
+        TileDataManager.setParameter(GridTile.SORTING_TYPE, type);
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        TileDataManager.setParameter(TileGrid.SORTING_DIRECTION, direction);
+        TileDataManager.setParameter(GridTile.SORTING_DIRECTION, direction);
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        TileDataManager.setParameter(TileGrid.SEARCH_BOX_MODE, searchBoxMode);
+        TileDataManager.setParameter(GridTile.SEARCH_BOX_MODE, searchBoxMode);
     }
 
     @Override
     public void onSizeChanged(int size) {
-        TileDataManager.setParameter(TileGrid.SIZE, size);
+        TileDataManager.setParameter(GridTile.SIZE, size);
     }
 
     @Override
     public void onTabSelectionChanged(int tab) {
-        TileDataManager.setParameter(TileGrid.TAB_SELECTED, tab);
+        TileDataManager.setParameter(GridTile.TAB_SELECTED, tab);
     }
 
     @Override
     public void onTabPageChanged(int page) {
         if (page >= 0 && page <= getTotalTabPages()) {
-            TileDataManager.setParameter(TileGrid.TAB_PAGE, page);
+            TileDataManager.setParameter(GridTile.TAB_PAGE, page);
         }
     }
 
     @Override
     public int getType() {
-        return world.isRemote ? TileGrid.PROCESSING_TYPE.getValue() : processingType;
+        return world.isRemote ? GridTile.PROCESSING_TYPE.getValue() : processingType;
     }
 
     @Override

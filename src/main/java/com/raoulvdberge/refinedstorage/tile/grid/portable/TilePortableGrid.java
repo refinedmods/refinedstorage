@@ -17,7 +17,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.*;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluidPortable;
@@ -35,7 +35,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
@@ -73,13 +73,13 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
             t.setSortingDirection(v);
             t.markDirty();
         }
-    }, (initial, p) -> TileGrid.trySortGrid(initial));
+    }, (initial, p) -> GridTile.trySortGrid(initial));
     private static final TileDataParameter<Integer, TilePortableGrid> SORTING_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSortingType, (t, v) -> {
         if (IGrid.isValidSortingType(v)) {
             t.setSortingType(v);
             t.markDirty();
         }
-    }, (initial, p) -> TileGrid.trySortGrid(initial));
+    }, (initial, p) -> GridTile.trySortGrid(initial));
     private static final TileDataParameter<Integer, TilePortableGrid> SEARCH_BOX_MODE = new TileDataParameter<>(DataSerializers.VARINT, 0, TilePortableGrid::getSearchBoxMode, (t, v) -> {
         if (IGrid.isValidSearchBoxMode(v)) {
             t.setSearchBoxMode(v);
@@ -273,12 +273,12 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
 
         stack.setTag(new CompoundNBT());
 
-        stack.getTag().putInt(NetworkNodeGrid.NBT_SORTING_DIRECTION, sortingDirection);
-        stack.getTag().putInt(NetworkNodeGrid.NBT_SORTING_TYPE, sortingType);
-        stack.getTag().putInt(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
-        stack.getTag().putInt(NetworkNodeGrid.NBT_SIZE, size);
-        stack.getTag().putInt(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
-        stack.getTag().putInt(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
+        stack.getTag().putInt(GridNetworkNode.NBT_SORTING_DIRECTION, sortingDirection);
+        stack.getTag().putInt(GridNetworkNode.NBT_SORTING_TYPE, sortingType);
+        stack.getTag().putInt(GridNetworkNode.NBT_SEARCH_BOX_MODE, searchBoxMode);
+        stack.getTag().putInt(GridNetworkNode.NBT_SIZE, size);
+        stack.getTag().putInt(GridNetworkNode.NBT_TAB_SELECTED, tabSelected);
+        stack.getTag().putInt(GridNetworkNode.NBT_TAB_PAGE, tabPage);
 
         stack.getTag().put(PortableGrid.NBT_STORAGE_TRACKER, storageTracker.serializeNbt());
         stack.getTag().put(PortableGrid.NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
@@ -601,12 +601,12 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.putInt(NetworkNodeGrid.NBT_SORTING_DIRECTION, sortingDirection);
-        tag.putInt(NetworkNodeGrid.NBT_SORTING_TYPE, sortingType);
-        tag.putInt(NetworkNodeGrid.NBT_SEARCH_BOX_MODE, searchBoxMode);
-        tag.putInt(NetworkNodeGrid.NBT_SIZE, size);
-        tag.putInt(NetworkNodeGrid.NBT_TAB_SELECTED, tabSelected);
-        tag.putInt(NetworkNodeGrid.NBT_TAB_PAGE, tabPage);
+        tag.putInt(GridNetworkNode.NBT_SORTING_DIRECTION, sortingDirection);
+        tag.putInt(GridNetworkNode.NBT_SORTING_TYPE, sortingType);
+        tag.putInt(GridNetworkNode.NBT_SEARCH_BOX_MODE, searchBoxMode);
+        tag.putInt(GridNetworkNode.NBT_SIZE, size);
+        tag.putInt(GridNetworkNode.NBT_TAB_SELECTED, tabSelected);
+        tag.putInt(GridNetworkNode.NBT_TAB_PAGE, tabPage);
 
         StackUtils.writeItems(disk, 0, tag);
         StackUtils.writeItems(filter, 1, tag);
@@ -629,28 +629,28 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
     public void read(CompoundNBT tag) {
         super.read(tag);
 
-        if (tag.contains(NetworkNodeGrid.NBT_SORTING_DIRECTION)) {
-            sortingDirection = tag.getInt(NetworkNodeGrid.NBT_SORTING_DIRECTION);
+        if (tag.contains(GridNetworkNode.NBT_SORTING_DIRECTION)) {
+            sortingDirection = tag.getInt(GridNetworkNode.NBT_SORTING_DIRECTION);
         }
 
-        if (tag.contains(NetworkNodeGrid.NBT_SORTING_TYPE)) {
-            sortingType = tag.getInt(NetworkNodeGrid.NBT_SORTING_TYPE);
+        if (tag.contains(GridNetworkNode.NBT_SORTING_TYPE)) {
+            sortingType = tag.getInt(GridNetworkNode.NBT_SORTING_TYPE);
         }
 
-        if (tag.contains(NetworkNodeGrid.NBT_SEARCH_BOX_MODE)) {
-            searchBoxMode = tag.getInt(NetworkNodeGrid.NBT_SEARCH_BOX_MODE);
+        if (tag.contains(GridNetworkNode.NBT_SEARCH_BOX_MODE)) {
+            searchBoxMode = tag.getInt(GridNetworkNode.NBT_SEARCH_BOX_MODE);
         }
 
-        if (tag.contains(NetworkNodeGrid.NBT_SIZE)) {
-            size = tag.getInt(NetworkNodeGrid.NBT_SIZE);
+        if (tag.contains(GridNetworkNode.NBT_SIZE)) {
+            size = tag.getInt(GridNetworkNode.NBT_SIZE);
         }
 
-        if (tag.contains(NetworkNodeGrid.NBT_TAB_SELECTED)) {
-            tabSelected = tag.getInt(NetworkNodeGrid.NBT_TAB_SELECTED);
+        if (tag.contains(GridNetworkNode.NBT_TAB_SELECTED)) {
+            tabSelected = tag.getInt(GridNetworkNode.NBT_TAB_SELECTED);
         }
 
-        if (tag.contains(NetworkNodeGrid.NBT_TAB_PAGE)) {
-            tabPage = tag.getInt(NetworkNodeGrid.NBT_TAB_PAGE);
+        if (tag.contains(GridNetworkNode.NBT_TAB_PAGE)) {
+            tabPage = tag.getInt(GridNetworkNode.NBT_TAB_PAGE);
         }
 
         StackUtils.readItems(disk, 0, tag);

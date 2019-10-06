@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandle
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.grid.CraftingGridSlot;
@@ -158,10 +158,10 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
     private void addPatternSlots() {
         int headerAndSlots = display.getTopHeight() + (display.getVisibleRows() * 18);
 
-        addSlot(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 0, 172, headerAndSlots + 4));
-        addSlot(new SlotItemHandler(((NetworkNodeGrid) grid).getPatterns(), 1, 172, headerAndSlots + 40));
+        addSlot(new SlotItemHandler(((GridNetworkNode) grid).getPatterns(), 0, 172, headerAndSlots + 4));
+        addSlot(new SlotItemHandler(((GridNetworkNode) grid).getPatterns(), 1, 172, headerAndSlots + 40));
 
-        transferManager.addBiTransfer(getPlayer().inventory, ((NetworkNodeGrid) grid).getPatterns());
+        transferManager.addBiTransfer(getPlayer().inventory, ((GridNetworkNode) grid).getPatterns());
 
         // Processing patterns
         int ox = 8;
@@ -169,8 +169,8 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
         int y = headerAndSlots + 4;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlot(new FilterSlot(((NetworkNodeGrid) grid).getProcessingMatrix(), i, x, y, FilterSlot.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.ITEMS));
-            addSlot(new FluidFilterSlot(((NetworkNodeGrid) grid).getProcessingMatrixFluids(), i, x, y, FilterSlot.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.FLUIDS));
+            addSlot(new FilterSlot(((GridNetworkNode) grid).getProcessingMatrix(), i, x, y, FilterSlot.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.ITEMS));
+            addSlot(new FluidFilterSlot(((GridNetworkNode) grid).getProcessingMatrixFluids(), i, x, y, FilterSlot.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.FLUIDS));
 
             x += 18;
 
@@ -191,7 +191,7 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
         y = headerAndSlots + 4;
 
         for (int i = 0; i < 9; ++i) {
-            addSlot(new FilterLegacySlot(grid.getCraftingMatrix(), i, x, y).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern()));
+            addSlot(new FilterLegacySlot(grid.getCraftingMatrix(), i, x, y).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern()));
 
             x += 18;
 
@@ -201,7 +201,7 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
             }
         }
 
-        addSlot(patternResultSlot = (new DisabledLegacySlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((NetworkNodeGrid) grid).isProcessingPattern())));
+        addSlot(patternResultSlot = (new DisabledLegacySlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern())));
     }
 
     public IGrid getGrid() {

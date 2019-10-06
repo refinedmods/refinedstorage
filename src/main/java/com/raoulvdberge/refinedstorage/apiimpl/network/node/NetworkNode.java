@@ -6,8 +6,8 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BaseBlock;
+import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,8 +51,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private boolean couldUpdate;
     private int ticksSinceUpdateChanged;
 
-    private boolean active;
-
     public NetworkNode(World world, BlockPos pos) {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
@@ -93,7 +91,11 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     protected void onConnectedStateChange(INetwork network, boolean state) {
-        // NO OP
+        BlockState blockState = world.getBlockState(pos);
+
+        if (blockState.getBlock() instanceof NodeBlock && ((NodeBlock) blockState.getBlock()).hasConnectedState()) {
+            world.setBlockState(pos, world.getBlockState(pos).with(NodeBlock.CONNECTED, state));
+        }
     }
 
     @Override
@@ -126,6 +128,11 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         throttlingDisabled = true;
     }
 
+    // @TODO: DELETE.
+    public boolean hasConnectivityState() {
+        return true;
+    }
+
     @Override
     public void update() {
         ++ticks;
@@ -139,10 +146,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
                 ticksSinceUpdateChanged = 0;
                 couldUpdate = canUpdate;
                 throttlingDisabled = false;
-
-                if (hasConnectivityState()) {
-                    WorldUtils.updateBlock(world, pos);
-                }
 
                 if (network != null) {
                     onConnectedStateChange(network, canUpdate);
@@ -245,18 +248,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     public boolean shouldRebuildGraphOnChange() {
         return false;
-    }
-
-    public boolean hasConnectivityState() {
-        return false;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     public void setOwner(@Nullable UUID owner) {

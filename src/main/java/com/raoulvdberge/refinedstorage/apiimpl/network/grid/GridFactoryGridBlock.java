@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridFactoryType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridFactory;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -24,8 +24,8 @@ public class GridFactoryGridBlock implements IGridFactory {
     public IGrid createFromBlock(PlayerEntity player, BlockPos pos) {
         TileEntity tile = getRelevantTile(player.getEntityWorld(), pos);
 
-        if (tile instanceof TileGrid) {
-            return ((TileGrid) tile).getNode();
+        if (tile instanceof GridTile) {
+            return ((GridTile) tile).getNode();
         }
 
         return null;

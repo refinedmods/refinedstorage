@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterCha
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
+import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
@@ -92,6 +93,11 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     @Override
     public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
         return TileWriter.REDSTONE_MODE;
+    }
+
+    @Override
+    public boolean isActive() {
+        return world.getBlockState(pos).get(NodeBlock.CONNECTED);
     }
 
     @Override

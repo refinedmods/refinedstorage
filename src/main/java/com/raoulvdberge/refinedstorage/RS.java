@@ -1,8 +1,10 @@
 package com.raoulvdberge.refinedstorage;
 
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.CableNetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
@@ -25,6 +27,7 @@ import com.raoulvdberge.refinedstorage.tile.CableTile;
 import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
@@ -67,7 +70,6 @@ public final class RS {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::onRegisterItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer.class, this::onRegisterRecipeSerializers);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, this::onRegisterContainers);
-
     }
 
     @SubscribeEvent
@@ -88,6 +90,8 @@ public final class RS {
         });
 
         API.instance().getNetworkNodeRegistry().add(CableNetworkNode.ID, (tag, world, pos) -> new CableNetworkNode(world, pos));
+
+        API.instance().getNetworkNodeRegistry().add(GridNetworkNode.ID, (tag, world, pos) -> new GridNetworkNode(world, pos, GridType.NORMAL));
     }
 
     @SubscribeEvent
@@ -103,6 +107,7 @@ public final class RS {
         e.getRegistry().register(new MachineCasingBlock());
         e.getRegistry().register(new CableBlock());
         e.getRegistry().register(new DiskDriveBlock());
+        e.getRegistry().register(new GridBlock(GridType.NORMAL));
     }
 
     @SubscribeEvent
@@ -118,6 +123,10 @@ public final class RS {
         e.getRegistry().register(TileEntityType.Builder.create(CableTile::new, RSBlocks.CABLE).build(null).setRegistryName(RS.ID, "cable"));
         e.getRegistry().register(registerTileDataParameters(
             TileEntityType.Builder.create(DiskDriveTile::new, RSBlocks.DISK_DRIVE).build(null).setRegistryName(RS.ID, "disk_drive")
+        ));
+
+        e.getRegistry().register(registerTileDataParameters(
+            TileEntityType.Builder.create(() -> new GridTile(GridType.NORMAL), RSBlocks.GRID).build(null).setRegistryName(RS.ID, "grid")
         ));
     }
 
@@ -185,6 +194,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.MACHINE_CASING));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CABLE));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DISK_DRIVE));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.GRID));
     }
 
     /* TODO

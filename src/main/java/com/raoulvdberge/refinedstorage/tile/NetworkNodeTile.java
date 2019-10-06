@@ -26,7 +26,6 @@ import javax.annotation.Nullable;
 public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile implements INetworkNodeProxy<N>, IRedstoneConfigurable {
     public static final TileDataParameter<Integer, NetworkNodeTile> REDSTONE_MODE = RedstoneMode.createParameter();
 
-    private static final String NBT_ACTIVE = "Active";
     private static final String NBT_COVERS = "Cover";
 
     private N clientNode;
@@ -56,8 +55,6 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
             tag.put(NBT_COVERS, ((ICoverable) getNode()).getCoverManager().writeToNbt());
         }
 
-        tag.putBoolean(NBT_ACTIVE, getNode().canUpdate());
-
         return tag;
     }
 
@@ -67,8 +64,6 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
         if (getNode() instanceof ICoverable && tag.contains(NBT_COVERS)) {
             ((ICoverable) getNode()).getCoverManager().readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
         }
-
-        getNode().setActive(tag.getBoolean(NBT_ACTIVE));
     }
 
     @Override

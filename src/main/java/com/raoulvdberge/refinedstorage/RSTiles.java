@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.ObjectHolder;
@@ -41,8 +41,10 @@ public class RSTiles {
     public static final TileEntityType<TileFluidInterface> FLUID_INTERFACE = null;
     //@ObjectHolder(RS.ID + ":fluid_storage")
     public static final TileEntityType<TileFluidInterface> FLUID_STORAGE = null;
-    //@ObjectHolder(RS.ID + ":grid")
-    public static final TileEntityType<TileGrid> GRID = null;
+
+    @ObjectHolder(RS.ID + ":grid")
+    public static final TileEntityType<GridTile> GRID = null;
+
     //@ObjectHolder(RS.ID + ":importer")
     public static final TileEntityType<TileImporter> IMPORTER = null;
     //@ObjectHolder(RS.ID + ":interface")

@@ -178,12 +178,11 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         pattern.getTag().put(String.format(NBT_FLUID_INPUT_SLOT, slot), stack.writeToNBT(new CompoundNBT()));
     }
 
-    @Nullable
     public static FluidStack getFluidInputSlot(ItemStack pattern, int slot) {
         String id = String.format(NBT_FLUID_INPUT_SLOT, slot);
 
         if (!pattern.hasTag() || !pattern.getTag().contains(id)) {
-            return null;
+            return FluidStack.EMPTY;
         }
 
         return FluidStack.loadFluidStackFromNBT(pattern.getTag().getCompound(id));
@@ -197,12 +196,11 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         pattern.getTag().put(String.format(NBT_FLUID_OUTPUT_SLOT, slot), stack.writeToNBT(new CompoundNBT()));
     }
 
-    @Nullable
     public static FluidStack getFluidOutputSlot(ItemStack pattern, int slot) {
         String id = String.format(NBT_FLUID_OUTPUT_SLOT, slot);
 
         if (!pattern.hasTag() || !pattern.getTag().contains(id)) {
-            return null;
+            return FluidStack.EMPTY;
         }
 
         return FluidStack.loadFluidStackFromNBT(pattern.getTag().getCompound(id));

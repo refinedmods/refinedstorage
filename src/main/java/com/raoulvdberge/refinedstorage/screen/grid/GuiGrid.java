@@ -5,7 +5,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
@@ -21,7 +21,7 @@ import com.raoulvdberge.refinedstorage.screen.widget.SearchWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.TabListWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import com.raoulvdberge.refinedstorage.tile.grid.TileGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -86,8 +86,8 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
-        if (grid instanceof NetworkNodeGrid || grid instanceof TilePortableGrid) {
-            addSideButton(new SideButtonRedstoneMode(this, grid instanceof NetworkNodeGrid ? TileGrid.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
+        if (grid instanceof GridNetworkNode || grid instanceof TilePortableGrid) {
+            addSideButton(new SideButtonRedstoneMode(this, grid instanceof GridNetworkNode ? GridTile.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
         }
 
         int sx = x + 80 + 1;
@@ -114,20 +114,20 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
         addSideButton(new SideButtonGridSize(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
 
         if (grid.getGridType() == GridType.PATTERN) {
-            processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.processing"), TileGrid.PROCESSING_PATTERN.getValue(), btn -> {
+            processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.processing"), GridTile.PROCESSING_PATTERN.getValue(), btn -> {
             });
 
             boolean showOredict = true;
-            if (((NetworkNodeGrid) grid).isProcessingPattern() && ((NetworkNodeGrid) grid).getType() == IType.FLUIDS) {
+            if (((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.FLUIDS) {
                 showOredict = false;
             }
 
             if (showOredict) {
-                oredictPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage:oredict"), TileGrid.OREDICT_PATTERN.getValue(), btn -> {
+                oredictPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage:oredict"), GridTile.OREDICT_PATTERN.getValue(), btn -> {
                 });
             }
 
-            addSideButton(new SideButtonType(this, TileGrid.PROCESSING_TYPE));
+            addSideButton(new SideButtonType(this, GridTile.PROCESSING_TYPE));
         }
 
         updateScrollbar();
@@ -243,7 +243,7 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
             case CRAFTING:
                 return RenderUtils.inBounds(82, y, 7, 7, mouseX, mouseY);
             case PATTERN:
-                if (((NetworkNodeGrid) grid).isProcessingPattern()) {
+                if (((GridNetworkNode) grid).isProcessingPattern()) {
                     return RenderUtils.inBounds(154, y, 7, 7, mouseX, mouseY);
                 }
 
@@ -254,7 +254,7 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
     }
 
     private boolean isOverCreatePattern(int mouseX, int mouseY) {
-        return grid.getGridType() == GridType.PATTERN && RenderUtils.inBounds(172, getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((NetworkNodeGrid) grid).canCreatePattern();
+        return grid.getGridType() == GridType.PATTERN && RenderUtils.inBounds(172, getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((GridNetworkNode) grid).canCreatePattern();
     }
 
     @Override
@@ -266,7 +266,7 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
         } else if (grid.getGridType() == GridType.CRAFTING) {
             bindTexture(RS.ID, "gui/crafting_grid.png");
         } else if (grid.getGridType() == GridType.PATTERN) {
-            bindTexture(RS.ID, "gui/pattern_grid" + (((NetworkNodeGrid) grid).isProcessingPattern() ? "_processing" : "") + ".png");
+            bindTexture(RS.ID, "gui/pattern_grid" + (((GridNetworkNode) grid).isProcessingPattern() ? "_processing" : "") + ".png");
         } else {
             bindTexture(RS.ID, "gui/grid.png");
         }
@@ -297,7 +297,7 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
                 ty = 1;
             }
 
-            if (!((NetworkNodeGrid) grid).canCreatePattern()) {
+            if (!((GridNetworkNode) grid).canCreatePattern()) {
                 ty = 2;
             }
 

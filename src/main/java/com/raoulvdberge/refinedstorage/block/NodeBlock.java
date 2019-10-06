@@ -24,6 +24,10 @@ public abstract class NodeBlock extends BaseBlock {
 
     public NodeBlock(Block.Properties props) {
         super(props);
+
+        if (hasConnectedState()) {
+            this.setDefaultState(this.getStateContainer().getBaseState().with(CONNECTED, false));
+        }
     }
 
     @Override
