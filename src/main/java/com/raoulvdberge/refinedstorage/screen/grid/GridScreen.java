@@ -5,6 +5,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
+import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
@@ -21,15 +23,19 @@ import com.raoulvdberge.refinedstorage.screen.widget.SearchWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.TabListWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.TimeUtils;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
@@ -81,7 +87,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public void onPostInit(int x, int y) {
-        container.initSlots();
+        this.container.initSlots();
 
         this.tabs.init(xSize - 32);
 
@@ -105,6 +111,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             searchField.y = sy;
         }
 
+        addButton(searchField);
+
         if (grid.getGridType() != GridType.FLUID && grid.getViewType() != -1) {
             addSideButton(new SideButtonGridViewType(this, grid));
         }
@@ -116,6 +124,12 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         if (grid.getGridType() == GridType.PATTERN) {
             processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.processing"), GridTile.PROCESSING_PATTERN.getValue(), btn -> {
+                // Rebuild the inventory slots before the slot change packet arrives.
+                GridTile.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
+                ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
+                this.container.initSlots();
+
+                TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
             });
 
             boolean showOredict = true;
@@ -125,6 +139,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
             if (showOredict) {
                 oredictPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage:oredict"), GridTile.OREDICT_PATTERN.getValue(), btn -> {
+                    TileDataManager.setParameter(GridTile.OREDICT_PATTERN, oredictPattern.isChecked());
                 });
             }
 
@@ -229,7 +244,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         return slotNumber >= 0;
     }
 
-    public boolean isOverSlotArea(int mouseX, int mouseY) {
+    public boolean isOverSlotArea(double mouseX, double mouseY) {
         return RenderUtils.inBounds(7, 19, 162, 18 * getVisibleRows(), mouseX, mouseY);
     }
 
@@ -237,7 +252,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         return slotNumber;
     }
 
-    private boolean isOverClear(int mouseX, int mouseY) {
+    private boolean isOverClear(double mouseX, double mouseY) {
         int y = getTopHeight() + (getVisibleRows() * 18) + 4;
 
         switch (grid.getGridType()) {
@@ -254,7 +269,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         }
     }
 
-    private boolean isOverCreatePattern(int mouseX, int mouseY) {
+    private boolean isOverCreatePattern(double mouseX, double mouseY) {
         return grid.getGridType() == GridType.PATTERN && RenderUtils.inBounds(172, getTopHeight() + (getVisibleRows() * 18) + 22, 16, 16, mouseX, mouseY) && ((GridNetworkNode) grid).canCreatePattern();
     }
 
@@ -396,51 +411,34 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, RS.INSTANCE.config.detailedTooltip, stack, mouseX, mouseY, xSize, ySize, font);
     }
 
-    /* TODO
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        super.actionPerformed(button);
-
-        tabs.actionPerformed(button);
-
-        if (button == oredictPattern) {
-            TileDataManager.setParameter(TileGrid.OREDICT_PATTERN, oredictPattern.isChecked());
-        } else if (button == processingPattern) {
-            // Rebuild the inventory slots before the slot change packet arrives.
-            TileGrid.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
-            ((NetworkNodeGrid) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
-            ((ContainerGrid) this.inventorySlots).initSlots();
-
-            TileDataManager.setParameter(TileGrid.PROCESSING_PATTERN, processingPattern.isChecked());
-        }
-    }
-
-    @Override
-    public void mouseClicked(int mouseX, int mouseY, int clickedButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, clickedButton);
-
-        tabs.mouseClicked();
-
-        if (searchField != null) {
-            searchField.mouseClicked(mouseX, mouseY, clickedButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int clickedButton) {
+        if (tabs.mouseClicked()) {
+            return true;
         }
 
         boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
         boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
         if (clickedCreatePattern) {
-            BlockPos gridPos = ((NetworkNodeGrid) grid).getPos();
+            BlockPos gridPos = ((GridNetworkNode) grid).getPos();
 
-            RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
+            // @TODO RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
+
+            return true;
         } else if (grid.isActive()) {
             if (clickedClear && grid instanceof IGridNetworkAware) {
-                RS.INSTANCE.network.sendToServer(new MessageGridClear());
+                // @TODO RS.INSTANCE.network.sendToServer(new MessageGridClear());
+
+                return true;
             }
 
-            ItemStack held = ((ContainerGrid) this.inventorySlots).getPlayer().inventory.getItemStack();
+            ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
-                RS.INSTANCE.network.sendToServer(grid.getGridType() == GridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
+                // @TODO RS.INSTANCE.network.sendToServer(grid.getGridType() == GridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
+
+                return true;
             }
 
             if (isOverSlotWithStack()) {
@@ -450,10 +448,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 IGridStack stack = view.getStacks().get(slotNumber);
 
                 if (isPulling) {
-                    if (stack.isCraftable() && view.canCraft() && (stack.doesDisplayCraftText() || (GuiScreen.isShiftKeyDown() && GuiScreen.isCtrlKeyDown()))) {
-                        FMLCommonHandler.instance().showGuiScreen(new GuiGridCraftingSettings(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
+                    if (stack.isCraftable() && view.canCraft() && (stack.doesDisplayCraftText() || (hasShiftDown() && hasControlDown()))) {
+                        // @TODO FMLCommonHandler.instance().showGuiScreen(new GuiGridCraftingSettings(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
                     } else if (grid.getGridType() == GridType.FLUID && held.isEmpty()) {
-                        RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(view.getStacks().get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
+                        // @TODO RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(view.getStacks().get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
                     } else if (grid.getGridType() != GridType.FLUID) {
                         int flags = 0;
 
@@ -461,7 +459,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                             flags |= IItemGridHandler.EXTRACT_HALF;
                         }
 
-                        if (GuiScreen.isShiftKeyDown()) {
+                        if (hasShiftDown()) {
                             flags |= IItemGridHandler.EXTRACT_SHIFT;
                         }
 
@@ -469,28 +467,36 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                             flags |= IItemGridHandler.EXTRACT_SINGLE;
                         }
 
-                        RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
+                        // @TODO RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
                     }
                 }
+
+                return true;
             }
         }
 
         if (clickedClear || clickedCreatePattern) {
-            mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+            minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+            return true;
         }
+
+        return super.mouseClicked(mouseX, mouseY, clickedButton);
     }
 
     @Override
-    protected void keyTyped(char character, int keyCode) throws IOException {
-        if (searchField == null) {
-            return;
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.func_212955_f()) {
+            return true;
         }
 
-        if (checkHotbarKeys(keyCode)) {
-            // NO OP
-        } else if (searchField.textboxKeyTyped(character, keyCode)) {
-            keyHandled = true;
-        } else if (keyCode == RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX.getKeyCode()) {
+        return super.keyPressed(key, scanCode, modifiers);
+    }
+
+    /* TODO
+    @Override
+    protected void keyTyped(char character, int keyCode) throws IOException {
+        if (keyCode == RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX.getKeyCode()) {
             RS.INSTANCE.network.sendToServer(new MessageGridClear());
         } else {
             super.keyTyped(character, keyCode);

@@ -36,8 +36,6 @@ public class TabListWidget {
     private Button left;
     private Button right;
 
-    private int width;
-
     public TabListWidget(BaseScreen gui, ElementDrawers drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
         this.gui = gui;
         this.drawers = drawers;
@@ -49,11 +47,8 @@ public class TabListWidget {
     }
 
     public void init(int width) {
-        this.width = width;
-        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 22, 20, 20, "<", true, pages.get() > 0, btn -> {
-        });
-        this.right = gui.addButton(gui.getGuiLeft() + width - 22, gui.getGuiTop() - 22, 20, 20, ">", true, pages.get() > 0, btn -> {
-        });
+        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 22, 20, 20, "<", true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() - 1)));
+        this.right = gui.addButton(gui.getGuiLeft() + width - 22, gui.getGuiTop() - 22, 20, 20, ">", true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() + 1)));
     }
 
     public void addListener(ITabListListener listener) {
@@ -175,13 +170,5 @@ public class TabListWidget {
         }
 
         return false;
-    }
-
-    public void actionPerformed(Button button) {
-        if (button == left) {
-            listeners.forEach(t -> t.onPageChanged(page.get() - 1));
-        } else if (button == right) {
-            listeners.forEach(t -> t.onPageChanged(page.get() + 1));
-        }
     }
 }

@@ -3,6 +3,8 @@ package com.raoulvdberge.refinedstorage.screen.widget;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -55,21 +57,21 @@ public class SearchWidget extends TextFieldWidget {
     }
 
     @Override
-    public boolean charTyped(char typedChar, int keyCode) {
-        // TODO @SuppressWarnings("deprecation") boolean canLoseFocus = ObfuscationReflectionHelper.getPrivateValue(GuiTextField.class, this, 10);
+    public boolean keyPressed(int keyCode, int scanCode, int modifier) {
+        @SuppressWarnings("deprecation") boolean canLoseFocus = ObfuscationReflectionHelper.getPrivateValue(TextFieldWidget.class, this, 6);
 
-        boolean result = super.charTyped(typedChar, keyCode);
+        boolean result = super.keyPressed(keyCode, scanCode, modifier);
 
         if (isFocused()) {
-            /* TODO if (keyCode == Keyboard.KEY_UP) {
+            if (keyCode == GLFW.GLFW_KEY_UP) {
                 updateSearchHistory(-1);
 
                 result = true;
-            } else if (keyCode == Keyboard.KEY_DOWN) {
+            } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
                 updateSearchHistory(1);
 
                 result = true;
-            } else if (keyCode == Keyboard.KEY_RETURN) {
+            } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
                 saveHistory();
 
                 if (canLoseFocus) {
@@ -77,16 +79,17 @@ public class SearchWidget extends TextFieldWidget {
                 }
 
                 result = true;
-            }*/
+            }
         }
 
-        if (/*TODO keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && canLoseFocus*/false) {
+        /* TODO
+        if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && canLoseFocus) {
             setFocused(!isFocused());
 
             saveHistory();
 
             result = true;
-        }
+        }*/
 
         if (result) {
             listeners.forEach(Runnable::run);
