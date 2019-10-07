@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.render.model.baked.FullbrightBakedModel;
 import com.raoulvdberge.refinedstorage.screen.ControllerScreen;
 import com.raoulvdberge.refinedstorage.screen.DiskDriveScreen;
 import com.raoulvdberge.refinedstorage.screen.FilterScreen;
+import com.raoulvdberge.refinedstorage.screen.factory.GridScreenFactory;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -57,6 +58,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.FILTER, FilterScreen::new);
         ScreenManager.registerFactory(RSContainers.CONTROLLER, ControllerScreen::new);
         ScreenManager.registerFactory(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
+        ScreenManager.registerFactory(RSContainers.GRID, new GridScreenFactory());
     }
 
     @SubscribeEvent

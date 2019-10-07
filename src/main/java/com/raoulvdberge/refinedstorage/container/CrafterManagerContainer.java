@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.screen.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.filtering.GridFilterParser;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
@@ -62,7 +62,7 @@ public class CrafterManagerContainer extends BaseContainer {
         }
     }
 
-    private IResizableDisplay display;
+    private IScreenInfoProvider display;
     private NetworkNodeCrafterManager crafterManager;
     private Map<String, Integer> containerData;
     private Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
@@ -83,7 +83,7 @@ public class CrafterManagerContainer extends BaseContainer {
         return new ArrayList<>();
     }
 
-    public CrafterManagerContainer(TileCrafterManager crafterManager, PlayerEntity player, IResizableDisplay display, int windowId) {
+    public CrafterManagerContainer(TileCrafterManager crafterManager, PlayerEntity player, IScreenInfoProvider display, int windowId) {
         super(RSContainers.CRAFTER_MANAGER, crafterManager, player, windowId);
 
         this.display = display;

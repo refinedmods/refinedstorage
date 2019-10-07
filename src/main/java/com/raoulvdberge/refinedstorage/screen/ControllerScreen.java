@@ -32,7 +32,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, ControllerTile.REDSTONE_MODE));
     }
 

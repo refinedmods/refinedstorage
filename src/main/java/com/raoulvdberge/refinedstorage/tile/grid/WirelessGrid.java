@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -20,6 +20,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -139,8 +141,8 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public String getGuiTitle() {
-        return "gui.refinedstorage:grid";
+    public ITextComponent getTitle() {
+        return new TranslationTextComponent("gui.refinedstorage.grid");
     }
 
     @Override
@@ -189,7 +191,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
         this.viewType = type;
 
-        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -198,7 +200,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
         this.sortingType = type;
 
-        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -207,7 +209,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
         this.sortingDirection = direction;
 
-        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -234,7 +236,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
         // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override

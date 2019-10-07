@@ -17,7 +17,7 @@ public class GuiImporter extends BaseScreen<ImporterContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileImporter.REDSTONE_MODE));
 
         addSideButton(new SideButtonType(this, TileImporter.TYPE));

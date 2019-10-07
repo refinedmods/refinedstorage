@@ -42,7 +42,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addCheckBox(x + 7, y + 77, I18n.format("gui.refinedstorage.filter.compare_nbt"), (compare & IComparer.COMPARE_NBT) == IComparer.COMPARE_NBT, btn -> {
             compare ^= IComparer.COMPARE_NBT;
 

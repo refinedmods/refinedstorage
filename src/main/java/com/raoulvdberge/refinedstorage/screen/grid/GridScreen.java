@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.screen.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.*;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
@@ -30,12 +30,13 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisplay {
+public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
     private IGridView view;
 
     private SearchWidget searchField;
@@ -51,8 +52,8 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
 
     private int slotNumber;
 
-    public GuiGrid(GridContainer container, IGrid grid, PlayerInventory inventory) {
-        super(container, 227, 0, inventory, null);
+    public GridScreen(GridContainer container, IGrid grid, PlayerInventory inventory, ITextComponent title) {
+        super(container, 227, 0, inventory, title);
 
         this.grid = grid;
         this.view = grid.getGridType() == GridType.FLUID ? new GridViewFluid(this, getDefaultSorter(), getSorters()) : new GridViewItem(this, getDefaultSorter(), getSorters());
@@ -71,15 +72,15 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
         });
     }
 
-    /* TODO - calcHeight
     @Override
-    protected void calcHeight() {
+    protected void onPreInit() {
+        super.onPreInit();
+
         this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
-        this.ySize = ySize;
-    }*/
+    }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         container.initSlots();
 
         this.tabs.init(xSize - 32);
@@ -208,7 +209,7 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
             case IGrid.SIZE_STRETCH:
                 int screenSpaceAvailable = height - getTopHeight() - getBottomHeight();
 
-                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRowsStretch));
+                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, Integer.MAX_VALUE));//@TODO: MaxRowsStretch
             case IGrid.SIZE_SMALL:
                 return 3;
             case IGrid.SIZE_MEDIUM:
@@ -324,7 +325,7 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, I18n.format(grid.getGuiTitle()));
+        renderString(7, 7, title.getFormattedText());
         renderString(7, getYPlayerInventory() - 12, I18n.format("container.inventory"));
 
         int x = 8;
@@ -372,7 +373,7 @@ public class GuiGrid extends BaseScreen<GridContainer> implements IResizableDisp
         }
 
         if (isOverCreatePattern(mouseX, mouseY)) {
-            renderTooltip(mouseX, mouseY, I18n.format("gui.refinedstorage:grid.pattern_create"));
+            renderTooltip(mouseX, mouseY, I18n.format("gui.refinedstorage.grid.pattern_create"));
         }
 
         tabs.drawTooltip(font, mouseX, mouseY);

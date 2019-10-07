@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.tile.NetworkNodeTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -39,17 +39,17 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
             t.getNode().setSearchBoxMode(v);
             t.getNode().markDirty();
         }
-    }, (initial, p) -> BaseScreen.executeLater(GuiGrid.class, grid -> grid.getSearchField().setMode(p)));
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getSearchField().setMode(p)));
     public static final TileDataParameter<Integer, GridTile> SIZE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getSize(), (t, v) -> {
         if (IGrid.isValidSize(v)) {
             t.getNode().setSize(v);
             t.getNode().markDirty();
         }
-    }, (initial, p) -> BaseScreen.executeLater(GuiGrid.class, BaseScreen::init));
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
     public static final TileDataParameter<Integer, GridTile> TAB_SELECTED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabSelected(), (t, v) -> {
         t.getNode().setTabSelected(v == t.getNode().getTabSelected() ? -1 : v);
         t.getNode().markDirty();
-    }, (initial, p) -> BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort()));
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort()));
     public static final TileDataParameter<Integer, GridTile> TAB_PAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getTabPage(), (t, v) -> {
         if (v >= 0 && v <= t.getNode().getTotalTabPages()) {
             t.getNode().setTabPage(v);
@@ -59,17 +59,17 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
     public static final TileDataParameter<Boolean, GridTile> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isOredictPattern(), (t, v) -> {
         t.getNode().setOredictPattern(v);
         t.getNode().markDirty();
-    }, (initial, p) -> BaseScreen.executeLater(GuiGrid.class, grid -> grid.updateOredictPattern(p)));
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.updateOredictPattern(p)));
     public static final TileDataParameter<Boolean, GridTile> PROCESSING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isProcessingPattern(), (t, v) -> {
         t.getNode().setProcessingPattern(v);
         t.getNode().clearMatrix();
         t.getNode().markDirty();
-    }, (initial, p) -> BaseScreen.executeLater(GuiGrid.class, BaseScreen::init));
-    public static final TileDataParameter<Integer, GridTile> PROCESSING_TYPE = IType.createParameter((initial, p) -> BaseScreen.executeLater(GuiGrid.class, BaseScreen::init));
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
+    public static final TileDataParameter<Integer, GridTile> PROCESSING_TYPE = IType.createParameter((initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
 
     public static void trySortGrid(boolean initial) {
         if (!initial) {
-            BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+            BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
         }
     }
 

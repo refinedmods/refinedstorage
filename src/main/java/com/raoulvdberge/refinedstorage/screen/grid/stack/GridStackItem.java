@@ -154,7 +154,7 @@ public class GridStackItem implements IGridStack {
         String text = null;
 
         if (displayCraftText) {
-            text = I18n.format("gui.refinedstorage:grid.craft");
+            text = I18n.format("gui.refinedstorage.grid.craft");
         } else if (stack.getCount() > 1) {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }

@@ -11,6 +11,10 @@ public final class RSContainers {
     @ObjectHolder(RS.ID + ":controller")
     public static final ContainerType<ControllerContainer> CONTROLLER = null;
 
+
+    @ObjectHolder(RS.ID + ":grid")
+    public static final ContainerType<GridContainer> GRID = null;
+
     //@ObjectHolder(RS.ID + ":crafter")
     public static final ContainerType<CrafterContainer> CRAFTER = null;
     //@ObjectHolder(RS.ID + ":crafter_manager")
@@ -36,8 +40,6 @@ public final class RSContainers {
     public static final ContainerType<FluidInterfaceContainer> FLUID_INTERFACE = null;
     //@ObjectHolder(RS.ID + ":fluid_storage")
     public static final ContainerType<FluidInterfaceContainer> FLUID_STORAGE = null;
-    //@ObjectHolder(RS.ID + ":grid")
-    public static final ContainerType<GridContainer> GRID = null;
     //@ObjectHolder(RS.ID + ":importer")
     public static final ContainerType<ImporterContainer> IMPORTER = null;
     //@ObjectHolder(RS.ID + ":interface")

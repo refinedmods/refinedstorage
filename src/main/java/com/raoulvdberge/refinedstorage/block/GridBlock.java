@@ -2,13 +2,22 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridFactoryGridBlock;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -49,6 +58,16 @@ public class GridBlock extends NodeBlock {
         return new GridTile(type);
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isRemote) {
+            return NetworkUtils.attemptModify(worldIn, pos, hit.getFace(), player, () -> API.instance().getGridManager().openGrid(GridFactoryGridBlock.ID, (ServerPlayerEntity) player, pos));
+        }
+
+        return true;
+    }
+
     /*
     @Override
     @OnlyIn(Dist.CLIENT)
@@ -64,10 +83,5 @@ public class GridBlock extends NodeBlock {
             RS.ID + ":blocks/grid/cutouts/pattern_front_connected",
             RS.ID + ":blocks/grid/cutouts/fluid_front_connected"
         ));
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
-        return openNetworkGui(player, world, pos, side, () -> API.instance().getGridManager().openGrid(NetworkNodeGrid.FACTORY_ID, (ServerPlayerEntity) player, pos));
     }*/
 }

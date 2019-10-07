@@ -14,7 +14,7 @@ public class GuiDiskManipulator extends BaseScreen<DiskManipulatorContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileDiskManipulator.REDSTONE_MODE));
         addSideButton(new SideButtonIOMode(this));
         addSideButton(new SideButtonType(this, TileDiskManipulator.TYPE));

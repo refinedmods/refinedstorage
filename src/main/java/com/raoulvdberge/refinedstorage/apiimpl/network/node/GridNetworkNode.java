@@ -39,6 +39,8 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -57,7 +59,6 @@ import java.util.Set;
 
 public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, IType {
     public static final String ID = "grid";
-    public static int FACTORY_ID = 0;
 
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
@@ -266,18 +267,18 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public String getGuiTitle() {
+    public ITextComponent getTitle() {
         GridType type = getGridType();
 
         switch (type) {
             case CRAFTING:
-                return "gui.refinedstorage:crafting_grid";
+                return new TranslationTextComponent("gui.refinedstorage.crafting_grid");
             case PATTERN:
-                return "gui.refinedstorage:pattern_grid";
+                return new TranslationTextComponent("gui.refinedstorage.pattern_grid");
             case FLUID:
-                return "gui.refinedstorage:fluid_grid";
+                return new TranslationTextComponent("gui.refinedstorage.fluid_grid");
             default:
-                return "gui.refinedstorage:grid";
+                return new TranslationTextComponent("gui.refinedstorage.grid");
         }
     }
 

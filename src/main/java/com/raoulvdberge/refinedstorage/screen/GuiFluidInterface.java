@@ -20,7 +20,7 @@ public class GuiFluidInterface extends BaseScreen<FluidInterfaceContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileFluidInterface.REDSTONE_MODE));
     }
 

@@ -5,11 +5,8 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -44,7 +41,7 @@ public class NetworkItemWirelessFluidGrid implements INetworkItem {
             return false;
         }
 
-        API.instance().getGridManager().openGrid(WirelessFluidGrid.ID, (ServerPlayerEntity) player, stack);
+        // TODO API.instance().getGridManager().openGrid(WirelessFluidGrid.ID, (ServerPlayerEntity) player, stack);
 
         drainEnergy(RS.INSTANCE.config.wirelessFluidGridOpenUsage);
 

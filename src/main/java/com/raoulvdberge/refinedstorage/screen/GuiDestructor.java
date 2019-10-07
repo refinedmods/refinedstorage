@@ -14,7 +14,7 @@ public class GuiDestructor extends BaseScreen<DestructorContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileDestructor.REDSTONE_MODE));
 
         addSideButton(new SideButtonType(this, TileDestructor.TYPE));

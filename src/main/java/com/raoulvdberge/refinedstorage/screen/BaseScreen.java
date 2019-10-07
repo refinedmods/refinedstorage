@@ -60,6 +60,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     public void init() {
         minecraft.keyboardListener.enableRepeatEvents(true);
 
+        onPreInit();
+
         super.init();
 
         buttons.clear();
@@ -67,7 +69,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         sideButtonY = 6;
 
-        init(guiLeft, guiTop);
+        onPostInit(guiLeft, guiTop);
 
         runActions();
     }
@@ -318,7 +320,11 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         GlStateManager.enableLighting();
     }
 
-    public abstract void init(int x, int y);
+    protected void onPreInit() {
+        // NO OP
+    }
+
+    public abstract void onPostInit(int x, int y);
 
     public abstract void tick(int x, int y);
 

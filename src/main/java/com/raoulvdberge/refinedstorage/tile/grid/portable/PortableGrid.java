@@ -25,7 +25,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPorta
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -33,6 +33,8 @@ import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -243,8 +245,8 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public String getGuiTitle() {
-        return "gui.refinedstorage:portable_grid";
+    public ITextComponent getTitle() {
+        return new TranslationTextComponent("gui.refinedstorage.portable_grid");
     }
 
     @Override
@@ -298,7 +300,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
         this.sortingType = type;
 
-        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -307,7 +309,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
         this.sortingDirection = direction;
 
-        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
@@ -334,7 +336,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
         // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override

@@ -22,7 +22,7 @@ public class GuiSecurityManager extends BaseScreen<SecurityManagerContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileSecurityManager.REDSTONE_MODE));
 
         int padding = 15;

@@ -13,7 +13,7 @@ public class GuiWirelessTransmitter extends BaseScreen<WirelessTransmitterContai
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileWirelessTransmitter.REDSTONE_MODE));
     }
 

@@ -111,7 +111,7 @@ public class GridStackFluid implements IGridStack {
         String text;
 
         if (displayCraftText) {
-            text = I18n.format("gui.refinedstorage:grid.craft");
+            text = I18n.format("gui.refinedstorage.grid.craft");
         } else {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
         }

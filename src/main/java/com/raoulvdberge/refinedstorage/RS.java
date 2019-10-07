@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridFactoryGridBlock;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.CableNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
@@ -16,6 +17,7 @@ import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.container.DiskDriveContainer;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
+import com.raoulvdberge.refinedstorage.container.factory.GridContainerFactory;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerFactory;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
@@ -90,8 +92,9 @@ public final class RS {
         });
 
         API.instance().getNetworkNodeRegistry().add(CableNetworkNode.ID, (tag, world, pos) -> new CableNetworkNode(world, pos));
-
         API.instance().getNetworkNodeRegistry().add(GridNetworkNode.ID, (tag, world, pos) -> new GridNetworkNode(world, pos, GridType.NORMAL));
+
+        API.instance().getGridManager().add(GridFactoryGridBlock.ID, new GridFactoryGridBlock());
     }
 
     @SubscribeEvent
@@ -143,6 +146,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> new FilterContainer(inv.player, inv.getCurrentItem(), windowId)).setRegistryName(RS.ID, "filter"));
         e.getRegistry().register(IForgeContainerType.create(((windowId, inv, data) -> new ControllerContainer(null, inv.player, windowId))).setRegistryName(RS.ID, "controller"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DiskDriveContainer, DiskDriveTile>((windowId, inv, tile) -> new DiskDriveContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "disk_drive"));
+        e.getRegistry().register(IForgeContainerType.create(new GridContainerFactory()).setRegistryName(RS.ID, "grid"));
     }
 
     @SubscribeEvent

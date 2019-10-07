@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen.grid.view;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.filtering.GridFilterParser;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.GridSorterDirection;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.IGridSorter;
@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class GridViewBase implements IGridView {
-    private GuiGrid gui;
+    private GridScreen gui;
     private boolean canCraft;
 
     private IGridSorter defaultSorter;
@@ -20,7 +20,7 @@ public abstract class GridViewBase implements IGridView {
     private List<IGridStack> stacks = new ArrayList<>();
     protected Map<Integer, IGridStack> map = new HashMap<>();
 
-    public GridViewBase(GuiGrid gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
+    public GridViewBase(GridScreen gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
         this.gui = gui;
         this.defaultSorter = defaultSorter;
         this.sorters = sorters;

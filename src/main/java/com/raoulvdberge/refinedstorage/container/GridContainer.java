@@ -16,7 +16,7 @@ import com.raoulvdberge.refinedstorage.container.slot.grid.ResultCraftingGridSlo
 import com.raoulvdberge.refinedstorage.container.slot.legacy.BaseLegacySlot;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.DisabledLegacySlot;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.FilterLegacySlot;
-import com.raoulvdberge.refinedstorage.screen.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
@@ -37,20 +37,21 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
     private IGrid grid;
     private IStorageCache cache;
     private IStorageCacheListener listener;
-    private IResizableDisplay display;
+    private IScreenInfoProvider screenInfoProvider;
 
     private ResultCraftingGridSlot craftingResultSlot;
     private BaseLegacySlot patternResultSlot;
 
-    public GridContainer(IGrid grid, IResizableDisplay display, @Nullable BaseTile gridTile, PlayerEntity player, int windowId) {
+    public GridContainer(IGrid grid, @Nullable BaseTile gridTile, PlayerEntity player, int windowId) {
         super(RSContainers.GRID, gridTile, player, windowId);
 
         this.grid = grid;
-        this.display = display;
-
-        initSlots();
 
         grid.addCraftingListener(this);
+    }
+
+    public void setScreenInfoProvider(IScreenInfoProvider screenInfoProvider) {
+        this.screenInfoProvider = screenInfoProvider;
     }
 
     public void initSlots() {
@@ -112,7 +113,7 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
             return ItemStack.EMPTY;
         });
 
-        addPlayerInventory(8, display.getYPlayerInventory());
+        addPlayerInventory(8, screenInfoProvider.getYPlayerInventory());
     }
 
     private void addPortableGridSlots() {
@@ -136,7 +137,7 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
     }
 
     private void addCraftingSlots() {
-        int headerAndSlots = display.getTopHeight() + (display.getVisibleRows() * 18);
+        int headerAndSlots = screenInfoProvider.getTopHeight() + (screenInfoProvider.getVisibleRows() * 18);
 
         int x = 26;
         int y = headerAndSlots + 4;
@@ -156,7 +157,7 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
     }
 
     private void addPatternSlots() {
-        int headerAndSlots = display.getTopHeight() + (display.getVisibleRows() * 18);
+        int headerAndSlots = screenInfoProvider.getTopHeight() + (screenInfoProvider.getVisibleRows() * 18);
 
         addSlot(new SlotItemHandler(((GridNetworkNode) grid).getPatterns(), 0, 172, headerAndSlots + 4));
         addSlot(new SlotItemHandler(((GridNetworkNode) grid).getPatterns(), 1, 172, headerAndSlots + 40));

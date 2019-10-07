@@ -17,7 +17,7 @@ public class GuiConstructor extends BaseScreen<ConstructorContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileConstructor.REDSTONE_MODE));
 
         addSideButton(new SideButtonType(this, TileConstructor.TYPE));

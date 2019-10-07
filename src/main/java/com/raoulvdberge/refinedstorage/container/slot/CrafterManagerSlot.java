@@ -1,15 +1,15 @@
 package com.raoulvdberge.refinedstorage.container.slot;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
-import com.raoulvdberge.refinedstorage.screen.IResizableDisplay;
+import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import net.minecraftforge.items.IItemHandler;
 
 public class CrafterManagerSlot extends BaseSlot {
     private boolean visible;
     private NetworkNodeCrafterManager crafterManager;
-    private IResizableDisplay display;
+    private IScreenInfoProvider display;
 
-    public CrafterManagerSlot(IItemHandler itemHandler, int inventoryIndex, int x, int y, boolean visible, IResizableDisplay display, NetworkNodeCrafterManager crafterManager) {
+    public CrafterManagerSlot(IItemHandler itemHandler, int inventoryIndex, int x, int y, boolean visible, IScreenInfoProvider display, NetworkNodeCrafterManager crafterManager) {
         super(itemHandler, inventoryIndex, x, y);
 
         this.visible = visible;

@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen;
 
-public interface IResizableDisplay {
+public interface IScreenInfoProvider {
     int getVisibleRows();
 
     int getRows();

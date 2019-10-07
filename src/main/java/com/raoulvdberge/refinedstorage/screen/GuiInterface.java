@@ -15,7 +15,7 @@ public class GuiInterface extends BaseScreen<InterfaceContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileInterface.REDSTONE_MODE));
 
         addSideButton(new SideButtonCompare(this, TileInterface.COMPARE, IComparer.COMPARE_NBT));

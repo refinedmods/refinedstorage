@@ -43,7 +43,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         Pair<Integer, Integer> pos = getOkCancelPos();
 
         okButton = addButton(x + pos.getLeft(), y + pos.getRight(), 50, 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));

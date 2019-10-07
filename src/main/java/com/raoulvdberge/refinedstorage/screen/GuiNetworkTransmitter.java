@@ -17,7 +17,7 @@ public class GuiNetworkTransmitter extends BaseScreen<NetworkTransmitterContaine
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileNetworkTransmitter.REDSTONE_MODE));
     }
 

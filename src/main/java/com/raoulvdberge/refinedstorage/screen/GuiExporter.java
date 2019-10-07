@@ -16,7 +16,7 @@ public class GuiExporter extends BaseScreen<ExporterContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileExporter.REDSTONE_MODE));
 
         addSideButton(new SideButtonType(this, TileExporter.TYPE));

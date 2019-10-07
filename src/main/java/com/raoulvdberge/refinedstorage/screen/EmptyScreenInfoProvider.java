@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen;
 
-public class ResizableDisplayDummy implements IResizableDisplay {
+public class EmptyScreenInfoProvider implements IScreenInfoProvider {
     @Override
     public int getVisibleRows() {
         return 3;

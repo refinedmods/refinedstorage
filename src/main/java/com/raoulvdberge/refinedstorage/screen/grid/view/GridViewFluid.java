@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.grid.view;
 
-import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.IGridSorter;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackFluid;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 import java.util.List;
 
 public class GridViewFluid extends GridViewBase {
-    public GridViewFluid(GuiGrid gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
+    public GridViewFluid(GridScreen gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
         super(gui, defaultSorter, sorters);
     }
 

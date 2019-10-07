@@ -67,7 +67,7 @@ public class GuiCraftingPreview extends BaseScreen {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         cancelButton = addButton(x + 55, y + 201 - 20 - 7, 50, 20, I18n.format("gui.cancel"), true, true, btn -> {
         });
 

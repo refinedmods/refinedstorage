@@ -60,7 +60,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         if (redstoneModeParameter != null) {
             addSideButton(new SideButtonRedstoneMode(this, redstoneModeParameter));
         }

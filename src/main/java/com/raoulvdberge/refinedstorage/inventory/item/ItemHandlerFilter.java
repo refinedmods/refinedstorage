@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.screen.grid.GuiGrid;
+import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.LogicalSide;
@@ -47,7 +47,7 @@ public class ItemHandlerFilter extends ItemHandlerBase {
         }
 
         if (EffectiveSide.get() == LogicalSide.CLIENT) { // TODO check
-            BaseScreen.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+            BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
         }
     }
 

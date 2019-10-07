@@ -14,7 +14,7 @@ public class GuiStorageMonitor extends BaseScreen<StorageMonitorContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonCompare(this, TileStorageMonitor.COMPARE, IComparer.COMPARE_NBT));
     }
 

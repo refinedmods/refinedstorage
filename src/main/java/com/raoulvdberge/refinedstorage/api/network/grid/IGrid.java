@@ -10,6 +10,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -86,9 +87,9 @@ public interface IGrid {
     }
 
     /**
-     * @return an unlocalized gui title
+     * @return the title
      */
-    String getGuiTitle();
+    ITextComponent getTitle();
 
     /**
      * @return the view type

@@ -19,7 +19,7 @@ public class GuiDetector extends BaseScreen<DetectorContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonType(this, TileDetector.TYPE));
 
         addSideButton(new SideButtonDetectorMode(this));

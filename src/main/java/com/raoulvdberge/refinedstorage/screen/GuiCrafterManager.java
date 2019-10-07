@@ -21,7 +21,7 @@ import net.minecraft.inventory.container.Slot;
 import java.util.Map;
 
 // TODO @MouseTweaksDisableWheelTweak
-public class GuiCrafterManager extends BaseScreen<CrafterManagerContainer> implements IResizableDisplay {
+public class GuiCrafterManager extends BaseScreen<CrafterManagerContainer> implements IScreenInfoProvider {
     private CrafterManagerContainer container;
     private NetworkNodeCrafterManager crafterManager;
 
@@ -96,7 +96,7 @@ public class GuiCrafterManager extends BaseScreen<CrafterManagerContainer> imple
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         addSideButton(new SideButtonRedstoneMode(this, TileCrafterManager.REDSTONE_MODE));
         addSideButton(new SideButtonCrafterManagerSearchBoxMode(this));
         addSideButton(new SideButtonGridSize(this, () -> crafterManager.getSize(), size -> TileDataManager.setParameter(TileCrafterManager.SIZE, size)));

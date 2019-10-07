@@ -151,7 +151,7 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
         this.tabs.init(xSize);
 
         this.scrollbar = new ScrollbarWidget(this, 235, 20, 12, 149);

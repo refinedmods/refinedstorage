@@ -13,7 +13,7 @@ public class GuiCrafter extends BaseScreen<CrafterContainer> {
     }
 
     @Override
-    public void init(int x, int y) {
+    public void onPostInit(int x, int y) {
     }
 
     @Override
