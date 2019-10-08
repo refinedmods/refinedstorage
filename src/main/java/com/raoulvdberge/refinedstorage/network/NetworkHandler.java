@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.network.disk.StorageDiskSizeRequestMessage;
 import com.raoulvdberge.refinedstorage.network.disk.StorageDiskSizeResponseMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemDeltaMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridItemInsertHeldMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridItemPullMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemUpdateMessage;
 import com.raoulvdberge.refinedstorage.network.tiledata.TileDataParameterMessage;
 import com.raoulvdberge.refinedstorage.network.tiledata.TileDataParameterUpdateMessage;
@@ -34,6 +36,8 @@ public class NetworkHandler {
         handler.registerMessage(id++, TileDataParameterUpdateMessage.class, TileDataParameterUpdateMessage::encode, TileDataParameterUpdateMessage::decode, TileDataParameterUpdateMessage::handle);
         handler.registerMessage(id++, GridItemUpdateMessage.class, GridItemUpdateMessage::encode, GridItemUpdateMessage::decode, GridItemUpdateMessage::handle);
         handler.registerMessage(id++, GridItemDeltaMessage.class, GridItemDeltaMessage::encode, GridItemDeltaMessage::decode, GridItemDeltaMessage::handle);
+        handler.registerMessage(id++, GridItemPullMessage.class, GridItemPullMessage::encode, GridItemPullMessage::decode, GridItemPullMessage::handle);
+        handler.registerMessage(id++, GridItemInsertHeldMessage.class, GridItemInsertHeldMessage::encode, GridItemInsertHeldMessage::decode, GridItemInsertHeldMessage::handle);
     }
 
     public void sendToServer(Object message) {

@@ -42,7 +42,7 @@ public abstract class BaseGridView implements IGridView {
 
             List<Predicate<IGridStack>> filters = GridFilterParser.getFilters(
                 grid,
-                screen.getSearchField() != null ? screen.getSearchField().getText() : "",
+                screen.getSearchFieldText(),
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
             );
 

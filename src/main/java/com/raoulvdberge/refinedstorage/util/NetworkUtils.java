@@ -28,11 +28,13 @@ public class NetworkUtils {
             if (proxy != null) {
                 INetworkNode node = proxy.getNode();
 
-                for (Permission permission : permissionsRequired) {
-                    if (!node.getNetwork().getSecurityManager().hasPermission(permission, player)) {
-                        WorldUtils.sendNoPermissionMessage(player);
+                if (node.getNetwork() != null) {
+                    for (Permission permission : permissionsRequired) {
+                        if (!node.getNetwork().getSecurityManager().hasPermission(permission, player)) {
+                            WorldUtils.sendNoPermissionMessage(player);
 
-                        return true; // Avoid placing blocks
+                            return true; // Avoid placing blocks
+                        }
                     }
                 }
             }

@@ -10,6 +10,8 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
+import com.raoulvdberge.refinedstorage.network.grid.GridItemInsertHeldMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridItemPullMessage;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.*;
@@ -215,7 +217,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public String getSearchFieldText() {
-        return searchField == null ? "" : searchField.getText();
+        return searchField.getText();
     }
 
     @Override
@@ -441,7 +443,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
-                // @TODO RS.INSTANCE.network.sendToServer(grid.getGridType() == GridType.FLUID ? new MessageGridFluidInsertHeld() : new MessageGridItemInsertHeld(clickedButton == 1));
+                if (grid.getGridType() == GridType.NORMAL) {
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemInsertHeldMessage(clickedButton == 1));
+                } else if (grid.getGridType() == GridType.FLUID) {
+                    // @TODO RS.INSTANCE.network.sendToServer(new MessageGridFluidInsertHeld());
+                }
 
                 return true;
             }
@@ -472,7 +478,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                             flags |= IItemGridHandler.EXTRACT_SINGLE;
                         }
 
-                        // @TODO RS.INSTANCE.network.sendToServer(new MessageGridItemPull(stack.getHash(), flags));
+                        RS.NETWORK_HANDLER.sendToServer(new GridItemPullMessage(stack.getHash(), flags));
                     }
                 }
 

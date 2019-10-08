@@ -33,6 +33,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     protected INetwork network;
     protected World world;
     protected BlockPos pos;
+    private BlockState cachedBlockState;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     @Nullable
@@ -58,6 +59,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
         this.world = world;
         this.pos = pos;
+    }
+
+    public BlockState getBlockState() {
+        if (cachedBlockState == null) {
+            cachedBlockState = world.getBlockState(pos);
+        }
+
+        return cachedBlockState;
     }
 
     public RedstoneMode getRedstoneMode() {

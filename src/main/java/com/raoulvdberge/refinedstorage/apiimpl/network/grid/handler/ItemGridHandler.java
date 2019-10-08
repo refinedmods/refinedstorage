@@ -102,7 +102,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 }
             }
 
-            network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridExtractUsage);
+            // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridExtractUsage);
         }
     }
 
@@ -116,7 +116,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
 
-        network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
+        // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
 
         return remainder;
     }
@@ -148,7 +148,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
+        // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
     }
 
     @Override
