@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.widget;
 
+import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -82,14 +83,13 @@ public class SearchWidget extends TextFieldWidget {
             }
         }
 
-        /* TODO
-        if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKeyCode() && canLoseFocus) {
+        if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKey().getKeyCode() && canLoseFocus) {
             setFocused(!isFocused());
 
             saveHistory();
 
             result = true;
-        }*/
+        }
 
         if (result) {
             listeners.forEach(Runnable::run);

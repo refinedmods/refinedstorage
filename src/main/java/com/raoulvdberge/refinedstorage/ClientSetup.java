@@ -59,6 +59,8 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.CONTROLLER, ControllerScreen::new);
         ScreenManager.registerFactory(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
         ScreenManager.registerFactory(RSContainers.GRID, new GridScreenFactory());
+
+        RSKeyBindings.init();
     }
 
     @SubscribeEvent

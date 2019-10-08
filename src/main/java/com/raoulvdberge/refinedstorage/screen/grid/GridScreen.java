@@ -322,9 +322,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, true);
 
-        if (searchField != null) {
-            searchField.render(0, 0, 0);
-        }
+        searchField.render(0, 0, 0);
+
+        scrollbar.render();
     }
 
     @Override
@@ -417,6 +417,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             return true;
         }
 
+        if (scrollbar.mouseClicked(mouseX, mouseY, clickedButton)) {
+            return true;
+        }
+
         boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
         boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
@@ -485,6 +489,23 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     @Override
+    public void mouseMoved(double mx, double my) {
+        scrollbar.mouseMoved(mx, my);
+
+        super.mouseMoved(mx, my);
+    }
+
+    @Override
+    public boolean mouseReleased(double mx, double my, int button) {
+        return scrollbar.mouseReleased(mx, my, button) || super.mouseReleased(mx, my, button);
+    }
+
+    @Override
+    public boolean mouseScrolled(double x, double y, double delta) {
+        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+    }
+
+    @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         if (searchField.keyPressed(key, scanCode, modifiers) || searchField.func_212955_f()) {
             return true;
@@ -514,10 +535,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     public void updateScrollbar() {
-        if (scrollbar != null) {
-            scrollbar.setEnabled(getRows() > getVisibleRows());
-            scrollbar.setMaxOffset(getRows() - getVisibleRows());
-        }
+        scrollbar.setEnabled(getRows() > getVisibleRows());
+        scrollbar.setMaxOffset(getRows() - getVisibleRows());
     }
 
     public static List<IGridSorter> getSorters() {
