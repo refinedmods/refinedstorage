@@ -1,12 +1,17 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.network.grid.GridItemDeltaMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridItemUpdateMessage;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StorageCacheListenerGridItem implements IStorageCacheListener<ItemStack> {
@@ -20,7 +25,7 @@ public class StorageCacheListenerGridItem implements IStorageCacheListener<ItemS
 
     @Override
     public void onAttached() {
-        // TODO RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(network, network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)), player);
+        RS.NETWORK_HANDLER.sendTo(player, new GridItemUpdateMessage(network, network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)));
     }
 
     @Override
@@ -30,11 +35,15 @@ public class StorageCacheListenerGridItem implements IStorageCacheListener<ItemS
 
     @Override
     public void onChanged(@Nonnull ItemStack stack, int size) {
-        // TODO RS.INSTANCE.network.sendTo(new MessageGridItemDelta(network, network.getItemStorageTracker(), stack, size), player);
+        List<Pair<ItemStack, Integer>> deltas = new ArrayList<>();
+
+        deltas.add(Pair.of(stack, size));
+
+        onChangedBulk(deltas);
     }
 
     @Override
     public void onChangedBulk(@Nonnull List<Pair<ItemStack, Integer>> stacks) {
-        // TODO RS.INSTANCE.network.sendTo(new MessageGridItemDelta(network, network.getItemStorageTracker(), stacks), player);
+        RS.NETWORK_HANDLER.sendTo(player, new GridItemDeltaMessage(network, stacks));
     }
 }

@@ -13,11 +13,11 @@ import com.raoulvdberge.refinedstorage.container.GridContainer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.*;
-import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.screen.grid.view.GridViewFluid;
-import com.raoulvdberge.refinedstorage.screen.grid.view.GridViewItem;
+import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
+import com.raoulvdberge.refinedstorage.screen.grid.view.FluidGridView;
 import com.raoulvdberge.refinedstorage.screen.grid.view.IGridView;
+import com.raoulvdberge.refinedstorage.screen.grid.view.ItemGridView;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.SearchWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.TabListWidget;
@@ -62,7 +62,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         super(container, 227, 0, inventory, title);
 
         this.grid = grid;
-        this.view = grid.getGridType() == GridType.FLUID ? new GridViewFluid(this, getDefaultSorter(), getSorters()) : new GridViewItem(this, getDefaultSorter(), getSorters());
+        this.view = grid.getGridType() == GridType.FLUID ? new FluidGridView(this, getDefaultSorter(), getSorters()) : new ItemGridView(this, getDefaultSorter(), getSorters());
         this.wasConnected = this.grid.isActive();
         this.tabs = new TabListWidget(this, new ElementDrawers(this, font), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
         this.tabs.addListener(new TabListWidget.ITabListListener() {
@@ -406,9 +406,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             smallTextLines.add(TimeUtils.getAgo(gridStack.getTrackerEntry().getTime(), gridStack.getTrackerEntry().getName()));
         }
 
-        ItemStack stack = gridStack instanceof GridStackItem ? ((GridStackItem) gridStack).getStack() : ItemStack.EMPTY;
+        ItemStack stack = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
 
-        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, RS.INSTANCE.config.detailedTooltip, stack, mouseX, mouseY, xSize, ySize, font);
+        // @TODO DetailedToolTip
+        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, stack, mouseX, mouseY, xSize, ySize, font);
     }
 
     @Override
@@ -542,15 +543,15 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     public static List<IGridSorter> getSorters() {
         List<IGridSorter> sorters = new LinkedList<>();
         sorters.add(getDefaultSorter());
-        sorters.add(new GridSorterQuantity());
-        sorters.add(new GridSorterID());
-        sorters.add(new GridSorterInventoryTweaks());
-        sorters.add(new GridSorterLastModified());
+        sorters.add(new QuantityGridSorter());
+        sorters.add(new IdGridSorter());
+        sorters.add(new LastModifiedGridSorter());
+        sorters.add(new InvTweaksGridSorter());
 
         return sorters;
     }
 
     public static IGridSorter getDefaultSorter() {
-        return new GridSorterName();
+        return new NameGridSorter();
     }
 }

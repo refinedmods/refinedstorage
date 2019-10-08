@@ -3,20 +3,20 @@ package com.raoulvdberge.refinedstorage.screen.grid.sorting;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 
-public class GridSorterName implements IGridSorter {
+public class NameGridSorter implements IGridSorter {
     @Override
     public boolean isApplicable(IGrid grid) {
         return grid.getSortingType() == IGrid.SORTING_TYPE_NAME;
     }
 
     @Override
-    public int compare(IGridStack left, IGridStack right, GridSorterDirection sortingDirection) {
+    public int compare(IGridStack left, IGridStack right, SortingDirection sortingDirection) {
         String leftName = left.getName();
         String rightName = right.getName();
 
-        if (sortingDirection == GridSorterDirection.ASCENDING) {
+        if (sortingDirection == SortingDirection.ASCENDING) {
             return leftName.compareTo(rightName);
-        } else if (sortingDirection == GridSorterDirection.DESCENDING) {
+        } else if (sortingDirection == SortingDirection.DESCENDING) {
             return rightName.compareTo(leftName);
         }
 

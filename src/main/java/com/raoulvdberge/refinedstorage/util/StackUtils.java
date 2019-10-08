@@ -7,8 +7,8 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackFluid;
-import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackItem;
+import com.raoulvdberge.refinedstorage.screen.grid.stack.FluidGridStack;
+import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -48,7 +48,7 @@ public final class StackUtils {
             Item item = stack.getItem();
 
             buf.writeVarInt(Item.getIdFromItem(item));
-            buf.writeByte(stack.getCount());
+            buf.writeInt(stack.getCount());
 
             CompoundNBT tag = null;
 
@@ -66,7 +66,7 @@ public final class StackUtils {
             return ItemStack.EMPTY;
         } else {
             int id = buf.readVarInt();
-            int count = buf.readByte();
+            int count = buf.readInt();
 
             ItemStack stack = new ItemStack(Item.getItemById(id), count);
 
@@ -99,7 +99,7 @@ public final class StackUtils {
         }
     }
 
-    public static GridStackItem readItemGridStack(PacketBuffer buf) {
+    public static ItemGridStack readItemGridStack(PacketBuffer buf) {
         ItemStack stack = readItemStack(buf);
         int hash = buf.readInt();
         boolean craftable = buf.readBoolean();
@@ -110,7 +110,7 @@ public final class StackUtils {
             entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
         }
 
-        return new GridStackItem(hash, stack, craftable, displayCraftText, entry);
+        return new ItemGridStack(hash, stack, craftable, displayCraftText, entry);
     }
 
     public static void writeFluidGridStack(PacketBuffer buf, FluidStack stack, @Nullable INetwork network, boolean displayCraftText, @Nullable IStorageTracker.IStorageTrackerEntry entry) {
@@ -136,7 +136,7 @@ public final class StackUtils {
         }
     }
 
-    public static GridStackFluid readFluidGridStack(PacketBuffer buf) {
+    public static FluidGridStack readFluidGridStack(PacketBuffer buf) {
         FluidStack stack = FluidStack.readFromPacket(buf);
         int hash = buf.readInt();
         boolean craftable = buf.readBoolean();
@@ -147,7 +147,7 @@ public final class StackUtils {
             entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
         }
 
-        return new GridStackFluid(hash, stack, entry, craftable, displayCraftText);
+        return new FluidGridStack(hash, stack, entry, craftable, displayCraftText);
     }
 
     public static ItemStack nullToEmpty(@Nullable ItemStack stack) {

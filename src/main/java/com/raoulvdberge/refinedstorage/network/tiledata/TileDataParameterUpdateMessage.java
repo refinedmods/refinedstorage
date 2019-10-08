@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.network;
+package com.raoulvdberge.refinedstorage.network.tiledata;
 
 import com.raoulvdberge.refinedstorage.container.BaseContainer;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -10,16 +10,16 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class MessageTileDataParameterUpdate {
+public class TileDataParameterUpdateMessage {
     private TileDataParameter parameter;
     private Object value;
 
-    public MessageTileDataParameterUpdate(TileDataParameter parameter, Object value) {
+    public TileDataParameterUpdateMessage(TileDataParameter parameter, Object value) {
         this.parameter = parameter;
         this.value = value;
     }
 
-    public static MessageTileDataParameterUpdate decode(PacketBuffer buf) {
+    public static TileDataParameterUpdateMessage decode(PacketBuffer buf) {
         int id = buf.readInt();
 
         TileDataParameter parameter = TileDataManager.getParameter(id);
@@ -33,16 +33,16 @@ public class MessageTileDataParameterUpdate {
             }
         }
 
-        return new MessageTileDataParameterUpdate(parameter, value);
+        return new TileDataParameterUpdateMessage(parameter, value);
     }
 
-    public static void encode(MessageTileDataParameterUpdate message, PacketBuffer buf) {
+    public static void encode(TileDataParameterUpdateMessage message, PacketBuffer buf) {
         buf.writeInt(message.parameter.getId());
 
         message.parameter.getSerializer().write(buf, message.value);
     }
 
-    public static void handle(MessageTileDataParameterUpdate message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(TileDataParameterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             Container c = ctx.get().getSender().openContainer;
 

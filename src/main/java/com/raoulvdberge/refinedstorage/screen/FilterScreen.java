@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
-import com.raoulvdberge.refinedstorage.network.MessageFilterUpdate;
+import com.raoulvdberge.refinedstorage.network.FilterUpdateMessage;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.FilterTypeSideButton;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -128,6 +128,6 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     }
 
     public void sendUpdate() {
-        RS.NETWORK_HANDLER.sendToServer(new MessageFilterUpdate(compare, mode, modFilter, nameField.getText(), type));
+        RS.NETWORK_HANDLER.sendToServer(new FilterUpdateMessage(compare, mode, modFilter, nameField.getText(), type));
     }
 }

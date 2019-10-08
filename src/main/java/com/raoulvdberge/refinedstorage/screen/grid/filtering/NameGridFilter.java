@@ -4,10 +4,10 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 
 import java.util.function.Predicate;
 
-public class GridFilterName implements Predicate<IGridStack> {
+public class NameGridFilter implements Predicate<IGridStack> {
     private String name;
 
-    public GridFilterName(String name) {
+    public NameGridFilter(String name) {
         this.name = name.toLowerCase();
     }
 

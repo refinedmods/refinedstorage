@@ -2,14 +2,14 @@ package com.raoulvdberge.refinedstorage.screen.grid.view;
 
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.IGridSorter;
-import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 
 import java.util.List;
 
-public class GridViewFluid extends GridViewBase {
-    public GridViewFluid(GridScreen gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
-        super(gui, defaultSorter, sorters);
+public class FluidGridView extends BaseGridView {
+    public FluidGridView(GridScreen screen, IGridSorter defaultSorter, List<IGridSorter> sorters) {
+        super(screen, defaultSorter, sorters);
     }
 
     @Override
@@ -28,14 +28,14 @@ public class GridViewFluid extends GridViewBase {
 
     @Override
     public void postChange(IGridStack stack, int delta) {
-        if (!(stack instanceof GridStackFluid)) {
+        if (!(stack instanceof FluidGridStack)) {
             return;
         }
 
-        GridStackFluid existing = (GridStackFluid) map.get(stack.getHash());
+        FluidGridStack existing = (FluidGridStack) map.get(stack.getHash());
 
         if (existing == null) {
-            ((GridStackFluid) stack).getStack().setAmount(delta);
+            ((FluidGridStack) stack).getStack().setAmount(delta);
 
             map.put(stack.getHash(), stack);
         } else {

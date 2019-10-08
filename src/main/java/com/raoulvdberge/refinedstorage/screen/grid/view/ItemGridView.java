@@ -2,14 +2,14 @@ package com.raoulvdberge.refinedstorage.screen.grid.view;
 
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.IGridSorter;
-import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
+import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
 
 import java.util.List;
 
-public class GridViewItem extends GridViewBase {
-    public GridViewItem(GridScreen gui, IGridSorter defaultSorter, List<IGridSorter> sorters) {
-        super(gui, defaultSorter, sorters);
+public class ItemGridView extends BaseGridView {
+    public ItemGridView(GridScreen screen, IGridSorter defaultSorter, List<IGridSorter> sorters) {
+        super(screen, defaultSorter, sorters);
     }
 
     @Override
@@ -28,14 +28,14 @@ public class GridViewItem extends GridViewBase {
 
     @Override
     public void postChange(IGridStack stack, int delta) {
-        if (!(stack instanceof GridStackItem)) {
+        if (!(stack instanceof ItemGridStack)) {
             return;
         }
 
-        GridStackItem existing = (GridStackItem) map.get(stack.getHash());
+        ItemGridStack existing = (ItemGridStack) map.get(stack.getHash());
 
         if (existing == null) {
-            ((GridStackItem) stack).getStack().setCount(delta);
+            ((ItemGridStack) stack).getStack().setCount(delta);
 
             map.put(stack.getHash(), stack);
         } else {

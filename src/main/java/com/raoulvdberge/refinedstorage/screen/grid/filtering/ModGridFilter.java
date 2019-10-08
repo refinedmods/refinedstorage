@@ -4,10 +4,10 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 
 import java.util.function.Predicate;
 
-public class GridFilterMod implements Predicate<IGridStack> {
+public class ModGridFilter implements Predicate<IGridStack> {
     private String inputModName;
 
-    public GridFilterMod(String inputModName) {
+    public ModGridFilter(String inputModName) {
         this.inputModName = standardify(inputModName);
     }
 

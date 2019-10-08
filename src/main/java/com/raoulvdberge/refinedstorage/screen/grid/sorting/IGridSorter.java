@@ -6,5 +6,5 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 public interface IGridSorter {
     boolean isApplicable(IGrid grid);
 
-    int compare(IGridStack left, IGridStack right, GridSorterDirection direction);
+    int compare(IGridStack left, IGridStack right, SortingDirection direction);
 }

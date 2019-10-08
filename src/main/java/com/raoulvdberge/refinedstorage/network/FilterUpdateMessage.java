@@ -8,14 +8,14 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class MessageFilterUpdate {
+public class FilterUpdateMessage {
     private int compare;
     private int mode;
     private boolean modFilter;
     private String name;
     private int type;
 
-    public MessageFilterUpdate(int compare, int mode, boolean modFilter, String name, int type) {
+    public FilterUpdateMessage(int compare, int mode, boolean modFilter, String name, int type) {
         this.compare = compare;
         this.mode = mode;
         this.modFilter = modFilter;
@@ -23,8 +23,8 @@ public class MessageFilterUpdate {
         this.type = type;
     }
 
-    public static MessageFilterUpdate decode(PacketBuffer buf) {
-        return new MessageFilterUpdate(
+    public static FilterUpdateMessage decode(PacketBuffer buf) {
+        return new FilterUpdateMessage(
             buf.readInt(),
             buf.readInt(),
             buf.readBoolean(),
@@ -33,7 +33,7 @@ public class MessageFilterUpdate {
         );
     }
 
-    public static void encode(MessageFilterUpdate message, PacketBuffer buf) {
+    public static void encode(FilterUpdateMessage message, PacketBuffer buf) {
         buf.writeInt(message.compare);
         buf.writeInt(message.mode);
         buf.writeBoolean(message.modFilter);
@@ -41,7 +41,7 @@ public class MessageFilterUpdate {
         buf.writeInt(message.type);
     }
 
-    public static void handle(MessageFilterUpdate message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(FilterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             PlayerEntity player = ctx.get().getSender();
 

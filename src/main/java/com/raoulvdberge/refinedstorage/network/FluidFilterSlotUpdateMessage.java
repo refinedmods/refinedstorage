@@ -9,25 +9,25 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class MessageSlotFilterFluidUpdate {
+public class FluidFilterSlotUpdateMessage {
     private int containerSlot;
     private FluidStack stack;
 
-    public MessageSlotFilterFluidUpdate(int containerSlot, FluidStack stack) {
+    public FluidFilterSlotUpdateMessage(int containerSlot, FluidStack stack) {
         this.containerSlot = containerSlot;
         this.stack = stack;
     }
 
-    public static void encode(MessageSlotFilterFluidUpdate message, PacketBuffer buf) {
+    public static void encode(FluidFilterSlotUpdateMessage message, PacketBuffer buf) {
         buf.writeInt(message.containerSlot);
         message.stack.writeToPacket(buf);
     }
 
-    public static MessageSlotFilterFluidUpdate decode(PacketBuffer buf) {
-        return new MessageSlotFilterFluidUpdate(buf.readInt(), FluidStack.readFromPacket(buf));
+    public static FluidFilterSlotUpdateMessage decode(PacketBuffer buf) {
+        return new FluidFilterSlotUpdateMessage(buf.readInt(), FluidStack.readFromPacket(buf));
     }
 
-    public static void handle(MessageSlotFilterFluidUpdate message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(FluidFilterSlotUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         BaseScreen.executeLater(gui -> {
             if (message.containerSlot >= 0 && message.containerSlot < gui.getContainer().inventorySlots.size()) {
                 Slot slot = gui.getContainer().getSlot(message.containerSlot);

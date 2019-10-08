@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 
 // TODO
-public class GridSorterInventoryTweaks implements IGridSorter {
+public class InvTweaksGridSorter implements IGridSorter {
     public static final String MOD_ID = "inventorytweaks";
 
     @Override
@@ -13,7 +13,7 @@ public class GridSorterInventoryTweaks implements IGridSorter {
     }
 
     @Override
-    public int compare(IGridStack left, IGridStack right, GridSorterDirection direction) {
+    public int compare(IGridStack left, IGridStack right, SortingDirection direction) {
         return 0;
     }
 

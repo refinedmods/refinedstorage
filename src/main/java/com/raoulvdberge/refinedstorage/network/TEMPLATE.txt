@@ -1,0 +1,24 @@
+    public static MessageXXX decode(PacketBuffer buf) {
+        return new MessageXXX(
+            buf.readInt(),
+            buf.readInt(),
+            buf.readBoolean(),
+            buf.readString(),
+            buf.readInt()
+        );
+    }
+
+    public static void encode(MessageXXX message, PacketBuffer buf) {
+        buf.writeInt(message.compare);
+        buf.writeInt(message.mode);
+        buf.writeBoolean(message.modFilter);
+        buf.writeString(message.name);
+        buf.writeInt(message.type);
+    }
+
+    public static void handle(MessageXXX message, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            // XXX
+        });
+        ctx.get().setPacketHandled(true);
+    }

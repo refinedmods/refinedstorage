@@ -4,10 +4,10 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 
 import java.util.function.Predicate;
 
-public class GridFilterTooltip implements Predicate<IGridStack> {
+public class TooltipGridFilter implements Predicate<IGridStack> {
     private String tooltip;
 
-    public GridFilterTooltip(String tooltip) {
+    public TooltipGridFilter(String tooltip) {
         this.tooltip = tooltip.toLowerCase();
     }
 

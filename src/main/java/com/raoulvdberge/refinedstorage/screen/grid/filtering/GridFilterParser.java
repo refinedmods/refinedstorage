@@ -25,19 +25,19 @@ public final class GridFilterParser {
             }
 
             gridFilters = new LinkedList<>();
-            gridFilters.add(new GridFilterOr(orPartFilters));
+            gridFilters.add(new OrGridFilter(orPartFilters));
         }
 
         if (grid != null) {
             if (grid.getViewType() == IGrid.VIEW_TYPE_NON_CRAFTABLES) {
-                gridFilters.add(new GridFilterCraftable(false));
+                gridFilters.add(new CraftableGridFilter(false));
             } else if (grid.getViewType() == IGrid.VIEW_TYPE_CRAFTABLES) {
-                gridFilters.add(new GridFilterCraftable(true));
+                gridFilters.add(new CraftableGridFilter(true));
             }
         }
 
         if (!filters.isEmpty()) {
-            gridFilters.add(new GridFilterFilter(filters));
+            gridFilters.add(new FilterGridFilter(filters));
         }
 
         return gridFilters;
@@ -48,13 +48,13 @@ public final class GridFilterParser {
 
         for (String part : query.toLowerCase().trim().split(" ")) {
             if (part.startsWith("@")) {
-                gridFilters.add(new GridFilterMod(part.substring(1)));
+                gridFilters.add(new ModGridFilter(part.substring(1)));
             } else if (part.startsWith("#")) {
-                gridFilters.add(new GridFilterTooltip(part.substring(1)));
+                gridFilters.add(new TooltipGridFilter(part.substring(1)));
             } else if (part.startsWith("$")) {
-                gridFilters.add(new GridFilterOreDict(part.substring(1)));
+                gridFilters.add(new OredictGridFilter(part.substring(1)));
             } else {
-                gridFilters.add(new GridFilterName(part));
+                gridFilters.add(new NameGridFilter(part));
             }
         }
 

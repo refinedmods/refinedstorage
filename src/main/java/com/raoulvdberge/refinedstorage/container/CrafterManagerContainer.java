@@ -8,8 +8,8 @@ import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.filtering.GridFilterParser;
-import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
+import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -172,7 +172,7 @@ public class CrafterManagerContainer extends BaseContainer {
                         visible = false;
 
                         for (ItemStack output : pattern.getOutputs()) {
-                            GridStackItem outputConverted = new GridStackItem(output);
+                            ItemGridStack outputConverted = new ItemGridStack(output);
 
                             for (Predicate<IGridStack> filter : filters) {
                                 if (filter.test(outputConverted)) {

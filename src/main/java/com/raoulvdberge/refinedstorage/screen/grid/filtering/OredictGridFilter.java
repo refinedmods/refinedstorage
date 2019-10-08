@@ -5,10 +5,10 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-public class GridFilterOreDict implements Predicate<IGridStack> {
+public class OredictGridFilter implements Predicate<IGridStack> {
     private String oreName;
 
-    public GridFilterOreDict(String oreName) {
+    public OredictGridFilter(String oreName) {
         this.oreName = oreName.toLowerCase();
     }
 

@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
-public class GridStackFluid implements IGridStack {
+public class FluidGridStack implements IGridStack {
     private int hash;
     private FluidStack stack;
     @Nullable
@@ -19,7 +19,7 @@ public class GridStackFluid implements IGridStack {
     private String modId;
     private String modName;
 
-    public GridStackFluid(int hash, FluidStack stack, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
+    public FluidGridStack(int hash, FluidStack stack, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
         this.hash = hash;
         this.stack = stack;
         this.entry = entry;
@@ -73,7 +73,7 @@ public class GridStackFluid implements IGridStack {
     @Override
     public String getModName() {
         if (modName == null) {
-            modName = GridStackItem.getModNameByModId(getModId());
+            modName = ItemGridStack.getModNameByModId(getModId());
 
             if (modName == null) {
                 modName = "???";

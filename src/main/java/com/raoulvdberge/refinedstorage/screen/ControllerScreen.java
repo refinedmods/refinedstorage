@@ -99,7 +99,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
                 renderItem(x, y + 5, node.getStack());
 
-                float scale = /*TODO fontRenderer.getUnicodeFlag() ? 1F :*/ 0.5F;
+                float scale = minecraft.getForceUnicodeFont() ? 1F : 0.5F;
 
                 GlStateManager.pushMatrix();
                 GlStateManager.scalef(scale, scale, 1);
@@ -107,7 +107,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
                 renderString(
                     RenderUtils.getOffsetOnScale(x + 1, scale),
                     RenderUtils.getOffsetOnScale(y - 2, scale),
-                    trimNameIfNeeded(/*TODO !fontRenderer.getUnicodeFlag()*/false, node.getStack().getDisplayName().getString()) // TODO
+                    trimNameIfNeeded(!minecraft.getForceUnicodeFont(), node.getStack().getDisplayName().getString())
                 );
                 renderString(RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 

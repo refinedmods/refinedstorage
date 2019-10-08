@@ -4,7 +4,7 @@ import com.google.common.primitives.Ints;
 import com.raoulvdberge.refinedstorage.container.CraftingSettingsContainer;
 import com.raoulvdberge.refinedstorage.screen.AmountSpecifyingScreen;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackFluid;
+import com.raoulvdberge.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,7 +32,7 @@ public class GuiGridCraftingSettings extends AmountSpecifyingScreen<CraftingSett
 
     @Override
     protected int[] getIncrements() {
-        if (stack instanceof GridStackFluid) {
+        if (stack instanceof FluidGridStack) {
             return new int[]{
                 100, 500, 1000,
                 -100, -500, -1000
@@ -47,7 +47,7 @@ public class GuiGridCraftingSettings extends AmountSpecifyingScreen<CraftingSett
 
     @Override
     protected int getDefaultAmount() {
-        return stack instanceof GridStackFluid ? FluidAttributes.BUCKET_VOLUME : 1;
+        return stack instanceof FluidGridStack ? FluidAttributes.BUCKET_VOLUME : 1;
     }
 
     @Override

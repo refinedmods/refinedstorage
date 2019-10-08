@@ -3,12 +3,14 @@ package com.raoulvdberge.refinedstorage.screen.grid.stack;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.stream.Collectors;
 
-public class GridStackItem implements IGridStack {
+public class ItemGridStack implements IGridStack {
     private int hash;
     private ItemStack stack;
     private String cachedName;
@@ -21,11 +23,11 @@ public class GridStackItem implements IGridStack {
     private String modName;
     private String tooltip;
 
-    public GridStackItem(ItemStack stack) {
+    public ItemGridStack(ItemStack stack) {
         this.stack = stack;
     }
 
-    public GridStackItem(int hash, ItemStack stack, boolean craftable, boolean displayCraftText, IStorageTracker.IStorageTrackerEntry entry) {
+    public ItemGridStack(int hash, ItemStack stack, boolean craftable, boolean displayCraftText, IStorageTracker.IStorageTrackerEntry entry) {
         this.hash = hash;
         this.stack = stack;
         this.craftable = craftable;
@@ -129,8 +131,7 @@ public class GridStackItem implements IGridStack {
     public String getTooltip() {
         if (tooltip == null) {
             try {
-                tooltip = "dinosaur";//TODO
-                //tooltip = RenderUtils.getItemTooltip(stack).stream().collect(Collectors.joining("\n"));
+                tooltip = RenderUtils.getTooltipFromItem(stack).stream().collect(Collectors.joining("\n"));
             } catch (Throwable t) {
                 tooltip = "";
             }

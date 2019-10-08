@@ -1,6 +1,12 @@
 package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.network.disk.StorageDiskSizeRequestMessage;
+import com.raoulvdberge.refinedstorage.network.disk.StorageDiskSizeResponseMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridItemDeltaMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridItemUpdateMessage;
+import com.raoulvdberge.refinedstorage.network.tiledata.TileDataParameterMessage;
+import com.raoulvdberge.refinedstorage.network.tiledata.TileDataParameterUpdateMessage;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.FakePlayer;
@@ -20,12 +26,14 @@ public class NetworkHandler {
     public void register() {
         int id = 0;
 
-        handler.registerMessage(id++, MessageStorageDiskSizeRequest.class, MessageStorageDiskSizeRequest::encode, MessageStorageDiskSizeRequest::decode, MessageStorageDiskSizeRequest::handle);
-        handler.registerMessage(id++, MessageStorageDiskSizeResponse.class, MessageStorageDiskSizeResponse::encode, MessageStorageDiskSizeResponse::decode, MessageStorageDiskSizeResponse::handle);
-        handler.registerMessage(id++, MessageFilterUpdate.class, MessageFilterUpdate::encode, MessageFilterUpdate::decode, MessageFilterUpdate::handle);
-        handler.registerMessage(id++, MessageSlotFilterFluidUpdate.class, MessageSlotFilterFluidUpdate::encode, MessageSlotFilterFluidUpdate::decode, MessageSlotFilterFluidUpdate::handle);
-        handler.registerMessage(id++, MessageTileDataParameter.class, MessageTileDataParameter::encode, MessageTileDataParameter::decode, MessageTileDataParameter::handle);
-        handler.registerMessage(id++, MessageTileDataParameterUpdate.class, MessageTileDataParameterUpdate::encode, MessageTileDataParameterUpdate::decode, MessageTileDataParameterUpdate::handle);
+        handler.registerMessage(id++, StorageDiskSizeRequestMessage.class, StorageDiskSizeRequestMessage::encode, StorageDiskSizeRequestMessage::decode, StorageDiskSizeRequestMessage::handle);
+        handler.registerMessage(id++, StorageDiskSizeResponseMessage.class, StorageDiskSizeResponseMessage::encode, StorageDiskSizeResponseMessage::decode, StorageDiskSizeResponseMessage::handle);
+        handler.registerMessage(id++, FilterUpdateMessage.class, FilterUpdateMessage::encode, FilterUpdateMessage::decode, FilterUpdateMessage::handle);
+        handler.registerMessage(id++, FluidFilterSlotUpdateMessage.class, FluidFilterSlotUpdateMessage::encode, FluidFilterSlotUpdateMessage::decode, FluidFilterSlotUpdateMessage::handle);
+        handler.registerMessage(id++, TileDataParameterMessage.class, TileDataParameterMessage::encode, TileDataParameterMessage::decode, TileDataParameterMessage::handle);
+        handler.registerMessage(id++, TileDataParameterUpdateMessage.class, TileDataParameterUpdateMessage::encode, TileDataParameterUpdateMessage::decode, TileDataParameterUpdateMessage::handle);
+        handler.registerMessage(id++, GridItemUpdateMessage.class, GridItemUpdateMessage::encode, GridItemUpdateMessage::decode, GridItemUpdateMessage::handle);
+        handler.registerMessage(id++, GridItemDeltaMessage.class, GridItemDeltaMessage::encode, GridItemDeltaMessage::decode, GridItemDeltaMessage::handle);
     }
 
     public void sendToServer(Object message) {

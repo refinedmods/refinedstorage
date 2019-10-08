@@ -5,10 +5,10 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class GridFilterOr implements Predicate<IGridStack> {
+public class OrGridFilter implements Predicate<IGridStack> {
     private List<List<Predicate<IGridStack>>> orPartFilters;
 
-    public GridFilterOr(List<List<Predicate<IGridStack>>> orPartFilters) {
+    public OrGridFilter(List<List<Predicate<IGridStack>>> orPartFilters) {
         this.orPartFilters = orPartFilters;
     }
 

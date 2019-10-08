@@ -45,6 +45,7 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -209,9 +210,14 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
         return craftingManager;
     }
 
+    private int ticks;
+
     @Override
     public void tick() {
         if (!world.isRemote) {
+            if (++ticks % 20 == 0)
+                insertItem(new ItemStack(Items.DIRT), 10, Action.PERFORM);
+
             if (canRun()) {
                 craftingManager.update();
 

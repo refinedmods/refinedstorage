@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.network;
+package com.raoulvdberge.refinedstorage.network.tiledata;
 
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -8,18 +8,18 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class MessageTileDataParameter {
+public class TileDataParameterMessage {
     private TileEntity tile;
     private TileDataParameter parameter;
     private boolean initial;
 
-    public MessageTileDataParameter(TileEntity tile, TileDataParameter parameter, boolean initial) {
+    public TileDataParameterMessage(TileEntity tile, TileDataParameter parameter, boolean initial) {
         this.tile = tile;
         this.parameter = parameter;
         this.initial = initial;
     }
 
-    public static MessageTileDataParameter decode(PacketBuffer buf) {
+    public static TileDataParameterMessage decode(PacketBuffer buf) {
         int id = buf.readInt();
         boolean initial = buf.readBoolean();
 
@@ -33,17 +33,17 @@ public class MessageTileDataParameter {
             }
         }
 
-        return new MessageTileDataParameter(null, null, initial);
+        return new TileDataParameterMessage(null, null, initial);
     }
 
-    public static void encode(MessageTileDataParameter message, PacketBuffer buf) {
+    public static void encode(TileDataParameterMessage message, PacketBuffer buf) {
         buf.writeInt(message.parameter.getId());
         buf.writeBoolean(message.initial);
 
         message.parameter.getSerializer().write(buf, message.parameter.getValueProducer().apply(message.tile));
     }
 
-    public static void handle(MessageTileDataParameter message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(TileDataParameterMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().setPacketHandled(true);
     }
 }

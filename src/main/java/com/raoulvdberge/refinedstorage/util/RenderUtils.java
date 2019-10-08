@@ -185,8 +185,7 @@ public final class RenderUtils {
             FontRenderer font = event.getFontRenderer();
 
             // RS BEGIN
-            //float textScale = font.getUnicodeFlag() ? 1F : 0.7F;
-            float textScale = 1F;
+            float textScale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.7F;
             // RS END
 
             GlStateManager.disableRescaleNormal();
@@ -281,7 +280,7 @@ public final class RenderUtils {
                     font.drawStringWithShadow(
                         TextFormatting.GRAY + smallTextLines.get(i),
                         RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                        RenderUtils.getOffsetOnScale(y - (/* TODO font.getUnicodeFlag() ? 2 : */0), textScale),
+                        RenderUtils.getOffsetOnScale(y - (Minecraft.getInstance().getForceUnicodeFont() ? 2 : 0), textScale),
                         -1
                     );
 

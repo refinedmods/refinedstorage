@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
@@ -270,7 +269,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderQuantity(int x, int y, String qty) {
-        boolean large = /* TODO font.getUnicodeFlag() ||*/ RS.INSTANCE.config.largeFont;
+        boolean large = minecraft.getForceUnicodeFont() /* TODO || RS.INSTANCE.config.largeFont*/;
 
         GlStateManager.pushMatrix();
         GlStateManager.translatef(x, y, 1);

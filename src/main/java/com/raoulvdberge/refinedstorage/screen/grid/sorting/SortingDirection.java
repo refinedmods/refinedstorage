@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.grid.sorting;
 
-public enum GridSorterDirection {
+public enum SortingDirection {
     ASCENDING,
     DESCENDING
 }

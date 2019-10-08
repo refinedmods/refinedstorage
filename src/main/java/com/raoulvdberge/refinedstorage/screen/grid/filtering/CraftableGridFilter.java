@@ -1,19 +1,19 @@
 package com.raoulvdberge.refinedstorage.screen.grid.filtering;
 
-import com.raoulvdberge.refinedstorage.screen.grid.stack.GridStackItem;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
+import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
 
 import java.util.function.Predicate;
 
-public class GridFilterCraftable implements Predicate<IGridStack> {
+public class CraftableGridFilter implements Predicate<IGridStack> {
     private boolean craftable;
 
-    public GridFilterCraftable(boolean craftable) {
+    public CraftableGridFilter(boolean craftable) {
         this.craftable = craftable;
     }
 
     @Override
     public boolean test(IGridStack stack) {
-        return stack instanceof GridStackItem && stack.isCraftable() == craftable;
+        return stack instanceof ItemGridStack && stack.isCraftable() == craftable;
     }
 }
