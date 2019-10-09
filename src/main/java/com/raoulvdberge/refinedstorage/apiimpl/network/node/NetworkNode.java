@@ -61,14 +61,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         this.pos = pos;
     }
 
-    public BlockState getBlockState() {
-        if (cachedBlockState == null) {
-            cachedBlockState = world.getBlockState(pos);
-        }
-
-        return cachedBlockState;
-    }
-
     public RedstoneMode getRedstoneMode() {
         return redstoneMode;
     }

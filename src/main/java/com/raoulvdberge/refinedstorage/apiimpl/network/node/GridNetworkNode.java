@@ -451,7 +451,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public boolean isActive() {
-        return getBlockState().get(NodeBlock.CONNECTED);
+        return world.getBlockState(pos).get(NodeBlock.CONNECTED);
     }
 
     @Override

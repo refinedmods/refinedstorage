@@ -1,13 +1,8 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 public class GuiHandler {
-    /*
-    private Object getContainer(int ID, PlayerEntity player, TileEntity tile) {
+    /*private Object getContainer(int ID, PlayerEntity player, TileEntity tile) {
         switch (ID) {
-            case RSGui.CONTROLLER:
-                return new ContainerController((TileController) tile, player);
-            case RSGui.DISK_DRIVE:
-                return new ContainerDiskDrive((TileDiskDrive) tile, player);
             case RSGui.IMPORTER:
                 return new ContainerImporter((TileImporter) tile, player);
             case RSGui.EXPORTER:
@@ -55,9 +50,7 @@ public class GuiHandler {
 
     @Override
     public Object getServerGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z) {
-        if (ID == RSGui.FILTER) {
-            return getFilterContainer(player, x);
-        } else if (ID == RSGui.WIRELESS_CRAFTING_MONITOR) {
+        if (ID == RSGui.WIRELESS_CRAFTING_MONITOR) {
             return getCraftingMonitorContainer(player, x);
         }
 
@@ -69,10 +62,6 @@ public class GuiHandler {
         TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
 
         switch (ID) {
-            case RSGui.CONTROLLER:
-                return new GuiController((ContainerController) getContainer(ID, player, tile), (TileController) tile, player.inventory);
-            case RSGui.DISK_DRIVE:
-                return new GuiStorage((ContainerDiskDrive) getContainer(ID, player, tile), ((TileDiskDrive) tile).getNode(), "gui/disk_drive.png", player.inventory);
             case RSGui.IMPORTER:
                 return new GuiImporter((ContainerImporter) getContainer(ID, player, tile), player.inventory);
             case RSGui.EXPORTER:
@@ -100,8 +89,6 @@ public class GuiHandler {
                 return new GuiWirelessTransmitter((ContainerWirelessTransmitter) getContainer(ID, player, tile), player.inventory);
             case RSGui.CRAFTER:
                 return new GuiCrafter((ContainerCrafter) getContainer(ID, player, tile), player.inventory);
-            case RSGui.FILTER:
-                return new GuiFilter(getFilterContainer(player, x), player.inventory);
             case RSGui.NETWORK_TRANSMITTER:
                 return new GuiNetworkTransmitter((ContainerNetworkTransmitter) getContainer(ID, player, tile), (TileNetworkTransmitter) tile, player.inventory);
             case RSGui.FLUID_INTERFACE:
@@ -141,11 +128,5 @@ public class GuiHandler {
 
     private ContainerCraftingMonitor getCraftingMonitorContainer(PlayerEntity player, int invIndex) {
         return new ContainerCraftingMonitor(getWirelessCraftingMonitor(player, invIndex), null, player);
-    }
-
-    private ContainerFilter getFilterContainer(PlayerEntity player, int hand) {
-        return new ContainerFilter(player, player.getHeldItem(Hand.values()[hand]));
-    }
-
-     */
+    }*/
 }
