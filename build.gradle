@@ -80,7 +80,7 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.1'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.40'
     compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11")
 }
