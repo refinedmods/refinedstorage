@@ -24,6 +24,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,7 +46,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class NetworkNodeDestructor extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, ICoverable {
-    public static final String ID = "destructor";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "destructor");
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
@@ -238,7 +239,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

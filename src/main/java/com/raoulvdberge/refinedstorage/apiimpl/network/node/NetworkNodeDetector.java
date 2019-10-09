@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,7 +23,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class NetworkNodeDetector extends NetworkNode implements IComparable, IType {
-    public static final String ID = "detector";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "detector");
 
     private static final int SPEED = 5;
 
@@ -94,7 +95,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

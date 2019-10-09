@@ -27,6 +27,7 @@ import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class NetworkNodeFluidStorage extends NetworkNode implements IStorageScreen, IStorageProvider, IComparable, IWhitelistBlacklist, IPrioritizable, IAccessType, IStorageDiskContainerContext {
-    public static final String ID = "fluid_storage";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid_storage");
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
@@ -87,7 +88,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageScre
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

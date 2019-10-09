@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -18,7 +19,7 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 
 public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReaderWriter, ICoverable {
-    public static final String ID = "writer";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "writer");
 
     private static final String NBT_CHANNEL = "Channel";
     private static final String NBT_COVERS = "Covers";
@@ -119,7 +120,7 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

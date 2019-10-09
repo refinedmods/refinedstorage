@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -16,7 +17,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 
 public class NetworkNodeNetworkTransmitter extends NetworkNode {
-    public static final String ID = "network_transmitter";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
     private ItemHandlerBase networkCard = new ItemHandlerBase(1, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
         @Override
@@ -62,7 +63,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

@@ -51,6 +51,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -265,11 +266,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
                 world.setBlockState(pos, world.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, energyType));
             }
         }
-    }
-
-    @Override
-    public String getId() {
-        return null;
     }
 
     @Override
@@ -560,6 +556,11 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
         tag.put(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());
 
         return tag;
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return null;
     }
 
     @Override

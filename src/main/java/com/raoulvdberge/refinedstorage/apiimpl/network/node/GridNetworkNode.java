@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.*;
@@ -38,6 +39,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -58,7 +60,7 @@ import java.util.List;
 import java.util.Set;
 
 public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, IType {
-    public static final String ID = "grid";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
 
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
@@ -751,7 +753,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

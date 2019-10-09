@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.node;
 
+import net.minecraft.util.ResourceLocation;
+
 import javax.annotation.Nullable;
 
 /**
@@ -12,7 +14,7 @@ public interface INetworkNodeRegistry {
      * @param id      the id, as specified in {@link INetworkNode#getId()}
      * @param factory the factory
      */
-    void add(String id, INetworkNodeFactory factory);
+    void add(ResourceLocation id, INetworkNodeFactory factory);
 
     /**
      * Returns a factory from the registry.
@@ -21,5 +23,5 @@ public interface INetworkNodeRegistry {
      * @return the factory, or null if no factory was found
      */
     @Nullable
-    INetworkNodeFactory get(String id);
+    INetworkNodeFactory get(ResourceLocation id);
 }

@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -12,7 +13,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 
 public class CableNetworkNode extends NetworkNode implements ICoverable {
-    public static final String ID = "cable";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "cable");
 
     private static final String NBT_COVERS = "Covers";
 
@@ -28,7 +29,7 @@ public class CableNetworkNode extends NetworkNode implements ICoverable {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

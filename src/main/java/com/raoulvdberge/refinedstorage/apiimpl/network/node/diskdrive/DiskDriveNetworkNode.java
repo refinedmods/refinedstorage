@@ -22,6 +22,7 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -55,7 +56,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
 
     public static final Predicate<ItemStack> VALIDATOR_STORAGE_DISK = s -> s.getItem() instanceof IStorageDiskProvider && ((IStorageDiskProvider) s.getItem()).isValid(s);
 
-    public static final String ID = "disk_drive";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "disk_drive");
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
@@ -194,7 +195,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -15,7 +16,7 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 
 public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReaderWriter, ICoverable {
-    public static final String ID = "reader";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "reader");
 
     private static final String NBT_CHANNEL = "Channel";
     private static final String NBT_COVERS = "Covers";
@@ -87,7 +88,7 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class NetworkNodeSecurityManager extends NetworkNode implements ISecurityCardContainer {
-    public static final String ID = "security_manager";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "security_manager");
 
     private List<ISecurityCard> cards = new ArrayList<>();
     private ISecurityCard globalCard;
@@ -112,7 +113,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

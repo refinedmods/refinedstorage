@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -14,8 +15,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class NetworkNodeStorageMonitor extends NetworkNode implements IComparable {
     public static final int DEPOSIT_ALL_MAX_DELAY = 500;
 
-    public static final String ID = "storage_monitor";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "storage_monitor");
 
     private static final String NBT_COMPARE = "Compare";
 
@@ -145,7 +146,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

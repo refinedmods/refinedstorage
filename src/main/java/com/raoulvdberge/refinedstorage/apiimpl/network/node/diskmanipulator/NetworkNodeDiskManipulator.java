@@ -22,6 +22,7 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, IStorageDiskContainerContext {
-    public static final String ID = "disk_manipulator";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "disk_manipulator");
 
     public static final int IO_MODE_INSERT = 0;
     public static final int IO_MODE_EXTRACT = 1;
@@ -469,7 +470,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 

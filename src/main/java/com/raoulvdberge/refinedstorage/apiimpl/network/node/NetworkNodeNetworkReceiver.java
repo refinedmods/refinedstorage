@@ -1,11 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class NetworkNodeNetworkReceiver extends NetworkNode {
-    public static final String ID = "network_receiver";
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_receiver");
 
     public NetworkNodeNetworkReceiver(World world, BlockPos pos) {
         super(world, pos);
@@ -22,7 +23,7 @@ public class NetworkNodeNetworkReceiver extends NetworkNode {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 }

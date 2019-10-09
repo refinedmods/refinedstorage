@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-// TODO: getId: return a ResourceLocation.
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
     private static final String NBT_VERSION = "Version";
@@ -33,7 +32,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     protected INetwork network;
     protected World world;
     protected BlockPos pos;
-    private BlockState cachedBlockState;
     protected int ticks;
     protected RedstoneMode redstoneMode = RedstoneMode.IGNORE;
     @Nullable
