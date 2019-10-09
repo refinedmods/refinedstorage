@@ -1,7 +1,11 @@
-package com.raoulvdberge.refinedstorage.apiimpl.storage;
+package com.raoulvdberge.refinedstorage.apiimpl.storage.cache;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.storage.*;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -14,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-public class StorageCacheItem implements IStorageCache<ItemStack> {
+public class ItemStorageCache implements IStorageCache<ItemStack> {
     public static final Consumer<INetwork> INVALIDATE = network -> network.getItemStorageCache().invalidate();
 
     private INetwork network;
@@ -23,7 +27,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     private List<IStorageCacheListener<ItemStack>> listeners = new LinkedList<>();
     private List<StackListResult<ItemStack>> batchedChanges = new ArrayList<>();
 
-    public StorageCacheItem(INetwork network) {
+    public ItemStorageCache(INetwork network) {
         this.network = network;
     }
 

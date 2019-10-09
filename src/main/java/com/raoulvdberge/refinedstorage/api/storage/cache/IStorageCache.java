@@ -1,6 +1,8 @@
-package com.raoulvdberge.refinedstorage.api.storage;
+package com.raoulvdberge.refinedstorage.api.storage.cache;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.storage.IStorage;
+import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 
 import javax.annotation.Nonnull;

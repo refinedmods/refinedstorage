@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.api.storage;
+package com.raoulvdberge.refinedstorage.api.storage.cache;
 
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 

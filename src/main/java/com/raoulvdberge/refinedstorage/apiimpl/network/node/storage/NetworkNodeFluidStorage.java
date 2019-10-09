@@ -12,7 +12,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IStorageScreen;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
@@ -69,7 +69,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageScre
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getNodeGraph().runActionWhenPossible(StorageCacheFluid.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE);
     }
 
     @Override

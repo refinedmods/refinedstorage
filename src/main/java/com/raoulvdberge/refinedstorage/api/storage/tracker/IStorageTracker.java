@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.api.storage;
+package com.raoulvdberge.refinedstorage.api.storage.tracker;
 
 import net.minecraft.entity.player.PlayerEntity;
 
@@ -8,18 +8,6 @@ import javax.annotation.Nullable;
  * Keeps track of when a stack is changed in the system.
  */
 public interface IStorageTracker<T> {
-    interface IStorageTrackerEntry {
-        /**
-         * @return the modification time
-         */
-        long getTime();
-
-        /**
-         * @return the name of the player who last modified the stack
-         */
-        String getName();
-    }
-
     /**
      * Updates the storage tracker entry for a stack, changing it's player name and modification time.
      *
@@ -33,5 +21,5 @@ public interface IStorageTracker<T> {
      * @return the entry, or null if the stack hasn't been modified yet
      */
     @Nullable
-    IStorageTrackerEntry get(T stack);
+    StorageTrackerEntry get(T stack);
 }

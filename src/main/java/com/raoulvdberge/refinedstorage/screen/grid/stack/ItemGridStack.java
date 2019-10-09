@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.grid.stack;
 
-import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -19,7 +19,7 @@ public class ItemGridStack implements IGridStack {
     private boolean displayCraftText;
     private String[] oreIds = null;
     @Nullable
-    private IStorageTracker.IStorageTrackerEntry entry;
+    private StorageTrackerEntry entry;
     private String modId;
     private String modName;
     private String tooltip;
@@ -28,7 +28,7 @@ public class ItemGridStack implements IGridStack {
         this.stack = stack;
     }
 
-    public ItemGridStack(UUID id, ItemStack stack, boolean craftable, boolean displayCraftText, IStorageTracker.IStorageTrackerEntry entry) {
+    public ItemGridStack(UUID id, ItemStack stack, boolean craftable, boolean displayCraftText, StorageTrackerEntry entry) {
         this.id = id;
         this.stack = stack;
         this.craftable = craftable;
@@ -171,12 +171,12 @@ public class ItemGridStack implements IGridStack {
 
     @Nullable
     @Override
-    public IStorageTracker.IStorageTrackerEntry getTrackerEntry() {
+    public StorageTrackerEntry getTrackerEntry() {
         return entry;
     }
 
     @Override
-    public void setTrackerEntry(@Nullable IStorageTracker.IStorageTrackerEntry entry) {
+    public void setTrackerEntry(@Nullable StorageTrackerEntry entry) {
         this.entry = entry;
     }
 }

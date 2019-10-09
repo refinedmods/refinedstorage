@@ -3,13 +3,13 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import net.minecraft.item.ItemStack;
 
-public class FilterItem implements IFilter<ItemStack> {
+public class ItemFilter implements IFilter<ItemStack> {
     private ItemStack stack;
     private int compare;
     private int mode;
     private boolean modFilter;
 
-    public FilterItem(ItemStack stack, int compare, int mode, boolean modFilter) {
+    public ItemFilter(ItemStack stack, int compare, int mode, boolean modFilter) {
         this.stack = stack;
         this.compare = compare;
         this.mode = mode;

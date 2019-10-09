@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.network.disk;
 
+import com.raoulvdberge.refinedstorage.api.storage.disk.StorageDiskSyncData;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskSync;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskSyncData;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 

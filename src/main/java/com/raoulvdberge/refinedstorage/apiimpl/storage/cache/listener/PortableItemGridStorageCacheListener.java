@@ -1,6 +1,6 @@
-package com.raoulvdberge.refinedstorage.apiimpl.storage;
+package com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener;
 
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -8,11 +8,11 @@ import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class StorageCacheListenerGridPortable implements IStorageCacheListener<ItemStack> {
+public class PortableItemGridStorageCacheListener implements IStorageCacheListener<ItemStack> {
     private IPortableGrid portableGrid;
     private ServerPlayerEntity player;
 
-    public StorageCacheListenerGridPortable(IPortableGrid portableGrid, ServerPlayerEntity player) {
+    public PortableItemGridStorageCacheListener(IPortableGrid portableGrid, ServerPlayerEntity player) {
         this.portableGrid = portableGrid;
         this.player = player;
     }

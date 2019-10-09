@@ -210,13 +210,13 @@ public class API implements IRSAPI {
     @Override
     @Nonnull
     public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity) {
-        return new StorageDiskItem(world, capacity);
+        return new ItemStorageDisk(world, capacity);
     }
 
     @Override
     @Nonnull
     public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity) {
-        return new StorageDiskFluid(world, capacity);
+        return new FluidStorageDisk(world, capacity);
     }
 
     @Override

@@ -1,6 +1,6 @@
-package com.raoulvdberge.refinedstorage.apiimpl.storage;
+package com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener;
 
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -8,11 +8,11 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class StorageCacheListenerGridPortableFluid implements IStorageCacheListener<FluidStack> {
+public class PortableFluidGridStorageCacheListener implements IStorageCacheListener<FluidStack> {
     private IPortableGrid portableGrid;
     private ServerPlayerEntity player;
 
-    public StorageCacheListenerGridPortableFluid(IPortableGrid portableGrid, ServerPlayerEntity player) {
+    public PortableFluidGridStorageCacheListener(IPortableGrid portableGrid, ServerPlayerEntity player) {
         this.portableGrid = portableGrid;
         this.player = player;
     }

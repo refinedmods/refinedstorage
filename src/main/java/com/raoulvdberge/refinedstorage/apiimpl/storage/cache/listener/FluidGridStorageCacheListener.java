@@ -1,18 +1,18 @@
-package com.raoulvdberge.refinedstorage.apiimpl.storage;
+package com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 
-public class StorageCacheListenerGridFluid implements IStorageCacheListener<FluidStack> {
+public class FluidGridStorageCacheListener implements IStorageCacheListener<FluidStack> {
     private ServerPlayerEntity player;
     private INetwork network;
 
-    public StorageCacheListenerGridFluid(ServerPlayerEntity player, INetwork network) {
+    public FluidGridStorageCacheListener(ServerPlayerEntity player, INetwork network) {
         this.player = player;
         this.network = network;
     }

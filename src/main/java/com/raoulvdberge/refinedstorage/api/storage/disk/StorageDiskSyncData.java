@@ -1,8 +1,9 @@
-package com.raoulvdberge.refinedstorage.apiimpl.storage.disk;
+package com.raoulvdberge.refinedstorage.api.storage.disk;
 
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
-
-public class StorageDiskSyncData implements IStorageDiskSyncData {
+/**
+ * Contains synced info about a storage disk.
+ */
+public class StorageDiskSyncData {
     private int stored;
     private int capacity;
 
@@ -11,12 +12,16 @@ public class StorageDiskSyncData implements IStorageDiskSyncData {
         this.capacity = capacity;
     }
 
-    @Override
+    /**
+     * @return the amount stored
+     */
     public int getStored() {
         return stored;
     }
 
-    @Override
+    /**
+     * @return the capacity
+     */
     public int getCapacity() {
         return capacity;
     }

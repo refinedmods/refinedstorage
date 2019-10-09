@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * Used to send requests to the server to get storage disk information ({@link IStorageDiskSyncData}).
+ * Used to send requests to the server to get storage disk information ({@link StorageDiskSyncData}).
  */
 public interface IStorageDiskSync {
     /**
@@ -15,7 +15,7 @@ public interface IStorageDiskSync {
      * @return the disk data, or null if there was no response from the server yet
      */
     @Nullable
-    IStorageDiskSyncData getData(UUID id);
+    StorageDiskSyncData getData(UUID id);
 
     /**
      * Sends a request to the server to get information from a storage disk.

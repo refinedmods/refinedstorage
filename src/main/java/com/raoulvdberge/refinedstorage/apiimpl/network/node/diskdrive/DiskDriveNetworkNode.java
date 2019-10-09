@@ -10,8 +10,8 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
@@ -162,8 +162,8 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     public void onConnectedStateChange(INetwork network, boolean state) {
         super.onConnectedStateChange(network, state);
 
-        network.getNodeGraph().runActionWhenPossible(StorageCacheItem.INVALIDATE);
-        network.getNodeGraph().runActionWhenPossible(StorageCacheFluid.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE);
 
         WorldUtils.updateBlock(world, pos);
     }

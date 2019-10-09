@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.grid.stack;
 
-import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 
 import javax.annotation.Nullable;
@@ -28,9 +28,9 @@ public interface IGridStack {
     Object getIngredient();
 
     @Nullable
-    IStorageTracker.IStorageTrackerEntry getTrackerEntry();
+    StorageTrackerEntry getTrackerEntry();
 
-    void setTrackerEntry(@Nullable IStorageTracker.IStorageTrackerEntry entry);
+    void setTrackerEntry(@Nullable StorageTrackerEntry entry);
 
     boolean isCraftable();
 

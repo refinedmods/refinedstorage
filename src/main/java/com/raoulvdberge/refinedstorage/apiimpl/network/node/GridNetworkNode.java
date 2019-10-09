@@ -6,14 +6,14 @@ import com.raoulvdberge.refinedstorage.api.network.grid.*;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
@@ -235,7 +235,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public IStorageCacheListener createListener(ServerPlayerEntity player) {
-        return getGridType() == GridType.FLUID ? new StorageCacheListenerGridFluid(player, network) : new StorageCacheListenerGridItem(player, network);
+        return getGridType() == GridType.FLUID ? new FluidGridStorageCacheListener(player, network) : new ItemGridStorageCacheListener(player, network);
     }
 
     @Nullable

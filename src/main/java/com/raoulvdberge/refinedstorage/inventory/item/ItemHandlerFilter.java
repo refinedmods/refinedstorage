@@ -4,7 +4,8 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
-import com.raoulvdberge.refinedstorage.apiimpl.util.FilterFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.util.FluidFilter;
+import com.raoulvdberge.refinedstorage.apiimpl.util.ItemFilter;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
@@ -64,14 +65,14 @@ public class ItemHandlerFilter extends ItemHandlerBase {
             if (stack.getItem() == RSItems.FILTER) {
                 addFilter(stack);
             } else if (!stack.isEmpty()) {
-                filters.add(new com.raoulvdberge.refinedstorage.apiimpl.util.FilterItem(stack, compare, mode, modFilter));
+                filters.add(new ItemFilter(stack, compare, mode, modFilter));
             }
         }
 
         FluidInventoryFilter fluids = new FluidInventoryFilter(filter);
 
         for (FluidStack stack : fluids.getFilteredFluids()) {
-            filters.add(new FilterFluid(stack, compare, mode, modFilter));
+            filters.add(new FluidFilter(stack, compare, mode, modFilter));
         }
 
         ItemStack icon = FilterItem.getIcon(filter);

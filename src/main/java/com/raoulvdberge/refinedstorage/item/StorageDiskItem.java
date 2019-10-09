@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
+import com.raoulvdberge.refinedstorage.api.storage.disk.StorageDiskSyncData;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import net.minecraft.client.util.ITooltipFlag;
@@ -62,7 +62,7 @@ public class StorageDiskItem extends Item implements IStorageDiskProvider {
 
             API.instance().getStorageDiskSync().sendRequest(id);
 
-            IStorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
+            StorageDiskSyncData data = API.instance().getStorageDiskSync().getData(id);
             if (data != null) {
                 if (data.getCapacity() == -1) {
                     tooltip.add(new TranslationTextComponent("misc.refinedstorage.storage.stored", API.instance().getQuantityFormatter().format(data.getStored())).setStyle(new Style().setColor(TextFormatting.GRAY)));

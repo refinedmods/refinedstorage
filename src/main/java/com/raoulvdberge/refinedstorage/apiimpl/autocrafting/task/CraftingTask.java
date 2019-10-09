@@ -20,10 +20,10 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craf
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFactoryItem;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.FluidStorageDisk;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDiskFactory;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -103,8 +103,8 @@ public class CraftingTask implements ICraftingTask {
         this.quantity = quantity;
         this.pattern = pattern;
 
-        this.internalStorage = new StorageDiskItem(null, -1);
-        this.internalFluidStorage = new StorageDiskFluid(null, -1);
+        this.internalStorage = new ItemStorageDisk(null, -1);
+        this.internalFluidStorage = new FluidStorageDisk(null, -1);
     }
 
     public CraftingTask(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
@@ -121,8 +121,8 @@ public class CraftingTask implements ICraftingTask {
             this.totalSteps = tag.getInt(NBT_TOTAL_STEPS);
         }
 
-        StorageDiskFactoryItem factoryItem = new StorageDiskFactoryItem();
-        StorageDiskFactoryFluid factoryFluid = new StorageDiskFactoryFluid();
+        ItemStorageDiskFactory factoryItem = new ItemStorageDiskFactory();
+        FluidStorageDiskFactory factoryFluid = new FluidStorageDiskFactory();
 
         this.internalStorage = factoryItem.createFromNbt(null, tag.getCompound(NBT_INTERNAL_STORAGE));
         this.internalFluidStorage = factoryFluid.createFromNbt(null, tag.getCompound(NBT_INTERNAL_FLUID_STORAGE));

@@ -18,9 +18,9 @@ import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterMan
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
+import com.raoulvdberge.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.energy.Energy;
@@ -31,10 +31,10 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.FluidStorageTracker;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
 import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyProxy;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
@@ -132,11 +132,11 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
     private ISecurityManager securityManager = new SecurityManager(this);
 
-    private IStorageCache<ItemStack> itemStorage = new StorageCacheItem(this);
-    private StorageTrackerItem itemStorageTracker = new StorageTrackerItem(this::markDirty);
+    private IStorageCache<ItemStack> itemStorage = new ItemStorageCache(this);
+    private ItemStorageTracker itemStorageTracker = new ItemStorageTracker(this::markDirty);
 
-    private IStorageCache<FluidStack> fluidStorage = new StorageCacheFluid(this);
-    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
+    private IStorageCache<FluidStack> fluidStorage = new FluidStorageCache(this);
+    private FluidStorageTracker fluidStorageTracker = new FluidStorageTracker(this::markDirty);
 
     private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this);
 

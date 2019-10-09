@@ -9,19 +9,28 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGridCraftingListener;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.storage.*;
+import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.StorageType;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.*;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskFluidPortable;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.StorageDiskItemPortable;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableFluidStorageCache;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableItemStorageCache;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.PortableFluidGridStorageCacheListener;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.PortableItemGridStorageCacheListener;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.PortableFluidStorageDisk;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.PortableItemStorageDisk;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.FluidStorageTracker;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
@@ -151,8 +160,8 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
     private PortableGridDiskState diskState = PortableGridDiskState.NONE;
     private boolean connected;
 
-    private StorageTrackerItem storageTracker = new StorageTrackerItem(this::markDirty);
-    private StorageTrackerFluid fluidStorageTracker = new StorageTrackerFluid(this::markDirty);
+    private ItemStorageTracker storageTracker = new ItemStorageTracker(this::markDirty);
+    private FluidStorageTracker fluidStorageTracker = new FluidStorageTracker(this::markDirty);
     private ListNBT enchants = null;
 
     public TilePortableGrid() {
@@ -182,12 +191,12 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
 
                 switch (type) {
                     case ITEM:
-                        this.storage = new StorageDiskItemPortable(disk, this);
-                        this.cache = new StorageCacheItemPortable(this);
+                        this.storage = new PortableItemStorageDisk(disk, this);
+                        this.cache = new PortableItemStorageCache(this);
                         break;
                     case FLUID:
-                        this.storage = new StorageDiskFluidPortable(disk, this);
-                        this.cache = new StorageCacheFluidPortable(this);
+                        this.storage = new PortableFluidStorageDisk(disk, this);
+                        this.cache = new PortableFluidStorageCache(this);
                         break;
                 }
 
@@ -319,7 +328,7 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
 
     @Override
     public IStorageCacheListener createListener(ServerPlayerEntity player) {
-        return getServerGridType() == GridType.FLUID ? new StorageCacheListenerGridPortableFluid(this, player) : new StorageCacheListenerGridPortable(this, player);
+        return getServerGridType() == GridType.FLUID ? new PortableFluidGridStorageCacheListener(this, player) : new PortableItemGridStorageCacheListener(this, player);
     }
 
     @Nullable

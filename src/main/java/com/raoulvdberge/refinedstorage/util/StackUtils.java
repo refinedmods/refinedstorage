@@ -1,11 +1,10 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
@@ -77,7 +76,7 @@ public final class StackUtils {
         }
     }
 
-    public static void writeItemGridStack(PacketBuffer buf, ItemStack stack, UUID id, @Nullable INetwork network, boolean displayCraftText, @Nullable IStorageTracker.IStorageTrackerEntry entry) {
+    public static void writeItemGridStack(PacketBuffer buf, ItemStack stack, UUID id, @Nullable INetwork network, boolean displayCraftText, @Nullable StorageTrackerEntry entry) {
         writeItemStack(buf, stack);
 
         buf.writeUniqueId(id);
@@ -106,7 +105,7 @@ public final class StackUtils {
         boolean craftable = buf.readBoolean();
         boolean displayCraftText = buf.readBoolean();
 
-        IStorageTracker.IStorageTrackerEntry entry = null;
+        StorageTrackerEntry entry = null;
         if (buf.readBoolean()) {
             entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
         }
@@ -114,7 +113,7 @@ public final class StackUtils {
         return new ItemGridStack(id, stack, craftable, displayCraftText, entry);
     }
 
-    public static void writeFluidGridStack(PacketBuffer buf, FluidStack stack, UUID id, @Nullable INetwork network, boolean displayCraftText, @Nullable IStorageTracker.IStorageTrackerEntry entry) {
+    public static void writeFluidGridStack(PacketBuffer buf, FluidStack stack, UUID id, @Nullable INetwork network, boolean displayCraftText, @Nullable StorageTrackerEntry entry) {
         stack.writeToPacket(buf);
 
         buf.writeUniqueId(id);
@@ -143,7 +142,7 @@ public final class StackUtils {
         boolean craftable = buf.readBoolean();
         boolean displayCraftText = buf.readBoolean();
 
-        IStorageTracker.IStorageTrackerEntry entry = null;
+        StorageTrackerEntry entry = null;
         if (buf.readBoolean()) {
             entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
         }

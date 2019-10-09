@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.grid.stack;
 
-import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
@@ -14,13 +14,13 @@ public class FluidGridStack implements IGridStack {
     private UUID id;
     private FluidStack stack;
     @Nullable
-    private IStorageTracker.IStorageTrackerEntry entry;
+    private StorageTrackerEntry entry;
     private boolean craftable;
     private boolean displayCraftText;
     private String modId;
     private String modName;
 
-    public FluidGridStack(UUID id, FluidStack stack, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
+    public FluidGridStack(UUID id, FluidStack stack, @Nullable StorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
         this.id = id;
         this.stack = stack;
         this.entry = entry;
@@ -127,12 +127,12 @@ public class FluidGridStack implements IGridStack {
 
     @Nullable
     @Override
-    public IStorageTracker.IStorageTrackerEntry getTrackerEntry() {
+    public StorageTrackerEntry getTrackerEntry() {
         return entry;
     }
 
     @Override
-    public void setTrackerEntry(@Nullable IStorageTracker.IStorageTrackerEntry entry) {
+    public void setTrackerEntry(@Nullable StorageTrackerEntry entry) {
         this.entry = entry;
     }
 }

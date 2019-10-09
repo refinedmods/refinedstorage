@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
+import com.raoulvdberge.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;

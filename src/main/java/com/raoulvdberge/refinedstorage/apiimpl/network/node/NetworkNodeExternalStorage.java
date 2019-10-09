@@ -12,8 +12,8 @@ import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExter
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
 import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
@@ -245,8 +245,8 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
             }
         }
 
-        network.getNodeGraph().runActionWhenPossible(StorageCacheItem.INVALIDATE);
-        network.getNodeGraph().runActionWhenPossible(StorageCacheFluid.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE);
     }
 
     @Override

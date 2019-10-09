@@ -1,9 +1,9 @@
-package com.raoulvdberge.refinedstorage.apiimpl.storage;
+package com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemDeltaMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemUpdateMessage;
@@ -13,11 +13,11 @@ import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StorageCacheListenerGridItem implements IStorageCacheListener<ItemStack> {
+public class ItemGridStorageCacheListener implements IStorageCacheListener<ItemStack> {
     private ServerPlayerEntity player;
     private INetwork network;
 
-    public StorageCacheListenerGridItem(ServerPlayerEntity player, INetwork network) {
+    public ItemGridStorageCacheListener(ServerPlayerEntity player, INetwork network) {
         this.player = player;
         this.network = network;
     }

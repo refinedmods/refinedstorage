@@ -14,11 +14,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public class StorageDiskItemPortable implements IStorageDisk<ItemStack> {
+public class PortableItemStorageDisk implements IStorageDisk<ItemStack> {
     private IStorageDisk<ItemStack> parent;
     private IPortableGrid portableGrid;
 
-    public StorageDiskItemPortable(IStorageDisk<ItemStack> parent, IPortableGrid portableGrid) {
+    public PortableItemStorageDisk(IStorageDisk<ItemStack> parent, IPortableGrid portableGrid) {
         this.parent = parent;
         this.portableGrid = portableGrid;
     }
