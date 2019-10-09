@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
+import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraftforge.fluids.FluidStack;
@@ -35,17 +36,19 @@ public class StorageCacheFluidPortable implements IStorageCache<FluidStack> {
 
     @Override
     public void add(@Nonnull FluidStack stack, int size, boolean rebuilding, boolean batched) {
-        list.add(stack, size);
+        StackListResult<FluidStack> result = list.add(stack, size);
 
         if (!rebuilding) {
-            listeners.forEach(l -> l.onChanged(stack, size));
+            listeners.forEach(l -> l.onChanged(result));
         }
     }
 
     @Override
     public void remove(@Nonnull FluidStack stack, int size, boolean batched) {
-        if (list.remove(stack, size)) {
-            listeners.forEach(l -> l.onChanged(stack, -size));
+        StackListResult<FluidStack> result = list.remove(stack, size);
+
+        if (result != null) {
+            listeners.forEach(l -> l.onChanged(result));
         }
     }
 

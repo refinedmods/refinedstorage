@@ -8,10 +8,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ItemGridStack implements IGridStack {
-    private int hash;
+    private UUID id;
     private ItemStack stack;
     private String cachedName;
     private boolean craftable;
@@ -27,8 +28,8 @@ public class ItemGridStack implements IGridStack {
         this.stack = stack;
     }
 
-    public ItemGridStack(int hash, ItemStack stack, boolean craftable, boolean displayCraftText, IStorageTracker.IStorageTrackerEntry entry) {
-        this.hash = hash;
+    public ItemGridStack(UUID id, ItemStack stack, boolean craftable, boolean displayCraftText, IStorageTracker.IStorageTrackerEntry entry) {
+        this.id = id;
         this.stack = stack;
         this.craftable = craftable;
         this.displayCraftText = displayCraftText;
@@ -70,8 +71,8 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public int getHash() {
-        return hash;
+    public UUID getId() {
+        return id;
     }
 
     @Override

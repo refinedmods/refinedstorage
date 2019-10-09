@@ -4,6 +4,8 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.registry.Registry;
+import net.minecraftforge.fluids.FluidStack;
 
 public class IdGridSorter implements IGridSorter {
     @Override
@@ -13,19 +15,22 @@ public class IdGridSorter implements IGridSorter {
 
     @Override
     public int compare(IGridStack left, IGridStack right, SortingDirection sortingDirection) {
-        int x = left.getHash();
-        int y = right.getHash();
+        int leftId = 0;
+        int rightId = 0;
 
         if (left.getIngredient() instanceof ItemStack && right.getIngredient() instanceof ItemStack) {
-            x = Item.getIdFromItem(((ItemStack) left.getIngredient()).getItem());
-            y = Item.getIdFromItem(((ItemStack) right.getIngredient()).getItem());
+            leftId = Item.getIdFromItem(((ItemStack) left.getIngredient()).getItem());
+            rightId = Item.getIdFromItem(((ItemStack) right.getIngredient()).getItem());
+        } else if (left.getIngredient() instanceof FluidStack && right.getIngredient() instanceof FluidStack) {
+            leftId = Registry.FLUID.getId(((FluidStack) left.getIngredient()).getFluid());
+            rightId = Registry.FLUID.getId(((FluidStack) right.getIngredient()).getFluid());
         }
 
-        if (x != y) {
+        if (leftId != rightId) {
             if (sortingDirection == SortingDirection.DESCENDING) {
-                return Integer.compare(x, y);
+                return Integer.compare(leftId, rightId);
             } else if (sortingDirection == SortingDirection.ASCENDING) {
-                return Integer.compare(y, x);
+                return Integer.compare(rightId, leftId);
             }
         }
 

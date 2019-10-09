@@ -29,8 +29,8 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, int hash, int flags) {
-        ItemStack item = network.getItemStorageCache().getList().get(hash);
+    public void onExtract(ServerPlayerEntity player, UUID id, int flags) {
+        ItemStack item = network.getItemStorageCache().getList().get(id);
 
         if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
@@ -157,7 +157,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingPreviewRequested(ServerPlayerEntity player, int hash, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -170,7 +170,7 @@ public class ItemGridHandler implements IItemGridHandler {
             }
         }
 
-        ItemStack stack = cache.get(hash);
+        ItemStack stack = cache.get(id);
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
@@ -197,7 +197,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(ServerPlayerEntity player, int hash, int quantity) {
+    public void onCraftingRequested(ServerPlayerEntity player, UUID id, int quantity) {
         if (quantity <= 0 || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -206,7 +206,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
             for (ItemStack output : pattern.getOutputs()) {
-                if (API.instance().getItemStackHashCode(output) == hash) {
+                if (/* TODO API.instance().getItemStackHashCode(output) == hash*/false) {
                     stack = output;
 
                     break;

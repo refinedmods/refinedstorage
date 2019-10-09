@@ -38,9 +38,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriter
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
+import com.raoulvdberge.refinedstorage.apiimpl.util.FluidStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.util.QuantityFormatter;
-import com.raoulvdberge.refinedstorage.apiimpl.util.StackListFluid;
-import com.raoulvdberge.refinedstorage.apiimpl.util.StackListItem;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -154,13 +154,13 @@ public class API implements IRSAPI {
     @Nonnull
     @Override
     public IStackList<ItemStack> createItemStackList() {
-        return new StackListItem();
+        return new ItemStackList();
     }
 
     @Override
     @Nonnull
     public IStackList<FluidStack> createFluidStackList() {
-        return new StackListFluid();
+        return new FluidStackList();
     }
 
     @Override
@@ -264,6 +264,7 @@ public class API implements IRSAPI {
         }
     }
 
+    // TODO: Remove eventually
     @Override
     public int getItemStackHashCode(ItemStack stack) {
         int result = stack.getItem().hashCode();
@@ -304,6 +305,7 @@ public class API implements IRSAPI {
         return result;
     }
 
+    // TODO: Remove eventually
     @Override
     public int getFluidStackHashCode(FluidStack stack) {
         int result = stack.getFluid().hashCode();

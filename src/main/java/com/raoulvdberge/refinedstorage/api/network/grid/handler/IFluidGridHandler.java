@@ -1,11 +1,10 @@
 package com.raoulvdberge.refinedstorage.api.network.grid.handler;
 
-import com.raoulvdberge.refinedstorage.api.IRSAPI;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Defines the behavior of fluid grids.
@@ -15,10 +14,10 @@ public interface IFluidGridHandler {
      * Called when a player tries to extract a fluid from the grid.
      *
      * @param player the player that is attempting the extraction
-     * @param hash   the hash of the fluid we're trying to extract, see {@link IRSAPI#getFluidStackHashCode(FluidStack)}
+     * @param id     the id of the fluid we're trying to extract, this id is the id from {@link com.raoulvdberge.refinedstorage.api.util.StackListEntry}
      * @param shift  true if shift click was used, false otherwise
      */
-    void onExtract(ServerPlayerEntity player, int hash, boolean shift);
+    void onExtract(ServerPlayerEntity player, UUID id, boolean shift);
 
     /**
      * Called when a player tries to insert fluids in the grid.
@@ -50,18 +49,18 @@ public interface IFluidGridHandler {
      * Called when a player requests the crafting preview window to be opened.
      *
      * @param player    the player
-     * @param hash      the item stack hash
+     * @param id        the id of the fluid we're trying to extract, this id is the id from {@link com.raoulvdberge.refinedstorage.api.util.StackListEntry}
      * @param quantity  the amount of that item that we need a preview for
      * @param noPreview true if the crafting preview window shouldn't be shown, false otherwise
      */
-    void onCraftingPreviewRequested(ServerPlayerEntity player, int hash, int quantity, boolean noPreview);
+    void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview);
 
     /**
      * Called when a player requested crafting for an item.
      *
      * @param player   the player that is requesting the crafting
-     * @param hash     the hash of the item to request a craft for
+     * @param id       the id of the fluid we're trying to extract, this id is the id from {@link com.raoulvdberge.refinedstorage.api.util.StackListEntry}
      * @param quantity the amount of the item that has to be crafted
      */
-    void onCraftingRequested(ServerPlayerEntity player, int hash, int quantity);
+    void onCraftingRequested(ServerPlayerEntity player, UUID id, int quantity);
 }

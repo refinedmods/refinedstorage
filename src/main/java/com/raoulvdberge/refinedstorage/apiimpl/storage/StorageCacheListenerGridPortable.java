@@ -1,12 +1,11 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class StorageCacheListenerGridPortable implements IStorageCacheListener<ItemStack> {
@@ -42,12 +41,12 @@ public class StorageCacheListenerGridPortable implements IStorageCacheListener<I
     }
 
     @Override
-    public void onChanged(@Nonnull ItemStack stack, int size) {
+    public void onChanged(StackListResult<ItemStack> delta) {
         // TODO RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getItemStorageTracker(), stack, size), player);
     }
 
     @Override
-    public void onChangedBulk(@Nonnull List<Pair<ItemStack, Integer>> stacks) {
+    public void onChangedBulk(List<StackListResult<ItemStack>> storageCacheDeltas) {
         // TODO RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getItemStorageTracker(), stacks), player);
     }
 }

@@ -21,6 +21,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class FluidGridHandler implements IFluidGridHandler {
     private INetwork network;
@@ -30,8 +31,8 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, int hash, boolean shift) {
-        FluidStack stack = network.getFluidStorageCache().getList().get(hash);
+    public void onExtract(ServerPlayerEntity player, UUID id, boolean shift) {
+        FluidStack stack = network.getFluidStorageCache().getList().get(id);
 
         if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
             return;
@@ -111,7 +112,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onCraftingPreviewRequested(ServerPlayerEntity player, int hash, int quantity, boolean noPreview) {
+    public void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -124,7 +125,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             }
         }
 
-        FluidStack stack = cache.get(hash);
+        FluidStack stack = cache.get(id);
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
@@ -151,7 +152,7 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    public void onCraftingRequested(ServerPlayerEntity player, int hash, int quantity) {
+    public void onCraftingRequested(ServerPlayerEntity player, UUID id, int quantity) {
         if (quantity <= 0 || !network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;
         }
@@ -160,7 +161,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
         for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
             for (FluidStack output : pattern.getFluidOutputs()) {
-                if (API.instance().getFluidStackHashCode(output) == hash) {
+                if (/* TODO API.instance().getFluidStackHashCode(output) == hash*/false) {
                     stack = output;
 
                     break;

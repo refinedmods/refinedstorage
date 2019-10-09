@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
@@ -34,6 +35,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, IStorageDiskContainerContext {
     public static final String ID = "disk_manipulator";
@@ -232,7 +234,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         if (itemFilters.isEmpty()) {
             ItemStack toExtract = null;
-            ArrayList<ItemStack> networkItems = new ArrayList<>(network.getItemStorageCache().getList().getStacks());
+            List<ItemStack> networkItems = network.getItemStorageCache().getList().getStacks().stream().map(StackListEntry::getStack).collect(Collectors.toList());
 
             int j = 0;
 
@@ -331,7 +333,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         if (fluidFilters.isEmpty()) {
             FluidStack toExtract = null;
-            ArrayList<FluidStack> networkFluids = new ArrayList<>(network.getFluidStorageCache().getList().getStacks());
+            List<FluidStack> networkFluids = network.getFluidStorageCache().getList().getStacks().stream().map(StackListEntry::getStack).collect(Collectors.toList());
 
             int j = 0;
 

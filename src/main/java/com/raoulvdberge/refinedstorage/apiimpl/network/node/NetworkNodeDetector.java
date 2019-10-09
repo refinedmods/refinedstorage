@@ -77,7 +77,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
 
                     powered = isPowered(stack == null ? null : stack.getCount());
                 } else {
-                    powered = isPowered(network.getItemStorageCache().getList().getStacks().stream().map(ItemStack::getCount).mapToInt(Number::intValue).sum());
+                    powered = isPowered(network.getItemStorageCache().getList().getStacks().stream().map(e -> e.getStack().getCount()).mapToInt(Number::intValue).sum());
                 }
             } else if (type == IType.FLUIDS) {
                 FluidStack slot = fluidFilters.getFluid(0);
@@ -87,7 +87,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
 
                     powered = isPowered(stack == null ? null : stack.getAmount());
                 } else {
-                    powered = isPowered(network.getFluidStorageCache().getList().getStacks().stream().map(FluidStack::getAmount).mapToInt(Number::intValue).sum());
+                    powered = isPowered(network.getFluidStorageCache().getList().getStacks().stream().map(e -> e.getStack().getAmount()).mapToInt(Number::intValue).sum());
                 }
             }
         }

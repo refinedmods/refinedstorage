@@ -2,11 +2,10 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class StorageCacheListenerGridFluid implements IStorageCacheListener<FluidStack> {
@@ -29,14 +28,17 @@ public class StorageCacheListenerGridFluid implements IStorageCacheListener<Flui
     }
 
     @Override
-    public void onChanged(@Nonnull FluidStack stack, int size) {
-        // TODO RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(network, network.getFluidStorageTracker(), stack, size), player);
+    public void onChanged(StackListResult<FluidStack> delta) {
+        // TODO: RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(network, network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)), player);
+
     }
 
     @Override
-    public void onChangedBulk(@Nonnull List<Pair<FluidStack, Integer>> stacks) {
+    public void onChangedBulk(List<StackListResult<FluidStack>> storageCacheDeltas) {
+        /* TODO
         for (Pair<FluidStack, Integer> stack : stacks) {
-            onChanged(stack.getLeft(), stack.getRight());
-        }
+                    onChanged(stack.getLeft(), stack.getRight());
+                }
+         */
     }
 }

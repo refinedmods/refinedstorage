@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
@@ -56,13 +57,13 @@ public class GridItemUpdateMessage {
 
         buf.writeInt(size);
 
-        for (ItemStack stack : message.network.getItemStorageCache().getList().getStacks()) {
-            StackUtils.writeItemGridStack(buf, stack, message.network, false, message.network.getItemStorageTracker().get(stack));
+        for (StackListEntry<ItemStack> stack : message.network.getItemStorageCache().getList().getStacks()) {
+            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), message.network, false, message.network.getItemStorageTracker().get(stack.getStack()));
         }
 
         for (ICraftingPattern pattern : message.network.getCraftingManager().getPatterns()) {
             for (ItemStack output : pattern.getOutputs()) {
-                StackUtils.writeItemGridStack(buf, output, message.network, true, message.network.getItemStorageTracker().get(output));
+                // TODO StackUtils.writeItemGridStack(buf, output, message.network, true, message.network.getItemStorageTracker().get(output));
             }
         }
     }

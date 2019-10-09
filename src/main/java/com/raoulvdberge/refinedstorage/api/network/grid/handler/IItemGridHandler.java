@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.api.network.grid.handler;
 
-import com.raoulvdberge.refinedstorage.api.IRSAPI;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 
@@ -19,10 +18,10 @@ public interface IItemGridHandler {
      * Called when a player tries to extract an item from the grid.
      *
      * @param player the player that is attempting the extraction
-     * @param hash   the hash of the item we're trying to extract, see {@link IRSAPI#getItemStackHashCode(ItemStack)}
+     * @param id     the id of the item we're trying to extract, this id is the id from {@link com.raoulvdberge.refinedstorage.api.util.StackListEntry}
      * @param flags  how we are extracting, see the flags in {@link IItemGridHandler}
      */
-    void onExtract(ServerPlayerEntity player, int hash, int flags);
+    void onExtract(ServerPlayerEntity player, UUID id, int flags);
 
     /**
      * Called when a player tries to insert an item in the grid.
@@ -55,20 +54,20 @@ public interface IItemGridHandler {
      * Called when a player requests the crafting preview window to be opened.
      *
      * @param player    the player
-     * @param hash      the item stack hash
+     * @param id        the id of the item we're trying to extract, this id is the id from {@link com.raoulvdberge.refinedstorage.api.util.StackListEntry}
      * @param quantity  the amount of that item that we need a preview for
      * @param noPreview true if the crafting preview window shouldn't be shown, false otherwise
      */
-    void onCraftingPreviewRequested(ServerPlayerEntity player, int hash, int quantity, boolean noPreview);
+    void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview);
 
     /**
      * Called when a player requested crafting for an item.
      *
      * @param player   the player that is requesting the crafting
-     * @param hash     the hash of the item to request a craft for
+     * @param id       the id of the item we're trying to extract, this id is the id from {@link com.raoulvdberge.refinedstorage.api.util.StackListEntry}
      * @param quantity the amount of the item that has to be crafted
      */
-    void onCraftingRequested(ServerPlayerEntity player, int hash, int quantity);
+    void onCraftingRequested(ServerPlayerEntity player, UUID id, int quantity);
 
     /**
      * Called when a player wants to cancel a crafting task.

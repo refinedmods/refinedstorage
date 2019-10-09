@@ -3,9 +3,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
+import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
     private CopyOnWriteArrayList<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<ItemStack> list = API.instance().createItemStackList();
     private List<IStorageCacheListener<ItemStack>> listeners = new LinkedList<>();
-    private List<Pair<ItemStack, Integer>> batchedChanges = new ArrayList<>();
+    private List<StackListResult<ItemStack>> batchedChanges = new ArrayList<>();
 
     public StorageCacheItem(INetwork network) {
         this.network = network;
@@ -56,24 +56,26 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
 
     @Override
     public void add(@Nonnull ItemStack stack, int size, boolean rebuilding, boolean batched) {
-        list.add(stack, size);
+        StackListResult<ItemStack> result = list.add(stack, size);
 
         if (!rebuilding) {
             if (!batched) {
-                listeners.forEach(l -> l.onChanged(stack, size));
+                listeners.forEach(l -> l.onChanged(result));
             } else {
-                batchedChanges.add(Pair.of(stack.copy(), size));
+                batchedChanges.add(result);
             }
         }
     }
 
     @Override
     public void remove(@Nonnull ItemStack stack, int size, boolean batched) {
-        if (list.remove(stack, size)) {
+        StackListResult<ItemStack> result = list.remove(stack, size);
+
+        if (result != null) {
             if (!batched) {
-                listeners.forEach(l -> l.onChanged(stack, -size));
+                listeners.forEach(l -> l.onChanged(result));
             } else {
-                batchedChanges.add(Pair.of(stack.copy(), -size));
+                batchedChanges.add(result);
             }
         }
     }
@@ -84,7 +86,7 @@ public class StorageCacheItem implements IStorageCache<ItemStack> {
             if (batchedChanges.size() > 1) {
                 listeners.forEach(l -> l.onChangedBulk(batchedChanges));
             } else {
-                batchedChanges.forEach(c -> listeners.forEach(l -> l.onChanged(c.getKey(), c.getValue())));
+                batchedChanges.forEach(change -> listeners.forEach(l -> l.onChanged(change)));
             }
 
             batchedChanges.clear();

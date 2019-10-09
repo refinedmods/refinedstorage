@@ -4,13 +4,12 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemDeltaMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemUpdateMessage;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,16 +33,16 @@ public class StorageCacheListenerGridItem implements IStorageCacheListener<ItemS
     }
 
     @Override
-    public void onChanged(@Nonnull ItemStack stack, int size) {
-        List<Pair<ItemStack, Integer>> deltas = new ArrayList<>();
+    public void onChanged(StackListResult<ItemStack> delta) {
+        List<StackListResult<ItemStack>> deltas = new ArrayList<>();
 
-        deltas.add(Pair.of(stack, size));
+        deltas.add(delta);
 
         onChangedBulk(deltas);
     }
 
     @Override
-    public void onChangedBulk(@Nonnull List<Pair<ItemStack, Integer>> stacks) {
-        RS.NETWORK_HANDLER.sendTo(player, new GridItemDeltaMessage(network, stacks));
+    public void onChangedBulk(List<StackListResult<ItemStack>> deltas) {
+        RS.NETWORK_HANDLER.sendTo(player, new GridItemDeltaMessage(network, deltas));
     }
 }

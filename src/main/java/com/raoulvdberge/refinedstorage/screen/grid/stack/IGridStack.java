@@ -4,9 +4,10 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageTracker;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public interface IGridStack {
-    int getHash();
+    UUID getId();
 
     String getName();
 

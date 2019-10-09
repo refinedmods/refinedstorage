@@ -18,7 +18,7 @@ public abstract class BaseGridView implements IGridView {
     private List<IGridSorter> sorters;
 
     private List<IGridStack> stacks = new ArrayList<>();
-    protected Map<Integer, IGridStack> map = new HashMap<>();
+    protected Map<UUID, IGridStack> map = new HashMap<>();
 
     public BaseGridView(GridScreen screen, IGridSorter defaultSorter, List<IGridSorter> sorters) {
         this.screen = screen;

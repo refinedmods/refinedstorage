@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
@@ -18,44 +19,46 @@ import java.util.function.Supplier;
 public class GridItemDeltaMessage {
     @Nullable
     private INetwork network;
-    private List<Pair<ItemStack, Integer>> deltas;
+    private List<StackListResult<ItemStack>> deltas;
 
-    private List<Pair<IGridStack, Integer>> gridStacks;
+    private List<Pair<IGridStack, Integer>> clientDeltas;
 
-    public GridItemDeltaMessage(INetwork network, List<Pair<ItemStack, Integer>> deltas) {
+    public GridItemDeltaMessage(INetwork network, List<StackListResult<ItemStack>> deltas) {
         this.network = network;
         this.deltas = deltas;
     }
 
-    public GridItemDeltaMessage(List<Pair<IGridStack, Integer>> gridStacks) {
-        this.gridStacks = gridStacks;
+    public GridItemDeltaMessage(List<Pair<IGridStack, Integer>> clientDeltas) {
+        this.clientDeltas = clientDeltas;
     }
 
     public static GridItemDeltaMessage decode(PacketBuffer buf) {
         int size = buf.readInt();
 
-        List<Pair<IGridStack, Integer>> gridStacks = new LinkedList<>();
+        List<Pair<IGridStack, Integer>> clientDeltas = new LinkedList<>();
 
         for (int i = 0; i < size; ++i) {
-            gridStacks.add(Pair.of(StackUtils.readItemGridStack(buf), buf.readInt()));
+            int delta = buf.readInt();
+
+            clientDeltas.add(Pair.of(StackUtils.readItemGridStack(buf), delta));
         }
 
-        return new GridItemDeltaMessage(gridStacks);
+        return new GridItemDeltaMessage(clientDeltas);
     }
 
     public static void encode(GridItemDeltaMessage message, PacketBuffer buf) {
         buf.writeInt(message.deltas.size());
 
-        for (Pair<ItemStack, Integer> delta : message.deltas) {
-            StackUtils.writeItemGridStack(buf, delta.getLeft(), message.network, false, message.network.getItemStorageTracker().get(delta.getLeft()));
+        for (StackListResult<ItemStack> delta : message.deltas) {
+            buf.writeInt(delta.getChange());
 
-            buf.writeInt(delta.getRight());
+            StackUtils.writeItemGridStack(buf, delta.getStack(), delta.getId(), message.network, false, message.network.getItemStorageTracker().get(delta.getStack()));
         }
     }
 
     public static void handle(GridItemDeltaMessage message, Supplier<NetworkEvent.Context> ctx) {
         BaseScreen.executeLater(GridScreen.class, grid -> {
-            message.gridStacks.forEach(p -> grid.getView().postChange(p.getLeft(), p.getRight()));
+            message.clientDeltas.forEach(p -> grid.getView().postChange(p.getLeft(), p.getRight()));
 
             grid.getView().sort();
         });

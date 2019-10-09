@@ -478,7 +478,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                             flags |= IItemGridHandler.EXTRACT_SINGLE;
                         }
 
-                        RS.NETWORK_HANDLER.sendToServer(new GridItemPullMessage(stack.getHash(), flags));
+                        RS.NETWORK_HANDLER.sendToServer(new GridItemPullMessage(stack.getId(), flags));
                     }
                 }
 

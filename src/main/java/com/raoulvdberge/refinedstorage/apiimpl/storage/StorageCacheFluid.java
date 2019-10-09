@@ -3,9 +3,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.*;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
+import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraftforge.fluids.FluidStack;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     private CopyOnWriteArrayList<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
     private IStackList<FluidStack> list = API.instance().createFluidStackList();
     private List<IStorageCacheListener<FluidStack>> listeners = new LinkedList<>();
-    private List<Pair<FluidStack, Integer>> batchedChanges = new ArrayList<>();
+    private List<StackListResult<FluidStack>> batchedChanges = new ArrayList<>();
 
     public StorageCacheFluid(INetwork network) {
         this.network = network;
@@ -54,24 +54,26 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
 
     @Override
     public void add(@Nonnull FluidStack stack, int size, boolean rebuilding, boolean batched) {
-        list.add(stack, size);
+        StackListResult<FluidStack> result = list.add(stack, size);
 
         if (!rebuilding) {
             if (!batched) {
-                listeners.forEach(l -> l.onChanged(stack, size));
+                listeners.forEach(l -> l.onChanged(result));
             } else {
-                batchedChanges.add(Pair.of(stack.copy(), size));
+                batchedChanges.add(result);
             }
         }
     }
 
     @Override
     public void remove(@Nonnull FluidStack stack, int size, boolean batched) {
-        if (list.remove(stack, size)) {
+        StackListResult<FluidStack> result = list.remove(stack, size);
+
+        if (result != null) {
             if (!batched) {
-                listeners.forEach(l -> l.onChanged(stack, -size));
+                listeners.forEach(l -> l.onChanged(result));
             } else {
-                batchedChanges.add(Pair.of(stack.copy(), -size));
+                batchedChanges.add(result);
             }
         }
     }
@@ -79,7 +81,7 @@ public class StorageCacheFluid implements IStorageCache<FluidStack> {
     @Override
     public void flush() {
         if (!batchedChanges.isEmpty()) {
-            batchedChanges.forEach(c -> listeners.forEach(l -> l.onChanged(c.getKey(), c.getValue())));
+            batchedChanges.forEach(change -> listeners.forEach(l -> l.onChanged(change)));
             batchedChanges.clear();
         }
     }

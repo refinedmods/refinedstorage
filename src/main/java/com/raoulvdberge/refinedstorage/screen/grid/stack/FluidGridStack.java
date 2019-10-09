@@ -8,9 +8,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class FluidGridStack implements IGridStack {
-    private int hash;
+    private UUID id;
     private FluidStack stack;
     @Nullable
     private IStorageTracker.IStorageTrackerEntry entry;
@@ -19,8 +20,8 @@ public class FluidGridStack implements IGridStack {
     private String modId;
     private String modName;
 
-    public FluidGridStack(int hash, FluidStack stack, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
-        this.hash = hash;
+    public FluidGridStack(UUID id, FluidStack stack, @Nullable IStorageTracker.IStorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
+        this.id = id;
         this.stack = stack;
         this.entry = entry;
         this.craftable = craftable;
@@ -47,8 +48,8 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public int getHash() {
-        return hash;
+    public UUID getId() {
+        return id;
     }
 
     @Override

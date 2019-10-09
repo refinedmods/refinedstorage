@@ -18,11 +18,11 @@ public class ItemGridView extends BaseGridView {
 
         for (IGridStack stack : stacks) {
             // Don't let a craftable stack override a normal stack
-            if (stack.doesDisplayCraftText() && map.containsKey(stack.getHash())) {
+            if (stack.doesDisplayCraftText() && map.containsKey(stack.getId())) {
                 continue;
             }
 
-            map.put(stack.getHash(), stack);
+            map.put(stack.getId(), stack);
         }
     }
 
@@ -32,18 +32,18 @@ public class ItemGridView extends BaseGridView {
             return;
         }
 
-        ItemGridStack existing = (ItemGridStack) map.get(stack.getHash());
+        ItemGridStack existing = (ItemGridStack) map.get(stack.getId());
 
         if (existing == null) {
             ((ItemGridStack) stack).getStack().setCount(delta);
 
-            map.put(stack.getHash(), stack);
+            map.put(stack.getId(), stack);
         } else {
             if (existing.getStack().getCount() + delta <= 0) {
                 if (existing.isCraftable()) {
                     existing.setDisplayCraftText(true);
                 } else {
-                    map.remove(existing.getHash());
+                    map.remove(existing.getId());
                 }
             } else {
                 if (existing.doesDisplayCraftText()) {

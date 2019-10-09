@@ -7,23 +7,24 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GridItemPullMessage {
-    private int hash;
+    private UUID id;
     private int flags;
 
-    public GridItemPullMessage(int hash, int flags) {
-        this.hash = hash;
+    public GridItemPullMessage(UUID id, int flags) {
+        this.id = id;
         this.flags = flags;
     }
 
     public static GridItemPullMessage decode(PacketBuffer buf) {
-        return new GridItemPullMessage(buf.readInt(), buf.readInt());
+        return new GridItemPullMessage(buf.readUniqueId(), buf.readInt());
     }
 
     public static void encode(GridItemPullMessage message, PacketBuffer buf) {
-        buf.writeInt(message.hash);
+        buf.writeUniqueId(message.id);
         buf.writeInt(message.flags);
     }
 
@@ -38,7 +39,7 @@ public class GridItemPullMessage {
                     IGrid grid = ((GridContainer) container).getGrid();
 
                     if (grid.getItemHandler() != null) {
-                        grid.getItemHandler().onExtract(player, message.hash, message.flags);
+                        grid.getItemHandler().onExtract(player, message.id, message.flags);
                     }
                 }
             }

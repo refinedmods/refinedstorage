@@ -1,8 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.storage;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -24,15 +23,14 @@ public interface IStorageCacheListener<T> {
     /**
      * Called when the storage cache changes.
      *
-     * @param stack the stack
-     * @param size  the size, negative if the amount decreases
+     * @param delta the delta
      */
-    void onChanged(@Nonnull T stack, int size);
+    void onChanged(StackListResult<T> delta);
 
     /**
      * Called when the storage cache changes.
      *
-     * @param stacks a list of stacks that are changed, with the size changed (negative if the amount decreases)
+     * @param deltas a list of deltas
      */
-    void onChangedBulk(@Nonnull List<Pair<T, Integer>> stacks);
+    void onChangedBulk(List<StackListResult<T>> deltas);
 }
