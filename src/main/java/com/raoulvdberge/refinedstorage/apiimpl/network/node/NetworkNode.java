@@ -92,11 +92,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     protected void onConnectedStateChange(INetwork network, boolean state) {
-        BlockState blockState = world.getBlockState(pos);
-
-        if (blockState.getBlock() instanceof NodeBlock && ((NodeBlock) blockState.getBlock()).hasConnectedState()) {
-            world.setBlockState(pos, world.getBlockState(pos).with(NodeBlock.CONNECTED, state));
-        }
+        // NO OP
     }
 
     @Override
@@ -147,6 +143,12 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
                 ticksSinceUpdateChanged = 0;
                 couldUpdate = canUpdate;
                 throttlingDisabled = false;
+
+                BlockState blockState = world.getBlockState(pos);
+
+                if (blockState.getBlock() instanceof NodeBlock && ((NodeBlock) blockState.getBlock()).hasConnectedState()) {
+                    world.setBlockState(pos, world.getBlockState(pos).with(NodeBlock.CONNECTED, canUpdate));
+                }
 
                 if (network != null) {
                     onConnectedStateChange(network, canUpdate);

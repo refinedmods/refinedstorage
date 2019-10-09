@@ -33,6 +33,11 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/controller/cutouts/on")
         ));
 
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "grid"), (base, registry) -> new FullbrightBakedModel(
+            base,
+            new ResourceLocation(RS.ID, "block/grid/cutouts/front_connected")
+        ));
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
             new DiskDriveBakedModel(
                 base,

@@ -78,7 +78,6 @@ public class GridBlock extends NodeBlock {
 
         modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(
             base,
-            RS.ID + ":blocks/grid/cutouts/front_connected",
             RS.ID + ":blocks/grid/cutouts/crafting_front_connected",
             RS.ID + ":blocks/grid/cutouts/pattern_front_connected",
             RS.ID + ":blocks/grid/cutouts/fluid_front_connected"
