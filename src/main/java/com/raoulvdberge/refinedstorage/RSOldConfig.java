@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage;
 
 public class RSOldConfig {
     //region Energy
-    public int cableUsage;
     public int constructorUsage;
     public int crafterUsage;
     public int crafterPerPatternUsage;
@@ -10,8 +9,6 @@ public class RSOldConfig {
     public int crafterManagerUsage;
     public int destructorUsage;
     public int detectorUsage;
-    public int diskDriveUsage;
-    public int diskDrivePerDiskUsage;
     public int externalStorageUsage;
     public int externalStoragePerStorageUsage;
     public int exporterUsage;
@@ -22,7 +19,6 @@ public class RSOldConfig {
     public int storageUsage;
     public int fluidStorageUsage;
     public int wirelessTransmitterUsage;
-    public int gridUsage;
     public int craftingGridUsage;
     public int patternGridUsage;
     public int fluidGridUsage;
@@ -31,12 +27,6 @@ public class RSOldConfig {
     public int diskManipulatorUsage;
     public int securityManagerUsage;
     public int securityManagerPerSecurityCardUsage;
-    //endregion
-
-    //region Grid
-    public int maxRowsStretch;
-    public boolean largeFont;
-    public boolean detailedTooltip;
     //endregion
 
     //region Wireless Transmitter
@@ -92,8 +82,6 @@ public class RSOldConfig {
 
     //region Categories
     private static final String ENERGY = "energy";
-    private static final String CONTROLLER = "controller";
-    private static final String GRID = "grid";
     private static final String WIRELESS_TRANSMITTER = "wirelessTransmitter";
     private static final String WIRELESS_GRID = "wirelessGrid";
     private static final String PORTABLE_GRID = "portableGrid";
@@ -106,9 +94,6 @@ public class RSOldConfig {
 
     /*private void loadConfig() {
         //region Energy
-        controllerBaseUsage = config.getInt("controllerBase", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by the Controller");
-        controllerMaxReceive = config.getInt("controllerMaxReceive", ENERGY, Integer.MAX_VALUE, 0, Integer.MAX_VALUE, "The maximum energy the controller receives per tick");
-        cableUsage = config.getInt("cable", ENERGY, 0, 0, Integer.MAX_VALUE, "The energy used by Cables");
         constructorUsage = config.getInt("constructor", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Constructors");
         crafterUsage = config.getInt("crafter", ENERGY, 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");
         crafterPerPatternUsage = config.getInt("crafterPerPattern", ENERGY, 1, 0, Integer.MAX_VALUE, "The additional energy used per Pattern in a Crafter");
@@ -116,8 +101,6 @@ public class RSOldConfig {
         crafterManagerUsage = config.getInt("crafterManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafter Managers");
         destructorUsage = config.getInt("destructor", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Destructors");
         detectorUsage = config.getInt("detector", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Detectors");
-        diskDriveUsage = config.getInt("diskDrive", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by Disk Drives");
-        diskDrivePerDiskUsage = config.getInt("diskDrivePerDisk", ENERGY, 1, 0, Integer.MAX_VALUE, "The additional energy used by Storage Disks in Disk Drives");
         externalStorageUsage = config.getInt("externalStorage", ENERGY, 0, 0, Integer.MAX_VALUE, "The base energy used by External Storages");
         externalStoragePerStorageUsage = config.getInt("externalStoragePerStorage", ENERGY, 1, 0, Integer.MAX_VALUE, "The additional energy used per connected storage to an External Storage");
         exporterUsage = config.getInt("exporter", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Exporters");
@@ -128,7 +111,6 @@ public class RSOldConfig {
         storageUsage = config.getInt("storage", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Storage Blocks");
         fluidStorageUsage = config.getInt("fluidStorage", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Fluid Storage Blocks");
         wirelessTransmitterUsage = config.getInt("wirelessTransmitter", ENERGY, 8, 0, Integer.MAX_VALUE, "The energy used by Wireless Transmitters");
-        gridUsage = config.getInt("grid", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Grids");
         craftingGridUsage = config.getInt("craftingGrid", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafting Grids");
         patternGridUsage = config.getInt("patternGrid", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Pattern Grids");
         fluidGridUsage = config.getInt("fluidGrid", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Fluid Grids");
@@ -137,17 +119,6 @@ public class RSOldConfig {
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
         securityManagerUsage = config.getInt("securityManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The base energy used by Security Managers");
         securityManagerPerSecurityCardUsage = config.getInt("securityManagerPerSecurityCard", ENERGY, 10, 0, Integer.MAX_VALUE, "The additional energy used by Security Cards in Security Managers");
-        //endregion
-
-        //region Controller
-        controllerCapacity = config.getInt("capacity", CONTROLLER, 32000, 0, Integer.MAX_VALUE, "The energy capacity of the Controller");
-        controllerUsesEnergy = config.getBoolean("usesEnergy", CONTROLLER, true, "Whether the Controller uses energy");
-        //endregion
-
-        //region Grid
-        maxRowsStretch = config.getInt("maxRowsStretch", GRID, Integer.MAX_VALUE, 3, Integer.MAX_VALUE, "The maximum amount of rows that the Grid can show when stretched");
-        largeFont = config.getBoolean("largeFont", GRID, false, "Whether the Grid should use a large font for stack quantity display");
-        detailedTooltip = config.getBoolean("detailedTooltip", GRID, true, "Whether the Grid should display a detailed tooltip when hovering over an item or fluid");
         //endregion
 
         //region Wireless Transmitter

@@ -171,19 +171,18 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public int getEnergyUsage() {
-        /* @TODO switch (getGridType()) {
+        switch (getGridType()) {
             case NORMAL:
-                return RS.INSTANCE.config.gridUsage;
+                return RS.SERVER_CONFIG.getGrid().getUsage();
             case CRAFTING:
-                return RS.INSTANCE.config.craftingGridUsage;
+                return 0;
             case PATTERN:
-                return RS.INSTANCE.config.patternGridUsage;
+                return 0;
             case FLUID:
-                return RS.INSTANCE.config.fluidGridUsage;
+                return 0;
             default:
                 return 0;
-        }*/
-        return 0;
+        }
     }
 
     public void setViewType(int viewType) {

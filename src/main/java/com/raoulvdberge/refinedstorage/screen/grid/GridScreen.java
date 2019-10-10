@@ -226,7 +226,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             case IGrid.SIZE_STRETCH:
                 int screenSpaceAvailable = height - getTopHeight() - getBottomHeight();
 
-                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, Integer.MAX_VALUE));//@TODO: MaxRowsStretch
+                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.CLIENT_CONFIG.getGrid().getMaxRowsStretch()));
             case IGrid.SIZE_SMALL:
                 return 3;
             case IGrid.SIZE_MEDIUM:
@@ -410,8 +410,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         ItemStack stack = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
 
-        // @TODO DetailedToolTip
-        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, stack, mouseX, mouseY, xSize, ySize, font);
+        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, RS.CLIENT_CONFIG.getGrid().getDetailedTooltip(), stack, mouseX, mouseY, xSize, ySize, font);
     }
 
     @Override

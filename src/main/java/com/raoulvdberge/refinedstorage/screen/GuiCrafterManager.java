@@ -64,7 +64,7 @@ public class GuiCrafterManager extends BaseScreen<CrafterManagerContainer> imple
             case IGrid.SIZE_STRETCH:
                 int screenSpaceAvailable = height - getTopHeight() - getBottomHeight();
 
-                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, RS.INSTANCE.config.maxRowsStretch));
+                return Math.max(3, Math.min((screenSpaceAvailable / 18) - 3, Integer.MAX_VALUE)); // TODO CrafterManager MaxRowsStretch
             case IGrid.SIZE_SMALL:
                 return 3;
             case IGrid.SIZE_MEDIUM:

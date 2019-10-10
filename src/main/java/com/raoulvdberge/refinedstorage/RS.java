@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.factory.FluidStorage
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDiskFactory;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
+import com.raoulvdberge.refinedstorage.config.ClientConfig;
 import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.container.DiskDriveContainer;
@@ -63,11 +64,13 @@ public final class RS {
     public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
     public static final ItemGroup MAIN_GROUP = new MainItemGroup();
     public static final ServerConfig SERVER_CONFIG = new ServerConfig();
+    public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
     public RS() {
         DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSetup::new);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::onRegisterBlocks);

@@ -8,12 +8,14 @@ public class ServerConfig {
 
     private Controller controller;
     private Cable cable;
+    private Grid grid;
     private DiskDrive diskDrive;
     private Upgrades upgrades;
 
     public ServerConfig() {
         controller = new Controller();
         cable = new Cable();
+        grid = new Grid();
         diskDrive = new DiskDrive();
         upgrades = new Upgrades();
 
@@ -34,6 +36,10 @@ public class ServerConfig {
 
     public Upgrades getUpgrades() {
         return upgrades;
+    }
+
+    public Grid getGrid() {
+        return grid;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -109,6 +115,22 @@ public class ServerConfig {
 
         public int getDiskUsage() {
             return diskUsage.get();
+        }
+    }
+
+    public class Grid {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public Grid() {
+            builder.push("grid");
+
+            usage = builder.comment("The energy used by Grids").defineInRange("usage", 2, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
         }
     }
 
