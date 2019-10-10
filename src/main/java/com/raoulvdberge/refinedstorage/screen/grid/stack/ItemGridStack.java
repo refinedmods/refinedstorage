@@ -79,7 +79,7 @@ public class ItemGridStack implements IGridStack {
     public String getName() {
         try {
             if (cachedName == null) {
-                cachedName = stack.getDisplayName().getFormattedText(); // TODO
+                cachedName = stack.getDisplayName().getFormattedText();
             }
 
             return cachedName;

@@ -5,11 +5,14 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.item.PatternItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
@@ -34,12 +37,12 @@ public class CraftingPattern implements ICraftingPattern {
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
         this.container = container;
         this.stack = stack;
-        // TODO  this.processing = ItemPattern.isProcessing(stack);
-        // TODO this.oredict = ItemPattern.isOredict(stack);
+        this.processing = PatternItem.isProcessing(stack);
+        this.oredict = PatternItem.isOredict(stack);
 
         if (processing) {
             for (int i = 0; i < 9; ++i) {
-                ItemStack input = ItemStack.EMPTY;// TODO ItemPattern.getInputSlot(stack, i);
+                ItemStack input = PatternItem.getInputSlot(stack, i);
 
                 if (input == null) {
                     inputs.add(NonNullList.create());
@@ -71,42 +74,42 @@ public class CraftingPattern implements ICraftingPattern {
                     inputs.add(NonNullList.from(ItemStack.EMPTY, input));
                 }
 
-                /*ItemStack output = ItemPattern.getOutputSlot(stack, i);
+                ItemStack output = PatternItem.getOutputSlot(stack, i);
                 if (output != null) {
                     this.valid = true; // As soon as we have one output, we are valid.
 
                     outputs.add(output);
                 }
 
-                FluidStack fluidInput = ItemPattern.getFluidInputSlot(stack, i);
+                FluidStack fluidInput = PatternItem.getFluidInputSlot(stack, i);
                 if (fluidInput != null) {
                     this.valid = true;
 
                     fluidInputs.add(fluidInput);
                 }
 
-                FluidStack fluidOutput = ItemPattern.getFluidOutputSlot(stack, i);
+                FluidStack fluidOutput = PatternItem.getFluidOutputSlot(stack, i);
                 if (fluidOutput != null) {
                     this.valid = true;
 
                     fluidOutputs.add(fluidOutput);
-                }*/
+                }
             }
         } else {
-            CraftingInventory inv = new CraftingInventoryDummy();
+            CraftingInventory inv = new DummyCraftingInventory();
 
             for (int i = 0; i < 9; ++i) {
-                // TODO ItemStack input = ItemPattern.getInputSlot(stack, i);
+                ItemStack input = PatternItem.getInputSlot(stack, i);
 
-                // TODO inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
+                inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
 
-                // TODO  if (input != null) {
-                // TODO     inv.setInventorySlotContents(i, input);
-                // TODO }
+                if (input != null) {
+                    inv.setInventorySlotContents(i, input);
+                }
             }
 
             // TODO: better way of collecting recipes
-            for (IRecipe r : world.getRecipeManager().getRecipes()) {
+            for (ICraftingRecipe r : world.getRecipeManager().getRecipes(IRecipeType.CRAFTING, inv, world)) {
                 if (r.matches(inv, world)) {
                     this.recipe = r;
 
@@ -182,7 +185,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
         }
 
-        CraftingInventory inv = new CraftingInventoryDummy();
+        CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -215,7 +218,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
         }
 
-        CraftingInventory inv = new CraftingInventoryDummy();
+        CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -341,8 +344,8 @@ public class CraftingPattern implements ICraftingPattern {
         return result;
     }
 
-    class CraftingInventoryDummy extends CraftingInventory {
-        public CraftingInventoryDummy() {
+    private class DummyCraftingInventory extends CraftingInventory {
+        public DummyCraftingInventory() {
             super(new Container(null, 0) {
                 @Override
                 public boolean canInteractWith(PlayerEntity player) {

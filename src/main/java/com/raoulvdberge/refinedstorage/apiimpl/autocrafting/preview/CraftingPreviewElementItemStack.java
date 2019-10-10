@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -77,8 +78,7 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
 
         drawers.getItemDrawer().draw(x, y, getElement());
 
-        // TODO float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
-        float scale = 1F;
+        float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         y += 2;
 

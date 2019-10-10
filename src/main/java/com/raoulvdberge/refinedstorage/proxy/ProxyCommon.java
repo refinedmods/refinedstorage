@@ -7,7 +7,6 @@ public class ProxyCommon {
 
         API.deliver(e.getAsmData());
 
-        NetworkNodeGrid.FACTORY_ID = API.instance().getGridManager().add(new GridFactoryGridBlock());
         WirelessGrid.ID = API.instance().getGridManager().add(new GridFactoryWirelessGrid());
         WirelessFluidGrid.ID = API.instance().getGridManager().add(new GridFactoryWirelessFluidGrid());
         TilePortableGrid.FACTORY_ID = API.instance().getGridManager().add(new GridFactoryPortableGridBlock());
@@ -87,20 +86,6 @@ public class ProxyCommon {
     public void onHarvestCheck(PlayerEvent.HarvestCheck e) {
         if (e.getTargetBlock().getBlock() instanceof BlockBase) {
             e.setCanHarvest(true); // Allow break without tool
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerLoginEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent e) {
-        if (!e.player.world.isRemote) {
-            RS.INSTANCE.network.sendTo(new MessageConfigSync(), (ServerPlayerEntity) e.player);
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerLogoutEvent(WorldEvent.Unload e) {
-        if (e.getWorld().isRemote && RS.INSTANCE.config.getOriginalClientVersion() != null) {
-            RS.INSTANCE.config = RS.INSTANCE.config.getOriginalClientVersion();
         }
     }*/
 }

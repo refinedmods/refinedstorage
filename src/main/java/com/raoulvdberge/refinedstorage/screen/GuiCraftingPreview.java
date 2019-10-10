@@ -112,7 +112,7 @@ public class GuiCraftingPreview extends BaseScreen {
         int x = 7;
         int y = 15;
 
-        float scale = /* TODO font.getUnicodeFlag() ? 1F :*/ 0.5F;
+        float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         if (getErrorType() != null) {
             GlStateManager.pushMatrix();

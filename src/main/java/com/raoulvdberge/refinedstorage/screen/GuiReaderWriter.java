@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -116,7 +117,7 @@ public class GuiReaderWriter extends BaseScreen<ReaderWriterContainer> {
 
         int item = scrollbar != null ? scrollbar.getOffset() : 0;
 
-        float scale = /*TODO fontRenderer.getUnicodeFlag() ? 1F :*/ 0.5F;
+        float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         for (int i = 0; i < VISIBLE_ROWS; ++i) {
             if (item < getChannels().size()) {

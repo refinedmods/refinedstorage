@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
@@ -52,8 +53,7 @@ public class CraftingMonitorElementFluidRender implements ICraftingMonitorElemen
 
         drawers.getFluidDrawer().draw(x + 4, y + 6, stack);
 
-        // TODO float scale = drawers.getFontRenderer().getUnicodeFlag() ? 1F : 0.5F;
-        float scale = 1F;
+        float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         GlStateManager.pushMatrix();
         GlStateManager.scalef(scale, scale, 1);
