@@ -721,7 +721,7 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
             return energyStorageCap.cast();
         }
 
-        return super.getCapability(cap);
+        return super.getCapability(cap, direction);
     }
 
     public void onOpened() {

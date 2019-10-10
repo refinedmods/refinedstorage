@@ -672,7 +672,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
             return networkNodeProxyCap.cast();
         }
 
-        return super.getCapability(cap);
+        return super.getCapability(cap, direction);
     }
 
     @Override

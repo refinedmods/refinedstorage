@@ -99,6 +99,6 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
             return networkNodeProxy.cast();
         }
 
-        return super.getCapability(cap);
+        return super.getCapability(cap, direction);
     }
 }
