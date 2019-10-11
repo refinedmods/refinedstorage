@@ -5,14 +5,14 @@ import net.minecraft.inventory.container.Slot;
 
 import java.util.function.Supplier;
 
-public class BaseLegacySlot extends Slot {
+public class LegacyBaseSlot extends Slot {
     private Supplier<Boolean> enableHandler = () -> true;
 
-    public BaseLegacySlot(IInventory inventory, int inventoryIndex, int x, int y) {
+    public LegacyBaseSlot(IInventory inventory, int inventoryIndex, int x, int y) {
         super(inventory, inventoryIndex, x, y);
     }
 
-    public BaseLegacySlot setEnableHandler(Supplier<Boolean> enableHandler) {
+    public LegacyBaseSlot setEnableHandler(Supplier<Boolean> enableHandler) {
         this.enableHandler = enableHandler;
 
         return this;

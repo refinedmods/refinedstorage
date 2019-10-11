@@ -46,6 +46,8 @@ public final class RSBlocks {
     public static final GridBlock GRID = null;
     @ObjectHolder(RS.ID + ":crafting_grid")
     public static final GridBlock CRAFTING_GRID = null;
+    @ObjectHolder(RS.ID + ":pattern_grid")
+    public static final GridBlock PATTERN_GRID = null;
 
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();

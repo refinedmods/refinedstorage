@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
-import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
@@ -9,6 +8,7 @@ import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.tile.NetworkNodeTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.GridUtils;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -73,12 +73,12 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
         }
     }
 
-    private final GridType gridType;
+    private final GridType type;
 
-    public GridTile(GridType gridType) {
-        super(gridType == GridType.NORMAL ? RSTiles.GRID : RSTiles.CRAFTING_GRID);
+    public GridTile(GridType type) {
+        super(GridUtils.getTileEntityType(type));
 
-        this.gridType = gridType;
+        this.type = type;
 
         dataManager.addWatchedParameter(VIEW_TYPE);
         dataManager.addWatchedParameter(SORTING_DIRECTION);
@@ -95,7 +95,7 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
     @Override
     @Nonnull
     public GridNetworkNode createNode(World world, BlockPos pos) {
-        return new GridNetworkNode(world, pos, gridType);
+        return new GridNetworkNode(world, pos, type);
     }
 
     /* TODO

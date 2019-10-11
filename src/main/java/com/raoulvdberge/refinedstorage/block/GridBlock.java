@@ -72,13 +72,11 @@ public class GridBlock extends NodeBlock {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, GridType.CRAFTING.getId(), new ModelResourceLocation(info.getId(), "connected=false,direction=north,type=crafting"));
         modelRegistration.setModel(this, GridType.PATTERN.getId(), new ModelResourceLocation(info.getId(), "connected=false,direction=north,type=pattern"));
         modelRegistration.setModel(this, GridType.FLUID.getId(), new ModelResourceLocation(info.getId(), "connected=false,direction=north,type=fluid"));
 
         modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(
             base,
-            RS.ID + ":blocks/grid/cutouts/crafting_front_connected",
             RS.ID + ":blocks/grid/cutouts/pattern_front_connected",
             RS.ID + ":blocks/grid/cutouts/fluid_front_connected"
         ));

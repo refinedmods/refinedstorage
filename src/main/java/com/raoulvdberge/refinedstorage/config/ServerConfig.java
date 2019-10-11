@@ -121,12 +121,14 @@ public class ServerConfig {
     public class Grid {
         private final ForgeConfigSpec.IntValue gridUsage;
         private final ForgeConfigSpec.IntValue craftingGridUsage;
+        private final ForgeConfigSpec.IntValue patternGridUsage;
 
         public Grid() {
             builder.push("grid");
 
             gridUsage = builder.comment("The energy used by Grids").defineInRange("gridUsage", 2, 0, Integer.MAX_VALUE);
             craftingGridUsage = builder.comment("The energy used by Crafting Grids").defineInRange("craftingGridUsage", 4, 0, Integer.MAX_VALUE);
+            patternGridUsage = builder.comment("The energy used by Pattern Grids").defineInRange("patternGridUsage", 3, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -137,6 +139,10 @@ public class ServerConfig {
 
         public int getCraftingGridUsage() {
             return craftingGridUsage.get();
+        }
+
+        public int getPatternGridUsage() {
+            return patternGridUsage.get();
         }
     }
 

@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -157,31 +159,30 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
     }
 
-    /* TODO
     @Override
     protected void handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type) {
-        boolean valid = type != ClickType.QUICK_MOVE && Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty();
+        boolean valid = type != ClickType.QUICK_MOVE && minecraft.player.inventory.getItemStack().isEmpty();
 
-        if (valid && slot instanceof SlotFilter && slot.isEnabled() && ((SlotFilter) slot).isSizeAllowed()) {
+        if (valid && slot instanceof FilterSlot && slot.isEnabled() && ((FilterSlot) slot).isSizeAllowed()) {
             if (!slot.getStack().isEmpty()) {
-                FMLClientHandler.instance().showGuiScreen(new GuiAmount(
-                    (GuiBase) Minecraft.getMinecraft().currentScreen,
-                    Minecraft.getMinecraft().player,
+                minecraft.displayGuiScreen(new AmountScreen(
+                    this,
+                    minecraft.player,
                     slot.slotNumber,
                     slot.getStack(),
                     slot.getSlotStackLimit()
                 ));
             }
-        } else if (valid && slot instanceof SlotFilterFluid && slot.isEnabled() && ((SlotFilterFluid) slot).isSizeAllowed()) {
-            FluidStack stack = ((SlotFilterFluid) slot).getFluidInventory().getFluid(slot.getSlotIndex());
+        } else if (valid && slot instanceof FluidFilterSlot && slot.isEnabled() && ((FluidFilterSlot) slot).isSizeAllowed()) {
+            FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
-            if (stack != null) {
-                FMLClientHandler.instance().showGuiScreen(new GuiFluidAmount(
-                    (GuiBase) Minecraft.getMinecraft().currentScreen,
-                    Minecraft.getMinecraft().player,
+            if (!stack.isEmpty()) {
+                minecraft.displayGuiScreen(new FluidAmountScreen(
+                    this,
+                    minecraft.player,
                     slot.slotNumber,
                     stack,
-                    ((SlotFilterFluid) slot).getFluidInventory().getMaxAmount()
+                    ((FluidFilterSlot) slot).getFluidInventory().getMaxAmount()
                 ));
             } else {
                 super.handleMouseClick(slot, slotId, mouseButton, type);
@@ -190,17 +191,6 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
             super.handleMouseClick(slot, slotId, mouseButton, type);
         }
     }
-
-    @Override
-    public void handleMouseInput() throws IOException {
-        super.handleMouseInput();
-
-        int d = Mouse.getEventDWheel();
-
-        if (scrollbar != null && d != 0) {
-            scrollbar.wheel(d);
-        }
-    }*/
 
     public GuiCheckBox addCheckBox(int x, int y, String text, boolean checked, Button.IPressable onPress) {
         CheckBoxWidget checkBox = new CheckBoxWidget(x, y, text, checked, onPress);

@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class FilterLegacySlot extends BaseLegacySlot {
-    public FilterLegacySlot(IInventory inventory, int inventoryIndex, int x, int y) {
+public class LegacyFilterSlot extends LegacyBaseSlot {
+    public LegacyFilterSlot(IInventory inventory, int inventoryIndex, int x, int y) {
         super(inventory, inventoryIndex, x, y);
     }
 

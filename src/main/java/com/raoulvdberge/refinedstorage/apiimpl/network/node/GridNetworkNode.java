@@ -25,6 +25,7 @@ import com.raoulvdberge.refinedstorage.item.PatternItem;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
+import com.raoulvdberge.refinedstorage.util.GridUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -60,6 +61,7 @@ import java.util.Set;
 public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
     public static final ResourceLocation CRAFTING_ID = new ResourceLocation(RS.ID, "crafting_grid");
+    public static final ResourceLocation PATTERN_ID = new ResourceLocation(RS.ID, "pattern_grid");
 
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
@@ -174,7 +176,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
             case CRAFTING:
                 return RS.SERVER_CONFIG.getGrid().getCraftingGridUsage();
             case PATTERN:
-                return 0;
+                return RS.SERVER_CONFIG.getGrid().getPatternGridUsage();
             case FLUID:
                 return 0;
             default:
@@ -540,7 +542,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
                     inputsFilled++;
                 }
 
-                if (processingMatrixFluids.getFluid(i) != null) {
+                if (!processingMatrixFluids.getFluid(i).isEmpty()) {
                     inputsFilled++;
                 }
             }
@@ -550,7 +552,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
                     outputsFilled++;
                 }
 
-                if (processingMatrixFluids.getFluid(i) != null) {
+                if (!processingMatrixFluids.getFluid(i).isEmpty()) {
                     outputsFilled++;
                 }
             }
@@ -689,7 +691,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public ResourceLocation getId() {
-        return type == GridType.NORMAL ? ID : CRAFTING_ID;
+        return GridUtils.getNetworkNodeId(type);
     }
 
     @Override

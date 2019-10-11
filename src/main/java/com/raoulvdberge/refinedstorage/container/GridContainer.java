@@ -13,9 +13,9 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.grid.CraftingGridSlot;
 import com.raoulvdberge.refinedstorage.container.slot.grid.ResultCraftingGridSlot;
-import com.raoulvdberge.refinedstorage.container.slot.legacy.BaseLegacySlot;
-import com.raoulvdberge.refinedstorage.container.slot.legacy.DisabledLegacySlot;
-import com.raoulvdberge.refinedstorage.container.slot.legacy.FilterLegacySlot;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.LegacyBaseSlot;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.LegacyDisabledSlot;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.LegacyFilterSlot;
 import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.tile.BaseTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -39,7 +39,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     private IScreenInfoProvider screenInfoProvider;
 
     private ResultCraftingGridSlot craftingResultSlot;
-    private BaseLegacySlot patternResultSlot;
+    private LegacyBaseSlot patternResultSlot;
 
     public GridContainer(IGrid grid, @Nullable BaseTile gridTile, PlayerEntity player, int windowId) {
         super(RSContainers.GRID, gridTile, player, windowId);
@@ -191,7 +191,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         y = headerAndSlots + 4;
 
         for (int i = 0; i < 9; ++i) {
-            addSlot(new FilterLegacySlot(grid.getCraftingMatrix(), i, x, y).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern()));
+            addSlot(new LegacyFilterSlot(grid.getCraftingMatrix(), i, x, y).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern()));
 
             x += 18;
 
@@ -201,7 +201,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
             }
         }
 
-        addSlot(patternResultSlot = (new DisabledLegacySlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern())));
+        addSlot(patternResultSlot = (new LegacyDisabledSlot(grid.getCraftingResult(), 0, 134, headerAndSlots + 22).setEnableHandler(() -> !((GridNetworkNode) grid).isProcessingPattern())));
     }
 
     public IGrid getGrid() {

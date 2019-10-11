@@ -5,8 +5,8 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.raoulvdberge.refinedstorage.container.slot.legacy.DisabledLegacySlot;
-import com.raoulvdberge.refinedstorage.container.slot.legacy.FilterLegacySlot;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.LegacyDisabledSlot;
+import com.raoulvdberge.refinedstorage.container.slot.legacy.LegacyFilterSlot;
 import com.raoulvdberge.refinedstorage.container.transfer.TransferManager;
 import com.raoulvdberge.refinedstorage.network.FluidFilterSlotUpdateMessage;
 import com.raoulvdberge.refinedstorage.tile.BaseTile;
@@ -65,7 +65,7 @@ public abstract class BaseContainer extends Container {
             int y = yInventory + 4 + (3 * 18);
 
             if (isHeldItemDisabled() && i == player.inventory.currentItem) {
-                addSlot(new DisabledLegacySlot(player.inventory, id, x, y));
+                addSlot(new LegacyDisabledSlot(player.inventory, id, x, y));
             } else {
                 addSlot(new Slot(player.inventory, id, x, y));
             }
@@ -123,7 +123,7 @@ public abstract class BaseContainer extends Container {
             }
 
             return player.inventory.getItemStack();
-        } else if (slot instanceof FilterLegacySlot) {
+        } else if (slot instanceof LegacyFilterSlot) {
             if (player.inventory.getItemStack().isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
             } else if (slot.isItemValid(player.inventory.getItemStack())) {
@@ -131,7 +131,7 @@ public abstract class BaseContainer extends Container {
             }
 
             return player.inventory.getItemStack();
-        } else if (slot instanceof DisabledLegacySlot) {
+        } else if (slot instanceof LegacyDisabledSlot) {
             return ItemStack.EMPTY;
         }
 
@@ -150,7 +150,7 @@ public abstract class BaseContainer extends Container {
 
     @Override
     public boolean canMergeSlot(ItemStack stack, Slot slot) {
-        if (slot instanceof FilterSlot || slot instanceof FluidFilterSlot || slot instanceof FilterLegacySlot) {
+        if (slot instanceof FilterSlot || slot instanceof FluidFilterSlot || slot instanceof LegacyFilterSlot) {
             return false;
         }
 

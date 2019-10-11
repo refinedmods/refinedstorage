@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.container.GridContainer;
 import com.raoulvdberge.refinedstorage.network.grid.GridClearMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemInsertHeldMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemPullMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridPatternCreateMessage;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.*;
@@ -38,7 +39,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.lwjgl.glfw.GLFW;
@@ -392,7 +392,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         }
 
         if (isOverClear(mouseX, mouseY)) {
-            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage:clear"));
+            renderTooltip(mouseX, mouseY, I18n.format("misc.refinedstorage.clear"));
         }
 
         if (isOverCreatePattern(mouseX, mouseY)) {
@@ -407,7 +407,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         List<String> smallTextLines = Lists.newArrayList();
 
         if (!gridStack.doesDisplayCraftText()) {
-            smallTextLines.add(I18n.format("misc.refinedstorage:total", gridStack.getFormattedFullQuantity()));
+            smallTextLines.add(I18n.format("misc.refinedstorage.total", gridStack.getFormattedFullQuantity()));
         }
 
         if (gridStack.getTrackerEntry() != null) {
@@ -433,18 +433,16 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
         if (clickedCreatePattern) {
-            BlockPos gridPos = ((GridNetworkNode) grid).getPos();
-
             minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
-            // @TODO RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
+            RS.NETWORK_HANDLER.sendToServer(new GridPatternCreateMessage(((GridNetworkNode) grid).getPos()));
 
             return true;
         } else if (grid.isActive()) {
             if (clickedClear) {
-                RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
-
                 minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
+                RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
 
                 return true;
             }

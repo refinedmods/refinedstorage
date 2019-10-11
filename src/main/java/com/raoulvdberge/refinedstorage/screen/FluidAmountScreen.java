@@ -1,19 +1,21 @@
 package com.raoulvdberge.refinedstorage.screen;
 
-import com.google.common.primitives.Ints;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.FluidAmountContainer;
+import com.raoulvdberge.refinedstorage.network.SetFluidFilterSlotMessage;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GuiFluidAmount extends AmountSpecifyingScreen<FluidAmountContainer> {
+public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContainer> {
     private int containerSlot;
     private FluidStack stack;
     private int maxAmount;
 
-    public GuiFluidAmount(BaseScreen parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount) {
-        super(parent, new FluidAmountContainer(player, stack), 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage:fluid_amount"));
+    public FluidAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount) {
+        super(parent, new FluidAmountContainer(player, stack), 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage.fluid_amount"));
 
         this.containerSlot = containerSlot;
         this.stack = stack;
@@ -55,12 +57,14 @@ public class GuiFluidAmount extends AmountSpecifyingScreen<FluidAmountContainer>
 
     @Override
     protected void onOkButtonPressed(boolean shiftDown) {
-        Integer amount = Ints.tryParse(amountField.getText());
+        try {
+            int amount = Integer.parseInt(amountField.getText());
 
-        if (amount != null) {
-            // TODO RS.INSTANCE.network.sendToServer(new MessageSlotFilterFluidSetAmount(containerSlot, amount));
+            RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(containerSlot, StackUtils.copy(stack, amount)));
 
             close();
+        } catch (NumberFormatException e) {
+            // NO OP
         }
     }
 }
