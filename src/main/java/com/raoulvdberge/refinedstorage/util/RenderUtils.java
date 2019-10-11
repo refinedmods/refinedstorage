@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.util;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -11,7 +10,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -30,27 +28,16 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 public final class RenderUtils {
-    public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix(Direction.DOWN); // TODO: dir?
-
-    // @Volatile: From ForgeBlockStateV1
-    private static final TRSRTransformation FLIP_X = new TRSRTransformation(null, null, new Vector3f(-1, 1, 1), null);
-
-    private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_ITEM_TRANSFORM;
-    private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_BLOCK_TRANSFORM;
-
     private static final VertexFormat ITEM_FORMAT_WITH_LIGHTMAP = new VertexFormat(DefaultVertexFormats.ITEM).addElement(DefaultVertexFormats.TEX_2S);
 
     public static String shorten(String text, int length) {
@@ -58,52 +45,6 @@ public final class RenderUtils {
             text = text.substring(0, length) + "...";
         }
         return text;
-    }
-
-    private static TRSRTransformation leftifyTransform(TRSRTransformation transform) {
-        return TRSRTransformation.blockCenterToCorner(FLIP_X.compose(TRSRTransformation.blockCornerToCenter(transform)).compose(FLIP_X));
-    }
-
-    private static TRSRTransformation getTransform(float tx, float ty, float tz, float ax, float ay, float az, float s) {
-        return new TRSRTransformation(
-            new Vector3f(tx / 16, ty / 16, tz / 16),
-            TRSRTransformation.quatFromXYZDegrees(new Vector3f(ax, ay, az)),
-            new Vector3f(s, s, s),
-            null
-        );
-    }
-
-    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getDefaultItemTransforms() {
-        if (DEFAULT_ITEM_TRANSFORM != null) {
-            return DEFAULT_ITEM_TRANSFORM;
-        }
-
-        return DEFAULT_ITEM_TRANSFORM = ImmutableMap.<ItemCameraTransforms.TransformType, TRSRTransformation>builder()
-            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, getTransform(0, 3, 1, 0, 0, 0, 0.55f))
-            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, getTransform(0, 3, 1, 0, 0, 0, 0.55f))
-            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, getTransform(1.13f, 3.2f, 1.13f, 0, -90, 25, 0.68f))
-            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, getTransform(1.13f, 3.2f, 1.13f, 0, 90, -25, 0.68f))
-            .put(ItemCameraTransforms.TransformType.GROUND, getTransform(0, 2, 0, 0, 0, 0, 0.5f))
-            .put(ItemCameraTransforms.TransformType.HEAD, getTransform(0, 13, 7, 0, 180, 0, 1))
-            .build();
-    }
-
-    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getDefaultBlockTransforms() {
-        if (DEFAULT_BLOCK_TRANSFORM != null) {
-            return DEFAULT_BLOCK_TRANSFORM;
-        }
-
-        TRSRTransformation thirdperson = getTransform(0, 2.5f, 0, 75, 45, 0, 0.375f);
-
-        return DEFAULT_BLOCK_TRANSFORM = ImmutableMap.<ItemCameraTransforms.TransformType, TRSRTransformation>builder()
-            .put(ItemCameraTransforms.TransformType.GUI, getTransform(0, 0, 0, 30, 225, 0, 0.625f))
-            .put(ItemCameraTransforms.TransformType.GROUND, getTransform(0, 3, 0, 0, 0, 0, 0.25f))
-            .put(ItemCameraTransforms.TransformType.FIXED, getTransform(0, 0, 0, 0, 0, 0, 0.5f))
-            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdperson)
-            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, leftifyTransform(thirdperson))
-            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, getTransform(0, 0, 0, 0, 45, 0, 0.4f))
-            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, getTransform(0, 0, 0, 0, 225, 0, 0.4f))
-            .build();
     }
 
     public static int getOffsetOnScale(int pos, float scale) {
@@ -334,7 +275,7 @@ public final class RenderUtils {
         return format;
     }
 
-    public static TextureAtlasSprite getSprite(IBakedModel coverModel, BlockState coverState, Direction facing, long rand) {
+    public static TextureAtlasSprite getSprite(IBakedModel coverModel, BlockState coverState, Direction facing, Random rand) {
         TextureAtlasSprite sprite = null;
 
         BlockRenderLayer originalLayer = MinecraftForgeClient.getRenderLayer();
@@ -343,11 +284,11 @@ public final class RenderUtils {
             for (BlockRenderLayer layer : BlockRenderLayer.values()) {
                 ForgeHooksClient.setRenderLayer(layer);
 
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, new Random())) {
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
                     return bakedQuad.getSprite();
                 }
 
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, new Random())) { // TODO random inst
+                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, rand)) {
                     if (sprite == null) {
                         sprite = bakedQuad.getSprite();
                     }
@@ -372,7 +313,7 @@ public final class RenderUtils {
         }
 
         if (sprite == null) {
-            sprite = MissingTextureSprite.func_217790_a(); // TODO Mapping
+            sprite = MissingTextureSprite.func_217790_a();
         }
 
         return sprite;

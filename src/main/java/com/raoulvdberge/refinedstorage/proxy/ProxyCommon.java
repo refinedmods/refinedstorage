@@ -27,34 +27,6 @@ public class ProxyCommon {
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementFluidStack.ID, CraftingPreviewElementFluidStack::fromByteBuf);
         API.instance().getCraftingPreviewElementRegistry().add(CraftingPreviewElementError.ID, CraftingPreviewElementError::fromByteBuf);
 
-        API.instance().addPatternRenderHandler(pattern -> GuiBase.isShiftKeyDown());
-        API.instance().addPatternRenderHandler(pattern -> {
-            Container container = Minecraft.getMinecraft().player.openContainer;
-
-            if (container instanceof ContainerCrafterManager) {
-                for (Slot slot : container.inventorySlots) {
-                    if (slot instanceof SlotCrafterManager && slot.getStack() == pattern) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        });
-        API.instance().addPatternRenderHandler(pattern -> {
-            Container container = Minecraft.getMinecraft().player.openContainer;
-
-            if (container instanceof ContainerCrafter) {
-                for (int i = 0; i < 9; ++i) {
-                    if (container.getSlot(i).getStack() == pattern) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        });
-
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerItems.ID, ReaderWriterHandlerItems::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerFluids.ID, ReaderWriterHandlerFluids::new);
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());

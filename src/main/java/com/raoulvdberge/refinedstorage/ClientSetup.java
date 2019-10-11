@@ -1,13 +1,22 @@
 package com.raoulvdberge.refinedstorage;
 
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.container.CrafterContainer;
+import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
+import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.render.BakedModelOverrideRegistry;
 import com.raoulvdberge.refinedstorage.render.model.baked.DiskDriveBakedModel;
 import com.raoulvdberge.refinedstorage.render.model.baked.FullbrightBakedModel;
+import com.raoulvdberge.refinedstorage.render.model.baked.PatternBakedModel;
 import com.raoulvdberge.refinedstorage.screen.ControllerScreen;
 import com.raoulvdberge.refinedstorage.screen.DiskDriveScreen;
 import com.raoulvdberge.refinedstorage.screen.FilterScreen;
 import com.raoulvdberge.refinedstorage.screen.factory.GridScreenFactory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -49,6 +58,8 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/grid/cutouts/pattern_front_connected")
         ));
 
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
             new DiskDriveBakedModel(
                 base,
@@ -67,6 +78,34 @@ public class ClientSetup {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelBake);
+
+        API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown());
+        API.instance().addPatternRenderHandler(pattern -> {
+            Container container = Minecraft.getInstance().player.openContainer;
+
+            if (container instanceof CrafterManagerContainer) {
+                for (Slot slot : container.inventorySlots) {
+                    if (slot instanceof CrafterManagerSlot && slot.getStack() == pattern) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
+        API.instance().addPatternRenderHandler(pattern -> {
+            Container container = Minecraft.getInstance().player.openContainer;
+
+            if (container instanceof CrafterContainer) {
+                for (int i = 0; i < 9; ++i) {
+                    if (container.getSlot(i).getStack() == pattern) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
     }
 
     @SubscribeEvent
