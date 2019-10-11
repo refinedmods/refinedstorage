@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRe
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
@@ -120,6 +121,12 @@ public interface IRSAPI {
      */
     @Nonnull
     IGridManager getGridManager();
+
+    /**
+     * @return the default crafting grid behavior
+     */
+    @Nonnull
+    ICraftingGridBehavior getCraftingGridBehavior();
 
     /**
      * @return the storage disk registry

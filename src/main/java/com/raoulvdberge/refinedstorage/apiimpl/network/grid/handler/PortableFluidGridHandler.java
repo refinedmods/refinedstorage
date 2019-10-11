@@ -19,10 +19,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class FluidGridHandlerPortable implements IFluidGridHandler {
+public class PortableFluidGridHandler implements IFluidGridHandler {
     private IPortableGrid portableGrid;
 
-    public FluidGridHandlerPortable(IPortableGrid portableGrid) {
+    public PortableFluidGridHandler(IPortableGrid portableGrid) {
         this.portableGrid = portableGrid;
     }
 

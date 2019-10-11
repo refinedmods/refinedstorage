@@ -3,13 +3,14 @@ package com.raoulvdberge.refinedstorage.screen.grid;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
+import com.raoulvdberge.refinedstorage.network.grid.GridClearMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemInsertHeldMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridItemPullMessage;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
@@ -40,6 +41,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -104,7 +106,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         if (searchField == null) {
             searchField = new SearchWidget(font, sx, sy, 88 - 6);
-            searchField.addListener(() -> {
+            searchField.func_212954_a(value -> {
                 this.getView().sort(); // Use getter since this view can be replaced.
             });
             searchField.setMode(grid.getSearchBoxMode());
@@ -169,6 +171,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             wasConnected = grid.isActive();
 
             view.sort();
+        }
+
+        if (isKeyDown(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX)) {
+            RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
         }
 
         tabs.update();
@@ -429,12 +435,16 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         if (clickedCreatePattern) {
             BlockPos gridPos = ((GridNetworkNode) grid).getPos();
 
+            minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+
             // @TODO RS.INSTANCE.network.sendToServer(new MessageGridPatternCreate(gridPos.getX(), gridPos.getY(), gridPos.getZ()));
 
             return true;
         } else if (grid.isActive()) {
-            if (clickedClear && grid instanceof IGridNetworkAware) {
-                // @TODO RS.INSTANCE.network.sendToServer(new MessageGridClear());
+            if (clickedClear) {
+                RS.NETWORK_HANDLER.sendToServer(new GridClearMessage());
+
+                minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
                 return true;
             }
@@ -442,10 +452,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             ItemStack held = container.getPlayer().inventory.getItemStack();
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
-                if (grid.getGridType() == GridType.NORMAL) {
-                    RS.NETWORK_HANDLER.sendToServer(new GridItemInsertHeldMessage(clickedButton == 1));
-                } else if (grid.getGridType() == GridType.FLUID) {
+                if (grid.getGridType() == GridType.FLUID) {
                     // @TODO RS.INSTANCE.network.sendToServer(new MessageGridFluidInsertHeld());
+                } else {
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemInsertHeldMessage(clickedButton == 1));
                 }
 
                 return true;
@@ -485,12 +495,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             }
         }
 
-        if (clickedClear || clickedCreatePattern) {
-            minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-
-            return true;
-        }
-
         return super.mouseClicked(mouseX, mouseY, clickedButton);
     }
 
@@ -512,23 +516,28 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     @Override
+    public boolean charTyped(char p_charTyped_1_, int p_charTyped_2_) {
+        if (searchField.charTyped(p_charTyped_1_, p_charTyped_2_)) {
+            return true;
+        }
+
+        return super.charTyped(p_charTyped_1_, p_charTyped_2_);
+    }
+
+    @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if (key == GLFW.GLFW_KEY_ESCAPE) {
+            minecraft.player.closeScreen();
+
+            return true;
+        }
+
         if (searchField.keyPressed(key, scanCode, modifiers) || searchField.func_212955_f()) {
             return true;
         }
 
         return super.keyPressed(key, scanCode, modifiers);
     }
-
-    /* TODO
-    @Override
-    protected void keyTyped(char character, int keyCode) throws IOException {
-        if (keyCode == RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX.getKeyCode()) {
-            RS.INSTANCE.network.sendToServer(new MessageGridClear());
-        } else {
-            super.keyTyped(character, keyCode);
-        }
-    }*/
 
     public SearchWidget getSearchField() {
         return searchField;

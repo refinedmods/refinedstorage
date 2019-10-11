@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRe
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
@@ -33,6 +34,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPrev
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.CraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
@@ -60,18 +62,19 @@ import java.util.*;
 public class API implements IRSAPI {
     private static final IRSAPI INSTANCE = new API();
 
-    private IComparer comparer = new Comparer();
-    private IQuantityFormatter quantityFormatter = new QuantityFormatter();
-    private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
-    private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
-    private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
-    private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
-    private IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
-    private IGridManager gridManager = new GridManager();
-    private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
-    private IStorageDiskSync storageDiskSync = new StorageDiskSync();
-    private Map<StorageType, TreeSet<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
-    private List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
+    private final IComparer comparer = new Comparer();
+    private final IQuantityFormatter quantityFormatter = new QuantityFormatter();
+    private final INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
+    private final ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
+    private final ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
+    private final ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
+    private final IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
+    private final IGridManager gridManager = new GridManager();
+    private final ICraftingGridBehavior craftingGridBehavior = new CraftingGridBehavior();
+    private final IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
+    private final IStorageDiskSync storageDiskSync = new StorageDiskSync();
+    private final Map<StorageType, TreeSet<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
+    private final List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
 
     public static IRSAPI instance() {
         return INSTANCE;
@@ -173,6 +176,12 @@ public class API implements IRSAPI {
     @Override
     public IGridManager getGridManager() {
         return gridManager;
+    }
+
+    @Nonnull
+    @Override
+    public ICraftingGridBehavior getCraftingGridBehavior() {
+        return craftingGridBehavior;
     }
 
     @Nonnull

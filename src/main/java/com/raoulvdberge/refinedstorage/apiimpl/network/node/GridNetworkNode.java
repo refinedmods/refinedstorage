@@ -31,14 +31,12 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -61,6 +59,7 @@ import java.util.Set;
 
 public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
+    public static final ResourceLocation CRAFTING_ID = new ResourceLocation(RS.ID, "crafting_grid");
 
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
@@ -87,13 +86,13 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
             }
         }
     };
-    private IRecipe currentRecipe;
+    private ICraftingRecipe currentRecipe;
     private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
     private CraftResultInventory result = new CraftResultInventory();
     private ItemHandlerBase processingMatrix = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this));
     private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64, new ListenerNetworkNode(this));
 
-    private Set<IGridCraftingListener> craftingListeners = new HashSet<>();
+    private Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
     private ItemHandlerBase patterns = new ItemHandlerBase(2, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN)) {
         @Override
@@ -146,7 +145,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     private List<IGridTab> tabs = new ArrayList<>();
     private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ListenerNetworkNode(this));
 
-    private GridType type;
+    private final GridType type;
 
     private int viewType = VIEW_TYPE_NORMAL;
     private int sortingDirection = SORTING_DIRECTION_DESCENDING;
@@ -161,21 +160,19 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     private boolean processingPattern = false;
     private int processingType = IType.ITEMS;
 
-    private final GridType gridType;
-
-    public GridNetworkNode(World world, BlockPos pos, GridType gridType) {
+    public GridNetworkNode(World world, BlockPos pos, GridType type) {
         super(world, pos);
 
-        this.gridType = gridType;
+        this.type = type;
     }
 
     @Override
     public int getEnergyUsage() {
-        switch (getGridType()) {
+        switch (type) {
             case NORMAL:
-                return RS.SERVER_CONFIG.getGrid().getUsage();
+                return RS.SERVER_CONFIG.getGrid().getGridUsage();
             case CRAFTING:
-                return 0;
+                return RS.SERVER_CONFIG.getGrid().getCraftingGridUsage();
             case PATTERN:
                 return 0;
             case FLUID:
@@ -231,18 +228,18 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public GridType getGridType() {
-        return gridType;
+        return type;
     }
 
     @Override
     public IStorageCacheListener createListener(ServerPlayerEntity player) {
-        return getGridType() == GridType.FLUID ? new FluidGridStorageCacheListener(player, network) : new ItemGridStorageCacheListener(player, network);
+        return type == GridType.FLUID ? new FluidGridStorageCacheListener(player, network) : new ItemGridStorageCacheListener(player, network);
     }
 
     @Nullable
     @Override
     public IStorageCache getStorageCache() {
-        return network != null ? (getGridType() == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache()) : null;
+        return network != null ? (type == GridType.FLUID ? network.getFluidStorageCache() : network.getItemStorageCache()) : null;
     }
 
     @Nullable
@@ -258,19 +255,17 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public void addCraftingListener(IGridCraftingListener listener) {
+    public void addCraftingListener(ICraftingGridListener listener) {
         craftingListeners.add(listener);
     }
 
     @Override
-    public void removeCraftingListener(IGridCraftingListener listener) {
+    public void removeCraftingListener(ICraftingGridListener listener) {
         craftingListeners.remove(listener);
     }
 
     @Override
     public ITextComponent getTitle() {
-        GridType type = getGridType();
-
         switch (type) {
             case CRAFTING:
                 return new TranslationTextComponent("gui.refinedstorage.crafting_grid");
@@ -323,7 +318,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     @Override
     public void onCraftingMatrixChanged() {
         if (currentRecipe == null || !currentRecipe.matches(matrix, world)) {
-            currentRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, matrix, world).orElse(null); // TODO: does this work?
+            currentRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, matrix, world).orElse(null);
         }
 
         if (currentRecipe == null) {
@@ -332,7 +327,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
             result.setInventorySlotContents(0, currentRecipe.getCraftingResult(matrix));
         }
 
-        craftingListeners.forEach(IGridCraftingListener::onCraftingMatrixChanged);
+        craftingListeners.forEach(ICraftingGridListener::onCraftingMatrixChanged);
 
         markDirty();
     }
@@ -457,88 +452,29 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public void onCrafted(PlayerEntity player) {
-        onCrafted(this, world, player);
+        API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player);
     }
 
-    public static void onCrafted(IGridNetworkAware grid, World world, PlayerEntity player) {
-        // TODO: NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(grid.getCraftingMatrix(), world);
-        NonNullList<ItemStack> remainder = NonNullList.create();
+    @Override
+    public void onClear(PlayerEntity player) {
+        if (type == GridType.CRAFTING && network != null && network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
+            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+                ItemStack slot = matrix.getStackInSlot(i);
 
-        INetwork network = grid.getNetwork();
+                if (!slot.isEmpty()) {
+                    matrix.setInventorySlotContents(i, StackUtils.nullToEmpty(network.insertItem(slot, slot.getCount(), Action.PERFORM)));
 
-        CraftingInventory matrix = grid.getCraftingMatrix();
-
-        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
-            ItemStack slot = matrix.getStackInSlot(i);
-
-            if (i < remainder.size() && !remainder.get(i).isEmpty()) {
-                // If there is no space for the remainder, dump it in the player inventory
-                if (!slot.isEmpty() && slot.getCount() > 1) {
-                    if (!player.inventory.addItemStackToInventory(remainder.get(i).copy())) {
-                        ItemStack remainderStack = network == null ? remainder.get(i).copy() : network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), Action.PERFORM);
-
-                        if (remainderStack != null) {
-                            InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
-                        }
-                    }
-
-                    matrix.decrStackSize(i, 1);
-                } else {
-                    matrix.setInventorySlotContents(i, remainder.get(i).copy());
-                }
-            } else if (!slot.isEmpty()) {
-                if (slot.getCount() == 1 && network != null) {
-                    ItemStack refill = StackUtils.nullToEmpty(network.extractItem(slot, 1, Action.PERFORM));
-
-                    matrix.setInventorySlotContents(i, refill);
-
-                    if (!refill.isEmpty()) {
-                        network.getItemStorageTracker().changed(player, refill.copy());
-                    }
-                } else {
-                    matrix.decrStackSize(i, 1);
+                    network.getItemStorageTracker().changed(player, slot.copy());
                 }
             }
+        } else if (type == GridType.PATTERN) {
+            clearMatrix();
         }
-
-        grid.onCraftingMatrixChanged();
     }
 
     @Override
     public void onCraftedShift(PlayerEntity player) {
-        onCraftedShift(this, player);
-    }
-
-    public static void onCraftedShift(IGridNetworkAware grid, PlayerEntity player) {
-        List<ItemStack> craftedItemsList = new ArrayList<>();
-        int craftedItems = 0;
-        ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
-
-        while (true) {
-            grid.onCrafted(player);
-
-            craftedItemsList.add(crafted.copy());
-
-            craftedItems += crafted.getCount();
-
-            if (!API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) || craftedItems + crafted.getCount() > crafted.getMaxStackSize()) {
-                break;
-            }
-        }
-
-        INetwork network = grid.getNetwork();
-
-        for (ItemStack craftedItem : craftedItemsList) {
-            if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                ItemStack remainder = network == null ? craftedItem : network.insertItem(craftedItem, craftedItem.getCount(), Action.PERFORM);
-
-                if (remainder != null) {
-                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
-                }
-            }
-        }
-
-        // TODO FMLCommonHandler.instance().firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, craftedItems), grid.getCraftingMatrix());
+        API.instance().getCraftingGridBehavior().onCraftedShift(this, player);
     }
 
     public void onCreatePattern() {
@@ -753,7 +689,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public ResourceLocation getId() {
-        return ID;
+        return type == GridType.NORMAL ? ID : CRAFTING_ID;
     }
 
     @Override
@@ -828,7 +764,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     @Override
     public IItemHandler getDrops() {
-        switch (getGridType()) {
+        switch (type) {
             case CRAFTING:
                 return new CombinedInvWrapper(filter, new InvWrapper(matrix));
             case PATTERN:

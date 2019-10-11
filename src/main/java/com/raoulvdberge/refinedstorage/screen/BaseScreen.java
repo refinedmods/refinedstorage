@@ -8,9 +8,12 @@ import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
@@ -322,6 +325,12 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
     protected void onPreInit() {
         // NO OP
+    }
+
+    public static boolean isKeyDown(KeyBinding keybinding) {
+        return InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), keybinding.getKey().getKeyCode()) &&
+            keybinding.getKeyConflictContext().isActive() &&
+            keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
     }
 
     public abstract void onPostInit(int x, int y);

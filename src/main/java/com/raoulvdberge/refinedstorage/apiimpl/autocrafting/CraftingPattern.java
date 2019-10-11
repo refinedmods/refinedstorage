@@ -11,7 +11,6 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -20,6 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class CraftingPattern implements ICraftingPattern {
     private ICraftingPatternContainer container;
@@ -27,7 +27,7 @@ public class CraftingPattern implements ICraftingPattern {
     private boolean processing;
     private boolean oredict;
     private boolean valid;
-    private IRecipe recipe;
+    private ICraftingRecipe recipe;
     private List<NonNullList<ItemStack>> inputs = new ArrayList<>();
     private NonNullList<ItemStack> outputs = NonNullList.create();
     private NonNullList<ItemStack> byproducts = NonNullList.create();
@@ -108,34 +108,30 @@ public class CraftingPattern implements ICraftingPattern {
                 }
             }
 
-            // TODO: better way of collecting recipes
-            for (ICraftingRecipe r : world.getRecipeManager().getRecipes(IRecipeType.CRAFTING, inv, world)) {
-                if (r.matches(inv, world)) {
-                    this.recipe = r;
+            Optional<ICraftingRecipe> potentialRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inv, world);
+            if (potentialRecipe.isPresent()) {
+                this.recipe = potentialRecipe.get();
 
-                    this.byproducts = recipe.getRemainingItems(inv);
+                this.byproducts = recipe.getRemainingItems(inv);
 
-                    ItemStack output = recipe.getCraftingResult(inv);
+                ItemStack output = recipe.getCraftingResult(inv);
 
-                    if (!output.isEmpty()) {
-                        this.valid = true;
+                if (!output.isEmpty()) {
+                    this.valid = true;
 
-                        outputs.add(output);
+                    outputs.add(output);
 
-                        if (oredict) {
-                            if (recipe.getIngredients().size() > 0) {
-                                inputs.clear();
+                    if (oredict) {
+                        if (recipe.getIngredients().size() > 0) {
+                            inputs.clear();
 
-                                for (int i = 0; i < recipe.getIngredients().size(); ++i) {
-                                    inputs.add(i, NonNullList.from(ItemStack.EMPTY, ((Ingredient) recipe.getIngredients().get(i)).getMatchingStacks()));
-                                }
-                            } else {
-                                this.valid = false;
+                            for (int i = 0; i < recipe.getIngredients().size(); ++i) {
+                                inputs.add(i, NonNullList.from(ItemStack.EMPTY, ((Ingredient) recipe.getIngredients().get(i)).getMatchingStacks()));
                             }
+                        } else {
+                            this.valid = false;
                         }
                     }
-
-                    break;
                 }
             }
         }

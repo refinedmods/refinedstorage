@@ -31,8 +31,8 @@ public class GridItemPullMessage {
     public static void handle(GridItemPullMessage message, Supplier<NetworkEvent.Context> ctx) {
         ServerPlayerEntity player = ctx.get().getSender();
 
-        ctx.get().enqueueWork(() -> {
-            if (player != null) {
+        if (player != null) {
+            ctx.get().enqueueWork(() -> {
                 Container container = player.openContainer;
 
                 if (container instanceof GridContainer) {
@@ -42,8 +42,9 @@ public class GridItemPullMessage {
                         grid.getItemHandler().onExtract(player, message.id, message.flags);
                     }
                 }
-            }
-        });
+            });
+        }
+        
         ctx.get().setPacketHandled(true);
     }
 }

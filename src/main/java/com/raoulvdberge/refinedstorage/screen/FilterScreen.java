@@ -91,6 +91,8 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         if (key == GLFW.GLFW_KEY_ESCAPE) {
             minecraft.player.closeScreen();
+
+            return true;
         }
 
         if (nameField.keyPressed(key, scanCode, modifiers) || nameField.func_212955_f()) {

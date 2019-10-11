@@ -44,6 +44,8 @@ public class RSTiles {
 
     @ObjectHolder(RS.ID + ":grid")
     public static final TileEntityType<GridTile> GRID = null;
+    @ObjectHolder(RS.ID + ":crafting_grid")
+    public static final TileEntityType<GridTile> CRAFTING_GRID = null;
 
     //@ObjectHolder(RS.ID + ":importer")
     public static final TileEntityType<TileImporter> IMPORTER = null;

@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridFactoryGridBlock;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
@@ -62,7 +62,7 @@ public class GridBlock extends NodeBlock {
     @SuppressWarnings("deprecation")
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
-            return NetworkUtils.attemptModify(worldIn, pos, hit.getFace(), player, () -> API.instance().getGridManager().openGrid(GridFactoryGridBlock.ID, (ServerPlayerEntity) player, pos));
+            return NetworkUtils.attemptModify(worldIn, pos, hit.getFace(), player, () -> API.instance().getGridManager().openGrid(GridBlockGridFactory.ID, (ServerPlayerEntity) player, pos));
         }
 
         return true;

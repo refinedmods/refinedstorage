@@ -27,8 +27,8 @@ public class GridItemInsertHeldMessage {
     public static void handle(GridItemInsertHeldMessage message, Supplier<NetworkEvent.Context> ctx) {
         ServerPlayerEntity player = ctx.get().getSender();
 
-        ctx.get().enqueueWork(() -> {
-            if (player != null) {
+        if (player != null) {
+            ctx.get().enqueueWork(() -> {
                 Container container = player.openContainer;
 
                 if (container instanceof GridContainer) {
@@ -38,8 +38,8 @@ public class GridItemInsertHeldMessage {
                         grid.getItemHandler().onInsertHeldItem(player, message.single);
                     }
                 }
-            }
-        });
+            });
+        }
 
         ctx.get().setPacketHandled(true);
     }

@@ -131,12 +131,12 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public void addCraftingListener(IGridCraftingListener listener) {
+    public void addCraftingListener(ICraftingGridListener listener) {
         // NO OP
     }
 
     @Override
-    public void removeCraftingListener(IGridCraftingListener listener) {
+    public void removeCraftingListener(ICraftingGridListener listener) {
         // NO OP
     }
 
@@ -280,6 +280,11 @@ public class WirelessGrid implements IGridNetworkAware {
 
     @Override
     public void onCrafted(PlayerEntity player) {
+        // NO OP
+    }
+
+    @Override
+    public void onClear(PlayerEntity player) {
         // NO OP
     }
 

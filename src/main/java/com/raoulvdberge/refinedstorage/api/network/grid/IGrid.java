@@ -77,13 +77,13 @@ public interface IGrid {
     /**
      * @param listener the listener
      */
-    default void addCraftingListener(IGridCraftingListener listener) {
+    default void addCraftingListener(ICraftingGridListener listener) {
     }
 
     /**
      * @param listener the listener
      */
-    default void removeCraftingListener(IGridCraftingListener listener) {
+    default void removeCraftingListener(ICraftingGridListener listener) {
     }
 
     /**
@@ -204,6 +204,11 @@ public interface IGrid {
      * @param player the player that crafted the item
      */
     void onCrafted(PlayerEntity player);
+
+    /**
+     * Called when the clear button is pressed in the pattern grid or crafting grid.
+     */
+    void onClear(PlayerEntity player);
 
     /**
      * Called when an item is crafted with shift click (up to 64 items) in a crafting grid.

@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridFactoryGridBlock;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.CableNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
@@ -94,8 +94,9 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(DiskDriveNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new DiskDriveNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(CableNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new CableNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(GridNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new GridNetworkNode(world, pos, GridType.NORMAL)));
+        API.instance().getNetworkNodeRegistry().add(GridNetworkNode.CRAFTING_ID, (tag, world, pos) -> readAndReturn(tag, new GridNetworkNode(world, pos, GridType.CRAFTING)));
 
-        API.instance().getGridManager().add(GridFactoryGridBlock.ID, new GridFactoryGridBlock());
+        API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
     }
 
     private INetworkNode readAndReturn(CompoundNBT tag, NetworkNode node) {
@@ -118,26 +119,17 @@ public final class RS {
         e.getRegistry().register(new CableBlock());
         e.getRegistry().register(new DiskDriveBlock());
         e.getRegistry().register(new GridBlock(GridType.NORMAL));
+        e.getRegistry().register(new GridBlock(GridType.CRAFTING));
     }
 
     @SubscribeEvent
     public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> e) {
-        e.getRegistry().register(registerTileDataParameters(
-            TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.NORMAL), RSBlocks.CONTROLLER).build(null).setRegistryName(RS.ID, "controller")
-        ));
-
-        e.getRegistry().register(registerTileDataParameters(
-            TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.CREATIVE), RSBlocks.CREATIVE_CONTROLLER).build(null).setRegistryName(RS.ID, "creative_controller")
-        ));
-
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.NORMAL), RSBlocks.CONTROLLER).build(null).setRegistryName(RS.ID, "controller")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.CREATIVE), RSBlocks.CREATIVE_CONTROLLER).build(null).setRegistryName(RS.ID, "creative_controller")));
         e.getRegistry().register(TileEntityType.Builder.create(CableTile::new, RSBlocks.CABLE).build(null).setRegistryName(RS.ID, "cable"));
-        e.getRegistry().register(registerTileDataParameters(
-            TileEntityType.Builder.create(DiskDriveTile::new, RSBlocks.DISK_DRIVE).build(null).setRegistryName(RS.ID, "disk_drive")
-        ));
-
-        e.getRegistry().register(registerTileDataParameters(
-            TileEntityType.Builder.create(() -> new GridTile(GridType.NORMAL), RSBlocks.GRID).build(null).setRegistryName(RS.ID, "grid")
-        ));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DiskDriveTile::new, RSBlocks.DISK_DRIVE).build(null).setRegistryName(RS.ID, "disk_drive")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new GridTile(GridType.NORMAL), RSBlocks.GRID).build(null).setRegistryName(RS.ID, "grid")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new GridTile(GridType.CRAFTING), RSBlocks.CRAFTING_GRID).build(null).setRegistryName(RS.ID, "crafting_grid")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -206,6 +198,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CABLE));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DISK_DRIVE));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.GRID));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CRAFTING_GRID));
     }
 
     /* TODO

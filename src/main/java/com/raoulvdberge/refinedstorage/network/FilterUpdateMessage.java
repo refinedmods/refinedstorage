@@ -42,17 +42,18 @@ public class FilterUpdateMessage {
     }
 
     public static void handle(FilterUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            PlayerEntity player = ctx.get().getSender();
+        PlayerEntity player = ctx.get().getSender();
 
-            if (player != null && player.openContainer instanceof FilterContainer) {
+        if (player != null && player.openContainer instanceof FilterContainer) {
+            ctx.get().enqueueWork(() -> {
                 FilterItem.setCompare(((FilterContainer) player.openContainer).getStack(), message.compare);
                 FilterItem.setMode(((FilterContainer) player.openContainer).getStack(), message.mode);
                 FilterItem.setModFilter(((FilterContainer) player.openContainer).getStack(), message.modFilter);
                 FilterItem.setName(((FilterContainer) player.openContainer).getStack(), message.name);
                 FilterItem.setType(((FilterContainer) player.openContainer).getStack(), message.type);
-            }
-        });
+            });
+        }
+
         ctx.get().setPacketHandled(true);
     }
 }

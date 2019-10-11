@@ -2,13 +2,12 @@ package com.raoulvdberge.refinedstorage.screen.widget;
 
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SearchWidget extends TextFieldWidget {
@@ -16,8 +15,6 @@ public class SearchWidget extends TextFieldWidget {
 
     private int mode;
     private int historyIndex = -1;
-
-    private List<Runnable> listeners = new LinkedList<>();
 
     public SearchWidget(FontRenderer fontRenderer, int x, int y, int width) {
         super(fontRenderer, x, y, width, fontRenderer.FONT_HEIGHT, "");
@@ -33,23 +30,17 @@ public class SearchWidget extends TextFieldWidget {
         });*/
     }
 
-    public void addListener(Runnable listener) {
-        listeners.add(listener);
-    }
-
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         boolean wasFocused = isFocused();
 
         boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        boolean flag = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
+        boolean clickedWidget = mouseX >= this.x && mouseX < this.x + this.width && mouseY >= this.y && mouseY < this.y + this.height;
 
-        if (flag && mouseButton == 1) {
+        if (clickedWidget && mouseButton == 1) {
             setText("");
             setFocused(true);
-
-            listeners.forEach(Runnable::run);
         } else if (wasFocused != isFocused()) {
             saveHistory();
         }
@@ -59,17 +50,15 @@ public class SearchWidget extends TextFieldWidget {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifier) {
-        @SuppressWarnings("deprecation") boolean canLoseFocus = ObfuscationReflectionHelper.getPrivateValue(TextFieldWidget.class, this, 6);
-
         boolean result = super.keyPressed(keyCode, scanCode, modifier);
 
         if (isFocused()) {
             if (keyCode == GLFW.GLFW_KEY_UP) {
-                updateSearchHistory(-1);
+                updateHistory(-1);
 
                 result = true;
             } else if (keyCode == GLFW.GLFW_KEY_DOWN) {
-                updateSearchHistory(1);
+                updateHistory(1);
 
                 result = true;
             } else if (keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
@@ -83,7 +72,7 @@ public class SearchWidget extends TextFieldWidget {
             }
         }
 
-        if (keyCode == RSKeyBindings.FOCUS_SEARCH_BAR.getKey().getKeyCode() && canLoseFocus) {
+        if (BaseScreen.isKeyDown(RSKeyBindings.FOCUS_SEARCH_BAR) && canLoseFocus) {
             setFocused(!isFocused());
 
             saveHistory();
@@ -91,14 +80,10 @@ public class SearchWidget extends TextFieldWidget {
             result = true;
         }
 
-        if (result) {
-            listeners.forEach(Runnable::run);
-        }
-
         return result;
     }
 
-    private void updateSearchHistory(int delta) {
+    private void updateHistory(int delta) {
         if (HISTORY.isEmpty()) {
             return;
         }
@@ -117,15 +102,11 @@ public class SearchWidget extends TextFieldWidget {
             if (delta == 1) {
                 setText("");
 
-                listeners.forEach(Runnable::run);
-
                 return;
             }
         }
 
         setText(HISTORY.get(historyIndex));
-
-        listeners.forEach(Runnable::run);
     }
 
     private void saveHistory() {

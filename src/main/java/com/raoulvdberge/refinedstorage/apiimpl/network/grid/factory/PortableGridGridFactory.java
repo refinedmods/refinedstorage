@@ -1,9 +1,9 @@
-package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
+package com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.GridFactoryType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridFactory;
-import com.raoulvdberge.refinedstorage.tile.grid.WirelessFluidGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -12,11 +12,11 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class GridFactoryWirelessFluidGrid implements IGridFactory {
+public class PortableGridGridFactory implements IGridFactory {
     @Nullable
     @Override
     public IGrid createFromStack(PlayerEntity player, ItemStack stack) {
-        return new WirelessFluidGrid(stack);
+        return new PortableGrid(player, stack);
     }
 
     @Nullable

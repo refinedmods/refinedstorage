@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -36,6 +37,11 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "grid"), (base, registry) -> new FullbrightBakedModel(
             base,
             new ResourceLocation(RS.ID, "block/grid/cutouts/front_connected")
+        ));
+
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_grid"), (base, registry) -> new FullbrightBakedModel(
+            base,
+            new ResourceLocation(RS.ID, "block/grid/cutouts/crafting_front_connected")
         ));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
@@ -65,7 +71,8 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
         ScreenManager.registerFactory(RSContainers.GRID, new GridScreenFactory());
 
-        RSKeyBindings.init();
+        ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
+        ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
     }
 
     @SubscribeEvent

@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridListener;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridCraftingListener;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
@@ -16,8 +16,8 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandlerPortable;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandlerPortable;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.PortableFluidGridHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.PortableItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableFluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableItemStorageCache;
@@ -61,8 +61,8 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     @Nullable
     private IStorageCache cache;
 
-    private ItemGridHandlerPortable itemHandler = new ItemGridHandlerPortable(this, this);
-    private FluidGridHandlerPortable fluidHandler = new FluidGridHandlerPortable(this);
+    private PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
+    private PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
 
     private PlayerEntity player;
     private ItemStack stack;
@@ -240,12 +240,12 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public void addCraftingListener(IGridCraftingListener listener) {
+    public void addCraftingListener(ICraftingGridListener listener) {
         // NO OP
     }
 
     @Override
-    public void removeCraftingListener(IGridCraftingListener listener) {
+    public void removeCraftingListener(ICraftingGridListener listener) {
         // NO OP
     }
 
@@ -395,6 +395,11 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public void onCrafted(PlayerEntity player) {
+        // NO OP
+    }
+
+    @Override
+    public void onClear(PlayerEntity player) {
         // NO OP
     }
 

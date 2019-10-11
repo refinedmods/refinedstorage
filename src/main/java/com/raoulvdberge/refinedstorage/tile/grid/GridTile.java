@@ -76,7 +76,7 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
     private final GridType gridType;
 
     public GridTile(GridType gridType) {
-        super(RSTiles.GRID);
+        super(gridType == GridType.NORMAL ? RSTiles.GRID : RSTiles.CRAFTING_GRID);
 
         this.gridType = gridType;
 

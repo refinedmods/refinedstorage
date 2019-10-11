@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
+import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridListener;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridCraftingListener;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
@@ -31,9 +31,8 @@ import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 
-public class GridContainer extends BaseContainer implements IGridCraftingListener {
+public class GridContainer extends BaseContainer implements ICraftingGridListener {
     private IGrid grid;
     private IStorageCache cache;
     private IStorageCacheListener listener;
@@ -56,7 +55,7 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
 
     public void initSlots() {
         this.inventorySlots.clear();
-        // this.inventoryItemStacks.clear(); // TODO at
+        this.inventoryItemStacks.clear();
 
         this.transferManager.clearTransfers();
 
@@ -215,8 +214,8 @@ public class GridContainer extends BaseContainer implements IGridCraftingListene
             Slot slot = inventorySlots.get(i);
 
             if (slot instanceof CraftingGridSlot || slot == craftingResultSlot || slot == patternResultSlot) {
-                for (IContainerListener listener : new ArrayList<IContainerListener>()) { // TODO AT for listeners
-                    // @Volatile: We can't use IContainerListener#sendSlotContents since ServerPlayerEntity blocks SlotCrafting changes...
+                for (IContainerListener listener : listeners) {
+                    // @Volatile: We can't use IContainerListener#sendSlotContents since ServerPlayerEntity blocks CraftingResultSlot changes...
                     if (listener instanceof ServerPlayerEntity) {
                         ((ServerPlayerEntity) listener).connection.sendPacket(new SSetSlotPacket(windowId, i, slot.getStack()));
                     }

@@ -16,6 +16,7 @@ public class ResultCraftingGridSlot extends CraftingResultSlot {
         this.grid = grid;
     }
 
+    // @Volatile: Overriding logic from the super onTake method for Grid behaviors like refilling stacks from the network
     @Override
     @Nonnull
     public ItemStack onTake(PlayerEntity player, @Nonnull ItemStack stack) {

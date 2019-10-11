@@ -119,18 +119,24 @@ public class ServerConfig {
     }
 
     public class Grid {
-        private final ForgeConfigSpec.IntValue usage;
+        private final ForgeConfigSpec.IntValue gridUsage;
+        private final ForgeConfigSpec.IntValue craftingGridUsage;
 
         public Grid() {
             builder.push("grid");
 
-            usage = builder.comment("The energy used by Grids").defineInRange("usage", 2, 0, Integer.MAX_VALUE);
+            gridUsage = builder.comment("The energy used by Grids").defineInRange("gridUsage", 2, 0, Integer.MAX_VALUE);
+            craftingGridUsage = builder.comment("The energy used by Crafting Grids").defineInRange("craftingGridUsage", 4, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
 
-        public int getUsage() {
-            return usage.get();
+        public int getGridUsage() {
+            return gridUsage.get();
+        }
+
+        public int getCraftingGridUsage() {
+            return craftingGridUsage.get();
         }
     }
 
