@@ -17,7 +17,7 @@ public class GridUtils {
             case PATTERN:
                 return GridNetworkNode.PATTERN_ID;
             case FLUID:
-                return null;
+                return GridNetworkNode.FLUID_ID;
             default:
                 throw new IllegalArgumentException("Unknown grid type " + type);
         }
@@ -32,7 +32,7 @@ public class GridUtils {
             case PATTERN:
                 return RSTiles.PATTERN_GRID;
             case FLUID:
-                return null;
+                return RSTiles.FLUID_GRID;
             default:
                 throw new IllegalArgumentException("Unknown grid type " + type);
         }

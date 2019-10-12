@@ -122,6 +122,7 @@ public class ServerConfig {
         private final ForgeConfigSpec.IntValue gridUsage;
         private final ForgeConfigSpec.IntValue craftingGridUsage;
         private final ForgeConfigSpec.IntValue patternGridUsage;
+        private final ForgeConfigSpec.IntValue fluidGridUsage;
 
         public Grid() {
             builder.push("grid");
@@ -129,6 +130,7 @@ public class ServerConfig {
             gridUsage = builder.comment("The energy used by Grids").defineInRange("gridUsage", 2, 0, Integer.MAX_VALUE);
             craftingGridUsage = builder.comment("The energy used by Crafting Grids").defineInRange("craftingGridUsage", 4, 0, Integer.MAX_VALUE);
             patternGridUsage = builder.comment("The energy used by Pattern Grids").defineInRange("patternGridUsage", 3, 0, Integer.MAX_VALUE);
+            fluidGridUsage = builder.comment("The energy used by Fluid Grids").defineInRange("fluidGridUsage", 2, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -143,6 +145,10 @@ public class ServerConfig {
 
         public int getPatternGridUsage() {
             return patternGridUsage.get();
+        }
+
+        public int getFluidGridUsage() {
+            return fluidGridUsage.get();
         }
     }
 

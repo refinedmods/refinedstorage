@@ -10,10 +10,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
-import com.raoulvdberge.refinedstorage.network.grid.GridClearMessage;
-import com.raoulvdberge.refinedstorage.network.grid.GridItemInsertHeldMessage;
-import com.raoulvdberge.refinedstorage.network.grid.GridItemPullMessage;
-import com.raoulvdberge.refinedstorage.network.grid.GridPatternCreateMessage;
+import com.raoulvdberge.refinedstorage.network.grid.*;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.*;
@@ -451,7 +448,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
                 if (grid.getGridType() == GridType.FLUID) {
-                    // @TODO RS.INSTANCE.network.sendToServer(new MessageGridFluidInsertHeld());
+                    RS.NETWORK_HANDLER.sendToServer(new GridFluidInsertHeldMessage());
                 } else {
                     RS.NETWORK_HANDLER.sendToServer(new GridItemInsertHeldMessage(clickedButton == 1));
                 }
@@ -469,7 +466,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                     if (stack.isCraftable() && view.canCraft() && (stack.doesDisplayCraftText() || (hasShiftDown() && hasControlDown()))) {
                         // @TODO FMLCommonHandler.instance().showGuiScreen(new GuiGridCraftingSettings(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
                     } else if (grid.getGridType() == GridType.FLUID && held.isEmpty()) {
-                        // @TODO RS.INSTANCE.network.sendToServer(new MessageGridFluidPull(view.getStacks().get(slotNumber).getHash(), GuiScreen.isShiftKeyDown()));
+                        RS.NETWORK_HANDLER.sendToServer(new GridFluidPullMessage(view.getStacks().get(slotNumber).getId(), hasShiftDown()));
                     } else if (grid.getGridType() != GridType.FLUID) {
                         int flags = 0;
 

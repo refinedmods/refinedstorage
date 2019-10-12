@@ -58,6 +58,11 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/grid/cutouts/pattern_front_connected")
         ));
 
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "fluid_grid"), (base, registry) -> new FullbrightBakedModel(
+            base,
+            new ResourceLocation(RS.ID, "block/grid/cutouts/fluid_front_connected")
+        ));
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(

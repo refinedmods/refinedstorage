@@ -1,11 +1,16 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
+import com.raoulvdberge.refinedstorage.network.grid.GridFluidDeltaMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridFluidUpdateMessage;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FluidGridStorageCacheListener implements IStorageCacheListener<FluidStack> {
@@ -19,7 +24,7 @@ public class FluidGridStorageCacheListener implements IStorageCacheListener<Flui
 
     @Override
     public void onAttached() {
-        // TODO: RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(network, network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)), player);
+        RS.NETWORK_HANDLER.sendTo(player, new GridFluidUpdateMessage(network, network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)));
     }
 
     @Override
@@ -29,16 +34,15 @@ public class FluidGridStorageCacheListener implements IStorageCacheListener<Flui
 
     @Override
     public void onChanged(StackListResult<FluidStack> delta) {
-        // TODO: RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(network, network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)), player);
+        List<StackListResult<FluidStack>> deltas = new ArrayList<>();
 
+        deltas.add(delta);
+
+        onChangedBulk(deltas);
     }
 
     @Override
-    public void onChangedBulk(List<StackListResult<FluidStack>> storageCacheDeltas) {
-        /* TODO
-        for (Pair<FluidStack, Integer> stack : stacks) {
-                    onChanged(stack.getLeft(), stack.getRight());
-                }
-         */
+    public void onChangedBulk(List<StackListResult<FluidStack>> deltas) {
+        RS.NETWORK_HANDLER.sendTo(player, new GridFluidDeltaMessage(network, deltas));
     }
 }

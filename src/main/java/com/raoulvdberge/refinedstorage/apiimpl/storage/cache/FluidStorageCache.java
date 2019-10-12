@@ -85,7 +85,12 @@ public class FluidStorageCache implements IStorageCache<FluidStack> {
     @Override
     public void flush() {
         if (!batchedChanges.isEmpty()) {
-            batchedChanges.forEach(change -> listeners.forEach(l -> l.onChanged(change)));
+            if (batchedChanges.size() > 1) {
+                listeners.forEach(l -> l.onChangedBulk(batchedChanges));
+            } else {
+                batchedChanges.forEach(change -> listeners.forEach(l -> l.onChanged(change)));
+            }
+
             batchedChanges.clear();
         }
     }

@@ -10,7 +10,6 @@ import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 
-// TODO Fix focusing issues on textbox (using tab)
 public abstract class AmountSpecifyingScreen<T extends Container> extends BaseScreen<T> {
     private BaseScreen parent;
 
@@ -106,7 +105,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
             return true;
         }
 
-        if (key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) {
+        if ((key == GLFW.GLFW_KEY_ENTER || key == GLFW.GLFW_KEY_KP_ENTER) && amountField.isFocused()) {
             onOkButtonPressed(hasShiftDown());
 
             return true;

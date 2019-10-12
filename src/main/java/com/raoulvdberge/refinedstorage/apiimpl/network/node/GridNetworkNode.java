@@ -62,6 +62,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
     public static final ResourceLocation CRAFTING_ID = new ResourceLocation(RS.ID, "crafting_grid");
     public static final ResourceLocation PATTERN_ID = new ResourceLocation(RS.ID, "pattern_grid");
+    public static final ResourceLocation FLUID_ID = new ResourceLocation(RS.ID, "fluid_grid");
 
     public static final String NBT_VIEW_TYPE = "ViewType";
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
@@ -178,7 +179,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
             case PATTERN:
                 return RS.SERVER_CONFIG.getGrid().getPatternGridUsage();
             case FLUID:
-                return 0;
+                return RS.SERVER_CONFIG.getGrid().getFluidGridUsage();
             default:
                 return 0;
         }

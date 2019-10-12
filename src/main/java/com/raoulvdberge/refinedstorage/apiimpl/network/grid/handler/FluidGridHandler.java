@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
@@ -53,7 +52,7 @@ public class FluidGridHandler implements IFluidGridHandler {
         }
 
         if (bucket.isEmpty()) {
-            bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM);
+            bucket = StackUtils.nullToEmpty(network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM));
         }
 
         if (!bucket.isEmpty()) {
@@ -71,7 +70,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                     player.updateHeldItem();
                 }
 
-                network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridExtractUsage);
+                // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridExtractUsage);
             });
         }
     }
@@ -85,14 +84,14 @@ public class FluidGridHandler implements IFluidGridHandler {
 
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
-        if (network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE) == null) {
+        if (!result.getValue().isEmpty() && network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE) == null) {
             network.getFluidStorageTracker().changed(player, result.getValue().copy());
 
             result = StackUtils.getFluid(container, false);
 
             network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.PERFORM);
 
-            network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridInsertUsage);
+            // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridInsertUsage);
 
             return result.getLeft();
         }
