@@ -48,7 +48,7 @@ public class ServerConfig {
 
     public class Controller {
         private final ForgeConfigSpec.IntValue baseUsage;
-        private final ForgeConfigSpec.IntValue maxReceive;
+        private final ForgeConfigSpec.IntValue maxTransfer;
         private final ForgeConfigSpec.IntValue capacity;
         private final ForgeConfigSpec.BooleanValue useEnergy;
 
@@ -56,7 +56,7 @@ public class ServerConfig {
             builder.push("controller");
 
             baseUsage = builder.comment("The base energy used by the Controller").defineInRange("baseUsage", 0, 0, Integer.MAX_VALUE);
-            maxReceive = builder.comment("The maximum energy the Controller receives per tick").defineInRange("maxReceive", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
+            maxTransfer = builder.comment("The maximum energy that the Controller can receive").defineInRange("maxTransfer", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
             capacity = builder.comment("The energy capacity of the Controller").defineInRange("capacity", 32000, 0, Integer.MAX_VALUE);
             useEnergy = builder.comment("Whether the Controller uses energy").define("useEnergy", true);
 
@@ -67,8 +67,8 @@ public class ServerConfig {
             return baseUsage.get();
         }
 
-        public int getMaxReceive() {
-            return maxReceive.get();
+        public int getMaxTransfer() {
+            return maxTransfer.get();
         }
 
         public int getCapacity() {

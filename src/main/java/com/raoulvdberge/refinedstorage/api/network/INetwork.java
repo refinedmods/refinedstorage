@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
-import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
@@ -54,11 +53,6 @@ public interface INetwork {
      * @return the {@link ICraftingManager} of this network
      */
     ICraftingManager getCraftingManager();
-
-    /**
-     * @return the {@link IEnergy} of this network
-     */
-    IEnergy getEnergy();
 
     /**
      * @return the {@link IItemGridHandler} of this network

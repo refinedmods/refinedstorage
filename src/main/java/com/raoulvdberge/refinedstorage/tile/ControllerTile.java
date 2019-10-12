@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
-import com.raoulvdberge.refinedstorage.api.energy.IEnergy;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
@@ -23,7 +22,6 @@ import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExter
 import com.raoulvdberge.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
-import com.raoulvdberge.refinedstorage.apiimpl.energy.Energy;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandler;
@@ -36,7 +34,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.FluidStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.EnergyProxy;
+import com.raoulvdberge.refinedstorage.integration.forgeenergy.BaseEnergyStorage;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
@@ -82,8 +80,8 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
     public static final TileDataParameter<Integer, ControllerTile> REDSTONE_MODE = RedstoneMode.createParameter();
     public static final TileDataParameter<Integer, ControllerTile> ENERGY_USAGE = new TileDataParameter<>(DataSerializers.VARINT, 0, ControllerTile::getEnergyUsage);
-    public static final TileDataParameter<Integer, ControllerTile> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getStored());
-    public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getEnergy().getCapacity());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_STORED = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energy.getEnergyStored());
+    public static final TileDataParameter<Integer, ControllerTile> ENERGY_CAPACITY = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.energy.getMaxEnergyStored());
     public static final TileDataParameter<List<ClientNode>, ControllerTile> NODES = new TileDataParameter<>(RSSerializers.CLIENT_NODE_SERIALIZER, new ArrayList<>(), t -> {
         List<ClientNode> nodes = new ArrayList<>();
 
@@ -140,10 +138,9 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
     private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this);
 
-    private final IEnergy energy = new Energy(RS.SERVER_CONFIG.getController().getCapacity());
-    private final EnergyProxy energyProxy = new EnergyProxy(this.energy, RS.SERVER_CONFIG.getController().getMaxReceive());
+    private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer());
 
-    private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> energyProxy);
+    private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> energy);
     private final LazyOptional<INetworkNodeProxy<ControllerTile>> networkNodeProxyCap = LazyOptional.of(() -> this);
 
     private boolean throttlingDisabled = true; // Will be enabled after first update
@@ -181,18 +178,13 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
     }
 
     @Override
-    public IEnergy getEnergy() {
-        return this.energy;
-    }
-
-    @Override
     public BlockPos getPosition() {
         return pos;
     }
 
     @Override
     public boolean canRun() {
-        return this.energy.getStored() > 0 && redstoneMode.isEnabled(world, pos);
+        return this.energy.getEnergyStored() > 0 && redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -225,14 +217,14 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
             if (type == ControllerBlock.Type.NORMAL) {
                 if (!RS.SERVER_CONFIG.getController().getUseEnergy()) {
-                    this.energy.setStored(this.energy.getCapacity());
-                } else if (this.energy.extract(getEnergyUsage(), Action.SIMULATE) >= 0) {
-                    this.energy.extract(getEnergyUsage(), Action.PERFORM);
+                    this.energy.setStored(this.energy.getMaxEnergyStored());
+                } else if (this.energy.extractEnergy(getEnergyUsage(), true) >= 0) {
+                    this.energy.extractEnergy(getEnergyUsage(), false);
                 } else {
                     this.energy.setStored(0);
                 }
             } else if (type == ControllerBlock.Type.CREATIVE) {
-                this.energy.setStored(this.energy.getCapacity());
+                this.energy.setStored(this.energy.getMaxEnergyStored());
             }
 
             boolean canRun = canRun();
@@ -538,7 +530,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.putInt(NBT_ENERGY, this.energy.getStored());
+        tag.putInt(NBT_ENERGY, this.energy.getEnergyStored());
 
         redstoneMode.write(tag);
 
@@ -584,7 +576,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
             return ControllerBlock.EnergyType.OFF;
         }
 
-        return getEnergyType(this.energy.getStored(), this.energy.getCapacity());
+        return getEnergyType(this.energy.getEnergyStored(), this.energy.getMaxEnergyStored());
     }
 
     public static ControllerBlock.EnergyType getEnergyType(int stored, int capacity) {
