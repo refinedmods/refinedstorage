@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterItems;
+import com.raoulvdberge.refinedstorage.inventory.item.FilterItemsItemHandler;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.util.ITooltipFlag;
@@ -85,7 +85,7 @@ public class FilterItem extends Item {
             tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").setStyle(new Style().setColor(TextFormatting.BLUE)));
         }
 
-        ItemHandlerFilterItems items = new ItemHandlerFilterItems(stack);
+        FilterItemsItemHandler items = new FilterItemsItemHandler(stack);
 
         RenderUtils.addCombinedItemsToTooltip(tooltip, false, items.getFilteredItems());
 

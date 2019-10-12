@@ -13,8 +13,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
@@ -69,7 +69,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     private int ticksSinceBlockUpdateRequested;
     private boolean blockUpdateRequested;
 
-    private ItemHandlerBase disks = new ItemHandlerBase(8, new ListenerNetworkNode(this), VALIDATOR_STORAGE_DISK) {
+    private BaseItemHandler disks = new BaseItemHandler(8, new NetworkNodeListener(this), VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -95,8 +95,8 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
         }
     };
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ListenerNetworkNode(this));
-    private FluidInventory fluidFilters = new FluidInventory(9, new ListenerNetworkNode(this));
+    private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
+    private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));
 
     private IStorageDisk[] itemDisks = new IStorageDisk[8];
     private IStorageDisk[] fluidDisks = new IStorageDisk[8];

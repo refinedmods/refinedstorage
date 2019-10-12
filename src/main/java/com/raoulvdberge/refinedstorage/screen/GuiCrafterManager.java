@@ -8,9 +8,9 @@ import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
 import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.SearchWidget;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonCrafterManagerSearchBoxMode;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonGridSize;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.CrafterManagerSearchBoxModeSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.GridSizeSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -97,9 +97,9 @@ public class GuiCrafterManager extends BaseScreen<CrafterManagerContainer> imple
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, TileCrafterManager.REDSTONE_MODE));
-        addSideButton(new SideButtonCrafterManagerSearchBoxMode(this));
-        addSideButton(new SideButtonGridSize(this, () -> crafterManager.getSize(), size -> TileDataManager.setParameter(TileCrafterManager.SIZE, size)));
+        addSideButton(new RedstoneModeSideButton(this, TileCrafterManager.REDSTONE_MODE));
+        addSideButton(new CrafterManagerSearchBoxModeSideButton(this));
+        addSideButton(new GridSizeSideButton(this, () -> crafterManager.getSize(), size -> TileDataManager.setParameter(TileCrafterManager.SIZE, size)));
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
         this.scrollbar.addListener((oldOffset, newOffset) -> {

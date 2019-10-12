@@ -8,7 +8,7 @@ import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -47,7 +47,7 @@ public class WirelessGrid implements IGridNetworkAware {
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, null) {
+    private FilterItemHandler filter = new FilterItemHandler(filters, tabs, null) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);

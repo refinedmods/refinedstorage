@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class TileFluidStorage extends NetworkNodeTile<NetworkNodeFluidStorage> {
     public static final TileDataParameter<Integer, TileFluidStorage> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer, TileFluidStorage> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileFluidStorage> MODE = IWhitelistBlacklist.createParameter();
+    public static final TileDataParameter<Integer, TileFluidStorage> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<AccessType, TileFluidStorage> ACCESS_TYPE = IAccessType.createParameter();
     public static final TileDataParameter<Long, TileFluidStorage> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> t.getNode().getStorage() != null ? (long) t.getNode().getStorage().getStored() : 0);
 
@@ -26,7 +26,7 @@ public class TileFluidStorage extends NetworkNodeTile<NetworkNodeFluidStorage> {
         
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(STORED);
         dataManager.addWatchedParameter(ACCESS_TYPE);
     }

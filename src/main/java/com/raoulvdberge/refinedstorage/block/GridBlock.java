@@ -60,25 +60,11 @@ public class GridBlock extends NodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
-            return NetworkUtils.attemptModify(worldIn, pos, hit.getFace(), player, () -> API.instance().getGridManager().openGrid(GridBlockGridFactory.ID, (ServerPlayerEntity) player, pos));
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!world.isRemote) {
+            return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> API.instance().getGridManager().openGrid(GridBlockGridFactory.ID, (ServerPlayerEntity) player, pos));
         }
 
         return true;
     }
-
-    /*
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, GridType.PATTERN.getId(), new ModelResourceLocation(info.getId(), "connected=false,direction=north,type=pattern"));
-        modelRegistration.setModel(this, GridType.FLUID.getId(), new ModelResourceLocation(info.getId(), "connected=false,direction=north,type=fluid"));
-
-        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(
-            base,
-            RS.ID + ":blocks/grid/cutouts/pattern_front_connected",
-            RS.ID + ":blocks/grid/cutouts/fluid_front_connected"
-        ));
-    }*/
 }

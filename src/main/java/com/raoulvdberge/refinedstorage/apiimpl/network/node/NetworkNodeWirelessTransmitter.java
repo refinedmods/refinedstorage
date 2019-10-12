@@ -2,9 +2,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWirelessTransmitter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_transmitter");
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO , ItemUpgrade.TYPE_RANGE*/);
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO , ItemUpgrade.TYPE_RANGE*/);
 
     public NetworkNodeWirelessTransmitter(World world, BlockPos pos) {
         super(world, pos);
@@ -66,7 +66,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
         return world.getDimension().getType().getId();
     }
 
-    public ItemHandlerBase getUpgrades() {
+    public BaseItemHandler getUpgrades() {
         return upgrades;
     }
 

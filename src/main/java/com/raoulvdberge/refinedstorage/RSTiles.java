@@ -67,8 +67,6 @@ public class RSTiles {
     public static final TileEntityType<TileRelay> RELAY = null;
     //@ObjectHolder(RS.ID + ":security_manager")
     public static final TileEntityType<TileSecurityManager> SECURITY_MANAGER = null;
-    //@ObjectHolder(RS.ID + ":storage")
-    public static final TileEntityType<TileStorage> STORAGE = null;
     //@ObjectHolder(RS.ID + ":storage_monitor")
     public static final TileEntityType<TileStorageMonitor> STORAGE_MONITOR = null;
     //@ObjectHolder(RS.ID + ":wireless_transmitter")
@@ -76,6 +74,17 @@ public class RSTiles {
 
     @ObjectHolder(RS.ID + ":cable")
     public static final TileEntityType<CableTile> CABLE = null;
+
+    @ObjectHolder(RS.ID + ":1k_storage_block")
+    public static final TileEntityType<StorageTile> ONE_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":4k_storage_block")
+    public static final TileEntityType<StorageTile> FOUR_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":16k_storage_block")
+    public static final TileEntityType<StorageTile> SIXTEEN_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":64k_storage_block")
+    public static final TileEntityType<StorageTile> SIXTY_FOUR_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":creative_storage_block")
+    public static final TileEntityType<StorageTile> CREATIVE_STORAGE_BLOCK = null;
 
     //@ObjectHolder(RS.ID + ":portable_grid")
     public static final TileEntityType<TilePortableGrid> PORTABLE_GRID = null;

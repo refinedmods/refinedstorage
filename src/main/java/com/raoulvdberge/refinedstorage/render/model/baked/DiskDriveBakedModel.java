@@ -68,6 +68,7 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
 
     private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
+        @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
             Direction facing = key.state.get(RSBlocks.DISK_DRIVE.getDirection().getProperty());
 

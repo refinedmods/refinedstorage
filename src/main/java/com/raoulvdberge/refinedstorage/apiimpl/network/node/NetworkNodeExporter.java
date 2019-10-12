@@ -5,9 +5,9 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -39,10 +39,10 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private static final String NBT_COVERS = "Covers";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ListenerNetworkNode(this));
-    private FluidInventory fluidFilters = new FluidInventory(9, new ListenerNetworkNode(this));
+    private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
+    private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK*/);
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK*/);
 
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;

@@ -10,10 +10,10 @@ import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerProxy;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.ProxyItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -58,7 +58,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private IStorageDisk<ItemStack>[] itemDisks = new IStorageDisk[6];
     private IStorageDisk<FluidStack>[] fluidDisks = new IStorageDisk[6];
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK*/) {
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK*/) {
         @Override
         public int getItemInteractCount() {
             int count = super.getItemInteractCount();
@@ -71,7 +71,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerBase inputDisks = new ItemHandlerBase(3, new ListenerNetworkNode(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
+    private BaseItemHandler inputDisks = new BaseItemHandler(3, new NetworkNodeListener(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -92,7 +92,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerBase outputDisks = new ItemHandlerBase(3, new ListenerNetworkNode(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
+    private BaseItemHandler outputDisks = new BaseItemHandler(3, new NetworkNodeListener(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -113,14 +113,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     };
 
-    private ItemHandlerProxy disks = new ItemHandlerProxy(inputDisks, outputDisks);
+    private ProxyItemHandler disks = new ProxyItemHandler(inputDisks, outputDisks);
 
     public NetworkNodeDiskManipulator(World world, BlockPos pos) {
         super(world, pos);
     }
 
-    private ItemHandlerBase itemFilters = new ItemHandlerBase(9, new ListenerNetworkNode(this));
-    private FluidInventory fluidFilters = new FluidInventory(9, new ListenerNetworkNode(this));
+    private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
+    private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));
 
     @Override
     public int getEnergyUsage() {
@@ -444,7 +444,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         return outputDisks;
     }
 
-    public ItemHandlerProxy getDisks() {
+    public ProxyItemHandler getDisks() {
         return disks;
     }
 

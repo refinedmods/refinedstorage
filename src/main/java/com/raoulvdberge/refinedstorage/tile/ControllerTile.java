@@ -623,6 +623,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
     public ItemStack getItemStack() {
         BlockState state = world.getBlockState(pos);
 
+        @SuppressWarnings("deprecation")
         Item item = Item.getItemFromBlock(state.getBlock());
 
         return new ItemStack(item, 1);

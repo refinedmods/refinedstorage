@@ -17,10 +17,10 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.FluidGridS
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.item.PatternItem;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -92,12 +92,12 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     private ICraftingRecipe currentRecipe;
     private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
     private CraftResultInventory result = new CraftResultInventory();
-    private ItemHandlerBase processingMatrix = new ItemHandlerBase(9 * 2, new ListenerNetworkNode(this));
-    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64, new ListenerNetworkNode(this));
+    private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2, new NetworkNodeListener(this));
+    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64, new NetworkNodeListener(this));
 
     private Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
-    private ItemHandlerBase patterns = new ItemHandlerBase(2, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.PATTERN)) {
+    private BaseItemHandler patterns = new BaseItemHandler(2, new NetworkNodeListener(this), new ItemValidatorBasic(RSItems.PATTERN)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -146,7 +146,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     };
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ListenerNetworkNode(this));
+    private FilterItemHandler filter = new FilterItemHandler(filters, tabs, new NetworkNodeListener(this));
 
     private final GridType type;
 
@@ -310,7 +310,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
         return result;
     }
 
-    public ItemHandlerBase getProcessingMatrix() {
+    public BaseItemHandler getProcessingMatrix() {
         return processingMatrix;
     }
 

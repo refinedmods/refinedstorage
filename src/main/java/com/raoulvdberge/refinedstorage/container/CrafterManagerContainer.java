@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.filtering.GridFilterParser;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
@@ -134,7 +134,7 @@ public class CrafterManagerContainer extends BaseContainer {
             if (newContainerData == null) { // We're only resizing, get the previous inventory...
                 dummy = dummyInventories.get(category.getKey());
             } else {
-                dummyInventories.put(category.getKey(), dummy = new ItemHandlerBase(category.getValue()) {
+                dummyInventories.put(category.getKey(), dummy = new BaseItemHandler(category.getValue()) {
                     @Override
                     public int getSlotLimit(int slot) {
                         return 1;

@@ -95,7 +95,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
         if (grid instanceof GridNetworkNode || grid instanceof TilePortableGrid) {
-            addSideButton(new SideButtonRedstoneMode(this, grid instanceof GridNetworkNode ? GridTile.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
+            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? GridTile.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
         }
 
         int sx = x + 80 + 1;
@@ -115,13 +115,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         addButton(searchField);
 
         if (grid.getGridType() != GridType.FLUID && grid.getViewType() != -1) {
-            addSideButton(new SideButtonGridViewType(this, grid));
+            addSideButton(new GridViewTypeSideButton(this, grid));
         }
 
-        addSideButton(new SideButtonGridSortingDirection(this, grid));
-        addSideButton(new SideButtonGridSortingType(this, grid));
-        addSideButton(new SideButtonGridSearchBoxMode(this));
-        addSideButton(new SideButtonGridSize(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
+        addSideButton(new GridSortingDirectionSideButton(this, grid));
+        addSideButton(new GridSortingTypeSideButton(this, grid));
+        addSideButton(new GridSearchBoxModeSideButton(this));
+        addSideButton(new GridSizeSideButton(this, () -> grid.getSize(), size -> grid.onSizeChanged(size)));
 
         if (grid.getGridType() == GridType.PATTERN) {
             processingPattern = addCheckBox(x + 7, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.processing"), GridTile.PROCESSING_PATTERN.getValue(), btn -> {
@@ -144,7 +144,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 });
             }
 
-            addSideButton(new SideButtonType(this, GridTile.PROCESSING_TYPE));
+            addSideButton(new TypeSideButton(this, GridTile.PROCESSING_TYPE));
         }
 
         updateScrollbar();

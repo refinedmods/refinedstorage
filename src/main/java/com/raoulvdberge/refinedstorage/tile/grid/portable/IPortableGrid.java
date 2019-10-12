@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.tile.grid.portable;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.tracker.IStorageTracker;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -47,7 +47,7 @@ public interface IPortableGrid {
 
     int getEnergy();
 
-    ItemHandlerBase getDisk();
+    BaseItemHandler getDisk();
 
     IItemHandlerModifiable getFilter();
 

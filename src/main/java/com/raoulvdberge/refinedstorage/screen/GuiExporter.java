@@ -3,9 +3,9 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ExporterContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonCompare;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonType;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.CompareSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileExporter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -17,11 +17,11 @@ public class GuiExporter extends BaseScreen<ExporterContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, TileExporter.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, TileExporter.REDSTONE_MODE));
 
-        addSideButton(new SideButtonType(this, TileExporter.TYPE));
+        addSideButton(new TypeSideButton(this, TileExporter.TYPE));
 
-        addSideButton(new SideButtonCompare(this, TileExporter.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new CompareSideButton(this, TileExporter.COMPARE, IComparer.COMPARE_NBT));
     }
 
     @Override

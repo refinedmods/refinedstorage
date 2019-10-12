@@ -34,9 +34,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracke
 import com.raoulvdberge.refinedstorage.block.BlockPortableGrid;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerTile;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.listener.TileListener;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.tile.BaseTile;
@@ -138,8 +138,8 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, new ListenerTile(this));
-    private ItemHandlerBase disk = new ItemHandlerBase(1, new ListenerTile(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
+    private FilterItemHandler filter = new FilterItemHandler(filters, tabs, new TileListener(this));
+    private BaseItemHandler disk = new BaseItemHandler(1, new TileListener(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -609,7 +609,7 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public ItemHandlerBase getDisk() {
+    public BaseItemHandler getDisk() {
         return disk;
     }
 

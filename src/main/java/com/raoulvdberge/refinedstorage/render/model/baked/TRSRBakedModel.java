@@ -67,6 +67,7 @@ public class TRSRBakedModel implements IBakedModel {
 
     @Nonnull
     @Override
+    @SuppressWarnings("deprecation")
     public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
         // transform quads obtained from parent
 
@@ -108,12 +109,14 @@ public class TRSRBakedModel implements IBakedModel {
 
     @Nonnull
     @Override
+    @SuppressWarnings("deprecation")
     public TextureAtlasSprite getParticleTexture() {
         return original.getParticleTexture();
     }
 
     @Nonnull
     @Override
+    @SuppressWarnings("deprecation")
     public ItemCameraTransforms getItemCameraTransforms() {
         return original.getItemCameraTransforms();
     }

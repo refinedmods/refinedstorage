@@ -15,15 +15,15 @@ public class GuiDestructor extends BaseScreen<DestructorContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, TileDestructor.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, TileDestructor.REDSTONE_MODE));
 
-        addSideButton(new SideButtonType(this, TileDestructor.TYPE));
+        addSideButton(new TypeSideButton(this, TileDestructor.TYPE));
 
-        addSideButton(new SideButtonMode(this, TileDestructor.MODE));
+        addSideButton(new WhitelistBlacklistSideButton(this, TileDestructor.WHITELIST_BLACKLIST));
 
-        addSideButton(new SideButtonCompare(this, TileDestructor.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new CompareSideButton(this, TileDestructor.COMPARE, IComparer.COMPARE_NBT));
 
-        addSideButton(new SideButtonDestructorPickup(this));
+        addSideButton(new DestructorPickupSideButton(this));
     }
 
     @Override

@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
 
 public class TileDestructor extends NetworkNodeTile<NetworkNodeDestructor> {
     public static final TileDataParameter<Integer, TileDestructor> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileDestructor> MODE = IWhitelistBlacklist.createParameter();
+    public static final TileDataParameter<Integer, TileDestructor> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, TileDestructor> TYPE = IType.createParameter();
     public static final TileDataParameter<Boolean, TileDestructor> PICKUP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isPickupItem(), (t, v) -> {
         t.getNode().setPickupItem(v);
@@ -25,7 +25,7 @@ public class TileDestructor extends NetworkNodeTile<NetworkNodeDestructor> {
         super(RSTiles.DESTRUCTOR);
         
         dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(PICKUP);
     }

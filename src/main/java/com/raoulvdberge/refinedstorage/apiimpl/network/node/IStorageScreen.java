@@ -2,9 +2,10 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.util.text.ITextComponent;
 
 public interface IStorageScreen {
-    String getGuiTitle();
+    ITextComponent getTitle();
 
     TileDataParameter<Integer, ?> getTypeParameter();
 

@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 public class TileExternalStorage extends NetworkNodeTile<NetworkNodeExternalStorage> {
     public static final TileDataParameter<Integer, TileExternalStorage> PRIORITY = IPrioritizable.createParameter();
     public static final TileDataParameter<Integer, TileExternalStorage> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileExternalStorage> MODE = IWhitelistBlacklist.createParameter();
+    public static final TileDataParameter<Integer, TileExternalStorage> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, TileExternalStorage> TYPE = IType.createParameter();
     public static final TileDataParameter<AccessType, TileExternalStorage> ACCESS_TYPE = IAccessType.createParameter();
     public static final TileDataParameter<Long, TileExternalStorage> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
@@ -52,7 +52,7 @@ public class TileExternalStorage extends NetworkNodeTile<NetworkNodeExternalStor
         
         dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(STORED);
         dataManager.addWatchedParameter(CAPACITY);
         dataManager.addWatchedParameter(TYPE);

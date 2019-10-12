@@ -5,8 +5,8 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -31,7 +31,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
 
     private static final String NBT_COMPARE = "Compare";
 
-    private ItemHandlerBase itemFilter = new ItemHandlerBase(1, new ListenerNetworkNode(this)) {
+    private BaseItemHandler itemFilter = new BaseItemHandler(1, new NetworkNodeListener(this)) {
         @Override
         public void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -202,7 +202,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         return stored != null ? stored.getCount() : 0;
     }
 
-    public ItemHandlerBase getItemFilters() {
+    public BaseItemHandler getItemFilters() {
         return itemFilter;
     }
 

@@ -275,6 +275,7 @@ public final class RenderUtils {
         return format;
     }
 
+    @SuppressWarnings("deprecation")
     public static TextureAtlasSprite getSprite(IBakedModel coverModel, BlockState coverState, Direction facing, Random rand) {
         TextureAtlasSprite sprite = null;
 

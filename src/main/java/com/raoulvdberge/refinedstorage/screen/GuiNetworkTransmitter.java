@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.NetworkTransmitterContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileNetworkTransmitter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -18,7 +18,7 @@ public class GuiNetworkTransmitter extends BaseScreen<NetworkTransmitterContaine
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, TileNetworkTransmitter.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, TileNetworkTransmitter.REDSTONE_MODE));
     }
 
     @Override

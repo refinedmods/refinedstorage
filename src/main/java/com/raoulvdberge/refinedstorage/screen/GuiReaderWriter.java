@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IGuiReaderWriter;
 import com.raoulvdberge.refinedstorage.container.ReaderWriterContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
@@ -46,7 +46,7 @@ public class GuiReaderWriter extends BaseScreen<ReaderWriterContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, readerWriter.getRedstoneModeParameter()));
+        addSideButton(new RedstoneModeSideButton(this, readerWriter.getRedstoneModeParameter()));
 
         add = addButton(x + 128, y + 15, 20, 20, "+", true, true, btn -> {
         });

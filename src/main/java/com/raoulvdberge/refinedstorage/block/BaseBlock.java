@@ -16,6 +16,7 @@ public abstract class BaseBlock extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockState rotate(BlockState state, Rotation rot) {
         BlockDirection dir = getDirection();
         if (dir != BlockDirection.NONE) {

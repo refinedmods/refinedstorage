@@ -10,7 +10,6 @@ public final class RSBlocks {
     public static final BlockDetector DETECTOR = new BlockDetector();
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
-    public static final BlockStorage STORAGE = new BlockStorage();
     public static final BlockRelay RELAY = new BlockRelay();
     public static final BlockInterface INTERFACE = new BlockInterface();
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
@@ -50,6 +49,17 @@ public final class RSBlocks {
     public static final GridBlock PATTERN_GRID = null;
     @ObjectHolder(RS.ID + ":fluid_grid")
     public static final GridBlock FLUID_GRID = null;
+
+    @ObjectHolder(RS.ID + ":1k_storage_block")
+    public static final StorageBlock ONE_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":4k_storage_block")
+    public static final StorageBlock FOUR_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":16k_storage_block")
+    public static final StorageBlock SIXTEEN_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":64k_storage_block")
+    public static final StorageBlock SIXTY_FOUR_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":creative_storage_block")
+    public static final StorageBlock CREATIVE_STORAGE_BLOCK = null;
 
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();

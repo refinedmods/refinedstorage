@@ -6,8 +6,8 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilterIcon;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterIcon;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilterItems;
+import com.raoulvdberge.refinedstorage.inventory.item.FilterIconItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.FilterItemsItemHandler;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +24,7 @@ public class FilterContainer extends BaseContainer {
         int y = 20;
         int x = 8;
 
-        ItemHandlerFilterItems filter = new ItemHandlerFilterItems(stack);
+        FilterItemsItemHandler filter = new FilterItemsItemHandler(stack);
         FluidInventory fluidFilter = new FluidInventoryFilter(stack);
 
         for (int i = 0; i < 27; ++i) {
@@ -39,7 +39,7 @@ public class FilterContainer extends BaseContainer {
             }
         }
 
-        addSlot(new FilterSlot(new ItemHandlerFilterIcon(stack), 0, 8, 117).setEnableHandler(() -> FilterItem.getType(stack) == IType.ITEMS));
+        addSlot(new FilterSlot(new FilterIconItemHandler(stack), 0, 8, 117).setEnableHandler(() -> FilterItem.getType(stack) == IType.ITEMS));
         addSlot(new FluidFilterSlot(new FluidInventoryFilterIcon(stack), 0, 8, 117).setEnableHandler(() -> FilterItem.getType(stack) == IType.FLUIDS));
 
         addPlayerInventory(8, 149);

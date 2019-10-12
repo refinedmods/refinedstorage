@@ -3,9 +3,9 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class NetworkNodeNetworkTransmitter extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
-    private ItemHandlerBase networkCard = new ItemHandlerBase(1, new ListenerNetworkNode(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
+    private BaseItemHandler networkCard = new BaseItemHandler(1, new NetworkNodeListener(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -72,7 +72,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         return RS.INSTANCE.config.networkTransmitterUsage;
     }
 
-    public ItemHandlerBase getNetworkCard() {
+    public BaseItemHandler getNetworkCard() {
         return networkCard;
     }
 

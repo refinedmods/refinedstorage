@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeFluidInterface;
 import com.raoulvdberge.refinedstorage.container.FluidInterfaceContainer;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
@@ -21,7 +21,7 @@ public class GuiFluidInterface extends BaseScreen<FluidInterfaceContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, TileFluidInterface.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, TileFluidInterface.REDSTONE_MODE));
     }
 
     @Override

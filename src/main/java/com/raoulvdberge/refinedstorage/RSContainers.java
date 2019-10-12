@@ -56,6 +56,9 @@ public final class RSContainers {
     @ObjectHolder(RS.ID + ":disk_drive")
     public static final ContainerType<DiskDriveContainer> DISK_DRIVE = null;
 
+    @ObjectHolder(RS.ID + ":storage_block")
+    public static final ContainerType<StorageContainer> STORAGE_BLOCK = null;
+
     //@ObjectHolder(RS.ID + ":storage_monitor")
     public static final ContainerType<StorageMonitorContainer> STORAGE_MONITOR = null;
     //@ObjectHolder(RS.ID + ":wireless_transmitter")

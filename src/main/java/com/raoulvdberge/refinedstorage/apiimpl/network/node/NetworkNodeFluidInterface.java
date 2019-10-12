@@ -6,11 +6,11 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalFluid;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidHandlerProxy;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerUpgrade;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.fluid.ProxyFluidHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -53,12 +53,12 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     };
     private FluidTank tankOut = new FluidTank(TANK_CAPACITY);
 
-    private FluidHandlerProxy tank = new FluidHandlerProxy(tankIn, tankOut);
+    private ProxyFluidHandler tank = new ProxyFluidHandler(tankIn, tankOut);
 
-    private ItemHandlerBase in = new ItemHandlerBase(1, new ListenerNetworkNode(this), stack -> !StackUtils.getFluid(stack, true).getValue().isEmpty());
-    private FluidInventory out = new FluidInventory(1, TANK_CAPACITY, new ListenerNetworkNode(this));
+    private BaseItemHandler in = new BaseItemHandler(1, new NetworkNodeListener(this), stack -> !StackUtils.getFluid(stack, true).getValue().isEmpty());
+    private FluidInventory out = new FluidInventory(1, TANK_CAPACITY, new NetworkNodeListener(this));
 
-    private ItemHandlerUpgrade upgrades = new ItemHandlerUpgrade(4, new ListenerNetworkNode(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/);
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/);
 
     public NetworkNodeFluidInterface(World world, BlockPos pos) {
         super(world, pos);
@@ -230,11 +230,11 @@ public class NetworkNodeFluidInterface extends NetworkNode {
         }
     }
 
-    public ItemHandlerUpgrade getUpgrades() {
+    public UpgradeItemHandler getUpgrades() {
         return upgrades;
     }
 
-    public ItemHandlerBase getIn() {
+    public BaseItemHandler getIn() {
         return in;
     }
 
@@ -242,7 +242,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
         return out;
     }
 
-    public FluidHandlerProxy getTank() {
+    public ProxyFluidHandler getTank() {
         return tank;
     }
 

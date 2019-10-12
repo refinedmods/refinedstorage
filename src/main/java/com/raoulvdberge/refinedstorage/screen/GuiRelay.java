@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.RelayContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileRelay;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,7 +14,7 @@ public class GuiRelay extends BaseScreen<RelayContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, TileRelay.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, TileRelay.REDSTONE_MODE));
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.SecurityManagerContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
@@ -23,7 +23,7 @@ public class GuiSecurityManager extends BaseScreen<SecurityManagerContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, TileSecurityManager.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, TileSecurityManager.REDSTONE_MODE));
 
         int padding = 15;
 

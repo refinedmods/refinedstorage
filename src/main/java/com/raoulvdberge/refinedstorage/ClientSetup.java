@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.render.model.baked.PatternBakedModel;
 import com.raoulvdberge.refinedstorage.screen.ControllerScreen;
 import com.raoulvdberge.refinedstorage.screen.DiskDriveScreen;
 import com.raoulvdberge.refinedstorage.screen.FilterScreen;
+import com.raoulvdberge.refinedstorage.screen.StorageBlockScreen;
 import com.raoulvdberge.refinedstorage.screen.factory.GridScreenFactory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -119,6 +120,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.CONTROLLER, ControllerScreen::new);
         ScreenManager.registerFactory(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
         ScreenManager.registerFactory(RSContainers.GRID, new GridScreenFactory());
+        ScreenManager.registerFactory(RSContainers.STORAGE_BLOCK, StorageBlockScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);

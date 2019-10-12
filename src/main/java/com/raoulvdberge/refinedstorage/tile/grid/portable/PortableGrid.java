@@ -27,8 +27,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.PortableFluidStorage
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.PortableItemStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.FluidStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -79,7 +79,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, null) {
+    private FilterItemHandler filter = new FilterItemHandler(filters, tabs, null) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -91,7 +91,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             StackUtils.writeItems(this, 0, stack.getTag());
         }
     };
-    private ItemHandlerBase disk = new ItemHandlerBase(1, DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
+    private BaseItemHandler disk = new BaseItemHandler(1, DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -203,7 +203,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public ItemHandlerBase getDisk() {
+    public BaseItemHandler getDisk() {
         return disk;
     }
 

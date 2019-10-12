@@ -3,9 +3,9 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.DetectorContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonCompare;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonDetectorMode;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonType;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.CompareSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.DetectorModeSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileDetector;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
@@ -20,11 +20,11 @@ public class GuiDetector extends BaseScreen<DetectorContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonType(this, TileDetector.TYPE));
+        addSideButton(new TypeSideButton(this, TileDetector.TYPE));
 
-        addSideButton(new SideButtonDetectorMode(this));
+        addSideButton(new DetectorModeSideButton(this));
 
-        addSideButton(new SideButtonCompare(this, TileDetector.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new CompareSideButton(this, TileDetector.COMPARE, IComparer.COMPARE_NBT));
 
         amount = new TextFieldWidget(font, x + 41 + 1, y + 23 + 1, 50, font.FONT_HEIGHT, "");
         amount.setText(String.valueOf(TileDetector.AMOUNT.getValue()));

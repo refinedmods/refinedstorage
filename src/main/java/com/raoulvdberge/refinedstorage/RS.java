@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.CableNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
@@ -20,17 +21,16 @@ import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.container.DiskDriveContainer;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
+import com.raoulvdberge.refinedstorage.container.StorageContainer;
 import com.raoulvdberge.refinedstorage.container.factory.GridContainerFactory;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerFactory;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
+import com.raoulvdberge.refinedstorage.item.blockitem.StorageBlockItem;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
-import com.raoulvdberge.refinedstorage.tile.BaseTile;
-import com.raoulvdberge.refinedstorage.tile.CableTile;
-import com.raoulvdberge.refinedstorage.tile.ControllerTile;
-import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
+import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
@@ -98,6 +98,12 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(GridNetworkNode.PATTERN_ID, (tag, world, pos) -> readAndReturn(tag, new GridNetworkNode(world, pos, GridType.PATTERN)));
         API.instance().getNetworkNodeRegistry().add(GridNetworkNode.FLUID_ID, (tag, world, pos) -> readAndReturn(tag, new GridNetworkNode(world, pos, GridType.FLUID)));
 
+        API.instance().getNetworkNodeRegistry().add(StorageNetworkNode.ONE_K_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new StorageNetworkNode(world, pos, ItemStorageType.ONE_K)));
+        API.instance().getNetworkNodeRegistry().add(StorageNetworkNode.FOUR_K_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new StorageNetworkNode(world, pos, ItemStorageType.FOUR_K)));
+        API.instance().getNetworkNodeRegistry().add(StorageNetworkNode.SIXTEEN_K_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new StorageNetworkNode(world, pos, ItemStorageType.SIXTEEN_K)));
+        API.instance().getNetworkNodeRegistry().add(StorageNetworkNode.SIXTY_FOUR_K_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new StorageNetworkNode(world, pos, ItemStorageType.SIXTY_FOUR_K)));
+        API.instance().getNetworkNodeRegistry().add(StorageNetworkNode.CREATIVE_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new StorageNetworkNode(world, pos, ItemStorageType.CREATIVE)));
+
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
     }
 
@@ -124,6 +130,12 @@ public final class RS {
         e.getRegistry().register(new GridBlock(GridType.CRAFTING));
         e.getRegistry().register(new GridBlock(GridType.PATTERN));
         e.getRegistry().register(new GridBlock(GridType.FLUID));
+
+        e.getRegistry().register(new StorageBlock(ItemStorageType.ONE_K));
+        e.getRegistry().register(new StorageBlock(ItemStorageType.FOUR_K));
+        e.getRegistry().register(new StorageBlock(ItemStorageType.SIXTEEN_K));
+        e.getRegistry().register(new StorageBlock(ItemStorageType.SIXTY_FOUR_K));
+        e.getRegistry().register(new StorageBlock(ItemStorageType.CREATIVE));
     }
 
     @SubscribeEvent
@@ -136,6 +148,12 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new GridTile(GridType.CRAFTING), RSBlocks.CRAFTING_GRID).build(null).setRegistryName(RS.ID, "crafting_grid")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new GridTile(GridType.PATTERN), RSBlocks.PATTERN_GRID).build(null).setRegistryName(RS.ID, "pattern_grid")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new GridTile(GridType.FLUID), RSBlocks.FLUID_GRID).build(null).setRegistryName(RS.ID, "fluid_grid")));
+
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new StorageTile(ItemStorageType.ONE_K), RSBlocks.ONE_K_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "1k_storage_block")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new StorageTile(ItemStorageType.FOUR_K), RSBlocks.FOUR_K_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "4k_storage_block")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new StorageTile(ItemStorageType.SIXTEEN_K), RSBlocks.SIXTEEN_K_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "16k_storage_block")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new StorageTile(ItemStorageType.SIXTY_FOUR_K), RSBlocks.SIXTY_FOUR_K_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "64k_storage_block")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new StorageTile(ItemStorageType.CREATIVE), RSBlocks.CREATIVE_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "creative_storage_block")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -152,6 +170,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(((windowId, inv, data) -> new ControllerContainer(null, inv.player, windowId))).setRegistryName(RS.ID, "controller"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DiskDriveContainer, DiskDriveTile>((windowId, inv, tile) -> new DiskDriveContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "disk_drive"));
         e.getRegistry().register(IForgeContainerType.create(new GridContainerFactory()).setRegistryName(RS.ID, "grid"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<StorageContainer, StorageTile>((windowId, inv, tile) -> new StorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "storage_block"));
     }
 
     @SubscribeEvent
@@ -207,6 +226,12 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CRAFTING_GRID));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.PATTERN_GRID));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.FLUID_GRID));
+
+        e.getRegistry().register(new StorageBlockItem(RSBlocks.ONE_K_STORAGE_BLOCK));
+        e.getRegistry().register(new StorageBlockItem(RSBlocks.FOUR_K_STORAGE_BLOCK));
+        e.getRegistry().register(new StorageBlockItem(RSBlocks.SIXTEEN_K_STORAGE_BLOCK));
+        e.getRegistry().register(new StorageBlockItem(RSBlocks.SIXTY_FOUR_K_STORAGE_BLOCK));
+        e.getRegistry().register(new StorageBlockItem(RSBlocks.CREATIVE_STORAGE_BLOCK));
     }
 
     /* TODO

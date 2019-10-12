@@ -15,7 +15,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.CraftingMonitorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.TabListWidget;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
@@ -157,7 +157,7 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
         this.scrollbar = new ScrollbarWidget(this, 235, 20, 12, 149);
 
         if (craftingMonitor.getRedstoneModeParameter() != null) {
-            addSideButton(new SideButtonRedstoneMode(this, craftingMonitor.getRedstoneModeParameter()));
+            addSideButton(new RedstoneModeSideButton(this, craftingMonitor.getRedstoneModeParameter()));
         }
 
         String cancel = I18n.format("gui.cancel");

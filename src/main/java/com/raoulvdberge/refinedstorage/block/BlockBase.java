@@ -100,6 +100,7 @@ public abstract class BlockBase extends Block {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             worldIn.updateComparatorOutputLevel(pos, this);

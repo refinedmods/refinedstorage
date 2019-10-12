@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerBase;
+import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
 import net.minecraft.inventory.IInventory;
@@ -225,7 +225,7 @@ public final class StackUtils {
         readItems(handler, id, tag, ItemStack::read);
     }
 
-    public static void readItems(ItemHandlerBase handler, int id, CompoundNBT tag) {
+    public static void readItems(BaseItemHandler handler, int id, CompoundNBT tag) {
         handler.setReading(true);
 
         readItems(handler, id, tag, ItemStack::read);

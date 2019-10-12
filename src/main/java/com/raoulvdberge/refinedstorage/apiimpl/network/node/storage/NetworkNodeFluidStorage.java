@@ -16,7 +16,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.block.BlockFluidStorage;
 import com.raoulvdberge.refinedstorage.block.enums.FluidStorageType;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import com.raoulvdberge.refinedstorage.inventory.listener.ListenerNetworkNode;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.tile.TileFluidStorage;
 import com.raoulvdberge.refinedstorage.tile.config.IAccessType;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -29,6 +29,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,7 +47,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageScre
     private static final String NBT_FILTERS = "Filters";
     public static final String NBT_ID = "Id";
 
-    private FluidInventory filters = new FluidInventory(9, new ListenerNetworkNode(this));
+    private FluidInventory filters = new FluidInventory(9, new NetworkNodeListener(this));
 
     private FluidStorageType type;
 
@@ -215,8 +217,8 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageScre
     }
 
     @Override
-    public String getGuiTitle() {
-        return "block.refinedstorage:fluid_storage." + getType().getId() + ".name";
+    public ITextComponent getTitle() {
+        return new TranslationTextComponent("block.refinedstorage:fluid_storage." + getType().getId() + ".name");
     }
 
     @Override
@@ -236,7 +238,7 @@ public class NetworkNodeFluidStorage extends NetworkNode implements IStorageScre
 
     @Override
     public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
-        return TileFluidStorage.MODE;
+        return TileFluidStorage.WHITELIST_BLACKLIST;
     }
 
     @Override

@@ -14,6 +14,7 @@ public class IdGridSorter implements IGridSorter {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public int compare(IGridStack left, IGridStack right, SortingDirection sortingDirection) {
         int leftId = 0;
         int rightId = 0;

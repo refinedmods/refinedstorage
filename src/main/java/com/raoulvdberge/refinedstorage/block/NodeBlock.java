@@ -49,6 +49,7 @@ public abstract class NodeBlock extends BaseBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tile = worldIn.getTileEntity(pos);

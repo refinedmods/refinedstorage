@@ -27,7 +27,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     private TileDataParameter<Integer, ?> typeParameter;
     private TileDataParameter<Integer, ?> redstoneModeParameter;
     private TileDataParameter<Integer, ?> compareParameter;
-    private TileDataParameter<Integer, ?> filterParameter;
+    private TileDataParameter<Integer, ?> whitelistBlacklistParameter;
     private TileDataParameter<Integer, ?> priorityParameter;
     private TileDataParameter<AccessType, ?> accessTypeParameter;
     private Supplier<Long> storedSupplier;
@@ -42,7 +42,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
                          @Nullable TileDataParameter<Integer, ?> typeParameter,
                          @Nullable TileDataParameter<Integer, ?> redstoneModeParameter,
                          @Nullable TileDataParameter<Integer, ?> compareParameter,
-                         @Nullable TileDataParameter<Integer, ?> filterParameter,
+                         @Nullable TileDataParameter<Integer, ?> whitelistBlacklistParameter,
                          TileDataParameter<Integer, ?> priorityParameter,
                          @Nullable TileDataParameter<AccessType, ?> accessTypeParameter,
                          Supplier<Long> storedSupplier, Supplier<Long> capacitySupplier) {
@@ -52,7 +52,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
         this.typeParameter = typeParameter;
         this.redstoneModeParameter = redstoneModeParameter;
         this.compareParameter = compareParameter;
-        this.filterParameter = filterParameter;
+        this.whitelistBlacklistParameter = whitelistBlacklistParameter;
         this.priorityParameter = priorityParameter;
         this.accessTypeParameter = accessTypeParameter;
         this.storedSupplier = storedSupplier;
@@ -62,23 +62,23 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     @Override
     public void onPostInit(int x, int y) {
         if (redstoneModeParameter != null) {
-            addSideButton(new SideButtonRedstoneMode(this, redstoneModeParameter));
+            addSideButton(new RedstoneModeSideButton(this, redstoneModeParameter));
         }
 
         if (typeParameter != null) {
-            addSideButton(new SideButtonType(this, typeParameter));
+            addSideButton(new TypeSideButton(this, typeParameter));
         }
 
-        if (filterParameter != null) {
-            addSideButton(new SideButtonMode(this, filterParameter));
+        if (whitelistBlacklistParameter != null) {
+            addSideButton(new WhitelistBlacklistSideButton(this, whitelistBlacklistParameter));
         }
 
         if (compareParameter != null) {
-            addSideButton(new SideButtonCompare(this, compareParameter, IComparer.COMPARE_NBT));
+            addSideButton(new CompareSideButton(this, compareParameter, IComparer.COMPARE_NBT));
         }
 
         if (accessTypeParameter != null) {
-            addSideButton(new SideButtonAccessType(this, accessTypeParameter));
+            addSideButton(new AccessTypeSideButton(this, accessTypeParameter));
         }
 
         int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage.priority"));

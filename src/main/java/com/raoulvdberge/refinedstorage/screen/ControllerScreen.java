@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButtonRedstoneMode;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.ClientNode;
 import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -33,7 +33,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new SideButtonRedstoneMode(this, ControllerTile.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, ControllerTile.REDSTONE_MODE));
     }
 
     @Override

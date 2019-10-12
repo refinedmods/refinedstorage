@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 
 public class TileDiskManipulator extends NetworkNodeTile<NetworkNodeDiskManipulator> {
     public static final TileDataParameter<Integer, TileDiskManipulator> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileDiskManipulator> MODE = IWhitelistBlacklist.createParameter();
+    public static final TileDataParameter<Integer, TileDiskManipulator> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
     public static final TileDataParameter<Integer, TileDiskManipulator> TYPE = IType.createParameter();
     public static final TileDataParameter<Integer, TileDiskManipulator> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, NetworkNodeDiskManipulator.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
         t.getNode().setIoMode(v);
@@ -28,7 +28,7 @@ public class TileDiskManipulator extends NetworkNodeTile<NetworkNodeDiskManipula
         super(RSTiles.DISK_MANIPULATOR);
 
         dataManager.addWatchedParameter(COMPARE);
-        dataManager.addWatchedParameter(MODE);
+        dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(TYPE);
         dataManager.addWatchedParameter(IO_MODE);
 
