@@ -90,7 +90,9 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
                     network.getFluidStorageCache().invalidate();
                 }
 
-                WorldUtils.updateBlock(world, pos);
+                if (!isReading()) {
+                    WorldUtils.updateBlock(world, pos);
+                }
             }
         }
     };

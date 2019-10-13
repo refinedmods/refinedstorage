@@ -71,4 +71,8 @@ public class BaseItemHandler extends ItemStackHandler {
     public void setReading(boolean reading) {
         this.reading = reading;
     }
+
+    public boolean isReading() {
+        return reading;
+    }
 }
