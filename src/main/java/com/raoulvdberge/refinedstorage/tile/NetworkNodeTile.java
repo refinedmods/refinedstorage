@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.tile;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
@@ -31,6 +32,8 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
     private N clientNode;
 
     private LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
+
+    private N removedNode;
 
     public NetworkNodeTile(TileEntityType<?> tileType) {
         super(tileType);
@@ -83,11 +86,50 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
         INetworkNode node = manager.getNode(pos);
 
         if (node == null) {
-            manager.setNode(pos, node = createNode(world, pos));
-            manager.markForSaving();
+            throw new RuntimeException("No network node present at " + pos.toString());
         }
 
         return (N) node;
+    }
+
+    @Override
+    public void validate() {
+        super.validate();
+
+        if (!world.isRemote) {
+            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) world);
+
+            if (manager.getNode(pos) == null) {
+                manager.setNode(pos, createNode(world, pos));
+                manager.markForSaving();
+            }
+        }
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+
+        if (!world.isRemote) {
+            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) world);
+
+            INetworkNode node = manager.getNode(pos);
+
+            if (node != null) {
+                removedNode = (N) node;
+            }
+
+            manager.removeNode(pos);
+            manager.markForSaving();
+
+            if (node != null && node.getNetwork() != null) {
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
+            }
+        }
+    }
+
+    public N getRemovedNode() {
+        return removedNode;
     }
 
     public abstract N createNode(World world, BlockPos pos);

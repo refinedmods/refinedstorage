@@ -1,9 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
-import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.NetworkNodeTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,9 +10,7 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 
 public abstract class NodeBlock extends BaseBlock {
@@ -27,24 +21,6 @@ public abstract class NodeBlock extends BaseBlock {
 
         if (hasConnectedState()) {
             this.setDefaultState(this.getStateContainer().getBaseState().with(CONNECTED, false));
-        }
-    }
-
-    @Override
-    public void onPlayerDestroy(IWorld world, BlockPos pos, BlockState state) {
-        super.onPlayerDestroy(world, pos, state);
-
-        if (!world.isRemote()) {
-            INetworkNodeManager manager = API.instance().getNetworkNodeManager((ServerWorld) world);
-
-            INetworkNode node = manager.getNode(pos);
-
-            manager.removeNode(pos);
-            manager.markForSaving();
-
-            if (node != null && node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
-            }
         }
     }
 

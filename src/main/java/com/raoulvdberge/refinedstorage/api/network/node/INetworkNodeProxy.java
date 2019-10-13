@@ -9,6 +9,10 @@ import javax.annotation.Nonnull;
  */
 public interface INetworkNodeProxy<T extends INetworkNode> {
     /**
+     * Returns the node.
+     * Needs to work on the client and the server.
+     * If there is no node present, don't silently return null but throw an exception since the game is in a bad state if that happens.
+     *
      * @return the node
      */
     @Nonnull

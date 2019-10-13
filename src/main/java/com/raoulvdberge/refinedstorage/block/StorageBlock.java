@@ -12,13 +12,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
@@ -56,26 +52,6 @@ public class StorageBlock extends NodeBlock {
 
         // Call this after loading the storage, so the network discovery can use the loaded storage.
         super.onBlockPlacedBy(world, pos, state, entity, stack);
-    }
-
-    // TODO Improve this dropping mechanism
-    @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            TileEntity tile = world.getTileEntity(pos);
-
-            if (tile instanceof StorageTile) {
-                @SuppressWarnings("deprecation")
-                ItemStack drop = new ItemStack(Item.getItemFromBlock(this));
-
-                drop.setTag(new CompoundNBT());
-                drop.getTag().putUniqueId(StorageNetworkNode.NBT_ID, ((StorageTile) tile).getNode().getStorageId());
-
-                InventoryHelper.dropItems(world, pos, NonNullList.from(ItemStack.EMPTY, drop));
-            }
-
-            super.onReplaced(state, world, pos, newState, isMoving);
-        }
     }
 
     @Override

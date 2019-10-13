@@ -28,6 +28,7 @@ import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
 import com.raoulvdberge.refinedstorage.item.blockitem.StorageBlockItem;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
+import com.raoulvdberge.refinedstorage.loottable.StorageBlockLootFunctionSerializer;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.raoulvdberge.refinedstorage.tile.*;
@@ -42,6 +43,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -105,6 +107,8 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(StorageNetworkNode.CREATIVE_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new StorageNetworkNode(world, pos, ItemStorageType.CREATIVE)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
+
+        LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
     }
 
     private INetworkNode readAndReturn(CompoundNBT tag, NetworkNode node) {
