@@ -16,10 +16,10 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class StorageDiskFluidStorageWrapper implements IStorageDisk<FluidStack> {
-    private NetworkNodeFluidStorage storage;
+    private FluidStorageNetworkNode storage;
     private IStorageDisk<FluidStack> parent;
 
-    public StorageDiskFluidStorageWrapper(NetworkNodeFluidStorage storage, IStorageDisk<FluidStack> parent) {
+    public StorageDiskFluidStorageWrapper(FluidStorageNetworkNode storage, IStorageDisk<FluidStack> parent) {
         this.storage = storage;
         this.parent = parent;
         this.setSettings(null, storage);

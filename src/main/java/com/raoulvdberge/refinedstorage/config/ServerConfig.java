@@ -11,6 +11,7 @@ public class ServerConfig {
     private Grid grid;
     private DiskDrive diskDrive;
     private StorageBlock storageBlock;
+    private FluidStorageBlock fluidStorageBlock;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -19,6 +20,7 @@ public class ServerConfig {
         grid = new Grid();
         diskDrive = new DiskDrive();
         storageBlock = new StorageBlock();
+        fluidStorageBlock = new FluidStorageBlock();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -46,6 +48,10 @@ public class ServerConfig {
 
     public StorageBlock getStorageBlock() {
         return storageBlock;
+    }
+
+    public FluidStorageBlock getFluidStorageBlock() {
+        return fluidStorageBlock;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -249,6 +255,46 @@ public class ServerConfig {
 
         public int getSixtyFourKUsage() {
             return sixtyFourKUsage.get();
+        }
+
+        public int getCreativeUsage() {
+            return creativeUsage.get();
+        }
+    }
+
+    public class FluidStorageBlock {
+        private final ForgeConfigSpec.IntValue sixtyFourKUsage;
+        private final ForgeConfigSpec.IntValue twoHundredFiftySixKUsage;
+        private final ForgeConfigSpec.IntValue thousandTwentyFourKUsage;
+        private final ForgeConfigSpec.IntValue fourThousandNinetySixKUsage;
+        private final ForgeConfigSpec.IntValue creativeUsage;
+
+        public FluidStorageBlock() {
+            builder.push("fluidStorageBlock");
+
+            sixtyFourKUsage = builder.comment("The energy used by the 64k Fluid Storage Block").defineInRange("sixtyFourKUsage", 2, 0, Integer.MAX_VALUE);
+            twoHundredFiftySixKUsage = builder.comment("The energy used by the 256k Fluid Storage Block").defineInRange("twoHundredFiftySixKUsage", 4, 0, Integer.MAX_VALUE);
+            thousandTwentyFourKUsage = builder.comment("The energy used by the 1024k Fluid Storage Block").defineInRange("thousandTwentyFourKUsage", 6, 0, Integer.MAX_VALUE);
+            fourThousandNinetySixKUsage = builder.comment("The energy used by the 4096k Fluid Storage Block").defineInRange("fourThousandNinetySixKUsage", 8, 0, Integer.MAX_VALUE);
+            creativeUsage = builder.comment("The energy used by the Creative Fluid Storage Block").defineInRange("creativeUsage", 10, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getSixtyFourKUsage() {
+            return sixtyFourKUsage.get();
+        }
+
+        public int getTwoHundredFiftySixKUsage() {
+            return twoHundredFiftySixKUsage.get();
+        }
+
+        public int getThousandTwentyFourKUsage() {
+            return thousandTwentyFourKUsage.get();
+        }
+
+        public int getFourThousandNinetySixKUsage() {
+            return fourThousandNinetySixKUsage.get();
         }
 
         public int getCreativeUsage() {

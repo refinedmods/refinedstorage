@@ -18,7 +18,6 @@ public final class RSBlocks {
     public static final BlockNetworkTransmitter NETWORK_TRANSMITTER = new BlockNetworkTransmitter();
     public static final BlockNetworkReceiver NETWORK_RECEIVER = new BlockNetworkReceiver();
     public static final BlockFluidInterface FLUID_INTERFACE = new BlockFluidInterface();
-    public static final BlockFluidStorage FLUID_STORAGE = new BlockFluidStorage();
     public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();
     public static final BlockReader READER = new BlockReader();
     public static final BlockWriter WRITER = new BlockWriter();
@@ -60,6 +59,17 @@ public final class RSBlocks {
     public static final StorageBlock SIXTY_FOUR_K_STORAGE_BLOCK = null;
     @ObjectHolder(RS.ID + ":creative_storage_block")
     public static final StorageBlock CREATIVE_STORAGE_BLOCK = null;
+
+    @ObjectHolder(RS.ID + ":64k_fluid_storage_block")
+    public static final FluidStorageBlock SIXTY_FOUR_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":256k_fluid_storage_block")
+    public static final FluidStorageBlock TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":1024k_fluid_storage_block")
+    public static final FluidStorageBlock THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":4096k_fluid_storage_block")
+    public static final FluidStorageBlock FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":creative_fluid_storage_block")
+    public static final FluidStorageBlock CREATIVE_FLUID_STORAGE_BLOCK = null;
 
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();

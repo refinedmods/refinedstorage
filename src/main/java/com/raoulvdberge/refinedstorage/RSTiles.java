@@ -39,8 +39,6 @@ public class RSTiles {
     public static final TileEntityType<TileExternalStorage> EXTERNAL_STORAGE = null;
     //@ObjectHolder(RS.ID + ":fluid_interface")
     public static final TileEntityType<TileFluidInterface> FLUID_INTERFACE = null;
-    //@ObjectHolder(RS.ID + ":fluid_storage")
-    public static final TileEntityType<TileFluidInterface> FLUID_STORAGE = null;
 
     @ObjectHolder(RS.ID + ":grid")
     public static final TileEntityType<GridTile> GRID = null;
@@ -85,6 +83,17 @@ public class RSTiles {
     public static final TileEntityType<StorageTile> SIXTY_FOUR_K_STORAGE_BLOCK = null;
     @ObjectHolder(RS.ID + ":creative_storage_block")
     public static final TileEntityType<StorageTile> CREATIVE_STORAGE_BLOCK = null;
+
+    @ObjectHolder(RS.ID + ":64k_fluid_storage_block")
+    public static final TileEntityType<FluidStorageTile> SIXTY_FOUR_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":256k_fluid_storage_block")
+    public static final TileEntityType<FluidStorageTile> TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":1024k_fluid_storage_block")
+    public static final TileEntityType<FluidStorageTile> THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":4096k_fluid_storage_block")
+    public static final TileEntityType<FluidStorageTile> FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":creative_fluid_storage_block")
+    public static final TileEntityType<FluidStorageTile> CREATIVE_FLUID_STORAGE_BLOCK = null;
 
     //@ObjectHolder(RS.ID + ":portable_grid")
     public static final TileEntityType<TilePortableGrid> PORTABLE_GRID = null;

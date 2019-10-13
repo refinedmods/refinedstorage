@@ -13,15 +13,13 @@
       "item": "minecraft:redstone"
     },
     "P": {
-      "item": "refinedstorage:fluid_storage_part",
-      "data": 0
+      "item": "refinedstorage:4096k_fluid_storage_part"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     }
   },
   "result": {
-    "item": "refinedstorage:fluid_storage",
-    "data": 0
+    "item": "refinedstorage:4096k_fluid_storage_block"
   }
 }
