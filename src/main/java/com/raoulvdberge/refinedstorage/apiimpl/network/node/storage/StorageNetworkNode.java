@@ -69,7 +69,20 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
 
     @Override
     public int getEnergyUsage() {
-        return 0;
+        switch (type) {
+            case ONE_K:
+                return RS.SERVER_CONFIG.getStorageBlock().getOneKUsage();
+            case FOUR_K:
+                return RS.SERVER_CONFIG.getStorageBlock().getFourKUsage();
+            case SIXTEEN_K:
+                return RS.SERVER_CONFIG.getStorageBlock().getSixteenKUsage();
+            case SIXTY_FOUR_K:
+                return RS.SERVER_CONFIG.getStorageBlock().getSixtyFourKUsage();
+            case CREATIVE:
+                return RS.SERVER_CONFIG.getStorageBlock().getCreativeUsage();
+            default:
+                return 0;
+        }
     }
 
     @Override
