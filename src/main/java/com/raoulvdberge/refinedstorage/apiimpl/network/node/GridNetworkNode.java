@@ -95,6 +95,8 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2, new NetworkNodeListener(this));
     private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64, new NetworkNodeListener(this));
 
+    private boolean reading;
+
     private Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
     private BaseItemHandler patterns = new BaseItemHandler(2, new NetworkNodeListener(this), new ItemValidatorBasic(RSItems.PATTERN)) {
@@ -332,7 +334,9 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
         craftingListeners.forEach(ICraftingGridListener::onCraftingMatrixChanged);
 
-        markDirty();
+        if (!reading) {
+            markDirty();
+        }
     }
 
     @Override
@@ -672,6 +676,8 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     public void read(CompoundNBT tag) {
         super.read(tag);
 
+        reading = true;
+
         StackUtils.readItems(matrix, 0, tag);
         StackUtils.readItems(patterns, 1, tag);
         StackUtils.readItems(filter, 2, tag);
@@ -688,6 +694,8 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
         if (tag.contains(NBT_TAB_PAGE)) {
             tabPage = tag.getInt(NBT_TAB_PAGE);
         }
+
+        reading = false;
     }
 
     @Override
