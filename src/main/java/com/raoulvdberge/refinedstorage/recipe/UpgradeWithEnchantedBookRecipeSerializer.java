@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.recipe;
 
 import com.google.gson.JsonObject;
-import com.mojang.realmsclient.util.JsonUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -15,9 +14,15 @@ import javax.annotation.Nullable;
 public class UpgradeWithEnchantedBookRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<UpgradeWithEnchantedBookRecipe> {
     @Override
     public UpgradeWithEnchantedBookRecipe read(ResourceLocation recipeId, JsonObject json) {
+        JsonObject enchantmentInfo = json.getAsJsonObject("enchantment");
+
         ItemStack result = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(json.getAsJsonPrimitive("result").getAsString())));
-        Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(json.getAsJsonObject("enchantment").getAsJsonPrimitive("id").getAsString()));
-        int level = JsonUtils.func_225172_a("level", json.getAsJsonObject("enchantment"), 1);
+        Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantmentInfo.getAsJsonPrimitive("id").getAsString()));
+
+        int level = 1;
+        if (enchantmentInfo.has("level")) {
+            level = enchantmentInfo.getAsJsonPrimitive("level").getAsInt();
+        }
 
         return new UpgradeWithEnchantedBookRecipe(recipeId, enchantment, level, result);
     }
