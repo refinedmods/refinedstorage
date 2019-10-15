@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
-public class TileEntitySpecialRendererStorageMonitor extends TileEntityRenderer<TileStorageMonitor> {
+public class StorageMonitorTileEntityRenderer extends TileEntityRenderer<TileStorageMonitor> {
     @Override
     public void render(TileStorageMonitor tile, double x, double y, double z, float partialTicks, int destroyStage) {
         setLightmapDisabled(true);

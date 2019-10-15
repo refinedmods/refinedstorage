@@ -50,25 +50,13 @@ public class ProxyClient extends ProxyCommon implements IModelRegistration {
 
     }
 
-    /*private List<Pair<Item, IItemColor>> itemColors = new LinkedList<>();
-
+    /*
     @Override
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
 
         MinecraftForge.EVENT_BUS.register(new BlockHighlightListener());
         MinecraftForge.EVENT_BUS.register(new KeyInputListener());
-
-        RSItems.PATTERN.setTileEntityItemStackRenderer(new TileEntityItemStackRendererPattern());
-    }
-
-    @Override
-    public void init(FMLInitializationEvent e) {
-        super.init(e);
-
-        RSKeyBindings.init();
-
-        itemColors.forEach(p -> Minecraft.getMinecraft().getItemColors().registerItemColorHandler(p.getRight(), p.getKey()));
     }
 
     @Override

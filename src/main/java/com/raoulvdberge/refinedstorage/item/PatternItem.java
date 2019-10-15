@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.render.tesr.PatternItemStackTileEntityRenderer;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -44,21 +45,10 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     private static final int VERSION = 1;
 
     public PatternItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP));
+        super(new Item.Properties().group(RS.MAIN_GROUP).setTEISR(() -> () -> new PatternItemStackTileEntityRenderer()));
 
         this.setRegistryName(RS.ID, "pattern");
     }
-
-    /* TODO - Pattern rendering
-    @Override
-    @SideOnly(Side.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setModel(this, 0, new ModelResourceLocation(info.getId(), "inventory"));
-
-        modelRegistration.addBakedModelOverride(info.getId(), BakedModelPattern::new);
-
-        modelRegistration.addItemColor(this, new ItemColorPattern());
-    }*/
 
     public static CraftingPattern fromCache(World world, ItemStack stack) {
         if (!CACHE.containsKey(stack)) {

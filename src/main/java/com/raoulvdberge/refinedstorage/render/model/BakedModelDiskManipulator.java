@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.render.model.baked;
+package com.raoulvdberge.refinedstorage.render.model;
 /*
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

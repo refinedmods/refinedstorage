@@ -5,9 +5,10 @@ import com.raoulvdberge.refinedstorage.container.CrafterContainer;
 import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
 import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.render.BakedModelOverrideRegistry;
-import com.raoulvdberge.refinedstorage.render.model.baked.DiskDriveBakedModel;
-import com.raoulvdberge.refinedstorage.render.model.baked.FullbrightBakedModel;
-import com.raoulvdberge.refinedstorage.render.model.baked.PatternBakedModel;
+import com.raoulvdberge.refinedstorage.render.color.PatternItemColor;
+import com.raoulvdberge.refinedstorage.render.model.DiskDriveBakedModel;
+import com.raoulvdberge.refinedstorage.render.model.FullbrightBakedModel;
+import com.raoulvdberge.refinedstorage.render.model.PatternBakedModel;
 import com.raoulvdberge.refinedstorage.screen.*;
 import com.raoulvdberge.refinedstorage.screen.factory.GridScreenFactory;
 import net.minecraft.client.Minecraft;
@@ -122,6 +123,8 @@ public class ClientSetup {
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
+
+        e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN);
     }
 
     @SubscribeEvent

@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.render.model.baked;
+package com.raoulvdberge.refinedstorage.render.model;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
