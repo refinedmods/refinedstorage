@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.block.*;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
-    public static final BlockExternalStorage EXTERNAL_STORAGE = new BlockExternalStorage();
+    public static final ExternalStorageBlock EXTERNAL_STORAGE = new ExternalStorageBlock();
     public static final BlockImporter IMPORTER = new BlockImporter();
     public static final BlockExporter EXPORTER = new BlockExporter();
     public static final BlockDetector DETECTOR = new BlockDetector();
