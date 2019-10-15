@@ -2,6 +2,8 @@ package com.raoulvdberge.refinedstorage.screen.widget;
 
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
+import com.raoulvdberge.refinedstorage.integration.jei.RSJeiPlugin;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -22,12 +24,12 @@ public class SearchWidget extends TextFieldWidget {
         this.setEnableBackgroundDrawing(false);
         this.setVisible(true);
         this.setTextColor(16777215);
+    }
 
-        /* TODO this.listeners.add(() -> {
-            if (IntegrationJEI.isLoaded() && (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-                RSJEIPlugin.INSTANCE.getRuntime().getIngredientFilter().setFilterText(getText());
-            }
-        });*/
+    public void updateJei() {
+        if (JeiIntegration.isLoaded() && (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
+            RSJeiPlugin.RUNTIME.getIngredientFilter().setFilterText(getText());
+        }
     }
 
     @Override

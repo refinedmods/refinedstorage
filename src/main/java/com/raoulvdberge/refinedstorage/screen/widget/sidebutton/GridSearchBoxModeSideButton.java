@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -29,11 +30,11 @@ public class GridSearchBoxModeSideButton extends SideButton {
         if (mode == IGrid.SEARCH_BOX_MODE_NORMAL) {
             mode = IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED;
         } else if (mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED) {
-            //TODO if (IntegrationJEI.isLoaded()) {
-            //    mode = IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED;
-            //} else {
+            if (JeiIntegration.isLoaded()) {
+                mode = IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED;
+            } else {
                 mode = IGrid.SEARCH_BOX_MODE_NORMAL;
-            //}
+            }
         } else if (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
             mode = IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
         } else if (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED) {

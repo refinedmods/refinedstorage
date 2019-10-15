@@ -104,7 +104,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         if (searchField == null) {
             searchField = new SearchWidget(font, sx, sy, 88 - 6);
             searchField.func_212954_a(value -> {
-                this.getView().sort(); // Use getter since this view can be replaced.
+                searchField.updateJei();
+
+                getView().sort(); // Use getter since this view can be replaced.
             });
             searchField.setMode(grid.getSearchBoxMode());
         } else {

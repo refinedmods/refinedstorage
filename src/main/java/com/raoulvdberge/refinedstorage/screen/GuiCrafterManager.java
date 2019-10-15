@@ -115,7 +115,11 @@ public class GuiCrafterManager extends BaseScreen<CrafterManagerContainer> imple
 
         if (searchField == null) {
             searchField = new SearchWidget(font, sx, sy, 88 - 6);
-            searchField.func_212954_a(value -> container.initSlots(null));
+            searchField.func_212954_a(value -> {
+                searchField.updateJei();
+
+                container.initSlots(null);
+            });
             searchField.setMode(crafterManager.getSearchBoxMode());
         } else {
             searchField.x = sx;
