@@ -35,8 +35,10 @@ public class RSTiles {
     public static final TileEntityType<TileDiskManipulator> DISK_MANIPULATOR = null;
     //@ObjectHolder(RS.ID + ":exporter")
     public static final TileEntityType<TileExporter> EXPORTER = null;
-    //@ObjectHolder(RS.ID + ":external_storage")
-    public static final TileEntityType<TileExternalStorage> EXTERNAL_STORAGE = null;
+
+    @ObjectHolder(RS.ID + ":external_storage")
+    public static final TileEntityType<ExternalStorageTile> EXTERNAL_STORAGE = null;
+
     //@ObjectHolder(RS.ID + ":fluid_interface")
     public static final TileEntityType<TileFluidInterface> FLUID_INTERFACE = null;
 

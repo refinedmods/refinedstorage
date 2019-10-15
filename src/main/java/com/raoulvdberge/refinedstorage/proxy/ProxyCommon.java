@@ -32,9 +32,6 @@ public class ProxyCommon {
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerRedstone.ID, tag -> new ReaderWriterHandlerRedstone());
         API.instance().getReaderWriterHandlerRegistry().add(ReaderWriterHandlerForgeEnergy.ID, ReaderWriterHandlerForgeEnergy::new);
 
-        API.instance().addExternalStorageProvider(StorageType.ITEM, new ExternalStorageProviderItem());
-        API.instance().addExternalStorageProvider(StorageType.FLUID, new ExternalStorageProviderFluid());
-
         IntegrationInventorySorter.register();
     }
 

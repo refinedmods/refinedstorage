@@ -38,7 +38,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     protected UUID owner;
     protected String version;
 
-    private Direction direction = Direction.NORTH;
+    private Direction direction;
 
     // Disable throttling for the first tick.
     // This is to make sure couldUpdate is going to be correctly set.
@@ -240,6 +240,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         }
 
         return direction;
+    }
+
+    public void onDirectionChanged(Direction direction) {
+        this.direction = direction;
     }
 
     @Nullable

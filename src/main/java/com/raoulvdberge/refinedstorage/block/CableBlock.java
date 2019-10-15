@@ -22,12 +22,12 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class CableBlock extends NodeBlock {
-    protected static final BooleanProperty NORTH = BooleanProperty.create("north");
-    protected static final BooleanProperty EAST = BooleanProperty.create("east");
-    protected static final BooleanProperty SOUTH = BooleanProperty.create("south");
-    protected static final BooleanProperty WEST = BooleanProperty.create("west");
-    protected static final BooleanProperty UP = BooleanProperty.create("up");
-    protected static final BooleanProperty DOWN = BooleanProperty.create("down");
+    private static final BooleanProperty NORTH = BooleanProperty.create("north");
+    private static final BooleanProperty EAST = BooleanProperty.create("east");
+    private static final BooleanProperty SOUTH = BooleanProperty.create("south");
+    private static final BooleanProperty WEST = BooleanProperty.create("west");
+    private static final BooleanProperty UP = BooleanProperty.create("up");
+    private static final BooleanProperty DOWN = BooleanProperty.create("down");
 
     private static final VoxelShape SHAPE_CORE = makeCuboidShape(6, 6, 6, 10, 10, 10);
     private static final VoxelShape SHAPE_NORTH = makeCuboidShape(6, 6, 0, 10, 10, 6);
@@ -53,7 +53,7 @@ public class CableBlock extends NodeBlock {
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, block, fromPos, isMoving);
 
-        world.setBlockState(pos, getState(world, pos));
+        world.setBlockState(pos, getState(state, world, pos));
     }
 
     @Override
@@ -91,7 +91,7 @@ public class CableBlock extends NodeBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext ctx) {
-        return getState(ctx.getWorld(), ctx.getPos());
+        return getState(getDefaultState(), ctx.getWorld(), ctx.getPos());
     }
 
     private static boolean hasNode(World world, BlockPos pos, Direction direction) {
@@ -103,7 +103,7 @@ public class CableBlock extends NodeBlock {
         return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent();
     }
 
-    private BlockState getState(World world, BlockPos pos) {
+    private BlockState getState(BlockState currentState, World world, BlockPos pos) {
         boolean north = hasNode(world, pos.offset(Direction.NORTH), Direction.SOUTH);
         boolean east = hasNode(world, pos.offset(Direction.EAST), Direction.WEST);
         boolean south = hasNode(world, pos.offset(Direction.SOUTH), Direction.NORTH);
@@ -111,7 +111,7 @@ public class CableBlock extends NodeBlock {
         boolean up = hasNode(world, pos.offset(Direction.UP), Direction.DOWN);
         boolean down = hasNode(world, pos.offset(Direction.DOWN), Direction.UP);
 
-        return getDefaultState()
+        return currentState
             .with(NORTH, north)
             .with(EAST, east)
             .with(SOUTH, south)

@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
-import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraftforge.fluids.FluidStack;
@@ -17,13 +17,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class StorageExternalFluid implements IStorageExternal<FluidStack> {
+public class FluidExternalStorage implements IExternalStorage<FluidStack> {
     private IExternalStorageContext context;
     private Supplier<IFluidHandler> handlerSupplier;
     private boolean connectedToInterface;
-    private ExternalStorageCacheFluid cache = new ExternalStorageCacheFluid();
+    private FluidExternalStorageCache cache = new FluidExternalStorageCache();
 
-    public StorageExternalFluid(IExternalStorageContext context, Supplier<IFluidHandler> handlerSupplier, boolean connectedToInterface) {
+    public FluidExternalStorage(IExternalStorageContext context, Supplier<IFluidHandler> handlerSupplier, boolean connectedToInterface) {
         this.context = context;
         this.handlerSupplier = handlerSupplier;
         this.connectedToInterface = connectedToInterface;

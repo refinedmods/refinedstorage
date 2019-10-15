@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalItem;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.ItemExternalStorage;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.ProxyItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
@@ -105,7 +105,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
                         // If we are an interface acting as a storage, we don't want to extract from other interfaces to
                         // avoid stealing from each other.
-                        return !(s instanceof StorageExternalItem) || !((StorageExternalItem) s).isConnectedToInterface();
+                        return !(s instanceof ItemExternalStorage) || !((ItemExternalStorage) s).isConnectedToInterface();
                     });
 
                     if (result != null) {
@@ -140,10 +140,10 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         for (Direction facing : Direction.values()) {
             INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(facing));
 
-            if (facingNode instanceof NetworkNodeExternalStorage &&
+            if (facingNode instanceof ExternalStorageNetworkNode &&
                 facingNode.canUpdate() &&
-                ((NetworkNodeExternalStorage) facingNode).getDirection() == facing.getOpposite() &&
-                ((NetworkNodeExternalStorage) facingNode).getType() == IType.ITEMS) {
+                ((ExternalStorageNetworkNode) facingNode).getDirection() == facing.getOpposite() &&
+                ((ExternalStorageNetworkNode) facingNode).getType() == IType.ITEMS) {
                 return true;
             }
         }

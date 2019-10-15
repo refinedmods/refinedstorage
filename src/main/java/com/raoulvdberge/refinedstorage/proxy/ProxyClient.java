@@ -55,22 +55,11 @@ public class ProxyClient extends ProxyCommon implements IModelRegistration {
     public void preInit(FMLPreInitializationEvent e) {
         super.preInit(e);
 
-        MinecraftForge.EVENT_BUS.register(new BlockHighlightListener());
         MinecraftForge.EVENT_BUS.register(new KeyInputListener());
-    }
-
-    @Override
-    public void addModelLoader(Supplier<ICustomModelLoader> modelLoader) {
-        ModelLoaderRegistry.registerLoader(modelLoader.get());
     }
 
     @Override
     public void setTesr(Class<? extends TileEntity> tile, TileEntitySpecialRenderer tesr) {
         ClientRegistry.bindTileEntitySpecialRenderer(tile, tesr);
-    }
-
-    @Override
-    public void addItemColor(Item item, IItemColor itemColor) {
-        itemColors.add(Pair.of(item, itemColor)); // ItemColors is only available in init.
     }*/
 }

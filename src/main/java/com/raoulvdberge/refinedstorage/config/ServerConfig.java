@@ -12,6 +12,7 @@ public class ServerConfig {
     private DiskDrive diskDrive;
     private StorageBlock storageBlock;
     private FluidStorageBlock fluidStorageBlock;
+    private ExternalStorage externalStorage;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -21,6 +22,7 @@ public class ServerConfig {
         diskDrive = new DiskDrive();
         storageBlock = new StorageBlock();
         fluidStorageBlock = new FluidStorageBlock();
+        externalStorage = new ExternalStorage();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -52,6 +54,10 @@ public class ServerConfig {
 
     public FluidStorageBlock getFluidStorageBlock() {
         return fluidStorageBlock;
+    }
+
+    public ExternalStorage getExternalStorage() {
+        return externalStorage;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -299,6 +305,22 @@ public class ServerConfig {
 
         public int getCreativeUsage() {
             return creativeUsage.get();
+        }
+    }
+
+    public class ExternalStorage {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public ExternalStorage() {
+            builder.push("externalStorage");
+
+            usage = builder.comment("The energy used by the External Storage").defineInRange("usage", 6, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
         }
     }
 }

@@ -7,23 +7,22 @@
   ],
   "key": {
     "C": {
-      "item": "#construction_core"
+      "item": "refinedstorage:construction_core"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "D": {
-      "item": "#destruction_core"
+      "item": "refinedstorage:destruction_core"
     },
     "H": {
-      "type": "forge:ore_dict",
-      "ore": "chest"
+      "tag": "forge:chests"
     },
     "M": {
       "item": "refinedstorage:cable"
     },
     "P": {
-      "item": "#improved_processor"
+      "item": "refinedstorage:improved_processor"
     }
   },
   "result": {

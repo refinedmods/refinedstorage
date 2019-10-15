@@ -1,5 +1,8 @@
 package com.raoulvdberge.refinedstorage.block;
 
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.tile.NetworkNodeTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -8,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -27,6 +31,8 @@ public abstract class NodeBlock extends BaseBlock {
     @Override
     @SuppressWarnings("deprecation")
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
+
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tile = worldIn.getTileEntity(pos);
 
@@ -43,8 +49,20 @@ public abstract class NodeBlock extends BaseBlock {
                     InventoryHelper.dropItems(worldIn, pos, drops);
                 }
             }
+        }
+    }
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+    @Override
+    protected void onDirectionChanged(World world, BlockPos pos, Direction newDirection) {
+        super.onDirectionChanged(world, pos, newDirection);
+
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof INetworkNodeProxy) {
+            INetworkNode node = ((INetworkNodeProxy) tile).getNode();
+
+            if (node instanceof NetworkNode) {
+                ((NetworkNode) node).onDirectionChanged(newDirection);
+            }
         }
     }
 

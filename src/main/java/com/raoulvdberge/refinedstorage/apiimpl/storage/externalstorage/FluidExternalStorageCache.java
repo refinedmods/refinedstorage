@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExternalStorageCacheFluid {
+public class FluidExternalStorageCache {
     private List<FluidStack> cache;
 
     public void update(INetwork network, @Nullable IFluidHandler handler) {

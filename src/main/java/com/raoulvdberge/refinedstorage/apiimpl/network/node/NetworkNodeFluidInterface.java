@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.StorageExternalFluid;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.FluidExternalStorage;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.fluid.ProxyFluidHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
@@ -123,7 +123,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
                         // If we are an interface acting as a storage, we don't want to extract from other interfaces to
                         // avoid stealing from each other.
-                        return !(s instanceof StorageExternalFluid) || !((StorageExternalFluid) s).isConnectedToInterface();
+                        return !(s instanceof FluidExternalStorage) || !((FluidExternalStorage) s).isConnectedToInterface();
                     });
 
                     if (result != null) {
@@ -162,10 +162,10 @@ public class NetworkNodeFluidInterface extends NetworkNode {
         for (Direction facing : Direction.values()) {
             INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(facing));
 
-            if (facingNode instanceof NetworkNodeExternalStorage &&
+            if (facingNode instanceof ExternalStorageNetworkNode &&
                 facingNode.canUpdate() &&
-                ((NetworkNodeExternalStorage) facingNode).getDirection() == facing.getOpposite() &&
-                ((NetworkNodeExternalStorage) facingNode).getType() == IType.FLUIDS) {
+                ((ExternalStorageNetworkNode) facingNode).getDirection() == facing.getOpposite() &&
+                ((ExternalStorageNetworkNode) facingNode).getType() == IType.FLUIDS) {
                 return true;
             }
         }

@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
  *
  * @param <T>
  */
-public interface IStorageExternal<T> extends IStorage<T> {
+public interface IExternalStorage<T> extends IStorage<T> {
     /**
      * For storage disks and blocks, the network detects changes and updates the {@link IStorageCache} accordingly.
      * However, for blocks connected to an external storage the external storage itself is responsible for bookkeeping the changes

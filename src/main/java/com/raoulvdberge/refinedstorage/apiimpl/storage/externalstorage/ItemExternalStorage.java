@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
-import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -19,13 +19,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class StorageExternalItem implements IStorageExternal<ItemStack> {
+public class ItemExternalStorage implements IExternalStorage<ItemStack> {
     private IExternalStorageContext context;
     private Supplier<IItemHandler> handlerSupplier;
     private boolean connectedToInterface;
-    private ExternalStorageCacheItem cache = new ExternalStorageCacheItem();
+    private ItemExternalStorageCache cache = new ItemExternalStorageCache();
 
-    public StorageExternalItem(IExternalStorageContext context, Supplier<IItemHandler> handlerSupplier, boolean connectedToInterface) {
+    public ItemExternalStorage(IExternalStorageContext context, Supplier<IItemHandler> handlerSupplier, boolean connectedToInterface) {
         this.context = context;
         this.handlerSupplier = handlerSupplier;
         this.connectedToInterface = connectedToInterface;

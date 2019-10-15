@@ -2,10 +2,12 @@ package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.CableNetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
@@ -15,6 +17,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.factory.ItemStorageDiskFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.FluidExternalStorageProvider;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.ItemExternalStorageProvider;
 import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.config.ClientConfig;
@@ -111,7 +115,12 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(FluidStorageNetworkNode.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new FluidStorageNetworkNode(world, pos, FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K)));
         API.instance().getNetworkNodeRegistry().add(FluidStorageNetworkNode.CREATIVE_FLUID_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new FluidStorageNetworkNode(world, pos, FluidStorageType.CREATIVE)));
 
+        API.instance().getNetworkNodeRegistry().add(ExternalStorageNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ExternalStorageNetworkNode(world, pos)));
+
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
+
+        API.instance().addExternalStorageProvider(StorageType.ITEM, new ItemExternalStorageProvider());
+        API.instance().addExternalStorageProvider(StorageType.FLUID, new FluidExternalStorageProvider());
 
         LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
     }
@@ -147,6 +156,8 @@ public final class RS {
         for (FluidStorageType type : FluidStorageType.values()) {
             e.getRegistry().register(new FluidStorageBlock(type));
         }
+
+        e.getRegistry().register(new ExternalStorageBlock());
     }
 
     @SubscribeEvent
@@ -171,6 +182,8 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new FluidStorageTile(FluidStorageType.THOUSAND_TWENTY_FOUR_K), RSBlocks.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "1024k_fluid_storage_block")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new FluidStorageTile(FluidStorageType.FOUR_THOUSAND_NINETY_SIX_K), RSBlocks.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "4096k_fluid_storage_block")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new FluidStorageTile(FluidStorageType.CREATIVE), RSBlocks.CREATIVE_FLUID_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "creative_fluid_storage_block")));
+
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ExternalStorageTile::new, RSBlocks.EXTERNAL_STORAGE).build(null).setRegistryName(RS.ID, "external_storage")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -189,6 +202,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new GridContainerFactory()).setRegistryName(RS.ID, "grid"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<StorageContainer, StorageTile>((windowId, inv, tile) -> new StorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "storage_block"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<FluidStorageContainer, FluidStorageTile>((windowId, inv, tile) -> new FluidStorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "fluid_storage_block"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<ExternalStorageContainer, ExternalStorageTile>((windowId, inv, tile) -> new ExternalStorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "external_storage"));
     }
 
     @SubscribeEvent
@@ -255,6 +269,8 @@ public final class RS {
         e.getRegistry().register(new FluidStorageBlockItem(RSBlocks.THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK));
         e.getRegistry().register(new FluidStorageBlockItem(RSBlocks.FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK));
         e.getRegistry().register(new FluidStorageBlockItem(RSBlocks.CREATIVE_FLUID_STORAGE_BLOCK));
+
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.EXTERNAL_STORAGE));
     }
 
     /* TODO

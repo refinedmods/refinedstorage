@@ -4,7 +4,10 @@ import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.StateContainer;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public abstract class BaseBlock extends Block {
     public BaseBlock(Properties properties) {
@@ -20,10 +23,27 @@ public abstract class BaseBlock extends Block {
     public BlockState rotate(BlockState state, Rotation rot) {
         BlockDirection dir = getDirection();
         if (dir != BlockDirection.NONE) {
-            return state.with(dir.getProperty(), dir.cycle(state.get(dir.getProperty())));
+            Direction newDirection = dir.cycle(state.get(dir.getProperty()));
+
+            return state.with(dir.getProperty(), newDirection);
         }
 
         return super.rotate(state, rot);
+    }
+
+    protected void onDirectionChanged(World world, BlockPos pos, Direction newDirection) {
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        super.onReplaced(state, world, pos, newState, isMoving);
+
+        if (getDirection() != BlockDirection.NONE &&
+            state.getBlock() == newState.getBlock() &&
+            state.get(getDirection().getProperty()) != newState.get(getDirection().getProperty())) {
+            onDirectionChanged(world, pos, newState.get(getDirection().getProperty()));
+        }
     }
 
     @Override

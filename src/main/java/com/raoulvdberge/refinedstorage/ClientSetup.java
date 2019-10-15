@@ -120,6 +120,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.GRID, new GridScreenFactory());
         ScreenManager.registerFactory(RSContainers.STORAGE_BLOCK, StorageBlockScreen::new);
         ScreenManager.registerFactory(RSContainers.FLUID_STORAGE_BLOCK, FluidStorageBlockScreen::new);
+        ScreenManager.registerFactory(RSContainers.EXTERNAL_STORAGE, ExternalStorageScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);

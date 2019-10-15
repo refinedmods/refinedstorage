@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExternalStorageCacheItem {
+public class ItemExternalStorageCache {
     private List<ItemStack> cache;
 
     public void update(INetwork network, @Nullable IItemHandler handler) {

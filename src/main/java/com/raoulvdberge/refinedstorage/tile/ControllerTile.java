@@ -18,7 +18,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
+import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.raoulvdberge.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
@@ -317,8 +317,8 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
             if (remainder == null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof IStorageExternal && action == Action.PERFORM) {
-                    ((IStorageExternal) storage).update(this);
+                if (storage instanceof IExternalStorage && action == Action.PERFORM) {
+                    ((IExternalStorage) storage).update(this);
 
                     insertedExternally += size;
                 }
@@ -326,8 +326,8 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
                 break;
             } else {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (size != remainder.getCount() && storage instanceof IStorageExternal && action == Action.PERFORM) {
-                    ((IStorageExternal) storage).update(this);
+                if (size != remainder.getCount() && storage instanceof IExternalStorage && action == Action.PERFORM) {
+                    ((IExternalStorage) storage).update(this);
 
                     insertedExternally += size - remainder.getCount();
                 }
@@ -361,8 +361,8 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
             if (took != null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof IStorageExternal && action == Action.PERFORM) {
-                    ((IStorageExternal) storage).update(this);
+                if (storage instanceof IExternalStorage && action == Action.PERFORM) {
+                    ((IExternalStorage) storage).update(this);
 
                     extractedExternally += took.getCount();
                 }
@@ -415,8 +415,8 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
             if (remainder == null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof IStorageExternal && action == Action.PERFORM) {
-                    ((IStorageExternal) storage).update(this);
+                if (storage instanceof IExternalStorage && action == Action.PERFORM) {
+                    ((IExternalStorage) storage).update(this);
 
                     insertedExternally += size;
                 }
@@ -424,8 +424,8 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
                 break;
             } else {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (size != remainder.getAmount() && storage instanceof IStorageExternal && action == Action.PERFORM) {
-                    ((IStorageExternal) storage).update(this);
+                if (size != remainder.getAmount() && storage instanceof IExternalStorage && action == Action.PERFORM) {
+                    ((IExternalStorage) storage).update(this);
 
                     insertedExternally += size - remainder.getAmount();
                 }
@@ -459,8 +459,8 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
             if (took != null) {
                 // The external storage is responsible for sending changes, we don't need to anymore
-                if (storage instanceof IStorageExternal && action == Action.PERFORM) {
-                    ((IStorageExternal) storage).update(this);
+                if (storage instanceof IExternalStorage && action == Action.PERFORM) {
+                    ((IExternalStorage) storage).update(this);
 
                     extractedExternally += took.getAmount();
                 }

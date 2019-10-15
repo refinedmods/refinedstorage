@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.block.*;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
-    public static final ExternalStorageBlock EXTERNAL_STORAGE = new ExternalStorageBlock();
     public static final BlockImporter IMPORTER = new BlockImporter();
     public static final BlockExporter EXPORTER = new BlockExporter();
     public static final BlockDetector DETECTOR = new BlockDetector();
@@ -70,6 +69,9 @@ public final class RSBlocks {
     public static final FluidStorageBlock FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK = null;
     @ObjectHolder(RS.ID + ":creative_fluid_storage_block")
     public static final FluidStorageBlock CREATIVE_FLUID_STORAGE_BLOCK = null;
+
+    @ObjectHolder(RS.ID + ":external_storage")
+    public static final ExternalStorageBlock EXTERNAL_STORAGE = null;
 
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();
