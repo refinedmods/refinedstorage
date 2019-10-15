@@ -43,6 +43,8 @@ public class NetworkHandler {
         handler.registerMessage(id++, GridFluidDeltaMessage.class, GridFluidDeltaMessage::encode, GridFluidDeltaMessage::decode, GridFluidDeltaMessage::handle);
         handler.registerMessage(id++, GridFluidInsertHeldMessage.class, GridFluidInsertHeldMessage::encode, GridFluidInsertHeldMessage::decode, GridFluidInsertHeldMessage::handle);
         handler.registerMessage(id++, GridFluidPullMessage.class, GridFluidPullMessage::encode, GridFluidPullMessage::decode, GridFluidPullMessage::handle);
+        handler.registerMessage(id++, GridTransferMessage.class, GridTransferMessage::encode, GridTransferMessage::decode, GridTransferMessage::handle);
+        handler.registerMessage(id++, GridProcessingTransferMessage.class, GridProcessingTransferMessage::encode, GridProcessingTransferMessage::decode, GridProcessingTransferMessage::handle);
     }
 
     public void sendToServer(Object message) {

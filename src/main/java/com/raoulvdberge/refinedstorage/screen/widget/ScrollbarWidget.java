@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.screen.widget;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.integration.jei.GridRecipeTransferHandler;
+import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -65,6 +67,13 @@ public class ScrollbarWidget implements IGuiEventListener {
         my -= screen.getGuiTop();
 
         if (button == 0 && RenderUtils.inBounds(x, y, width, height, mx, my)) {
+            // Prevent accidental scrollbar click after clicking recipe transfer button
+            if (JeiIntegration.isLoaded() && System.currentTimeMillis() - GridRecipeTransferHandler.LAST_TRANSFER_TIME <= GridRecipeTransferHandler.TRANSFER_SCROLLBAR_DELAY_MS) {
+                return false;
+            }
+
+            updateOffset(my);
+
             clicked = true;
 
             return true;
@@ -79,8 +88,12 @@ public class ScrollbarWidget implements IGuiEventListener {
         my -= screen.getGuiTop();
 
         if (clicked && RenderUtils.inBounds(x, y, width, height, mx, my)) {
-            setOffset((int) Math.floor((float) (my - y) / (float) (height - SCROLLER_HEIGHT) * (float) maxOffset));
+            updateOffset(my);
         }
+    }
+
+    private void updateOffset(double my) {
+        setOffset((int) Math.floor((float) (my - y) / (float) (height - SCROLLER_HEIGHT) * (float) maxOffset));
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.util.ResourceLocation;
 
@@ -13,8 +14,6 @@ public class RSJeiPlugin implements IModPlugin {
     private static final ResourceLocation ID = new ResourceLocation(RS.ID, "plugin");
 
     public static IJeiRuntime RUNTIME;
-
-    // TODO registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RecipeTransferHandlerGrid());
 
     // TODO registry.addRecipeRegistryPlugin(new RecipeRegistryPluginCover());
     // TODO registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowCover());
@@ -25,6 +24,11 @@ public class RSJeiPlugin implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
         return ID;
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        registration.addUniversalRecipeTransferHandler(new GridRecipeTransferHandler());
     }
 
     @Override

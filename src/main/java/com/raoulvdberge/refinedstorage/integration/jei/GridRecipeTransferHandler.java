@@ -1,21 +1,20 @@
 package com.raoulvdberge.refinedstorage.integration.jei;
-/*
+
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeGrid;
-import com.raoulvdberge.refinedstorage.container.ContainerGrid;
-import com.raoulvdberge.refinedstorage.network.MessageGridProcessingTransfer;
-import com.raoulvdberge.refinedstorage.network.MessageGridTransfer;
-import mezz.jei.api.gui.IGuiIngredient;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.raoulvdberge.refinedstorage.container.GridContainer;
+import com.raoulvdberge.refinedstorage.network.grid.GridProcessingTransferMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridTransferMessage;
+import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -23,9 +22,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
-    public static final long TRANSFER_SCROLL_DELAY_MS = 200;
-    public static long LAST_TRANSFER;
+public class GridRecipeTransferHandler implements IRecipeTransferHandler {
+    public static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
+    public static long LAST_TRANSFER_TIME;
 
     private static final IRecipeTransferError ERROR_CANNOT_TRANSFER = new IRecipeTransferError() {
         @Override
@@ -34,24 +33,24 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
         }
 
         @Override
-        public void showError(Minecraft minecraft, int mouseX, int mouseY, IRecipeLayout recipeLayout, int recipeX, int recipeY) {
-            // NO OP
+        public void showError(int i, int i1, IRecipeLayout iRecipeLayout, int i2, int i3) {
+
         }
     };
 
     @Override
     public Class<? extends Container> getContainerClass() {
-        return ContainerGrid.class;
+        return GridContainer.class;
     }
 
     @Override
     public IRecipeTransferError transferRecipe(Container container, IRecipeLayout recipeLayout, PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
-        IGrid grid = ((ContainerGrid) container).getGrid();
+        IGrid grid = ((GridContainer) container).getGrid();
 
         if (doTransfer) {
-            LAST_TRANSFER = System.currentTimeMillis();
+            LAST_TRANSFER_TIME = System.currentTimeMillis();
 
-            if (grid.getGridType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
+            if (grid.getGridType() == GridType.PATTERN && ((GridNetworkNode) grid).isProcessingPattern()) {
                 List<ItemStack> inputs = new LinkedList<>();
                 List<ItemStack> outputs = new LinkedList<>();
 
@@ -82,12 +81,15 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
                     }
                 }
 
-                RS.INSTANCE.network.sendToServer(new MessageGridProcessingTransfer(inputs, outputs, fluidInputs, fluidOutputs));
+                RS.NETWORK_HANDLER.sendToServer(new GridProcessingTransferMessage(inputs, outputs, fluidInputs, fluidOutputs));
             } else {
-                RS.INSTANCE.network.sendToServer(new MessageGridTransfer(recipeLayout.getItemStacks().getGuiIngredients(), container.inventorySlots.stream().filter(s -> s.inventory instanceof InventoryCrafting).collect(Collectors.toList())));
+                RS.NETWORK_HANDLER.sendToServer(new GridTransferMessage(
+                    recipeLayout.getItemStacks().getGuiIngredients(),
+                    container.inventorySlots.stream().filter(s -> s.inventory instanceof CraftingInventory).collect(Collectors.toList())
+                ));
             }
         } else {
-            if (grid.getGridType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
+            if (grid.getGridType() == GridType.PATTERN && ((GridNetworkNode) grid).isProcessingPattern()) {
                 if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
                     return ERROR_CANNOT_TRANSFER;
                 }
@@ -101,4 +103,3 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
         return null;
     }
 }
-*/
