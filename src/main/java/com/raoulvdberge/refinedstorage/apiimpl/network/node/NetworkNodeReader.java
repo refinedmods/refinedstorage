@@ -2,28 +2,20 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReader;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.tile.TileReader;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
-
-public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReaderWriter, ICoverable {
+public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReaderWriter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "reader");
 
     private static final String NBT_CHANNEL = "Channel";
-    private static final String NBT_COVERS = "Covers";
 
     private String channel = "";
-
-    private CoverManager coverManager = new CoverManager(this);
 
     public NetworkNodeReader(World world, BlockPos pos) {
         super(world, pos);
@@ -81,10 +73,6 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
         if (tag.contains(NBT_CHANNEL)) {
             channel = tag.getString(NBT_CHANNEL);
         }
-
-        if (tag.contains(NBT_COVERS)) {
-            coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
-        }
     }
 
     @Override
@@ -98,18 +86,6 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
 
         tag.putString(NBT_CHANNEL, channel);
 
-        tag.put(NBT_COVERS, coverManager.writeToNbt());
-
         return tag;
-    }
-
-    @Override
-    public boolean canConduct(@Nullable Direction direction) {
-        return coverManager.canConduct(direction);
-    }
-
-    @Override
-    public CoverManager getCoverManager() {
-        return coverManager;
     }
 }

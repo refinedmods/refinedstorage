@@ -67,10 +67,6 @@ public class RSOldConfig {
     public int readerWriterChannelEnergyCapacity;
     //endregion
 
-    //region Covers
-    public boolean hideCovers;
-    //endregion
-
     //region Autocrafting
     public int calculationTimeoutMs;
     //endregion
@@ -83,7 +79,6 @@ public class RSOldConfig {
     private static final String WIRELESS_FLUID_GRID = "wirelessFluidGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String READER_WRITER = "readerWriter";
-    private static final String COVERS = "covers";
     private static final String AUTOCRAFTING = "autocrafting";
     //endregion
 
@@ -152,10 +147,6 @@ public class RSOldConfig {
         readerUsage = config.getInt("reader", READER_WRITER, 2, 0, Integer.MAX_VALUE, "The energy used by Readers");
         writerUsage = config.getInt("writer", READER_WRITER, 2, 0, Integer.MAX_VALUE, "The energy used by Writers");
         readerWriterChannelEnergyCapacity = config.getInt("channelEnergyCapacity", READER_WRITER, 16000, 0, Integer.MAX_VALUE, "The energy capacity of energy channels");
-        //endregion
-
-        //region Covers
-        hideCovers = config.getBoolean("hideCovers", COVERS, false, "Whether to hide covers in the creative mode tabs and JEI");
         //endregion
 
         //region Autocrafting

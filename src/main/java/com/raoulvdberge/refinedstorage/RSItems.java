@@ -7,8 +7,6 @@ public final class RSItems {
     public static final ItemWirelessGrid WIRELESS_GRID = null;
     public static final ItemWirelessFluidGrid WIRELESS_FLUID_GRID = null;
     public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = null;
-    public static final ItemCover COVER = null;
-    public static final ItemHollowCover HOLLOW_COVER = null;
 
     @ObjectHolder(RS.ID + ":quartz_enriched_iron")
     public static final QuartzEnrichedIronItem QUARTZ_ENRICHED_IRON = null;
@@ -24,8 +22,6 @@ public final class RSItems {
     public static final FilterItem FILTER = null;
     @ObjectHolder(RS.ID + ":storage_housing")
     public static final StorageHousingItem STORAGE_HOUSING = null;
-    @ObjectHolder(RS.ID + ":cutting_tool")
-    public static final CuttingToolItem CUTTING_TOOL = null;
     @ObjectHolder(RS.ID + ":network_card")
     public static final NetworkCardItem NETWORK_CARD = null;
     @ObjectHolder(RS.ID + ":security_card")

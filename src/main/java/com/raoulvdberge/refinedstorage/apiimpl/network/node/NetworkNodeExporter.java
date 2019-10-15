@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
@@ -16,27 +15,21 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-import javax.annotation.Nullable;
-
-public class NetworkNodeExporter extends NetworkNode implements IComparable, IType, ICoverable {
+public class NetworkNodeExporter extends NetworkNode implements IComparable, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "exporter");
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
-    private static final String NBT_COVERS = "Covers";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
@@ -46,8 +39,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
-
-    private CoverManager coverManager = new CoverManager(this);
 
     private int filterSlot;
 
@@ -177,8 +168,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
         StackUtils.writeItems(upgrades, 1, tag);
 
-        tag.put(NBT_COVERS, coverManager.writeToNbt());
-
         return tag;
     }
 
@@ -201,10 +190,6 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
         super.read(tag);
 
         StackUtils.readItems(upgrades, 1, tag);
-
-        if (tag.contains(NBT_COVERS)) {
-            coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
-        }
     }
 
     @Override
@@ -232,7 +217,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     @Override
     public IItemHandler getDrops() {
-        return new CombinedInvWrapper(upgrades, coverManager.getAsInventory());
+        return upgrades;
     }
 
     @Override
@@ -255,15 +240,5 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     @Override
     public FluidInventory getFluidFilters() {
         return fluidFilters;
-    }
-
-    @Override
-    public boolean canConduct(@Nullable Direction direction) {
-        return coverManager.canConduct(direction);
-    }
-
-    @Override
-    public CoverManager getCoverManager() {
-        return coverManager;
     }
 }

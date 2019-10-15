@@ -15,9 +15,6 @@ public class RSJeiPlugin implements IModPlugin {
 
     public static IJeiRuntime RUNTIME;
 
-    // TODO registry.addRecipeRegistryPlugin(new RecipeRegistryPluginCover());
-    // TODO registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowCover());
-
     @Override
     public ResourceLocation getPluginUid() {
         return ID;

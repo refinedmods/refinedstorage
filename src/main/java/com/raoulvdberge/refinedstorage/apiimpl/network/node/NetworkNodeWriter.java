@@ -5,31 +5,23 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandler;
 import com.raoulvdberge.refinedstorage.api.network.readerwriter.IWriter;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.tile.TileWriter;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
-
-public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReaderWriter, ICoverable {
+public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReaderWriter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "writer");
 
     private static final String NBT_CHANNEL = "Channel";
-    private static final String NBT_COVERS = "Covers";
 
     private String channel = "";
 
     private int redstoneStrength;
     private int lastRedstoneStrength;
-
-    private CoverManager coverManager = new CoverManager(this);
 
     public NetworkNodeWriter(World world, BlockPos pos) {
         super(world, pos);
@@ -113,10 +105,6 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
         if (tag.contains(NBT_CHANNEL)) {
             channel = tag.getString(NBT_CHANNEL);
         }
-
-        if (tag.contains(NBT_COVERS)) {
-            coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
-        }
     }
 
     @Override
@@ -130,18 +118,6 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
 
         tag.putString(NBT_CHANNEL, channel);
 
-        tag.put(NBT_COVERS, coverManager.writeToNbt());
-
         return tag;
-    }
-
-    @Override
-    public boolean canConduct(@Nullable Direction direction) {
-        return coverManager.canConduct(direction);
-    }
-
-    @Override
-    public CoverManager getCoverManager() {
-        return coverManager;
     }
 }

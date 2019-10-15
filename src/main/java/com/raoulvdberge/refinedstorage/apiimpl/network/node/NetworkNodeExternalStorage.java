@@ -11,7 +11,6 @@ import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStor
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IStorageExternal;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
@@ -25,29 +24,24 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IStorageScreen, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IExternalStorageContext, ICoverable {
+public class NetworkNodeExternalStorage extends NetworkNode implements IStorageProvider, IStorageScreen, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IExternalStorageContext {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "external_storage");
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_MODE = "Mode";
     private static final String NBT_TYPE = "Type";
-    private static final String NBT_COVERS = "Covers";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
@@ -59,8 +53,6 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     private int type = IType.ITEMS;
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
-
-    private CoverManager coverManager = new CoverManager(this);
 
     private List<IStorageExternal<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
     private List<IStorageExternal<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
@@ -114,24 +106,6 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
     @Override
     public ResourceLocation getId() {
         return ID;
-    }
-
-    @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
-
-        if (tag.contains(NBT_COVERS)) {
-            coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
-        }
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        super.write(tag);
-
-        tag.put(NBT_COVERS, coverManager.writeToNbt());
-
-        return tag;
     }
 
     @Override
@@ -366,21 +340,5 @@ public class NetworkNodeExternalStorage extends NetworkNode implements IStorageP
 
     public List<IStorageExternal<FluidStack>> getFluidStorages() {
         return fluidStorages;
-    }
-
-    @Override
-    public boolean canConduct(@Nullable Direction direction) {
-        return coverManager.canConduct(direction);
-    }
-
-    @Nullable
-    @Override
-    public IItemHandler getDrops() {
-        return coverManager.getAsInventory();
-    }
-
-    @Override
-    public CoverManager getCoverManager() {
-        return coverManager;
     }
 }

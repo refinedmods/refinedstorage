@@ -49,12 +49,6 @@ public class ProxyCommon {
     }
 
     @SubscribeEvent
-    public void registerRecipes(RegistryEvent.Register<IRecipe> e) {
-        e.getRegistry().register(new RecipeCover().setRegistryName(new ResourceLocation(RS.ID, "cover")));
-        e.getRegistry().register(new RecipeHollowCover().setRegistryName(new ResourceLocation(RS.ID, "hollow_cover")));
-    }
-
-    @SubscribeEvent
     public void onHarvestCheck(PlayerEvent.HarvestCheck e) {
         if (e.getTargetBlock().getBlock() instanceof BlockBase) {
             e.setCanHarvest(true); // Allow break without tool

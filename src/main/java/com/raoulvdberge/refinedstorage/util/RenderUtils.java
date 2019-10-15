@@ -4,27 +4,18 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,7 +25,6 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public final class RenderUtils {
@@ -273,51 +263,6 @@ public final class RenderUtils {
         }
 
         return format;
-    }
-
-    @SuppressWarnings("deprecation")
-    public static TextureAtlasSprite getSprite(IBakedModel coverModel, BlockState coverState, Direction facing, Random rand) {
-        TextureAtlasSprite sprite = null;
-
-        BlockRenderLayer originalLayer = MinecraftForgeClient.getRenderLayer();
-
-        try {
-            for (BlockRenderLayer layer : BlockRenderLayer.values()) {
-                ForgeHooksClient.setRenderLayer(layer);
-
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
-                    return bakedQuad.getSprite();
-                }
-
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, rand)) {
-                    if (sprite == null) {
-                        sprite = bakedQuad.getSprite();
-                    }
-
-                    if (bakedQuad.getFace() == facing) {
-                        return bakedQuad.getSprite();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // NO OP
-        } finally {
-            ForgeHooksClient.setRenderLayer(originalLayer);
-        }
-
-        if (sprite == null) {
-            try {
-                sprite = coverModel.getParticleTexture();
-            } catch (Exception e) {
-                // NO OP
-            }
-        }
-
-        if (sprite == null) {
-            sprite = MissingTextureSprite.func_217790_a();
-        }
-
-        return sprite;
     }
 
     public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {

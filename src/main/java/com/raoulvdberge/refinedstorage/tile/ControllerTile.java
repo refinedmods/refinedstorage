@@ -26,7 +26,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.ICoverable;
 import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
@@ -46,7 +45,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -677,24 +675,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
     @Override
     public void visit(Operator operator) {
         for (Direction facing : Direction.values()) {
-            BlockPos pos = this.pos.offset(facing);
-
-            TileEntity tile = world.getTileEntity(pos);
-
-            // Little hack to support not conducting through covers (if the cover is right next to the controller).
-            if (tile != null) {
-                INetworkNodeProxy otherNodeProxy = tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
-
-                if (otherNodeProxy != null) {
-                    INetworkNode otherNode = otherNodeProxy.getNode();
-
-                    if (otherNode instanceof ICoverable && ((ICoverable) otherNode).getCoverManager().hasCover(facing.getOpposite())) {
-                        continue;
-                    }
-                }
-            }
-
-            operator.apply(world, pos, facing.getOpposite());
+            operator.apply(world, pos.offset(facing), facing.getOpposite());
         }
     }
 

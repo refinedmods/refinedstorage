@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.cover.CoverManager;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
@@ -33,24 +32,20 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class NetworkNodeConstructor extends NetworkNode implements IComparable, IType, ICoverable {
+public class NetworkNodeConstructor extends NetworkNode implements IComparable, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "constructor");
 
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_DROP = "Drop";
-    private static final String NBT_COVERS = "Covers";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private static final int BASE_SPEED = 20;
@@ -63,8 +58,6 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
     private boolean drop = false;
-
-    private CoverManager coverManager = new CoverManager(this);
 
     public NetworkNodeConstructor(World world, BlockPos pos) {
         super(world, pos);
@@ -303,8 +296,6 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
         StackUtils.writeItems(upgrades, 1, tag);
 
-        tag.put(NBT_COVERS, coverManager.writeToNbt());
-
         return tag;
     }
 
@@ -339,10 +330,6 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
             drop = tag.getBoolean(NBT_DROP);
         }
 
-        if (tag.contains(NBT_COVERS)) {
-            coverManager.readFromNbt(tag.getList(NBT_COVERS, Constants.NBT.TAG_COMPOUND));
-        }
-
         StackUtils.readItems(itemFilters, 0, tag);
 
         if (tag.contains(NBT_FLUID_FILTERS)) {
@@ -364,12 +351,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
     @Override
     public IItemHandler getDrops() {
-        return new CombinedInvWrapper(upgrades, coverManager.getAsInventory());
-    }
-
-    @Override
-    public boolean canConduct(@Nullable Direction direction) {
-        return coverManager.canConduct(direction);
+        return upgrades;
     }
 
     @Override
@@ -397,10 +379,5 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     @Override
     public FluidInventory getFluidFilters() {
         return fluidFilters;
-    }
-
-    @Override
-    public CoverManager getCoverManager() {
-        return coverManager;
     }
 }

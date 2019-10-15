@@ -206,7 +206,6 @@ public final class RS {
 
         e.getRegistry().register(new SecurityCardItem());
         e.getRegistry().register(new NetworkCardItem());
-        e.getRegistry().register(new CuttingToolItem());
 
         for (ItemStorageType type : ItemStorageType.values()) {
             if (type != ItemStorageType.CREATIVE) {
