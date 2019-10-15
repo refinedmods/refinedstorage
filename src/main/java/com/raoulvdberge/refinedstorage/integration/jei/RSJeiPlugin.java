@@ -18,9 +18,6 @@ public class RSJeiPlugin implements IModPlugin {
     // TODO registry.addRecipeRegistryPlugin(new RecipeRegistryPluginCover());
     // TODO registry.addRecipeRegistryPlugin(new RecipeRegistryPluginHollowCover());
 
-    // TODO: https://github.com/mezz/JustEnoughItems/issues/1307
-    // registry.addGhostIngredientHandler(GuiBase.class, new GhostIngredientHandler());
-
     @Override
     public ResourceLocation getPluginUid() {
         return ID;
@@ -34,6 +31,9 @@ public class RSJeiPlugin implements IModPlugin {
     @Override
     public void registerGuiHandlers(IGuiHandlerRegistration registration) {
         registration.addGuiContainerHandler(BaseScreen.class, new GuiContainerHandler());
+
+        // TODO: https://github.com/mezz/JustEnoughItems/issues/1307
+        // registration.addGhostIngredientHandler(BaseScreen.class, new GhostIngredientHandler());
     }
 
     @Override
