@@ -6,21 +6,21 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
-import net.minecraft.item.ItemStack;
+import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public class StorageDiskItemDriveWrapper implements IStorageDisk<ItemStack> {
+public class FluidDriveWrapperStorageDisk implements IStorageDisk<FluidStack> {
     private DiskDriveNetworkNode diskDrive;
-    private IStorageDisk<ItemStack> parent;
+    private IStorageDisk<FluidStack> parent;
     private DiskDriveNetworkNode.DiskState lastState;
 
-    public StorageDiskItemDriveWrapper(DiskDriveNetworkNode diskDrive, IStorageDisk<ItemStack> parent) {
+    public FluidDriveWrapperStorageDisk(DiskDriveNetworkNode diskDrive, IStorageDisk<FluidStack> parent) {
         this.diskDrive = diskDrive;
         this.parent = parent;
         this.setSettings(
@@ -49,23 +49,23 @@ public class StorageDiskItemDriveWrapper implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public Collection<ItemStack> getStacks() {
+    public Collection<FluidStack> getStacks() {
         return parent.getStacks();
     }
 
     @Override
-    @Nullable
-    public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
-        if (!IWhitelistBlacklist.acceptsItem(diskDrive.getItemFilters(), diskDrive.getWhitelistBlacklistMode(), diskDrive.getCompare(), stack)) {
-            return ItemHandlerHelper.copyStackWithSize(stack, size);
+    @Nonnull
+    public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
+        if (!IWhitelistBlacklist.acceptsFluid(diskDrive.getFluidFilters(), diskDrive.getWhitelistBlacklistMode(), diskDrive.getCompare(), stack)) {
+            return StackUtils.copy(stack, size);
         }
 
         return parent.insert(stack, size, action);
     }
 
-    @Nullable
     @Override
-    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
+    @Nonnull
+    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
         return parent.extract(stack, size, flags, action);
     }
 
@@ -75,7 +75,7 @@ public class StorageDiskItemDriveWrapper implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    public int getCacheDelta(int storedPreInsertion, int size, @Nullable ItemStack remainder) {
+    public int getCacheDelta(int storedPreInsertion, int size, @Nullable FluidStack remainder) {
         return parent.getCacheDelta(storedPreInsertion, size, remainder);
     }
 

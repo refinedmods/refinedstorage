@@ -28,12 +28,12 @@ public interface IStorage<T> {
     /**
      * Inserts a stack to this storage.
      *
-     * @param stack  the stack prototype to insert, do NOT modify
+     * @param stack  the stack prototype to insert, can be empty, do NOT modify
      * @param size   the amount of that prototype that has to be inserted
      * @param action the action
-     * @return null if the insert was successful, or a stack with the remainder
+     * @return an empty stack if the insert was successful, or a stack with the remainder
      */
-    @Nullable
+    @Nonnull
     T insert(@Nonnull T stack, int size, Action action);
 
     /**
@@ -41,13 +41,13 @@ public interface IStorage<T> {
      * <p>
      * If the stack we found in the system is smaller than the requested size, return that stack anyway.
      *
-     * @param stack  a prototype of the stack to extract, do NOT modify
+     * @param stack  a prototype of the stack to extract, can be empty, do NOT modify
      * @param size   the amount of that prototype that has to be extracted
      * @param flags  the flags to compare on, see {@link IComparer}
      * @param action the action
-     * @return null if we didn't extract anything, or a stack with the result
+     * @return an empty stack if nothing was extracted, or an extracted stack
      */
-    @Nullable
+    @Nonnull
     T extract(@Nonnull T stack, int size, int flags, Action action);
 
     /**

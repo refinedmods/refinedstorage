@@ -139,7 +139,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 
-        this.storage = new StorageDiskFluidStorageWrapper(this, disk);
+        this.storage = new FluidStorageWrapperStorageDisk(this, disk);
     }
 
     public void setStorageId(UUID id) {

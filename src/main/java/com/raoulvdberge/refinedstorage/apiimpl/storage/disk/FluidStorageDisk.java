@@ -67,8 +67,12 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (otherStack.isFluidEqual(stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -92,7 +96,7 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
                         onChanged();
                     }
 
-                    return null;
+                    return FluidStack.EMPTY;
                 }
             }
         }
@@ -118,13 +122,17 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
                 onChanged();
             }
 
-            return null;
+            return FluidStack.EMPTY;
         }
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         for (FluidStack otherStack : stacks.get(stack.getFluid())) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.getAmount()) {
@@ -145,7 +153,7 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
             }
         }
 
-        return null;
+        return FluidStack.EMPTY;
     }
 
     @Override

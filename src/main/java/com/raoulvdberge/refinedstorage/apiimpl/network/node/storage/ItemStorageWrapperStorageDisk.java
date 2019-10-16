@@ -15,11 +15,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public class StorageDiskItemStorageWrapper implements IStorageDisk<ItemStack> {
+public class ItemStorageWrapperStorageDisk implements IStorageDisk<ItemStack> {
     private StorageNetworkNode storage;
     private IStorageDisk<ItemStack> parent;
 
-    public StorageDiskItemStorageWrapper(StorageNetworkNode storage, IStorageDisk<ItemStack> parent) {
+    public ItemStorageWrapperStorageDisk(StorageNetworkNode storage, IStorageDisk<ItemStack> parent) {
         this.storage = storage;
         this.parent = parent;
         this.setSettings(null, storage);
@@ -41,7 +41,7 @@ public class StorageDiskItemStorageWrapper implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         if (!IWhitelistBlacklist.acceptsItem(storage.getFilters(), storage.getWhitelistBlacklistMode(), storage.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
@@ -50,8 +50,8 @@ public class StorageDiskItemStorageWrapper implements IStorageDisk<ItemStack> {
         return parent.insert(stack, size, action);
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
         return parent.extract(stack, size, flags, action);
     }

@@ -43,8 +43,8 @@ public class PortableItemStorageDisk implements IStorageDisk<ItemStack> {
         return parent.getStacks();
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         int storedPre = parent.getStored();
 
@@ -61,12 +61,12 @@ public class PortableItemStorageDisk implements IStorageDisk<ItemStack> {
         return remainder;
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
         ItemStack extracted = parent.extract(stack, size, flags, action);
 
-        if (action == Action.PERFORM && extracted != null) {
+        if (action == Action.PERFORM && !extracted.isEmpty()) {
             portableGrid.getItemCache().remove(extracted, extracted.getCount(), false);
         }
 

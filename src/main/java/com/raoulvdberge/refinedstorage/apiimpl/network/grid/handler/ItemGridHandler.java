@@ -18,6 +18,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -107,6 +108,7 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
+    @Nonnull
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack) {
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return stack;
@@ -114,7 +116,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         network.getItemStorageTracker().changed(player, stack.copy());
 
-        ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
+        ItemStack remainder = StackUtils.nullToEmpty(network.insertItem(stack, stack.getCount(), Action.PERFORM));
 
         // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
 
@@ -152,8 +154,9 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
+    @Nonnull
     public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack) {
-        return StackUtils.nullToEmpty(onInsert(player, stack));
+        return onInsert(player, stack);
     }
 
     @Override

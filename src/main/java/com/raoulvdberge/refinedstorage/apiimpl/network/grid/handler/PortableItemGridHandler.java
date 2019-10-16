@@ -7,7 +7,6 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -15,6 +14,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -80,7 +80,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
         ItemStack took = portableGrid.getItemStorage().extract(item, size, IComparer.COMPARE_NBT, Action.SIMULATE);
 
-        if (took != null) {
+        if (!took.isEmpty()) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
 
@@ -105,8 +105,8 @@ public class PortableItemGridHandler implements IItemGridHandler {
         }
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack) {
         if (portableGrid.getStorage() == null || !grid.isActive()) {
             return stack;
@@ -133,17 +133,18 @@ public class PortableItemGridHandler implements IItemGridHandler {
         portableGrid.getItemStorageTracker().changed(player, stack.copy());
 
         if (single) {
-            if (portableGrid.getItemStorage().insert(stack, size, Action.SIMULATE) == null) {
+            if (portableGrid.getItemStorage().insert(stack, size, Action.SIMULATE).isEmpty()) {
                 portableGrid.getItemStorage().insert(stack, size, Action.PERFORM);
 
                 stack.shrink(size);
 
+                // TODO ???
                 if (stack.getCount() == 0) {
                     player.inventory.setItemStack(ItemStack.EMPTY);
                 }
             }
         } else {
-            player.inventory.setItemStack(StackUtils.nullToEmpty(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM)));
+            player.inventory.setItemStack(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM));
         }
 
         player.updateHeldItem();
@@ -152,8 +153,9 @@ public class PortableItemGridHandler implements IItemGridHandler {
     }
 
     @Override
+    @Nonnull
     public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack) {
-        return StackUtils.nullToEmpty(onInsert(player, stack));
+        return onInsert(player, stack);
     }
 
     @Override

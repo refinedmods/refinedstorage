@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.apiimpl.network.node.storage;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
@@ -6,28 +6,41 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public class StorageDiskFluidStorageWrapper implements IStorageDisk<FluidStack> {
-    private FluidStorageNetworkNode storage;
-    private IStorageDisk<FluidStack> parent;
+public class ItemDriveWrapperStorageDisk implements IStorageDisk<ItemStack> {
+    private DiskDriveNetworkNode diskDrive;
+    private IStorageDisk<ItemStack> parent;
+    private DiskDriveNetworkNode.DiskState lastState;
 
-    public StorageDiskFluidStorageWrapper(FluidStorageNetworkNode storage, IStorageDisk<FluidStack> parent) {
-        this.storage = storage;
+    public ItemDriveWrapperStorageDisk(DiskDriveNetworkNode diskDrive, IStorageDisk<ItemStack> parent) {
+        this.diskDrive = diskDrive;
         this.parent = parent;
-        this.setSettings(null, storage);
+        this.setSettings(
+            () -> {
+                DiskDriveNetworkNode.DiskState currentState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
+
+                if (this.lastState != currentState) {
+                    this.lastState = currentState;
+
+                    diskDrive.requestBlockUpdate();
+                }
+            },
+            diskDrive
+        );
+        this.lastState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
     }
 
     @Override
     public int getPriority() {
-        return storage.getPriority();
+        return diskDrive.getPriority();
     }
 
     @Override
@@ -36,23 +49,23 @@ public class StorageDiskFluidStorageWrapper implements IStorageDisk<FluidStack> 
     }
 
     @Override
-    public Collection<FluidStack> getStacks() {
+    public Collection<ItemStack> getStacks() {
         return parent.getStacks();
     }
 
     @Override
-    @Nullable
-    public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
-        if (!IWhitelistBlacklist.acceptsFluid(storage.getFilters(), storage.getWhitelistBlacklistMode(), storage.getCompare(), stack)) {
-            return StackUtils.copy(stack, size);
+    @Nonnull
+    public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
+        if (!IWhitelistBlacklist.acceptsItem(diskDrive.getItemFilters(), diskDrive.getWhitelistBlacklistMode(), diskDrive.getCompare(), stack)) {
+            return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
         return parent.insert(stack, size, action);
     }
 
-    @Nullable
     @Override
-    public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
+    @Nonnull
+    public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
         return parent.extract(stack, size, flags, action);
     }
 
@@ -62,7 +75,7 @@ public class StorageDiskFluidStorageWrapper implements IStorageDisk<FluidStack> 
     }
 
     @Override
-    public int getCacheDelta(int storedPreInsertion, int size, @Nullable FluidStack remainder) {
+    public int getCacheDelta(int storedPreInsertion, int size, @Nullable ItemStack remainder) {
         return parent.getCacheDelta(storedPreInsertion, size, remainder);
     }
 

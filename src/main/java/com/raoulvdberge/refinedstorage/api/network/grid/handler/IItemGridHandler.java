@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.api.network.grid.handler;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -30,7 +31,7 @@ public interface IItemGridHandler {
      * @param stack  the item we're trying to insert
      * @return the remainder, or null if there is no remainder
      */
-    @Nullable
+    @Nonnull
     ItemStack onInsert(ServerPlayerEntity player, ItemStack stack);
 
     /**
@@ -48,6 +49,8 @@ public interface IItemGridHandler {
      * @param stack  the stack
      * @return the remainder stack
      */
+    // TODO Maybe remove?
+    @Nonnull
     ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack);
 
     /**

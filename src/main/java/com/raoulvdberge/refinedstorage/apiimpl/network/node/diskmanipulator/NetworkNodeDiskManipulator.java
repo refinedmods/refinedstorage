@@ -182,7 +182,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             ItemStack stack = stacks.get(i);
 
             ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, Action.PERFORM);
-            if (extracted == null) {
+            if (extracted.isEmpty()) {
                 continue;
             }
 
@@ -217,7 +217,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             ItemStack stack = stacks.get(i);
 
             ItemStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, Action.SIMULATE);
-            if (extracted == null) {
+            if (extracted.isEmpty()) {
                 continue;
             }
 
@@ -267,7 +267,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         ItemStack remainder = storage.insert(extracted, extracted.getCount(), Action.PERFORM);
 
-        if (remainder != null) {
+        if (!remainder.isEmpty()) {
             network.insertItem(remainder, remainder.getCount(), Action.PERFORM);
         }
     }
@@ -275,16 +275,16 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private void insertFluidIntoNetwork(IStorageDisk<FluidStack> storage, int slot) {
         List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
 
-        FluidStack extracted = null;
+        FluidStack extracted = FluidStack.EMPTY;
         int i = 0;
 
-        while (extracted == null && stacks.size() > i) {
+        while (extracted.isEmpty() && stacks.size() > i) {
             FluidStack stack = stacks.get(i++);
 
             extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, Action.PERFORM);
         }
 
-        if (extracted == null) {
+        if (extracted.isEmpty()) {
             moveDriveToOutput(slot);
             return;
         }
@@ -316,7 +316,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             FluidStack stack = stacks.get(i);
 
             FluidStack extracted = storage.extract(stack, upgrades.getItemInteractCount(), compare, Action.SIMULATE);
-            if (extracted == null) {
+            if (extracted.isEmpty()) {
                 continue;
             }
 
@@ -366,7 +366,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         FluidStack remainder = storage.insert(extracted, extracted.getAmount(), Action.PERFORM);
 
-        if (remainder != null) {
+        if (!remainder.isEmpty()) {
             network.insertFluid(remainder, remainder.getAmount(), Action.PERFORM);
         }
     }

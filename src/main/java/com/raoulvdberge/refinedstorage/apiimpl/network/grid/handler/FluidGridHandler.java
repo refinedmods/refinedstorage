@@ -59,7 +59,11 @@ public class FluidGridHandler implements IFluidGridHandler {
             bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
                 network.getFluidStorageTracker().changed(player, stack.copy());
 
-                fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
+                FluidStack extracted = network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM);
+
+                if (extracted != null) {
+                    fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
+                }
 
                 if (shift) {
                     if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {

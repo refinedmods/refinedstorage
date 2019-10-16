@@ -43,8 +43,8 @@ public class PortableFluidStorageDisk implements IStorageDisk<FluidStack> {
         return parent.getStacks();
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
         int storedPre = parent.getStored();
 
@@ -61,12 +61,12 @@ public class PortableFluidStorageDisk implements IStorageDisk<FluidStack> {
         return remainder;
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
         FluidStack extracted = parent.extract(stack, size, flags, action);
 
-        if (action == Action.PERFORM && extracted != null) {
+        if (action == Action.PERFORM && !extracted.isEmpty()) {
             portableGrid.getFluidCache().remove(extracted, extracted.getAmount(), false);
         }
 

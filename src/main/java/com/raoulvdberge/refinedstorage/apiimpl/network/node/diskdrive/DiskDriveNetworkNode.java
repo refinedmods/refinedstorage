@@ -81,8 +81,8 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
                     slot,
                     itemDisks,
                     fluidDisks,
-                    s -> new StorageDiskItemDriveWrapper(DiskDriveNetworkNode.this, s),
-                    s -> new StorageDiskFluidDriveWrapper(DiskDriveNetworkNode.this, s)
+                    s -> new ItemDriveWrapperStorageDisk(DiskDriveNetworkNode.this, s),
+                    s -> new FluidDriveWrapperStorageDisk(DiskDriveNetworkNode.this, s)
                 );
 
                 if (network != null) {

@@ -73,8 +73,12 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqualNoQuantity(otherStack, stack)) {
                 if (getCapacity() != -1 && getStored() + size > getCapacity()) {
@@ -98,7 +102,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
                         onChanged();
                     }
 
-                    return null;
+                    return ItemStack.EMPTY;
                 }
             }
         }
@@ -124,13 +128,17 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
                 onChanged();
             }
 
-            return null;
+            return ItemStack.EMPTY;
         }
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         for (ItemStack otherStack : stacks.get(stack.getItem())) {
             if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
                 if (size > otherStack.getCount()) {
@@ -151,7 +159,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
             }
         }
 
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override

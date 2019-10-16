@@ -76,14 +76,18 @@ public class FluidExternalStorage implements IExternalStorage<FluidStack> {
         return Collections.emptyList();
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         if (context.acceptsFluid(stack)) {
             int filled = handlerSupplier.get().fill(StackUtils.copy(stack, size), action == Action.PERFORM ? IFluidHandler.FluidAction.EXECUTE : IFluidHandler.FluidAction.SIMULATE);
 
             if (filled == size) {
-                return null;
+                return FluidStack.EMPTY;
             }
 
             return StackUtils.copy(stack, size - filled);
@@ -92,13 +96,17 @@ public class FluidExternalStorage implements IExternalStorage<FluidStack> {
         return StackUtils.copy(stack, size);
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         IFluidHandler handler = handlerSupplier.get();
 
         if (handler == null) {
-            return null;
+            return FluidStack.EMPTY;
         }
 
         return handler.drain(StackUtils.copy(stack, size), action == Action.PERFORM ? IFluidHandler.FluidAction.EXECUTE : IFluidHandler.FluidAction.SIMULATE);

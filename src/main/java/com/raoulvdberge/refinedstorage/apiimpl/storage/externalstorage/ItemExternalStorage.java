@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStor
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -78,30 +77,38 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
         return stacks;
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         IItemHandler handler = handlerSupplier.get();
 
         if (handler != null && context.acceptsItem(stack)) {
-            return StackUtils.emptyToNull(ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), action == Action.SIMULATE));
+            return ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(stack, size), action == Action.SIMULATE);
         }
 
         return ItemHandlerHelper.copyStackWithSize(stack, size);
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
-        int remaining = size;
-
-        ItemStack received = null;
+        if (stack.isEmpty()) {
+            return stack;
+        }
 
         IItemHandler handler = handlerSupplier.get();
 
         if (handler == null) {
-            return null;
+            return ItemStack.EMPTY;
         }
+
+        int remaining = size;
+
+        ItemStack received = ItemStack.EMPTY;
 
         for (int i = 0; i < handler.getSlots(); ++i) {
             ItemStack slot = handler.getStackInSlot(i);
@@ -110,7 +117,7 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
                 ItemStack got = handler.extractItem(i, remaining, action == Action.SIMULATE);
 
                 if (!got.isEmpty()) {
-                    if (received == null) {
+                    if (received.isEmpty()) {
                         received = got.copy();
                     } else {
                         received.grow(got.getCount());

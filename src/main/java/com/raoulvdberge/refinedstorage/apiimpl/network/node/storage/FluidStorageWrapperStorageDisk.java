@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive;
+package com.raoulvdberge.refinedstorage.apiimpl.network.node.storage;
 
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
@@ -15,32 +15,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public class StorageDiskFluidDriveWrapper implements IStorageDisk<FluidStack> {
-    private DiskDriveNetworkNode diskDrive;
+public class FluidStorageWrapperStorageDisk implements IStorageDisk<FluidStack> {
+    private FluidStorageNetworkNode storage;
     private IStorageDisk<FluidStack> parent;
-    private DiskDriveNetworkNode.DiskState lastState;
 
-    public StorageDiskFluidDriveWrapper(DiskDriveNetworkNode diskDrive, IStorageDisk<FluidStack> parent) {
-        this.diskDrive = diskDrive;
+    public FluidStorageWrapperStorageDisk(FluidStorageNetworkNode storage, IStorageDisk<FluidStack> parent) {
+        this.storage = storage;
         this.parent = parent;
-        this.setSettings(
-            () -> {
-                DiskDriveNetworkNode.DiskState currentState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
-
-                if (this.lastState != currentState) {
-                    this.lastState = currentState;
-
-                    diskDrive.requestBlockUpdate();
-                }
-            },
-            diskDrive
-        );
-        this.lastState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
+        this.setSettings(null, storage);
     }
 
     @Override
     public int getPriority() {
-        return diskDrive.getPriority();
+        return storage.getPriority();
     }
 
     @Override
@@ -54,17 +41,17 @@ public class StorageDiskFluidDriveWrapper implements IStorageDisk<FluidStack> {
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
-        if (!IWhitelistBlacklist.acceptsFluid(diskDrive.getFluidFilters(), diskDrive.getWhitelistBlacklistMode(), diskDrive.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsFluid(storage.getFilters(), storage.getWhitelistBlacklistMode(), storage.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 
         return parent.insert(stack, size, action);
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
         return parent.extract(stack, size, flags, action);
     }

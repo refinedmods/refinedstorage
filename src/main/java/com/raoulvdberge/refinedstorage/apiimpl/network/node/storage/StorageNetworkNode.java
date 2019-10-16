@@ -139,7 +139,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
             API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
         }
 
-        this.storage = new StorageDiskItemStorageWrapper(this, disk);
+        this.storage = new ItemStorageWrapperStorageDisk(this, disk);
     }
 
     public void setStorageId(UUID id) {

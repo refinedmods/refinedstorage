@@ -315,7 +315,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
-            if (remainder == null) {
+            if (remainder.isEmpty()) {
                 // The external storage is responsible for sending changes, we don't need to anymore
                 if (storage instanceof IExternalStorage && action == Action.PERFORM) {
                     ((IExternalStorage) storage).update(this);
@@ -340,6 +340,11 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
             itemStorage.add(stack, inserted - insertedExternally, false, false);
         }
 
+        // TODO Remove.
+        if (remainder.isEmpty()) {
+            remainder = null;
+        }
+
         return remainder;
     }
 
@@ -350,16 +355,16 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
         int extractedExternally = 0;
 
-        ItemStack newStack = null;
+        ItemStack newStack = ItemStack.EMPTY;
 
         for (IStorage<ItemStack> storage : this.itemStorage.getStorages()) {
-            ItemStack took = null;
+            ItemStack took = ItemStack.EMPTY;
 
             if (filter.test(storage) && storage.getAccessType() != AccessType.INSERT) {
                 took = storage.extract(stack, requested - received, flags, action);
             }
 
-            if (took != null) {
+            if (!took.isEmpty()) {
                 // The external storage is responsible for sending changes, we don't need to anymore
                 if (storage instanceof IExternalStorage && action == Action.PERFORM) {
                     ((IExternalStorage) storage).update(this);
@@ -367,7 +372,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
                     extractedExternally += took.getCount();
                 }
 
-                if (newStack == null) {
+                if (newStack.isEmpty()) {
                     newStack = took;
                 } else {
                     newStack.grow(took.getCount());
@@ -381,8 +386,13 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
             }
         }
 
-        if (newStack != null && newStack.getCount() - extractedExternally > 0 && action == Action.PERFORM) {
+        if (newStack.getCount() - extractedExternally > 0 && action == Action.PERFORM) {
             itemStorage.remove(newStack, newStack.getCount() - extractedExternally, false);
+        }
+
+        // TODO Remove.
+        if (newStack.isEmpty()) {
+            newStack = null;
         }
 
         return newStack;
@@ -413,7 +423,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
                 inserted += storage.getCacheDelta(storedPre, size, remainder);
             }
 
-            if (remainder == null) {
+            if (remainder.isEmpty()) {
                 // The external storage is responsible for sending changes, we don't need to anymore
                 if (storage instanceof IExternalStorage && action == Action.PERFORM) {
                     ((IExternalStorage) storage).update(this);
@@ -438,6 +448,11 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
             fluidStorage.add(stack, inserted - insertedExternally, false, false);
         }
 
+        // TODO Remove.
+        if (remainder.isEmpty()) {
+            remainder = null;
+        }
+
         return remainder;
     }
 
@@ -448,16 +463,16 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
         int extractedExternally = 0;
 
-        FluidStack newStack = null;
+        FluidStack newStack = FluidStack.EMPTY;
 
         for (IStorage<FluidStack> storage : this.fluidStorage.getStorages()) {
-            FluidStack took = null;
+            FluidStack took = FluidStack.EMPTY;
 
             if (filter.test(storage) && storage.getAccessType() != AccessType.INSERT) {
                 took = storage.extract(stack, requested - received, flags, action);
             }
 
-            if (took != null) {
+            if (!took.isEmpty()) {
                 // The external storage is responsible for sending changes, we don't need to anymore
                 if (storage instanceof IExternalStorage && action == Action.PERFORM) {
                     ((IExternalStorage) storage).update(this);
@@ -465,7 +480,7 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
                     extractedExternally += took.getAmount();
                 }
 
-                if (newStack == null) {
+                if (newStack.isEmpty()) {
                     newStack = took;
                 } else {
                     newStack.grow(took.getAmount());
@@ -479,8 +494,13 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
             }
         }
 
-        if (newStack != null && newStack.getAmount() - extractedExternally > 0 && action == Action.PERFORM) {
+        if (newStack.getAmount() - extractedExternally > 0 && action == Action.PERFORM) {
             fluidStorage.remove(newStack, newStack.getAmount() - extractedExternally, false);
+        }
+
+        // TODO Remove.
+        if (newStack.isEmpty()) {
+            newStack = null;
         }
 
         return newStack;

@@ -61,7 +61,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
         if (!IWhitelistBlacklist.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
@@ -71,10 +71,10 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
         if (!IWhitelistBlacklist.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
-            return null;
+            return ItemStack.EMPTY;
         }
 
         return parent.extract(stack, size, flags, action);

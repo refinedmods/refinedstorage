@@ -611,7 +611,7 @@ public class CraftingTask implements ICraftingTask {
                 for (StackListEntry<ItemStack> need : c.getToExtract().getStacks()) {
                     ItemStack result = this.internalStorage.extract(need.getStack(), need.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, Action.SIMULATE);
 
-                    if (result == null || result.getCount() != need.getStack().getCount()) {
+                    if (result.getCount() != need.getStack().getCount()) {
                         hasAll = false;
 
                         break;
@@ -622,7 +622,7 @@ public class CraftingTask implements ICraftingTask {
                     for (StackListEntry<ItemStack> need : c.getToExtract().getStacks()) {
                         ItemStack result = this.internalStorage.extract(need.getStack(), need.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
 
-                        if (result == null || result.getCount() != need.getStack().getCount()) {
+                        if (result.getCount() != need.getStack().getCount()) {
                             throw new IllegalStateException("Extractor check lied");
                         }
                     }
@@ -701,7 +701,7 @@ public class CraftingTask implements ICraftingTask {
                         } else {
                             ItemStack result = this.internalStorage.extract(need.getStack(), need.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, Action.SIMULATE);
 
-                            if (result == null || result.getCount() != need.getStack().getCount()) {
+                            if (result.getCount() != need.getStack().getCount()) {
                                 hasAll = false;
 
                                 break;
@@ -721,7 +721,7 @@ public class CraftingTask implements ICraftingTask {
                         } else {
                             FluidStack result = this.internalFluidStorage.extract(need.getStack(), need.getStack().getAmount(), IComparer.COMPARE_NBT, Action.SIMULATE);
 
-                            if (result == null || result.getAmount() != need.getStack().getAmount()) {
+                            if (result.getAmount() != need.getStack().getAmount()) {
                                 hasAll = false;
 
                                 break;
@@ -740,7 +740,7 @@ public class CraftingTask implements ICraftingTask {
 
                         for (StackListEntry<ItemStack> need : p.getItemsToPut().getStacks()) {
                             ItemStack result = this.internalStorage.extract(need.getStack(), need.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
-                            if (result == null || result.getCount() != need.getStack().getCount()) {
+                            if (result.getCount() != need.getStack().getCount()) {
                                 throw new IllegalStateException("The internal crafting inventory reported that " + need.getStack() + " was available but we got " + result);
                             }
 
@@ -753,7 +753,7 @@ public class CraftingTask implements ICraftingTask {
 
                         for (StackListEntry<FluidStack> need : p.getFluidsToPut().getStacks()) {
                             FluidStack result = this.internalFluidStorage.extract(need.getStack(), need.getStack().getAmount(), IComparer.COMPARE_NBT, Action.PERFORM);
-                            if (result == null || result.getAmount() != need.getStack().getAmount()) {
+                            if (result.getAmount() != need.getStack().getAmount()) {
                                 throw new IllegalStateException("The internal crafting inventory reported that " + need + " was available but we got " + result);
                             }
 
