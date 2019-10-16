@@ -80,7 +80,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             craftedItemsList.add(crafted.copy());
 
             amountCrafted += crafted.getCount();
-        } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted + crafted.getCount() < crafted.getMaxStackSize());
+        } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted + crafted.getCount() <= crafted.getMaxStackSize());
 
         INetwork network = grid.getNetwork();
 
