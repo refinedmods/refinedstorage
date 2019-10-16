@@ -87,27 +87,27 @@ public interface INetwork {
     /**
      * Inserts an item in this network.
      *
-     * @param stack  the stack prototype to insert, do NOT modify
+     * @param stack  the stack prototype to insert, can be empty, do NOT modify
      * @param size   the amount of that prototype that has to be inserted
      * @param action the action
-     * @return null if the insert was successful, or a stack with the remainder
+     * @return an empty stack if the insert was successful, or a stack with the remainder
      */
-    @Nullable
+    @Nonnull
     ItemStack insertItem(@Nonnull ItemStack stack, int size, Action action);
 
     /**
      * Inserts an item and notifies the crafting manager of the incoming item.
      *
-     * @param stack the stack prototype to insert, do NOT modify
+     * @param stack the stack prototype to insert, can be empty, do NOT modify
      * @param size  the amount of that prototype that has to be inserted
-     * @return null if the insert was successful, or a stack with the remainder
+     * @return an empty stack if the insert was successful, or a stack with the remainder
      */
-    @Nullable
+    @Nonnull
     default ItemStack insertItemTracked(@Nonnull ItemStack stack, int size) {
         int remainder = getCraftingManager().track(stack, size);
 
         if (remainder == 0) {
-            return null;
+            return ItemStack.EMPTY;
         }
 
         return insertItem(stack, remainder, Action.PERFORM);
@@ -121,9 +121,9 @@ public interface INetwork {
      * @param flags  the flags to compare on, see {@link IComparer}
      * @param action the action
      * @param filter a filter for the storage
-     * @return null if we didn't extract anything, or a stack with the result
+     * @return an empty stack if nothing was extracted, or a stack with the result
      */
-    @Nullable
+    @Nonnull
     ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, Action action, Predicate<IStorage<ItemStack>> filter);
 
     /**
@@ -133,9 +133,9 @@ public interface INetwork {
      * @param size   the amount of that prototype that has to be extracted
      * @param flags  the flags to compare on, see {@link IComparer}
      * @param action the action
-     * @return null if we didn't extract anything, or a stack with the result
+     * @return an empty stack if nothing was extracted, or a stack with the result
      */
-    @Nullable
+    @Nonnull
     default ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, Action action) {
         return extractItem(stack, size, flags, action, s -> true);
     }
@@ -146,9 +146,9 @@ public interface INetwork {
      * @param stack  the prototype of the stack to extract, do NOT modify
      * @param size   the amount of that prototype that has to be extracted
      * @param action the action
-     * @return null if we didn't extract anything, or a stack with the result
+     * @return an empty stack if nothing was extracted, or a stack with the result
      */
-    @Nullable
+    @Nonnull
     default ItemStack extractItem(@Nonnull ItemStack stack, int size, Action action) {
         return extractItem(stack, size, IComparer.COMPARE_NBT, action);
     }

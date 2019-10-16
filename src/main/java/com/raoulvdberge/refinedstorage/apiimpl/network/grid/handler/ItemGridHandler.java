@@ -10,7 +10,6 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -78,21 +77,19 @@ public class ItemGridHandler implements IItemGridHandler {
 
         ItemStack took = network.extractItem(item, size, Action.SIMULATE);
 
-        if (took != null) {
+        if (!took.isEmpty()) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
 
                 if (playerInventory != null && ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
                     took = network.extractItem(item, size, Action.PERFORM);
 
-                    if (took != null) {
-                        ItemHandlerHelper.insertItem(playerInventory, took, false);
-                    }
+                    ItemHandlerHelper.insertItem(playerInventory, took, false);
                 }
             } else {
                 took = network.extractItem(item, size, Action.PERFORM);
 
-                if (took != null) {
+                if (!took.isEmpty()) {
                     if (single && !held.isEmpty()) {
                         held.grow(1);
                     } else {
@@ -116,7 +113,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         network.getItemStorageTracker().changed(player, stack.copy());
 
-        ItemStack remainder = StackUtils.nullToEmpty(network.insertItem(stack, stack.getCount(), Action.PERFORM));
+        ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
 
         // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
 
@@ -135,17 +132,18 @@ public class ItemGridHandler implements IItemGridHandler {
         network.getItemStorageTracker().changed(player, stack.copy());
 
         if (single) {
-            if (network.insertItem(stack, size, Action.SIMULATE) == null) {
+            if (network.insertItem(stack, size, Action.SIMULATE).isEmpty()) {
                 network.insertItem(stack, size, Action.PERFORM);
 
                 stack.shrink(size);
 
-                if (stack.getCount() == 0) {
+                // TODO Is this still needed?
+                if (stack.isEmpty()) {
                     player.inventory.setItemStack(ItemStack.EMPTY);
                 }
             }
         } else {
-            player.inventory.setItemStack(StackUtils.nullToEmpty(network.insertItem(stack, size, Action.PERFORM)));
+            player.inventory.setItemStack(network.insertItem(stack, size, Action.PERFORM));
         }
 
         player.updateHeldItem();

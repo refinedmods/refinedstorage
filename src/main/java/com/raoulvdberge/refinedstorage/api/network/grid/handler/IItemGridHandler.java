@@ -29,7 +29,7 @@ public interface IItemGridHandler {
      *
      * @param player the player that is attempting the insert
      * @param stack  the item we're trying to insert
-     * @return the remainder, or null if there is no remainder
+     * @return the remainder, or an empty stack if there is no remainder
      */
     @Nonnull
     ItemStack onInsert(ServerPlayerEntity player, ItemStack stack);
@@ -47,7 +47,7 @@ public interface IItemGridHandler {
      *
      * @param player the player
      * @param stack  the stack
-     * @return the remainder stack
+     * @return the remainder, or an empty stack if there is no remainder
      */
     // TODO Maybe remove?
     @Nonnull

@@ -88,7 +88,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
                     if (item.getItem() == Items.FIREWORK_ROCKET && !drop) {
                         ItemStack took = network.extractItem(item, 1, Action.PERFORM);
 
-                        if (took != null) {
+                        if (!took.isEmpty()) {
                             world.addEntity(new FireworkRocketEntity(world, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
                         }
                     } else {
@@ -164,7 +164,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
         ItemStack took = network.extractItem(item, 1, compare, Action.SIMULATE);
 
-        if (took != null) {
+        if (!took.isEmpty()) {
             BlockState state = FilterSlot.getBlockState(world, front, took);
 
             // TODO if (state != null && world.isAirBlock(front) && state.getBlock().canPlaceBlockAt(world, front)) {
@@ -177,7 +177,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
 
                 took = network.extractItem(item, 1, compare, Action.PERFORM);
 
-                if (took != null) {
+                if (!took.isEmpty()) {
                     if (item.getItem() instanceof BlockItem) {
                         /*((BlockItem) item.getItem()).tryPlace(new BlockItemUseContext(
                             took,
@@ -242,7 +242,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     private void dropItem() {
         ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), upgrades.getItemInteractCount(), Action.PERFORM);
 
-        if (took != null) {
+        if (!took.isEmpty()) {
             DefaultDispenseItemBehavior.doDispense(world, took, 6, getDirection(), new Position(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);

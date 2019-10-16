@@ -105,7 +105,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                     if (entity instanceof ItemEntity) {
                         ItemStack droppedItem = ((ItemEntity) entity).getItem();
 
-                        if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE) == null) {
+                        if (IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, droppedItem) && network.insertItem(droppedItem, droppedItem.getCount(), Action.SIMULATE).isEmpty()) {
                             network.insertItemTracked(droppedItem.copy(), droppedItem.getCount());
 
                             // TODO world.removeEntity(entity);
@@ -148,7 +148,7 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
                         }*/
 
                         for (ItemStack drop : drops) {
-                            if (network.insertItem(drop, drop.getCount(), Action.SIMULATE) != null) {
+                            if (!network.insertItem(drop, drop.getCount(), Action.SIMULATE).isEmpty()) {
                                 return;
                             }
                         }

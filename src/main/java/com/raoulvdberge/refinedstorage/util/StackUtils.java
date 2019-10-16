@@ -150,15 +150,6 @@ public final class StackUtils {
         return new FluidGridStack(id, stack, entry, craftable, displayCraftText);
     }
 
-    public static ItemStack nullToEmpty(@Nullable ItemStack stack) {
-        return stack == null ? ItemStack.EMPTY : stack;
-    }
-
-    @Nullable
-    public static ItemStack emptyToNull(@Nonnull ItemStack stack) {
-        return stack.isEmpty() ? null : stack;
-    }
-
     @SuppressWarnings("unchecked")
     public static void createStorages(ServerWorld world, ItemStack diskStack, int slot, IStorageDisk<ItemStack>[] itemDisks, IStorageDisk<FluidStack>[] fluidDisks, Function<IStorageDisk<ItemStack>, IStorageDisk> itemDiskWrapper, Function<IStorageDisk<FluidStack>, IStorageDisk> fluidDiskWrapper) {
         if (diskStack.isEmpty()) {

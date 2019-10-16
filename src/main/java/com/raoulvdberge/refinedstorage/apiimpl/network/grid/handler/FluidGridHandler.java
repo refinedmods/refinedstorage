@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public class FluidGridHandler implements IFluidGridHandler {
@@ -52,7 +52,7 @@ public class FluidGridHandler implements IFluidGridHandler {
         }
 
         if (bucket.isEmpty()) {
-            bucket = StackUtils.nullToEmpty(network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM));
+            bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM);
         }
 
         if (!bucket.isEmpty()) {
@@ -79,8 +79,8 @@ public class FluidGridHandler implements IFluidGridHandler {
         }
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack container) {
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return container;
@@ -105,13 +105,14 @@ public class FluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onInsertHeldContainer(ServerPlayerEntity player) {
-        player.inventory.setItemStack(StackUtils.nullToEmpty(onInsert(player, player.inventory.getItemStack())));
+        player.inventory.setItemStack(onInsert(player, player.inventory.getItemStack()));
         player.updateHeldItem();
     }
 
     @Override
+    @Nonnull
     public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack container) {
-        return StackUtils.nullToEmpty(onInsert(player, container));
+        return onInsert(player, container);
     }
 
     @Override

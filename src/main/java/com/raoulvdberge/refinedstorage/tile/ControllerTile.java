@@ -292,8 +292,13 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
     }
 
     @Override
+    @Nonnull
     public ItemStack insertItem(@Nonnull ItemStack stack, int size, Action action) {
-        if (stack.isEmpty() || itemStorage.getStorages().isEmpty()) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
+        if (itemStorage.getStorages().isEmpty()) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
@@ -340,16 +345,16 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
             itemStorage.add(stack, inserted - insertedExternally, false, false);
         }
 
-        // TODO Remove.
-        if (remainder.isEmpty()) {
-            remainder = null;
-        }
-
         return remainder;
     }
 
     @Override
+    @Nonnull
     public ItemStack extractItem(@Nonnull ItemStack stack, int size, int flags, Action action, Predicate<IStorage<ItemStack>> filter) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         int requested = size;
         int received = 0;
 
@@ -388,11 +393,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
         if (newStack.getCount() - extractedExternally > 0 && action == Action.PERFORM) {
             itemStorage.remove(newStack, newStack.getCount() - extractedExternally, false);
-        }
-
-        // TODO Remove.
-        if (newStack.isEmpty()) {
-            newStack = null;
         }
 
         return newStack;

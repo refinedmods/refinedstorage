@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.api.network.grid.handler;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 /**
@@ -24,9 +24,9 @@ public interface IFluidGridHandler {
      *
      * @param player    the player
      * @param container a stack with a fluid container we're trying to insert
-     * @return the remainder, or null if there is no remainder
+     * @return the remainder, or an empty stack if there is no remainder
      */
-    @Nullable
+    @Nonnull
     ItemStack onInsert(ServerPlayerEntity player, ItemStack container);
 
     /**
@@ -43,6 +43,7 @@ public interface IFluidGridHandler {
      * @param container the container
      * @return the remainder container
      */
+    @Nonnull
     ItemStack onShiftClick(ServerPlayerEntity player, ItemStack container);
 
     /**

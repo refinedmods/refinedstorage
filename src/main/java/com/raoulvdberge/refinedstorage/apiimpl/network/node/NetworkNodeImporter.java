@@ -86,12 +86,10 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IWh
                 } else if (ticks % upgrades.getSpeed() == 0) {
                     ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
 
-                    if (!result.isEmpty() && network.insertItem(result, result.getCount(), Action.SIMULATE) == null) {
+                    if (!result.isEmpty() && network.insertItem(result, result.getCount(), Action.SIMULATE).isEmpty()) {
                         result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);
 
-                        if (!result.isEmpty()) {
-                            network.insertItemTracked(result, result.getCount());
-                        }
+                        network.insertItemTracked(result, result.getCount());
                     } else {
                         currentSlot++;
                     }

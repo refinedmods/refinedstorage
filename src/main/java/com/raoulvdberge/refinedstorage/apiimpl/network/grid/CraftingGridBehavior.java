@@ -1,11 +1,13 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
+import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -38,7 +40,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                         ItemStack remainderStack = network == null ? remainder.get(i).copy() : network.insertItem(remainder.get(i).copy(), remainder.get(i).getCount(), Action.PERFORM);
 
                         // If there is no space in the network, just dump it in the world.
-                        if (remainderStack != null) {
+                        if (!remainderStack.isEmpty()) {
                             InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainderStack);
                         }
                     }
@@ -49,7 +51,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 }
             } else if (!slot.isEmpty()) { // We don't have a remainder, but the slot is not empty.
                 if (slot.getCount() == 1 && network != null) { // Attempt to refill the slot with the same item from the network, only if we have a network and only if it's the last item.
-                    ItemStack refill = StackUtils.nullToEmpty(network.extractItem(slot, 1, Action.PERFORM));
+                    ItemStack refill = network.extractItem(slot, 1, Action.PERFORM);
 
                     matrix.setInventorySlotContents(i, refill);
 
@@ -86,7 +88,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
                 ItemStack remainder = network == null ? craftedItem : network.insertItem(craftedItem, craftedItem.getCount(), Action.PERFORM);
 
-                if (remainder != null) {
+                if (!remainder.isEmpty()) {
                     InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
                 }
             }
@@ -97,5 +99,95 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         // For regular crafting, this is already called in ResultCraftingGridSlot#onTake -> onCrafting(stack)
         crafted.onCrafting(player.world, player, amountCrafted);
         BasicEventHooks.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
+    }
+
+    @Override
+    public void onRecipeTransfer(IGridNetworkAware grid, PlayerEntity player, ItemStack[][] recipe) {
+        INetwork network = grid.getNetwork();
+
+        if (network != null && grid.getGridType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
+            return;
+        }
+
+        // First try to empty the crafting matrix
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
+            ItemStack slot = grid.getCraftingMatrix().getStackInSlot(i);
+
+            if (!slot.isEmpty()) {
+                // Only if we are a crafting grid. Pattern grids can just be emptied.
+                if (grid.getGridType() == GridType.CRAFTING) {
+                    // If we are connected, try to insert into network. If it fails, stop.
+                    if (network != null) {
+                        if (!network.insertItem(slot, slot.getCount(), Action.SIMULATE).isEmpty()) {
+                            return;
+                        } else {
+                            network.insertItem(slot, slot.getCount(), Action.PERFORM);
+
+                            network.getItemStorageTracker().changed(player, slot.copy());
+                        }
+                    } else {
+                        // If we aren't connected, try to insert into player inventory. If it fails, stop.
+                        if (!player.inventory.addItemStackToInventory(slot.copy())) {
+                            return;
+                        }
+                    }
+                }
+
+                grid.getCraftingMatrix().setInventorySlotContents(i, ItemStack.EMPTY);
+            }
+        }
+
+        // Now let's fill the matrix
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
+            if (recipe[i] != null) {
+                ItemStack[] possibilities = recipe[i];
+
+                // If we are a crafting grid
+                if (grid.getGridType() == GridType.CRAFTING) {
+                    boolean found = false;
+
+                    // If we are connected, first try to get the possibilities from the network
+                    if (network != null) {
+                        for (ItemStack possibility : possibilities) {
+                            ItemStack took = network.extractItem(possibility, 1, IComparer.COMPARE_NBT, Action.PERFORM);
+
+                            if (!took.isEmpty()) {
+                                grid.getCraftingMatrix().setInventorySlotContents(i, took);
+
+                                network.getItemStorageTracker().changed(player, took.copy());
+
+                                found = true;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    // If we haven't found anything in the network (or we are disconnected), go look in the player inventory
+                    if (!found) {
+                        for (ItemStack possibility : possibilities) {
+                            for (int j = 0; j < player.inventory.getSizeInventory(); ++j) {
+                                if (API.instance().getComparer().isEqual(possibility, player.inventory.getStackInSlot(j), IComparer.COMPARE_NBT)) {
+                                    grid.getCraftingMatrix().setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(player.inventory.getStackInSlot(j), 1));
+
+                                    player.inventory.decrStackSize(j, 1);
+
+                                    found = true;
+
+                                    break;
+                                }
+                            }
+
+                            if (found) {
+                                break;
+                            }
+                        }
+                    }
+                } else if (grid.getGridType() == GridType.PATTERN) {
+                    // If we are a pattern grid we can just set the slot
+                    grid.getCraftingMatrix().setInventorySlotContents(i, possibilities.length == 0 ? ItemStack.EMPTY : possibilities[0]);
+                }
+            }
+        }
     }
 }

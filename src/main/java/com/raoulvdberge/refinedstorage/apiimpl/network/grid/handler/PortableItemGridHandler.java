@@ -139,7 +139,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
                 stack.shrink(size);
 
                 // TODO ???
-                if (stack.getCount() == 0) {
+                if (stack.isEmpty()) {
                     player.inventory.setItemStack(ItemStack.EMPTY);
                 }
             }

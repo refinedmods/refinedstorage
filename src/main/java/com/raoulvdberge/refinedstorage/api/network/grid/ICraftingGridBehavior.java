@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.grid;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 
 /**
@@ -8,7 +9,7 @@ import net.minecraft.item.crafting.ICraftingRecipe;
  */
 public interface ICraftingGridBehavior {
     /**
-     * Default logic for regular crafting.
+     * Logic for regular crafting.
      *
      * @param grid   the grid
      * @param recipe the recipe
@@ -17,10 +18,19 @@ public interface ICraftingGridBehavior {
     void onCrafted(IGridNetworkAware grid, ICraftingRecipe recipe, PlayerEntity player);
 
     /**
-     * Default logic for crafting with shift click (mass crafting).
+     * Logic for crafting with shift click (mass crafting).
      *
      * @param grid   the grid
-     * @param player the layer
+     * @param player the player
      */
     void onCraftedShift(IGridNetworkAware grid, PlayerEntity player);
+
+    /**
+     * Logic for when a recipe is transferred to the grid.
+     *
+     * @param grid   the grid
+     * @param player the player
+     * @param recipe the recipe
+     */
+    void onRecipeTransfer(IGridNetworkAware grid, PlayerEntity player, ItemStack[][] recipe);
 }

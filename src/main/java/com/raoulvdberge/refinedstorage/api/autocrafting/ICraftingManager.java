@@ -121,7 +121,7 @@ public interface ICraftingManager {
      *
      * @param stack the stack
      */
-    int track(ItemStack stack, int size);
+    int track(@Nonnull ItemStack stack, int size);
 
     /**
      * Tracks an incoming stack.

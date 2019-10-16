@@ -120,20 +120,15 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         pattern.getTag().put(String.format(NBT_INPUT_SLOT, slot), stack.serializeNBT());
     }
 
-    @Nullable
+    @Nonnull
     public static ItemStack getInputSlot(ItemStack pattern, int slot) {
         String id = String.format(NBT_INPUT_SLOT, slot);
 
         if (!pattern.hasTag() || !pattern.getTag().contains(id)) {
-            return null;
+            return ItemStack.EMPTY;
         }
 
-        ItemStack stack = ItemStack.read(pattern.getTag().getCompound(id));
-        if (stack.isEmpty()) {
-            return null;
-        }
-
-        return stack;
+        return ItemStack.read(pattern.getTag().getCompound(id));
     }
 
     public static void setOutputSlot(ItemStack pattern, int slot, ItemStack stack) {
@@ -144,20 +139,15 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         pattern.getTag().put(String.format(NBT_OUTPUT_SLOT, slot), stack.serializeNBT());
     }
 
-    @Nullable
+    @Nonnull
     public static ItemStack getOutputSlot(ItemStack pattern, int slot) {
         String id = String.format(NBT_OUTPUT_SLOT, slot);
 
         if (!pattern.hasTag() || !pattern.getTag().contains(id)) {
-            return null;
+            return ItemStack.EMPTY;
         }
 
-        ItemStack stack = ItemStack.read(pattern.getTag().getCompound(id));
-        if (stack.isEmpty()) {
-            return null;
-        }
-
-        return stack;
+        return ItemStack.read(pattern.getTag().getCompound(id));
     }
 
     public static void setFluidInputSlot(ItemStack pattern, int slot, FluidStack stack) {

@@ -72,13 +72,9 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
             ItemStack remainder = network.insertItemTracked(slot, size);
 
-            if (remainder == null) {
-                importItems.extractItem(currentSlot, size, false);
-            } else if (size - remainder.getCount() > 0) {
-                importItems.extractItem(currentSlot, size - remainder.getCount(), false);
+            importItems.extractItem(currentSlot, size - remainder.getCount(), false);
 
-                currentSlot++;
-            }
+            currentSlot++;
         }
 
         for (int i = 0; i < 9; ++i) {
@@ -87,10 +83,10 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
             if (wanted.isEmpty()) {
                 if (!got.isEmpty()) {
-                    exportItems.setStackInSlot(i, StackUtils.nullToEmpty(network.insertItemTracked(got, got.getCount())));
+                    exportItems.setStackInSlot(i, network.insertItemTracked(got, got.getCount()));
                 }
             } else if (!got.isEmpty() && !API.instance().getComparer().isEqual(wanted, got, getCompare())) {
-                exportItems.setStackInSlot(i, StackUtils.nullToEmpty(network.insertItemTracked(got, got.getCount())));
+                exportItems.setStackInSlot(i, network.insertItemTracked(got, got.getCount()));
             } else {
                 int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
 
@@ -108,7 +104,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                         return !(s instanceof ItemExternalStorage) || !((ItemExternalStorage) s).isConnectedToInterface();
                     });
 
-                    if (result != null) {
+                    if (!result.isEmpty()) {
                         if (exportItems.getStackInSlot(i).isEmpty()) {
                             exportItems.setStackInSlot(i, result);
                         } else {
@@ -118,7 +114,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
                     // Example: our delta is 5, we extracted 3 items.
                     // That means we still have to autocraft 2 items.
-                    delta -= result == null ? 0 : result.getCount();
+                    delta -= result.isEmpty() ? 0 : result.getCount();
 
                     if (delta > 0 && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                         network.getCraftingManager().request(new SlottedCraftingRequest(this, i), wanted, delta);
@@ -126,11 +122,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
                 } else if (delta < 0) {
                     ItemStack remainder = network.insertItemTracked(got, Math.abs(delta));
 
-                    if (remainder == null) {
-                        exportItems.extractItem(i, Math.abs(delta), false);
-                    } else {
-                        exportItems.extractItem(i, Math.abs(delta) - remainder.getCount(), false);
-                    }
+                    exportItems.extractItem(i, Math.abs(delta) - remainder.getCount(), false);
                 }
             }
         }

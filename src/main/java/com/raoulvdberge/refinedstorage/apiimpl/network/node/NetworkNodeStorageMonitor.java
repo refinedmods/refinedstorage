@@ -88,7 +88,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
                 ItemStack toInsert = player.inventory.getStackInSlot(i);
 
                 if (API.instance().getComparer().isEqual(inserted, toInsert, compare)) {
-                    player.inventory.setInventorySlotContents(i, StackUtils.nullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
+                    player.inventory.setInventorySlotContents(i, network.insertItemTracked(toInsert, toInsert.getCount()));
                 }
             }
         }
@@ -108,7 +108,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         ItemStack filter = itemFilter.getStackInSlot(0);
 
         if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, StackUtils.nullToEmpty(network.insertItemTracked(toInsert, toInsert.getCount())));
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, network.insertItemTracked(toInsert, toInsert.getCount()));
 
             deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, System.currentTimeMillis()));
         }
@@ -132,10 +132,8 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
         if (!filter.isEmpty()) {
             ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);
 
-            if (result != null) {
-                if (!player.inventory.addItemStackToInventory(result.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), result);
-                }
+            if (!result.isEmpty() && !player.inventory.addItemStackToInventory(result.copy())) {
+                InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), result);
             }
         }
     }

@@ -44,7 +44,7 @@ public class CraftingPattern implements ICraftingPattern {
             for (int i = 0; i < 9; ++i) {
                 ItemStack input = PatternItem.getInputSlot(stack, i);
 
-                if (input == null) {
+                if (input.isEmpty()) {
                     inputs.add(NonNullList.create());
                 } else if (oredict) {
                     NonNullList<ItemStack> ores = NonNullList.create();
@@ -75,7 +75,7 @@ public class CraftingPattern implements ICraftingPattern {
                 }
 
                 ItemStack output = PatternItem.getOutputSlot(stack, i);
-                if (output != null) {
+                if (!output.isEmpty()) {
                     this.valid = true; // As soon as we have one output, we are valid.
 
                     outputs.add(output);
@@ -101,11 +101,9 @@ public class CraftingPattern implements ICraftingPattern {
             for (int i = 0; i < 9; ++i) {
                 ItemStack input = PatternItem.getInputSlot(stack, i);
 
-                inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
+                inputs.add(input.isEmpty() ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
 
-                if (input != null) {
-                    inv.setInventorySlotContents(i, input);
-                }
+                inv.setInventorySlotContents(i, input);
             }
 
             Optional<ICraftingRecipe> potentialRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inv, world);

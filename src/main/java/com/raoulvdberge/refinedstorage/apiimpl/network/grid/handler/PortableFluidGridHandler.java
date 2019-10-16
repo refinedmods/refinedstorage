@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public class PortableFluidGridHandler implements IFluidGridHandler {
@@ -68,8 +68,8 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
         }
     }
 
-    @Nullable
     @Override
+    @Nonnull
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack container) {
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
@@ -90,13 +90,14 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
 
     @Override
     public void onInsertHeldContainer(ServerPlayerEntity player) {
-        player.inventory.setItemStack(StackUtils.nullToEmpty(onInsert(player, player.inventory.getItemStack())));
+        player.inventory.setItemStack(onInsert(player, player.inventory.getItemStack()));
         player.updateHeldItem();
     }
 
     @Override
+    @Nonnull
     public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack container) {
-        return StackUtils.nullToEmpty(onInsert(player, container));
+        return onInsert(player, container);
     }
 
     @Override

@@ -187,7 +187,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
 
             ItemStack remainder = network.insertItem(extracted, extracted.getCount(), Action.PERFORM);
-            if (remainder == null) {
+            if (remainder.isEmpty()) {
                 break;
             }
 
@@ -222,7 +222,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
 
             ItemStack remainder = network.insertItem(extracted, extracted.getCount(), Action.SIMULATE);
-            if (remainder == null) { //An item could be inserted (no remainders when trying to). This disk isn't done.
+            if (remainder.isEmpty()) { // An item could be inserted (no remainders when trying to). This disk isn't done.
                 return false;
             }
         }
@@ -230,7 +230,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private void extractItemFromNetwork(IStorageDisk<ItemStack> storage, int slot) {
-        ItemStack extracted = null;
+        ItemStack extracted = ItemStack.EMPTY;
         int i = 0;
 
         if (itemFilters.isEmpty()) {
@@ -260,16 +260,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
         }
 
-        if (extracted == null) {
+        if (extracted.isEmpty()) {
             moveDriveToOutput(slot);
             return;
         }
 
         ItemStack remainder = storage.insert(extracted, extracted.getCount(), Action.PERFORM);
 
-        if (!remainder.isEmpty()) {
-            network.insertItem(remainder, remainder.getCount(), Action.PERFORM);
-        }
+        network.insertItem(remainder, remainder.getCount(), Action.PERFORM);
     }
 
     private void insertFluidIntoNetwork(IStorageDisk<FluidStack> storage, int slot) {

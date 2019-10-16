@@ -546,7 +546,7 @@ public class CraftingTask implements ICraftingTask {
             for (StackListEntry<ItemStack> toExtract : toExtractInitial.getStacks()) {
                 ItemStack result = network.extractItem(toExtract.getStack(), toExtract.getStack().getCount(), Action.PERFORM);
 
-                if (result != null) {
+                if (!result.isEmpty()) {
                     internalStorage.insert(toExtract.getStack(), result.getCount(), Action.PERFORM);
 
                     toRemove.add(result);
@@ -634,9 +634,7 @@ public class CraftingTask implements ICraftingTask {
                     } else {
                         ItemStack remainder = this.network.insertItem(output, output.getCount(), Action.PERFORM);
 
-                        if (remainder != null) {
-                            this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
-                        }
+                        this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
                     }
 
                     // Byproducts need to always be inserted in the internal storage for later reuse further in the task.
@@ -852,13 +850,7 @@ public class CraftingTask implements ICraftingTask {
             for (ItemStack stack : internalStorage.getStacks()) {
                 ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
 
-                toPerform.add(() -> {
-                    if (remainder == null) {
-                        internalStorage.extract(stack, stack.getCount(), IComparer.COMPARE_NBT, Action.PERFORM);
-                    } else {
-                        internalStorage.extract(stack, stack.getCount() - remainder.getCount(), IComparer.COMPARE_NBT, Action.PERFORM);
-                    }
-                });
+                toPerform.add(() -> internalStorage.extract(stack, stack.getCount() - remainder.getCount(), IComparer.COMPARE_NBT, Action.PERFORM));
             }
 
             for (FluidStack stack : internalFluidStorage.getStacks()) {
@@ -960,9 +952,7 @@ public class CraftingTask implements ICraftingTask {
                 } else {
                     ItemStack remainder = network.insertItem(stack, needed, Action.PERFORM);
 
-                    if (remainder != null) {
-                        internalStorage.insert(stack, needed, Action.PERFORM);
-                    }
+                    internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
                 }
 
                 if (size == 0) {
