@@ -122,14 +122,12 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
                             FluidStack took = network.extractFluid(stack, toExtract, compare, Action.SIMULATE);
 
-                            if (took != null) {
-                                int filled = handler.fill(took, IFluidHandler.FluidAction.SIMULATE);
+                            int filled = handler.fill(took, IFluidHandler.FluidAction.SIMULATE);
 
-                                if (filled > 0) {
-                                    took = network.extractFluid(stack, filled, compare, Action.PERFORM);
+                            if (filled > 0) {
+                                took = network.extractFluid(stack, filled, compare, Action.PERFORM);
 
-                                    handler.fill(took, IFluidHandler.FluidAction.EXECUTE);
-                                }
+                                handler.fill(took, IFluidHandler.FluidAction.EXECUTE);
                             }
                         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                             network.getCraftingManager().request(this, stack, toExtract);

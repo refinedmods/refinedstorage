@@ -289,9 +289,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
         FluidStack remainder = network.insertFluid(extracted, extracted.getAmount(), Action.PERFORM);
 
-        if (remainder != null) {
-            storage.insert(remainder, remainder.getAmount(), Action.PERFORM);
-        }
+        storage.insert(remainder, remainder.getAmount(), Action.PERFORM);
     }
 
     private boolean isFluidDiskDone(IStorageDisk<FluidStack> storage, int slot) {
@@ -319,7 +317,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
 
             FluidStack remainder = network.insertFluid(extracted, extracted.getAmount(), Action.SIMULATE);
-            if (remainder == null) { // A fluid could be inserted (no remainders when trying to). This disk isn't done.
+            if (remainder.isEmpty()) { // A fluid could be inserted (no remainders when trying to). This disk isn't done.
                 return false;
             }
         }
@@ -327,7 +325,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     }
 
     private void extractFluidFromNetwork(IStorageDisk<FluidStack> storage, int slot) {
-        FluidStack extracted = null;
+        FluidStack extracted = FluidStack.EMPTY;
         int i = 0;
 
         if (fluidFilters.isEmpty()) {
@@ -357,16 +355,14 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
             }
         }
 
-        if (extracted == null) {
+        if (extracted.isEmpty()) {
             moveDriveToOutput(slot);
             return;
         }
 
         FluidStack remainder = storage.insert(extracted, extracted.getAmount(), Action.PERFORM);
 
-        if (!remainder.isEmpty()) {
-            network.insertFluid(remainder, remainder.getAmount(), Action.PERFORM);
-        }
+        network.insertFluid(remainder, remainder.getAmount(), Action.PERFORM);
     }
 
     private void moveDriveToOutput(int slot) {

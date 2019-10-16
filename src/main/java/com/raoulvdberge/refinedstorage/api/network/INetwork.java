@@ -17,7 +17,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.function.Predicate;
 
 /**
@@ -159,9 +158,9 @@ public interface INetwork {
      * @param stack  the stack prototype to insert, do NOT modify
      * @param size   the amount of that prototype that has to be inserted
      * @param action the action
-     * @return null if the insert was successful, or a stack with the remainder
+     * @return an empty stack if the insert was successful, or a stack with the remainder
      */
-    @Nullable
+    @Nonnull
     FluidStack insertFluid(@Nonnull FluidStack stack, int size, Action action);
 
     /**
@@ -169,14 +168,14 @@ public interface INetwork {
      *
      * @param stack the stack prototype to insert, do NOT modify
      * @param size  the amount of that prototype that has to be inserted
-     * @return null if the insert was successful, or a stack with the remainder
+     * @return an empty stack if the insert was successful, or a stack with the remainder
      */
-    @Nullable
+    @Nonnull
     default FluidStack insertFluidTracked(@Nonnull FluidStack stack, int size) {
         int remainder = getCraftingManager().track(stack, size);
 
         if (remainder == 0) {
-            return null;
+            return FluidStack.EMPTY;
         }
 
         return insertFluid(stack, remainder, Action.PERFORM);
@@ -189,9 +188,9 @@ public interface INetwork {
      * @param size   the amount of that prototype that has to be extracted
      * @param flags  the flags to compare on, see {@link IComparer}
      * @param action the action
-     * @return null if we didn't extract anything, or a stack with the result
+     * @return an empty stack if nothing was extracted, or a stack with the result
      */
-    @Nullable
+    @Nonnull
     FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, Action action, Predicate<IStorage<FluidStack>> filter);
 
     /**
@@ -201,9 +200,9 @@ public interface INetwork {
      * @param size   the amount of that prototype that has to be extracted
      * @param flags  the flags to compare on, see {@link IComparer}
      * @param action the action
-     * @return null if we didn't extract anything, or a stack with the result
+     * @return an empty stack if nothing was extracted, or a stack with the result
      */
-    @Nullable
+    @Nonnull
     default FluidStack extractFluid(FluidStack stack, int size, int flags, Action action) {
         return extractFluid(stack, size, flags, action, s -> true);
     }
@@ -214,9 +213,9 @@ public interface INetwork {
      * @param stack  the prototype of the stack to extract, do NOT modify
      * @param size   the amount of that prototype that has to be extracted
      * @param action the action
-     * @return null if we didn't extract anything, or a stack with the result
+     * @return an empty stack if nothing was extracted, or a stack with the result
      */
-    @Nullable
+    @Nonnull
     default FluidStack extractFluid(FluidStack stack, int size, Action action) {
         return extractFluid(stack, size, IComparer.COMPARE_NBT, action);
     }

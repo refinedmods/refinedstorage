@@ -87,12 +87,10 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                 FluidStack drained = tankIn.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount(), IFluidHandler.FluidAction.EXECUTE);
 
                 // Drain in tank
-                if (drained != null) {
+                if (!drained.isEmpty()) {
                     FluidStack remainder = network.insertFluidTracked(drained, drained.getAmount());
 
-                    if (remainder != null) {
-                        tankIn.fill(remainder, IFluidHandler.FluidAction.EXECUTE);
-                    }
+                    tankIn.fill(remainder, IFluidHandler.FluidAction.EXECUTE);
                 }
             }
 
@@ -126,8 +124,8 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                         return !(s instanceof FluidExternalStorage) || !((FluidExternalStorage) s).isConnectedToInterface();
                     });
 
-                    if (result != null) {
-                        if (tankOut.getFluid() == null) {
+                    if (!result.isEmpty()) {
+                        if (tankOut.getFluid().isEmpty()) {
                             tankOut.setFluid(result);
                         } else {
                             tankOut.getFluid().grow(result.getAmount());
@@ -138,7 +136,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
                     // Example: our delta is 5, we extracted 3 fluids.
                     // That means we still have to autocraft 2 fluids.
-                    delta -= result == null ? 0 : result.getAmount();
+                    delta -= result.getAmount();
 
                     if (delta > 0 && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                         network.getCraftingManager().request(this, wanted, delta);
@@ -146,11 +144,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
                 } else if (delta < 0) {
                     FluidStack remainder = network.insertFluidTracked(got, Math.abs(delta));
 
-                    if (remainder == null) {
-                        tankOut.getFluid().shrink(Math.abs(delta));
-                    } else {
-                        tankOut.getFluid().shrink(Math.abs(delta) - remainder.getAmount());
-                    }
+                    tankOut.getFluid().shrink(Math.abs(delta) - remainder.getAmount());
 
                     onTankOutChanged();
                 }

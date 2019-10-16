@@ -61,9 +61,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
                 FluidStack extracted = network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM);
 
-                if (extracted != null) {
-                    fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
-                }
+                fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
 
                 if (shift) {
                     if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
@@ -88,7 +86,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(container, true);
 
-        if (!result.getValue().isEmpty() && network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE) == null) {
+        if (!result.getValue().isEmpty() && network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE).isEmpty()) {
             network.getFluidStorageTracker().changed(player, result.getValue().copy());
 
             result = StackUtils.getFluid(container, false);

@@ -568,7 +568,7 @@ public class CraftingTask implements ICraftingTask {
             for (StackListEntry<FluidStack> toExtract : toExtractInitialFluids.getStacks()) {
                 FluidStack result = network.extractFluid(toExtract.getStack(), toExtract.getStack().getAmount(), Action.PERFORM);
 
-                if (result != null) {
+                if (!result.isEmpty()) {
                     internalFluidStorage.insert(toExtract.getStack(), result.getAmount(), Action.PERFORM);
 
                     toRemove.add(result);
@@ -856,13 +856,7 @@ public class CraftingTask implements ICraftingTask {
             for (FluidStack stack : internalFluidStorage.getStacks()) {
                 FluidStack remainder = network.insertFluid(stack, stack.getAmount(), Action.PERFORM);
 
-                toPerform.add(() -> {
-                    if (remainder == null) {
-                        internalFluidStorage.extract(stack, stack.getAmount(), IComparer.COMPARE_NBT, Action.PERFORM);
-                    } else {
-                        internalFluidStorage.extract(stack, stack.getAmount() - remainder.getAmount(), IComparer.COMPARE_NBT, Action.PERFORM);
-                    }
-                });
+                toPerform.add(() -> internalFluidStorage.extract(stack, stack.getAmount() - remainder.getAmount(), IComparer.COMPARE_NBT, Action.PERFORM));
             }
 
             // Prevent CME.
@@ -993,9 +987,7 @@ public class CraftingTask implements ICraftingTask {
                 } else {
                     FluidStack remainder = network.insertFluid(stack, needed, Action.PERFORM);
 
-                    if (remainder != null) {
-                        internalFluidStorage.insert(stack, needed, Action.PERFORM);
-                    }
+                    internalFluidStorage.insert(remainder, remainder.getAmount(), Action.PERFORM);
                 }
 
                 if (size == 0) {

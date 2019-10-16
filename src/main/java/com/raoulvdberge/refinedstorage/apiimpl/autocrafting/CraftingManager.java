@@ -333,7 +333,11 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public int track(FluidStack stack, int size) {
+    public int track(@Nonnull FluidStack stack, int size) {
+        if (stack.isEmpty()) {
+            return 0;
+        }
+
         for (ICraftingTask task : tasks.values()) {
             size = task.onTrackedInsert(stack, size);
 

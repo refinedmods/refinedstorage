@@ -400,8 +400,13 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
 
     @Override
+    @Nonnull
     public FluidStack insertFluid(@Nonnull FluidStack stack, int size, Action action) {
-        if (stack == null || fluidStorage.getStorages().isEmpty()) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
+        if (fluidStorage.getStorages().isEmpty()) {
             return StackUtils.copy(stack, size);
         }
 
@@ -448,16 +453,16 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
             fluidStorage.add(stack, inserted - insertedExternally, false, false);
         }
 
-        // TODO Remove.
-        if (remainder.isEmpty()) {
-            remainder = null;
-        }
-
         return remainder;
     }
 
     @Override
+    @Nonnull
     public FluidStack extractFluid(@Nonnull FluidStack stack, int size, int flags, Action action, Predicate<IStorage<FluidStack>> filter) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         int requested = size;
         int received = 0;
 
@@ -496,11 +501,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
         if (newStack.getAmount() - extractedExternally > 0 && action == Action.PERFORM) {
             fluidStorage.remove(newStack, newStack.getAmount() - extractedExternally, false);
-        }
-
-        // TODO Remove.
-        if (newStack.isEmpty()) {
-            newStack = null;
         }
 
         return newStack;

@@ -101,15 +101,15 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IWh
             if (handler != null) {
                 FluidStack stack = handler.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
 
-                if (stack != null && IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack) && network.insertFluid(stack, stack.getAmount(), Action.SIMULATE) == null) {
+                if (!stack.isEmpty() &&
+                    IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack) &&
+                    network.insertFluid(stack, stack.getAmount(), Action.SIMULATE).isEmpty()) {
                     FluidStack toDrain = handler.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount(), IFluidHandler.FluidAction.EXECUTE); // TODO: is this execute?
 
-                    if (toDrain != null) {
+                    if (!toDrain.isEmpty()) {
                         FluidStack remainder = network.insertFluidTracked(toDrain, toDrain.getAmount());
 
-                        if (remainder != null) {
-                            toDrain.shrink(remainder.getAmount());
-                        }
+                        toDrain.shrink(remainder.getAmount());
 
                         handler.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
                     }
