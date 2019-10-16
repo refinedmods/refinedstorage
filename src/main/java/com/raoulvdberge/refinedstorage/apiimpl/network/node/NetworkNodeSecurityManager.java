@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityCard;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.item.SecurityCardItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -80,8 +81,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
             ItemStack stack = cardsInv.getStackInSlot(i);
 
             if (!stack.isEmpty()) {
-                UUID uuid = null;/*TODO ItemSecurityCard.getOwner(stack)*/
-                ;
+                UUID uuid = SecurityCardItem.getOwner(stack);
 
                 if (uuid == null) {
                     this.globalCard = createCard(stack, null);
@@ -98,7 +98,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         SecurityCard card = new SecurityCard(uuid);
 
         for (Permission permission : Permission.values()) {
-            card.getPermissions().put(permission, /*TODO ItemSecurityCard.hasPermission(stack, permission)*/false);
+            card.getPermissions().put(permission, SecurityCardItem.hasPermission(stack, permission));
         }
 
         return card;
@@ -146,7 +146,7 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         ItemStack card = getEditCard().getStackInSlot(0);
 
         if (!card.isEmpty()) {
-            // TODO ItemSecurityCard.setPermission(card, permission, state);
+            SecurityCardItem.setPermission(card, permission, state);
         }
     }
 
@@ -164,10 +164,5 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     @Override
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(cardsInv, editCard);
-    }
-
-    @Override
-    public boolean hasConnectivityState() {
-        return true;
     }
 }

@@ -18,11 +18,6 @@ public class NetworkNodeNetworkReceiver extends NetworkNode {
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public ResourceLocation getId() {
         return ID;
     }

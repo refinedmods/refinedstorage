@@ -81,11 +81,6 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public void visit(Operator operator) {
         operator.apply(world, pos.offset(Direction.DOWN), Direction.UP);
     }

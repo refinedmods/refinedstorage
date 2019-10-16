@@ -137,11 +137,6 @@ public class PortableItemGridHandler implements IItemGridHandler {
                 portableGrid.getItemStorage().insert(stack, size, Action.PERFORM);
 
                 stack.shrink(size);
-
-                // TODO ???
-                if (stack.isEmpty()) {
-                    player.inventory.setItemStack(ItemStack.EMPTY);
-                }
             }
         } else {
             player.inventory.setItemStack(portableGrid.getItemStorage().insert(stack, size, Action.PERFORM));
@@ -150,12 +145,6 @@ public class PortableItemGridHandler implements IItemGridHandler {
         player.updateHeldItem();
 
         portableGrid.drainEnergy(RS.INSTANCE.config.portableGridInsertUsage);
-    }
-
-    @Override
-    @Nonnull
-    public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack) {
-        return onInsert(player, stack);
     }
 
     @Override

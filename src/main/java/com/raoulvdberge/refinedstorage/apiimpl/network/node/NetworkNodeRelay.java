@@ -44,11 +44,6 @@ public class NetworkNodeRelay extends NetworkNode {
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public boolean shouldRebuildGraphOnChange() {
         return true;
     }

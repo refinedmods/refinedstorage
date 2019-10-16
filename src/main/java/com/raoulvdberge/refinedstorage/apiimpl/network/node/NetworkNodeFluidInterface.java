@@ -260,9 +260,4 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(in, upgrades);
     }
-
-    @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
 }

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
+import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
 import com.raoulvdberge.refinedstorage.screen.GuiCrafterManager;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -31,11 +32,11 @@ public class CrafterManagerSearchBoxModeSideButton extends SideButton {
         if (mode == IGrid.SEARCH_BOX_MODE_NORMAL) {
             mode = IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED;
         } else if (mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED) {
-            //TODO if (IntegrationJEI.isLoaded()) {
-            //    mode = IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED;
-            //} else {
-            mode = IGrid.SEARCH_BOX_MODE_NORMAL;
-            //}
+            if (JeiIntegration.isLoaded()) {
+                mode = IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED;
+            } else {
+                mode = IGrid.SEARCH_BOX_MODE_NORMAL;
+            }
         } else if (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED) {
             mode = IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED;
         } else if (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED) {

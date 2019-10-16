@@ -94,11 +94,6 @@ public class NetworkNodeWriter extends NetworkNode implements IWriter, IGuiReade
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public void read(CompoundNBT tag) {
         super.read(tag);
 

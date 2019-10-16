@@ -205,11 +205,6 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public void setRedstoneMode(RedstoneMode mode) {
         // NO OP
     }

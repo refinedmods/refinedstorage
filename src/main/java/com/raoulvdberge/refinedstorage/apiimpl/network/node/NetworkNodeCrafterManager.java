@@ -78,11 +78,6 @@ public class NetworkNodeCrafterManager extends NetworkNode {
         this.searchBoxMode = searchBoxMode;
     }
 
-    @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
     public boolean isActive() {
         return world.getBlockState(pos).get(NodeBlock.CONNECTED);
     }

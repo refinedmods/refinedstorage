@@ -62,11 +62,6 @@ public class NetworkNodeReader extends NetworkNode implements IReader, IGuiReade
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public void read(CompoundNBT tag) {
         super.read(tag);
 

@@ -10,10 +10,16 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.GridUtils;
 import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class GridTile extends NetworkNodeTile<GridNetworkNode> {
     public static final TileDataParameter<Integer, GridTile> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getViewType(), (t, v) -> {
@@ -75,6 +81,8 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
 
     private final GridType type;
 
+    private LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
+
     public GridTile(GridType type) {
         super(GridUtils.getTileEntityType(type));
 
@@ -98,18 +106,13 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
         return new GridNetworkNode(world, pos, type);
     }
 
-    /* TODO
+    @Nonnull
     @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable Direction side) {
-        return (getNode().getGridType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, side);
-    }
-
-    @Override
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable Direction side) {
-        if (getNode().getGridType() == GridType.PATTERN && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getNode().getPatterns());
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && type == GridType.PATTERN) {
+            return diskCapability.cast();
         }
 
-        return super.getCapability(capability, side);
-    }*/
+        return super.getCapability(cap, direction);
+    }
 }

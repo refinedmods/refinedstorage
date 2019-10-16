@@ -226,9 +226,4 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
     public IItemHandler getDrops() {
         return new CombinedInvWrapper(importItems, exportItems, upgrades);
     }
-
-    @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
 }

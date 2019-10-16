@@ -292,11 +292,6 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public IItemHandler getDrops() {
         return upgrades;
     }

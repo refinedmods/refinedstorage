@@ -108,12 +108,6 @@ public class FluidGridHandler implements IFluidGridHandler {
     }
 
     @Override
-    @Nonnull
-    public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack container) {
-        return onInsert(player, container);
-    }
-
-    @Override
     public void onCraftingPreviewRequested(ServerPlayerEntity player, UUID id, int quantity, boolean noPreview) {
         if (!network.getSecurityManager().hasPermission(Permission.AUTOCRAFTING, player)) {
             return;

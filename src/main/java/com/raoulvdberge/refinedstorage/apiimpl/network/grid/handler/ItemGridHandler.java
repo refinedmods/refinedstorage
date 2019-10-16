@@ -136,11 +136,6 @@ public class ItemGridHandler implements IItemGridHandler {
                 network.insertItem(stack, size, Action.PERFORM);
 
                 stack.shrink(size);
-
-                // TODO Is this still needed?
-                if (stack.isEmpty()) {
-                    player.inventory.setItemStack(ItemStack.EMPTY);
-                }
             }
         } else {
             player.inventory.setItemStack(network.insertItem(stack, size, Action.PERFORM));
@@ -149,12 +144,6 @@ public class ItemGridHandler implements IItemGridHandler {
         player.updateHeldItem();
 
         // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
-    }
-
-    @Override
-    @Nonnull
-    public ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack) {
-        return onInsert(player, stack);
     }
 
     @Override

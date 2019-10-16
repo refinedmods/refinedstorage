@@ -375,11 +375,6 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     @Nullable
     public ICraftingPatternContainer getRootContainer() {
         if (visited) {

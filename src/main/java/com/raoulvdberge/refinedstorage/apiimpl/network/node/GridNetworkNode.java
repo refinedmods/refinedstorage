@@ -576,11 +576,6 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public void read(CompoundNBT tag) {
         super.read(tag);
 

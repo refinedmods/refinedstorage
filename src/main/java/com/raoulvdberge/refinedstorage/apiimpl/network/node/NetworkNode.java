@@ -123,11 +123,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         throttlingDisabled = true;
     }
 
-    // @TODO: DELETE.
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
     @Override
     public void update() {
         ++ticks;

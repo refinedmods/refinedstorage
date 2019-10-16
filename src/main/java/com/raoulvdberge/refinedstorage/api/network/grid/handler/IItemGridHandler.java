@@ -43,17 +43,6 @@ public interface IItemGridHandler {
     void onInsertHeldItem(ServerPlayerEntity player, boolean single);
 
     /**
-     * Called when the player shift clicks an item into the grid.
-     *
-     * @param player the player
-     * @param stack  the stack
-     * @return the remainder, or an empty stack if there is no remainder
-     */
-    // TODO Maybe remove?
-    @Nonnull
-    ItemStack onShiftClick(ServerPlayerEntity player, ItemStack stack);
-
-    /**
      * Called when a player requests the crafting preview window to be opened.
      *
      * @param player    the player

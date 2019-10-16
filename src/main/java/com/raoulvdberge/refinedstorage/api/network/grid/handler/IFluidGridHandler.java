@@ -37,16 +37,6 @@ public interface IFluidGridHandler {
     void onInsertHeldContainer(ServerPlayerEntity player);
 
     /**
-     * Called when the player shift clicks a container into the grid.
-     *
-     * @param player    the player
-     * @param container the container
-     * @return the remainder container
-     */
-    @Nonnull
-    ItemStack onShiftClick(ServerPlayerEntity player, ItemStack container);
-
-    /**
      * Called when a player requests the crafting preview window to be opened.
      *
      * @param player    the player

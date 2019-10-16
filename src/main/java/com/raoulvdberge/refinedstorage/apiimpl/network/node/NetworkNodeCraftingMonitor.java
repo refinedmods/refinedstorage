@@ -45,11 +45,6 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public String getGuiTitle() {
         return "gui.refinedstorage:crafting_monitor";
     }

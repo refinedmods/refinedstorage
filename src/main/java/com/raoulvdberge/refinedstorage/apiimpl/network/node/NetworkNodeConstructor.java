@@ -355,11 +355,6 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     @Override
-    public boolean hasConnectivityState() {
-        return true;
-    }
-
-    @Override
     public int getType() {
         return world.isRemote ? TileConstructor.TYPE.getValue() : type;
     }
