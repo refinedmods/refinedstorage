@@ -2,26 +2,23 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 public class Comparer implements IComparer {
     @Override
-    public boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right, int flags) {
-        ActionResultType validity = getResult(left, right);
-
-        if (validity == ActionResultType.FAIL || validity == ActionResultType.SUCCESS) {
-            return validity == ActionResultType.SUCCESS;
+    public boolean isEqual(@Nonnull ItemStack left, @Nonnull ItemStack right, int flags) {
+        if (left.isEmpty() && right.isEmpty()) {
+            return true;
         }
 
-        if (left.getItem() != right.getItem()) {
+        if (!ItemStack.areItemsEqual(left, right)) {
             return false;
         }
 
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (!isEqualNbt(left, right)) {
+            if (!ItemStack.areItemStackTagsEqual(left, right)) {
                 return false;
             }
         }
@@ -36,17 +33,19 @@ public class Comparer implements IComparer {
     }
 
     @Override
-    public boolean isEqual(@Nullable FluidStack left, @Nullable FluidStack right, int flags) {
-        if (left == null && right == null) {
+    public boolean isEqual(@Nonnull FluidStack left, @Nonnull FluidStack right, int flags) {
+        if (left.isEmpty() && right.isEmpty()) {
             return true;
-        }
-
-        if ((left == null && right != null) || (left != null && right == null)) {
-            return false;
         }
 
         if (left.getFluid() != right.getFluid()) {
             return false;
+        }
+
+        if ((flags & COMPARE_NBT) == COMPARE_NBT) {
+            if (!FluidStack.areFluidStackTagsEqual(left, right)) {
+                return false;
+            }
         }
 
         if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
@@ -55,58 +54,6 @@ public class Comparer implements IComparer {
             }
         }
 
-        if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (left.getTag() != null && !left.getTag().equals(right.getTag())) {
-                return false;
-            }
-        }
-
         return true;
-    }
-
-    @Override
-    public boolean isEqualNbt(@Nullable ItemStack left, @Nullable ItemStack right) {
-        ActionResultType validity = getResult(left, right);
-
-        if (validity == ActionResultType.FAIL || validity == ActionResultType.SUCCESS) {
-            return validity == ActionResultType.SUCCESS;
-        }
-
-        if (!ItemStack.areItemStackTagsEqual(left, right)) {
-            if (left.hasTag() && !right.hasTag() && left.getTag().isEmpty()) {
-                return true;
-            } else if (!left.hasTag() && right.hasTag() && right.getTag().isEmpty()) {
-                return true;
-            } else if (!left.hasTag() && !right.hasTag()) {
-                return true;
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private ActionResultType getResult(@Nullable ItemStack left, @Nullable ItemStack right) {
-        if (left == null && right == null) {
-            return ActionResultType.SUCCESS;
-        }
-
-        if ((left == null && right != null) || (left != null && right == null)) {
-            return ActionResultType.FAIL;
-        }
-
-        boolean leftEmpty = left.isEmpty();
-        boolean rightEmpty = right.isEmpty();
-
-        if (leftEmpty && rightEmpty) {
-            return ActionResultType.SUCCESS;
-        }
-
-        if ((leftEmpty && !rightEmpty) || (!leftEmpty && rightEmpty)) {
-            return ActionResultType.FAIL;
-        }
-
-        return ActionResultType.PASS;
     }
 }

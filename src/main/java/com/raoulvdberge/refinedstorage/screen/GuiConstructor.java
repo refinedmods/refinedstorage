@@ -1,10 +1,9 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ConstructorContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.CompareSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ConstructorDropSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileConstructor;
@@ -22,7 +21,7 @@ public class GuiConstructor extends BaseScreen<ConstructorContainer> {
 
         addSideButton(new TypeSideButton(this, TileConstructor.TYPE));
 
-        addSideButton(new CompareSideButton(this, TileConstructor.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new ExactModeSideButton(this, TileConstructor.COMPARE));
         addSideButton(new ConstructorDropSideButton(this));
     }
 

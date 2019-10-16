@@ -164,7 +164,7 @@ public abstract class BaseContainer extends Container {
     @Override
     protected Slot addSlot(Slot slot) {
         if (slot instanceof FluidFilterSlot) {
-            fluids.add(null);
+            fluids.add(FluidStack.EMPTY);
             fluidSlots.add((FluidFilterSlot) slot);
         }
 

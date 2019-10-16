@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.DestructorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
@@ -21,7 +20,7 @@ public class GuiDestructor extends BaseScreen<DestructorContainer> {
 
         addSideButton(new WhitelistBlacklistSideButton(this, TileDestructor.WHITELIST_BLACKLIST));
 
-        addSideButton(new CompareSideButton(this, TileDestructor.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new ExactModeSideButton(this, TileDestructor.COMPARE));
 
         addSideButton(new DestructorPickupSideButton(this));
     }

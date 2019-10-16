@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.DiskManipulatorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
@@ -19,7 +18,7 @@ public class GuiDiskManipulator extends BaseScreen<DiskManipulatorContainer> {
         addSideButton(new IoModeSideButton(this));
         addSideButton(new TypeSideButton(this, TileDiskManipulator.TYPE));
         addSideButton(new WhitelistBlacklistSideButton(this, TileDiskManipulator.WHITELIST_BLACKLIST));
-        addSideButton(new CompareSideButton(this, TileDiskManipulator.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new ExactModeSideButton(this, TileDiskManipulator.COMPARE));
     }
 
     @Override

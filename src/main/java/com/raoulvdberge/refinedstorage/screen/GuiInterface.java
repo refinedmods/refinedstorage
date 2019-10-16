@@ -1,9 +1,8 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.InterfaceContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.CompareSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileInterface;
 import net.minecraft.client.resources.I18n;
@@ -18,7 +17,7 @@ public class GuiInterface extends BaseScreen<InterfaceContainer> {
     public void onPostInit(int x, int y) {
         addSideButton(new RedstoneModeSideButton(this, TileInterface.REDSTONE_MODE));
 
-        addSideButton(new CompareSideButton(this, TileInterface.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new ExactModeSideButton(this, TileInterface.COMPARE));
     }
 
     @Override

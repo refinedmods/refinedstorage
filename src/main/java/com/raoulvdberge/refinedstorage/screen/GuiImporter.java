@@ -1,9 +1,8 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ImporterContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.CompareSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.WhitelistBlacklistSideButton;
@@ -24,7 +23,7 @@ public class GuiImporter extends BaseScreen<ImporterContainer> {
 
         addSideButton(new WhitelistBlacklistSideButton(this, TileImporter.WHITELIST_BLACKLIST));
 
-        addSideButton(new CompareSideButton(this, TileImporter.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new ExactModeSideButton(this, TileImporter.COMPARE));
     }
 
     @Override

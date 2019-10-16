@@ -1,9 +1,8 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.StorageMonitorContainer;
-import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.CompareSideButton;
+import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,7 +14,7 @@ public class GuiStorageMonitor extends BaseScreen<StorageMonitorContainer> {
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new CompareSideButton(this, TileStorageMonitor.COMPARE, IComparer.COMPARE_NBT));
+        addSideButton(new ExactModeSideButton(this, TileStorageMonitor.COMPARE));
     }
 
     @Override

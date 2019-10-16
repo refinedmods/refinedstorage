@@ -2,12 +2,10 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -26,14 +24,12 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     private String texture;
     private TileDataParameter<Integer, ?> typeParameter;
     private TileDataParameter<Integer, ?> redstoneModeParameter;
-    private TileDataParameter<Integer, ?> compareParameter;
+    private TileDataParameter<Integer, ?> exactModeParameter;
     private TileDataParameter<Integer, ?> whitelistBlacklistParameter;
     private TileDataParameter<Integer, ?> priorityParameter;
     private TileDataParameter<AccessType, ?> accessTypeParameter;
     private Supplier<Long> storedSupplier;
     private Supplier<Long> capacitySupplier;
-
-    private Button priorityButton;
 
     public StorageScreen(T container,
                          PlayerInventory inventory,
@@ -41,7 +37,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
                          String texture,
                          @Nullable TileDataParameter<Integer, ?> typeParameter,
                          @Nullable TileDataParameter<Integer, ?> redstoneModeParameter,
-                         @Nullable TileDataParameter<Integer, ?> compareParameter,
+                         @Nullable TileDataParameter<Integer, ?> exactModeParameter,
                          @Nullable TileDataParameter<Integer, ?> whitelistBlacklistParameter,
                          TileDataParameter<Integer, ?> priorityParameter,
                          @Nullable TileDataParameter<AccessType, ?> accessTypeParameter,
@@ -51,7 +47,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
         this.texture = texture;
         this.typeParameter = typeParameter;
         this.redstoneModeParameter = redstoneModeParameter;
-        this.compareParameter = compareParameter;
+        this.exactModeParameter = exactModeParameter;
         this.whitelistBlacklistParameter = whitelistBlacklistParameter;
         this.priorityParameter = priorityParameter;
         this.accessTypeParameter = accessTypeParameter;
@@ -73,8 +69,8 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
             addSideButton(new WhitelistBlacklistSideButton(this, whitelistBlacklistParameter));
         }
 
-        if (compareParameter != null) {
-            addSideButton(new CompareSideButton(this, compareParameter, IComparer.COMPARE_NBT));
+        if (exactModeParameter != null) {
+            addSideButton(new ExactModeSideButton(this, exactModeParameter));
         }
 
         if (accessTypeParameter != null) {
@@ -83,7 +79,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
 
         int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage.priority"));
 
-        priorityButton = addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, I18n.format("misc.refinedstorage.priority"), true, true, btn -> {
+        addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, I18n.format("misc.refinedstorage.priority"), true, true, btn -> {
             minecraft.displayGuiScreen(new PriorityScreen(this, priorityParameter, playerInventory));
         });
     }

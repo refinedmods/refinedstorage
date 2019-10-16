@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.api.util;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Utilities for comparing item and fluid stacks.
@@ -20,7 +20,7 @@ public interface IComparer {
      * @param flags the flags to compare with
      * @return true if the left and right stack are the same, false otherwise
      */
-    boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right, int flags);
+    boolean isEqual(@Nonnull ItemStack left, @Nonnull ItemStack right, int flags);
 
     /**
      * Compares two stacks by NBT, damage and quantity.
@@ -29,7 +29,7 @@ public interface IComparer {
      * @param right the right stack
      * @return true if the left and right stack are the same, false otherwise
      */
-    default boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right) {
+    default boolean isEqual(@Nonnull ItemStack left, @Nonnull ItemStack right) {
         return isEqual(left, right, COMPARE_NBT | COMPARE_QUANTITY);
     }
 
@@ -40,7 +40,7 @@ public interface IComparer {
      * @param right the right stack
      * @return true if the left and right stack are the same, false otherwise
      */
-    default boolean isEqualNoQuantity(@Nullable ItemStack left, @Nullable ItemStack right) {
+    default boolean isEqualNoQuantity(@Nonnull ItemStack left, @Nonnull ItemStack right) {
         return isEqual(left, right, COMPARE_NBT);
     }
 
@@ -52,14 +52,5 @@ public interface IComparer {
      * @param flags the flags to compare with
      * @return true if the left and right stack are the same, false otherwise
      */
-    boolean isEqual(@Nullable FluidStack left, @Nullable FluidStack right, int flags);
-
-    /**
-     * Compares the NBT tags of two stacks.
-     *
-     * @param left  the left stack
-     * @param right the right stack
-     * @return true if the NBT tags of the two stacks are the same, false otherwise
-     */
-    boolean isEqualNbt(@Nullable ItemStack left, @Nullable ItemStack right);
+    boolean isEqual(@Nonnull FluidStack left, @Nonnull FluidStack right, int flags);
 }
