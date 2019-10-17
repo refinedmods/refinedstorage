@@ -22,8 +22,6 @@ public final class RSBlocks {
     public static final BlockNetworkReceiver NETWORK_RECEIVER = new BlockNetworkReceiver();
     public static final BlockFluidInterface FLUID_INTERFACE = new BlockFluidInterface();
     public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();
-    public static final BlockReader READER = new BlockReader();
-    public static final BlockWriter WRITER = new BlockWriter();
     public static final BlockSecurityManager SECURITY_MANAGER = new BlockSecurityManager();
 
     @ObjectHolder(RS.ID + ":quartz_enriched_iron_block")

@@ -8,15 +8,12 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
@@ -36,8 +33,6 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.CraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridManager;
-import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
 import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
 import com.raoulvdberge.refinedstorage.apiimpl.util.FluidStackList;
@@ -68,7 +63,6 @@ public class API implements IRSAPI {
     private final ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private final ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private final ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
-    private final IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
     private final IGridManager gridManager = new GridManager();
     private final ICraftingGridBehavior craftingGridBehavior = new CraftingGridBehavior();
     private final IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
@@ -140,18 +134,6 @@ public class API implements IRSAPI {
     @Nonnull
     public ICraftingPreviewElementRegistry getCraftingPreviewElementRegistry() {
         return craftingPreviewElementRegistry;
-    }
-
-    @Nonnull
-    @Override
-    public IReaderWriterHandlerRegistry getReaderWriterHandlerRegistry() {
-        return readerWriterHandlerRegistry;
-    }
-
-    @Nonnull
-    @Override
-    public IReaderWriterChannel createReaderWriterChannel(String name, INetwork network) {
-        return new ReaderWriterChannel(name, network);
     }
 
     @Nonnull

@@ -6,8 +6,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FluidInventoryFilter extends FluidInventory {
-    public FluidInventoryFilter(ItemStack stack) {
+public class FilterFluidInventory extends FluidInventory {
+    public FilterFluidInventory(ItemStack stack) {
         super(27, Integer.MAX_VALUE);
 
         this.addListener((handler, slot, reading) -> {

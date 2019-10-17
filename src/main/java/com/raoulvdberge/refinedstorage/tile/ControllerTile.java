@@ -12,8 +12,6 @@ import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterListener;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
@@ -26,14 +24,13 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.FluidStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.BaseEnergyStorage;
+import com.raoulvdberge.refinedstorage.energy.BaseEnergyStorage;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
@@ -134,8 +131,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
     private IStorageCache<FluidStack> fluidStorage = new FluidStorageCache(this);
     private FluidStorageTracker fluidStorageTracker = new FluidStorageTracker(this::markDirty);
 
-    private IReaderWriterManager readerWriterManager = new ReaderWriterManager(this);
-
     private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer());
 
     private final LazyOptional<IEnergyStorage> energyProxyCap = LazyOptional.of(() -> energy);
@@ -160,17 +155,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
         dataManager.addWatchedParameter(ENERGY_STORED);
         dataManager.addParameter(ENERGY_CAPACITY);
         dataManager.addParameter(NODES);
-
-        readerWriterManager.addListener(new IReaderWriterListener() {
-            @Override
-            public void onAttached() {
-            }
-
-            @Override
-            public void onChanged() {
-                markDirty();
-            }
-        });
 
         nodeGraph.addListener(() -> dataManager.sendParameterToWatchers(ControllerTile.NODES));
     }
@@ -205,8 +189,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
         if (!world.isRemote) {
             if (canRun()) {
                 craftingManager.update();
-
-                readerWriterManager.update();
 
                 if (!craftingManager.getTasks().isEmpty()) {
                     markDirty();
@@ -284,11 +266,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
     @Override
     public IStorageCache<FluidStack> getFluidStorageCache() {
         return fluidStorage;
-    }
-
-    @Override
-    public IReaderWriterManager getReaderWriterManager() {
-        return readerWriterManager;
     }
 
     @Override
@@ -533,8 +510,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
 
         craftingManager.readFromNbt(tag);
 
-        readerWriterManager.readFromNbt(tag);
-
         if (tag.contains(NBT_ITEM_STORAGE_TRACKER)) {
             itemStorageTracker.readFromNbt(tag.getList(NBT_ITEM_STORAGE_TRACKER, Constants.NBT.TAG_COMPOUND));
         }
@@ -553,8 +528,6 @@ public class ControllerTile extends BaseTile implements ITickableTileEntity, INe
         redstoneMode.write(tag);
 
         craftingManager.writeToNbt(tag);
-
-        readerWriterManager.writeToNbt(tag);
 
         tag.put(NBT_ITEM_STORAGE_TRACKER, itemStorageTracker.serializeNbt());
         tag.put(NBT_FLUID_STORAGE_TRACKER, fluidStorageTracker.serializeNbt());

@@ -3,9 +3,9 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FilterFluidInventory;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FilterIconFluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilterIcon;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterIconItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemsItemHandler;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
@@ -25,7 +25,7 @@ public class FilterContainer extends BaseContainer {
         int x = 8;
 
         FilterItemsItemHandler filter = new FilterItemsItemHandler(stack);
-        FluidInventory fluidFilter = new FluidInventoryFilter(stack);
+        FluidInventory fluidFilter = new FilterFluidInventory(stack);
 
         for (int i = 0; i < 27; ++i) {
             addSlot(new FilterSlot(filter, i, x, y).setEnableHandler(() -> FilterItem.getType(stack) == IType.ITEMS));
@@ -40,7 +40,7 @@ public class FilterContainer extends BaseContainer {
         }
 
         addSlot(new FilterSlot(new FilterIconItemHandler(stack), 0, 8, 117).setEnableHandler(() -> FilterItem.getType(stack) == IType.ITEMS));
-        addSlot(new FluidFilterSlot(new FluidInventoryFilterIcon(stack), 0, 8, 117).setEnableHandler(() -> FilterItem.getType(stack) == IType.FLUIDS));
+        addSlot(new FluidFilterSlot(new FilterIconFluidInventory(stack), 0, 8, 117).setEnableHandler(() -> FilterItem.getType(stack) == IType.FLUIDS));
 
         addPlayerInventory(8, 149);
 

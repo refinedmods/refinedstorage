@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FilterFluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemsItemHandler;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -89,7 +89,7 @@ public class FilterItem extends Item {
 
         RenderUtils.addCombinedItemsToTooltip(tooltip, false, items.getFilteredItems());
 
-        FluidInventoryFilter fluids = new FluidInventoryFilter(stack);
+        FilterFluidInventory fluids = new FilterFluidInventory(stack);
 
         RenderUtils.addCombinedFluidsToTooltip(tooltip, false, fluids.getFilteredFluids());
     }

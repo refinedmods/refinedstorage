@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.integration.forgeenergy;
+package com.raoulvdberge.refinedstorage.energy;
 
 import net.minecraftforge.energy.EnergyStorage;
 

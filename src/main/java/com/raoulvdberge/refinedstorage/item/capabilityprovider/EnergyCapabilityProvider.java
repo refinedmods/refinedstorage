@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.item.capabilityprovider;
 
-import com.raoulvdberge.refinedstorage.integration.forgeenergy.ItemEnergyStorage;
+import com.raoulvdberge.refinedstorage.energy.ItemEnergyStorage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;

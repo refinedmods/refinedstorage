@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterManager;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
@@ -77,11 +76,6 @@ public interface INetwork {
      * @return the {@link IStorageCache<FluidStack>} of this network
      */
     IStorageCache<FluidStack> getFluidStorageCache();
-
-    /**
-     * @return the {@link IReaderWriterManager} of this network
-     */
-    IReaderWriterManager getReaderWriterManager();
 
     /**
      * Inserts an item in this network.

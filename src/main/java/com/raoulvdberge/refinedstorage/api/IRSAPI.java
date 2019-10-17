@@ -7,14 +7,11 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
@@ -83,20 +80,6 @@ public interface IRSAPI {
      */
     @Nonnull
     ICraftingPreviewElementRegistry getCraftingPreviewElementRegistry();
-
-    /**
-     * @return the reader writer handler registry
-     */
-    @Nonnull
-    IReaderWriterHandlerRegistry getReaderWriterHandlerRegistry();
-
-    /**
-     * @param name    the name of the channel
-     * @param network the network
-     * @return a new reader writer channel
-     */
-    @Nonnull
-    IReaderWriterChannel createReaderWriterChannel(String name, INetwork network);
 
     /**
      * @return an empty item stack list

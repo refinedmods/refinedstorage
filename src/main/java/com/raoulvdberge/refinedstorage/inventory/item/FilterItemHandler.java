@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.util.FluidFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.util.ItemFilter;
-import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FilterFluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidator;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
@@ -69,7 +69,7 @@ public class FilterItemHandler extends BaseItemHandler {
             }
         }
 
-        FluidInventoryFilter fluids = new FluidInventoryFilter(filter);
+        FilterFluidInventory fluids = new FilterFluidInventory(filter);
 
         for (FluidStack stack : fluids.getFilteredFluids()) {
             filters.add(new FluidFilter(stack, compare, mode, modFilter));

@@ -57,12 +57,6 @@ public class RSOldConfig {
     public int wirelessCraftingMonitorCancelAllUsage;
     //endregion
 
-    //region Readers and Writers
-    public int readerUsage;
-    public int writerUsage;
-    public int readerWriterChannelEnergyCapacity;
-    //endregion
-
     //region Autocrafting
     public int calculationTimeoutMs;
     //endregion
@@ -74,7 +68,6 @@ public class RSOldConfig {
     private static final String PORTABLE_GRID = "portableGrid";
     private static final String WIRELESS_FLUID_GRID = "wirelessFluidGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
-    private static final String READER_WRITER = "readerWriter";
     private static final String AUTOCRAFTING = "autocrafting";
     //endregion
 
@@ -133,12 +126,6 @@ public class RSOldConfig {
         wirelessCraftingMonitorOpenUsage = config.getInt("open", WIRELESS_CRAFTING_MONITOR, 35, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to open");
         wirelessCraftingMonitorCancelUsage = config.getInt("cancel", WIRELESS_CRAFTING_MONITOR, 4, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to cancel a task");
         wirelessCraftingMonitorCancelAllUsage = config.getInt("cancelAll", WIRELESS_CRAFTING_MONITOR, 5, 0, Integer.MAX_VALUE, "The energy used by the Wireless Crafting Monitor to cancel all tasks");
-        //endregion
-
-        //region Readers and Writers
-        readerUsage = config.getInt("reader", READER_WRITER, 2, 0, Integer.MAX_VALUE, "The energy used by Readers");
-        writerUsage = config.getInt("writer", READER_WRITER, 2, 0, Integer.MAX_VALUE, "The energy used by Writers");
-        readerWriterChannelEnergyCapacity = config.getInt("channelEnergyCapacity", READER_WRITER, 16000, 0, Integer.MAX_VALUE, "The energy capacity of energy channels");
         //endregion
 
         //region Autocrafting
