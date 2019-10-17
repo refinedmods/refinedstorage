@@ -7,7 +7,9 @@ public final class RSBlocks {
     @ObjectHolder(RS.ID + ":importer")
     public static final ImporterBlock IMPORTER = null;
 
-    public static final BlockExporter EXPORTER = new BlockExporter();
+    @ObjectHolder(RS.ID + ":exporter")
+    public static final ExporterBlock EXPORTER = null;
+
     public static final BlockDetector DETECTOR = new BlockDetector();
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();

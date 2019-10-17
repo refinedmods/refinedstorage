@@ -13,6 +13,8 @@ public class ServerConfig {
     private StorageBlock storageBlock;
     private FluidStorageBlock fluidStorageBlock;
     private ExternalStorage externalStorage;
+    private Importer importer;
+    private Exporter exporter;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -23,6 +25,8 @@ public class ServerConfig {
         storageBlock = new StorageBlock();
         fluidStorageBlock = new FluidStorageBlock();
         externalStorage = new ExternalStorage();
+        importer = new Importer();
+        exporter = new Exporter();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -58,6 +62,14 @@ public class ServerConfig {
 
     public ExternalStorage getExternalStorage() {
         return externalStorage;
+    }
+
+    public Importer getImporter() {
+        return importer;
+    }
+
+    public Exporter getExporter() {
+        return exporter;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -315,6 +327,38 @@ public class ServerConfig {
             builder.push("externalStorage");
 
             usage = builder.comment("The energy used by the External Storage").defineInRange("usage", 6, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class Importer {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public Importer() {
+            builder.push("importer");
+
+            usage = builder.comment("The energy used by the Importer").defineInRange("usage", 1, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class Exporter {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public Exporter() {
+            builder.push("exporter");
+
+            usage = builder.comment("The energy used by the Exporter").defineInRange("usage", 1, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }

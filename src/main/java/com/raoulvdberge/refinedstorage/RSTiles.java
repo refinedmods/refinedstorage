@@ -33,8 +33,9 @@ public class RSTiles {
 
     //@ObjectHolder(RS.ID + ":disk_manipulator")
     public static final TileEntityType<TileDiskManipulator> DISK_MANIPULATOR = null;
-    //@ObjectHolder(RS.ID + ":exporter")
-    public static final TileEntityType<TileExporter> EXPORTER = null;
+
+    @ObjectHolder(RS.ID + ":exporter")
+    public static final TileEntityType<ExporterTile> EXPORTER = null;
 
     @ObjectHolder(RS.ID + ":external_storage")
     public static final TileEntityType<ExternalStorageTile> EXTERNAL_STORAGE = null;

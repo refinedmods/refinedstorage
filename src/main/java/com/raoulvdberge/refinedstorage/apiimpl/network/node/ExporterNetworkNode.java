@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
-import com.raoulvdberge.refinedstorage.tile.TileExporter;
+import com.raoulvdberge.refinedstorage.tile.ExporterTile;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -26,7 +26,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class NetworkNodeExporter extends NetworkNode implements IComparable, IType {
+public class ExporterNetworkNode extends NetworkNode implements IComparable, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "exporter");
 
     private static final String NBT_COMPARE = "Compare";
@@ -36,20 +36,21 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
     private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4 /* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_CRAFTING, ItemUpgrade.TYPE_STACK*/).addListener(new NetworkNodeInventoryListener(this));
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK)
+        .addListener(new NetworkNodeInventoryListener(this));
 
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
 
     private int filterSlot;
 
-    public NetworkNodeExporter(World world, BlockPos pos) {
+    public ExporterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.exporterUsage + upgrades.getEnergyUsage();
+        return RS.SERVER_CONFIG.getExporter().getUsage() + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -219,7 +220,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return world.isRemote ? TileExporter.TYPE.getValue() : type;
+        return world.isRemote ? ExporterTile.TYPE.getValue() : type;
     }
 
     @Override

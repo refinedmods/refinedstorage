@@ -2,9 +2,9 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
-import com.raoulvdberge.refinedstorage.container.ImporterContainer;
+import com.raoulvdberge.refinedstorage.container.ExporterContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
-import com.raoulvdberge.refinedstorage.tile.ImporterTile;
+import com.raoulvdberge.refinedstorage.tile.ExporterTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.BlockState;
@@ -25,41 +25,41 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class ImporterBlock extends CableBlock {
-    private static final VoxelShape LINE_NORTH_1 = makeCuboidShape(6, 6, 4, 10, 10, 6);
+public class ExporterBlock extends CableBlock {
+    private static final VoxelShape LINE_NORTH_1 = makeCuboidShape(6, 6, 0, 10, 10, 2);
     private static final VoxelShape LINE_NORTH_2 = makeCuboidShape(5, 5, 2, 11, 11, 4);
-    private static final VoxelShape LINE_NORTH_3 = makeCuboidShape(3, 3, 0, 13, 13, 2);
+    private static final VoxelShape LINE_NORTH_3 = makeCuboidShape(3, 3, 4, 13, 13, 6);
     private static final VoxelShape LINE_NORTH = VoxelShapes.or(LINE_NORTH_1, LINE_NORTH_2, LINE_NORTH_3);
 
-    private static final VoxelShape LINE_EAST_1 = makeCuboidShape(10, 6, 6, 12, 10, 10);
+    private static final VoxelShape LINE_EAST_1 = makeCuboidShape(14, 6, 6, 16, 10, 10);
     private static final VoxelShape LINE_EAST_2 = makeCuboidShape(12, 5, 5, 14, 11, 11);
-    private static final VoxelShape LINE_EAST_3 = makeCuboidShape(14, 3, 3, 16, 13, 13);
+    private static final VoxelShape LINE_EAST_3 = makeCuboidShape(10, 3, 3, 12, 13, 13);
     private static final VoxelShape LINE_EAST = VoxelShapes.or(LINE_EAST_1, LINE_EAST_2, LINE_EAST_3);
 
-    private static final VoxelShape LINE_SOUTH_1 = makeCuboidShape(6, 6, 10, 10, 10, 12);
+    private static final VoxelShape LINE_SOUTH_1 = makeCuboidShape(6, 6, 14, 10, 10, 16);
     private static final VoxelShape LINE_SOUTH_2 = makeCuboidShape(5, 5, 12, 11, 11, 14);
-    private static final VoxelShape LINE_SOUTH_3 = makeCuboidShape(3, 3, 14, 13, 13, 16);
+    private static final VoxelShape LINE_SOUTH_3 = makeCuboidShape(3, 3, 10, 13, 13, 12);
     private static final VoxelShape LINE_SOUTH = VoxelShapes.or(LINE_SOUTH_1, LINE_SOUTH_2, LINE_SOUTH_3);
 
-    private static final VoxelShape LINE_WEST_1 = makeCuboidShape(4, 6, 6, 6, 10, 10);
+    private static final VoxelShape LINE_WEST_1 = makeCuboidShape(0, 6, 6, 2, 10, 10);
     private static final VoxelShape LINE_WEST_2 = makeCuboidShape(2, 5, 5, 4, 11, 11);
-    private static final VoxelShape LINE_WEST_3 = makeCuboidShape(0, 3, 3, 2, 13, 13);
+    private static final VoxelShape LINE_WEST_3 = makeCuboidShape(4, 3, 3, 6, 13, 13);
     private static final VoxelShape LINE_WEST = VoxelShapes.or(LINE_WEST_1, LINE_WEST_2, LINE_WEST_3);
 
-    private static final VoxelShape LINE_UP_1 = makeCuboidShape(6, 10, 6, 10, 12, 10);
+    private static final VoxelShape LINE_UP_1 = makeCuboidShape(6, 14, 6, 10, 16, 10);
     private static final VoxelShape LINE_UP_2 = makeCuboidShape(5, 12, 5, 11, 14, 11);
-    private static final VoxelShape LINE_UP_3 = makeCuboidShape(3, 14, 3, 13, 16, 13);
+    private static final VoxelShape LINE_UP_3 = makeCuboidShape(3, 10, 3, 13, 12, 13);
     private static final VoxelShape LINE_UP = VoxelShapes.or(LINE_UP_1, LINE_UP_2, LINE_UP_3);
 
-    private static final VoxelShape LINE_DOWN_1 = makeCuboidShape(6, 4, 6, 10, 6, 10);
+    private static final VoxelShape LINE_DOWN_1 = makeCuboidShape(6, 0, 6, 10, 2, 10);
     private static final VoxelShape LINE_DOWN_2 = makeCuboidShape(5, 2, 5, 11, 4, 11);
-    private static final VoxelShape LINE_DOWN_3 = makeCuboidShape(3, 0, 3, 13, 2, 13);
+    private static final VoxelShape LINE_DOWN_3 = makeCuboidShape(3, 4, 3, 13, 6, 13);
     private static final VoxelShape LINE_DOWN = VoxelShapes.or(LINE_DOWN_1, LINE_DOWN_2, LINE_DOWN_3);
 
-    public ImporterBlock() {
+    public ExporterBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
 
-        this.setRegistryName(RS.ID, "importer");
+        this.setRegistryName(RS.ID, "exporter");
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ImporterBlock extends CableBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ImporterTile();
+        return new ExporterTile();
     }
 
     @Override
@@ -112,9 +112,9 @@ public class ImporterBlock extends CableBlock {
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
-                new PositionalTileContainerProvider<ImporterTile>(
-                    new TranslationTextComponent("gui.refinedstorage.importer"),
-                    (tile, windowId, inventory, p) -> new ImporterContainer(tile, player, windowId),
+                new PositionalTileContainerProvider<ExporterTile>(
+                    new TranslationTextComponent("gui.refinedstorage.exporter"),
+                    (tile, windowId, inventory, p) -> new ExporterContainer(tile, player, windowId),
                     pos
                 ),
                 pos

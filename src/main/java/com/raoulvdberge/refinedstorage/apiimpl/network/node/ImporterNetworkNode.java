@@ -53,7 +53,7 @@ public class ImporterNetworkNode extends NetworkNode implements IComparable, IWh
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.importerUsage + upgrades.getEnergyUsage();
+        return RS.SERVER_CONFIG.getImporter().getUsage() + upgrades.getEnergyUsage();
     }
 
     @Override

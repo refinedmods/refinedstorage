@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSTiles;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeExporter;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ExporterNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -10,11 +10,11 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileExporter extends NetworkNodeTile<NetworkNodeExporter> {
-    public static final TileDataParameter<Integer, TileExporter> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileExporter> TYPE = IType.createParameter();
+public class ExporterTile extends NetworkNodeTile<ExporterNetworkNode> {
+    public static final TileDataParameter<Integer, ExporterTile> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer, ExporterTile> TYPE = IType.createParameter();
 
-    public TileExporter() {
+    public ExporterTile() {
         super(RSTiles.EXPORTER);
         
         dataManager.addWatchedParameter(COMPARE);
@@ -23,7 +23,7 @@ public class TileExporter extends NetworkNodeTile<NetworkNodeExporter> {
 
     @Override
     @Nonnull
-    public NetworkNodeExporter createNode(World world, BlockPos pos) {
-        return new NetworkNodeExporter(world, pos);
+    public ExporterNetworkNode createNode(World world, BlockPos pos) {
+        return new ExporterNetworkNode(world, pos);
     }
 }

@@ -3,13 +3,13 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.raoulvdberge.refinedstorage.tile.TileExporter;
+import com.raoulvdberge.refinedstorage.tile.ExporterTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ExporterContainer extends BaseContainer {
-    public ExporterContainer(TileExporter exporter, PlayerEntity player, int windowId) {
+    public ExporterContainer(ExporterTile exporter, PlayerEntity player, int windowId) {
         super(RSContainers.EXPORTER, exporter, player, windowId);
 
         for (int i = 0; i < 4; ++i) {

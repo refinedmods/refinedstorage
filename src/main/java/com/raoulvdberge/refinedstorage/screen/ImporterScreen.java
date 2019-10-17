@@ -40,7 +40,7 @@ public class ImporterScreen extends BaseScreen<ImporterContainer> {
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, I18n.format("gui.refinedstorage.importer"));
+        renderString(7, 7, title.getFormattedText());
         renderString(7, 43, I18n.format("container.inventory"));
     }
 }

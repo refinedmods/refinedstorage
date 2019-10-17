@@ -27,7 +27,8 @@ public final class RSContainers {
 
     //@ObjectHolder(RS.ID + ":disk_manipulator")
     public static final ContainerType<DiskManipulatorContainer> DISK_MANIPULATOR = null;
-    //@ObjectHolder(RS.ID + ":exporter")
+
+    @ObjectHolder(RS.ID + ":exporter")
     public static final ContainerType<ExporterContainer> EXPORTER = null;
 
     @ObjectHolder(RS.ID + ":external_storage")
