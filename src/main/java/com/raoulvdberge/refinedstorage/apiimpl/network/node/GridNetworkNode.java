@@ -17,7 +17,7 @@ import com.raoulvdberge.refinedstorage.block.NodeBlock;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
-import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.item.PatternItem;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -96,7 +96,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
     private Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
-    private BaseItemHandler patterns = new BaseItemHandler(2, new NetworkNodeListener(this), new ItemValidatorBasic(RSItems.PATTERN)) {
+    private BaseItemHandler patterns = new BaseItemHandler(2, new NetworkNodeListener(this)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -142,7 +142,7 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
             return stack;
         }
-    };
+    }.addValidator(new ItemValidator(RSItems.PATTERN));
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
     private FilterItemHandler filter = new FilterItemHandler(filters, tabs, new NetworkNodeListener(this));

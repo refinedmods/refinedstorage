@@ -240,7 +240,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     private void dropItem() {
-        ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), upgrades.getItemInteractCount(), Action.PERFORM);
+        ItemStack took = network.extractItem(itemFilters.getStackInSlot(0), upgrades.getStackInteractCount(), Action.PERFORM);
 
         if (!took.isEmpty()) {
             DefaultDispenseItemBehavior.doDispense(world, took, 6, getDirection(), new Position(getDispensePositionX(), getDispensePositionY(), getDispensePositionZ()));

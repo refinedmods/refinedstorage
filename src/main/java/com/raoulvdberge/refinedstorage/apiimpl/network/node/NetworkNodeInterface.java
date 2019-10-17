@@ -68,7 +68,7 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
         if (slot.isEmpty()) {
             currentSlot++;
         } else if (ticks % upgrades.getSpeed() == 0) {
-            int size = Math.min(slot.getCount(), upgrades.getItemInteractCount());
+            int size = Math.min(slot.getCount(), upgrades.getStackInteractCount());
 
             ItemStack remainder = network.insertItemTracked(slot, size);
 

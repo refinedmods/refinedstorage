@@ -38,8 +38,10 @@ public final class RSContainers {
 
     //@ObjectHolder(RS.ID + ":fluid_interface")
     public static final ContainerType<FluidInterfaceContainer> FLUID_INTERFACE = null;
-    //@ObjectHolder(RS.ID + ":importer")
+
+    @ObjectHolder(RS.ID + ":importer")
     public static final ContainerType<ImporterContainer> IMPORTER = null;
+
     //@ObjectHolder(RS.ID + ":interface")
     public static final ContainerType<ImporterContainer> INTERFACE = null;
     //@ObjectHolder(RS.ID + ":network_transmitter")

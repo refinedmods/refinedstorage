@@ -6,24 +6,25 @@ import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideBut
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.WhitelistBlacklistSideButton;
-import com.raoulvdberge.refinedstorage.tile.TileImporter;
+import com.raoulvdberge.refinedstorage.tile.ImporterTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 
-public class GuiImporter extends BaseScreen<ImporterContainer> {
-    public GuiImporter(ImporterContainer container, PlayerInventory inventory) {
-        super(container, 211, 137, inventory, null);
+public class ImporterScreen extends BaseScreen<ImporterContainer> {
+    public ImporterScreen(ImporterContainer container, PlayerInventory inventory, ITextComponent title) {
+        super(container, 211, 137, inventory, title);
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, TileImporter.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, ImporterTile.REDSTONE_MODE));
 
-        addSideButton(new TypeSideButton(this, TileImporter.TYPE));
+        addSideButton(new TypeSideButton(this, ImporterTile.TYPE));
 
-        addSideButton(new WhitelistBlacklistSideButton(this, TileImporter.WHITELIST_BLACKLIST));
+        addSideButton(new WhitelistBlacklistSideButton(this, ImporterTile.WHITELIST_BLACKLIST));
 
-        addSideButton(new ExactModeSideButton(this, TileImporter.COMPARE));
+        addSideButton(new ExactModeSideButton(this, ImporterTile.COMPARE));
     }
 
     @Override
@@ -39,7 +40,7 @@ public class GuiImporter extends BaseScreen<ImporterContainer> {
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, I18n.format("gui.refinedstorage:importer"));
+        renderString(7, 7, I18n.format("gui.refinedstorage.importer"));
         renderString(7, 43, I18n.format("container.inventory"));
     }
 }

@@ -2,10 +2,10 @@ package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafter;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeCrafterManager;
 import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.PatternItemValidator;
 import com.raoulvdberge.refinedstorage.screen.IScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.screen.grid.filtering.GridFilterParser;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
@@ -134,7 +134,8 @@ public class CrafterManagerContainer extends BaseContainer {
             if (newContainerData == null) { // We're only resizing, get the previous inventory...
                 dummy = dummyInventories.get(category.getKey());
             } else {
-                dummyInventories.put(category.getKey(), dummy = new BaseItemHandler(category.getValue()) {
+                dummyInventories.put(category.getKey(), dummy = new BaseItemHandler(category.getValue(), slot -> {
+                }) {
                     @Override
                     public int getSlotLimit(int slot) {
                         return 1;
@@ -143,7 +144,7 @@ public class CrafterManagerContainer extends BaseContainer {
                     @Nonnull
                     @Override
                     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-                        if (NetworkNodeCrafter.isValidPatternInSlot(getPlayer().getEntityWorld(), stack)) {
+                        if (new PatternItemValidator(getPlayer().getEntityWorld()).test(stack)) {
                             return super.insertItem(slot, stack, simulate);
                         }
 

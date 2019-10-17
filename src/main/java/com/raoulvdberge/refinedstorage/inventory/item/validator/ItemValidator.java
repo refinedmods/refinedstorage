@@ -5,10 +5,10 @@ import net.minecraft.item.ItemStack;
 
 import java.util.function.Predicate;
 
-public class ItemValidatorBasic implements Predicate<ItemStack> {
+public class ItemValidator implements Predicate<ItemStack> {
     private Item item;
 
-    public ItemValidatorBasic(Item item) {
+    public ItemValidator(Item item) {
         this.item = item;
     }
 

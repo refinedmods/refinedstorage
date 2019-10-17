@@ -18,7 +18,6 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.PortableFluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.PortableItemGridHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableFluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableItemStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.PortableFluidGridStorageCacheListener;
@@ -29,6 +28,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.FluidStorageTrack
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -91,7 +91,8 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             StackUtils.writeItems(this, 0, stack.getTag());
         }
     };
-    private BaseItemHandler disk = new BaseItemHandler(1, DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
+    private BaseItemHandler disk = new BaseItemHandler(1, slot -> {
+    }) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -133,7 +134,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                 StackUtils.writeItems(this, 4, stack.getTag());
             }
         }
-    };
+    }.addValidator(new StorageDiskItemValidator());
 
     public PortableGrid(PlayerEntity player, ItemStack stack) {
         this.player = player;

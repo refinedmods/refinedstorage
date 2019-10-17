@@ -100,32 +100,4 @@ public class ExternalStorageBlock extends CableBlock {
 
         return true;
     }
-
-    /* TODO
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
-        if (!canAccessGui(state, world, pos, hitX, hitY, hitZ)) {
-            return false;
-        }
-
-        return openNetworkGui(RSGui.EXTERNAL_STORAGE, player, world, pos, side);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
-        super.neighborChanged(state, world, pos, block, fromPos);
-
-        if (!world.isRemote) {
-            TileEntity tile = world.getTileEntity(pos);
-
-            if (tile instanceof TileExternalStorage) {
-                NetworkNodeExternalStorage externalStorage = ((TileExternalStorage) tile).getNode();
-
-                if (externalStorage.getNetwork() != null) {
-                    externalStorage.updateStorage(externalStorage.getNetwork());
-                }
-            }
-        }
-    }*/
 }

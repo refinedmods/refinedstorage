@@ -7,13 +7,13 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.config.*;
@@ -31,7 +31,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvider, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IStorageDiskContainerContext {
     public enum DiskState {
@@ -54,8 +53,6 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
         }
     }
 
-    public static final Predicate<ItemStack> VALIDATOR_STORAGE_DISK = s -> s.getItem() instanceof IStorageDiskProvider && ((IStorageDiskProvider) s.getItem()).isValid(s);
-
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "disk_drive");
 
     private static final String NBT_PRIORITY = "Priority";
@@ -69,7 +66,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     private int ticksSinceBlockUpdateRequested;
     private boolean blockUpdateRequested;
 
-    private BaseItemHandler disks = new BaseItemHandler(8, new NetworkNodeListener(this), VALIDATOR_STORAGE_DISK) {
+    private BaseItemHandler disks = new BaseItemHandler(8, new NetworkNodeListener(this)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -95,7 +92,7 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
                 }
             }
         }
-    };
+    }.addValidator(new StorageDiskItemValidator());
 
     private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
     private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));

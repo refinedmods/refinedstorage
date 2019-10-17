@@ -7,8 +7,9 @@ import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
-import com.raoulvdberge.refinedstorage.tile.TileImporter;
+import com.raoulvdberge.refinedstorage.tile.ImporterTile;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
@@ -26,7 +27,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class NetworkNodeImporter extends NetworkNode implements IComparable, IWhitelistBlacklist, IType {
+public class ImporterNetworkNode extends NetworkNode implements IComparable, IWhitelistBlacklist, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "importer");
 
     private static final String NBT_COMPARE = "Compare";
@@ -37,7 +38,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IWh
     private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
     private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));
 
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK*/);
+    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this), UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK);
 
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;
@@ -45,7 +46,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IWh
 
     private int currentSlot;
 
-    public NetworkNodeImporter(World world, BlockPos pos) {
+    public ImporterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -84,10 +85,10 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IWh
                 if (!IWhitelistBlacklist.acceptsItem(itemFilters, mode, compare, stack)) {
                     currentSlot++;
                 } else if (ticks % upgrades.getSpeed() == 0) {
-                    ItemStack result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), true);
+                    ItemStack result = handler.extractItem(currentSlot, upgrades.getStackInteractCount(), true);
 
                     if (!result.isEmpty() && network.insertItem(result, result.getCount(), Action.SIMULATE).isEmpty()) {
-                        result = handler.extractItem(currentSlot, upgrades.getItemInteractCount(), false);
+                        result = handler.extractItem(currentSlot, upgrades.getStackInteractCount(), false);
 
                         network.insertItemTracked(result, result.getCount());
                     } else {
@@ -104,12 +105,13 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IWh
                 if (!stack.isEmpty() &&
                     IWhitelistBlacklist.acceptsFluid(fluidFilters, mode, compare, stack) &&
                     network.insertFluid(stack, stack.getAmount(), Action.SIMULATE).isEmpty()) {
-                    FluidStack toDrain = handler.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount(), IFluidHandler.FluidAction.EXECUTE); // TODO: is this execute?
+                    FluidStack toDrain = handler.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getStackInteractCount(), IFluidHandler.FluidAction.SIMULATE);
 
                     if (!toDrain.isEmpty()) {
                         FluidStack remainder = network.insertFluidTracked(toDrain, toDrain.getAmount());
-
-                        toDrain.shrink(remainder.getAmount());
+                        if (!remainder.isEmpty()) {
+                            toDrain.shrink(remainder.getAmount());
+                        }
 
                         handler.drain(toDrain, IFluidHandler.FluidAction.EXECUTE);
                     }
@@ -212,7 +214,7 @@ public class NetworkNodeImporter extends NetworkNode implements IComparable, IWh
 
     @Override
     public int getType() {
-        return world.isRemote ? TileImporter.TYPE.getValue() : type;
+        return world.isRemote ? ImporterTile.TYPE.getValue() : type;
     }
 
     @Override

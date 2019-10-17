@@ -5,10 +5,10 @@
       "item": "refinedstorage:cable"
     },
     {
-      "item": "#destruction_core"
+      "item": "refinedstorage:destruction_core"
     },
     {
-      "item": "#improved_processor"
+      "item": "refinedstorage:improved_processor"
     }
   ],
   "result": {

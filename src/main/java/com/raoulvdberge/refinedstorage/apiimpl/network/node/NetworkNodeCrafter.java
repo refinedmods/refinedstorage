@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.PatternItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -58,7 +59,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private static final String NBT_LOCKED = "Locked";
     private static final String NBT_WAS_POWERED = "WasPowered";
 
-    private BaseItemHandler patternsInventory = new BaseItemHandler(9, new NetworkNodeListener(this), s -> isValidPatternInSlot(world, s)) {
+    private BaseItemHandler patternsInventory = new BaseItemHandler(9, new NetworkNodeListener(this)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -78,11 +79,7 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
         public int getSlotLimit(int slot) {
             return 1;
         }
-    };
-
-    public static boolean isValidPatternInSlot(World world, ItemStack stack) {
-        return stack.getItem() instanceof ICraftingPatternProvider && ((ICraftingPatternProvider) stack.getItem()).create(world, stack, null).isValid();
-    }
+    }.addValidator(new PatternItemValidator(world));
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 

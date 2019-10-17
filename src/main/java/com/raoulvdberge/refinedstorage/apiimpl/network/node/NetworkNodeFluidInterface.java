@@ -55,7 +55,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
     private ProxyFluidHandler tank = new ProxyFluidHandler(tankIn, tankOut);
 
-    private BaseItemHandler in = new BaseItemHandler(1, new NetworkNodeListener(this), stack -> !StackUtils.getFluid(stack, true).getValue().isEmpty());
+    private BaseItemHandler in = new BaseItemHandler(1, new NetworkNodeListener(this)).addValidator(stack -> !StackUtils.getFluid(stack, true).getValue().isEmpty());
     private FluidInventory out = new FluidInventory(1, TANK_CAPACITY, new NetworkNodeListener(this));
 
     private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/);
@@ -84,7 +84,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
             }
 
             if (ticks % upgrades.getSpeed() == 0) {
-                FluidStack drained = tankIn.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount(), IFluidHandler.FluidAction.EXECUTE);
+                FluidStack drained = tankIn.drain(FluidAttributes.BUCKET_VOLUME * upgrades.getStackInteractCount(), IFluidHandler.FluidAction.EXECUTE);
 
                 // Drain in tank
                 if (!drained.isEmpty()) {

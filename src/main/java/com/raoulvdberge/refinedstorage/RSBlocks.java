@@ -4,7 +4,9 @@ import com.raoulvdberge.refinedstorage.block.*;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
-    public static final BlockImporter IMPORTER = new BlockImporter();
+    @ObjectHolder(RS.ID + ":importer")
+    public static final ImporterBlock IMPORTER = null;
+
     public static final BlockExporter EXPORTER = new BlockExporter();
     public static final BlockDetector DETECTOR = new BlockDetector();
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();

@@ -36,6 +36,7 @@ import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.listener.TileListener;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
@@ -139,7 +140,7 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
     private FilterItemHandler filter = new FilterItemHandler(filters, tabs, new TileListener(this));
-    private BaseItemHandler disk = new BaseItemHandler(1, new TileListener(this), DiskDriveNetworkNode.VALIDATOR_STORAGE_DISK) {
+    private BaseItemHandler disk = new BaseItemHandler(1, new TileListener(this)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -148,7 +149,7 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
                 loadStorage();
             }
         }
-    };
+    }.addValidator(new StorageDiskItemValidator());
 
     @Nullable
     private IStorageDisk storage;

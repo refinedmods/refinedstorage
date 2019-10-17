@@ -75,7 +75,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     ItemStack slot = itemFilters.getStackInSlot(filterSlot);
 
                     if (!slot.isEmpty()) {
-                        int stackSize = upgrades.getItemInteractCount();
+                        int stackSize = upgrades.getStackInteractCount();
 
                         ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, Action.SIMULATE);
 
@@ -113,7 +113,7 @@ public class NetworkNodeExporter extends NetworkNode implements IComparable, ITy
                     FluidStack stack = fluids[filterSlot];
 
                     if (stack != null) {
-                        int toExtract = FluidAttributes.BUCKET_VOLUME * upgrades.getItemInteractCount();
+                        int toExtract = FluidAttributes.BUCKET_VOLUME * upgrades.getStackInteractCount();
 
                         FluidStack stackInStorage = network.getFluidStorageCache().getList().get(stack, compare);
 

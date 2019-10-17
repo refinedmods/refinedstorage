@@ -5,10 +5,10 @@ import net.minecraft.item.ItemStack;
 
 import java.util.function.Predicate;
 
-public class ItemValidatorUpgrade implements Predicate<ItemStack> {
+public class UpgradeItemValidator implements Predicate<ItemStack> {
     private UpgradeItem.Type type;
 
-    public ItemValidatorUpgrade(UpgradeItem.Type type) {
+    public UpgradeItemValidator(UpgradeItem.Type type) {
         this.type = type;
     }
 

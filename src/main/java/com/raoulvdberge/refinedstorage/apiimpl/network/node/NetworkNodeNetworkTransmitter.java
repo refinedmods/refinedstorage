@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
-import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class NetworkNodeNetworkTransmitter extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
-    private BaseItemHandler networkCard = new BaseItemHandler(1, new NetworkNodeListener(this), new ItemValidatorBasic(RSItems.NETWORK_CARD)) {
+    private BaseItemHandler networkCard = new BaseItemHandler(1, new NetworkNodeListener(this)) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -37,7 +37,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
                 network.getNodeGraph().invalidate(Action.PERFORM, network.world(), network.getPosition());
             }
         }
-    };
+    }.addValidator(new ItemValidator(RSItems.NETWORK_CARD));
 
     private BlockPos receiver;
     private int receiverDimension;

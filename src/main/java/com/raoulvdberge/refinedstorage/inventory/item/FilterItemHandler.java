@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.util.FluidFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.util.ItemFilter;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventoryFilter;
-import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidator;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
@@ -26,7 +26,9 @@ public class FilterItemHandler extends BaseItemHandler {
     private List<IGridTab> tabs;
 
     public FilterItemHandler(List<IFilter> filters, List<IGridTab> tabs, @Nullable Consumer<Integer> listener) {
-        super(4, listener, new ItemValidatorBasic(RSItems.FILTER));
+        super(4, listener);
+
+        this.addValidator(new ItemValidator(RSItems.FILTER));
 
         this.filters = filters;
         this.tabs = tabs;

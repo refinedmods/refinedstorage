@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.inventory.item;
 
-import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorBasic;
-import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidatorUpgrade;
+import com.raoulvdberge.refinedstorage.inventory.item.validator.UpgradeItemValidator;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import net.minecraft.item.ItemStack;
 
@@ -10,10 +9,10 @@ import java.util.function.Consumer;
 
 public class UpgradeItemHandler extends BaseItemHandler {
     public UpgradeItemHandler(int size, @Nullable Consumer<Integer> listener, UpgradeItem.Type... supportedUpgrades) {
-        super(size, listener, new ItemValidatorBasic[supportedUpgrades.length]);
+        super(size, listener);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {
-            this.validators[i] = new ItemValidatorUpgrade(supportedUpgrades[i]);
+            addValidator(new UpgradeItemValidator(supportedUpgrades[i]));
         }
     }
 
@@ -91,7 +90,7 @@ public class UpgradeItemHandler extends BaseItemHandler {
         return maxFortune;
     }
 
-    public int getItemInteractCount() {
+    public int getStackInteractCount() {
         return hasUpgrade(UpgradeItem.Type.STACK) ? 64 : 1;
     }
 

@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSTiles;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeImporter;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ImporterNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
@@ -11,12 +11,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileImporter extends NetworkNodeTile<NetworkNodeImporter> {
-    public static final TileDataParameter<Integer, TileImporter> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileImporter> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
-    public static final TileDataParameter<Integer, TileImporter> TYPE = IType.createParameter();
+public class ImporterTile extends NetworkNodeTile<ImporterNetworkNode> {
+    public static final TileDataParameter<Integer, ImporterTile> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer, ImporterTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
+    public static final TileDataParameter<Integer, ImporterTile> TYPE = IType.createParameter();
 
-    public TileImporter() {
+    public ImporterTile() {
         super(RSTiles.IMPORTER);
         
         dataManager.addWatchedParameter(COMPARE);
@@ -26,7 +26,7 @@ public class TileImporter extends NetworkNodeTile<NetworkNodeImporter> {
 
     @Override
     @Nonnull
-    public NetworkNodeImporter createNode(World world, BlockPos pos) {
-        return new NetworkNodeImporter(world, pos);
+    public ImporterNetworkNode createNode(World world, BlockPos pos) {
+        return new ImporterNetworkNode(world, pos);
     }
 }

@@ -6,10 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.CableNetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.*;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
@@ -116,6 +113,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(FluidStorageNetworkNode.CREATIVE_FLUID_STORAGE_BLOCK_ID, (tag, world, pos) -> readAndReturn(tag, new FluidStorageNetworkNode(world, pos, FluidStorageType.CREATIVE)));
 
         API.instance().getNetworkNodeRegistry().add(ExternalStorageNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ExternalStorageNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(ImporterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ImporterNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
 
@@ -158,6 +156,7 @@ public final class RS {
         }
 
         e.getRegistry().register(new ExternalStorageBlock());
+        e.getRegistry().register(new ImporterBlock());
     }
 
     @SubscribeEvent
@@ -184,6 +183,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new FluidStorageTile(FluidStorageType.CREATIVE), RSBlocks.CREATIVE_FLUID_STORAGE_BLOCK).build(null).setRegistryName(RS.ID, "creative_fluid_storage_block")));
 
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ExternalStorageTile::new, RSBlocks.EXTERNAL_STORAGE).build(null).setRegistryName(RS.ID, "external_storage")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ImporterTile::new, RSBlocks.IMPORTER).build(null).setRegistryName(RS.ID, "importer")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -203,6 +203,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<StorageContainer, StorageTile>((windowId, inv, tile) -> new StorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "storage_block"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<FluidStorageContainer, FluidStorageTile>((windowId, inv, tile) -> new FluidStorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "fluid_storage_block"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<ExternalStorageContainer, ExternalStorageTile>((windowId, inv, tile) -> new ExternalStorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "external_storage"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<ImporterContainer, ImporterTile>((windowId, inv, tile) -> new ImporterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "importer"));
     }
 
     @SubscribeEvent
@@ -271,6 +272,7 @@ public final class RS {
         e.getRegistry().register(new FluidStorageBlockItem(RSBlocks.CREATIVE_FLUID_STORAGE_BLOCK));
 
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.EXTERNAL_STORAGE));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.IMPORTER));
     }
 
     /* TODO
