@@ -1,5 +1,10 @@
 # Refined Storage Changelog
 
+### 1.7
+- Port to Minecraft 1.14 (raoulvdberge)
+- Removed the Reader and Writer (raoulvdberge)
+- Removed covers (raoulvdberge)
+
 ### 1.6.16
 - Updated Russian translation (Bytegm)
 
