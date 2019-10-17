@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWirelessTransmitter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_transmitter");
 
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO , ItemUpgrade.TYPE_RANGE*/);
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4 /* TODO , ItemUpgrade.TYPE_RANGE*/).addListener(new NetworkNodeInventoryListener(this));
 
     public NetworkNodeWirelessTransmitter(World world, BlockPos pos) {
         super(world, pos);

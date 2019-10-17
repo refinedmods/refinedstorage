@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage.ItemExter
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.ProxyItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -29,14 +29,14 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private static final String NBT_COMPARE = "Compare";
 
-    private BaseItemHandler importItems = new BaseItemHandler(9, new NetworkNodeListener(this));
+    private BaseItemHandler importItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
-    private BaseItemHandler exportFilterItems = new BaseItemHandler(9, new NetworkNodeListener(this));
-    private BaseItemHandler exportItems = new BaseItemHandler(9, new NetworkNodeListener(this));
+    private BaseItemHandler exportFilterItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private BaseItemHandler exportItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
     private IItemHandler items = new ProxyItemHandler(importItems, exportItems);
 
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/);
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4).addListener(new NetworkNodeInventoryListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/);
 
     private int compare = IComparer.COMPARE_NBT;
 

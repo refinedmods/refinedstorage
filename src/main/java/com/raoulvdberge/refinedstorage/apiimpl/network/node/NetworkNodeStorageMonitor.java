@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -31,14 +31,13 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
 
     private static final String NBT_COMPARE = "Compare";
 
-    private BaseItemHandler itemFilter = new BaseItemHandler(1, new NetworkNodeListener(this)) {
-        @Override
-        public void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            WorldUtils.updateBlock(world, pos);
-        }
-    };
+    private BaseItemHandler itemFilter = new BaseItemHandler(1)
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            if (!reading) {
+                WorldUtils.updateBlock(world, pos);
+            }
+        });
 
     private Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
 

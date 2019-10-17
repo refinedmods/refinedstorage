@@ -1,32 +1,34 @@
 package com.raoulvdberge.refinedstorage.inventory.item;
 
+import com.raoulvdberge.refinedstorage.inventory.listener.InventoryListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-// TODO Builder system for server and clientside listeners.
 public class BaseItemHandler extends ItemStackHandler {
-    private final Consumer<Integer> listener;
+    private final List<InventoryListener<BaseItemHandler>> listeners = new ArrayList<>();
     private final List<Predicate<ItemStack>> validators = new ArrayList<>();
 
     private boolean empty = true;
     private boolean reading;
 
-    public BaseItemHandler(int size, @Nullable Consumer<Integer> listener) {
+    public BaseItemHandler(int size) {
         super(size);
-
-        this.listener = listener;
     }
 
     public BaseItemHandler addValidator(Predicate<ItemStack> validator) {
         validators.add(validator);
+
+        return this;
+    }
+
+    public BaseItemHandler addListener(InventoryListener<BaseItemHandler> listener) {
+        listeners.add(listener);
 
         return this;
     }
@@ -51,11 +53,8 @@ public class BaseItemHandler extends ItemStackHandler {
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
 
-        if (!reading && listener != null) {
-            listener.accept(slot);
-        }
-
         this.empty = stacks.stream().allMatch(ItemStack::isEmpty);
+        this.listeners.forEach(l -> l.onChanged(this, slot, reading));
     }
 
     @Override
@@ -71,9 +70,5 @@ public class BaseItemHandler extends ItemStackHandler {
 
     public void setReading(boolean reading) {
         this.reading = reading;
-    }
-
-    public boolean isReading() {
-        return reading;
     }
 }

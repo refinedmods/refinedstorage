@@ -18,7 +18,8 @@ import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.item.PatternItem;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -89,40 +90,14 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
     private ICraftingRecipe currentRecipe;
     private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
     private CraftResultInventory result = new CraftResultInventory();
-    private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2, new NetworkNodeListener(this));
-    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64, new NetworkNodeListener(this));
+    private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2).addListener(new NetworkNodeInventoryListener(this));
+    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64).addListener(new NetworkNodeFluidInventoryListener(this));
 
     private boolean reading;
 
     private Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
-    private BaseItemHandler patterns = new BaseItemHandler(2, new NetworkNodeListener(this)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            ItemStack pattern = getStackInSlot(slot);
-            if (slot == 1 && !pattern.isEmpty()) {
-                boolean isPatternProcessing = PatternItem.isProcessing(pattern);
-
-                if (isPatternProcessing && isProcessingPattern()) {
-                    for (int i = 0; i < 9; ++i) {
-                        processingMatrix.setStackInSlot(i, PatternItem.getInputSlot(pattern, i));
-                        processingMatrixFluids.setFluid(i, PatternItem.getFluidInputSlot(pattern, i));
-                    }
-
-                    for (int i = 0; i < 9; ++i) {
-                        processingMatrix.setStackInSlot(9 + i, PatternItem.getOutputSlot(pattern, i));
-                        processingMatrixFluids.setFluid(9 + i, PatternItem.getFluidOutputSlot(pattern, i));
-                    }
-                } else if (!isPatternProcessing && !isProcessingPattern()) {
-                    for (int i = 0; i < 9; ++i) {
-                        matrix.setInventorySlotContents(i, PatternItem.getInputSlot(pattern, i));
-                    }
-                }
-            }
-        }
-
+    private BaseItemHandler patterns = new BaseItemHandler(2) {
         @Override
         public int getSlotLimit(int slot) {
             return slot == 1 ? 1 : super.getSlotLimit(slot);
@@ -142,10 +117,36 @@ public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, I
 
             return stack;
         }
-    }.addValidator(new ItemValidator(RSItems.PATTERN));
+    }
+        .addValidator(new ItemValidator(RSItems.PATTERN))
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener(((handler, slot, reading) -> {
+            ItemStack pattern = handler.getStackInSlot(slot);
+
+            if (slot == 1 && !pattern.isEmpty()) {
+                boolean isPatternProcessing = PatternItem.isProcessing(pattern);
+
+                if (isPatternProcessing && isProcessingPattern()) {
+                    for (int i = 0; i < 9; ++i) {
+                        processingMatrix.setStackInSlot(i, PatternItem.getInputSlot(pattern, i));
+                        processingMatrixFluids.setFluid(i, PatternItem.getFluidInputSlot(pattern, i));
+                    }
+
+                    for (int i = 0; i < 9; ++i) {
+                        processingMatrix.setStackInSlot(9 + i, PatternItem.getOutputSlot(pattern, i));
+                        processingMatrixFluids.setFluid(9 + i, PatternItem.getFluidOutputSlot(pattern, i));
+                    }
+                } else if (!isPatternProcessing && !isProcessingPattern()) {
+                    for (int i = 0; i < 9; ++i) {
+                        matrix.setInventorySlotContents(i, PatternItem.getInputSlot(pattern, i));
+                    }
+                }
+            }
+        }));
+
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = new FilterItemHandler(filters, tabs, new NetworkNodeListener(this));
+    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new NetworkNodeInventoryListener(this));
 
     private final GridType type;
 

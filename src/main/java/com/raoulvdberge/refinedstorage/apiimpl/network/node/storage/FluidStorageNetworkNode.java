@@ -14,7 +14,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.raoulvdberge.refinedstorage.tile.FluidStorageTile;
 import com.raoulvdberge.refinedstorage.tile.config.IAccessType;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -49,7 +49,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     private static final String NBT_FILTERS = "Filters";
     public static final String NBT_ID = "Id";
 
-    private FluidInventory filters = new FluidInventory(9, new NetworkNodeListener(this));
+    private FluidInventory filters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
     private FluidStorageType type;
 

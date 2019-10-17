@@ -14,7 +14,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.tile.StorageTile;
 import com.raoulvdberge.refinedstorage.tile.config.IAccessType;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
@@ -49,7 +49,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     private static final String NBT_MODE = "Mode";
     public static final String NBT_ID = "Id";
 
-    private BaseItemHandler filters = new BaseItemHandler(9, new NetworkNodeListener(this));
+    private BaseItemHandler filters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
     private final ItemStorageType type;
 

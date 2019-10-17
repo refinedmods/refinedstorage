@@ -47,18 +47,14 @@ public class WirelessGrid implements IGridNetworkAware {
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = new FilterItemHandler(filters, tabs, null) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
+    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
+        .addListener((handler, slot, reading) -> {
             if (!stack.hasTag()) {
                 stack.setTag(new CompoundNBT());
             }
 
-            StackUtils.writeItems(this, 0, stack.getTag());
-        }
-    };
+            StackUtils.writeItems(handler, 0, stack.getTag());
+        });
 
     public WirelessGrid(ItemStack stack) {
         /* TODO this.networkDimension = ItemWirelessGrid.getDimensionId(stack);

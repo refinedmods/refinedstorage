@@ -15,7 +15,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.tile.ExternalStorageTile;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
@@ -45,8 +46,8 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     private static final String NBT_TYPE = "Type";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));
+    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;

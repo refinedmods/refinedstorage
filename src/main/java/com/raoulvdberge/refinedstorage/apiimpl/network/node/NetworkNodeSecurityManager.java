@@ -9,7 +9,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityCard;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.item.SecurityCardItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -31,11 +31,10 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
     private List<ISecurityCard> cards = new ArrayList<>();
     private ISecurityCard globalCard;
 
-    private BaseItemHandler cardsInv = new BaseItemHandler(9 * 2, new NetworkNodeListener(this)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
+    private BaseItemHandler cardsInv = new BaseItemHandler(9 * 2)
+        .addValidator(new ItemValidator(RSItems.SECURITY_CARD))
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener(((handler, slot, reading) -> {
             if (!world.isRemote) {
                 invalidate();
             }
@@ -43,9 +42,11 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
             if (network != null) {
                 network.getSecurityManager().invalidate();
             }
-        }
-    }.addValidator(new ItemValidator(RSItems.SECURITY_CARD));
-    private BaseItemHandler editCard = new BaseItemHandler(1, new NetworkNodeListener(this)).addValidator(new ItemValidator(RSItems.SECURITY_CARD));
+        }));
+
+    private BaseItemHandler editCard = new BaseItemHandler(1)
+        .addValidator(new ItemValidator(RSItems.SECURITY_CARD))
+        .addListener(new NetworkNodeInventoryListener(this));
 
     public NetworkNodeSecurityManager(World world, BlockPos pos) {
         super(world, pos);

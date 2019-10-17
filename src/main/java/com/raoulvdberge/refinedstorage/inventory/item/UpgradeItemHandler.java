@@ -4,12 +4,9 @@ import com.raoulvdberge.refinedstorage.inventory.item.validator.UpgradeItemValid
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
-import java.util.function.Consumer;
-
 public class UpgradeItemHandler extends BaseItemHandler {
-    public UpgradeItemHandler(int size, @Nullable Consumer<Integer> listener, UpgradeItem.Type... supportedUpgrades) {
-        super(size, listener);
+    public UpgradeItemHandler(int size, UpgradeItem.Type... supportedUpgrades) {
+        super(size);
 
         for (int i = 0; i < supportedUpgrades.length; ++i) {
             addValidator(new UpgradeItemValidator(supportedUpgrades[i]));

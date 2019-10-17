@@ -79,26 +79,21 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = new FilterItemHandler(filters, tabs, null) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
 
+    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
+        .addListener((handler, slot, reading) -> {
             if (!stack.hasTag()) {
                 stack.setTag(new CompoundNBT());
             }
 
-            StackUtils.writeItems(this, 0, stack.getTag());
-        }
-    };
-    private BaseItemHandler disk = new BaseItemHandler(1, slot -> {
-    }) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
+            StackUtils.writeItems(handler, 0, stack.getTag());
+        });
 
-            if (/*TODO FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER*/false) {
-                ItemStack diskStack = getStackInSlot(slot);
+    private BaseItemHandler disk = new BaseItemHandler(1)
+        .addValidator(new StorageDiskItemValidator())
+        .addListener(((handler, slot, reading) -> {
+            if (!player.world.isRemote) {
+                ItemStack diskStack = handler.getStackInSlot(slot);
 
                 if (diskStack.isEmpty()) {
                     storage = null;
@@ -131,10 +126,9 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
                     cache.invalidate();
                 }
 
-                StackUtils.writeItems(this, 4, stack.getTag());
+                StackUtils.writeItems(handler, 4, stack.getTag());
             }
-        }
-    }.addValidator(new StorageDiskItemValidator());
+        }));
 
     public PortableGrid(PlayerEntity player, ItemStack stack) {
         this.player = player;

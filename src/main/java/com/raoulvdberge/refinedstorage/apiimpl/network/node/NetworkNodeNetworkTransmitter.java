@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,12 +19,11 @@ import javax.annotation.Nullable;
 public class NetworkNodeNetworkTransmitter extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
-    private BaseItemHandler networkCard = new BaseItemHandler(1, new NetworkNodeListener(this)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            ItemStack card = getStackInSlot(slot);
+    private BaseItemHandler networkCard = new BaseItemHandler(1)
+        .addValidator(new ItemValidator(RSItems.NETWORK_CARD))
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            ItemStack card = handler.getStackInSlot(slot);
 
             if (card.isEmpty()) {
                 receiver = null;
@@ -36,8 +35,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
             if (network != null) {
                 network.getNodeGraph().invalidate(Action.PERFORM, network.world(), network.getPosition());
             }
-        }
-    }.addValidator(new ItemValidator(RSItems.NETWORK_CARD));
+        });
 
     private BlockPos receiver;
     private int receiverDimension;
@@ -120,9 +118,9 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
 
 // TODO                final World dimensionWorld = DimensionManager.getWorld(receiverDimension);
 
-       //         if (dimensionWorld != null) {
-         //           operator.apply(dimensionWorld, receiver, null);
-           //     }
+                //         if (dimensionWorld != null) {
+                //           operator.apply(dimensionWorld, receiver, null);
+                //     }
             } else {
                 operator.apply(world, receiver, null);
             }

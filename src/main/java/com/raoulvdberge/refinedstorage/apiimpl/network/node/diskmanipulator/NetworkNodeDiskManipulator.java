@@ -13,7 +13,9 @@ import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.ProxyItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
+import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -28,8 +30,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
@@ -58,7 +58,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
     private IStorageDisk<ItemStack>[] itemDisks = new IStorageDisk[6];
     private IStorageDisk<FluidStack>[] fluidDisks = new IStorageDisk[6];
 
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK*/) {
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK) {
         @Override
         public int getStackInteractCount() {
             int count = super.getStackInteractCount();
@@ -69,17 +69,16 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
             return count;
         }
-    };
+    }.addListener(new NetworkNodeInventoryListener(this));
 
-    private BaseItemHandler inputDisks = new BaseItemHandler(3, new NetworkNodeListener(this)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO: correct?
+    private BaseItemHandler inputDisks = new BaseItemHandler(3)
+        .addValidator(new StorageDiskItemValidator())
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            if (!world.isRemote) {
                 StackUtils.createStorages(
                     (ServerWorld) world,
-                    getStackInSlot(slot),
+                    handler.getStackInSlot(slot),
                     slot,
                     itemDisks,
                     fluidDisks,
@@ -89,18 +88,16 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
                 WorldUtils.updateBlock(world, pos);
             }
-        }
-    }.addValidator(new StorageDiskItemValidator());
+        });
 
-    private BaseItemHandler outputDisks = new BaseItemHandler(3, new NetworkNodeListener(this)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            if (EffectiveSide.get() == LogicalSide.SERVER) { // TODO: correct?
+    private BaseItemHandler outputDisks = new BaseItemHandler(3)
+        .addValidator(new StorageDiskItemValidator())
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener(((handler, slot, reading) -> {
+            if (!world.isRemote) {
                 StackUtils.createStorages(
                     (ServerWorld) world,
-                    getStackInSlot(slot),
+                    handler.getStackInSlot(slot),
                     3 + slot,
                     itemDisks,
                     fluidDisks,
@@ -110,8 +107,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
                 WorldUtils.updateBlock(world, pos);
             }
-        }
-    }.addValidator(new StorageDiskItemValidator());
+        }));
 
     private ProxyItemHandler disks = new ProxyItemHandler(inputDisks, outputDisks);
 
@@ -119,8 +115,8 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         super(world, pos);
     }
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));
+    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
     @Override
     public int getEnergyUsage() {

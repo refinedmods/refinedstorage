@@ -14,7 +14,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import com.raoulvdberge.refinedstorage.tile.config.*;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
@@ -66,15 +67,20 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     private int ticksSinceBlockUpdateRequested;
     private boolean blockUpdateRequested;
 
-    private BaseItemHandler disks = new BaseItemHandler(8, new NetworkNodeListener(this)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
+    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
+    private IStorageDisk[] itemDisks = new IStorageDisk[8];
+    private IStorageDisk[] fluidDisks = new IStorageDisk[8];
+
+    private BaseItemHandler disks = new BaseItemHandler(8)
+        .addValidator(new StorageDiskItemValidator())
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
             if (!world.isRemote) {
                 StackUtils.createStorages(
                     (ServerWorld) world,
-                    getStackInSlot(slot),
+                    handler.getStackInSlot(slot),
                     slot,
                     itemDisks,
                     fluidDisks,
@@ -87,18 +93,11 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
                     network.getFluidStorageCache().invalidate();
                 }
 
-                if (!isReading()) {
+                if (!reading) {
                     WorldUtils.updateBlock(world, pos);
                 }
             }
-        }
-    }.addValidator(new StorageDiskItemValidator());
-
-    private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));
-
-    private IStorageDisk[] itemDisks = new IStorageDisk[8];
-    private IStorageDisk[] fluidDisks = new IStorageDisk[8];
+        });
 
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int priority = 0;

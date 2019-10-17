@@ -7,7 +7,8 @@ import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.tile.TileDestructor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
@@ -51,10 +52,10 @@ public class NetworkNodeDestructor extends NetworkNode implements IComparable, I
 
     private static final int BASE_SPEED = 20;
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9, new NetworkNodeListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9, new NetworkNodeListener(this));
+    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH, ItemUpgrade.TYPE_FORTUNE_1, ItemUpgrade.TYPE_FORTUNE_2, ItemUpgrade.TYPE_FORTUNE_3*/);
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4).addListener(new NetworkNodeInventoryListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_SILK_TOUCH, ItemUpgrade.TYPE_FORTUNE_1, ItemUpgrade.TYPE_FORTUNE_2, ItemUpgrade.TYPE_FORTUNE_3*/);
 
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;

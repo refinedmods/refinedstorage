@@ -16,22 +16,20 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class FilterItemHandler extends BaseItemHandler {
     private List<IFilter> filters;
     private List<IGridTab> tabs;
 
-    public FilterItemHandler(List<IFilter> filters, List<IGridTab> tabs, @Nullable Consumer<Integer> listener) {
-        super(4, listener);
-
-        this.addValidator(new ItemValidator(RSItems.FILTER));
+    public FilterItemHandler(List<IFilter> filters, List<IGridTab> tabs) {
+        super(4);
 
         this.filters = filters;
         this.tabs = tabs;
+
+        this.addValidator(new ItemValidator(RSItems.FILTER));
     }
 
     @Override

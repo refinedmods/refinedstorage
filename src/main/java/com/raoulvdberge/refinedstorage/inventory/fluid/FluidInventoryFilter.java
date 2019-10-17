@@ -8,15 +8,15 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class FluidInventoryFilter extends FluidInventory {
     public FluidInventoryFilter(ItemStack stack) {
-        super(27, Integer.MAX_VALUE, null);
+        super(27, Integer.MAX_VALUE);
 
-        this.listener = slot -> {
+        this.addListener((handler, slot, reading) -> {
             if (!stack.hasTag()) {
                 stack.setTag(new CompoundNBT());
             }
 
             stack.getTag().put(FilterItem.NBT_FLUID_FILTERS, writeToNbt());
-        };
+        });
 
         if (stack.hasTag() && stack.getTag().contains(FilterItem.NBT_FLUID_FILTERS)) {
             readFromNbt(stack.getTag().getCompound(FilterItem.NBT_FLUID_FILTERS));

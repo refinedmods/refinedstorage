@@ -1,23 +1,23 @@
 package com.raoulvdberge.refinedstorage.inventory.fluid;
 
+import com.raoulvdberge.refinedstorage.inventory.listener.InventoryListener;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FluidInventory {
     private static final String NBT_SLOT = "Slot_%d";
+
+    private final List<InventoryListener<FluidInventory>> listeners = new ArrayList<>();
 
     private FluidStack[] fluids;
     private int maxAmount;
     private boolean empty = true;
 
-    @Nullable
-    protected Consumer<Integer> listener;
-
-    public FluidInventory(int size, int maxAmount, @Nullable Consumer<Integer> listener) {
+    public FluidInventory(int size, int maxAmount) {
         this.fluids = new FluidStack[size];
 
         for (int i = 0; i < size; ++i) {
@@ -25,15 +25,16 @@ public class FluidInventory {
         }
 
         this.maxAmount = maxAmount;
-        this.listener = listener;
-    }
-
-    public FluidInventory(int size, @Nullable Consumer<Integer> listener) {
-        this(size, Integer.MAX_VALUE, listener);
     }
 
     public FluidInventory(int size) {
-        this(size, Integer.MAX_VALUE, null);
+        this(size, Integer.MAX_VALUE);
+    }
+
+    public FluidInventory addListener(InventoryListener<FluidInventory> listener) {
+        listeners.add(listener);
+
+        return this;
     }
 
     public int getSlots() {
@@ -54,19 +55,13 @@ public class FluidInventory {
     }
 
     public void setFluid(int slot, @Nonnull FluidStack stack) {
-        if (stack == null) {
-            throw new IllegalArgumentException("Stack can't be null");
-        }
-
         if (stack.getAmount() > maxAmount) {
             throw new IllegalArgumentException("Fluid size is invalid (given: " + stack.getAmount() + ", max size: " + maxAmount + ")");
         }
 
         fluids[slot] = stack;
 
-        if (listener != null) {
-            listener.accept(slot);
-        }
+        listeners.forEach(l -> l.onChanged(this, slot, false));
 
         updateEmptyState();
     }

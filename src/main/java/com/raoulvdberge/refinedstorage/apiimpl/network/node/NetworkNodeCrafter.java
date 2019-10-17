@@ -10,7 +10,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.PatternItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -59,11 +59,15 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
     private static final String NBT_LOCKED = "Locked";
     private static final String NBT_WAS_POWERED = "WasPowered";
 
-    private BaseItemHandler patternsInventory = new BaseItemHandler(9, new NetworkNodeListener(this)) {
+    private BaseItemHandler patternsInventory = new BaseItemHandler(9) {
         @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
+    }
+        .addValidator(new PatternItemValidator(world))
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
             if (!reading) {
                 if (!world.isRemote) {
                     invalidate();
@@ -73,17 +77,11 @@ public class NetworkNodeCrafter extends NetworkNode implements ICraftingPatternC
                     network.getCraftingManager().rebuild();
                 }
             }
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return 1;
-        }
-    }.addValidator(new PatternItemValidator(world));
+        });
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
-    private UpgradeItemHandler upgrades = new UpgradeItemHandler(4, new NetworkNodeListener(this)/* TODO, ItemUpgrade.TYPE_SPEED*/);
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4 /* TODO, ItemUpgrade.TYPE_SPEED*/).addListener(new NetworkNodeInventoryListener(this));
 
     // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
     private boolean visited = false;

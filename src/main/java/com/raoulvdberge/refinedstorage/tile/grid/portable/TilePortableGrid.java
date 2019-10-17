@@ -37,7 +37,7 @@ import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
-import com.raoulvdberge.refinedstorage.inventory.listener.TileListener;
+import com.raoulvdberge.refinedstorage.inventory.listener.TileInventoryListener;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.tile.BaseTile;
@@ -139,17 +139,16 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = new FilterItemHandler(filters, tabs, new TileListener(this));
-    private BaseItemHandler disk = new BaseItemHandler(1, new TileListener(this)) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
 
+    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new TileInventoryListener(this));
+    private BaseItemHandler disk = new BaseItemHandler(1)
+        .addValidator(new StorageDiskItemValidator())
+        .addListener(new TileInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
             if (world != null && !world.isRemote) {
                 loadStorage();
             }
-        }
-    }.addValidator(new StorageDiskItemValidator());
+        });
 
     @Nullable
     private IStorageDisk storage;
