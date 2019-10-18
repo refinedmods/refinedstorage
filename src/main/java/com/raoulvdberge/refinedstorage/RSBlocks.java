@@ -18,8 +18,9 @@ public final class RSBlocks {
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
-    public static final BlockNetworkTransmitter NETWORK_TRANSMITTER = new BlockNetworkTransmitter();
 
+    @ObjectHolder(RS.ID + ":network_transmitter")
+    public static final NetworkTransmitterBlock NETWORK_TRANSMITTER = null;
     @ObjectHolder(RS.ID + ":network_receiver")
     public static final NetworkReceiverBlock NETWORK_RECEIVER = null;
 

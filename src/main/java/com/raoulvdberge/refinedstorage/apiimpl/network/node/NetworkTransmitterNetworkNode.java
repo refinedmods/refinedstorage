@@ -6,17 +6,19 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.ItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
+import com.raoulvdberge.refinedstorage.item.NetworkCardItem;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class NetworkNodeNetworkTransmitter extends NetworkNode {
+public class NetworkTransmitterNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
     private BaseItemHandler networkCard = new BaseItemHandler(1)
@@ -27,9 +29,10 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
 
             if (card.isEmpty()) {
                 receiver = null;
+                receiverDimension = null;
             } else {
-                // TODO receiver = ItemNetworkCard.getReceiver(card);
-                // TODO receiverDimension = ItemNetworkCard.getDimension(card);
+                receiver = NetworkCardItem.getReceiver(card);
+                receiverDimension = NetworkCardItem.getDimension(card);
             }
 
             if (network != null) {
@@ -38,9 +41,9 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         });
 
     private BlockPos receiver;
-    private int receiverDimension;
+    private DimensionType receiverDimension;
 
-    public NetworkNodeNetworkTransmitter(World world, BlockPos pos) {
+    public NetworkTransmitterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -67,7 +70,7 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.networkTransmitterUsage;
+        return RS.SERVER_CONFIG.getNetworkTransmitter().getUsage();
     }
 
     public BaseItemHandler getNetworkCard() {
@@ -84,24 +87,25 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
         return receiver;
     }
 
-    public int getReceiverDimension() {
+    @Nullable
+    public DimensionType getReceiverDimension() {
         return receiverDimension;
     }
 
     public int getDistance() {
-        if (receiver == null) {
-            return 0;
+        if (receiver == null || receiverDimension == null || !isSameDimension()) {
+            return -1;
         }
 
         return (int) Math.sqrt(Math.pow(pos.getX() - receiver.getX(), 2) + Math.pow(pos.getY() - receiver.getY(), 2) + Math.pow(pos.getZ() - receiver.getZ(), 2));
     }
 
     public boolean isSameDimension() {
-        return world.getDimension().getType().getId() == receiverDimension;
+        return world.getDimension().getType() == receiverDimension;
     }
 
     private boolean canTransmit() {
-        return canUpdate() && receiver != null;
+        return canUpdate() && receiver != null && receiverDimension != null;
     }
 
     @Override
@@ -115,15 +119,18 @@ public class NetworkNodeNetworkTransmitter extends NetworkNode {
 
         if (canTransmit()) {
             if (!isSameDimension()) {
-
-// TODO                final World dimensionWorld = DimensionManager.getWorld(receiverDimension);
-
-                //         if (dimensionWorld != null) {
-                //           operator.apply(dimensionWorld, receiver, null);
-                //     }
-            } else {
-                operator.apply(world, receiver, null);
+                return;
             }
+
+            // TODO if (!isSameDimension()) {
+            //    World dimensionWorld = DimensionManager.getWorld(world.getServer(), receiverDimension, true, true);
+
+            //if (dimensionWorld != null) {
+            //        operator.apply(dimensionWorld, receiver, null);
+            //    }
+            //} else {
+                operator.apply(world, receiver, null);
+            //}
         }
     }
 }

@@ -72,6 +72,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
+        // TODO This doesn't work crossdim.
         return new ItemStack(Item.BLOCK_TO_ITEM.get(world.getBlockState(pos).getBlock()), 1);
     }
 

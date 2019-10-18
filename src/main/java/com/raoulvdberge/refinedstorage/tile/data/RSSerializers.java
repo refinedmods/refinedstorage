@@ -6,10 +6,12 @@ import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.IDataSerializer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class RSSerializers {
     public static final IDataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new IDataSerializer<List<ClientNode>>() {
@@ -110,6 +112,34 @@ public final class RSSerializers {
 
         @Override
         public Long copyValue(Long value) {
+            return value;
+        }
+    };
+
+    public static final IDataSerializer<Optional<ResourceLocation>> OPTIONAL_RESOURCE_LOCATION_SERIALIZER = new IDataSerializer<Optional<ResourceLocation>>() {
+        @Override
+        public void write(PacketBuffer buf, Optional<ResourceLocation> value) {
+            buf.writeBoolean(value.isPresent());
+
+            value.ifPresent(buf::writeResourceLocation);
+        }
+
+        @Override
+        public Optional<ResourceLocation> read(PacketBuffer buf) {
+            if (!buf.readBoolean()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(buf.readResourceLocation());
+        }
+
+        @Override
+        public DataParameter<Optional<ResourceLocation>> createKey(int id) {
+            return null;
+        }
+
+        @Override
+        public Optional<ResourceLocation> copyValue(Optional<ResourceLocation> value) {
             return value;
         }
     };

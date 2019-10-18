@@ -7,19 +7,19 @@
   ],
   "key": {
     "E": {
-      "item": "minecraft:ender_pearl"
+      "tag": "forge:ender_pearls"
     },
     "C": {
-      "item": "#construction_core"
+      "item": "refinedstorage:construction_core"
     },
     "M": {
       "item": "refinedstorage:machine_casing"
     },
     "D": {
-      "item": "#destruction_core"
+      "item": "refinedstorage:destruction_core"
     },
     "A": {
-      "item": "#advanced_processor"
+      "item": "refinedstorage:advanced_processor"
     }
   },
   "result": {

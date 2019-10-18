@@ -67,6 +67,11 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/network_receiver/cutouts/connected")
         ));
 
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(
+            base,
+            new ResourceLocation(RS.ID, "block/network_transmitter/cutouts/connected")
+        ));
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
@@ -128,6 +133,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.EXTERNAL_STORAGE, ExternalStorageScreen::new);
         ScreenManager.registerFactory(RSContainers.IMPORTER, ImporterScreen::new);
         ScreenManager.registerFactory(RSContainers.EXPORTER, ExporterScreen::new);
+        ScreenManager.registerFactory(RSContainers.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);

@@ -45,8 +45,10 @@ public final class RSContainers {
 
     //@ObjectHolder(RS.ID + ":interface")
     public static final ContainerType<ImporterContainer> INTERFACE = null;
-    //@ObjectHolder(RS.ID + ":network_transmitter")
+
+    @ObjectHolder(RS.ID + ":network_transmitter")
     public static final ContainerType<NetworkTransmitterContainer> NETWORK_TRANSMITTER = null;
+
     //@ObjectHolder(RS.ID + ":relay")
     public static final ContainerType<RelayContainer> RELAY = null;
     //@ObjectHolder(RS.ID + ":security_manager")

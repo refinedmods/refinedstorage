@@ -116,6 +116,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(ImporterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ImporterNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(ExporterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ExporterNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(NetworkReceiverNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new NetworkReceiverNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(NetworkTransmitterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new NetworkTransmitterNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
 
@@ -161,6 +162,7 @@ public final class RS {
         e.getRegistry().register(new ImporterBlock());
         e.getRegistry().register(new ExporterBlock());
         e.getRegistry().register(new NetworkReceiverBlock());
+        e.getRegistry().register(new NetworkTransmitterBlock());
     }
 
     @SubscribeEvent
@@ -190,6 +192,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ImporterTile::new, RSBlocks.IMPORTER).build(null).setRegistryName(RS.ID, "importer")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ExporterTile::new, RSBlocks.EXPORTER).build(null).setRegistryName(RS.ID, "exporter")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(NetworkReceiverTile::new, RSBlocks.NETWORK_RECEIVER).build(null).setRegistryName(RS.ID, "network_receiver")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(NetworkTransmitterTile::new, RSBlocks.NETWORK_TRANSMITTER).build(null).setRegistryName(RS.ID, "network_transmitter")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -211,6 +214,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<ExternalStorageContainer, ExternalStorageTile>((windowId, inv, tile) -> new ExternalStorageContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "external_storage"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<ImporterContainer, ImporterTile>((windowId, inv, tile) -> new ImporterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "importer"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<ExporterContainer, ExporterTile>((windowId, inv, tile) -> new ExporterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "exporter"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<NetworkTransmitterContainer, NetworkTransmitterTile>((windowId, inv, tile) -> new NetworkTransmitterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "network_transmitter"));
     }
 
     @SubscribeEvent
@@ -282,6 +286,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.IMPORTER));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.EXPORTER));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.NETWORK_RECEIVER));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.NETWORK_TRANSMITTER));
     }
 
     /* TODO
