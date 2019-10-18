@@ -14,7 +14,6 @@ public class RSOldConfig {
     public int relayUsage;
     public int wirelessTransmitterUsage;
     public int networkTransmitterUsage;
-    public int networkReceiverUsage;
     public int diskManipulatorUsage;
     public int securityManagerUsage;
     public int securityManagerPerSecurityCardUsage;
@@ -85,7 +84,6 @@ public class RSOldConfig {
         relayUsage = config.getInt("relay", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Relays");
         wirelessTransmitterUsage = config.getInt("wirelessTransmitter", ENERGY, 8, 0, Integer.MAX_VALUE, "The energy used by Wireless Transmitters");
         networkTransmitterUsage = config.getInt("networkTransmitter", ENERGY, 64, 0, Integer.MAX_VALUE, "The energy used by Network Transmitters");
-        networkReceiverUsage = config.getInt("networkReceiver", ENERGY, 0, 0, Integer.MAX_VALUE, "The energy used by Network Receivers");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
         securityManagerUsage = config.getInt("securityManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The base energy used by Security Managers");
         securityManagerPerSecurityCardUsage = config.getInt("securityManagerPerSecurityCard", ENERGY, 10, 0, Integer.MAX_VALUE, "The additional energy used by Security Cards in Security Managers");

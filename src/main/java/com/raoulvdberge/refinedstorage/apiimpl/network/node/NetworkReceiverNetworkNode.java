@@ -5,16 +5,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class NetworkNodeNetworkReceiver extends NetworkNode {
+public class NetworkReceiverNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_receiver");
 
-    public NetworkNodeNetworkReceiver(World world, BlockPos pos) {
+    public NetworkReceiverNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.networkReceiverUsage;
+        return RS.SERVER_CONFIG.getNetworkReceiver().getUsage();
     }
 
     @Override

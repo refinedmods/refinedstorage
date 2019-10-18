@@ -120,11 +120,6 @@ public class CableBlock extends NodeBlock {
             .with(DOWN, down);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

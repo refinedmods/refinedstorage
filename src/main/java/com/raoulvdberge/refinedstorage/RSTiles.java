@@ -59,8 +59,10 @@ public class RSTiles {
     public static final TileEntityType<ImporterTile> INTERFACE = null;
     //@ObjectHolder(RS.ID + ":network_transmitter")
     public static final TileEntityType<TileNetworkTransmitter> NETWORK_TRANSMITTER = null;
-    //@ObjectHolder(RS.ID + ":network_receiver")
-    public static final TileEntityType<TileNetworkReceiver> NETWORK_RECEIVER = null;
+
+    @ObjectHolder(RS.ID + ":network_receiver")
+    public static final TileEntityType<NetworkReceiverTile> NETWORK_RECEIVER = null;
+
     //@ObjectHolder(RS.ID + ":relay")
     public static final TileEntityType<TileRelay> RELAY = null;
     //@ObjectHolder(RS.ID + ":security_manager")

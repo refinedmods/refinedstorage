@@ -15,6 +15,7 @@ public class ServerConfig {
     private ExternalStorage externalStorage;
     private Importer importer;
     private Exporter exporter;
+    private NetworkReceiver networkReceiver;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -27,6 +28,7 @@ public class ServerConfig {
         externalStorage = new ExternalStorage();
         importer = new Importer();
         exporter = new Exporter();
+        networkReceiver = new NetworkReceiver();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -70,6 +72,10 @@ public class ServerConfig {
 
     public Exporter getExporter() {
         return exporter;
+    }
+
+    public NetworkReceiver getNetworkReceiver() {
+        return networkReceiver;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -359,6 +365,22 @@ public class ServerConfig {
             builder.push("exporter");
 
             usage = builder.comment("The energy used by the Exporter").defineInRange("usage", 1, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class NetworkReceiver {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public NetworkReceiver() {
+            builder.push("networkReceiver");
+
+            usage = builder.comment("The energy used by the Network Receiver").defineInRange("usage", 0, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }

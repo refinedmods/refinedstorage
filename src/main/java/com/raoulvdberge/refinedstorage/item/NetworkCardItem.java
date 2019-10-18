@@ -58,15 +58,30 @@ public class NetworkCardItem extends Item {
         super.addInformation(stack, world, tooltip, flag);
 
         BlockPos pos = getReceiver(stack);
+        DimensionType type = getDimension(stack);
 
-        if (pos != null) {
-            tooltip.add(new TranslationTextComponent("misc.refinedstorage.network_card.tooltip", pos.getX(), pos.getY(), pos.getZ()).setStyle(new Style().setColor(TextFormatting.GRAY)));
+        if (pos != null && type != null) {
+            tooltip.add(new TranslationTextComponent(
+                "misc.refinedstorage.network_card.tooltip",
+                pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                type.getRegistryName().toString()
+            ).setStyle(new Style().setColor(TextFormatting.GRAY)));
         }
     }
 
+    @Nullable
     public static BlockPos getReceiver(ItemStack stack) {
-        if (stack.hasTag() && stack.getTag().contains(NBT_RECEIVER_X) && stack.getTag().contains(NBT_RECEIVER_Y) && stack.getTag().contains(NBT_RECEIVER_Z)) {
-            return new BlockPos(stack.getTag().getInt(NBT_RECEIVER_X), stack.getTag().getInt(NBT_RECEIVER_Y), stack.getTag().getInt(NBT_RECEIVER_Z));
+        if (stack.hasTag() &&
+            stack.getTag().contains(NBT_RECEIVER_X) &&
+            stack.getTag().contains(NBT_RECEIVER_Y) &&
+            stack.getTag().contains(NBT_RECEIVER_Z)) {
+            return new BlockPos(
+                stack.getTag().getInt(NBT_RECEIVER_X),
+                stack.getTag().getInt(NBT_RECEIVER_Y),
+                stack.getTag().getInt(NBT_RECEIVER_Z)
+            );
         }
 
         return null;

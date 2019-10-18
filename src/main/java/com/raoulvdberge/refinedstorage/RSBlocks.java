@@ -19,7 +19,10 @@ public final class RSBlocks {
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
     public static final BlockNetworkTransmitter NETWORK_TRANSMITTER = new BlockNetworkTransmitter();
-    public static final BlockNetworkReceiver NETWORK_RECEIVER = new BlockNetworkReceiver();
+
+    @ObjectHolder(RS.ID + ":network_receiver")
+    public static final NetworkReceiverBlock NETWORK_RECEIVER = null;
+
     public static final BlockFluidInterface FLUID_INTERFACE = new BlockFluidInterface();
     public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();
     public static final BlockSecurityManager SECURITY_MANAGER = new BlockSecurityManager();

@@ -75,6 +75,11 @@ public abstract class NodeBlock extends BaseBlock {
         }
     }
 
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+        return true;
+    }
+    
     public boolean hasConnectedState() {
         return false;
     }

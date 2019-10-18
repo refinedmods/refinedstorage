@@ -115,6 +115,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(ExternalStorageNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ExternalStorageNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(ImporterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ImporterNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(ExporterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ExporterNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(NetworkReceiverNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new NetworkReceiverNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
 
@@ -159,6 +160,7 @@ public final class RS {
         e.getRegistry().register(new ExternalStorageBlock());
         e.getRegistry().register(new ImporterBlock());
         e.getRegistry().register(new ExporterBlock());
+        e.getRegistry().register(new NetworkReceiverBlock());
     }
 
     @SubscribeEvent
@@ -187,6 +189,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ExternalStorageTile::new, RSBlocks.EXTERNAL_STORAGE).build(null).setRegistryName(RS.ID, "external_storage")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ImporterTile::new, RSBlocks.IMPORTER).build(null).setRegistryName(RS.ID, "importer")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ExporterTile::new, RSBlocks.EXPORTER).build(null).setRegistryName(RS.ID, "exporter")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(NetworkReceiverTile::new, RSBlocks.NETWORK_RECEIVER).build(null).setRegistryName(RS.ID, "network_receiver")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -278,6 +281,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.EXTERNAL_STORAGE));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.IMPORTER));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.EXPORTER));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.NETWORK_RECEIVER));
     }
 
     /* TODO
