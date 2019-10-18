@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
 import com.raoulvdberge.refinedstorage.item.blockitem.ItemBlockBase;
-import com.raoulvdberge.refinedstorage.render.IModelRegistration;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,8 +13,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -41,10 +38,6 @@ public abstract class BlockBase extends Block {
 
     public BlockBase(Properties p_i48440_1_) {
         super(p_i48440_1_);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
     }
 
     @Override
