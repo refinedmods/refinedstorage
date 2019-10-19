@@ -1,9 +1,11 @@
 package com.raoulvdberge.refinedstorage;
 
+import com.raoulvdberge.refinedstorage.api.network.NetworkType;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.*;
@@ -89,6 +91,7 @@ public final class RS {
         NetworkNodeProxyCapability.register();
 
         MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
+        MinecraftForge.EVENT_BUS.register(new NetworkListener());
 
         API.instance().getStorageDiskRegistry().add(ItemStorageDiskFactory.ID, new ItemStorageDiskFactory());
         API.instance().getStorageDiskRegistry().add(FluidStorageDiskFactory.ID, new FluidStorageDiskFactory());
@@ -140,8 +143,8 @@ public final class RS {
     @SubscribeEvent
     public void onRegisterBlocks(RegistryEvent.Register<Block> e) {
         e.getRegistry().register(new QuartzEnrichedIronBlock());
-        e.getRegistry().register(new ControllerBlock(ControllerBlock.Type.NORMAL));
-        e.getRegistry().register(new ControllerBlock(ControllerBlock.Type.CREATIVE));
+        e.getRegistry().register(new ControllerBlock(NetworkType.NORMAL));
+        e.getRegistry().register(new ControllerBlock(NetworkType.CREATIVE));
         e.getRegistry().register(new MachineCasingBlock());
         e.getRegistry().register(new CableBlock());
         e.getRegistry().register(new DiskDriveBlock());
@@ -167,8 +170,8 @@ public final class RS {
 
     @SubscribeEvent
     public void onRegisterTiles(RegistryEvent.Register<TileEntityType<?>> e) {
-        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.NORMAL), RSBlocks.CONTROLLER).build(null).setRegistryName(RS.ID, "controller")));
-        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new ControllerTile(ControllerBlock.Type.CREATIVE), RSBlocks.CREATIVE_CONTROLLER).build(null).setRegistryName(RS.ID, "creative_controller")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new ControllerTile(NetworkType.NORMAL), RSBlocks.CONTROLLER).build(null).setRegistryName(RS.ID, "controller")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new ControllerTile(NetworkType.CREATIVE), RSBlocks.CREATIVE_CONTROLLER).build(null).setRegistryName(RS.ID, "creative_controller")));
         e.getRegistry().register(TileEntityType.Builder.create(CableTile::new, RSBlocks.CABLE).build(null).setRegistryName(RS.ID, "cable"));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DiskDriveTile::new, RSBlocks.DISK_DRIVE).build(null).setRegistryName(RS.ID, "disk_drive")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new GridTile(GridType.NORMAL), RSBlocks.GRID).build(null).setRegistryName(RS.ID, "grid")));

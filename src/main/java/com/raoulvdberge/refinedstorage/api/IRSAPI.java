@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
+import com.raoulvdberge.refinedstorage.api.network.INetworkManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
@@ -23,8 +24,6 @@ import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -62,6 +61,14 @@ public interface IRSAPI {
      * @return the network node manager for a given world
      */
     INetworkNodeManager getNetworkNodeManager(ServerWorld world);
+
+    /**
+     * Gets a network manager for a given world.
+     *
+     * @param world world
+     * @return the network manager for a given world
+     */
+    INetworkManager getNetworkManager(ServerWorld world);
 
     /**
      * @return the crafting task registry
@@ -193,14 +200,6 @@ public interface IRSAPI {
      * @return a list of pattern render handlers
      */
     List<ICraftingPatternRenderHandler> getPatternRenderHandlers();
-
-    /**
-     * Notifies the neighbors of a node that there is a node placed at the given position.
-     *
-     * @param world the world
-     * @param pos   the position of the node
-     */
-    void discoverNode(IWorld world, BlockPos pos);
 
     /**
      * @param stack the stack

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.network.NetworkType;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
@@ -29,11 +30,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import javax.annotation.Nullable;
 
 public class ControllerBlock extends Block {
-    public enum Type {
-        NORMAL,
-        CREATIVE
-    }
-
     public enum EnergyType implements IStringSerializable {
         OFF("off"),
         NEARLY_OFF("nearly_off"),
@@ -59,13 +55,13 @@ public class ControllerBlock extends Block {
 
     public static final EnumProperty<EnergyType> ENERGY_TYPE = EnumProperty.create("energy_type", EnergyType.class);
 
-    private Type type;
+    private NetworkType type;
 
-    public ControllerBlock(Type type) {
+    public ControllerBlock(NetworkType type) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 
         this.type = type;
-        this.setRegistryName(RS.ID, type == Type.CREATIVE ? "creative_controller" : "controller");
+        this.setRegistryName(RS.ID, type == NetworkType.CREATIVE ? "creative_controller" : "controller");
         this.setDefaultState(getStateContainer().getBaseState().with(ENERGY_TYPE, EnergyType.OFF));
     }
 
@@ -76,7 +72,7 @@ public class ControllerBlock extends Block {
         builder.add(ENERGY_TYPE);
     }
 
-    public Type getType() {
+    public NetworkType getType() {
         return type;
     }
 
@@ -118,7 +114,7 @@ public class ControllerBlock extends Block {
             player.openContainer(new INamedContainerProvider() {
                 @Override
                 public ITextComponent getDisplayName() {
-                    return new TranslationTextComponent("gui.refinedstorage." + (ControllerBlock.this.getType() == Type.CREATIVE ? "creative_" : "") + "controller");
+                    return new TranslationTextComponent("gui.refinedstorage." + (ControllerBlock.this.getType() == NetworkType.CREATIVE ? "creative_" : "") + "controller");
                 }
 
                 @Override

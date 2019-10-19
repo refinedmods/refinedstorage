@@ -36,7 +36,7 @@ public class NetworkTransmitterNetworkNode extends NetworkNode {
             }
 
             if (network != null) {
-                network.getNodeGraph().invalidate(Action.PERFORM, network.world(), network.getPosition());
+                network.getNodeGraph().invalidate(Action.PERFORM, network.getWorld(), network.getPosition());
             }
         });
 

@@ -36,7 +36,7 @@ class Processing {
     }
 
     public Processing(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
-        this.pattern = CraftingTask.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.world());
+        this.pattern = CraftingTask.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
         this.itemsToReceive = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
         this.fluidsToReceive = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
         this.root = tag.getBoolean(NBT_ROOT);

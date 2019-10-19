@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.apiimpl.network.Network;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
@@ -48,7 +49,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
         blit(x, y, 0, 0, xSize, ySize);
 
-        int energyBarHeightNew = ControllerTile.getEnergyScaled(ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue(), ENERGY_BAR_HEIGHT);
+        int energyBarHeightNew = Network.getEnergyScaled(ControllerTile.ENERGY_STORED.getValue(), ControllerTile.ENERGY_CAPACITY.getValue(), ENERGY_BAR_HEIGHT);
 
         blit(x + ENERGY_BAR_X, y + ENERGY_BAR_Y + ENERGY_BAR_HEIGHT - energyBarHeightNew, 178, ENERGY_BAR_HEIGHT - energyBarHeightNew, ENERGY_BAR_WIDTH, energyBarHeightNew);
 

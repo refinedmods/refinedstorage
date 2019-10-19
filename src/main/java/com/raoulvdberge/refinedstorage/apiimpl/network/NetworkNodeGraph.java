@@ -105,7 +105,7 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
     }
 
     protected World getWorld() {
-        return network.world();
+        return network.getWorld();
     }
 
     private void dropConflictingBlock(World world, BlockPos pos) {

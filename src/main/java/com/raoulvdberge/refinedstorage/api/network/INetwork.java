@@ -11,15 +11,17 @@ import com.raoulvdberge.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
 
 /**
- * Represents a network, usually is a controller.
+ * Represents a network.
  */
 public interface INetwork {
     /**
@@ -28,14 +30,29 @@ public interface INetwork {
     int getEnergyUsage();
 
     /**
-     * @return the position of this network in the world
+     * @return the energy storage
      */
-    BlockPos getPosition();
+    IEnergyStorage getEnergyStorage();
+
+    /**
+     * @return the network type
+     */
+    NetworkType getType();
 
     /**
      * @return true if this network is able to run (usually corresponds to the redstone configuration), false otherwise
      */
     boolean canRun();
+
+    /**
+     * Updates the network.
+     */
+    void update();
+
+    /**
+     * Called when the network is removed.
+     */
+    void onRemoved();
 
     /**
      * @return a graph of connected nodes to this network
@@ -227,5 +244,26 @@ public interface INetwork {
     /**
      * @return the world where this network is in
      */
-    World world();
+    World getWorld();
+
+    /**
+     * @return the position of this network in the world
+     */
+    BlockPos getPosition();
+
+    /**
+     * @return a read network
+     */
+    INetwork readFromNbt(CompoundNBT tag);
+
+    /**
+     * @param tag the tag to write to
+     * @return a written tag
+     */
+    CompoundNBT writeToNbt(CompoundNBT tag);
+
+    /**
+     * Marks the network dirty.
+     */
+    void markDirty();
 }

@@ -87,7 +87,7 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
                 list.add(nodeTag);
             } catch (Throwable t) {
-                logger.error("Error while saving", t);
+                logger.error("Error while saving network node", t);
             }
         }
 

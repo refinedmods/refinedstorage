@@ -112,7 +112,7 @@ public class CraftingTask implements ICraftingTask {
 
         this.requested = API.instance().createCraftingRequestInfo(tag.getCompound(NBT_REQUESTED));
         this.quantity = tag.getInt(NBT_QUANTITY);
-        this.pattern = readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.world());
+        this.pattern = readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
         this.ticks = tag.getInt(NBT_TICKS);
         this.id = tag.getUniqueId(NBT_ID);
         this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);

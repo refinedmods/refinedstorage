@@ -148,7 +148,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
                     onConnectedStateChange(network, canUpdate);
 
                     if (shouldRebuildGraphOnChange()) {
-                        network.getNodeGraph().invalidate(Action.PERFORM, network.world(), network.getPosition());
+                        network.getNodeGraph().invalidate(Action.PERFORM, network.getWorld(), network.getPosition());
                     }
                 }
             }

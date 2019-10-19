@@ -100,7 +100,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
             manager.markForSaving();
 
             if (node != null && node.getNetwork() != null) {
-                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
+                node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().getWorld(), node.getNetwork().getPosition());
             }
         }
     }
