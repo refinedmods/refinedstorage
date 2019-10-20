@@ -63,8 +63,9 @@ public class RSTiles {
     @ObjectHolder(RS.ID + ":network_receiver")
     public static final TileEntityType<NetworkReceiverTile> NETWORK_RECEIVER = null;
 
-    //@ObjectHolder(RS.ID + ":relay")
-    public static final TileEntityType<TileRelay> RELAY = null;
+    @ObjectHolder(RS.ID + ":relay")
+    public static final TileEntityType<RelayTile> RELAY = null;
+
     //@ObjectHolder(RS.ID + ":security_manager")
     public static final TileEntityType<TileSecurityManager> SECURITY_MANAGER = null;
     //@ObjectHolder(RS.ID + ":storage_monitor")

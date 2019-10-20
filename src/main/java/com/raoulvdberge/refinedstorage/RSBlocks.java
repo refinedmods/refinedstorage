@@ -13,7 +13,10 @@ public final class RSBlocks {
     public static final BlockDetector DETECTOR = new BlockDetector();
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
-    public static final BlockRelay RELAY = new BlockRelay();
+
+    @ObjectHolder(RS.ID + ":relay")
+    public static final RelayBlock RELAY = null;
+
     public static final BlockInterface INTERFACE = new BlockInterface();
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();

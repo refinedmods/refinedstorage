@@ -9,10 +9,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class NetworkNodeRelay extends NetworkNode {
+public class RelayNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "relay");
 
-    public NetworkNodeRelay(World world, BlockPos pos) {
+    public RelayNetworkNode(World world, BlockPos pos) {
         super(world, pos);
 
         this.redstoneMode = RedstoneMode.LOW;
@@ -30,7 +30,7 @@ public class NetworkNodeRelay extends NetworkNode {
 
     @Override
     public int getEnergyUsage() {
-        return getRedstoneMode() == RedstoneMode.IGNORE ? 0 : RS.INSTANCE.config.relayUsage;
+        return RS.SERVER_CONFIG.getRelay().getUsage();
     }
 
     @Override

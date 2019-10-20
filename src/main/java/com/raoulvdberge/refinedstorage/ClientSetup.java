@@ -34,45 +34,19 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"),
             new ResourceLocation(RS.ID, "block/controller/cutouts/on")
         ));
-
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "creative_controller"), (base, registry) -> new FullbrightBakedModel(
             base,
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"),
             new ResourceLocation(RS.ID, "block/controller/cutouts/on")
         ));
-
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "grid"), (base, registry) -> new FullbrightBakedModel(
-            base,
-            new ResourceLocation(RS.ID, "block/grid/cutouts/front_connected")
-        ));
-
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_grid"), (base, registry) -> new FullbrightBakedModel(
-            base,
-            new ResourceLocation(RS.ID, "block/grid/cutouts/crafting_front_connected")
-        ));
-
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern_grid"), (base, registry) -> new FullbrightBakedModel(
-            base,
-            new ResourceLocation(RS.ID, "block/grid/cutouts/pattern_front_connected")
-        ));
-
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "fluid_grid"), (base, registry) -> new FullbrightBakedModel(
-            base,
-            new ResourceLocation(RS.ID, "block/grid/cutouts/fluid_front_connected")
-        ));
-
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_receiver"), (base, registry) -> new FullbrightBakedModel(
-            base,
-            new ResourceLocation(RS.ID, "block/network_receiver/cutouts/connected")
-        ));
-
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(
-            base,
-            new ResourceLocation(RS.ID, "block/network_transmitter/cutouts/connected")
-        ));
-
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "grid"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/grid/cutouts/front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_grid"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/grid/cutouts/crafting_front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern_grid"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/grid/cutouts/pattern_front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "fluid_grid"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/grid/cutouts/fluid_front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_receiver"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/network_receiver/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/network_transmitter/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "relay"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/relay/cutouts/connected")));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
             new DiskDriveBakedModel(
@@ -84,6 +58,9 @@ public class ClientSetup {
             ),
             new ResourceLocation(RS.ID, "block/disks/leds")
         ).disableCache());
+
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
+
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity"));
@@ -134,6 +111,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.IMPORTER, ImporterScreen::new);
         ScreenManager.registerFactory(RSContainers.EXPORTER, ExporterScreen::new);
         ScreenManager.registerFactory(RSContainers.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
+        ScreenManager.registerFactory(RSContainers.RELAY, RelayScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);

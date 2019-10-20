@@ -17,6 +17,7 @@ public class ServerConfig {
     private Exporter exporter;
     private NetworkReceiver networkReceiver;
     private NetworkTransmitter networkTransmitter;
+    private Relay relay;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -31,6 +32,7 @@ public class ServerConfig {
         exporter = new Exporter();
         networkReceiver = new NetworkReceiver();
         networkTransmitter = new NetworkTransmitter();
+        relay = new Relay();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -82,6 +84,10 @@ public class ServerConfig {
 
     public NetworkTransmitter getNetworkTransmitter() {
         return networkTransmitter;
+    }
+
+    public Relay getRelay() {
+        return relay;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -403,6 +409,22 @@ public class ServerConfig {
             builder.push("networkTransmitter");
 
             usage = builder.comment("The energy used by the Network Transmitter").defineInRange("usage", 64, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class Relay {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public Relay() {
+            builder.push("relay");
+
+            usage = builder.comment("The energy used by the Relay").defineInRange("usage", 1, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
