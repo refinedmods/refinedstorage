@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.screen.widget.sidebutton;
 
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDetector;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DetectorNetworkNode;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.tile.TileDetector;
+import com.raoulvdberge.refinedstorage.tile.DetectorTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -14,26 +14,26 @@ public class DetectorModeSideButton extends SideButton {
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.detector.mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.detector.mode." + TileDetector.MODE.getValue());
+        return I18n.format("sidebutton.refinedstorage.detector.mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.detector.mode." + DetectorTile.MODE.getValue());
     }
 
     @Override
     protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, TileDetector.MODE.getValue() * 16, 176, 16, 16);
+        screen.blit(x, y, DetectorTile.MODE.getValue() * 16, 176, 16, 16);
     }
 
     @Override
     public void onPress() {
-        int mode = TileDetector.MODE.getValue();
+        int mode = DetectorTile.MODE.getValue();
 
-        if (mode == NetworkNodeDetector.MODE_EQUAL) {
-            mode = NetworkNodeDetector.MODE_ABOVE;
-        } else if (mode == NetworkNodeDetector.MODE_ABOVE) {
-            mode = NetworkNodeDetector.MODE_UNDER;
-        } else if (mode == NetworkNodeDetector.MODE_UNDER) {
-            mode = NetworkNodeDetector.MODE_EQUAL;
+        if (mode == DetectorNetworkNode.MODE_EQUAL) {
+            mode = DetectorNetworkNode.MODE_ABOVE;
+        } else if (mode == DetectorNetworkNode.MODE_ABOVE) {
+            mode = DetectorNetworkNode.MODE_UNDER;
+        } else if (mode == DetectorNetworkNode.MODE_UNDER) {
+            mode = DetectorNetworkNode.MODE_EQUAL;
         }
 
-        TileDataManager.setParameter(TileDetector.MODE, mode);
+        TileDataManager.setParameter(DetectorTile.MODE, mode);
     }
 }

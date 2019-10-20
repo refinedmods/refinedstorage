@@ -4,16 +4,16 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.block.DetectorBlock;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
-import com.raoulvdberge.refinedstorage.tile.TileDetector;
+import com.raoulvdberge.refinedstorage.tile.DetectorTile;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class NetworkNodeDetector extends NetworkNode implements IComparable, IType {
+public class DetectorNetworkNode extends NetworkNode implements IComparable, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "detector");
 
     private static final int SPEED = 5;
@@ -49,13 +49,13 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
     private boolean powered = false;
     private boolean wasPowered;
 
-    public NetworkNodeDetector(World world, BlockPos pos) {
+    public DetectorNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.detectorUsage;
+        return RS.SERVER_CONFIG.getDetector().getUsage();
     }
 
     @Override
@@ -65,9 +65,8 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
         if (powered != wasPowered) {
             wasPowered = powered;
 
+            world.setBlockState(pos, world.getBlockState(pos).with(DetectorBlock.POWERED, powered));
             world.notifyNeighborsOfStateChange(pos, RSBlocks.DETECTOR);
-
-            WorldUtils.updateBlock(world, pos);
         }
 
         if (canUpdate() && ticks % SPEED == 0) {
@@ -222,7 +221,7 @@ public class NetworkNodeDetector extends NetworkNode implements IComparable, ITy
 
     @Override
     public int getType() {
-        return world.isRemote ? TileDetector.TYPE.getValue() : type;
+        return world.isRemote ? DetectorTile.TYPE.getValue() : type;
     }
 
     @Override

@@ -1,29 +1,10 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "side": "refinedstorage:blocks/detector/side",
-      "bottom": "refinedstorage:blocks/detector/bottom",
-      "top": "refinedstorage:blocks/detector/top",
-      "torch": "refinedstorage:blocks/detector/cutouts/off",
-      "particle": "refinedstorage:blocks/detector/side"
-    },
-    "model": "refinedstorage:detector"
-  },
   "variants": {
-    "inventory": [
-      {
-        "transform": "forge:default-block"
-      }
-    ],
-    "powered": {
-      "true": {
-        "textures": {
-          "torch": "refinedstorage:blocks/detector/cutouts/on"
-        }
-      },
-      "false": {
-      }
+    "powered=true": {
+      "model": "refinedstorage:block/detector_on"
+    },
+    "powered=false": {
+      "model": "refinedstorage:block/detector_off"
     }
   }
 }

@@ -25,10 +25,9 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
     public static final TileDataParameter<Integer, NetworkNodeTile> REDSTONE_MODE = RedstoneMode.createParameter();
 
     private N clientNode;
+    private N removedNode;
 
     private LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
-
-    private N removedNode;
 
     public NetworkNodeTile(TileEntityType<?> tileType) {
         super(tileType);

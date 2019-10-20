@@ -1,5 +1,11 @@
 {
-  "credit": "Made with Blockbench",
+  "parent": "block/cube",
+  "textures": {
+    "side": "refinedstorage:block/detector/side",
+    "bottom": "refinedstorage:block/detector/bottom",
+    "top": "refinedstorage:block/detector/top",
+    "particle": "refinedstorage:block/detector/side"
+  },
   "elements": [
     {
       "name": "Handle",

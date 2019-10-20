@@ -18,6 +18,7 @@ public class ServerConfig {
     private NetworkReceiver networkReceiver;
     private NetworkTransmitter networkTransmitter;
     private Relay relay;
+    private Detector detector;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -33,6 +34,7 @@ public class ServerConfig {
         networkReceiver = new NetworkReceiver();
         networkTransmitter = new NetworkTransmitter();
         relay = new Relay();
+        detector = new Detector();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -88,6 +90,10 @@ public class ServerConfig {
 
     public Relay getRelay() {
         return relay;
+    }
+
+    public Detector getDetector() {
+        return detector;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -425,6 +431,22 @@ public class ServerConfig {
             builder.push("relay");
 
             usage = builder.comment("The energy used by the Relay").defineInRange("usage", 1, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class Detector {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public Detector() {
+            builder.push("detector");
+
+            usage = builder.comment("The energy used by the Detector").defineInRange("usage", 2, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
