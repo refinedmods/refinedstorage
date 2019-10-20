@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.RSContainers;
-import com.raoulvdberge.refinedstorage.tile.TileSecurityManager;
+import com.raoulvdberge.refinedstorage.tile.SecurityManagerTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SecurityManagerContainer extends BaseContainer {
-    public SecurityManagerContainer(TileSecurityManager securityManager, PlayerEntity player, int windowId) {
+    public SecurityManagerContainer(SecurityManagerTile securityManager, PlayerEntity player, int windowId) {
         super(RSContainers.SECURITY_MANAGER, securityManager, player, windowId);
 
         int x = 8;

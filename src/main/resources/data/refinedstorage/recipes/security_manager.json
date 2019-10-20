@@ -10,8 +10,7 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "C": {
-      "type": "forge:ore_dict",
-      "ore": "chest"
+      "tag": "forge:chests"
     },
     "S": {
       "item": "refinedstorage:security_card"

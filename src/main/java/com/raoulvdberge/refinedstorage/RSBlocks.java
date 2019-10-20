@@ -58,6 +58,8 @@ public final class RSBlocks {
     public static final FluidStorageBlock FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK = null;
     @ObjectHolder(RS.ID + ":creative_fluid_storage_block")
     public static final FluidStorageBlock CREATIVE_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":security_manager")
+    public static final SecurityManagerBlock SECURITY_MANAGER = null;
 
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
@@ -67,7 +69,6 @@ public final class RSBlocks {
     public static final BlockCrafter CRAFTER = new BlockCrafter();
     public static final BlockFluidInterface FLUID_INTERFACE = new BlockFluidInterface();
     public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();
-    public static final BlockSecurityManager SECURITY_MANAGER = new BlockSecurityManager();
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();
     public static final BlockCrafterManager CRAFTER_MANAGER = new BlockCrafterManager();

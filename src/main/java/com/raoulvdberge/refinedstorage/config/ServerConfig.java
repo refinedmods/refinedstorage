@@ -19,6 +19,7 @@ public class ServerConfig {
     private NetworkTransmitter networkTransmitter;
     private Relay relay;
     private Detector detector;
+    private SecurityManager securityManager;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -35,6 +36,7 @@ public class ServerConfig {
         networkTransmitter = new NetworkTransmitter();
         relay = new Relay();
         detector = new Detector();
+        securityManager = new SecurityManager();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -94,6 +96,10 @@ public class ServerConfig {
 
     public Detector getDetector() {
         return detector;
+    }
+
+    public SecurityManager getSecurityManager() {
+        return securityManager;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -453,6 +459,28 @@ public class ServerConfig {
 
         public int getUsage() {
             return usage.get();
+        }
+    }
+
+    public class SecurityManager {
+        private final ForgeConfigSpec.IntValue usage;
+        private final ForgeConfigSpec.IntValue usagePerCard;
+
+        public SecurityManager() {
+            builder.push("securityManager");
+
+            usage = builder.comment("The energy used by the Security Manager").defineInRange("usage", 4, 0, Integer.MAX_VALUE);
+            usagePerCard = builder.comment("The additional energy used by Security Cards in the Security Manager").defineInRange("usagePerCard", 10, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+
+        public int getUsagePerCard() {
+            return usagePerCard.get();
         }
     }
 }

@@ -48,6 +48,14 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/network_transmitter/cutouts/connected")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "relay"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/relay/cutouts/connected")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "detector"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/detector/cutouts/on")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "security_manager"), (base, registry) -> new FullbrightBakedModel(
+            base,
+            new ResourceLocation(RS.ID, "block/security_manager/cutouts/top_connected"),
+            new ResourceLocation(RS.ID, "block/security_manager/cutouts/front_connected"),
+            new ResourceLocation(RS.ID, "block/security_manager/cutouts/left_connected"),
+            new ResourceLocation(RS.ID, "block/security_manager/cutouts/back_connected"),
+            new ResourceLocation(RS.ID, "block/security_manager/cutouts/right_connected")
+        ));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
             new DiskDriveBakedModel(
@@ -113,6 +121,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.NETWORK_TRANSMITTER, NetworkTransmitterScreen::new);
         ScreenManager.registerFactory(RSContainers.RELAY, RelayScreen::new);
         ScreenManager.registerFactory(RSContainers.DETECTOR, DetectorScreen::new);
+        ScreenManager.registerFactory(RSContainers.SECURITY_MANAGER, SecurityManagerScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);

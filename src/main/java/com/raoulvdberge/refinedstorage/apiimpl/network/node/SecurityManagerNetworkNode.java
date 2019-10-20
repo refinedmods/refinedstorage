@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class NetworkNodeSecurityManager extends NetworkNode implements ISecurityCardContainer {
+public class SecurityManagerNetworkNode extends NetworkNode implements ISecurityCardContainer {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "security_manager");
 
     private List<ISecurityCard> cards = new ArrayList<>();
@@ -48,17 +48,17 @@ public class NetworkNodeSecurityManager extends NetworkNode implements ISecurity
         .addValidator(new ItemValidator(RSItems.SECURITY_CARD))
         .addListener(new NetworkNodeInventoryListener(this));
 
-    public NetworkNodeSecurityManager(World world, BlockPos pos) {
+    public SecurityManagerNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
     public int getEnergyUsage() {
-        int usage = RS.INSTANCE.config.securityManagerUsage;
+        int usage = RS.SERVER_CONFIG.getSecurityManager().getUsage();
 
         for (int i = 0; i < cardsInv.getSlots(); ++i) {
             if (!cardsInv.getStackInSlot(i).isEmpty()) {
-                usage += RS.INSTANCE.config.securityManagerPerSecurityCardUsage;
+                usage += RS.SERVER_CONFIG.getSecurityManager().getUsagePerCard();
             }
         }
 

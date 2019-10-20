@@ -12,8 +12,6 @@ public class RSOldConfig {
     public int fluidInterfaceUsage;
     public int wirelessTransmitterUsage;
     public int diskManipulatorUsage;
-    public int securityManagerUsage;
-    public int securityManagerPerSecurityCardUsage;
     //endregion
 
     //region Wireless Transmitter
@@ -79,8 +77,6 @@ public class RSOldConfig {
         fluidInterfaceUsage = config.getInt("fluidInterface", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Fluid Interfaces");
         wirelessTransmitterUsage = config.getInt("wirelessTransmitter", ENERGY, 8, 0, Integer.MAX_VALUE, "The energy used by Wireless Transmitters");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
-        securityManagerUsage = config.getInt("securityManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The base energy used by Security Managers");
-        securityManagerPerSecurityCardUsage = config.getInt("securityManagerPerSecurityCard", ENERGY, 10, 0, Integer.MAX_VALUE, "The additional energy used by Security Cards in Security Managers");
         //endregion
 
         //region Wireless Transmitter
