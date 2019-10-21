@@ -1,26 +1,10 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "refinedstorage:wireless_transmitter",
-    "textures": {
-      "torch": "refinedstorage:blocks/wireless_transmitter/wireless_transmitter",
-      "cutout": "refinedstorage:blocks/wireless_transmitter/cutouts/disconnected"
-    }
-  },
   "variants": {
-    "inventory": [
-      {
-        "transform": "forge:default-block"
-      }
-    ],
-    "connected": {
-      "true": {
-        "textures": {
-          "cutout": "refinedstorage:blocks/wireless_transmitter/cutouts/connected"
-        }
-      },
-      "false": {
-      }
+    "connected=true": {
+      "model": "refinedstorage:block/wireless_transmitter_connected"
+    },
+    "connected=false": {
+      "model": "refinedstorage:block/wireless_transmitter_disconnected"
     }
   }
 }

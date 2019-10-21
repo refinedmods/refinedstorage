@@ -8,13 +8,7 @@ public class RSOldConfig {
     public int craftingMonitorUsage;
     public int crafterManagerUsage;
     public int destructorUsage;
-    public int wirelessTransmitterUsage;
     public int diskManipulatorUsage;
-    //endregion
-
-    //region Wireless Transmitter
-    public int wirelessTransmitterBaseRange;
-    public int wirelessTransmitterRangePerUpgrade;
     //endregion
 
     //region Wireless Grid
@@ -55,7 +49,6 @@ public class RSOldConfig {
 
     //region Categories
     private static final String ENERGY = "energy";
-    private static final String WIRELESS_TRANSMITTER = "wirelessTransmitter";
     private static final String WIRELESS_GRID = "wirelessGrid";
     private static final String PORTABLE_GRID = "portableGrid";
     private static final String WIRELESS_FLUID_GRID = "wirelessFluidGrid";
@@ -71,13 +64,7 @@ public class RSOldConfig {
         craftingMonitorUsage = config.getInt("craftingMonitor", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");
         crafterManagerUsage = config.getInt("crafterManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafter Managers");
         destructorUsage = config.getInt("destructor", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Destructors");
-        wirelessTransmitterUsage = config.getInt("wirelessTransmitter", ENERGY, 8, 0, Integer.MAX_VALUE, "The energy used by Wireless Transmitters");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
-        //endregion
-
-        //region Wireless Transmitter
-        wirelessTransmitterBaseRange = config.getInt("range", WIRELESS_TRANSMITTER, 16, 0, Integer.MAX_VALUE, "The base range of the Wireless Transmitter");
-        wirelessTransmitterRangePerUpgrade = config.getInt("rangePerUpgrade", WIRELESS_TRANSMITTER, 8, 0, Integer.MAX_VALUE, "The additional range per Range Upgrade in the Wireless Transmitter");
         //endregion
 
         //region Wireless Grid

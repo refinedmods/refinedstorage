@@ -56,6 +56,7 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/security_manager/cutouts/back_connected"),
             new ResourceLocation(RS.ID, "block/security_manager/cutouts/right_connected")
         ));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "wireless_transmitter"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/wireless_transmitter/cutouts/connected")));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
             new DiskDriveBakedModel(
@@ -124,6 +125,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.SECURITY_MANAGER, SecurityManagerScreen::new);
         ScreenManager.registerFactory(RSContainers.INTERFACE, InterfaceScreen::new);
         ScreenManager.registerFactory(RSContainers.FLUID_INTERFACE, FluidInterfaceScreen::new);
+        ScreenManager.registerFactory(RSContainers.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);

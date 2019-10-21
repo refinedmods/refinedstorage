@@ -12,22 +12,23 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWirelessTransmitter {
+public class WirelessTransmitterNetworkNode extends NetworkNode implements IWirelessTransmitter {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "wireless_transmitter");
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4 /* TODO , ItemUpgrade.TYPE_RANGE*/).addListener(new NetworkNodeInventoryListener(this));
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.RANGE).addListener(new NetworkNodeInventoryListener(this));
 
-    public NetworkNodeWirelessTransmitter(World world, BlockPos pos) {
+    public WirelessTransmitterNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.wirelessTransmitterUsage + upgrades.getEnergyUsage();
+        return RS.SERVER_CONFIG.getWirelessTransmitter().getUsage() + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -53,7 +54,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
 
     @Override
     public int getRange() {
-        return RS.INSTANCE.config.wirelessTransmitterBaseRange + (upgrades.getUpgradeCount(UpgradeItem.Type.RANGE) * RS.INSTANCE.config.wirelessTransmitterRangePerUpgrade);
+        return RS.SERVER_CONFIG.getWirelessTransmitter().getBaseRange() + (upgrades.getUpgradeCount(UpgradeItem.Type.RANGE) * RS.SERVER_CONFIG.getWirelessTransmitter().getRangePerUpgrade());
     }
 
     @Override
@@ -62,8 +63,8 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
     }
 
     @Override
-    public int getDimension() {
-        return world.getDimension().getType().getId();
+    public DimensionType getDimension() {
+        return world.getDimension().getType();
     }
 
     public BaseItemHandler getUpgrades() {
@@ -77,7 +78,7 @@ public class NetworkNodeWirelessTransmitter extends NetworkNode implements IWire
 
     @Override
     public boolean canConduct(@Nullable Direction direction) {
-        return direction != null && Direction.DOWN.equals(direction);
+        return Direction.DOWN.equals(direction);
     }
 
     @Override

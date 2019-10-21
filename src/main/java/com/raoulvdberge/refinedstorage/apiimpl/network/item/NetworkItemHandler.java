@@ -15,7 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkItemHandler implements INetworkItemHandler {
     private INetwork network;
-
     private Map<PlayerEntity, INetworkItem> items = new ConcurrentHashMap<>();
 
     public NetworkItemHandler(INetwork network) {
@@ -27,7 +26,9 @@ public class NetworkItemHandler implements INetworkItemHandler {
         boolean inRange = false;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
-            if (node instanceof IWirelessTransmitter && node.canUpdate() && ((IWirelessTransmitter) node).getDimension() == player.dimension.getId()) { // TODO does that work?
+            if (node instanceof IWirelessTransmitter &&
+                node.canUpdate() &&
+                ((IWirelessTransmitter) node).getDimension() == player.dimension) {
                 IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
 
                 double distance = Math.sqrt(Math.pow(transmitter.getOrigin().getX() - player.posX, 2) + Math.pow(transmitter.getOrigin().getY() - player.posY, 2) + Math.pow(transmitter.getOrigin().getZ() - player.posZ, 2));

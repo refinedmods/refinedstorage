@@ -22,6 +22,7 @@ public class ServerConfig {
     private SecurityManager securityManager;
     private Interface _interface;
     private FluidInterface fluidInterface;
+    private WirelessTransmitter wirelessTransmitter;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -41,6 +42,7 @@ public class ServerConfig {
         securityManager = new SecurityManager();
         _interface = new Interface();
         fluidInterface = new FluidInterface();
+        wirelessTransmitter = new WirelessTransmitter();
         upgrades = new Upgrades();
 
         spec = builder.build();
@@ -112,6 +114,10 @@ public class ServerConfig {
 
     public FluidInterface getFluidInterface() {
         return fluidInterface;
+    }
+
+    public WirelessTransmitter getWirelessTransmitter() {
+        return wirelessTransmitter;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -525,6 +531,34 @@ public class ServerConfig {
 
         public int getUsage() {
             return usage.get();
+        }
+    }
+
+    public class WirelessTransmitter {
+        private final ForgeConfigSpec.IntValue usage;
+        private final ForgeConfigSpec.IntValue baseRange;
+        private final ForgeConfigSpec.IntValue rangePerUpgrade;
+
+        public WirelessTransmitter() {
+            builder.push("wirelessTransmitter");
+
+            usage = builder.comment("The energy used by the Wireless Transmitter").defineInRange("usage", 8, 0, Integer.MAX_VALUE);
+            baseRange = builder.comment("The base range of the Wireless Transmitter").defineInRange("baseRange", 16, 0, Integer.MAX_VALUE);
+            rangePerUpgrade = builder.comment("The additional range per Range Upgrade in the Wireless Transmitter").defineInRange("rangePerUpgrade", 8, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+
+        public int getBaseRange() {
+            return baseRange.get();
+        }
+
+        public int getRangePerUpgrade() {
+            return rangePerUpgrade.get();
         }
     }
 }

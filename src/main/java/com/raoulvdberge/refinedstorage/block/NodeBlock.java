@@ -31,8 +31,6 @@ public abstract class NodeBlock extends BaseBlock {
     @Override
     @SuppressWarnings("deprecation")
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
-
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tile = worldIn.getTileEntity(pos);
 
@@ -50,6 +48,9 @@ public abstract class NodeBlock extends BaseBlock {
                 }
             }
         }
+
+        // Call onReplaced after the drops check so the tile still exists
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     @Override

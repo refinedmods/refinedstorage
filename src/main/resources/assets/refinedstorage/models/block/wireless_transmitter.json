@@ -1,7 +1,9 @@
 {
+  "parent": "block/cube",
   "ambientocclusion": false,
   "textures": {
-    "particle": "#torch"
+    "particle": "refinedstorage:block/wireless_transmitter/wireless_transmitter",
+    "torch": "refinedstorage:block/wireless_transmitter/wireless_transmitter"
   },
   "elements": [
     {
