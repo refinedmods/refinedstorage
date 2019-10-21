@@ -3,12 +3,12 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.slot.OutputSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
-import com.raoulvdberge.refinedstorage.tile.TileInterface;
+import com.raoulvdberge.refinedstorage.tile.InterfaceTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class InterfaceContainer extends BaseContainer {
-    public InterfaceContainer(TileInterface tile, PlayerEntity player, int windowId) {
+    public InterfaceContainer(InterfaceTile tile, PlayerEntity player, int windowId) {
         super(RSContainers.INTERFACE, tile, player, windowId);
 
         for (int i = 0; i < 9; ++i) {

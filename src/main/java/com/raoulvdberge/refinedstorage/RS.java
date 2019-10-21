@@ -123,6 +123,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(RelayNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new RelayNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(DetectorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new DetectorNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(SecurityManagerNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new SecurityManagerNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(InterfaceNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new InterfaceNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
 
@@ -172,6 +173,7 @@ public final class RS {
         e.getRegistry().register(new RelayBlock());
         e.getRegistry().register(new DetectorBlock());
         e.getRegistry().register(new SecurityManagerBlock());
+        e.getRegistry().register(new InterfaceBlock());
     }
 
     @SubscribeEvent
@@ -205,6 +207,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(RelayTile::new, RSBlocks.RELAY).build(null).setRegistryName(RS.ID, "relay")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DetectorTile::new, RSBlocks.DETECTOR).build(null).setRegistryName(RS.ID, "detector")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(SecurityManagerTile::new, RSBlocks.SECURITY_MANAGER).build(null).setRegistryName(RS.ID, "security_manager")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(InterfaceTile::new, RSBlocks.INTERFACE).build(null).setRegistryName(RS.ID, "interface")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -230,6 +233,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<RelayContainer, RelayTile>((windowId, inv, tile) -> new RelayContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "relay"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DetectorContainer, DetectorTile>((windowId, inv, tile) -> new DetectorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "detector"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<SecurityManagerContainer, SecurityManagerTile>((windowId, inv, tile) -> new SecurityManagerContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "security_manager"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<InterfaceContainer, InterfaceTile>((windowId, inv, tile) -> new InterfaceContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "interface"));
     }
 
     @SubscribeEvent
@@ -305,6 +309,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.RELAY));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DETECTOR));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.SECURITY_MANAGER));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.INTERFACE));
     }
 
     /* TODO

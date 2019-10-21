@@ -60,10 +60,11 @@ public final class RSBlocks {
     public static final FluidStorageBlock CREATIVE_FLUID_STORAGE_BLOCK = null;
     @ObjectHolder(RS.ID + ":security_manager")
     public static final SecurityManagerBlock SECURITY_MANAGER = null;
+    @ObjectHolder(RS.ID + ":interface")
+    public static final InterfaceBlock INTERFACE = null;
 
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
-    public static final BlockInterface INTERFACE = new BlockInterface();
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
     public static final BlockCrafter CRAFTER = new BlockCrafter();

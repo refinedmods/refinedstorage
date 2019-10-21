@@ -20,6 +20,7 @@ public class ServerConfig {
     private Relay relay;
     private Detector detector;
     private SecurityManager securityManager;
+    private Interface _interface;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -38,6 +39,7 @@ public class ServerConfig {
         detector = new Detector();
         securityManager = new SecurityManager();
         upgrades = new Upgrades();
+        _interface = new Interface();
 
         spec = builder.build();
     }
@@ -100,6 +102,10 @@ public class ServerConfig {
 
     public SecurityManager getSecurityManager() {
         return securityManager;
+    }
+
+    public Interface getInterface() {
+        return _interface;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -481,6 +487,22 @@ public class ServerConfig {
 
         public int getUsagePerCard() {
             return usagePerCard.get();
+        }
+    }
+
+    public class Interface {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public Interface() {
+            builder.push("interface");
+
+            usage = builder.comment("The energy used by the Interface").defineInRange("usage", 2, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
         }
     }
 }

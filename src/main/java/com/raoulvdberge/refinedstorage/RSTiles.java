@@ -60,6 +60,8 @@ public class RSTiles {
     public static final TileEntityType<FluidStorageTile> CREATIVE_FLUID_STORAGE_BLOCK = null;
     @ObjectHolder(RS.ID + ":security_manager")
     public static final TileEntityType<SecurityManagerTile> SECURITY_MANAGER = null;
+    @ObjectHolder(RS.ID + ":interface")
+    public static final TileEntityType<InterfaceTile> INTERFACE = null;
 
     //@ObjectHolder(RS.ID + ":portable_grid")
     public static final TileEntityType<TilePortableGrid> PORTABLE_GRID = null;
@@ -67,8 +69,6 @@ public class RSTiles {
     public static final TileEntityType<TileStorageMonitor> STORAGE_MONITOR = null;
     //@ObjectHolder(RS.ID + ":wireless_transmitter")
     public static final TileEntityType<SecurityManagerTile> WIRELESS_TRANSMITTER = null;
-    //@ObjectHolder(RS.ID + ":interface")
-    public static final TileEntityType<ImporterTile> INTERFACE = null;
     //@ObjectHolder(RS.ID + ":fluid_interface")
     public static final TileEntityType<TileFluidInterface> FLUID_INTERFACE = null;
     //@ObjectHolder(RS.ID + ":disk_manipulator")

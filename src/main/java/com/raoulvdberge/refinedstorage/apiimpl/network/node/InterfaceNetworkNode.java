@@ -24,7 +24,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class NetworkNodeInterface extends NetworkNode implements IComparable {
+public class InterfaceNetworkNode extends NetworkNode implements IComparable {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "interface");
 
     private static final String NBT_COMPARE = "Compare";
@@ -36,19 +36,20 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
 
     private IItemHandler items = new ProxyItemHandler(importItems, exportItems);
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4).addListener(new NetworkNodeInventoryListener(this)/* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/);
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING)
+        .addListener(new NetworkNodeInventoryListener(this));
 
     private int compare = IComparer.COMPARE_NBT;
 
     private int currentSlot = 0;
 
-    public NetworkNodeInterface(World world, BlockPos pos) {
+    public InterfaceNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.interfaceUsage + upgrades.getEnergyUsage();
+        return RS.SERVER_CONFIG.getInterface().getUsage() + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -73,8 +74,6 @@ public class NetworkNodeInterface extends NetworkNode implements IComparable {
             ItemStack remainder = network.insertItemTracked(slot, size);
 
             importItems.extractItem(currentSlot, size - remainder.getCount(), false);
-
-            currentSlot++;
         }
 
         for (int i = 0; i < 9; ++i) {
