@@ -95,6 +95,9 @@ public class CraftingTask implements ICraftingTask {
     private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
     private IStackList<FluidStack> toCraftFluids = API.instance().createFluidStackList();
 
+    private Map<ICraftingPattern, Integer> patternCounter = new HashMap<>();
+    private Map<ICraftingPattern, Boolean> repeatedPatterns = new HashMap<>();
+
     public CraftingTask(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
         this.network = network;
         this.requested = requested;
@@ -280,8 +283,16 @@ public class CraftingTask implements ICraftingTask {
         } else {
             this.toCraftFluids.add(requested.getFluid(), crafted);
         }
+        findRepeatedPatterns();
 
         return null;
+    }
+
+    private void findRepeatedPatterns() {
+        for (Map.Entry<ICraftingPattern, Integer> entry : patternCounter.entrySet()) {
+            if (entry.getValue() < 500) continue;
+            repeatedPatterns.put(entry.getKey(), false);
+        }
     }
 
     class PossibleInputs {
@@ -343,7 +354,7 @@ public class CraftingTask implements ICraftingTask {
         if (!patternsUsed.add(pattern)) {
             return new CraftingTaskError(CraftingTaskErrorType.RECURSIVE, pattern);
         }
-
+        patternCounter.merge(pattern, 1, (x, y) -> x + y);
         IStackList<ItemStack> itemsToExtract = API.instance().createItemStackList();
         IStackList<FluidStack> fluidsToExtract = API.instance().createFluidStackList();
 
@@ -596,6 +607,7 @@ public class CraftingTask implements ICraftingTask {
 
         while (it.hasNext()) {
             Crafting c = it.next();
+            if(repeatedPatterns.getOrDefault(c.getPattern(),false)) continue;
 
             ICraftingPatternContainer container = c.getPattern().getContainer();
 
@@ -654,6 +666,8 @@ public class CraftingTask implements ICraftingTask {
                     network.getCraftingManager().onTaskChanged();
 
                     counter.merge(container, 1, (a, b) -> a + b);
+                } else {
+                    repeatedPatterns.computeIfPresent(c.getPattern(),(x,y)-> true);
                 }
             }
         }
@@ -666,6 +680,8 @@ public class CraftingTask implements ICraftingTask {
 
         while (it.hasNext()) {
             Processing p = it.next();
+
+            if(repeatedPatterns.getOrDefault(p.getPattern(),false)) continue;
 
             ICraftingPatternContainer container = p.getPattern().getContainer();
 
@@ -773,6 +789,9 @@ public class CraftingTask implements ICraftingTask {
 
                         counter.merge(container, 1, (a, b) -> a + b);
                     }
+                    else {
+                       repeatedPatterns.computeIfPresent(p.getPattern(),(x,y)-> true);
+                    }
                 }
 
                 if (originalState != p.getState()) {
@@ -797,8 +816,8 @@ public class CraftingTask implements ICraftingTask {
             for (int i = 0; i < availableSlots.size(); ++i) {
                 int slot = availableSlots.get(i);
 
-                // .copy() is mandatory!
-                remainder = dest.insertItem(slot, current.copy(), action == Action.SIMULATE);
+                // .copy() is mandatory! Don't copy for Simulations
+                remainder = dest.insertItem(slot, action == Action.SIMULATE ? current : current.copy(), action == Action.SIMULATE);
 
                 // If we inserted *something*
                 if (remainder.isEmpty() || current.getCount() != remainder.getCount()) {
@@ -880,6 +899,7 @@ public class CraftingTask implements ICraftingTask {
         } else {
             updateCrafting();
             updateProcessing();
+            repeatedPatterns.replaceAll((x,y)-> false);
 
             return false;
         }
