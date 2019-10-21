@@ -123,6 +123,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.DETECTOR, DetectorScreen::new);
         ScreenManager.registerFactory(RSContainers.SECURITY_MANAGER, SecurityManagerScreen::new);
         ScreenManager.registerFactory(RSContainers.INTERFACE, InterfaceScreen::new);
+        ScreenManager.registerFactory(RSContainers.FLUID_INTERFACE, FluidInterfaceScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);

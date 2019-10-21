@@ -62,13 +62,14 @@ public final class RSBlocks {
     public static final SecurityManagerBlock SECURITY_MANAGER = null;
     @ObjectHolder(RS.ID + ":interface")
     public static final InterfaceBlock INTERFACE = null;
+    @ObjectHolder(RS.ID + ":fluid_interface")
+    public static final FluidInterfaceBlock FLUID_INTERFACE = null;
 
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
-    public static final BlockFluidInterface FLUID_INTERFACE = new BlockFluidInterface();
     public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();
     public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();

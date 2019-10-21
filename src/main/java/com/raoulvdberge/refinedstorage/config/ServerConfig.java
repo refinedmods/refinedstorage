@@ -21,6 +21,7 @@ public class ServerConfig {
     private Detector detector;
     private SecurityManager securityManager;
     private Interface _interface;
+    private FluidInterface fluidInterface;
     private Upgrades upgrades;
 
     public ServerConfig() {
@@ -38,8 +39,9 @@ public class ServerConfig {
         relay = new Relay();
         detector = new Detector();
         securityManager = new SecurityManager();
-        upgrades = new Upgrades();
         _interface = new Interface();
+        fluidInterface = new FluidInterface();
+        upgrades = new Upgrades();
 
         spec = builder.build();
     }
@@ -106,6 +108,10 @@ public class ServerConfig {
 
     public Interface getInterface() {
         return _interface;
+    }
+
+    public FluidInterface getFluidInterface() {
+        return fluidInterface;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -497,6 +503,22 @@ public class ServerConfig {
             builder.push("interface");
 
             usage = builder.comment("The energy used by the Interface").defineInRange("usage", 2, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class FluidInterface {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public FluidInterface() {
+            builder.push("fluidInterface");
+
+            usage = builder.comment("The energy used by the Fluid Interface").defineInRange("usage", 2, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }

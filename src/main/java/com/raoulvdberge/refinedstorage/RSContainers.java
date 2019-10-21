@@ -33,6 +33,8 @@ public final class RSContainers {
     public static final ContainerType<SecurityManagerContainer> SECURITY_MANAGER = null;
     @ObjectHolder(RS.ID + ":interface")
     public static final ContainerType<InterfaceContainer> INTERFACE = null;
+    @ObjectHolder(RS.ID + ":fluid_interface")
+    public static final ContainerType<FluidInterfaceContainer> FLUID_INTERFACE = null;
 
     //@ObjectHolder(RS.ID + ":crafter")
     public static final ContainerType<CrafterContainer> CRAFTER = null;
@@ -46,8 +48,6 @@ public final class RSContainers {
     public static final ContainerType<ConstructorContainer> CONSTRUCTOR = null;
     //@ObjectHolder(RS.ID + ":disk_manipulator")
     public static final ContainerType<DiskManipulatorContainer> DISK_MANIPULATOR = null;
-    //@ObjectHolder(RS.ID + ":fluid_interface")
-    public static final ContainerType<FluidInterfaceContainer> FLUID_INTERFACE = null;
     //@ObjectHolder(RS.ID + ":storage_monitor")
     public static final ContainerType<StorageMonitorContainer> STORAGE_MONITOR = null;
     //@ObjectHolder(RS.ID + ":wireless_transmitter")

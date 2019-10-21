@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
-import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
+import com.raoulvdberge.refinedstorage.tile.FluidInterfaceTile;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -21,7 +21,7 @@ public class FluidExternalStorageProvider implements IExternalStorageProvider<Fl
     @Nonnull
     @Override
     public IExternalStorage<FluidStack> provide(IExternalStorageContext context, Supplier<TileEntity> tile, Direction direction) {
-        return new FluidExternalStorage(context, () -> WorldUtils.getFluidHandler(tile.get(), direction.getOpposite()), tile.get() instanceof TileFluidInterface);
+        return new FluidExternalStorage(context, () -> WorldUtils.getFluidHandler(tile.get(), direction.getOpposite()), tile.get() instanceof FluidInterfaceTile);
     }
 
     @Override

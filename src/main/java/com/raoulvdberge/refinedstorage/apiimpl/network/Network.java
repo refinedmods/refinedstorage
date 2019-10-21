@@ -81,6 +81,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
         this.world = world;
         this.type = type;
         this.root = new RootNetworkNode(this, world, pos);
+
+        // TODO: Update ControllerTile.NODES when graph changes?
     }
 
     public RootNetworkNode getRoot() {

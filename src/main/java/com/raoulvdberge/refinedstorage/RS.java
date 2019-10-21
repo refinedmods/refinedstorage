@@ -124,6 +124,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(DetectorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new DetectorNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(SecurityManagerNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new SecurityManagerNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(InterfaceNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new InterfaceNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(FluidInterfaceNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new FluidInterfaceNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
 
@@ -174,6 +175,7 @@ public final class RS {
         e.getRegistry().register(new DetectorBlock());
         e.getRegistry().register(new SecurityManagerBlock());
         e.getRegistry().register(new InterfaceBlock());
+        e.getRegistry().register(new FluidInterfaceBlock());
     }
 
     @SubscribeEvent
@@ -208,6 +210,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DetectorTile::new, RSBlocks.DETECTOR).build(null).setRegistryName(RS.ID, "detector")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(SecurityManagerTile::new, RSBlocks.SECURITY_MANAGER).build(null).setRegistryName(RS.ID, "security_manager")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(InterfaceTile::new, RSBlocks.INTERFACE).build(null).setRegistryName(RS.ID, "interface")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(FluidInterfaceTile::new, RSBlocks.FLUID_INTERFACE).build(null).setRegistryName(RS.ID, "fluid_interface")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -234,6 +237,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DetectorContainer, DetectorTile>((windowId, inv, tile) -> new DetectorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "detector"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<SecurityManagerContainer, SecurityManagerTile>((windowId, inv, tile) -> new SecurityManagerContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "security_manager"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<InterfaceContainer, InterfaceTile>((windowId, inv, tile) -> new InterfaceContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "interface"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<FluidInterfaceContainer, FluidInterfaceTile>((windowId, inv, tile) -> new FluidInterfaceContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "fluid_interface"));
     }
 
     @SubscribeEvent
@@ -310,6 +314,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DETECTOR));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.SECURITY_MANAGER));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.INTERFACE));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.FLUID_INTERFACE));
     }
 
     /* TODO

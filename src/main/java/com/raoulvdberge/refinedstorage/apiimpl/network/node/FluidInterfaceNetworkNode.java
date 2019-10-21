@@ -13,7 +13,7 @@ import com.raoulvdberge.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
-import com.raoulvdberge.refinedstorage.tile.TileFluidInterface;
+import com.raoulvdberge.refinedstorage.tile.FluidInterfaceTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.apache.commons.lang3.tuple.Pair;
 
-public class NetworkNodeFluidInterface extends NetworkNode {
+public class FluidInterfaceNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid_interface");
 
     public static final int TANK_CAPACITY = 16_000;
@@ -46,7 +46,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
             super.onContentsChanged();
 
             if (!world.isRemote) {
-                ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_IN);
+                ((FluidInterfaceTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_IN);
             }
 
             markDirty();
@@ -59,9 +59,9 @@ public class NetworkNodeFluidInterface extends NetworkNode {
     private BaseItemHandler in = new BaseItemHandler(1).addListener(new NetworkNodeInventoryListener(this)).addValidator(stack -> !StackUtils.getFluid(stack, true).getValue().isEmpty());
     private FluidInventory out = new FluidInventory(1, TANK_CAPACITY).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4 /* TODO, ItemUpgrade.TYPE_SPEED, ItemUpgrade.TYPE_STACK, ItemUpgrade.TYPE_CRAFTING*/).addListener(new NetworkNodeInventoryListener(this));
+    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING).addListener(new NetworkNodeInventoryListener(this));
 
-    public NetworkNodeFluidInterface(World world, BlockPos pos) {
+    public FluidInterfaceNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -98,7 +98,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
             FluidStack wanted = out.getFluid(0);
             FluidStack got = tankOut.getFluid();
 
-            if (!wanted.isEmpty()) {
+            if (wanted.isEmpty()) {
                 if (!got.isEmpty()) {
                     tankOut.setFluid(network.insertFluidTracked(got, got.getAmount()));
 
@@ -170,7 +170,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.fluidInterfaceUsage;
+        return RS.SERVER_CONFIG.getFluidInterface().getUsage();
     }
 
     @Override
@@ -251,7 +251,7 @@ public class NetworkNodeFluidInterface extends NetworkNode {
 
     private void onTankOutChanged() {
         if (!world.isRemote) {
-            ((TileFluidInterface) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(TileFluidInterface.TANK_OUT);
+            ((FluidInterfaceTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(FluidInterfaceTile.TANK_OUT);
         }
 
         markDirty();
