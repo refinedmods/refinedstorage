@@ -2,6 +2,7 @@
 
 ### 1.6.16
 - Updated Russian translation (Bytegm)
+- Improvements to Autocrafting performance (Darkere)
 
 ### 1.6.15
 - Fixed recipes with more than 1 bucket of fluid not transferring from JEI (Darkere)
