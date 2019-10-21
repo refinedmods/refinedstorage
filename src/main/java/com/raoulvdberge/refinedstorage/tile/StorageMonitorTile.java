@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSTiles;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorageMonitor;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.StorageMonitorNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class TileStorageMonitor extends NetworkNodeTile<NetworkNodeStorageMonitor> {
-    public static final TileDataParameter<Integer, TileStorageMonitor> COMPARE = IComparable.createParameter();
+public class StorageMonitorTile extends NetworkNodeTile<StorageMonitorNetworkNode> {
+    public static final TileDataParameter<Integer, StorageMonitorTile> COMPARE = IComparable.createParameter();
 
     private static final String NBT_STACK = "Stack";
     private static final String NBT_AMOUNT = "Amount";
@@ -21,15 +21,15 @@ public class TileStorageMonitor extends NetworkNodeTile<NetworkNodeStorageMonito
     @Nullable
     private ItemStack itemStack;
 
-    public TileStorageMonitor() {
+    public StorageMonitorTile() {
         super(RSTiles.STORAGE_MONITOR);
 
         dataManager.addWatchedParameter(COMPARE);
     }
 
     @Override
-    public NetworkNodeStorageMonitor createNode(World world, BlockPos pos) {
-        return new NetworkNodeStorageMonitor(world, pos);
+    public StorageMonitorNetworkNode createNode(World world, BlockPos pos) {
+        return new StorageMonitorNetworkNode(world, pos);
     }
 
     @Override

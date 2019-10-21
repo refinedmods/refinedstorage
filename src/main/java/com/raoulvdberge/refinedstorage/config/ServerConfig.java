@@ -6,6 +6,7 @@ public class ServerConfig {
     private ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
     private ForgeConfigSpec spec;
 
+    private Upgrades upgrades;
     private Controller controller;
     private Cable cable;
     private Grid grid;
@@ -23,9 +24,10 @@ public class ServerConfig {
     private Interface _interface;
     private FluidInterface fluidInterface;
     private WirelessTransmitter wirelessTransmitter;
-    private Upgrades upgrades;
+    private StorageMonitor storageMonitor;
 
     public ServerConfig() {
+        upgrades = new Upgrades();
         controller = new Controller();
         cable = new Cable();
         grid = new Grid();
@@ -43,9 +45,13 @@ public class ServerConfig {
         _interface = new Interface();
         fluidInterface = new FluidInterface();
         wirelessTransmitter = new WirelessTransmitter();
-        upgrades = new Upgrades();
+        storageMonitor = new StorageMonitor();
 
         spec = builder.build();
+    }
+
+    public Upgrades getUpgrades() {
+        return upgrades;
     }
 
     public Controller getController() {
@@ -58,10 +64,6 @@ public class ServerConfig {
 
     public DiskDrive getDiskDrive() {
         return diskDrive;
-    }
-
-    public Upgrades getUpgrades() {
-        return upgrades;
     }
 
     public Grid getGrid() {
@@ -118,6 +120,10 @@ public class ServerConfig {
 
     public WirelessTransmitter getWirelessTransmitter() {
         return wirelessTransmitter;
+    }
+
+    public StorageMonitor getStorageMonitor() {
+        return storageMonitor;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -559,6 +565,22 @@ public class ServerConfig {
 
         public int getRangePerUpgrade() {
             return rangePerUpgrade.get();
+        }
+    }
+
+    public class StorageMonitor {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public StorageMonitor() {
+            builder.push("storageMonitor");
+
+            usage = builder.comment("The energy used by the Storage Monitor").defineInRange("usage", 3, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
         }
     }
 }

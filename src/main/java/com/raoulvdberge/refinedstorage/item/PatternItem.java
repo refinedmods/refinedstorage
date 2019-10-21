@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
-import com.raoulvdberge.refinedstorage.render.tesr.PatternItemStackTileEntityRenderer;
+import com.raoulvdberge.refinedstorage.render.tesr.PatternItemStackTileRenderer;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.util.ITooltipFlag;
@@ -45,7 +45,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     private static final int VERSION = 1;
 
     public PatternItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP).setTEISR(() -> PatternItemStackTileEntityRenderer::new));
+        super(new Item.Properties().group(RS.MAIN_GROUP).setTEISR(() -> PatternItemStackTileRenderer::new));
 
         this.setRegistryName(RS.ID, "pattern");
     }

@@ -7,6 +7,9 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -55,5 +58,15 @@ public final class WorldUtils {
 
     public static void sendNoPermissionMessage(PlayerEntity player) {
         player.sendMessage(new TranslationTextComponent("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
+    }
+
+    public static RayTraceResult rayTracePlayer(World world, PlayerEntity player) {
+        double reachDistance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+
+        Vec3d base = player.getEyePosition(1.0F);
+        Vec3d look = player.getLookVec();
+        Vec3d target = base.add(look.x * reachDistance, look.y * reachDistance, look.z * reachDistance);
+
+        return world.rayTraceBlocks(new RayTraceContext(base, target, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
     }
 }

@@ -24,7 +24,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NetworkNodeStorageMonitor extends NetworkNode implements IComparable {
+public class StorageMonitorNetworkNode extends NetworkNode implements IComparable {
     public static final int DEPOSIT_ALL_MAX_DELAY = 500;
 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "storage_monitor");
@@ -45,7 +45,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
 
     private int oldAmount = -1;
 
-    public NetworkNodeStorageMonitor(World world, BlockPos pos) {
+    public StorageMonitorNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
@@ -139,7 +139,7 @@ public class NetworkNodeStorageMonitor extends NetworkNode implements IComparabl
 
     @Override
     public int getEnergyUsage() {
-        return 0;
+        return RS.SERVER_CONFIG.getStorageMonitor().getUsage();
     }
 
     @Override

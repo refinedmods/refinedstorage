@@ -66,13 +66,14 @@ public final class RSBlocks {
     public static final FluidInterfaceBlock FLUID_INTERFACE = null;
     @ObjectHolder(RS.ID + ":wireless_transmitter")
     public static final WirelessTransmitterBlock WIRELESS_TRANSMITTER = null;
+    @ObjectHolder(RS.ID + ":storage_monitor")
+    public static final StorageMonitorBlock STORAGE_MONITOR = null;
 
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
     public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
     public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();
-    public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
     public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();
     public static final BlockCrafterManager CRAFTER_MANAGER = new BlockCrafterManager();
 }

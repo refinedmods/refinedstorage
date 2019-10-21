@@ -7,14 +7,13 @@
   ],
   "key": {
     "P": {
-      "item": "#basic_processor"
+      "item": "refinedstorage:basic_processor"
     },
     "C": {
-      "item": "#construction_core"
+      "item": "refinedstorage:construction_core"
     },
     "G": {
-      "type": "forge:ore_dict",
-      "ore": "blockGlass"
+      "tag": "forge:glass"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"
@@ -23,7 +22,7 @@
       "item": "refinedstorage:machine_casing"
     },
     "D": {
-      "item": "#destruction_core"
+      "item": "refinedstorage:destruction_core"
     }
   },
   "result": {

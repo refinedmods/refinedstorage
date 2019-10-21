@@ -1,40 +1,20 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "cube",
-    "textures": {
-      "particle": "refinedstorage:blocks/side",
-      "north": "refinedstorage:blocks/storage_monitor_front",
-      "east": "refinedstorage:blocks/storage_monitor_left",
-      "south": "refinedstorage:blocks/storage_monitor_back",
-      "west": "refinedstorage:blocks/storage_monitor_right",
-      "up": "refinedstorage:blocks/storage_monitor_top",
-      "down": "refinedstorage:blocks/bottom"
-    }
-  },
   "variants": {
-    "connected": {
-      "true": {
-        "textures": {
-          "north": "refinedstorage:blocks/storage_monitor_front"
-        }
-      },
-      "false": {
-      }
+    "direction=north": {
+      "model": "refinedstorage:block/storage_monitor",
+      "y": 0
     },
-    "direction": {
-      "north": {
-        "y": 0
-      },
-      "east": {
-        "y": 90
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      }
+    "direction=east": {
+      "model": "refinedstorage:block/storage_monitor",
+      "y": 90
+    },
+    "direction=south": {
+      "model": "refinedstorage:block/storage_monitor",
+      "y": 180
+    },
+    "direction=west": {
+      "model": "refinedstorage:block/storage_monitor",
+      "y": 270
     }
   }
 }

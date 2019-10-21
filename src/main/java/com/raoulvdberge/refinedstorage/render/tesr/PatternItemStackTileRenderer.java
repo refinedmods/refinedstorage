@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.item.PatternItem;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.item.ItemStack;
 
-public class PatternItemStackTileEntityRenderer extends ItemStackTileEntityRenderer {
+public class PatternItemStackTileRenderer extends ItemStackTileEntityRenderer {
     @Override
     public void renderByItem(ItemStack stack) {
         CraftingPattern pattern = PatternItem.fromCache(null, stack);

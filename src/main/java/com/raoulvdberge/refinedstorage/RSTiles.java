@@ -66,11 +66,11 @@ public class RSTiles {
     public static final TileEntityType<FluidInterfaceTile> FLUID_INTERFACE = null;
     @ObjectHolder(RS.ID + ":wireless_transmitter")
     public static final TileEntityType<WirelessTransmitterTile> WIRELESS_TRANSMITTER = null;
+    @ObjectHolder(RS.ID + ":storage_monitor")
+    public static final TileEntityType<StorageMonitorTile> STORAGE_MONITOR = null;
 
     //@ObjectHolder(RS.ID + ":portable_grid")
     public static final TileEntityType<TilePortableGrid> PORTABLE_GRID = null;
-    //@ObjectHolder(RS.ID + ":storage_monitor")
-    public static final TileEntityType<TileStorageMonitor> STORAGE_MONITOR = null;
     //@ObjectHolder(RS.ID + ":disk_manipulator")
     public static final TileEntityType<TileDiskManipulator> DISK_MANIPULATOR = null;
     //@ObjectHolder(RS.ID + ":crafter")

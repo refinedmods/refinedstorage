@@ -9,8 +9,10 @@ import com.raoulvdberge.refinedstorage.render.color.PatternItemColor;
 import com.raoulvdberge.refinedstorage.render.model.DiskDriveBakedModel;
 import com.raoulvdberge.refinedstorage.render.model.FullbrightBakedModel;
 import com.raoulvdberge.refinedstorage.render.model.PatternBakedModel;
+import com.raoulvdberge.refinedstorage.render.tesr.StorageMonitorTileRenderer;
 import com.raoulvdberge.refinedstorage.screen.*;
 import com.raoulvdberge.refinedstorage.screen.factory.GridScreenFactory;
+import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
@@ -126,9 +128,12 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.INTERFACE, InterfaceScreen::new);
         ScreenManager.registerFactory(RSContainers.FLUID_INTERFACE, FluidInterfaceScreen::new);
         ScreenManager.registerFactory(RSContainers.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
+        ScreenManager.registerFactory(RSContainers.STORAGE_MONITOR, StorageMonitorScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
+
+        ClientRegistry.bindTileEntitySpecialRenderer(StorageMonitorTile.class, new StorageMonitorTileRenderer());
 
         e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN);
     }

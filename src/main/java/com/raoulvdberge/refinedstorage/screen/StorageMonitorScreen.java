@@ -3,18 +3,19 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.StorageMonitorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
-import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
+import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 
-public class GuiStorageMonitor extends BaseScreen<StorageMonitorContainer> {
-    public GuiStorageMonitor(StorageMonitorContainer container, PlayerInventory inventory) {
-        super(container, 211, 137, inventory, null);
+public class StorageMonitorScreen extends BaseScreen<StorageMonitorContainer> {
+    public StorageMonitorScreen(StorageMonitorContainer container, PlayerInventory inventory, ITextComponent title) {
+        super(container, 211, 137, inventory, title);
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new ExactModeSideButton(this, TileStorageMonitor.COMPARE));
+        addSideButton(new ExactModeSideButton(this, StorageMonitorTile.COMPARE));
     }
 
     @Override
@@ -30,7 +31,7 @@ public class GuiStorageMonitor extends BaseScreen<StorageMonitorContainer> {
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, I18n.format("gui.refinedstorage:storage_monitor"));
+        renderString(7, 7, title.getFormattedText());
         renderString(7, 43, I18n.format("container.inventory"));
     }
 }
