@@ -12,29 +12,30 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * @link https://github.com/mezz/JustEnoughItems/blob/1.14/src/main/java/mezz/jei/plugins/vanilla/ingredients/fluid/FluidStackRenderer.java
  */
 public class FluidRenderer {
-    public static final FluidRenderer INSTANCE = new FluidRenderer(FluidAttributes.BUCKET_VOLUME, 16, 16);
+    public static final FluidRenderer INSTANCE = new FluidRenderer(FluidAttributes.BUCKET_VOLUME, 16, 16, 16);
 
     private static final int TEX_WIDTH = 16;
     private static final int TEX_HEIGHT = 16;
-    private static final int MIN_FLUID_HEIGHT = 1;
 
     private final int capacityMb;
     private final int width;
     private final int height;
+    private final int minHeight;
 
-    public FluidRenderer(int capacityMb, int width, int height) {
+    public FluidRenderer(int capacityMb, int width, int height, int minHeight) {
         this.capacityMb = capacityMb;
         this.width = width;
         this.height = height;
+        this.minHeight = minHeight;
     }
 
-    public void render(final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
+    public void render(final int xPosition, final int yPosition, @Nonnull FluidStack fluidStack) {
         GlStateManager.enableBlend();
         GlStateManager.enableAlphaTest();
 
@@ -46,15 +47,12 @@ public class FluidRenderer {
         GlStateManager.disableBlend();
     }
 
-    private void drawFluid(final int xPosition, final int yPosition, @Nullable FluidStack fluidStack) {
-        if (fluidStack == null) {
+    private void drawFluid(final int xPosition, final int yPosition, @Nonnull FluidStack fluidStack) {
+        if (fluidStack.isEmpty()) {
             return;
         }
 
         Fluid fluid = fluidStack.getFluid();
-        if (fluid == null) {
-            return;
-        }
 
         TextureAtlasSprite fluidStillSprite = getStillFluidSprite(fluidStack);
 
@@ -63,8 +61,8 @@ public class FluidRenderer {
 
         int amount = fluidStack.getAmount();
         int scaledAmount = (amount * height) / capacityMb;
-        if (amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
-            scaledAmount = MIN_FLUID_HEIGHT;
+        if (amount > 0 && scaledAmount < minHeight) {
+            scaledAmount = minHeight;
         }
         if (scaledAmount > height) {
             scaledAmount = height;

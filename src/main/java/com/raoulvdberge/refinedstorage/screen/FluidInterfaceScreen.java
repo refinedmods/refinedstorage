@@ -14,7 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class FluidInterfaceScreen extends BaseScreen<FluidInterfaceContainer> {
-    private static final FluidRenderer TANK_RENDERER = new FluidRenderer(FluidInterfaceNetworkNode.TANK_CAPACITY, 12, 47);
+    private static final FluidRenderer TANK_RENDERER = new FluidRenderer(FluidInterfaceNetworkNode.TANK_CAPACITY, 12, 47, 1);
 
     public FluidInterfaceScreen(FluidInterfaceContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 211, 204, inventory, title);
