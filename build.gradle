@@ -19,7 +19,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.7+5'
+version = '1.7+6'
 group = 'com.raoulvdberge'
 archivesBaseName = 'refinedstorage'
 
