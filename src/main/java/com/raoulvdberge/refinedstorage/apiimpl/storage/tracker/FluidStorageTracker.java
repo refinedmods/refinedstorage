@@ -33,7 +33,7 @@ public class FluidStorageTracker implements IStorageTracker<FluidStack> {
 
     @Override
     public StorageTrackerEntry get(FluidStack stack) {
-        return changes.get(stack);
+        return changes.get(new Key(stack));
     }
 
     public void readFromNbt(ListNBT list) {
