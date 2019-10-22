@@ -2,11 +2,9 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.block.info.IBlockInfo;
-import com.raoulvdberge.refinedstorage.item.blockitem.ItemBlockBase;
 import com.raoulvdberge.refinedstorage.render.collision.CollisionGroup;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.Item;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -52,10 +50,6 @@ public abstract class BlockBase extends Block {
         if (getDirection() != null) {
             builder.add(getDirection().getProperty());
         }
-    }
-
-    public Item createItem() {
-        return new ItemBlockBase(this);
     }
 
     @Override

@@ -1,29 +1,36 @@
 package com.raoulvdberge.refinedstorage.tile.grid;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.*;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
+import com.raoulvdberge.refinedstorage.item.WirelessFluidGridItem;
+import com.raoulvdberge.refinedstorage.network.grid.WirelessFluidGridSettingsUpdateMessage;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -31,12 +38,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WirelessFluidGrid implements INetworkAwareGrid {
-    public static int ID;
-
     private ItemStack stack;
-
-    private int networkDimension;
-    private BlockPos network;
+    @Nullable
+    private final MinecraftServer server;
+    private final DimensionType nodeDimension;
+    private final BlockPos nodePos;
 
     private int sortingType;
     private int sortingDirection;
@@ -56,18 +62,18 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
             StackUtils.writeItems(handler, 0, stack.getTag());
         }));
 
-    public WirelessFluidGrid(ItemStack stack) {
-        /* TODO this.networkDimension = ItemWirelessFluidGrid.getDimensionId(stack);
-        this.network = new BlockPos(ItemWirelessFluidGrid.getX(stack), ItemWirelessFluidGrid.getY(stack), ItemWirelessFluidGrid.getZ(stack));
-
+    public WirelessFluidGrid(ItemStack stack, @Nullable MinecraftServer server) {
         this.stack = stack;
+        this.server = server;
+        this.nodeDimension = WirelessFluidGridItem.getDimension(stack);
+        this.nodePos = new BlockPos(WirelessFluidGridItem.getX(stack), WirelessFluidGridItem.getY(stack), WirelessFluidGridItem.getZ(stack));
 
-        this.sortingType = ItemWirelessFluidGrid.getSortingType(stack);
-        this.sortingDirection = ItemWirelessFluidGrid.getSortingDirection(stack);
-        this.searchBoxMode = ItemWirelessFluidGrid.getSearchBoxMode(stack);
-        this.tabSelected = ItemWirelessFluidGrid.getTabSelected(stack);
-        this.tabPage = ItemWirelessFluidGrid.getTabPage(stack);
-        this.size = ItemWirelessFluidGrid.getSize(stack);*/
+        this.sortingType = WirelessFluidGridItem.getSortingType(stack);
+        this.sortingDirection = WirelessFluidGridItem.getSortingDirection(stack);
+        this.searchBoxMode = WirelessFluidGridItem.getSearchBoxMode(stack);
+        this.tabSelected = WirelessFluidGridItem.getTabSelected(stack);
+        this.tabPage = WirelessFluidGridItem.getTabPage(stack);
+        this.size = WirelessFluidGridItem.getSize(stack);
 
         if (stack.hasTag()) {
             StackUtils.readItems(filter, 0, stack.getTag());
@@ -86,13 +92,18 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     @Override
     @Nullable
     public INetwork getNetwork() {
-// TODO        World world = DimensionManager.getWorld(networkDimension);
-        World world = null;
+        World world = DimensionManager.getWorld(server, nodeDimension, true, true);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(network);
+            TileEntity tile = world.getTileEntity(nodePos);
 
-            return tile instanceof INetwork ? (INetwork) tile : null;
+            if (tile != null) {
+                INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
+
+                if (proxy != null) {
+                    return proxy.getNode().getNetwork();
+                }
+            }
         }
 
         return null;
@@ -187,7 +198,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
 
     @Override
     public void onSortingTypeChanged(int type) {
-        // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessFluidGridSettingsUpdateMessage(getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingType = type;
 
@@ -196,7 +207,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessFluidGridSettingsUpdateMessage(direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingDirection = direction;
 
@@ -205,27 +216,25 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessFluidGridSettingsUpdateMessage(getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
 
         this.searchBoxMode = searchBoxMode;
     }
 
     @Override
     public void onSizeChanged(int size) {
-        // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessFluidGridSettingsUpdateMessage(getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
 
         this.size = size;
 
-        if (Minecraft.getInstance().currentScreen != null) {
-            // TODO Minecraft.getInstance().currentScreen.init();
-        }
+        BaseScreen.executeLater(GridScreen.class, BaseScreen::init);
     }
 
     @Override
     public void onTabSelectionChanged(int tab) {
         this.tabSelected = tab == tabSelected ? -1 : tab;
 
-        // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessFluidGridSettingsUpdateMessage(getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
         BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
@@ -233,7 +242,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     @Override
     public void onTabPageChanged(int page) {
         if (page >= 0 && page <= getTotalTabPages()) {
-            // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessFluidGridSettingsUpdate(getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
+            RS.NETWORK_HANDLER.sendToServer(new WirelessFluidGridSettingsUpdateMessage(getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
 
             this.tabPage = page;
         }

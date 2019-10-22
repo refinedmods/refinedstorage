@@ -26,6 +26,7 @@ public class ServerConfig {
     private WirelessTransmitter wirelessTransmitter;
     private StorageMonitor storageMonitor;
     private WirelessGrid wirelessGrid;
+    private WirelessFluidGrid wirelessFluidGrid;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -48,6 +49,7 @@ public class ServerConfig {
         wirelessTransmitter = new WirelessTransmitter();
         storageMonitor = new StorageMonitor();
         wirelessGrid = new WirelessGrid();
+        wirelessFluidGrid = new WirelessFluidGrid();
 
         spec = builder.build();
     }
@@ -130,6 +132,10 @@ public class ServerConfig {
 
     public WirelessGrid getWirelessGrid() {
         return wirelessGrid;
+    }
+
+    public WirelessFluidGrid getWirelessFluidGrid() {
+        return wirelessFluidGrid;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -605,6 +611,46 @@ public class ServerConfig {
             openUsage = builder.comment("The energy used by the Wireless Grid to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
             extractUsage = builder.comment("The energy used by the Wireless Grid to extract items").defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
             insertUsage = builder.comment("The energy used by the Wireless Grid to insert items").defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public boolean getUseEnergy() {
+            return useEnergy.get();
+        }
+
+        public int getCapacity() {
+            return capacity.get();
+        }
+
+        public int getOpenUsage() {
+            return openUsage.get();
+        }
+
+        public int getExtractUsage() {
+            return extractUsage.get();
+        }
+
+        public int getInsertUsage() {
+            return insertUsage.get();
+        }
+    }
+
+    public class WirelessFluidGrid {
+        private final ForgeConfigSpec.BooleanValue useEnergy;
+        private final ForgeConfigSpec.IntValue capacity;
+        private final ForgeConfigSpec.IntValue openUsage;
+        private final ForgeConfigSpec.IntValue extractUsage;
+        private final ForgeConfigSpec.IntValue insertUsage;
+
+        public WirelessFluidGrid() {
+            builder.push("wirelessFluidGrid");
+
+            useEnergy = builder.comment("Whether the Wireless Fluid Grid uses energy").define("useEnergy", true);
+            capacity = builder.comment("The energy capacity of the Wireless Fluid Grid").defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
+            openUsage = builder.comment("The energy used by the Wireless Fluid Grid to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
+            extractUsage = builder.comment("The energy used by the Wireless Fluid Grid to extract fluids").defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
+            insertUsage = builder.comment("The energy used by the Wireless Fluid Grid to insert fluids").defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }

@@ -60,6 +60,10 @@ public final class RSItems {
     public static final WirelessGridItem WIRELESS_GRID = null;
     @ObjectHolder(RS.ID + ":creative_wireless_grid")
     public static final WirelessGridItem CREATIVE_WIRELESS_GRID = null;
+    @ObjectHolder(RS.ID + ":wireless_fluid_grid")
+    public static final WirelessFluidGridItem WIRELESS_FLUID_GRID = null;
+    @ObjectHolder(RS.ID + ":creative_wireless_fluid_grid")
+    public static final WirelessFluidGridItem CREATIVE_WIRELESS_FLUID_GRID = null;
     @ObjectHolder(RS.ID + ":1k_storage_part")
     public static final StoragePartItem ONE_K_STORAGE_PART = null;
     @ObjectHolder(RS.ID + ":4k_storage_part")
@@ -97,6 +101,5 @@ public final class RSItems {
     @ObjectHolder(RS.ID + ":creative_fluid_storage_disk")
     public static final FluidStorageDiskItem CREATIVE_FLUID_STORAGE_DISK = null;
 
-    public static final ItemWirelessFluidGrid WIRELESS_FLUID_GRID = null;
     public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = null;
 }

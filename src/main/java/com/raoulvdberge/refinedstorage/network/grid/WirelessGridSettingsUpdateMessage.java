@@ -13,7 +13,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class GridSettingsUpdateMessage {
+public class WirelessGridSettingsUpdateMessage {
     private int viewType;
     private int sortingDirection;
     private int sortingType;
@@ -22,7 +22,7 @@ public class GridSettingsUpdateMessage {
     private int tabSelected;
     private int tabPage;
 
-    public GridSettingsUpdateMessage(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected, int tabPage) {
+    public WirelessGridSettingsUpdateMessage(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected, int tabPage) {
         this.viewType = viewType;
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
@@ -32,8 +32,8 @@ public class GridSettingsUpdateMessage {
         this.tabPage = tabPage;
     }
 
-    public static GridSettingsUpdateMessage decode(PacketBuffer buf) {
-        return new GridSettingsUpdateMessage(
+    public static WirelessGridSettingsUpdateMessage decode(PacketBuffer buf) {
+        return new WirelessGridSettingsUpdateMessage(
             buf.readInt(),
             buf.readInt(),
             buf.readInt(),
@@ -44,7 +44,7 @@ public class GridSettingsUpdateMessage {
         );
     }
 
-    public static void encode(GridSettingsUpdateMessage message, PacketBuffer buf) {
+    public static void encode(WirelessGridSettingsUpdateMessage message, PacketBuffer buf) {
         buf.writeInt(message.viewType);
         buf.writeInt(message.sortingDirection);
         buf.writeInt(message.sortingType);
@@ -54,7 +54,7 @@ public class GridSettingsUpdateMessage {
         buf.writeInt(message.tabPage);
     }
 
-    public static void handle(GridSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(WirelessGridSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         PlayerEntity player = ctx.get().getSender();
 
         if (player != null) {
@@ -62,6 +62,7 @@ public class GridSettingsUpdateMessage {
                 if (player.openContainer instanceof GridContainer) {
                     IGrid grid = ((GridContainer) player.openContainer).getGrid();
 
+                    // TODO Duplicate for portable grid.
                     if (grid instanceof WirelessGrid || grid instanceof PortableGrid) {
                         ItemStack stack = grid instanceof WirelessGrid ? ((WirelessGrid) grid).getStack() : ((PortableGrid) grid).getStack();
 

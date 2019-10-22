@@ -13,7 +13,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.ItemGridSt
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
 import com.raoulvdberge.refinedstorage.item.WirelessGridItem;
-import com.raoulvdberge.refinedstorage.network.grid.GridSettingsUpdateMessage;
+import com.raoulvdberge.refinedstorage.network.grid.WirelessGridSettingsUpdateMessage;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -39,6 +39,7 @@ import java.util.List;
 
 public class WirelessGrid implements INetworkAwareGrid {
     private ItemStack stack;
+    @Nullable
     private final MinecraftServer server;
     private final DimensionType nodeDimension;
     private final BlockPos nodePos;
@@ -195,7 +196,7 @@ public class WirelessGrid implements INetworkAwareGrid {
 
     @Override
     public void onViewTypeChanged(int type) {
-        RS.NETWORK_HANDLER.sendToServer(new GridSettingsUpdateMessage(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.viewType = type;
 
@@ -204,7 +205,7 @@ public class WirelessGrid implements INetworkAwareGrid {
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RS.NETWORK_HANDLER.sendToServer(new GridSettingsUpdateMessage(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingType = type;
 
@@ -213,7 +214,7 @@ public class WirelessGrid implements INetworkAwareGrid {
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RS.NETWORK_HANDLER.sendToServer(new GridSettingsUpdateMessage(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingDirection = direction;
 
@@ -222,14 +223,14 @@ public class WirelessGrid implements INetworkAwareGrid {
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RS.NETWORK_HANDLER.sendToServer(new GridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
 
         this.searchBoxMode = searchBoxMode;
     }
 
     @Override
     public void onSizeChanged(int size) {
-        RS.NETWORK_HANDLER.sendToServer(new GridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
 
         this.size = size;
 
@@ -240,7 +241,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     public void onTabSelectionChanged(int tab) {
         this.tabSelected = tab == tabSelected ? -1 : tab;
 
-        RS.NETWORK_HANDLER.sendToServer(new GridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
         BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
@@ -248,7 +249,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     @Override
     public void onTabPageChanged(int page) {
         if (page >= 0 && page <= getTotalTabPages()) {
-            RS.NETWORK_HANDLER.sendToServer(new GridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
+            RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
 
             this.tabPage = page;
         }

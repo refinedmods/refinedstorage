@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
@@ -72,7 +73,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                     player.updateHeldItem();
                 }
 
-                // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridExtractUsage);
+                network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
             });
         }
     }
@@ -93,7 +94,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
             network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.PERFORM);
 
-            // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessFluidGridInsertUsage);
+            network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getInsertUsage());
 
             return result.getLeft();
         }
