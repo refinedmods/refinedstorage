@@ -38,7 +38,7 @@ public class RecipeRegistryPluginHollowCover implements IRecipeRegistryPlugin {
 
     @Override
     public <T extends IRecipeWrapper, V> List<T> getRecipeWrappers(IRecipeCategory<T> recipeCategory, IFocus<V> focus) {
-        if (focus.getValue() instanceof ItemStack) {
+        if (focus.getValue() instanceof ItemStack && recipeCategory.getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
             ItemStack stack = (ItemStack) focus.getValue();
 
             if (focus.getMode() == IFocus.Mode.INPUT) {
