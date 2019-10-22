@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -39,6 +40,8 @@ public class WirelessGridNetworkItem implements INetworkItem {
             ((WirelessGridItem) stack.getItem()).getType() != WirelessGridItem.Type.CREATIVE &&
             energy != null &&
             energy.getEnergyStored() <= RS.SERVER_CONFIG.getWirelessGrid().getOpenUsage()) {
+            sendOutOfEnergyMessage();
+            
             return false;
         }
 
@@ -65,8 +68,14 @@ public class WirelessGridNetworkItem implements INetworkItem {
                     handler.close(player);
 
                     player.closeScreen();
+
+                    sendOutOfEnergyMessage();
                 }
             });
         }
+    }
+
+    private void sendOutOfEnergyMessage() {
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.network_item.out_of_energy", new TranslationTextComponent(stack.getItem().getTranslationKey())));
     }
 }

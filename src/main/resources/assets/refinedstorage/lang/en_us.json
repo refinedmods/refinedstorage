@@ -94,6 +94,7 @@
   "misc.refinedstorage.network_item.not_found": "Network not found.",
   "misc.refinedstorage.network_item.shortcut_not_found": "There isn't any %s in your inventory.",
   "misc.refinedstorage.network_item.shortcut_duplicate": "There is more than one %s in your inventory.",
+  "misc.refinedstorage.network_item.out_of_energy": "The %s is out of energy.",
   "misc.refinedstorage.network_card.tooltip": "Linked to %d, %d, %d in %s.",
   "misc.refinedstorage.pattern.inputs": "Inputs",
   "misc.refinedstorage.pattern.outputs": "Outputs",
