@@ -100,7 +100,7 @@ public class ItemGridHandler implements IItemGridHandler {
                 }
             }
 
-            // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridExtractUsage);
+            network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessGrid().getExtractUsage());
         }
     }
 
@@ -115,7 +115,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
 
-        // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
+        network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessGrid().getInsertUsage());
 
         return remainder;
     }
@@ -143,7 +143,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        // TODO network.getNetworkItemHandler().drainEnergy(player, RS.INSTANCE.config.wirelessGridInsertUsage);
+        network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessGrid().getInsertUsage());
     }
 
     @Override
@@ -229,6 +229,6 @@ public class ItemGridHandler implements IItemGridHandler {
 
         network.getCraftingManager().cancel(id);
 
-        network.getNetworkItemHandler().drainEnergy(player, id == null ? RS.INSTANCE.config.wirelessCraftingMonitorCancelAllUsage : RS.INSTANCE.config.wirelessCraftingMonitorCancelUsage);
+        network.getNetworkItemManager().drainEnergy(player, id == null ? RS.INSTANCE.config.wirelessCraftingMonitorCancelAllUsage : RS.INSTANCE.config.wirelessCraftingMonitorCancelUsage);
     }
 }

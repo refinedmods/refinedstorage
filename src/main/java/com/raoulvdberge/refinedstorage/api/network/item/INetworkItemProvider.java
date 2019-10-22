@@ -18,5 +18,5 @@ public interface INetworkItemProvider {
      * @return the network item
      */
     @Nonnull
-    INetworkItem provide(INetworkItemHandler handler, PlayerEntity player, ItemStack stack);
+    INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack);
 }

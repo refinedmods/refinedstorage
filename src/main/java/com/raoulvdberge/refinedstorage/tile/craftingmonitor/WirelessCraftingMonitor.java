@@ -102,7 +102,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         INetwork network = getNetwork();
 
         if (network != null) {
-            network.getNetworkItemHandler().close(player);
+            network.getNetworkItemManager().close(player);
         }
     }
 

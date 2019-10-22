@@ -2,29 +2,47 @@ package com.raoulvdberge.refinedstorage.energy;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.EnergyStorage;
 
-public class ItemEnergyStorage extends EnergyStorage implements INBTSerializable<CompoundNBT> {
+public class ItemEnergyStorage extends EnergyStorage {
     private static final String NBT_ENERGY = "Energy";
+
+    private ItemStack stack;
 
     public ItemEnergyStorage(ItemStack stack, int capacity) {
         super(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
 
+        this.stack = stack;
         this.energy = stack.hasTag() && stack.getTag().contains(NBT_ENERGY) ? stack.getTag().getInt(NBT_ENERGY) : 0;
     }
 
     @Override
-    public CompoundNBT serializeNBT() {
-        CompoundNBT tag = new CompoundNBT();
+    public int receiveEnergy(int maxReceive, boolean simulate) {
+        int received = super.receiveEnergy(maxReceive, simulate);
 
-        tag.putInt(NBT_ENERGY, getEnergyStored());
+        if (received > 0 && !simulate) {
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundNBT());
+            }
 
-        return tag;
+            stack.getTag().putInt(NBT_ENERGY, getEnergyStored());
+        }
+
+        return received;
     }
 
     @Override
-    public void deserializeNBT(CompoundNBT tag) {
-        this.energy = tag.getInt(NBT_ENERGY);
+    public int extractEnergy(int maxExtract, boolean simulate) {
+        int extracted = super.extractEnergy(maxExtract, simulate);
+
+        if (extracted > 0 && !simulate) {
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundNBT());
+            }
+
+            stack.getTag().putInt(NBT_ENERGY, getEnergyStored());
+        }
+
+        return extracted;
     }
 }

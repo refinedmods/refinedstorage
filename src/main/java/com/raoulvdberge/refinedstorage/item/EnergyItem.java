@@ -17,12 +17,13 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class EnergyItem extends Item {
-    private final int energyCapacity;
+    private final Supplier<Integer> energyCapacity;
     private final boolean creative;
 
-    public EnergyItem(Item.Properties properties, boolean creative, int energyCapacity) {
+    public EnergyItem(Item.Properties properties, boolean creative, Supplier<Integer> energyCapacity) {
         super(properties);
 
         this.creative = creative;
@@ -31,7 +32,7 @@ public abstract class EnergyItem extends Item {
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundNBT tag) {
-        return new EnergyCapabilityProvider(stack, energyCapacity);
+        return new EnergyCapabilityProvider(stack, energyCapacity.get());
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.IWirelessTransmitter;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemManager;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,11 +13,11 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NetworkItemHandler implements INetworkItemHandler {
-    private INetwork network;
-    private Map<PlayerEntity, INetworkItem> items = new ConcurrentHashMap<>();
+public class NetworkItemManager implements INetworkItemManager {
+    private final INetwork network;
+    private final Map<PlayerEntity, INetworkItem> items = new ConcurrentHashMap<>();
 
-    public NetworkItemHandler(INetwork network) {
+    public NetworkItemManager(INetwork network) {
         this.network = network;
     }
 

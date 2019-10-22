@@ -11,14 +11,6 @@ public class RSOldConfig {
     public int diskManipulatorUsage;
     //endregion
 
-    //region Wireless Grid
-    public boolean wirelessGridUsesEnergy;
-    public int wirelessGridCapacity;
-    public int wirelessGridOpenUsage;
-    public int wirelessGridExtractUsage;
-    public int wirelessGridInsertUsage;
-    //endregion
-
     //region Portable Grid
     public boolean portableGridUsesEnergy;
     public int portableGridCapacity;
@@ -49,7 +41,6 @@ public class RSOldConfig {
 
     //region Categories
     private static final String ENERGY = "energy";
-    private static final String WIRELESS_GRID = "wirelessGrid";
     private static final String PORTABLE_GRID = "portableGrid";
     private static final String WIRELESS_FLUID_GRID = "wirelessFluidGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
@@ -65,14 +56,6 @@ public class RSOldConfig {
         crafterManagerUsage = config.getInt("crafterManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafter Managers");
         destructorUsage = config.getInt("destructor", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Destructors");
         diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
-        //endregion
-
-        //region Wireless Grid
-        wirelessGridUsesEnergy = config.getBoolean("usesEnergy", WIRELESS_GRID, true, "Whether the Wireless Grid uses energy");
-        wirelessGridCapacity = config.getInt("capacity", WIRELESS_GRID, 3200, 0, Integer.MAX_VALUE, "The energy capacity of the Wireless Grid");
-        wirelessGridOpenUsage = config.getInt("open", WIRELESS_GRID, 30, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to open");
-        wirelessGridInsertUsage = config.getInt("insert", WIRELESS_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to insert items");
-        wirelessGridExtractUsage = config.getInt("extract", WIRELESS_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Wireless Grid to extract items");
         //endregion
 
         //region Portable Grid

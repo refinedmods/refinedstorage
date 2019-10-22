@@ -56,7 +56,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GridNetworkNode extends NetworkNode implements IGridNetworkAware, IType {
+public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
     public static final ResourceLocation CRAFTING_ID = new ResourceLocation(RS.ID, "crafting_grid");
     public static final ResourceLocation PATTERN_ID = new ResourceLocation(RS.ID, "pattern_grid");

@@ -25,6 +25,7 @@ public class ServerConfig {
     private FluidInterface fluidInterface;
     private WirelessTransmitter wirelessTransmitter;
     private StorageMonitor storageMonitor;
+    private WirelessGrid wirelessGrid;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -46,6 +47,7 @@ public class ServerConfig {
         fluidInterface = new FluidInterface();
         wirelessTransmitter = new WirelessTransmitter();
         storageMonitor = new StorageMonitor();
+        wirelessGrid = new WirelessGrid();
 
         spec = builder.build();
     }
@@ -126,25 +128,37 @@ public class ServerConfig {
         return storageMonitor;
     }
 
+    public WirelessGrid getWirelessGrid() {
+        return wirelessGrid;
+    }
+
     public ForgeConfigSpec getSpec() {
         return spec;
     }
 
     public class Controller {
+        private final ForgeConfigSpec.BooleanValue useEnergy;
+        private final ForgeConfigSpec.IntValue capacity;
         private final ForgeConfigSpec.IntValue baseUsage;
         private final ForgeConfigSpec.IntValue maxTransfer;
-        private final ForgeConfigSpec.IntValue capacity;
-        private final ForgeConfigSpec.BooleanValue useEnergy;
 
         public Controller() {
             builder.push("controller");
 
+            useEnergy = builder.comment("Whether the Controller uses energy").define("useEnergy", true);
+            capacity = builder.comment("The energy capacity of the Controller").defineInRange("capacity", 32000, 0, Integer.MAX_VALUE);
             baseUsage = builder.comment("The base energy used by the Controller").defineInRange("baseUsage", 0, 0, Integer.MAX_VALUE);
             maxTransfer = builder.comment("The maximum energy that the Controller can receive").defineInRange("maxTransfer", Integer.MAX_VALUE, 0, Integer.MAX_VALUE);
-            capacity = builder.comment("The energy capacity of the Controller").defineInRange("capacity", 32000, 0, Integer.MAX_VALUE);
-            useEnergy = builder.comment("Whether the Controller uses energy").define("useEnergy", true);
 
             builder.pop();
+        }
+
+        public boolean getUseEnergy() {
+            return useEnergy.get();
+        }
+
+        public int getCapacity() {
+            return capacity.get();
         }
 
         public int getBaseUsage() {
@@ -153,14 +167,6 @@ public class ServerConfig {
 
         public int getMaxTransfer() {
             return maxTransfer.get();
-        }
-
-        public int getCapacity() {
-            return capacity.get();
-        }
-
-        public boolean getUseEnergy() {
-            return useEnergy.get();
         }
     }
 
@@ -581,6 +587,46 @@ public class ServerConfig {
 
         public int getUsage() {
             return usage.get();
+        }
+    }
+
+    public class WirelessGrid {
+        private final ForgeConfigSpec.BooleanValue useEnergy;
+        private final ForgeConfigSpec.IntValue capacity;
+        private final ForgeConfigSpec.IntValue openUsage;
+        private final ForgeConfigSpec.IntValue extractUsage;
+        private final ForgeConfigSpec.IntValue insertUsage;
+
+        public WirelessGrid() {
+            builder.push("wirelessGrid");
+
+            useEnergy = builder.comment("Whether the Wireless Grid uses energy").define("useEnergy", true);
+            capacity = builder.comment("The energy capacity of the Wireless Grid").defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
+            openUsage = builder.comment("The energy used by the Wireless Grid to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
+            extractUsage = builder.comment("The energy used by the Wireless Grid to extract items").defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
+            insertUsage = builder.comment("The energy used by the Wireless Grid to insert items").defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public boolean getUseEnergy() {
+            return useEnergy.get();
+        }
+
+        public int getCapacity() {
+            return capacity.get();
+        }
+
+        public int getOpenUsage() {
+            return openUsage.get();
+        }
+
+        public int getExtractUsage() {
+            return extractUsage.get();
+        }
+
+        public int getInsertUsage() {
+            return insertUsage.get();
         }
     }
 }

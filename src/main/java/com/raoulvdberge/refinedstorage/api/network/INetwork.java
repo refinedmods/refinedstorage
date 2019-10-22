@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.api.network;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemManager;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
@@ -80,9 +80,9 @@ public interface INetwork {
     IFluidGridHandler getFluidGridHandler();
 
     /**
-     * @return the {@link INetworkItemHandler} of this network
+     * @return the {@link INetworkItemManager} of this network
      */
-    INetworkItemHandler getNetworkItemHandler();
+    INetworkItemManager getNetworkItemManager();
 
     /**
      * @return the {@link IStorageCache<ItemStack>} of this network

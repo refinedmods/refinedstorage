@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.WirelessGridGridFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.*;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
@@ -130,6 +131,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(StorageMonitorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new StorageMonitorNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
+        API.instance().getGridManager().add(WirelessGridGridFactory.ID, new WirelessGridGridFactory());
 
         API.instance().addExternalStorageProvider(StorageType.ITEM, new ItemExternalStorageProvider());
         API.instance().addExternalStorageProvider(StorageType.FLUID, new FluidExternalStorageProvider());
@@ -326,6 +328,9 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.FLUID_INTERFACE));
         e.getRegistry().register(new WirelessTransmitterBlockItem());
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.STORAGE_MONITOR));
+
+        e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.NORMAL));
+        e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.CREATIVE));
     }
 
     /* TODO

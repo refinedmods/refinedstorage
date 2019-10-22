@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 /**
  * A grid that knows about a network.
  */
-public interface IGridNetworkAware extends IGrid {
+public interface INetworkAwareGrid extends IGrid {
     /**
      * @return the network, or null if no network is available
      */

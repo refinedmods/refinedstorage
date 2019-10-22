@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
  * This is the handler for network items of a network.
  * It stores which player is currently using what network item.
  */
-public interface INetworkItemHandler {
+public interface INetworkItemManager {
     /**
      * Called when a player opens a network item.
      *

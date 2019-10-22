@@ -1,9 +1,9 @@
 package com.raoulvdberge.refinedstorage.item;
 
-import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
-import net.minecraft.block.Block;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -28,14 +28,15 @@ import net.minecraftforge.common.DimensionManager;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class NetworkItem extends EnergyItem implements INetworkItemProvider {
-    private static final String NBT_CONTROLLER_X = "ControllerX";
-    private static final String NBT_CONTROLLER_Y = "ControllerY";
-    private static final String NBT_CONTROLLER_Z = "ControllerZ";
+    private static final String NBT_NODE_X = "NodeX";
+    private static final String NBT_NODE_Y = "NodeY";
+    private static final String NBT_NODE_Z = "NodeZ";
     private static final String NBT_DIMENSION = "Dimension";
 
-    public NetworkItem(Item.Properties item, boolean creative, int energyCapacity) {
+    public NetworkItem(Item.Properties item, boolean creative, Supplier<Integer> energyCapacity) {
         super(item, creative, energyCapacity);
 
         addPropertyOverride(new ResourceLocation("connected"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
@@ -46,26 +47,51 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemHandler().open(player, player.getHeldItem(hand)), player::sendMessage);
+            applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand)), player::sendMessage);
         }
 
         return ActionResult.newResult(ActionResultType.SUCCESS, stack);
     }
 
-    private void applyNetwork(MinecraftServer server, ItemStack stack, Consumer<INetwork> onNetwork, Consumer<ITextComponent> onError) {
+    public void applyNetwork(MinecraftServer server, ItemStack stack, Consumer<INetwork> onNetwork, Consumer<ITextComponent> onError) {
+        TranslationTextComponent notFound = new TranslationTextComponent("misc.refinedstorage.network_item.not_found");
+
         if (!isValid(stack)) {
-            onError.accept(new TranslationTextComponent("misc.refinedstorage.network_item.not_found"));
-        } else {
-            World networkWorld = DimensionManager.getWorld(server, getDimension(stack), true, true);
-
-            TileEntity network;
-
-            if (networkWorld != null && ((network = networkWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))) instanceof INetwork)) {
-                onNetwork.accept((INetwork) network);
-            } else {
-                onError.accept(new TranslationTextComponent("misc.refinedstorage.network_item.not_found"));
-            }
+            onError.accept(notFound);
+            return;
         }
+
+        DimensionType dimension = getDimension(stack);
+        if (dimension == null) {
+            onError.accept(notFound);
+            return;
+        }
+
+        World nodeWorld = DimensionManager.getWorld(server, dimension, true, true);
+        if (nodeWorld == null) {
+            onError.accept(notFound);
+            return;
+        }
+
+        TileEntity node = nodeWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
+        if (node == null) {
+            onError.accept(notFound);
+            return;
+        }
+
+        INetworkNodeProxy proxy = node.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
+        if (proxy == null) {
+            onError.accept(notFound);
+            return;
+        }
+
+        INetwork network = proxy.getNode().getNetwork();
+        if (network == null) {
+            onError.accept(notFound);
+            return;
+        }
+
+        onNetwork.accept(network);
     }
 
     @Override
@@ -81,23 +107,30 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     public ActionResultType onItemUse(ItemUseContext ctx) {
         ItemStack stack = ctx.getPlayer().getHeldItem(ctx.getHand());
 
-        Block block = ctx.getWorld().getBlockState(ctx.getPos()).getBlock();
+        TileEntity tile = ctx.getWorld().getTileEntity(ctx.getPos());
+        if (tile != null) {
+            INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
 
-        if (block == RSBlocks.CONTROLLER) {
-            CompoundNBT tag = stack.getTag();
+            if (proxy != null) {
+                INetwork network = proxy.getNode().getNetwork();
 
-            if (tag == null) {
-                tag = new CompoundNBT();
+                if (network != null) {
+                    CompoundNBT tag = stack.getTag();
+
+                    if (tag == null) {
+                        tag = new CompoundNBT();
+                    }
+
+                    tag.putInt(NBT_NODE_X, network.getPosition().getX());
+                    tag.putInt(NBT_NODE_Y, network.getPosition().getY());
+                    tag.putInt(NBT_NODE_Z, network.getPosition().getZ());
+                    tag.putString(NBT_DIMENSION, DimensionType.getKey(ctx.getWorld().getDimension().getType()).toString());
+
+                    stack.setTag(tag);
+
+                    return ActionResultType.SUCCESS;
+                }
             }
-
-            tag.putInt(NBT_CONTROLLER_X, ctx.getPos().getX());
-            tag.putInt(NBT_CONTROLLER_Y, ctx.getPos().getY());
-            tag.putInt(NBT_CONTROLLER_Z, ctx.getPos().getZ());
-            tag.putString(NBT_DIMENSION, DimensionType.getKey(ctx.getWorld().getDimension().getType()).toString());
-
-            stack.setTag(tag);
-
-            return ActionResultType.SUCCESS;
         }
 
         return ActionResultType.PASS;
@@ -118,15 +151,15 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     }
 
     public static int getX(ItemStack stack) {
-        return stack.getTag().getInt(NBT_CONTROLLER_X);
+        return stack.getTag().getInt(NBT_NODE_X);
     }
 
     public static int getY(ItemStack stack) {
-        return stack.getTag().getInt(NBT_CONTROLLER_Y);
+        return stack.getTag().getInt(NBT_NODE_Y);
     }
 
     public static int getZ(ItemStack stack) {
-        return stack.getTag().getInt(NBT_CONTROLLER_Z);
+        return stack.getTag().getInt(NBT_NODE_Z);
     }
 
     @Override
@@ -136,9 +169,9 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
 
     public boolean isValid(ItemStack stack) {
         return stack.hasTag()
-            && stack.getTag().contains(NBT_CONTROLLER_X)
-            && stack.getTag().contains(NBT_CONTROLLER_Y)
-            && stack.getTag().contains(NBT_CONTROLLER_Z)
+            && stack.getTag().contains(NBT_NODE_X)
+            && stack.getTag().contains(NBT_NODE_Y)
+            && stack.getTag().contains(NBT_NODE_Z)
             && stack.getTag().contains(NBT_DIMENSION);
     }
 }

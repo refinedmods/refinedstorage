@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.item;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItem;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemManager;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,12 +12,12 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
-    private INetworkItemHandler handler;
+    private INetworkItemManager handler;
     private PlayerEntity player;
     private ItemStack stack;
     private int invIndex;
 
-    public NetworkItemWirelessCraftingMonitor(INetworkItemHandler handler, PlayerEntity player, ItemStack stack, int invIndex) {
+    public NetworkItemWirelessCraftingMonitor(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int invIndex) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;

@@ -21,6 +21,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -112,6 +113,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public void onClientSetup(FMLClientSetupEvent e) {
+        MinecraftForge.EVENT_BUS.register(new KeyInputListener());
+
         ScreenManager.registerFactory(RSContainers.FILTER, FilterScreen::new);
         ScreenManager.registerFactory(RSContainers.CONTROLLER, ControllerScreen::new);
         ScreenManager.registerFactory(RSContainers.DISK_DRIVE, DiskDriveScreen::new);
@@ -130,6 +133,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.WIRELESS_TRANSMITTER, WirelessTransmitterScreen::new);
         ScreenManager.registerFactory(RSContainers.STORAGE_MONITOR, StorageMonitorScreen::new);
 
+        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_GRID);
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
 

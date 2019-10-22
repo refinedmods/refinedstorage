@@ -15,7 +15,7 @@ public interface ICraftingGridBehavior {
      * @param recipe the recipe
      * @param player the player
      */
-    void onCrafted(IGridNetworkAware grid, ICraftingRecipe recipe, PlayerEntity player);
+    void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player);
 
     /**
      * Logic for crafting with shift click (mass crafting).
@@ -23,7 +23,7 @@ public interface ICraftingGridBehavior {
      * @param grid   the grid
      * @param player the player
      */
-    void onCraftedShift(IGridNetworkAware grid, PlayerEntity player);
+    void onCraftedShift(INetworkAwareGrid grid, PlayerEntity player);
 
     /**
      * Logic for when a recipe is transferred to the grid.
@@ -32,5 +32,5 @@ public interface ICraftingGridBehavior {
      * @param player the player
      * @param recipe the recipe
      */
-    void onRecipeTransfer(IGridNetworkAware grid, PlayerEntity player, ItemStack[][] recipe);
+    void onRecipeTransfer(INetworkAwareGrid grid, PlayerEntity player, ItemStack[][] recipe);
 }

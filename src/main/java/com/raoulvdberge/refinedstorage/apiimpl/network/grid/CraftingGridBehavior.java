@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
-import com.raoulvdberge.refinedstorage.api.network.grid.IGridNetworkAware;
+import com.raoulvdberge.refinedstorage.api.network.grid.INetworkAwareGrid;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class CraftingGridBehavior implements ICraftingGridBehavior {
     @Override
-    public void onCrafted(IGridNetworkAware grid, ICraftingRecipe recipe, PlayerEntity player) {
+    public void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player) {
         NonNullList<ItemStack> remainder = recipe.getRemainingItems(grid.getCraftingMatrix());
 
         INetwork network = grid.getNetwork();
@@ -68,7 +68,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
     }
 
     @Override
-    public void onCraftedShift(IGridNetworkAware grid, PlayerEntity player) {
+    public void onCraftedShift(INetworkAwareGrid grid, PlayerEntity player) {
         List<ItemStack> craftedItemsList = new ArrayList<>();
         int amountCrafted = 0;
         ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
@@ -102,7 +102,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
     }
 
     @Override
-    public void onRecipeTransfer(IGridNetworkAware grid, PlayerEntity player, ItemStack[][] recipe) {
+    public void onRecipeTransfer(INetworkAwareGrid grid, PlayerEntity player, ItemStack[][] recipe) {
         INetwork network = grid.getNetwork();
 
         if (network != null && grid.getGridType() == GridType.CRAFTING && !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {

@@ -46,6 +46,8 @@ public class NetworkHandler {
         handler.registerMessage(id++, GridTransferMessage.class, GridTransferMessage::encode, GridTransferMessage::decode, GridTransferMessage::handle);
         handler.registerMessage(id++, GridProcessingTransferMessage.class, GridProcessingTransferMessage::encode, GridProcessingTransferMessage::decode, GridProcessingTransferMessage::handle);
         handler.registerMessage(id++, SecurityManagerUpdateMessage.class, SecurityManagerUpdateMessage::encode, SecurityManagerUpdateMessage::decode, SecurityManagerUpdateMessage::handle);
+        handler.registerMessage(id++, GridSettingsUpdateMessage.class, GridSettingsUpdateMessage::encode, GridSettingsUpdateMessage::decode, GridSettingsUpdateMessage::handle);
+        handler.registerMessage(id++, OpenNetworkItemMessage.class, OpenNetworkItemMessage::encode, OpenNetworkItemMessage::decode, OpenNetworkItemMessage::handle);
     }
 
     public void sendToServer(Object message) {

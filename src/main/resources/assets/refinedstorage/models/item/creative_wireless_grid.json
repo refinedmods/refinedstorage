@@ -1,0 +1,20 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "refinedstorage:item/wireless_grid_disconnected"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "connected": 0
+      },
+      "model": "refinedstorage:item/wireless_grid_disconnected"
+    },
+    {
+      "predicate": {
+        "connected": 1
+      },
+      "model": "refinedstorage:item/wireless_grid_connected"
+    }
+  ]
+}

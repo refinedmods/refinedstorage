@@ -4,6 +4,7 @@
 - Port to Minecraft 1.14 (raoulvdberge)
 - Removed the Reader and Writer (raoulvdberge)
 - Removed covers (raoulvdberge)
+- When binding a network item to a network you can now bind to any network block, not only the Controller (raoulvdberge)
 
 ### 1.6.16
 - Updated Russian translation (Bytegm)

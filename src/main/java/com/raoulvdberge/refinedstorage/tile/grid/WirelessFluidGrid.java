@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WirelessFluidGrid implements IGridNetworkAware {
+public class WirelessFluidGrid implements INetworkAwareGrid {
     public static int ID;
 
     private ItemStack stack;
@@ -299,7 +299,7 @@ public class WirelessFluidGrid implements IGridNetworkAware {
         INetwork network = getNetwork();
 
         if (network != null) {
-            network.getNetworkItemHandler().close(player);
+            network.getNetworkItemManager().close(player);
         }
     }
 }

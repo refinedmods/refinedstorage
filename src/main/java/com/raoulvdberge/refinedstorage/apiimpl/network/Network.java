@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraph;
 import com.raoulvdberge.refinedstorage.api.network.NetworkType;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemHandler;
+import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.security.ISecurityManager;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
@@ -20,7 +20,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.FluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.ItemGridHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.item.NetworkItemManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.RootNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.security.SecurityManager;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
@@ -55,7 +55,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     private final IItemGridHandler itemGridHandler = new ItemGridHandler(this);
     private final IFluidGridHandler fluidGridHandler = new FluidGridHandler(this);
-    private final INetworkItemHandler networkItemHandler = new NetworkItemHandler(this);
+    private final INetworkItemManager networkItemManager = new NetworkItemManager(this);
     private final INetworkNodeGraph nodeGraph = new NetworkNodeGraph(this);
     private final ICraftingManager craftingManager = new CraftingManager(this);
     private final ISecurityManager securityManager = new SecurityManager(this);
@@ -179,8 +179,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     @Override
-    public INetworkItemHandler getNetworkItemHandler() {
-        return networkItemHandler;
+    public INetworkItemManager getNetworkItemManager() {
+        return networkItemManager;
     }
 
     @Override
