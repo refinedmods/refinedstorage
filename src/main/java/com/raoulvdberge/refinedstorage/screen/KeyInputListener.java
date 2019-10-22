@@ -22,17 +22,19 @@ import java.util.function.Consumer;
 public class KeyInputListener {
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent e) {
-        PlayerInventory inv = Minecraft.getInstance().player.inventory;
+        if (Minecraft.getInstance().player != null) {
+            PlayerInventory inv = Minecraft.getInstance().player.inventory;
 
-        if (RSKeyBindings.OPEN_WIRELESS_GRID.isKeyDown()) {
-            findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_GRID, RSItems.CREATIVE_WIRELESS_GRID);
-        } else if (RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.isKeyDown()) {
-            findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_FLUID_GRID, RSItems.CREATIVE_WIRELESS_FLUID_GRID);
-        }/* TODO else if (RSKeyBindings.OPEN_PORTABLE_GRID.isKeyDown()) {
-            findAndOpen(inv, Item.getItemFromBlock(RSBlocks.PORTABLE_GRID));
-        } else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isKeyDown()) {
-            findAndOpen(inv, RSItems.WIRELESS_CRAFTING_MONITOR);
-        }*/
+            if (RSKeyBindings.OPEN_WIRELESS_GRID.isKeyDown()) {
+                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_GRID, RSItems.CREATIVE_WIRELESS_GRID);
+            } else if (RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.isKeyDown()) {
+                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_FLUID_GRID, RSItems.CREATIVE_WIRELESS_FLUID_GRID);
+            }/* TODO else if (RSKeyBindings.OPEN_PORTABLE_GRID.isKeyDown()) {
+                findAndOpen(inv, Item.getItemFromBlock(RSBlocks.PORTABLE_GRID));
+            } else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isKeyDown()) {
+                findAndOpen(inv, RSItems.WIRELESS_CRAFTING_MONITOR);
+            }*/
+        }
     }
 
     private void findAndOpen(IInventory inv, Consumer<ITextComponent> onError, Item... items) {
