@@ -12,9 +12,10 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
+import mezz.jei.api.recipe.transfer.IRecipeTransferHandlerHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
+public class RecipeTransferHandlerGrid implements IRecipeTransferHandler<ContainerGrid> {
     public static final long TRANSFER_SCROLL_DELAY_MS = 200;
     public static long LAST_TRANSFER;
 
@@ -38,20 +39,47 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
             // NO OP
         }
     };
+    private IRecipeTransferHandlerHelper handlerHelper;
+
+    public RecipeTransferHandlerGrid(IRecipeTransferHandlerHelper handlerHelper) {
+        this.handlerHelper = handlerHelper;
+    }
 
     @Override
-    public Class<? extends Container> getContainerClass() {
+    public Class<ContainerGrid> getContainerClass() {
         return ContainerGrid.class;
     }
 
     @Override
-    public IRecipeTransferError transferRecipe(Container container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
-        IGrid grid = ((ContainerGrid) container).getGrid();
+    public IRecipeTransferError transferRecipe(ContainerGrid container, IRecipeLayout recipeLayout, EntityPlayer player, boolean maxTransfer, boolean doTransfer) {
+        IGrid grid = container.getGrid();
+        GridType gridType = grid.getGridType();
+
+        if (gridType != GridType.CRAFTING && gridType != GridType.PATTERN) {
+            return ERROR_CANNOT_TRANSFER;
+        }
+
+        boolean isProcessingPattern = gridType == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern();
+        boolean isCraftingRecipe = recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING);
+
+        if (gridType == GridType.PATTERN) {
+            // will be removed in #2316
+            if (isProcessingPattern && isCraftingRecipe) {
+                return this.handlerHelper.createUserErrorWithTooltip(I18n.format("gui.refinedstorage:jei.tooltip.error.recipe.transfer.pattern.turn_off_processing"));
+            }
+            if (!isProcessingPattern && !isCraftingRecipe) {
+                return this.handlerHelper.createUserErrorWithTooltip(I18n.format("gui.refinedstorage:jei.tooltip.error.recipe.transfer.pattern.turn_on_processing"));
+            }
+        } else { // gridType == GridType.CRAFTING
+            if (!isCraftingRecipe) {
+                return ERROR_CANNOT_TRANSFER;
+            }
+        }
 
         if (doTransfer) {
             LAST_TRANSFER = System.currentTimeMillis();
 
-            if (grid.getGridType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
+            if (isProcessingPattern) {
                 List<ItemStack> inputs = new LinkedList<>();
                 List<ItemStack> outputs = new LinkedList<>();
 
@@ -85,16 +113,6 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler {
                 RS.INSTANCE.network.sendToServer(new MessageGridProcessingTransfer(inputs, outputs, fluidInputs, fluidOutputs));
             } else {
                 RS.INSTANCE.network.sendToServer(new MessageGridTransfer(recipeLayout.getItemStacks().getGuiIngredients(), container.inventorySlots.stream().filter(s -> s.inventory instanceof InventoryCrafting).collect(Collectors.toList())));
-            }
-        } else {
-            if (grid.getGridType() == GridType.PATTERN && ((NetworkNodeGrid) grid).isProcessingPattern()) {
-                if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
-                    return ERROR_CANNOT_TRANSFER;
-                }
-            } else {
-                if (!recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
-                    return ERROR_CANNOT_TRANSFER;
-                }
             }
         }
 

@@ -15,7 +15,7 @@ public class RSJEIPlugin implements IModPlugin {
     public void register(IModRegistry registry) {
         INSTANCE = this;
 
-        registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RecipeTransferHandlerGrid());
+        registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RecipeTransferHandlerGrid(registry.getJeiHelpers().recipeTransferHandlerHelper()));
 
         registry.addAdvancedGuiHandlers(new AdvancedGuiHandler());
 
