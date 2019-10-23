@@ -46,19 +46,14 @@ public abstract class GridViewBase implements IGridView {
                 (grid.getTabSelected() >= 0 && grid.getTabSelected() < grid.getTabs().size()) ? grid.getTabs().get(grid.getTabSelected()).getFilters() : grid.getFilters()
             );
 
-            Iterator<IGridStack> it = stacks.iterator();
-
-            while (it.hasNext()) {
-                IGridStack stack = it.next();
-
+            stacks.removeIf(stack -> {
                 for (Predicate<IGridStack> filter : filters) {
                     if (!filter.test(stack)) {
-                        it.remove();
-
-                        break;
+                        return true;
                     }
                 }
-            }
+                return false;
+            });
 
             GridSorterDirection sortingDirection = grid.getSortingDirection() == IGrid.SORTING_DIRECTION_DESCENDING ? GridSorterDirection.DESCENDING : GridSorterDirection.ASCENDING;
 
