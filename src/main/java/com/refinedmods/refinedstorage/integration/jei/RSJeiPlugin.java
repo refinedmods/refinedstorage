@@ -22,7 +22,7 @@ public class RSJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addUniversalRecipeTransferHandler(new GridRecipeTransferHandler());
+        registration.addUniversalRecipeTransferHandler(new GridRecipeTransferHandler(registration.getTransferHelper()));
     }
 
     @Override
