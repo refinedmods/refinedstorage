@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
@@ -590,13 +591,11 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private void updateCrafting() {
-        Iterator<Crafting> it = crafting.iterator();
+        Set<Crafting> toRemove = Sets.newHashSet();
 
         Map<ICraftingPatternContainer, Integer> counter = Maps.newHashMap();
 
-        while (it.hasNext()) {
-            Crafting c = it.next();
-
+        for (Crafting c : this.crafting) {
             ICraftingPatternContainer container = c.getPattern().getContainer();
 
             int interval = container.getUpdateInterval();
@@ -649,7 +648,7 @@ public class CraftingTask implements ICraftingTask {
                         this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
                     }
 
-                    it.remove();
+                    toRemove.add(c);
 
                     network.getCraftingManager().onTaskChanged();
 
@@ -657,20 +656,20 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
         }
+
+        this.crafting.removeAll(toRemove);
     }
 
     private void updateProcessing() {
-        Iterator<Processing> it = processing.iterator();
+        Set<Processing> toRemove = Sets.newHashSet();
 
         Map<ICraftingPatternContainer, Integer> counter = Maps.newHashMap();
 
-        while (it.hasNext()) {
-            Processing p = it.next();
-
+        for (Processing p : this.processing) {
             ICraftingPatternContainer container = p.getPattern().getContainer();
 
             if (p.getState() == ProcessingState.PROCESSED) {
-                it.remove();
+                toRemove.add(p);
 
                 network.getCraftingManager().onTaskChanged();
 
@@ -780,6 +779,8 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
         }
+
+        this.processing.removeAll(toRemove);
     }
 
     private static boolean insertIntoInventory(@Nullable IItemHandler dest, Deque<ItemStack> stacks, Action action) {
