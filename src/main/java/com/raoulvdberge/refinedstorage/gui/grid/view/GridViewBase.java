@@ -32,6 +32,11 @@ public abstract class GridViewBase implements IGridView {
     }
 
     @Override
+    public Collection<IGridStack> getAllStacks() {
+        return map.values();
+    }
+
+    @Override
     public void sort() {
         List<IGridStack> stacks = new ArrayList<>();
 

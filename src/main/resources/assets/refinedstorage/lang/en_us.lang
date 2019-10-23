@@ -88,6 +88,7 @@ gui.refinedstorage:portable_grid=Portable Grid
 gui.refinedstorage:crafter_manager=Crafter Manager
 gui.refinedstorage:jei.tooltip.error.recipe.transfer.pattern.turn_off_processing=Turn off Processing to create this pattern
 gui.refinedstorage:jei.tooltip.error.recipe.transfer.pattern.turn_on_processing=Turn on Processing to create this pattern
+gui.refinedstorage:jei.tooltip.error.recipe.transfer.missing.autocraft=Items can be autocrafted
 
 misc.refinedstorage:energy_stored=%d / %d FE
 misc.refinedstorage:energy_usage=Usage: %d FE/t
