@@ -159,9 +159,6 @@ public class MessageGridProcessingTransfer extends MessageHandlerPlayerToServer<
 
     private void setFluidSlots(FluidInventory inventory, Collection<FluidStack> stacks, int begin, int end) {
         for (FluidStack stack : stacks) {
-            if (stack.amount > Fluid.BUCKET_VOLUME) {
-                continue;
-            }
 
             inventory.setFluid(begin, stack.copy());
 

@@ -420,7 +420,7 @@ public final class RenderUtils {
 
         for (int i = 0; i < lines.size(); ++i) {
             if (i == 0) {
-                lines.set(i, stack.getRarity().color + lines.get(i));
+                lines.set(i, stack.getItem().getForgeRarity(stack).getColor() + lines.get(i));
             } else {
                 lines.set(i, TextFormatting.GRAY + lines.get(i));
             }
