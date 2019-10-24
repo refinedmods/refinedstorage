@@ -38,6 +38,7 @@ import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
 import com.raoulvdberge.refinedstorage.inventory.listener.TileInventoryListener;
+import com.raoulvdberge.refinedstorage.item.WirelessGridItem;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.tile.BaseTile;
@@ -237,13 +238,13 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
     }
 
     public void onPassItemContext(ItemStack stack) {
-        /* TODO this.sortingType = ItemWirelessGrid.getSortingType(stack);
-        this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
-        this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
-        this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
-        this.tabPage = ItemWirelessGrid.getTabPage(stack);
-        this.size = ItemWirelessGrid.getSize(stack);
-*/
+        this.sortingType = WirelessGridItem.getSortingType(stack);
+        this.sortingDirection = WirelessGridItem.getSortingDirection(stack);
+        this.searchBoxMode = WirelessGridItem.getSearchBoxMode(stack);
+        this.tabSelected = WirelessGridItem.getTabSelected(stack);
+        this.tabPage = WirelessGridItem.getTabPage(stack);
+        this.size = WirelessGridItem.getSize(stack);
+
         IEnergyStorage energyStorage = stack.getCapability(CapabilityEnergy.ENERGY).orElse(null);
 
         this.energyStorage = recreateEnergyStorage(energyStorage != null ? energyStorage.getEnergyStored() : 0);

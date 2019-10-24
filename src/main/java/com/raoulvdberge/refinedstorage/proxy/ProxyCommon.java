@@ -7,8 +7,6 @@ public class ProxyCommon {
 
         API.deliver(e.getAsmData());
 
-        WirelessGrid.ID = API.instance().getGridManager().add(new GridFactoryWirelessGrid());
-        WirelessFluidGrid.ID = API.instance().getGridManager().add(new GridFactoryWirelessFluidGrid());
         TilePortableGrid.FACTORY_ID = API.instance().getGridManager().add(new GridFactoryPortableGridBlock());
         PortableGrid.ID = API.instance().getGridManager().add(new GridFactoryPortableGrid());
 
