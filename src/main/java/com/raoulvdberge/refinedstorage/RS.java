@@ -130,6 +130,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(FluidInterfaceNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new FluidInterfaceNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(WirelessTransmitterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new WirelessTransmitterNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(StorageMonitorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new StorageMonitorNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(ConstructorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ConstructorNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
         API.instance().getGridManager().add(WirelessGridGridFactory.ID, new WirelessGridGridFactory());
@@ -185,6 +186,7 @@ public final class RS {
         e.getRegistry().register(new FluidInterfaceBlock());
         e.getRegistry().register(new WirelessTransmitterBlock());
         e.getRegistry().register(new StorageMonitorBlock());
+        e.getRegistry().register(new ConstructorBlock());
     }
 
     @SubscribeEvent
@@ -222,6 +224,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(FluidInterfaceTile::new, RSBlocks.FLUID_INTERFACE).build(null).setRegistryName(RS.ID, "fluid_interface")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(WirelessTransmitterTile::new, RSBlocks.WIRELESS_TRANSMITTER).build(null).setRegistryName(RS.ID, "wireless_transmitter")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(StorageMonitorTile::new, RSBlocks.STORAGE_MONITOR).build(null).setRegistryName(RS.ID, "storage_monitor")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ConstructorTile::new, RSBlocks.CONSTRUCTOR).build(null).setRegistryName(RS.ID, "constructor")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -251,6 +254,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<FluidInterfaceContainer, FluidInterfaceTile>((windowId, inv, tile) -> new FluidInterfaceContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "fluid_interface"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<WirelessTransmitterContainer, WirelessTransmitterTile>((windowId, inv, tile) -> new WirelessTransmitterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "wireless_transmitter"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<StorageMonitorContainer, StorageMonitorTile>((windowId, inv, tile) -> new StorageMonitorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "storage_monitor"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<ConstructorContainer, ConstructorTile>((windowId, inv, tile) -> new ConstructorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "constructor"));
     }
 
     @SubscribeEvent
@@ -330,6 +334,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.FLUID_INTERFACE));
         e.getRegistry().register(new WirelessTransmitterBlockItem());
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.STORAGE_MONITOR));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CONSTRUCTOR));
 
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.NORMAL));
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.CREATIVE));

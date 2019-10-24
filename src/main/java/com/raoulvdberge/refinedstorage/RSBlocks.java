@@ -68,9 +68,10 @@ public final class RSBlocks {
     public static final WirelessTransmitterBlock WIRELESS_TRANSMITTER = null;
     @ObjectHolder(RS.ID + ":storage_monitor")
     public static final StorageMonitorBlock STORAGE_MONITOR = null;
+    @ObjectHolder(RS.ID + ":constructor")
+    public static final ConstructorBlock CONSTRUCTOR = null;
 
     public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
-    public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
     public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();

@@ -1,98 +1,180 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "cable": "refinedstorage:blocks/cable",
-      "particle": "refinedstorage:blocks/cable",
-      "front": "refinedstorage:blocks/constructor/constructor",
-      "cutout": "refinedstorage:blocks/constructor/cutouts/disconnected",
-      "border": "refinedstorage:blocks/cable_part_border"
-    },
-    "model": "refinedstorage:cable_core",
-    "uvlock": true,
-    "transform": "forge:default-block"
-  },
-  "variants": {
-    "connected": {
-      "true": {
-        "textures": {
-          "cutout": "refinedstorage:blocks/constructor/cutouts/connected"
-        }
-      },
-      "false": {
+  "multipart": [
+    {
+      "apply": {
+        "model": "refinedstorage:block/cable_core"
       }
     },
-    "direction": {
-      "north": {
-        "submodel": "refinedstorage:constructor_destructor"
+    {
+      "when": {
+        "north": true
       },
-      "east": {
-        "submodel": "refinedstorage:constructor_destructor",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension"
+      }
+    },
+    {
+      "when": {
+        "east": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": true
       },
-      "south": {
-        "submodel": "refinedstorage:constructor_destructor",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "x": 180
+      }
+    },
+    {
+      "when": {
+        "west": true
       },
-      "west": {
-        "submodel": "refinedstorage:constructor_destructor",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": true
       },
-      "up": {
-        "submodel": "refinedstorage:constructor_destructor",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": true
       },
-      "down": {
-        "submodel": "refinedstorage:constructor_destructor",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "x": 90
       }
     },
-    "north": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension"
+    {
+      "when": {
+        "direction": "north",
+        "connected": true
       },
-      "false": {
+      "apply": {
+        "model": "refinedstorage:block/constructor_connected"
       }
     },
-    "east": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "direction": "east",
+        "connected": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_connected",
         "y": 90
-      },
-      "false": {
       }
     },
-    "south": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "direction": "south",
+        "connected": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_connected",
         "x": 180
-      },
-      "false": {
       }
     },
-    "west": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "direction": "west",
+        "connected": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_connected",
         "y": 270
-      },
-      "false": {
       }
     },
-    "up": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "direction": "up",
+        "connected": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_connected",
         "x": 270
-      },
-      "false": {
       }
     },
-    "down": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
-        "x": 90
+    {
+      "when": {
+        "direction": "down",
+        "connected": true
       },
-      "false": {
+      "apply": {
+        "model": "refinedstorage:block/constructor_connected",
+        "x": 90
+      }
+    },
+    {
+      "when": {
+        "direction": "north",
+        "connected": false
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_disconnected"
+      }
+    },
+    {
+      "when": {
+        "direction": "east",
+        "connected": false
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_disconnected",
+        "y": 90
+      }
+    },
+    {
+      "when": {
+        "direction": "south",
+        "connected": false
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_disconnected",
+        "x": 180
+      }
+    },
+    {
+      "when": {
+        "direction": "west",
+        "connected": false
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_disconnected",
+        "y": 270
+      }
+    },
+    {
+      "when": {
+        "direction": "up",
+        "connected": false
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_disconnected",
+        "x": 270
+      }
+    },
+    {
+      "when": {
+        "direction": "down",
+        "connected": false
+      },
+      "apply": {
+        "model": "refinedstorage:block/constructor_disconnected",
+        "x": 90
       }
     }
-  }
+  ]
 }

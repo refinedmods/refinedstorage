@@ -27,6 +27,7 @@ public class ServerConfig {
     private StorageMonitor storageMonitor;
     private WirelessGrid wirelessGrid;
     private WirelessFluidGrid wirelessFluidGrid;
+    private Constructor constructor;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -50,6 +51,7 @@ public class ServerConfig {
         storageMonitor = new StorageMonitor();
         wirelessGrid = new WirelessGrid();
         wirelessFluidGrid = new WirelessFluidGrid();
+        constructor = new Constructor();
 
         spec = builder.build();
     }
@@ -136,6 +138,10 @@ public class ServerConfig {
 
     public WirelessFluidGrid getWirelessFluidGrid() {
         return wirelessFluidGrid;
+    }
+
+    public Constructor getConstructor() {
+        return constructor;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -673,6 +679,22 @@ public class ServerConfig {
 
         public int getInsertUsage() {
             return insertUsage.get();
+        }
+    }
+
+    public class Constructor {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public Constructor() {
+            builder.push("constructor");
+
+            usage = builder.comment("The energy used by the Constructor").defineInRange("usage", 3, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
         }
     }
 }

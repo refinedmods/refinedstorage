@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage;
 
 public class RSOldConfig {
     //region Energy
-    public int constructorUsage;
     public int crafterUsage;
     public int crafterPerPatternUsage;
     public int craftingMonitorUsage;
@@ -40,7 +39,6 @@ public class RSOldConfig {
 
     /*private void loadConfig() {
         //region Energy
-        constructorUsage = config.getInt("constructor", ENERGY, 1, 0, Integer.MAX_VALUE, "The energy used by Constructors");
         crafterUsage = config.getInt("crafter", ENERGY, 2, 0, Integer.MAX_VALUE, "The base energy used by Crafters");
         crafterPerPatternUsage = config.getInt("crafterPerPattern", ENERGY, 1, 0, Integer.MAX_VALUE, "The additional energy used per Pattern in a Crafter");
         craftingMonitorUsage = config.getInt("craftingMonitor", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");

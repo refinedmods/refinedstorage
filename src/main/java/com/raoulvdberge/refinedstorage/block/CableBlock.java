@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.tile.CableTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
@@ -28,6 +29,13 @@ public class CableBlock extends NodeBlock {
     private static final BooleanProperty WEST = BooleanProperty.create("west");
     private static final BooleanProperty UP = BooleanProperty.create("up");
     private static final BooleanProperty DOWN = BooleanProperty.create("down");
+
+    protected static final VoxelShape HOLDER_NORTH = makeCuboidShape(7, 7, 2, 9, 9, 6);
+    protected static final VoxelShape HOLDER_EAST = makeCuboidShape(10, 7, 7, 14, 9, 9);
+    protected static final VoxelShape HOLDER_SOUTH = makeCuboidShape(7, 7, 10, 9, 9, 14);
+    protected static final VoxelShape HOLDER_WEST = makeCuboidShape(2, 7, 7, 6, 9, 9);
+    protected static final VoxelShape HOLDER_UP = makeCuboidShape(7, 10, 7, 9, 14, 9);
+    protected static final VoxelShape HOLDER_DOWN = makeCuboidShape(7, 2, 7, 9, 6, 9);
 
     private static final VoxelShape SHAPE_CORE = makeCuboidShape(6, 6, 6, 10, 10, 10);
     private static final VoxelShape SHAPE_NORTH = makeCuboidShape(6, 6, 0, 10, 10, 6);
@@ -94,7 +102,11 @@ public class CableBlock extends NodeBlock {
         return getState(getDefaultState(), ctx.getWorld(), ctx.getPos());
     }
 
-    private static boolean hasNode(World world, BlockPos pos, Direction direction) {
+    private boolean hasNode(World world, BlockPos pos, BlockState state, Direction direction) {
+        if (getDirection() != BlockDirection.NONE && state.get(getDirection().getProperty()) == direction.getOpposite()) {
+            return false;
+        }
+
         TileEntity tile = world.getTileEntity(pos);
         if (tile == null) {
             return false;
@@ -104,12 +116,12 @@ public class CableBlock extends NodeBlock {
     }
 
     private BlockState getState(BlockState currentState, World world, BlockPos pos) {
-        boolean north = hasNode(world, pos.offset(Direction.NORTH), Direction.SOUTH);
-        boolean east = hasNode(world, pos.offset(Direction.EAST), Direction.WEST);
-        boolean south = hasNode(world, pos.offset(Direction.SOUTH), Direction.NORTH);
-        boolean west = hasNode(world, pos.offset(Direction.WEST), Direction.EAST);
-        boolean up = hasNode(world, pos.offset(Direction.UP), Direction.DOWN);
-        boolean down = hasNode(world, pos.offset(Direction.DOWN), Direction.UP);
+        boolean north = hasNode(world, pos.offset(Direction.NORTH), currentState, Direction.SOUTH);
+        boolean east = hasNode(world, pos.offset(Direction.EAST), currentState, Direction.WEST);
+        boolean south = hasNode(world, pos.offset(Direction.SOUTH), currentState, Direction.NORTH);
+        boolean west = hasNode(world, pos.offset(Direction.WEST), currentState, Direction.EAST);
+        boolean up = hasNode(world, pos.offset(Direction.UP), currentState, Direction.DOWN);
+        boolean down = hasNode(world, pos.offset(Direction.DOWN), currentState, Direction.UP);
 
         return currentState
             .with(NORTH, north)

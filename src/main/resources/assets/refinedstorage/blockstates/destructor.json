@@ -2,11 +2,8 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "cable": "refinedstorage:blocks/cable",
-      "particle": "refinedstorage:blocks/cable",
       "front": "refinedstorage:blocks/destructor/destructor",
-      "cutout": "refinedstorage:blocks/destructor/cutouts/disconnected",
-      "border": "refinedstorage:blocks/cable_part_border"
+      "cutout": "refinedstorage:blocks/destructor/cutouts/disconnected"
     },
     "model": "refinedstorage:cable_core",
     "uvlock": true,

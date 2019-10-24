@@ -1,18 +1,11 @@
 package com.raoulvdberge.refinedstorage.container.slot.filter;
 
 import com.raoulvdberge.refinedstorage.container.slot.BaseSlot;
-import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.SkullItem;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class FilterSlot extends BaseSlot {
     public static final int FILTER_ALLOW_SIZE = 1;
@@ -34,8 +27,7 @@ public class FilterSlot extends BaseSlot {
     public boolean isItemValid(@Nonnull ItemStack stack) {
         if (super.isItemValid(stack)) {
             if (isBlockAllowed()) {
-                // TODO!
-                return stack.getItem() instanceof BlockItem || /*stack.getItem() instanceof ItemBlockSpecial ||*/ stack.getItem() instanceof IPlantable || stack.getItem() instanceof SkullItem;
+                return stack.getItem() instanceof BlockItem;
             }
 
             return true;
@@ -59,26 +51,5 @@ public class FilterSlot extends BaseSlot {
 
     public boolean isBlockAllowed() {
         return (flags & FILTER_ALLOW_BLOCKS) == FILTER_ALLOW_BLOCKS;
-    }
-
-    @Nullable
-    public static BlockState getBlockState(World world, BlockPos pos, @Nullable ItemStack stack) {
-        if (stack != null) {
-            Item item = stack.getItem();
-
-            // TODO if (item instanceof ItemBlockSpecial) {
-            //    return ((ItemBlockSpecial) item).getBlock().getDefaultState();
-            /*} else*/
-            /*if (item instanceof SkullItem) {
-                return Blocks.SKELETON_SKULL.getDefaultState();
-            } else */
-            if (item instanceof BlockItem) {
-                return (((BlockItem) item).getBlock()).getDefaultState();
-            } else if (item instanceof IPlantable) {
-                return ((IPlantable) item).getPlant(world, pos);
-            }
-        }
-
-        return null;
     }
 }

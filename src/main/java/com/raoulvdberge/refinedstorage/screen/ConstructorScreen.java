@@ -6,22 +6,23 @@ import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ConstructorDropS
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.TypeSideButton;
-import com.raoulvdberge.refinedstorage.tile.TileConstructor;
+import com.raoulvdberge.refinedstorage.tile.ConstructorTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 
-public class GuiConstructor extends BaseScreen<ConstructorContainer> {
-    public GuiConstructor(ConstructorContainer container, PlayerInventory inventory) {
-        super(container, 211, 137, inventory, null); // TODO TextComponent
+public class ConstructorScreen extends BaseScreen<ConstructorContainer> {
+    public ConstructorScreen(ConstructorContainer container, PlayerInventory inventory, ITextComponent title) {
+        super(container, 211, 137, inventory, title);
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, TileConstructor.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, ConstructorTile.REDSTONE_MODE));
 
-        addSideButton(new TypeSideButton(this, TileConstructor.TYPE));
+        addSideButton(new TypeSideButton(this, ConstructorTile.TYPE));
 
-        addSideButton(new ExactModeSideButton(this, TileConstructor.COMPARE));
+        addSideButton(new ExactModeSideButton(this, ConstructorTile.COMPARE));
         addSideButton(new ConstructorDropSideButton(this));
     }
 
@@ -38,7 +39,7 @@ public class GuiConstructor extends BaseScreen<ConstructorContainer> {
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, I18n.format("gui.refinedstorage:constructor"));
+        renderString(7, 7, title.getFormattedText());
         renderString(7, 43, I18n.format("container.inventory"));
     }
 }
