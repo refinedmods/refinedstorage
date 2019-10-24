@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.mojang.authlib.GameProfile;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -14,6 +13,7 @@ import com.raoulvdberge.refinedstorage.tile.ConstructorTile;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.dispenser.Position;
 import net.minecraft.entity.item.FireworkRocketEntity;
@@ -33,8 +33,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -45,7 +43,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.UUID;
 
 public class ConstructorNetworkNode extends NetworkNode implements IComparable, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "constructor");
@@ -105,7 +102,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
             if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                 network.getCraftingManager().request(this, stack, FluidAttributes.BUCKET_VOLUME);
             }
-        } else if (world.isAirBlock(front) && FluidUtil.tryPlaceFluid(getFakePlayer(), world, Hand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack)) {
+        } else if (world.isAirBlock(front) && FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerWorld) world, getOwner()), world, Hand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack)) {
             // We manually have to check world.isAirBlock in the else if statement because tryPlaceFluid ignores this.
             network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM);
         }
@@ -115,7 +112,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         if (!network.extractItem(stack, 1, compare, Action.SIMULATE).isEmpty()) {
             BlockItemUseContext ctx = new ConstructorBlockItemUseContext(
                 world,
-                getFakePlayer(),
+                WorldUtils.getFakePlayer((ServerWorld) world, getOwner()),
                 Hand.MAIN_HAND,
                 ItemHandlerHelper.copyStackWithSize(stack, 1),
                 new BlockRayTraceResult(Vec3d.ZERO, getDirection(), pos, false)
@@ -148,22 +145,6 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         if (!took.isEmpty()) {
             world.addEntity(new FireworkRocketEntity(world, getDispensePositionX(), getDispensePositionY(), getDispensePositionZ(), took));
         }
-    }
-
-    private FakePlayer getFakePlayer() {
-        ServerWorld world = (ServerWorld) this.world;
-
-        UUID owner = getOwner();
-
-        if (owner != null) {
-            GameProfile profile = world.getServer().getPlayerProfileCache().getProfileByUUID(owner);
-
-            if (profile != null) {
-                return FakePlayerFactory.get(world, profile);
-            }
-        }
-
-        return FakePlayerFactory.getMinecraft(world);
     }
 
     // @Volatile: From BlockDispenser#getDispensePosition

@@ -3,13 +3,13 @@ package com.raoulvdberge.refinedstorage.container;
 import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
-import com.raoulvdberge.refinedstorage.tile.TileDestructor;
+import com.raoulvdberge.refinedstorage.tile.DestructorTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class DestructorContainer extends BaseContainer {
-    public DestructorContainer(TileDestructor destructor, PlayerEntity player, int windowId) {
+    public DestructorContainer(DestructorTile destructor, PlayerEntity player, int windowId) {
         super(RSContainers.DESTRUCTOR, destructor, player, windowId);
 
         for (int i = 0; i < 4; ++i) {

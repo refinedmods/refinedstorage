@@ -1,9 +1,11 @@
 package com.raoulvdberge.refinedstorage.util;
 
+import com.mojang.authlib.GameProfile;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +16,9 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -22,6 +27,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public final class WorldUtils {
     public static void updateBlock(@Nullable World world, BlockPos pos) {
@@ -54,6 +60,20 @@ public final class WorldUtils {
             return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null);
         }
         return null;
+    }
+
+    public static FakePlayer getFakePlayer(ServerWorld world, @Nullable UUID owner) {
+        if (owner != null) {
+            PlayerProfileCache profileCache = world.getServer().getPlayerProfileCache();
+
+            GameProfile profile = profileCache.getProfileByUUID(owner);
+
+            if (profile != null) {
+                return FakePlayerFactory.get(world, profile);
+            }
+        }
+
+        return FakePlayerFactory.getMinecraft(world);
     }
 
     public static void sendNoPermissionMessage(PlayerEntity player) {

@@ -3,24 +3,25 @@ package com.raoulvdberge.refinedstorage.screen;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.DestructorContainer;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
-import com.raoulvdberge.refinedstorage.tile.TileDestructor;
+import com.raoulvdberge.refinedstorage.tile.DestructorTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 
-public class GuiDestructor extends BaseScreen<DestructorContainer> {
-    public GuiDestructor(DestructorContainer container, PlayerInventory playerInventory) {
-        super(container, 211, 137, playerInventory, null);
+public class DestructorScreen extends BaseScreen<DestructorContainer> {
+    public DestructorScreen(DestructorContainer container, PlayerInventory playerInventory, ITextComponent title) {
+        super(container, 211, 137, playerInventory, title);
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        addSideButton(new RedstoneModeSideButton(this, TileDestructor.REDSTONE_MODE));
+        addSideButton(new RedstoneModeSideButton(this, DestructorTile.REDSTONE_MODE));
 
-        addSideButton(new TypeSideButton(this, TileDestructor.TYPE));
+        addSideButton(new TypeSideButton(this, DestructorTile.TYPE));
 
-        addSideButton(new WhitelistBlacklistSideButton(this, TileDestructor.WHITELIST_BLACKLIST));
+        addSideButton(new WhitelistBlacklistSideButton(this, DestructorTile.WHITELIST_BLACKLIST));
 
-        addSideButton(new ExactModeSideButton(this, TileDestructor.COMPARE));
+        addSideButton(new ExactModeSideButton(this, DestructorTile.COMPARE));
 
         addSideButton(new DestructorPickupSideButton(this));
     }
@@ -38,7 +39,7 @@ public class GuiDestructor extends BaseScreen<DestructorContainer> {
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, I18n.format("gui.refinedstorage:destructor"));
+        renderString(7, 7, title.getFormattedText());
         renderString(7, 43, I18n.format("container.inventory"));
     }
 }

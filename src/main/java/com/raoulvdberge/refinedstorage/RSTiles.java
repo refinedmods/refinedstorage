@@ -70,6 +70,8 @@ public class RSTiles {
     public static final TileEntityType<StorageMonitorTile> STORAGE_MONITOR = null;
     @ObjectHolder(RS.ID + ":constructor")
     public static final TileEntityType<ConstructorTile> CONSTRUCTOR = null;
+    @ObjectHolder(RS.ID + ":destructor")
+    public static final TileEntityType<DestructorTile> DESTRUCTOR = null;
 
     //@ObjectHolder(RS.ID + ":portable_grid")
     public static final TileEntityType<TilePortableGrid> PORTABLE_GRID = null;
@@ -81,6 +83,4 @@ public class RSTiles {
     public static final TileEntityType<TileCrafter> CRAFTER_MANAGER = null;
     //@ObjectHolder(RS.ID + ":crafting_monitor")
     public static final TileEntityType<TileCraftingMonitor> CRAFTING_MONITOR = null;
-    //@ObjectHolder(RS.ID + ":destructor")
-    public static final TileEntityType<TileDestructor> DESTRUCTOR = null;
 }

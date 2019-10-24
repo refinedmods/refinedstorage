@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSTiles;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeDestructor;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DestructorNetworkNode;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
@@ -12,16 +12,16 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class TileDestructor extends NetworkNodeTile<NetworkNodeDestructor> {
-    public static final TileDataParameter<Integer, TileDestructor> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, TileDestructor> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
-    public static final TileDataParameter<Integer, TileDestructor> TYPE = IType.createParameter();
-    public static final TileDataParameter<Boolean, TileDestructor> PICKUP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isPickupItem(), (t, v) -> {
+public class DestructorTile extends NetworkNodeTile<DestructorNetworkNode> {
+    public static final TileDataParameter<Integer, DestructorTile> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer, DestructorTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
+    public static final TileDataParameter<Integer, DestructorTile> TYPE = IType.createParameter();
+    public static final TileDataParameter<Boolean, DestructorTile> PICKUP = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isPickupItem(), (t, v) -> {
         t.getNode().setPickupItem(v);
         t.getNode().markDirty();
     });
 
-    public TileDestructor() {
+    public DestructorTile() {
         super(RSTiles.DESTRUCTOR);
         
         dataManager.addWatchedParameter(COMPARE);
@@ -32,7 +32,7 @@ public class TileDestructor extends NetworkNodeTile<NetworkNodeDestructor> {
 
     @Override
     @Nonnull
-    public NetworkNodeDestructor createNode(World world, BlockPos pos) {
-        return new NetworkNodeDestructor(world, pos);
+    public DestructorNetworkNode createNode(World world, BlockPos pos) {
+        return new DestructorNetworkNode(world, pos);
     }
 }
