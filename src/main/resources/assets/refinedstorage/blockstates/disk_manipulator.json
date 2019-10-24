@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "refinedstorage:block/disk_manipulator_disconnected"
+    }
+  }
+}

@@ -72,11 +72,11 @@ public class RSTiles {
     public static final TileEntityType<ConstructorTile> CONSTRUCTOR = null;
     @ObjectHolder(RS.ID + ":destructor")
     public static final TileEntityType<DestructorTile> DESTRUCTOR = null;
+    @ObjectHolder(RS.ID + ":disk_manipulator")
+    public static final TileEntityType<DiskManipulatorTile> DISK_MANIPULATOR = null;
 
     //@ObjectHolder(RS.ID + ":portable_grid")
     public static final TileEntityType<TilePortableGrid> PORTABLE_GRID = null;
-    //@ObjectHolder(RS.ID + ":disk_manipulator")
-    public static final TileEntityType<TileDiskManipulator> DISK_MANIPULATOR = null;
     //@ObjectHolder(RS.ID + ":crafter")
     public static final TileEntityType<TileCrafter> CRAFTER = null;
     //@ObjectHolder(RS.ID + ":crafter_manager")

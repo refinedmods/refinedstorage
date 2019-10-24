@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
@@ -18,16 +18,16 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidStack> {
-    private NetworkNodeDiskManipulator diskManipulator;
+    private DiskManipulatorNetworkNode diskManipulator;
     private IStorageDisk<FluidStack> parent;
-    private DiskDriveNetworkNode.DiskState lastState;
+    private DiskState lastState;
 
-    public StorageDiskFluidManipulatorWrapper(NetworkNodeDiskManipulator diskManipulator, IStorageDisk<FluidStack> parent) {
+    public StorageDiskFluidManipulatorWrapper(DiskManipulatorNetworkNode diskManipulator, IStorageDisk<FluidStack> parent) {
         this.diskManipulator = diskManipulator;
         this.parent = parent;
         this.setSettings(
             () -> {
-                DiskDriveNetworkNode.DiskState currentState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
+                DiskState currentState = DiskState.get(getStored(), getCapacity());
 
                 if (lastState != currentState) {
                     lastState = currentState;
@@ -37,7 +37,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
             },
             diskManipulator
         );
-        this.lastState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
+        this.lastState = DiskState.get(getStored(), getCapacity());
     }
 
     @Override

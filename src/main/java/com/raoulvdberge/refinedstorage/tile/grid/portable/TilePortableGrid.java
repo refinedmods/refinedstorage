@@ -21,8 +21,8 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.PortableFluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.PortableItemGridHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableFluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableItemStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.PortableFluidGridStorageCacheListener;
@@ -756,7 +756,7 @@ public class TilePortableGrid extends BaseTile implements IGrid, IPortableGrid, 
 
         if (renderInfo.getStored() == renderInfo.getCapacity()) {
             return PortableGridDiskState.FULL;
-        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= DiskDriveNetworkNode.DiskState.DISK_NEAR_CAPACITY_THRESHOLD) {
+        } else if ((int) ((float) renderInfo.getStored() / (float) renderInfo.getCapacity() * 100F) >= DiskState.DISK_NEAR_CAPACITY_THRESHOLD) {
             return PortableGridDiskState.NEAR_CAPACITY;
         } else {
             return PortableGridDiskState.NORMAL;

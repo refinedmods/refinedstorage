@@ -6,7 +6,6 @@ public class RSOldConfig {
     public int crafterPerPatternUsage;
     public int craftingMonitorUsage;
     public int crafterManagerUsage;
-    public int diskManipulatorUsage;
     //endregion
 
     //region Portable Grid
@@ -42,7 +41,6 @@ public class RSOldConfig {
         crafterPerPatternUsage = config.getInt("crafterPerPattern", ENERGY, 1, 0, Integer.MAX_VALUE, "The additional energy used per Pattern in a Crafter");
         craftingMonitorUsage = config.getInt("craftingMonitor", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");
         crafterManagerUsage = config.getInt("crafterManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafter Managers");
-        diskManipulatorUsage = config.getInt("diskManipulator", ENERGY, 3, 0, Integer.MAX_VALUE, "The energy used by Disk Manipulators");
         //endregion
 
         //region Portable Grid

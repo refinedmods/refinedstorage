@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,14 +19,14 @@ import java.util.Collection;
 public class ItemDriveWrapperStorageDisk implements IStorageDisk<ItemStack> {
     private DiskDriveNetworkNode diskDrive;
     private IStorageDisk<ItemStack> parent;
-    private DiskDriveNetworkNode.DiskState lastState;
+    private DiskState lastState;
 
     public ItemDriveWrapperStorageDisk(DiskDriveNetworkNode diskDrive, IStorageDisk<ItemStack> parent) {
         this.diskDrive = diskDrive;
         this.parent = parent;
         this.setSettings(
             () -> {
-                DiskDriveNetworkNode.DiskState currentState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
+                DiskState currentState = DiskState.get(getStored(), getCapacity());
 
                 if (this.lastState != currentState) {
                     this.lastState = currentState;
@@ -35,7 +36,7 @@ public class ItemDriveWrapperStorageDisk implements IStorageDisk<ItemStack> {
             },
             diskDrive
         );
-        this.lastState = DiskDriveNetworkNode.DiskState.get(getStored(), getCapacity());
+        this.lastState = DiskState.get(getStored(), getCapacity());
     }
 
     @Override

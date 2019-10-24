@@ -13,13 +13,13 @@
       "item": "refinedstorage:storage_housing"
     },
     "C": {
-      "item": "#construction_core"
+      "item": "refinedstorage:construction_core"
     },
     "M": {
       "item": "refinedstorage:machine_casing"
     },
     "D": {
-      "item": "#destruction_core"
+      "item": "refinedstorage:destruction_core"
     }
   },
   "result": {

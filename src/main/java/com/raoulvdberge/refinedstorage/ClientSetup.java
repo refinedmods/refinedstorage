@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.render.BakedModelOverrideRegistry;
 import com.raoulvdberge.refinedstorage.render.color.PatternItemColor;
 import com.raoulvdberge.refinedstorage.render.model.DiskDriveBakedModel;
+import com.raoulvdberge.refinedstorage.render.model.DiskManipulatorBakedModel;
 import com.raoulvdberge.refinedstorage.render.model.FullbrightBakedModel;
 import com.raoulvdberge.refinedstorage.render.model.PatternBakedModel;
 import com.raoulvdberge.refinedstorage.render.tesr.StorageMonitorTileRenderer;
@@ -74,12 +75,28 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/disks/leds")
         ).disableCache());
 
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_manipulator"), (base, registry) -> new FullbrightBakedModel(
+            new DiskManipulatorBakedModel(
+                registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator_connected")),
+                registry.get(new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected")),
+                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk")),
+                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity")),
+                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
+                registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
+            ),
+            new ResourceLocation(RS.ID, "block/disk_manipulator/cutouts/connected"),
+            new ResourceLocation(RS.ID, "block/disks/leds")
+        ).disableCache());
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_full"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"));
+
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator_connected"));
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelBake);
@@ -136,6 +153,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.STORAGE_MONITOR, StorageMonitorScreen::new);
         ScreenManager.registerFactory(RSContainers.CONSTRUCTOR, ConstructorScreen::new);
         ScreenManager.registerFactory(RSContainers.DESTRUCTOR, DestructorScreen::new);
+        ScreenManager.registerFactory(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_GRID);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);

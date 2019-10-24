@@ -54,11 +54,6 @@ public class FluidStorageBlock extends NodeBlock {
         super.onBlockPlacedBy(world, pos, state, player, stack);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

@@ -1,17 +1,17 @@
 package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSTiles;
-import com.raoulvdberge.refinedstorage.api.storage.AccessType;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
-import com.raoulvdberge.refinedstorage.tile.config.*;
-import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.DiskManipulatorNetworkNode;
+import com.raoulvdberge.refinedstorage.tile.config.IComparable;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -28,53 +28,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
-    public static final TileDataParameter<Integer, DiskDriveTile> PRIORITY = IPrioritizable.createParameter();
-    public static final TileDataParameter<Integer, DiskDriveTile> COMPARE = IComparable.createParameter();
-    public static final TileDataParameter<Integer, DiskDriveTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
-    public static final TileDataParameter<Integer, DiskDriveTile> TYPE = IType.createParameter();
-    public static final TileDataParameter<AccessType, DiskDriveTile> ACCESS_TYPE = IAccessType.createParameter();
-    public static final TileDataParameter<Long, DiskDriveTile> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
-        long stored = 0;
-
-        for (IStorageDisk storage : t.getNode().getItemDisks()) {
-            if (storage != null) {
-                stored += storage.getStored();
-            }
-        }
-
-        for (IStorageDisk storage : t.getNode().getFluidDisks()) {
-            if (storage != null) {
-                stored += storage.getStored();
-            }
-        }
-
-        return stored;
-    });
-    public static final TileDataParameter<Long, DiskDriveTile> CAPACITY = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> {
-        long capacity = 0;
-
-        for (IStorageDisk storage : t.getNode().getItemDisks()) {
-            if (storage != null) {
-                if (storage.getCapacity() == -1) {
-                    return -1L;
-                }
-
-                capacity += storage.getCapacity();
-            }
-        }
-
-        for (IStorageDisk storage : t.getNode().getFluidDisks()) {
-            if (storage != null) {
-                if (storage.getCapacity() == -1) {
-                    return -1L;
-                }
-
-                capacity += storage.getCapacity();
-            }
-        }
-
-        return capacity;
+public class DiskManipulatorTile extends NetworkNodeTile<DiskManipulatorNetworkNode> {
+    public static final TileDataParameter<Integer, DiskManipulatorTile> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Integer, DiskManipulatorTile> WHITELIST_BLACKLIST = IWhitelistBlacklist.createParameter();
+    public static final TileDataParameter<Integer, DiskManipulatorTile> TYPE = IType.createParameter();
+    public static final TileDataParameter<Integer, DiskManipulatorTile> IO_MODE = new TileDataParameter<>(DataSerializers.VARINT, DiskManipulatorNetworkNode.IO_MODE_INSERT, t -> t.getNode().getIoMode(), (t, v) -> {
+        t.getNode().setIoMode(v);
+        t.getNode().markDirty();
     });
 
     public static final ModelProperty<DiskState[]> DISK_STATE_PROPERTY = new ModelProperty<>();
@@ -85,16 +45,13 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
 
     private DiskState[] diskState = new DiskState[8];
 
-    public DiskDriveTile() {
-        super(RSTiles.DISK_DRIVE);
+    public DiskManipulatorTile() {
+        super(RSTiles.DISK_MANIPULATOR);
 
-        dataManager.addWatchedParameter(PRIORITY);
         dataManager.addWatchedParameter(COMPARE);
         dataManager.addWatchedParameter(WHITELIST_BLACKLIST);
         dataManager.addWatchedParameter(TYPE);
-        dataManager.addWatchedParameter(ACCESS_TYPE);
-        dataManager.addWatchedParameter(STORED);
-        dataManager.addWatchedParameter(CAPACITY);
+        dataManager.addWatchedParameter(IO_MODE);
 
         Arrays.fill(diskState, DiskState.NONE);
     }
@@ -147,7 +104,7 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
 
     @Override
     @Nonnull
-    public DiskDriveNetworkNode createNode(World world, BlockPos pos) {
-        return new DiskDriveNetworkNode(world, pos);
+    public DiskManipulatorNetworkNode createNode(World world, BlockPos pos) {
+        return new DiskManipulatorNetworkNode(world, pos);
     }
 }

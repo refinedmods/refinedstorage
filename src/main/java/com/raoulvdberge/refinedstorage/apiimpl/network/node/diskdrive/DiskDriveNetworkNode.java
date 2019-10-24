@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
@@ -34,26 +35,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import java.util.List;
 
 public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvider, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IStorageDiskContainerContext {
-    public enum DiskState {
-        NONE,
-        NORMAL,
-        DISCONNECTED,
-        NEAR_CAPACITY,
-        FULL;
-
-        public static final int DISK_NEAR_CAPACITY_THRESHOLD = 75;
-
-        public static DiskState get(int stored, int capacity) {
-            if (stored == capacity) {
-                return FULL;
-            } else if ((int) ((float) stored / (float) capacity * 100F) >= DISK_NEAR_CAPACITY_THRESHOLD) {
-                return NEAR_CAPACITY;
-            } else {
-                return NORMAL;
-            }
-        }
-    }
-
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "disk_drive");
 
     private static final String NBT_PRIORITY = "Priority";

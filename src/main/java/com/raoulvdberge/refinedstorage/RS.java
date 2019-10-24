@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.WirelessFlui
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.WirelessGridGridFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.*;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.DiskManipulatorNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
@@ -132,6 +133,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(StorageMonitorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new StorageMonitorNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(ConstructorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new ConstructorNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(DestructorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new DestructorNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(DiskManipulatorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new DiskManipulatorNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
         API.instance().getGridManager().add(WirelessGridGridFactory.ID, new WirelessGridGridFactory());
@@ -189,6 +191,7 @@ public final class RS {
         e.getRegistry().register(new StorageMonitorBlock());
         e.getRegistry().register(new ConstructorBlock());
         e.getRegistry().register(new DestructorBlock());
+        e.getRegistry().register(new DiskManipulatorBlock());
     }
 
     @SubscribeEvent
@@ -228,6 +231,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(StorageMonitorTile::new, RSBlocks.STORAGE_MONITOR).build(null).setRegistryName(RS.ID, "storage_monitor")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ConstructorTile::new, RSBlocks.CONSTRUCTOR).build(null).setRegistryName(RS.ID, "constructor")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DestructorTile::new, RSBlocks.DESTRUCTOR).build(null).setRegistryName(RS.ID, "destructor")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DiskManipulatorTile::new, RSBlocks.DISK_MANIPULATOR).build(null).setRegistryName(RS.ID, "disk_manipulator")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {
@@ -259,6 +263,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<StorageMonitorContainer, StorageMonitorTile>((windowId, inv, tile) -> new StorageMonitorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "storage_monitor"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<ConstructorContainer, ConstructorTile>((windowId, inv, tile) -> new ConstructorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "constructor"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DestructorContainer, DestructorTile>((windowId, inv, tile) -> new DestructorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "destructor"));
+        e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DiskManipulatorContainer, DiskManipulatorTile>((windowId, inv, tile) -> new DiskManipulatorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "disk_manipulator"));
     }
 
     @SubscribeEvent
@@ -340,6 +345,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.STORAGE_MONITOR));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CONSTRUCTOR));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DESTRUCTOR));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DISK_MANIPULATOR));
 
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.NORMAL));
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.CREATIVE));

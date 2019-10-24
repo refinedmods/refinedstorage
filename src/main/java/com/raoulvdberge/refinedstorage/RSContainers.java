@@ -43,6 +43,8 @@ public final class RSContainers {
     public static final ContainerType<ConstructorContainer> CONSTRUCTOR = null;
     @ObjectHolder(RS.ID + ":destructor")
     public static final ContainerType<DestructorContainer> DESTRUCTOR = null;
+    @ObjectHolder(RS.ID + ":disk_manipulator")
+    public static final ContainerType<DiskManipulatorContainer> DISK_MANIPULATOR = null;
 
     //@ObjectHolder(RS.ID + ":crafter")
     public static final ContainerType<CrafterContainer> CRAFTER = null;
@@ -50,6 +52,4 @@ public final class RSContainers {
     public static final ContainerType<CrafterContainer> CRAFTER_MANAGER = null;
     //@ObjectHolder(RS.ID + ":crafting_monitor")
     public static final ContainerType<CraftingMonitorContainer> CRAFTING_MONITOR = null;
-    //@ObjectHolder(RS.ID + ":disk_manipulator")
-    public static final ContainerType<DiskManipulatorContainer> DISK_MANIPULATOR = null;
 }

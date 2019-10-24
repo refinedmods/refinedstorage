@@ -29,6 +29,7 @@ public class ServerConfig {
     private WirelessFluidGrid wirelessFluidGrid;
     private Constructor constructor;
     private Destructor destructor;
+    private DiskManipulator diskManipulator;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -54,6 +55,7 @@ public class ServerConfig {
         wirelessFluidGrid = new WirelessFluidGrid();
         constructor = new Constructor();
         destructor = new Destructor();
+        diskManipulator = new DiskManipulator();
 
         spec = builder.build();
     }
@@ -148,6 +150,10 @@ public class ServerConfig {
 
     public Destructor getDestructor() {
         return destructor;
+    }
+
+    public DiskManipulator getDiskManipulator() {
+        return diskManipulator;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -711,6 +717,22 @@ public class ServerConfig {
             builder.push("destructor");
 
             usage = builder.comment("The energy used by the Destructor").defineInRange("usage", 3, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class DiskManipulator {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public DiskManipulator() {
+            builder.push("diskManipulator");
+
+            usage = builder.comment("The energy used by the Disk Manipulator").defineInRange("usage", 4, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }

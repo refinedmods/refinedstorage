@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerCon
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
@@ -16,7 +17,7 @@ import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemV
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeFluidInventoryListener;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.raoulvdberge.refinedstorage.item.UpgradeItem;
-import com.raoulvdberge.refinedstorage.tile.TileDiskManipulator;
+import com.raoulvdberge.refinedstorage.tile.DiskManipulatorTile;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class NetworkNodeDiskManipulator extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, IStorageDiskContainerContext {
+public class DiskManipulatorNetworkNode extends NetworkNode implements IComparable, IWhitelistBlacklist, IType, IStorageDiskContainerContext {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "disk_manipulator");
 
     public static final int IO_MODE_INSERT = 0;
@@ -82,11 +83,13 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                     slot,
                     itemDisks,
                     fluidDisks,
-                    s -> new StorageDiskItemManipulatorWrapper(NetworkNodeDiskManipulator.this, s),
-                    s -> new StorageDiskFluidManipulatorWrapper(NetworkNodeDiskManipulator.this, s)
+                    s -> new StorageDiskItemManipulatorWrapper(DiskManipulatorNetworkNode.this, s),
+                    s -> new StorageDiskFluidManipulatorWrapper(DiskManipulatorNetworkNode.this, s)
                 );
 
-                WorldUtils.updateBlock(world, pos);
+                if (!reading) {
+                    WorldUtils.updateBlock(world, pos);
+                }
             }
         });
 
@@ -101,26 +104,28 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                     3 + slot,
                     itemDisks,
                     fluidDisks,
-                    s -> new StorageDiskItemManipulatorWrapper(NetworkNodeDiskManipulator.this, s),
-                    s -> new StorageDiskFluidManipulatorWrapper(NetworkNodeDiskManipulator.this, s)
+                    s -> new StorageDiskItemManipulatorWrapper(DiskManipulatorNetworkNode.this, s),
+                    s -> new StorageDiskFluidManipulatorWrapper(DiskManipulatorNetworkNode.this, s)
                 );
 
-                WorldUtils.updateBlock(world, pos);
+                if (!reading) {
+                    WorldUtils.updateBlock(world, pos);
+                }
             }
         }));
 
     private ProxyItemHandler disks = new ProxyItemHandler(inputDisks, outputDisks);
 
-    public NetworkNodeDiskManipulator(World world, BlockPos pos) {
-        super(world, pos);
-    }
-
     private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
+    public DiskManipulatorNetworkNode(World world, BlockPos pos) {
+        super(world, pos);
+    }
+
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.diskManipulatorUsage + upgrades.getEnergyUsage();
+        return RS.SERVER_CONFIG.getDiskManipulator().getUsage() + upgrades.getEnergyUsage();
     }
 
     @Override
@@ -238,7 +243,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 extracted = network.extractItem(toExtract, upgrades.getStackInteractCount(), compare, Action.PERFORM);
             }
         } else {
-            while (itemFilters.getSlots() > i && extracted == null) {
+            while (itemFilters.getSlots() > i && extracted.isEmpty()) {
                 ItemStack filterStack = ItemStack.EMPTY;
 
                 while (itemFilters.getSlots() > i && filterStack.isEmpty()) {
@@ -333,7 +338,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
                 extracted = network.extractFluid(toExtract, upgrades.getStackInteractCount(), compare, Action.PERFORM);
             }
         } else {
-            while (fluidFilters.getSlots() > i && extracted == null) {
+            while (fluidFilters.getSlots() > i && extracted.isEmpty()) {
                 FluidStack filterStack = FluidStack.EMPTY;
 
                 while (fluidFilters.getSlots() > i && filterStack.isEmpty()) {
@@ -373,6 +378,29 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
         }
     }
 
+    public DiskState[] getDiskState() {
+        DiskState[] diskStates = new DiskState[6];
+
+        for (int i = 0; i < 6; ++i) {
+            DiskState state = DiskState.NONE;
+
+            if (itemDisks[i] != null || fluidDisks[i] != null) {
+                if (!canUpdate()) {
+                    state = DiskState.DISCONNECTED;
+                } else {
+                    state = DiskState.get(
+                        itemDisks[i] != null ? itemDisks[i].getStored() : fluidDisks[i].getStored(),
+                        itemDisks[i] != null ? itemDisks[i].getCapacity() : fluidDisks[i].getCapacity()
+                    );
+                }
+            }
+
+            diskStates[i] = state;
+        }
+
+        return diskStates;
+    }
+
     @Override
     public int getCompare() {
         return compare;
@@ -385,7 +413,7 @@ public class NetworkNodeDiskManipulator extends NetworkNode implements IComparab
 
     @Override
     public int getType() {
-        return world.isRemote ? TileDiskManipulator.TYPE.getValue() : type;
+        return world.isRemote ? DiskManipulatorTile.TYPE.getValue() : type;
     }
 
     @Override
