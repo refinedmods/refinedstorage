@@ -1,7 +1,10 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.PortableGridGridFactory;
 import com.raoulvdberge.refinedstorage.item.NetworkItem;
-import net.minecraft.entity.player.PlayerEntity;
+import com.raoulvdberge.refinedstorage.item.blockitem.PortableGridBlockItem;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -24,7 +27,7 @@ public class OpenNetworkItemMessage {
     }
 
     public static void handle(OpenNetworkItemMessage message, Supplier<NetworkEvent.Context> ctx) {
-        PlayerEntity player = ctx.get().getSender();
+        ServerPlayerEntity player = ctx.get().getSender();
 
         if (player != null) {
             ctx.get().enqueueWork(() -> {
@@ -32,9 +35,9 @@ public class OpenNetworkItemMessage {
 
                 if (stack.getItem() instanceof NetworkItem) {
                     ((NetworkItem) stack.getItem()).applyNetwork(player.getServer(), stack, n -> n.getNetworkItemManager().open(player, stack), player::sendMessage);
-                }/* TODO else if (stack.getItem() == Item.getItemFromBlock(RSBlocks.PORTABLE_GRID)) { // @Hack
-                    API.instance().getGridManager().openGrid(PortableGrid.ID, player, stack);
-                }*/
+                } else if (stack.getItem() instanceof PortableGridBlockItem) {
+                    API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, player, stack);
+                }
             });
         }
 

@@ -177,6 +177,7 @@ public class ClientSetup {
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
+        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
 
         ClientRegistry.bindTileEntitySpecialRenderer(StorageMonitorTile.class, new StorageMonitorTileRenderer());
 

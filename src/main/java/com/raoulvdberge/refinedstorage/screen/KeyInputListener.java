@@ -29,9 +29,9 @@ public class KeyInputListener {
                 findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_GRID, RSItems.CREATIVE_WIRELESS_GRID);
             } else if (RSKeyBindings.OPEN_WIRELESS_FLUID_GRID.isKeyDown()) {
                 findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.WIRELESS_FLUID_GRID, RSItems.CREATIVE_WIRELESS_FLUID_GRID);
-            }/* TODO else if (RSKeyBindings.OPEN_PORTABLE_GRID.isKeyDown()) {
-                findAndOpen(inv, Item.getItemFromBlock(RSBlocks.PORTABLE_GRID));
-            } else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isKeyDown()) {
+            } else if (RSKeyBindings.OPEN_PORTABLE_GRID.isKeyDown()) {
+                findAndOpen(inv, (error) -> Minecraft.getInstance().player.sendMessage(error), RSItems.PORTABLE_GRID, RSItems.CREATIVE_PORTABLE_GRID);
+            }/* TODO else if (RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR.isKeyDown()) {
                 findAndOpen(inv, RSItems.WIRELESS_CRAFTING_MONITOR);
             }*/
         }
