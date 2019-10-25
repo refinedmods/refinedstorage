@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridTile;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -74,9 +74,11 @@ public class RSTiles {
     public static final TileEntityType<DestructorTile> DESTRUCTOR = null;
     @ObjectHolder(RS.ID + ":disk_manipulator")
     public static final TileEntityType<DiskManipulatorTile> DISK_MANIPULATOR = null;
-
-    //@ObjectHolder(RS.ID + ":portable_grid")
-    public static final TileEntityType<TilePortableGrid> PORTABLE_GRID = null;
+    @ObjectHolder(RS.ID + ":portable_grid")
+    public static final TileEntityType<PortableGridTile> PORTABLE_GRID = null;
+    @ObjectHolder(RS.ID + ":creative_portable_grid")
+    public static final TileEntityType<PortableGridTile> CREATIVE_PORTABLE_GRID = null;
+    
     //@ObjectHolder(RS.ID + ":crafter")
     public static final TileEntityType<TileCrafter> CRAFTER = null;
     //@ObjectHolder(RS.ID + ":crafter_manager")

@@ -7,10 +7,7 @@ import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.PortableGridGridFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.WirelessFluidGridGridFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.WirelessGridGridFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.*;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.*;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.DiskManipulatorNetworkNode;
@@ -32,12 +29,14 @@ import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainer
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
+import com.raoulvdberge.refinedstorage.loottable.PortableGridBlockLootFunctionSerializer;
 import com.raoulvdberge.refinedstorage.loottable.StorageBlockLootFunctionSerializer;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.raoulvdberge.refinedstorage.tile.*;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
@@ -137,11 +136,13 @@ public final class RS {
         API.instance().getGridManager().add(WirelessGridGridFactory.ID, new WirelessGridGridFactory());
         API.instance().getGridManager().add(WirelessFluidGridGridFactory.ID, new WirelessFluidGridGridFactory());
         API.instance().getGridManager().add(PortableGridGridFactory.ID, new PortableGridGridFactory());
+        API.instance().getGridManager().add(PortableGridBlockGridFactory.ID, new PortableGridBlockGridFactory());
 
         API.instance().addExternalStorageProvider(StorageType.ITEM, new ItemExternalStorageProvider());
         API.instance().addExternalStorageProvider(StorageType.FLUID, new FluidExternalStorageProvider());
 
         LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
+        LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());
     }
 
     private INetworkNode readAndReturn(CompoundNBT tag, NetworkNode node) {
@@ -233,6 +234,9 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(ConstructorTile::new, RSBlocks.CONSTRUCTOR).build(null).setRegistryName(RS.ID, "constructor")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DestructorTile::new, RSBlocks.DESTRUCTOR).build(null).setRegistryName(RS.ID, "destructor")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DiskManipulatorTile::new, RSBlocks.DISK_MANIPULATOR).build(null).setRegistryName(RS.ID, "disk_manipulator")));
+
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new PortableGridTile(PortableGridBlockItem.Type.CREATIVE), RSBlocks.CREATIVE_PORTABLE_GRID).build(null).setRegistryName(RS.ID, "creative_portable_grid")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new PortableGridTile(PortableGridBlockItem.Type.NORMAL), RSBlocks.PORTABLE_GRID).build(null).setRegistryName(RS.ID, "portable_grid")));
     }
 
     private <T extends TileEntity> TileEntityType<T> registerTileDataParameters(TileEntityType<T> t) {

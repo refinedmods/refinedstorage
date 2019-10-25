@@ -27,7 +27,7 @@ import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridTile;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.TimeUtils;
 import net.minecraft.client.audio.SimpleSound;
@@ -94,8 +94,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         this.scrollbar = new ScrollbarWidget(this, 174, getTopHeight(), 12, (getVisibleRows() * 18) - 2);
 
-        if (grid instanceof GridNetworkNode || grid instanceof TilePortableGrid) {
-            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? GridTile.REDSTONE_MODE : TilePortableGrid.REDSTONE_MODE));
+        if (grid instanceof GridNetworkNode || grid instanceof PortableGridTile) {
+            addSideButton(new RedstoneModeSideButton(this, grid instanceof GridNetworkNode ? GridTile.REDSTONE_MODE : PortableGridTile.REDSTONE_MODE));
         }
 
         int sx = x + 80 + 1;

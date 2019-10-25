@@ -1,17 +1,38 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.PortableGridBlockGridFactory;
+import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridDiskState;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class PortableGridBlock extends BaseBlock {
-    public static final EnumProperty<PortableGridType> TYPE = EnumProperty.create("type", PortableGridType.class);
     public static final EnumProperty<PortableGridDiskState> DISK_STATE = EnumProperty.create("disk_state", PortableGridDiskState.class);
-    public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+
+    private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 13.2, 16);
 
     private final PortableGridBlockItem.Type type;
 
@@ -20,105 +41,58 @@ public class PortableGridBlock extends BaseBlock {
 
         this.type = type;
         this.setRegistryName(RS.ID, (type == PortableGridBlockItem.Type.CREATIVE ? "creative_" : "") + "portable_grid");
-    }
-
-    /*
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void registerModels(IModelRegistration modelRegistration) {
-        modelRegistration.setStateMapper(this, new StateMap.Builder().ignore(TYPE).build());
-        modelRegistration.setModelMeshDefinition(this, new ItemMeshDefinitionPortableGrid());
-
-        modelRegistration.addBakedModelOverride(info.getId(), base -> new BakedModelFullbright(
-            base,
-            RS.ID + ":blocks/disks/leds"
-        ));
+        this.setDefaultState(getDefaultState().with(DISK_STATE, PortableGridDiskState.NONE).with(ACTIVE, false));
     }
 
     @Override
-    @Nullable
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        super.fillStateContainer(builder);
+
+        builder.add(DISK_STATE);
+        builder.add(ACTIVE);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return SHAPE;
+    }
+
+    @Override
     public BlockDirection getDirection() {
         return BlockDirection.HORIZONTAL;
     }
 
     @Override
-    public Item createItem() {
-        return new ItemBlockPortableGrid(this);
+    public boolean hasTileEntity(BlockState state) {
+        return true;
     }
 
+    @Nullable
     @Override
-    public List<CollisionGroup> getCollisions(TileEntity tile, BlockState state) {
-        return Collections.singletonList(ConstantsPortableGrid.COLLISION);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isOpaqueCube(BlockState state) {
-        return false;
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new PortableGridTile(type);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean isFullCube(BlockState state) {
-        return false;
-    }
-
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, EntityLivingBase placer, ItemStack stack) {
-        super.onBlockPlacedBy(world, pos, state, placer, stack);
-
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote) {
-            ((TilePortableGrid) world.getTileEntity(pos)).onPassItemContext(stack);
-        }
-    }
+            API.instance().getGridManager().openGrid(PortableGridBlockGridFactory.ID, (ServerPlayerEntity) player, pos);
 
-    @Override
-    public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, BlockState state, int fortune) {
-        drops.add(((TilePortableGrid) world.getTileEntity(pos)).getAsItem());
-    }
-
-    @Override
-    public BlockState getActualState(BlockState state, IBlockAccess world, BlockPos pos) {
-        TilePortableGrid portableGrid = (TilePortableGrid) world.getTileEntity(pos);
-
-        return super.getActualState(state, world, pos)
-            .withProperty(DISK_STATE, portableGrid.getDiskState())
-            .withProperty(CONNECTED, portableGrid.isConnected());
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return createBlockStateBuilder()
-            .add(TYPE)
-            .add(DISK_STATE)
-            .add(CONNECTED)
-            .build();
-    }
-
-    @Override
-    public BlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(TYPE, meta == 0 ? PortableGridType.NORMAL : PortableGridType.CREATIVE);
-    }
-
-    @Override
-    public int getMetaFromState(BlockState state) {
-        return state.getValue(TYPE) == PortableGridType.NORMAL ? 0 : 1;
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, BlockState state, PlayerEntity player, EnumHand hand, Direction side, float hitX, float hitY, float hitZ) {
-        if (!world.isRemote) {
-            API.instance().getGridManager().openGrid(TilePortableGrid.FACTORY_ID, (ServerPlayerEntity) player, pos);
-
-            ((TilePortableGrid) world.getTileEntity(pos)).onOpened();
+            ((PortableGridTile) world.getTileEntity(pos)).onOpened();
         }
 
         return true;
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, BlockState state, BlockPos pos, Direction face) {
-        return BlockFaceShape.UNDEFINED;
-    }*/
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.onBlockPlacedBy(world, pos, state, placer, stack);
+
+        if (!world.isRemote) {
+            ((PortableGridTile) world.getTileEntity(pos)).applyDataFromItemToTile(stack);
+            ((PortableGridTile) world.getTileEntity(pos)).updateState();
+        }
+    }
 }

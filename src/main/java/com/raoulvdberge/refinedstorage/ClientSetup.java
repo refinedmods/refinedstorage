@@ -85,22 +85,19 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/disks/leds")
         ).disableCache());
 
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "portable_grid"), (base, registry) -> new PortableGridBakedModel(
-            registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_connected")),
-            registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"))
-        ));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "creative_portable_grid"), (base, registry) -> new PortableGridBakedModel(
-            registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_connected")),
-            registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full")),
-            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"))
-        ));
+        for (String portableGridName : new String[]{"portable_grid", "creative_portable_grid"}) {
+            bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, portableGridName), (base, registry) -> new FullbrightBakedModel(
+                new PortableGridBakedModel(
+                    registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_connected")),
+                    registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected")),
+                    registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk")),
+                    registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity")),
+                    registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full")),
+                    registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"))
+                ),
+                new ResourceLocation(RS.ID + ":block/disks/leds")
+            ).disableCache());
+        }
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
