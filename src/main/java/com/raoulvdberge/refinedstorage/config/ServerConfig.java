@@ -30,6 +30,7 @@ public class ServerConfig {
     private Constructor constructor;
     private Destructor destructor;
     private DiskManipulator diskManipulator;
+    private PortableGrid portableGrid;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -56,6 +57,7 @@ public class ServerConfig {
         constructor = new Constructor();
         destructor = new Destructor();
         diskManipulator = new DiskManipulator();
+        portableGrid = new PortableGrid();
 
         spec = builder.build();
     }
@@ -154,6 +156,10 @@ public class ServerConfig {
 
     public DiskManipulator getDiskManipulator() {
         return diskManipulator;
+    }
+
+    public PortableGrid getPortableGrid() {
+        return portableGrid;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -669,6 +675,46 @@ public class ServerConfig {
             openUsage = builder.comment("The energy used by the Wireless Fluid Grid to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
             extractUsage = builder.comment("The energy used by the Wireless Fluid Grid to extract fluids").defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
             insertUsage = builder.comment("The energy used by the Wireless Fluid Grid to insert fluids").defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public boolean getUseEnergy() {
+            return useEnergy.get();
+        }
+
+        public int getCapacity() {
+            return capacity.get();
+        }
+
+        public int getOpenUsage() {
+            return openUsage.get();
+        }
+
+        public int getExtractUsage() {
+            return extractUsage.get();
+        }
+
+        public int getInsertUsage() {
+            return insertUsage.get();
+        }
+    }
+
+    public class PortableGrid {
+        private final ForgeConfigSpec.BooleanValue useEnergy;
+        private final ForgeConfigSpec.IntValue capacity;
+        private final ForgeConfigSpec.IntValue openUsage;
+        private final ForgeConfigSpec.IntValue extractUsage;
+        private final ForgeConfigSpec.IntValue insertUsage;
+
+        public PortableGrid() {
+            builder.push("portableGrid");
+
+            useEnergy = builder.comment("Whether the Portable Grid uses energy").define("useEnergy", true);
+            capacity = builder.comment("The energy capacity of the Portable Grid").defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
+            openUsage = builder.comment("The energy used by the Portable Grid to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
+            extractUsage = builder.comment("The energy used by the Portable Grid to extract items or fluids").defineInRange("extractUsage", 5, 0, Integer.MAX_VALUE);
+            insertUsage = builder.comment("The energy used by the Portable Grid to insert items or fluids").defineInRange("insertUsage", 5, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }

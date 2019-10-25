@@ -8,14 +8,6 @@ public class RSOldConfig {
     public int crafterManagerUsage;
     //endregion
 
-    //region Portable Grid
-    public boolean portableGridUsesEnergy;
-    public int portableGridCapacity;
-    public int portableGridOpenUsage;
-    public int portableGridExtractUsage;
-    public int portableGridInsertUsage;
-    //endregion
-
     //region Wireless Crafting Monitor
     public boolean wirelessCraftingMonitorUsesEnergy;
     public int wirelessCraftingMonitorCapacity;
@@ -30,7 +22,6 @@ public class RSOldConfig {
 
     //region Categories
     private static final String ENERGY = "energy";
-    private static final String PORTABLE_GRID = "portableGrid";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String AUTOCRAFTING = "autocrafting";
     //endregion
@@ -41,14 +32,6 @@ public class RSOldConfig {
         crafterPerPatternUsage = config.getInt("crafterPerPattern", ENERGY, 1, 0, Integer.MAX_VALUE, "The additional energy used per Pattern in a Crafter");
         craftingMonitorUsage = config.getInt("craftingMonitor", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");
         crafterManagerUsage = config.getInt("crafterManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafter Managers");
-        //endregion
-
-        //region Portable Grid
-        portableGridUsesEnergy = config.getBoolean("usesEnergy", PORTABLE_GRID, true, "Whether the Portable Grid uses energy");
-        portableGridCapacity = config.getInt("capacity", PORTABLE_GRID, 3200, 0, Integer.MAX_VALUE, "The energy capacity of the Portable Grid");
-        portableGridOpenUsage = config.getInt("open", PORTABLE_GRID, 30, 0, Integer.MAX_VALUE, "The energy used by the Portable Grid to open");
-        portableGridInsertUsage = config.getInt("insert", PORTABLE_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Portable Grid to insert items");
-        portableGridExtractUsage = config.getInt("extract", PORTABLE_GRID, 3, 0, Integer.MAX_VALUE, "The energy used by the Portable Grid to extract items");
         //endregion
 
         //region Wireless Crafting Monitor

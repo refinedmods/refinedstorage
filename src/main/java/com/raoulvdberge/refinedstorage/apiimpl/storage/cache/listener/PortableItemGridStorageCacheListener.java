@@ -1,11 +1,15 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
+import com.raoulvdberge.refinedstorage.network.grid.PortableGridItemDeltaMessage;
+import com.raoulvdberge.refinedstorage.network.grid.PortableGridItemUpdateMessage;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PortableItemGridStorageCacheListener implements IStorageCacheListener<ItemStack> {
@@ -19,20 +23,7 @@ public class PortableItemGridStorageCacheListener implements IStorageCacheListen
 
     @Override
     public void onAttached() {
-        /*RS.INSTANCE.network.sendTo(new MessageGridItemUpdate(buf -> {
-            buf.writeInt(portableGrid.getItemCache().getList().getStacks().size());
-
-            for (ItemStack stack : portableGrid.getItemCache().getList().getStacks()) {
-                StackUtils.writeItemStack(buf, stack, null, false);
-
-                IStorageTracker.IStorageTrackerEntry entry = portableGrid.getItemStorageTracker().get(stack);
-                buf.writeBoolean(entry != null);
-                if (entry != null) {
-                    buf.writeLong(entry.getTime());
-                    ByteBufUtils.writeUTF8String(buf, entry.getName());
-                }
-            }
-        }, false), player); TODO */
+        RS.NETWORK_HANDLER.sendTo(player, new PortableGridItemUpdateMessage(portableGrid));
     }
 
     @Override
@@ -42,11 +33,15 @@ public class PortableItemGridStorageCacheListener implements IStorageCacheListen
 
     @Override
     public void onChanged(StackListResult<ItemStack> delta) {
-        // TODO RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getItemStorageTracker(), stack, size), player);
+        List<StackListResult<ItemStack>> deltas = new ArrayList<>();
+
+        deltas.add(delta);
+
+        onChangedBulk(deltas);
     }
 
     @Override
     public void onChangedBulk(List<StackListResult<ItemStack>> storageCacheDeltas) {
-        // TODO RS.INSTANCE.network.sendTo(new MessageGridItemDelta(null, portableGrid.getItemStorageTracker(), stacks), player);
+        RS.NETWORK_HANDLER.sendTo(player, new PortableGridItemDeltaMessage(portableGrid, storageCacheDeltas));
     }
 }

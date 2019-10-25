@@ -1,4 +1,15 @@
 {
+  "parent": "block/cube",
+  "textures": {
+    "particle": "refinedstorage:block/portable_grid_1",
+    "texture0": "refinedstorage:block/portable_grid_1",
+    "texture2": "refinedstorage:block/portable_grid_3",
+    "texture3": "refinedstorage:block/portable_grid_4",
+    "texture4": "refinedstorage:block/portable_grid_5",
+    "texture5": "refinedstorage:block/portable_grid_6",
+    "texture6": "refinedstorage:block/portable_grid_7",
+    "texture7": "refinedstorage:block/portable_grid_8"
+  },
   "display": {
     "firstperson_lefthand": {
       "rotation": [10, 130, 0],

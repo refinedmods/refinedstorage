@@ -1,19 +1,25 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.block.enums.PortableGridDiskState;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.block.enums.PortableGridType;
-import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.TilePortableGrid;
+import com.raoulvdberge.refinedstorage.item.blockitem.PortableGridBlockItem;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridDiskState;
+import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 
-public class BlockPortableGrid extends BlockBase {
+public class PortableGridBlock extends BaseBlock {
     public static final EnumProperty<PortableGridType> TYPE = EnumProperty.create("type", PortableGridType.class);
     public static final EnumProperty<PortableGridDiskState> DISK_STATE = EnumProperty.create("disk_state", PortableGridDiskState.class);
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
-    public BlockPortableGrid() {
-        super(BlockInfoBuilder.forId("portable_grid").tileEntity(TilePortableGrid::new).create());
+    private final PortableGridBlockItem.Type type;
+
+    public PortableGridBlock(PortableGridBlockItem.Type type) {
+        super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
+
+        this.type = type;
+        this.setRegistryName(RS.ID, (type == PortableGridBlockItem.Type.CREATIVE ? "creative_" : "") + "portable_grid");
     }
 
     /*

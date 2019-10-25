@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.block.enums;
+package com.raoulvdberge.refinedstorage.tile.grid.portable;
 
 import net.minecraft.util.IStringSerializable;
 

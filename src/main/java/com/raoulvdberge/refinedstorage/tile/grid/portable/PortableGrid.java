@@ -14,10 +14,12 @@ import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
+import com.raoulvdberge.refinedstorage.api.storage.disk.StorageDiskSyncData;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.PortableFluidGridHandler;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler.PortableItemGridHandler;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableFluidStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.PortableItemStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.PortableFluidGridStorageCacheListener;
@@ -29,6 +31,9 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracke
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.validator.StorageDiskItemValidator;
+import com.raoulvdberge.refinedstorage.item.WirelessGridItem;
+import com.raoulvdberge.refinedstorage.item.blockitem.PortableGridBlockItem;
+import com.raoulvdberge.refinedstorage.network.grid.PortableGridSettingsUpdateMessage;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -49,10 +54,9 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainerContext {
-    public static int ID;
-
     static final String NBT_STORAGE_TRACKER = "StorageTracker";
     static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
 
@@ -64,6 +68,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     private PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
     private PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
 
+    @Nullable
     private PlayerEntity player;
     private ItemStack stack;
 
@@ -92,7 +97,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     private BaseItemHandler disk = new BaseItemHandler(1)
         .addValidator(new StorageDiskItemValidator())
         .addListener(((handler, slot, reading) -> {
-            if (!player.world.isRemote) {
+            if (player != null && !player.world.isRemote) {
                 ItemStack diskStack = handler.getStackInSlot(slot);
 
                 if (diskStack.isEmpty()) {
@@ -130,18 +135,16 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             }
         }));
 
-    public PortableGrid(PlayerEntity player, ItemStack stack) {
+    public PortableGrid(@Nullable PlayerEntity player, ItemStack stack) {
         this.player = player;
         this.stack = stack;
 
-        if (player != null) {
-            /* TODO this.sortingType = ItemWirelessGrid.getSortingType(stack);
-            this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
-            this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
-            this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
-            this.tabPage = ItemWirelessGrid.getTabPage(stack);
-            this.size = ItemWirelessGrid.getSize(stack);*/
-        }
+        this.sortingType = WirelessGridItem.getSortingType(stack);
+        this.sortingDirection = WirelessGridItem.getSortingDirection(stack);
+        this.searchBoxMode = WirelessGridItem.getSearchBoxMode(stack);
+        this.tabSelected = WirelessGridItem.getTabSelected(stack);
+        this.tabPage = WirelessGridItem.getTabPage(stack);
+        this.size = WirelessGridItem.getSize(stack);
 
         if (!stack.hasTag()) {
             stack.setTag(new CompoundNBT());
@@ -156,10 +159,11 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         }
 
         StackUtils.readItems(disk, 4, stack.getTag());
-
         StackUtils.readItems(filter, 0, stack.getTag());
+    }
 
-        drainEnergy(RS.INSTANCE.config.portableGridOpenUsage);
+    public void onOpen() {
+        drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getOpenUsage());
     }
 
     public ItemStack getStack() {
@@ -180,21 +184,24 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public void drainEnergy(int energy) {
-        //TODO if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemBlockPortableGrid.TYPE_CREATIVE) {
-        IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
-        //}
-        if (storage != null) {
-            storage.extractEnergy(energy, false);
+        if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() && ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE) {
+            IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
+
+            if (storage != null) {
+                storage.extractEnergy(energy, false);
+            }
         }
     }
 
     @Override
     public int getEnergy() {
-        //TODO if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemBlockPortableGrid.TYPE_CREATIVE) {
-        IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
-        // }
+        if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() && ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE) {
+            IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null).orElse(null);
 
-        return storage == null ? RS.INSTANCE.config.portableGridCapacity : storage.getMaxEnergyStored();
+            return storage == null ? RS.SERVER_CONFIG.getPortableGrid().getCapacity() : storage.getEnergyStored();
+        }
+
+        return RS.SERVER_CONFIG.getPortableGrid().getCapacity();
     }
 
     @Override
@@ -296,7 +303,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public void onSortingTypeChanged(int type) {
-        // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new PortableGridSettingsUpdateMessage(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingType = type;
 
@@ -305,7 +312,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new PortableGridSettingsUpdateMessage(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingDirection = direction;
 
@@ -314,27 +321,25 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new PortableGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
 
         this.searchBoxMode = searchBoxMode;
     }
 
     @Override
     public void onSizeChanged(int size) {
-        // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new PortableGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
 
         this.size = size;
 
-        // TODO if (Minecraft.getMinecraft().currentScreen != null) {
-        //    Minecraft.getMinecraft().currentScreen.initGui();
-        //}
+        BaseScreen.executeLater(GridScreen.class, BaseScreen::init);
     }
 
     @Override
     public void onTabSelectionChanged(int tab) {
         this.tabSelected = tab == tabSelected ? -1 : tab;
 
-        // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new PortableGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
         BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
@@ -342,7 +347,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     @Override
     public void onTabPageChanged(int page) {
         if (page >= 0 && page <= getTotalTabPages()) {
-            // TODO RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
+            RS.NETWORK_HANDLER.sendToServer(new PortableGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
 
             this.tabPage = page;
         }
@@ -415,17 +420,62 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         }
     }
 
+    private boolean hasDisk() {
+        return !disk.getStackInSlot(0).isEmpty();
+    }
+
     @Override
     public boolean isActive() {
-        // TODO if (RS.INSTANCE.config.portableGridUsesEnergy && stack.getItemDamage() != ItemBlockPortableGrid.TYPE_CREATIVE && stack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored() <= RS.INSTANCE.config.portableGridOpenUsage) {
-        //  return false;
-        //+}
-
-        if (disk.getStackInSlot(0).isEmpty()) {
+        if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() &&
+            ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE &&
+            stack.getCapability(CapabilityEnergy.ENERGY).orElse(null).getEnergyStored() <= RS.SERVER_CONFIG.getPortableGrid().getOpenUsage()) {
             return false;
         }
 
-        return true;
+        return hasDisk();
+    }
+
+    @Nullable
+    private UUID getDiskId() {
+        return !hasDisk() ? null : ((IStorageDiskProvider) disk.getStackInSlot(0).getItem()).getId(disk.getStackInSlot(0));
+    }
+
+    private int getStored() {
+        API.instance().getStorageDiskSync().sendRequest(getDiskId());
+
+        StorageDiskSyncData data = API.instance().getStorageDiskSync().getData(getDiskId());
+
+        return data == null ? 0 : data.getStored();
+    }
+
+    private int getCapacity() {
+        API.instance().getStorageDiskSync().sendRequest(getDiskId());
+
+        StorageDiskSyncData data = API.instance().getStorageDiskSync().getData(getDiskId());
+
+        return data == null ? 0 : data.getCapacity();
+    }
+
+    @Override
+    public PortableGridDiskState getDiskState() {
+        if (!hasDisk()) {
+            return PortableGridDiskState.NONE;
+        }
+
+        if (!isActive()) {
+            return PortableGridDiskState.DISCONNECTED;
+        }
+
+        int stored = getStored();
+        int capacity = getCapacity();
+
+        if (stored == capacity) {
+            return PortableGridDiskState.FULL;
+        } else if ((int) ((float) stored / (float) capacity * 100F) >= DiskState.DISK_NEAR_CAPACITY_THRESHOLD) {
+            return PortableGridDiskState.NEAR_CAPACITY;
+        } else {
+            return PortableGridDiskState.NORMAL;
+        }
     }
 
     @Override

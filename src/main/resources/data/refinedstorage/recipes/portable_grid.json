@@ -10,20 +10,16 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "G": {
-      "item": "refinedstorage:grid",
-      "data": 0
+      "item": "refinedstorage:grid"
     },
     "F": {
-      "item": "refinedstorage:grid",
-      "data": 3
+      "item": "refinedstorage:fluid_grid"
     },
     "C": {
-      "item": "refinedstorage:controller",
-      "data": 0
+      "item": "refinedstorage:controller"
     }
   },
   "result": {
-    "item": "refinedstorage:portable_grid",
-    "data": 0
+    "item": "refinedstorage:portable_grid"
   }
 }

@@ -11,16 +11,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 
 public interface IPortableGrid {
-    interface IPortableGridRenderInfo {
-        int getStored();
-
-        int getCapacity();
-
-        boolean hasStorage();
-
-        boolean isActive();
-    }
-
     @Nullable
     IStorageCache getCache();
 
@@ -54,4 +44,8 @@ public interface IPortableGrid {
     IStorageTracker<ItemStack> getItemStorageTracker();
 
     IStorageTracker<FluidStack> getFluidStorageTracker();
+
+    boolean isActive();
+
+    PortableGridDiskState getDiskState();
 }

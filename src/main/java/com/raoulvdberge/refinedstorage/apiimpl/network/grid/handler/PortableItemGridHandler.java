@@ -101,7 +101,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
                 player.updateHeldItem();
             }
 
-            portableGrid.drainEnergy(RS.INSTANCE.config.portableGridExtractUsage);
+            portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
         }
     }
 
@@ -116,7 +116,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
         ItemStack remainder = portableGrid.getItemStorage().insert(stack, stack.getCount(), Action.PERFORM);
 
-        portableGrid.drainEnergy(RS.INSTANCE.config.portableGridInsertUsage);
+        portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getInsertUsage());
 
         return remainder;
     }
@@ -144,7 +144,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
         player.updateHeldItem();
 
-        portableGrid.drainEnergy(RS.INSTANCE.config.portableGridInsertUsage);
+        portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getInsertUsage());
     }
 
     @Override

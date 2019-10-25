@@ -6,10 +6,7 @@ import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
 import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.render.BakedModelOverrideRegistry;
 import com.raoulvdberge.refinedstorage.render.color.PatternItemColor;
-import com.raoulvdberge.refinedstorage.render.model.DiskDriveBakedModel;
-import com.raoulvdberge.refinedstorage.render.model.DiskManipulatorBakedModel;
-import com.raoulvdberge.refinedstorage.render.model.FullbrightBakedModel;
-import com.raoulvdberge.refinedstorage.render.model.PatternBakedModel;
+import com.raoulvdberge.refinedstorage.render.model.*;
 import com.raoulvdberge.refinedstorage.render.tesr.StorageMonitorTileRenderer;
 import com.raoulvdberge.refinedstorage.screen.*;
 import com.raoulvdberge.refinedstorage.screen.factory.GridScreenFactory;
@@ -88,6 +85,23 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/disks/leds")
         ).disableCache());
 
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "portable_grid"), (base, registry) -> new PortableGridBakedModel(
+            registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_connected")),
+            registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected")),
+            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk")),
+            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity")),
+            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full")),
+            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"))
+        ));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "creative_portable_grid"), (base, registry) -> new PortableGridBakedModel(
+            registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_connected")),
+            registry.get(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected")),
+            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk")),
+            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity")),
+            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full")),
+            registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"))
+        ));
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk"));
@@ -97,6 +111,13 @@ public class ClientSetup {
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator_disconnected"));
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disk_manipulator_connected"));
+
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_connected"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/portable_grid_disconnected"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_near_capacity"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full"));
+        ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"));
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onClientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelBake);

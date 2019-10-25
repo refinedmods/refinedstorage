@@ -63,7 +63,7 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
                     player.updateHeldItem();
                 }
 
-                portableGrid.drainEnergy(RS.INSTANCE.config.portableGridExtractUsage);
+                portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getExtractUsage());
             });
         }
     }
@@ -80,7 +80,7 @@ public class PortableFluidGridHandler implements IFluidGridHandler {
 
             portableGrid.getFluidStorage().insert(result.getValue(), result.getValue().getAmount(), Action.PERFORM);
 
-            portableGrid.drainEnergy(RS.INSTANCE.config.portableGridInsertUsage);
+            portableGrid.drainEnergy(RS.SERVER_CONFIG.getPortableGrid().getInsertUsage());
 
             return result.getLeft();
         }

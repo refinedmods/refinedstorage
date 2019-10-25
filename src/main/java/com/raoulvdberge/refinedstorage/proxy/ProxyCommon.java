@@ -8,7 +8,6 @@ public class ProxyCommon {
         API.deliver(e.getAsmData());
 
         TilePortableGrid.FACTORY_ID = API.instance().getGridManager().add(new GridFactoryPortableGridBlock());
-        PortableGrid.ID = API.instance().getGridManager().add(new GridFactoryPortableGrid());
 
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
 

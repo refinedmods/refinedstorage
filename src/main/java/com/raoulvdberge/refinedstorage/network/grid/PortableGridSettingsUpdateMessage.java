@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.network.grid;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
-import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
+import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class WirelessGridSettingsUpdateMessage {
+public class PortableGridSettingsUpdateMessage {
     private int viewType;
     private int sortingDirection;
     private int sortingType;
@@ -21,7 +21,7 @@ public class WirelessGridSettingsUpdateMessage {
     private int tabSelected;
     private int tabPage;
 
-    public WirelessGridSettingsUpdateMessage(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected, int tabPage) {
+    public PortableGridSettingsUpdateMessage(int viewType, int sortingDirection, int sortingType, int searchBoxMode, int size, int tabSelected, int tabPage) {
         this.viewType = viewType;
         this.sortingDirection = sortingDirection;
         this.sortingType = sortingType;
@@ -31,8 +31,8 @@ public class WirelessGridSettingsUpdateMessage {
         this.tabPage = tabPage;
     }
 
-    public static WirelessGridSettingsUpdateMessage decode(PacketBuffer buf) {
-        return new WirelessGridSettingsUpdateMessage(
+    public static PortableGridSettingsUpdateMessage decode(PacketBuffer buf) {
+        return new PortableGridSettingsUpdateMessage(
             buf.readInt(),
             buf.readInt(),
             buf.readInt(),
@@ -43,7 +43,7 @@ public class WirelessGridSettingsUpdateMessage {
         );
     }
 
-    public static void encode(WirelessGridSettingsUpdateMessage message, PacketBuffer buf) {
+    public static void encode(PortableGridSettingsUpdateMessage message, PacketBuffer buf) {
         buf.writeInt(message.viewType);
         buf.writeInt(message.sortingDirection);
         buf.writeInt(message.sortingType);
@@ -53,7 +53,7 @@ public class WirelessGridSettingsUpdateMessage {
         buf.writeInt(message.tabPage);
     }
 
-    public static void handle(WirelessGridSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void handle(PortableGridSettingsUpdateMessage message, Supplier<NetworkEvent.Context> ctx) {
         PlayerEntity player = ctx.get().getSender();
 
         if (player != null) {
@@ -61,8 +61,8 @@ public class WirelessGridSettingsUpdateMessage {
                 if (player.openContainer instanceof GridContainer) {
                     IGrid grid = ((GridContainer) player.openContainer).getGrid();
 
-                    if (grid instanceof WirelessGrid) {
-                        ItemStack stack = ((WirelessGrid) grid).getStack();
+                    if (grid instanceof PortableGrid) {
+                        ItemStack stack = ((PortableGrid) grid).getStack();
 
                         if (!stack.hasTag()) {
                             stack.setTag(new CompoundNBT());

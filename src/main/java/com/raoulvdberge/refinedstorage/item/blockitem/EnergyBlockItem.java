@@ -1,9 +1,8 @@
 package com.raoulvdberge.refinedstorage.item.blockitem;
 
+import com.raoulvdberge.refinedstorage.block.BaseBlock;
 import com.raoulvdberge.refinedstorage.item.capabilityprovider.EnergyCapabilityProvider;
-import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,11 +20,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class EnergyBlockItem extends BlockItem {
+public abstract class EnergyBlockItem extends BaseBlockItem {
     private final Supplier<Integer> energyCapacity;
     private final boolean creative;
 
-    public EnergyBlockItem(Block block, Item.Properties properties, boolean creative, Supplier<Integer> energyCapacity) {
+    public EnergyBlockItem(BaseBlock block, Item.Properties properties, boolean creative, Supplier<Integer> energyCapacity) {
         super(block, properties);
 
         this.creative = creative;

@@ -1,11 +1,15 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
+import com.raoulvdberge.refinedstorage.network.grid.PortableGridFluidDeltaMessage;
+import com.raoulvdberge.refinedstorage.network.grid.PortableGridFluidUpdateMessage;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PortableFluidGridStorageCacheListener implements IStorageCacheListener<FluidStack> {
@@ -19,25 +23,7 @@ public class PortableFluidGridStorageCacheListener implements IStorageCacheListe
 
     @Override
     public void onAttached() {
-        /*RS.INSTANCE.network.sendTo(new MessageGridFluidUpdate(buf -> {
-            int size = portableGrid.getFluidCache().getList().getStacks().size();
-
-            buf.writeInt(size);
-
-            for (FluidStack stack : portableGrid.getFluidCache().getList().getStacks()) {
-                StackUtils.writeFluidStackAndHash(buf, stack);
-
-                IStorageTracker.IStorageTrackerEntry entry = portableGrid.getFluidStorageTracker().get(stack);
-                buf.writeBoolean(entry != null);
-                if (entry != null) {
-                    buf.writeLong(entry.getTime());
-                    ByteBufUtils.writeUTF8String(buf, entry.getName());
-                }
-
-                buf.writeBoolean(false);
-                buf.writeBoolean(false);
-            }
-        }, false), player); TODO */
+        RS.NETWORK_HANDLER.sendTo(player, new PortableGridFluidUpdateMessage(portableGrid));
     }
 
     @Override
@@ -47,17 +33,15 @@ public class PortableFluidGridStorageCacheListener implements IStorageCacheListe
 
     @Override
     public void onChanged(StackListResult<FluidStack> delta) {
-        // TODO RS.INSTANCE.network.sendTo(new MessageGridFluidDelta(null, portableGrid.getFluidStorageTracker(), stack, size), player);
+        List<StackListResult<FluidStack>> deltas = new ArrayList<>();
 
+        deltas.add(delta);
+
+        onChangedBulk(deltas);
     }
 
     @Override
     public void onChangedBulk(List<StackListResult<FluidStack>> storageCacheDeltas) {
-        /* TODO
-        for (Pair<FluidStack, Integer> stack : stacks) {
-            onChanged(stack.getLeft(), stack.getRight());
-        }
-
-         */
+        RS.NETWORK_HANDLER.sendTo(player, new PortableGridFluidDeltaMessage(portableGrid, storageCacheDeltas));
     }
 }

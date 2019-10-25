@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.PortableGridGridFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.WirelessFluidGridGridFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.WirelessGridGridFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.*;
@@ -29,10 +30,7 @@ import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.container.factory.GridContainerFactory;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerFactory;
 import com.raoulvdberge.refinedstorage.item.*;
-import com.raoulvdberge.refinedstorage.item.blockitem.ControllerBlockItem;
-import com.raoulvdberge.refinedstorage.item.blockitem.FluidStorageBlockItem;
-import com.raoulvdberge.refinedstorage.item.blockitem.StorageBlockItem;
-import com.raoulvdberge.refinedstorage.item.blockitem.WirelessTransmitterBlockItem;
+import com.raoulvdberge.refinedstorage.item.blockitem.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
 import com.raoulvdberge.refinedstorage.loottable.StorageBlockLootFunctionSerializer;
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
@@ -138,6 +136,7 @@ public final class RS {
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
         API.instance().getGridManager().add(WirelessGridGridFactory.ID, new WirelessGridGridFactory());
         API.instance().getGridManager().add(WirelessFluidGridGridFactory.ID, new WirelessFluidGridGridFactory());
+        API.instance().getGridManager().add(PortableGridGridFactory.ID, new PortableGridGridFactory());
 
         API.instance().addExternalStorageProvider(StorageType.ITEM, new ItemExternalStorageProvider());
         API.instance().addExternalStorageProvider(StorageType.FLUID, new FluidExternalStorageProvider());
@@ -192,6 +191,8 @@ public final class RS {
         e.getRegistry().register(new ConstructorBlock());
         e.getRegistry().register(new DestructorBlock());
         e.getRegistry().register(new DiskManipulatorBlock());
+        e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.NORMAL));
+        e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.CREATIVE));
     }
 
     @SubscribeEvent
@@ -307,6 +308,8 @@ public final class RS {
         e.getRegistry().register(new WrenchItem());
         e.getRegistry().register(new PatternItem());
         e.getRegistry().register(new FilterItem());
+        e.getRegistry().register(new PortableGridBlockItem(PortableGridBlockItem.Type.NORMAL));
+        e.getRegistry().register(new PortableGridBlockItem(PortableGridBlockItem.Type.CREATIVE));
 
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.QUARTZ_ENRICHED_IRON));
         e.getRegistry().register(new ControllerBlockItem(RSBlocks.CONTROLLER));

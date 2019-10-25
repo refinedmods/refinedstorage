@@ -32,7 +32,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class ControllerBlock extends Block {
+public class ControllerBlock extends BaseBlock {
     public enum EnergyType implements IStringSerializable {
         OFF("off"),
         NEARLY_OFF("nearly_off"),

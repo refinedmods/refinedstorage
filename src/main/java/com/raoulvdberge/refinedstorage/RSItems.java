@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.item.*;
+import com.raoulvdberge.refinedstorage.item.blockitem.PortableGridBlockItem;
 import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSItems {
@@ -100,6 +101,10 @@ public final class RSItems {
     public static final FluidStorageDiskItem FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_DISK = null;
     @ObjectHolder(RS.ID + ":creative_fluid_storage_disk")
     public static final FluidStorageDiskItem CREATIVE_FLUID_STORAGE_DISK = null;
+    @ObjectHolder(RS.ID + ":portable_grid")
+    public static final PortableGridBlockItem PORTABLE_GRID = null;
+    @ObjectHolder(RS.ID + ":creative_portable_grid")
+    public static final PortableGridBlockItem CREATIVE_PORTABLE_GRID = null;
 
     public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = null;
 }

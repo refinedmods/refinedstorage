@@ -74,9 +74,12 @@ public final class RSBlocks {
     public static final DestructorBlock DESTRUCTOR = null;
     @ObjectHolder(RS.ID + ":disk_manipulator")
     public static final DiskManipulatorBlock DISK_MANIPULATOR = null;
+    @ObjectHolder(RS.ID + ":portable_grid")
+    public static final PortableGridBlock PORTABLE_GRID = null;
+    @ObjectHolder(RS.ID + ":creative_portable_grid")
+    public static final PortableGridBlock CREATIVE_PORTABLE_GRID = null;
 
     public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
     public static final BlockCrafter CRAFTER = new BlockCrafter();
-    public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();
     public static final BlockCrafterManager CRAFTER_MANAGER = new BlockCrafterManager();
 }
