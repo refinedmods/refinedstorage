@@ -1,15 +1,12 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
-import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import net.minecraft.util.BlockRenderLayer;
 
 import javax.annotation.Nullable;
 
-public class BlockCrafter extends BlockNode {
-    public BlockCrafter() {
-        super(BlockInfoBuilder.forId("crafter").tileEntity(TileCrafter::new).create());
+public class BlockCrafter extends NetworkNodeBlock {
+    public BlockCrafter(Properties props) {
+        super(props);
     }
 
     /*

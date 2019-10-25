@@ -23,7 +23,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class StorageBlock extends NodeBlock {
+public class StorageBlock extends NetworkNodeBlock {
     private final ItemStorageType type;
 
     public StorageBlock(ItemStorageType type) {

@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.block;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.PortableGridBlockGridFactory;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.item.blockitem.PortableGridBlockItem;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridDiskState;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridTile;

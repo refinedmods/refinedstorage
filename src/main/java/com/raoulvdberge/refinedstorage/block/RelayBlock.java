@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class RelayBlock extends NodeBlock {
+public class RelayBlock extends NetworkNodeBlock {
     public RelayBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 

@@ -6,7 +6,7 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.BaseBlock;
-import com.raoulvdberge.refinedstorage.block.NodeBlock;
+import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -140,8 +140,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
                 BlockState blockState = world.getBlockState(pos);
 
-                if (blockState.getBlock() instanceof NodeBlock && ((NodeBlock) blockState.getBlock()).hasConnectedState()) {
-                    world.setBlockState(pos, world.getBlockState(pos).with(NodeBlock.CONNECTED, canUpdate));
+                if (blockState.getBlock() instanceof NetworkNodeBlock && ((NetworkNodeBlock) blockState.getBlock()).hasConnectedState()) {
+                    world.setBlockState(pos, world.getBlockState(pos).with(NetworkNodeBlock.CONNECTED, canUpdate));
                 }
 
                 if (network != null) {

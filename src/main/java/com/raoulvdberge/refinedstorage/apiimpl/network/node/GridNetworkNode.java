@@ -13,7 +13,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
-import com.raoulvdberge.refinedstorage.block.NodeBlock;
+import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
@@ -363,7 +363,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public boolean isActive() {
-        return world.getBlockState(pos).get(NodeBlock.CONNECTED);
+        return world.getBlockState(pos).get(NetworkNodeBlock.CONNECTED);
     }
 
     @Override

@@ -28,7 +28,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class WirelessTransmitterBlock extends NodeBlock {
+public class WirelessTransmitterBlock extends NetworkNodeBlock {
     private static final VoxelShape SHAPE = Block.makeCuboidShape(6.0D, 0.0D, 6.0D, 10.0D, 10.0D, 10.0D);
 
     public WirelessTransmitterBlock() {

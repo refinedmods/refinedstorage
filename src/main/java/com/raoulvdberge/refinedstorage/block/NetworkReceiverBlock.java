@@ -10,7 +10,7 @@ import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
-public class NetworkReceiverBlock extends NodeBlock {
+public class NetworkReceiverBlock extends NetworkNodeBlock {
     public NetworkReceiverBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 

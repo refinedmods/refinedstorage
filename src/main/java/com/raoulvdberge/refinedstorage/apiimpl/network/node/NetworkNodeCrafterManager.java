@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.block.NodeBlock;
+import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
 import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -79,6 +79,6 @@ public class NetworkNodeCrafterManager extends NetworkNode {
     }
 
     public boolean isActive() {
-        return world.getBlockState(pos).get(NodeBlock.CONNECTED);
+        return world.getBlockState(pos).get(NetworkNodeBlock.CONNECTED);
     }
 }

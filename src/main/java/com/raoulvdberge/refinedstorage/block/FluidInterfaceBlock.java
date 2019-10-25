@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class FluidInterfaceBlock extends NodeBlock {
+public class FluidInterfaceBlock extends NetworkNodeBlock {
     public FluidInterfaceBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 

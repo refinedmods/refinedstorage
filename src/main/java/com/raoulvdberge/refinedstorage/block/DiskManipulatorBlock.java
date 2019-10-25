@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.container.DiskManipulatorContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.DiskManipulatorTile;
@@ -22,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class DiskManipulatorBlock extends NodeBlock {
+public class DiskManipulatorBlock extends NetworkNodeBlock {
     public DiskManipulatorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 

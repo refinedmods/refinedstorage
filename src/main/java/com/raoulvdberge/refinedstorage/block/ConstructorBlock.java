@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.container.ConstructorContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.ConstructorTile;

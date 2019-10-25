@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.StorageMonitorNetworkNode;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.container.StorageMonitorContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
@@ -25,7 +24,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class StorageMonitorBlock extends NodeBlock {
+public class StorageMonitorBlock extends NetworkNodeBlock {
     public StorageMonitorBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 

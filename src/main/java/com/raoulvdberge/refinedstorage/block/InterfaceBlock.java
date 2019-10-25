@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class InterfaceBlock extends NodeBlock {
+public class InterfaceBlock extends NetworkNodeBlock {
     public InterfaceBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 

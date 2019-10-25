@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.StateContainer;

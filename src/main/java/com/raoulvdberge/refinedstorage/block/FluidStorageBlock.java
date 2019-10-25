@@ -23,7 +23,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class FluidStorageBlock extends NodeBlock {
+public class FluidStorageBlock extends NetworkNodeBlock {
     private final FluidStorageType type;
 
     public FluidStorageBlock(FluidStorageType type) {

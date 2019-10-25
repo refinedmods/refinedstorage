@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.GridBlockGridFactory;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import com.raoulvdberge.refinedstorage.util.NetworkUtils;
@@ -21,7 +20,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class GridBlock extends NodeBlock {
+public class GridBlock extends NetworkNodeBlock {
     private final GridType type;
 
     public GridBlock(GridType type) {

@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
-import com.raoulvdberge.refinedstorage.block.NodeBlock;
+import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -74,7 +74,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
     @Override
     public boolean isActive() {
-        return world.getBlockState(pos).get(NodeBlock.CONNECTED);
+        return world.getBlockState(pos).get(NetworkNodeBlock.CONNECTED);
     }
 
     @Override

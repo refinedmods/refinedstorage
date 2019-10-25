@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.tile.CableTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
@@ -22,7 +21,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class CableBlock extends NodeBlock {
+public class CableBlock extends NetworkNodeBlock {
     private static final BooleanProperty NORTH = BooleanProperty.create("north");
     private static final BooleanProperty EAST = BooleanProperty.create("east");
     private static final BooleanProperty SOUTH = BooleanProperty.create("south");

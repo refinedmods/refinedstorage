@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.block.info;
+package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.util.DirectionUtils;
 import net.minecraft.entity.LivingEntity;

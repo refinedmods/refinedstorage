@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class NetworkTransmitterBlock extends NodeBlock {
+public class NetworkTransmitterBlock extends NetworkNodeBlock {
     public NetworkTransmitterBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 

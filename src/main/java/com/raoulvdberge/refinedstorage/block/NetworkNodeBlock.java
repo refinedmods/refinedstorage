@@ -17,10 +17,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
-public abstract class NodeBlock extends BaseBlock {
+public abstract class NetworkNodeBlock extends BaseBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.create("connected");
 
-    public NodeBlock(Block.Properties props) {
+    public NetworkNodeBlock(Block.Properties props) {
         super(props);
 
         if (hasConnectedState()) {

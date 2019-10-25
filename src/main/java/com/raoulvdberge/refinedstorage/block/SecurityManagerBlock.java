@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
 import com.raoulvdberge.refinedstorage.container.SecurityManagerContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.SecurityManagerTile;
@@ -23,7 +22,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class SecurityManagerBlock extends NodeBlock {
+public class SecurityManagerBlock extends NetworkNodeBlock {
     public SecurityManagerBlock() {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);
 

@@ -1,11 +1,8 @@
 package com.raoulvdberge.refinedstorage.block;
 
-import com.raoulvdberge.refinedstorage.block.info.BlockInfoBuilder;
-import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
-
-public class BlockCrafterManager extends BlockNode {
-    public BlockCrafterManager() {
-        super(BlockInfoBuilder.forId("crafter_manager").tileEntity(TileCrafterManager::new).create());
+public class BlockCrafterManager extends NetworkNodeBlock {
+    public BlockCrafterManager(Properties props) {
+        super(props);
     }
 
     /* TODO

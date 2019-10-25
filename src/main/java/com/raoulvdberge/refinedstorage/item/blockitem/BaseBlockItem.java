@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.item.blockitem;
 
 import com.raoulvdberge.refinedstorage.block.BaseBlock;
-import com.raoulvdberge.refinedstorage.block.info.BlockDirection;
+import com.raoulvdberge.refinedstorage.block.BlockDirection;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;

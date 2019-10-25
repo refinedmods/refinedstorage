@@ -27,7 +27,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class DetectorBlock extends NodeBlock {
+public class DetectorBlock extends NetworkNodeBlock {
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
     private static final VoxelShape SHAPE = makeCuboidShape(0, 0, 0, 16, 5, 16);
