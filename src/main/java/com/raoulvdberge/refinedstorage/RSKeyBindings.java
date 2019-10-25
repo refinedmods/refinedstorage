@@ -11,7 +11,6 @@ public final class RSKeyBindings {
     public static final KeyBinding OPEN_WIRELESS_CRAFTING_MONITOR = new KeyBinding("key.refinedstorage.openWirelessCraftingMonitor", KeyConflictContext.IN_GAME, 0, "Refined Storage");
 
     public static void init() {
-        ClientRegistry.registerKeyBinding(OPEN_PORTABLE_GRID);
         ClientRegistry.registerKeyBinding(OPEN_WIRELESS_CRAFTING_MONITOR);
     }*/
 

@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -54,16 +55,17 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public String getName() {
-        return stack.getDisplayName().getFormattedText(); // TODO correct method usage
+        return stack.getDisplayName().getFormattedText();
     }
 
     @Override
     public String getModId() {
         if (modId == null) {
-            // modId = FluidRegistry.getModId(stack);
-            modId = "dinosaur";//TODO
+            ResourceLocation registryName = stack.getFluid().getRegistryName();
 
-            if (modId == null) {
+            if (registryName != null) {
+                modId = registryName.getNamespace();
+            } else {
                 modId = "???";
             }
         }
@@ -92,7 +94,7 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public String getTooltip() {
-        return stack.getDisplayName().getFormattedText();//TODO
+        return stack.getDisplayName().getFormattedText();
     }
 
     @Override

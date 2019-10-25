@@ -6,8 +6,11 @@ import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -38,13 +41,9 @@ public class ItemGridStack implements IGridStack {
 
     @Nullable
     static String getModNameByModId(String modId) {
-        /*ModContainer container = Loader.instance().getActiveModList().stream()
-            .filter(m -> m.getModId().toLowerCase().equals(modId))
-            .findFirst()
-            .orElse(null);
+        Optional<? extends ModContainer> modContainer = ModList.get().getModContainerById(modId);
 
-        return container == null ? null : container.getName();*/
-        return "dinosaur"; // TODO
+        return modContainer.map(container -> container.getModInfo().getDisplayName()).orElse(null);
     }
 
     public ItemStack getStack() {

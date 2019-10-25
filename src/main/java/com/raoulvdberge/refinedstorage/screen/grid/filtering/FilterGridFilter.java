@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -46,10 +47,14 @@ public class FilterGridFilter implements Predicate<IGridStack> {
                 FluidStack stackInFilter = (FluidStack) filter.getStack();
 
                 if (filter.isModFilter()) {
-                    String stackInFilterModId = /* TODO FluidRegistry.getModId(stackInFilter)*/"bla bla";
+                    ResourceLocation stackInFilterRegistryName = stackInFilter.getFluid().getRegistryName();
 
-                    if (stackInFilterModId != null && stackInFilterModId.equalsIgnoreCase(stack.getModId())) {
-                        return filter.getMode() == IFilter.MODE_WHITELIST;
+                    if (stackInFilterRegistryName != null) {
+                        String stackInFilterModId = stackInFilterRegistryName.getNamespace();
+
+                        if (stackInFilterModId.equalsIgnoreCase(stack.getModId())) {
+                            return filter.getMode() == IFilter.MODE_WHITELIST;
+                        }
                     }
                 } else if (API.instance().getComparer().isEqual(((FluidGridStack) stack).getStack(), stackInFilter, filter.getCompare())) {
                     return filter.getMode() == IFilter.MODE_WHITELIST;
