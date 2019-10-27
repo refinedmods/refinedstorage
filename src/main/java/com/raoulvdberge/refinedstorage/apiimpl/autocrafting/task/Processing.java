@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -14,22 +13,17 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.*;
 
-class Processing {
-    private static final String NBT_PATTERN = "Pattern";
+class Processing extends Craft{
     private static final String NBT_ITEMS_TO_RECEIVE = "ItemsToReceive";
     private static final String NBT_FLUIDS_TO_RECEIVE = "FluidsToReceive";
     private static final String NBT_ITEMS_TO_PUT = "ItemsToPut";
     private static final String NBT_FLUIDS_TO_PUT = "FluidsToPut";
     private static final String NBT_STATE = "State";
-    private static final String NBT_ROOT = "Root";
-    private static final String NBT_QUANTITY = "Quantity";
     private static final String NBT_QUANTITY_TOTAL = "TotalQuantity";
     private static final String NBT_ITEMS_RECEIVED = "ItemsReceived";
     private static final String NBT_FLUIDS_RECEIVED = "FluidsReceived";
     private static final String NBT_CONTAINERS = "Containers";
     private static final String NBT_INSERTED = "Inserted";
-
-    private ICraftingPattern pattern;
 
     private IStackList<ItemStack> itemsToReceive;
     private IStackList<FluidStack> fluidsToReceive;
@@ -43,25 +37,27 @@ class Processing {
     private Map<NonNullList<ItemStack>, Integer> ingredientList = null;
 
     private ProcessingState state = ProcessingState.READY_OR_PROCESSING;
-    private boolean root;
-    private int quantity;
+
     private int totalQuantity;
     private int finished;
     private int inserted;
-    private List<ICraftingPatternContainer> containers = new ArrayList<>();
 
-    public Processing(ICraftingPattern pattern, int quantity, IStackList<ItemStack> itemsToReceive, IStackList<FluidStack> fluidsToReceive, IStackList<ItemStack> itemsToPutTotal, IStackList<FluidStack> fluidsToPut, boolean root, Map<NonNullList<ItemStack>, Integer> ingredientList) {
+    public Processing(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
+        this.root = root;
+        this.itemsReceived = API.instance().createItemStackList();
+        this.fluidsReceived = API.instance().createFluidStackList();
+        this.containers.add(pattern.getContainer());
+        this.isProcessing = true;
+    }
+    public void initialize( int quantity, IStackList<ItemStack> itemsToReceive, IStackList<FluidStack> fluidsToReceive, IStackList<ItemStack> itemsToPutTotal, IStackList<FluidStack> fluidsToPut, Map<NonNullList<ItemStack>, Integer> ingredientList){
         this.quantity = quantity;
         this.itemsToReceive = itemsToReceive;
         this.fluidsToReceive = fluidsToReceive;
         this.itemsToPutTotal = itemsToPutTotal;
         this.fluidsToPut = fluidsToPut;
-        this.root = root;
-        itemsReceived = API.instance().createItemStackList();
-        fluidsReceived = API.instance().createFluidStackList();
-        containers.add(pattern.getContainer());
         this.ingredientList = ingredientList;
+        isInitialized = true;
     }
 
     public Processing(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
@@ -81,9 +77,7 @@ class Processing {
         setTotals();
     }
 
-    public ICraftingPattern getPattern() {
-        return pattern;
-    }
+    @Override
     public void finishCalculation() {
         totalQuantity = quantity;
         itemsToPut = CraftingTask.calculateItemsToPut(itemsToPutTotal, ingredientList);
@@ -96,18 +90,6 @@ class Processing {
         fluidsToReceiveTotal = fluidsToReceive.copy();
         fluidsToReceiveTotal.getStacks().forEach(x -> x.amount *= totalQuantity);
 
-    }
-
-    public void addQuantity(int quantity) {
-        this.quantity += quantity;
-    }
-
-    public void reduceQuantity() {
-        quantity--;
-    }
-
-    public int getQuantity() {
-        return quantity;
     }
 
     public boolean isNothingProcessing() {
@@ -239,14 +221,6 @@ class Processing {
         return 0;
     }
 
-    public void addContainer(ICraftingPatternContainer container) {
-        containers.add(container);
-    }
-
-    public List<ICraftingPatternContainer> getContainer() {
-        return containers;
-    }
-
     public int getFinished() {
         return finished;
     }
@@ -262,27 +236,20 @@ class Processing {
     public ProcessingState getState() {
         return state;
     }
-
-    public boolean isRoot() {
-        return root;
-    }
-
+    @Override
     public NBTTagCompound writeToNbt() {
-        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound tag = super.writeToNbt();
 
-        tag.setTag(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
         tag.setTag(NBT_ITEMS_TO_RECEIVE, CraftingTask.writeItemStackList(itemsToReceive));
         tag.setTag(NBT_FLUIDS_TO_RECEIVE, CraftingTask.writeFluidStackList(fluidsToReceive));
-        tag.setBoolean(NBT_ROOT, root);
         tag.setTag(NBT_ITEMS_TO_PUT, CraftingTask.writeMappedStackList(itemsToPut));
         tag.setTag(NBT_FLUIDS_TO_PUT, CraftingTask.writeFluidStackList(fluidsToPut));
         tag.setInteger(NBT_STATE, state.ordinal());
-        tag.setInteger(NBT_QUANTITY, quantity);
         tag.setInteger(NBT_QUANTITY_TOTAL, totalQuantity);
         tag.setTag(NBT_ITEMS_RECEIVED, CraftingTask.writeItemStackList(itemsReceived));
         tag.setTag(NBT_FLUIDS_RECEIVED, CraftingTask.writeFluidStackList(fluidsReceived));
-        tag.setTag(NBT_CONTAINERS, CraftingTask.writeContainerList(containers));
         tag.setInteger(NBT_INSERTED,inserted);
+
         return tag;
     }
 }

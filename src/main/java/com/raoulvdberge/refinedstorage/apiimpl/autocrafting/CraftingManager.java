@@ -119,11 +119,6 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public ICraftingPatternChainList createPatternChainList() {
-        return new CraftingPatternChainList(patterns);
-    }
-
-    @Override
     public void update() {
         if (network.canRun()) {
             if (tasksToRead != null) {

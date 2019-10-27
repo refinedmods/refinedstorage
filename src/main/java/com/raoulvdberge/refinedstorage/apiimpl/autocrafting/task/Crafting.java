@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
@@ -20,34 +19,34 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
 
-class Crafting {
-    private static final String NBT_PATTERN = "Pattern";
+class Crafting extends Craft{
+
     private static final String NBT_TOOK = "Took";
     private static final String NBT_ITEMS_TO_PUT = "ToExtract";
-    private static final String NBT_ROOT = "Root";
-    private static final String NBT_CONTAINERS = "Containers";
     private static final String NBT_QUANTITY = "Quantity";
     private static final String NBT_CRAFTED = "Crafted";
 
-    private ICraftingPattern pattern;
+
     private NonNullList<ItemStack> took;
     private IStackList<ItemStack> toExtractTotal;
-    private List<ICraftingPatternContainer> containers = new ArrayList<>();
+
     private Map<IStackList<ItemStack>, Integer> toExtract = new LinkedHashMap<>();
     private Map<NonNullList<ItemStack>, Integer> counts = null;
-
-    private int quantity = 0;
     private int crafted = 0;
-    private boolean root;
 
-    public Crafting(ICraftingPattern pattern, int quantity, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract, boolean root, Map<NonNullList<ItemStack>, Integer> counts) {
+    public Crafting(ICraftingPattern pattern, boolean root ) {
         this.pattern = pattern;
-        this.took = took;
-        this.toExtractTotal = toExtract;
         this.root = root;
         this.containers.add(pattern.getContainer());
+
+        this.isProcessing = false;
+    }
+    public void initialize(int quantity, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract,Map<NonNullList<ItemStack>, Integer> counts){
+        this.took = took;
+        this.toExtractTotal = toExtract;
         this.quantity = quantity;
         this.counts = counts;
+        isInitialized = true;
     }
 
     public Crafting(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
@@ -90,6 +89,7 @@ class Crafting {
         return false;
     }
 
+    @Override
     public void finishCalculation() {
         toExtract = CraftingTask.calculateItemsToPut(toExtractTotal, counts);
     }
@@ -97,35 +97,7 @@ class Crafting {
     public void addToExtractTotal(ItemStack stack) {
         toExtractTotal.add(stack);
     }
-
-    public void addQuantity(int quantity) {
-        this.quantity += quantity;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void reduceQuantity() {
-        quantity--;
-    }
-
-    public void addContainer(ICraftingPatternContainer container) {
-        containers.add(container);
-    }
-
-    public List<ICraftingPatternContainer> getContainer() {
-        return containers;
-    }
-
-    public boolean isRoot() {
-        return root;
-    }
-
-    public ICraftingPattern getPattern() {
-        return pattern;
-    }
-
+    
     public NonNullList<ItemStack> getTook() {
         return took;
     }
@@ -144,21 +116,16 @@ class Crafting {
         }
         return API.instance().createItemStackList();
     }
-
+    @Override
     public NBTTagCompound writeToNbt() {
-        NBTTagCompound tag = new NBTTagCompound();
+        NBTTagCompound tag = super.writeToNbt();
 
-        tag.setTag(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
         tag.setTag(NBT_ITEMS_TO_PUT, CraftingTask.writeMappedStackList(toExtract));
-        tag.setBoolean(NBT_ROOT, root);
-
         NBTTagList tookList = new NBTTagList();
         for (ItemStack took : this.took) {
             tookList.appendTag(StackUtils.serializeStackToNbt(took));
         }
-
         tag.setTag(NBT_TOOK, tookList);
-        tag.setInteger(NBT_QUANTITY, quantity);
         tag.setTag(NBT_CONTAINERS, CraftingTask.writeContainerList(containers));
         tag.setInteger(NBT_CRAFTED, crafted);
 

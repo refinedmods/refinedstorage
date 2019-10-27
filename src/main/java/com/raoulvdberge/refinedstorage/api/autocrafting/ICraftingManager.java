@@ -72,11 +72,6 @@ public interface ICraftingManager {
     ICraftingTask create(FluidStack stack, int quantity);
 
     /**
-     * @return a new pattern chain list
-     */
-    ICraftingPatternChainList createPatternChainList();
-
-    /**
      * @deprecated Use {@link #request(Object, ItemStack, int)}
      */
     @Nullable
