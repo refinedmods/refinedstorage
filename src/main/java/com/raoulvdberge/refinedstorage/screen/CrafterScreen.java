@@ -2,14 +2,14 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.CrafterContainer;
-import com.raoulvdberge.refinedstorage.tile.TileCrafter;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.ITextComponent;
 
-public class GuiCrafter extends BaseScreen<CrafterContainer> {
-    public GuiCrafter(CrafterContainer container, PlayerInventory inventory) {
-        super(container, 211, 137, inventory, null);
+public class CrafterScreen extends BaseScreen<CrafterContainer> {
+    public CrafterScreen(CrafterContainer container, PlayerInventory inventory, ITextComponent title) {
+        super(container, 211, 137, inventory, title);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class GuiCrafter extends BaseScreen<CrafterContainer> {
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, RenderUtils.shorten(I18n.format(TileCrafter.NAME.getValue()), 26));
+        renderString(7, 7, RenderUtils.shorten(title.getFormattedText(), 26));
         renderString(7, 43, I18n.format("container.inventory"));
     }
 }

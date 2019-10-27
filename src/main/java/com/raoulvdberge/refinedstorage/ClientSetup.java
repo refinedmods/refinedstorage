@@ -99,6 +99,15 @@ public class ClientSetup {
             ).disableCache());
         }
 
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter"), (base, registry) -> new FullbrightBakedModel(
+            base,
+            new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected"),
+            new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected_90"),
+            new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected_180"),
+            new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected_270"),
+            new ResourceLocation(RS.ID, "block/crafter/cutouts/front_connected")
+        ));
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk"));
@@ -172,6 +181,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.CONSTRUCTOR, ConstructorScreen::new);
         ScreenManager.registerFactory(RSContainers.DESTRUCTOR, DestructorScreen::new);
         ScreenManager.registerFactory(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
+        ScreenManager.registerFactory(RSContainers.CRAFTER, CrafterScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_GRID);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);

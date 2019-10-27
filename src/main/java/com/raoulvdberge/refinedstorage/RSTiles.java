@@ -78,11 +78,11 @@ public class RSTiles {
     public static final TileEntityType<PortableGridTile> PORTABLE_GRID = null;
     @ObjectHolder(RS.ID + ":creative_portable_grid")
     public static final TileEntityType<PortableGridTile> CREATIVE_PORTABLE_GRID = null;
-    
-    //@ObjectHolder(RS.ID + ":crafter")
-    public static final TileEntityType<TileCrafter> CRAFTER = null;
+    @ObjectHolder(RS.ID + ":crafter")
+    public static final TileEntityType<CrafterTile> CRAFTER = null;
+
     //@ObjectHolder(RS.ID + ":crafter_manager")
-    public static final TileEntityType<TileCrafter> CRAFTER_MANAGER = null;
+    public static final TileEntityType<CrafterTile> CRAFTER_MANAGER = null;
     //@ObjectHolder(RS.ID + ":crafting_monitor")
     public static final TileEntityType<TileCraftingMonitor> CRAFTING_MONITOR = null;
 }

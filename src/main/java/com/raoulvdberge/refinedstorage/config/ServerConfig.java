@@ -31,6 +31,7 @@ public class ServerConfig {
     private Destructor destructor;
     private DiskManipulator diskManipulator;
     private PortableGrid portableGrid;
+    private Crafter crafter;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -58,6 +59,7 @@ public class ServerConfig {
         destructor = new Destructor();
         diskManipulator = new DiskManipulator();
         portableGrid = new PortableGrid();
+        crafter = new Crafter();
 
         spec = builder.build();
     }
@@ -160,6 +162,10 @@ public class ServerConfig {
 
     public PortableGrid getPortableGrid() {
         return portableGrid;
+    }
+
+    public Crafter getCrafter() {
+        return crafter;
     }
 
     public ForgeConfigSpec getSpec() {
@@ -785,6 +791,28 @@ public class ServerConfig {
 
         public int getUsage() {
             return usage.get();
+        }
+    }
+
+    public class Crafter {
+        private final ForgeConfigSpec.IntValue usage;
+        private final ForgeConfigSpec.IntValue patternUsage;
+
+        public Crafter() {
+            builder.push("crafter");
+
+            usage = builder.comment("The energy used by the Crafter").defineInRange("usage", 4, 0, Integer.MAX_VALUE);
+            patternUsage = builder.comment("The energy used for every Pattern in the Crafter").defineInRange("patternUsage", 1, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+
+        public int getPatternUsage() {
+            return patternUsage.get();
         }
     }
 }

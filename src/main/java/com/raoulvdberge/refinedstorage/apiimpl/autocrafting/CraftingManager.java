@@ -374,7 +374,8 @@ public class CraftingManager implements ICraftingManager {
 
             IItemHandlerModifiable handler = container.getPatternInventory();
             if (handler != null) {
-                this.containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
+                // TODO: Maybe use ITextComponent instead of string...
+                this.containerInventories.computeIfAbsent(container.getName().getFormattedText(), k -> new ArrayList<>()).add(handler);
             }
         }
     }

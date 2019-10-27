@@ -78,8 +78,9 @@ public final class RSBlocks {
     public static final PortableGridBlock PORTABLE_GRID = null;
     @ObjectHolder(RS.ID + ":creative_portable_grid")
     public static final PortableGridBlock CREATIVE_PORTABLE_GRID = null;
+    @ObjectHolder(RS.ID + ":crafter")
+    public static final CrafterBlock CRAFTER = null;
 
     public static final BlockCraftingMonitor CRAFTING_MONITOR = null;
-    public static final BlockCrafter CRAFTER = null;
     public static final BlockCrafterManager CRAFTER_MANAGER = null;
 }

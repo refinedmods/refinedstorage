@@ -10,16 +10,16 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "C": {
-      "item": "#construction_core"
+      "item": "refinedstorage:construction_core"
     },
     "A": {
-      "item": "#advanced_processor"
+      "item": "refinedstorage:advanced_processor"
     },
     "M": {
       "item": "refinedstorage:machine_casing"
     },
     "D": {
-      "item": "#destruction_core"
+      "item": "refinedstorage:destruction_core"
     }
   },
   "result": {
