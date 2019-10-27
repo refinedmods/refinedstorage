@@ -52,7 +52,7 @@ public class GridItemDeltaMessage {
         for (StackListResult<ItemStack> delta : message.deltas) {
             buf.writeInt(delta.getChange());
 
-            StackUtils.writeItemGridStack(buf, delta.getStack(), delta.getId(), message.network, false, message.network.getItemStorageTracker().get(delta.getStack()));
+            StackUtils.writeItemGridStack(buf, delta.getStack(), delta.getId(), false, message.network, message.network.getItemStorageTracker().get(delta.getStack()));
         }
     }
 

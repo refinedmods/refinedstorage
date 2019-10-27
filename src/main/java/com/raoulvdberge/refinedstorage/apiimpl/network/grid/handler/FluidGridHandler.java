@@ -1,15 +1,16 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridCraftingStartResponseMessage;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -21,6 +22,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.UUID;
 
 public class FluidGridHandler implements IFluidGridHandler {
@@ -114,15 +116,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             return;
         }
 
-        IStackList<FluidStack> cache = API.instance().createFluidStackList();
-
-        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            for (FluidStack output : pattern.getFluidOutputs()) {
-                cache.add(output);
-            }
-        }
-
-        FluidStack stack = cache.get(id);
+        FluidStack stack = network.getFluidStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
@@ -134,13 +128,29 @@ public class FluidGridHandler implements IFluidGridHandler {
                 ICraftingTaskError error = task.calculate();
 
                 if (error != null) {
-                    // TODO: Networking RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, true), player);
+                    RS.NETWORK_HANDLER.sendTo(
+                        player,
+                        new GridCraftingPreviewResponseMessage(
+                            Collections.singletonList(new ErrorCraftingPreviewElement(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())),
+                            id,
+                            quantity,
+                            false
+                        )
+                    );
                 } else if (noPreview && !task.hasMissing()) {
                     network.getCraftingManager().add(task);
 
-                    // TODO: Networking RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
+                    RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
                 } else {
-                    // TODO: Networking RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity, true), player);
+                    RS.NETWORK_HANDLER.sendTo(
+                        player,
+                        new GridCraftingPreviewResponseMessage(
+                            task.getPreviewStacks(),
+                            id,
+                            quantity,
+                            false
+                        )
+                    );
                 }
             }, "RS crafting preview calculation");
 
@@ -154,21 +164,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             return;
         }
 
-        FluidStack stack = null;
-
-        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            for (FluidStack output : pattern.getFluidOutputs()) {
-                if (/* TODO API.instance().getFluidStackHashCode(output) == hash*/false) {
-                    stack = output;
-
-                    break;
-                }
-            }
-
-            if (stack != null) {
-                break;
-            }
-        }
+        FluidStack stack = network.getFluidStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
             ICraftingTask task = network.getCraftingManager().create(stack, quantity);

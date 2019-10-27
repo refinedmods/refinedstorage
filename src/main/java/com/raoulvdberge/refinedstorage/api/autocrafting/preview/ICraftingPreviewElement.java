@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.preview;
 
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -43,12 +43,12 @@ public interface ICraftingPreviewElement<T> {
     /**
      * @param buf buffer to write to
      */
-    void writeToByteBuf(PacketBuffer buf);
+    void write(PacketBuffer buf);
 
     /**
      * Returns the id of this element, used for serialization and deserialization over the network.
      *
      * @return the id
      */
-    String getId();
+    ResourceLocation getId();
 }

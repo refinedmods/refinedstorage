@@ -405,7 +405,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         List<String> textLines = Lists.newArrayList(gridStack.getTooltip().split("\n"));
         List<String> smallTextLines = Lists.newArrayList();
 
-        if (!gridStack.doesDisplayCraftText()) {
+        if (!gridStack.isCraftable()) {
             smallTextLines.add(I18n.format("misc.refinedstorage.total", gridStack.getFormattedFullQuantity()));
         }
 
@@ -465,8 +465,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 IGridStack stack = view.getStacks().get(slotNumber);
 
                 if (isPulling) {
-                    if (stack.isCraftable() && view.canCraft() && (stack.doesDisplayCraftText() || (hasShiftDown() && hasControlDown()))) {
-                        // @TODO FMLCommonHandler.instance().showGuiScreen(new GuiGridCraftingSettings(this, ((ContainerGrid) this.inventorySlots).getPlayer(), stack));
+                    if (stack.isCraftable() && view.canCraft()) {
+                        minecraft.displayGuiScreen(new CraftingSettingsScreen(this, playerInventory.player, stack));
                     } else if (grid.getGridType() == GridType.FLUID && held.isEmpty()) {
                         RS.NETWORK_HANDLER.sendToServer(new GridFluidPullMessage(view.getStacks().get(slotNumber).getId(), hasShiftDown()));
                     } else if (grid.getGridType() != GridType.FLUID) {

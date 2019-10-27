@@ -80,6 +80,11 @@ public class PortableItemStorageCache implements IStorageCache<ItemStack> {
     }
 
     @Override
+    public IStackList<ItemStack> getCraftablesList() {
+        throw new RuntimeException("Unsupported");
+    }
+
+    @Override
     public List<IStorage<ItemStack>> getStorages() {
         return Collections.emptyList();
     }

@@ -2,7 +2,7 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.RSTiles;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.CrafterNetworkNode;
-import com.raoulvdberge.refinedstorage.screen.TileDataParameterClientListenerCrafter;
+import com.raoulvdberge.refinedstorage.screen.CrafterTileDataParameterClientListener;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.Direction;
@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 
 public class CrafterTile extends NetworkNodeTile<CrafterNetworkNode> {
     public static final TileDataParameter<Integer, CrafterTile> MODE = new TileDataParameter<>(DataSerializers.VARINT, CrafterNetworkNode.CrafterMode.IGNORE.ordinal(), t -> t.getNode().getMode().ordinal(), (t, v) -> t.getNode().setMode(CrafterNetworkNode.CrafterMode.getById(v)));
-    private static final TileDataParameter<Boolean, CrafterTile> HAS_ROOT = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().getRootContainerNotSelf().isPresent(), null, (t, v) -> new TileDataParameterClientListenerCrafter().onChanged(t, v));
+    private static final TileDataParameter<Boolean, CrafterTile> HAS_ROOT = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().getRootContainerNotSelf().isPresent(), null, (t, v) -> new CrafterTileDataParameterClientListener().onChanged(t, v));
 
     private LazyOptional<IItemHandler> patternsCapability = LazyOptional.of(() -> getNode().getPatternItems());
 

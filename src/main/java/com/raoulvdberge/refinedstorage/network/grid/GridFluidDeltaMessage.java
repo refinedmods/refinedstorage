@@ -52,7 +52,7 @@ public class GridFluidDeltaMessage {
         for (StackListResult<FluidStack> delta : message.deltas) {
             buf.writeInt(delta.getChange());
 
-            StackUtils.writeFluidGridStack(buf, delta.getStack(), delta.getId(), message.network, false, message.network.getFluidStorageTracker().get(delta.getStack()));
+            StackUtils.writeFluidGridStack(buf, delta.getStack(), delta.getId(), false, message.network, message.network.getFluidStorageTracker().get(delta.getStack()));
         }
     }
 

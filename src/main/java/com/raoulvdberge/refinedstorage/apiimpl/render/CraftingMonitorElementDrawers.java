@@ -22,8 +22,8 @@ public class CraftingMonitorElementDrawers extends ElementDrawers {
         GlStateManager.color4f(1, 1, 1, 1);
         GlStateManager.disableLighting();
 
-        gui.bindTexture(RS.ID, "gui/crafting_preview.png");
-        gui.blit(x + itemWidth - 12 - 2, y + itemHeight - 12 - 2, 0, 244, 12, 12);
+        screen.bindTexture(RS.ID, "gui/crafting_preview.png");
+        screen.blit(x + itemWidth - 12 - 2, y + itemHeight - 12 - 2, 0, 244, 12, 12);
     };
 
     public CraftingMonitorElementDrawers(BaseScreen gui, FontRenderer fontRenderer, int itemWidth, int itemHeight) {

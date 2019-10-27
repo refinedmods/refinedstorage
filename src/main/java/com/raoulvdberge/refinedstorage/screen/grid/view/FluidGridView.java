@@ -17,11 +17,6 @@ public class FluidGridView extends BaseGridView {
         map.clear();
 
         for (IGridStack stack : stacks) {
-            // Don't let a craftable stack override a normal stack
-            if (stack.doesDisplayCraftText() && map.containsKey(stack.getId())) {
-                continue;
-            }
-
             map.put(stack.getId(), stack);
         }
     }
@@ -40,19 +35,11 @@ public class FluidGridView extends BaseGridView {
             map.put(stack.getId(), stack);
         } else {
             if (existing.getStack().getAmount() + delta <= 0) {
-                if (existing.isCraftable()) {
-                    existing.setDisplayCraftText(true);
-                } else {
-                    map.remove(existing.getId());
-                }
-            } else {
-                if (existing.doesDisplayCraftText()) {
-                    existing.setDisplayCraftText(false);
+                existing.getStack().grow(delta);
 
-                    existing.getStack().setAmount(delta);
-                } else {
-                    existing.getStack().grow(delta);
-                }
+                map.remove(existing.getId());
+            } else {
+                existing.getStack().grow(delta);
             }
 
             existing.setTrackerEntry(stack.getTrackerEntry());

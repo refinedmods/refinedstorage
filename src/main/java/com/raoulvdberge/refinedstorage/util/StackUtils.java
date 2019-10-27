@@ -76,18 +76,11 @@ public final class StackUtils {
         }
     }
 
-    public static void writeItemGridStack(PacketBuffer buf, ItemStack stack, UUID id, @Nullable INetwork network, boolean displayCraftText, @Nullable StorageTrackerEntry entry) {
+    public static void writeItemGridStack(PacketBuffer buf, ItemStack stack, UUID id, boolean craftable, @Nullable INetwork network, @Nullable StorageTrackerEntry entry) {
         writeItemStack(buf, stack);
 
+        buf.writeBoolean(craftable);
         buf.writeUniqueId(id);
-
-        if (network != null) {
-            buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
-            buf.writeBoolean(displayCraftText);
-        } else {
-            buf.writeBoolean(false);
-            buf.writeBoolean(false);
-        }
 
         if (entry == null) {
             buf.writeBoolean(false);
@@ -101,30 +94,23 @@ public final class StackUtils {
 
     public static ItemGridStack readItemGridStack(PacketBuffer buf) {
         ItemStack stack = readItemStack(buf);
-        UUID id = buf.readUniqueId();
+
         boolean craftable = buf.readBoolean();
-        boolean displayCraftText = buf.readBoolean();
+        UUID id = buf.readUniqueId();
 
         StorageTrackerEntry entry = null;
         if (buf.readBoolean()) {
             entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
         }
 
-        return new ItemGridStack(id, stack, craftable, displayCraftText, entry);
+        return new ItemGridStack(id, stack, craftable, entry);
     }
 
-    public static void writeFluidGridStack(PacketBuffer buf, FluidStack stack, UUID id, @Nullable INetwork network, boolean displayCraftText, @Nullable StorageTrackerEntry entry) {
+    public static void writeFluidGridStack(PacketBuffer buf, FluidStack stack, UUID id, boolean craftable, @Nullable INetwork network, @Nullable StorageTrackerEntry entry) {
         stack.writeToPacket(buf);
 
+        buf.writeBoolean(craftable);
         buf.writeUniqueId(id);
-
-        if (network != null) {
-            buf.writeBoolean(network.getCraftingManager().getPattern(stack) != null);
-            buf.writeBoolean(displayCraftText);
-        } else {
-            buf.writeBoolean(false);
-            buf.writeBoolean(false);
-        }
 
         if (entry == null) {
             buf.writeBoolean(false);
@@ -138,16 +124,15 @@ public final class StackUtils {
 
     public static FluidGridStack readFluidGridStack(PacketBuffer buf) {
         FluidStack stack = FluidStack.readFromPacket(buf);
-        UUID id = buf.readUniqueId();
         boolean craftable = buf.readBoolean();
-        boolean displayCraftText = buf.readBoolean();
+        UUID id = buf.readUniqueId();
 
         StorageTrackerEntry entry = null;
         if (buf.readBoolean()) {
             entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
         }
 
-        return new FluidGridStack(id, stack, entry, craftable, displayCraftText);
+        return new FluidGridStack(id, stack, entry, craftable);
     }
 
     @SuppressWarnings("unchecked")

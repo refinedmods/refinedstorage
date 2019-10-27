@@ -17,16 +17,14 @@ public class FluidGridStack implements IGridStack {
     @Nullable
     private StorageTrackerEntry entry;
     private boolean craftable;
-    private boolean displayCraftText;
     private String modId;
     private String modName;
 
-    public FluidGridStack(UUID id, FluidStack stack, @Nullable StorageTrackerEntry entry, boolean craftable, boolean displayCraftText) {
+    public FluidGridStack(UUID id, FluidStack stack, @Nullable StorageTrackerEntry entry, boolean craftable) {
         this.id = id;
         this.stack = stack;
         this.entry = entry;
         this.craftable = craftable;
-        this.displayCraftText = displayCraftText;
     }
 
     public FluidStack getStack() {
@@ -36,16 +34,6 @@ public class FluidGridStack implements IGridStack {
     @Override
     public boolean isCraftable() {
         return craftable;
-    }
-
-    @Override
-    public boolean doesDisplayCraftText() {
-        return displayCraftText;
-    }
-
-    @Override
-    public void setDisplayCraftText(boolean displayCraftText) {
-        this.displayCraftText = displayCraftText;
     }
 
     @Override
@@ -99,7 +87,8 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public int getQuantity() {
-        return stack.getAmount();
+        // The isCraftable check is needed so sorting is applied correctly
+        return isCraftable() ? 0 : stack.getAmount();
     }
 
     @Override
@@ -113,7 +102,7 @@ public class FluidGridStack implements IGridStack {
 
         String text;
 
-        if (displayCraftText) {
+        if (isCraftable()) {
             text = I18n.format("gui.refinedstorage.grid.craft");
         } else {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());

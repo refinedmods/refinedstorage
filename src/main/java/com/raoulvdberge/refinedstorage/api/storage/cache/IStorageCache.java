@@ -81,6 +81,11 @@ public interface IStorageCache<T> {
     IStackList<T> getList();
 
     /**
+     * @return a list of craftables
+     */
+    IStackList<T> getCraftablesList();
+
+    /**
      * @return the storages connected to this network
      */
     List<IStorage<T>> getStorages();

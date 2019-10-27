@@ -5,6 +5,10 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.*;
@@ -142,6 +146,12 @@ public final class RS {
 
         API.instance().addExternalStorageProvider(StorageType.ITEM, new ItemExternalStorageProvider());
         API.instance().addExternalStorageProvider(StorageType.FLUID, new FluidExternalStorageProvider());
+
+        API.instance().getCraftingPreviewElementRegistry().add(ItemCraftingPreviewElement.ID, ItemCraftingPreviewElement::read);
+        API.instance().getCraftingPreviewElementRegistry().add(FluidCraftingPreviewElement.ID, FluidCraftingPreviewElement::read);
+        API.instance().getCraftingPreviewElementRegistry().add(ErrorCraftingPreviewElement.ID, ErrorCraftingPreviewElement::read);
+
+        API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
 
         LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
         LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());

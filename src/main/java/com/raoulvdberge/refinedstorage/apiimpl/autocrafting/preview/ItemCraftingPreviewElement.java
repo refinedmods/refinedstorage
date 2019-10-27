@@ -1,21 +1,21 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<ItemStack> {
-    public static final String ID = "item_renderer";
+public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
 
     private ItemStack stack;
     private int available;
@@ -23,42 +23,32 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
     // If missing is true then toCraft is the missing amount
     private int toCraft;
 
-    public CraftingPreviewElementItemStack(ItemStack stack) {
+    public ItemCraftingPreviewElement(ItemStack stack) {
         this.stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
     }
 
-    public CraftingPreviewElementItemStack(ItemStack stack, int available, boolean missing, int toCraft) {
+    public ItemCraftingPreviewElement(ItemStack stack, int available, boolean missing, int toCraft) {
         this.stack = stack;
         this.available = available;
         this.missing = missing;
         this.toCraft = toCraft;
     }
 
-    // TODO ren
     @Override
-    public void writeToByteBuf(PacketBuffer buf) {
-        // TODO can't we use writeItemSTack
-        buf.writeInt(Item.getIdFromItem(stack.getItem()));
-        buf.writeCompoundTag(stack.getTag());
+    public void write(PacketBuffer buf) {
+        buf.writeItemStack(stack);
         buf.writeInt(available);
         buf.writeBoolean(missing);
         buf.writeInt(toCraft);
     }
 
-    // TODO ren
-    public static CraftingPreviewElementItemStack fromByteBuf(PacketBuffer buf) {
-        // TODO readItemStack
-
-        Item item = Item.getItemById(buf.readInt());
-        CompoundNBT tag = buf.readCompoundTag();
+    public static ItemCraftingPreviewElement read(PacketBuffer buf) {
+        ItemStack stack = buf.readItemStack();
         int available = buf.readInt();
         boolean missing = buf.readBoolean();
         int toCraft = buf.readInt();
 
-        ItemStack stack = new ItemStack(item, 1);
-        stack.setTag(tag);
-
-        return new CraftingPreviewElementItemStack(stack, available, missing, toCraft);
+        return new ItemCraftingPreviewElement(stack, available, missing, toCraft);
     }
 
     @Override
@@ -86,14 +76,14 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
         GlStateManager.scalef(scale, scale, 1);
 
         if (getToCraft() > 0) {
-            String format = hasMissing() ? "gui.refinedstorage:crafting_preview.missing" : "gui.refinedstorage:crafting_preview.to_craft";
+            String format = hasMissing() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
             drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format(format, getToCraft()));
 
             y += 7;
         }
 
         if (getAvailable() > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage:crafting_preview.available", getAvailable()));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", getAvailable()));
         }
 
         GlStateManager.popMatrix();
@@ -127,7 +117,7 @@ public class CraftingPreviewElementItemStack implements ICraftingPreviewElement<
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 }

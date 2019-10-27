@@ -19,7 +19,6 @@ public class ItemGridStack implements IGridStack {
     private ItemStack stack;
     private String cachedName;
     private boolean craftable;
-    private boolean displayCraftText;
     private String[] oreIds = null;
     @Nullable
     private StorageTrackerEntry entry;
@@ -31,11 +30,10 @@ public class ItemGridStack implements IGridStack {
         this.stack = stack;
     }
 
-    public ItemGridStack(UUID id, ItemStack stack, boolean craftable, boolean displayCraftText, StorageTrackerEntry entry) {
+    public ItemGridStack(UUID id, ItemStack stack, boolean craftable, StorageTrackerEntry entry) {
         this.id = id;
         this.stack = stack;
         this.craftable = craftable;
-        this.displayCraftText = displayCraftText;
         this.entry = entry;
     }
 
@@ -53,20 +51,6 @@ public class ItemGridStack implements IGridStack {
     @Override
     public boolean isCraftable() {
         return craftable;
-    }
-
-    @Override
-    public boolean doesDisplayCraftText() {
-        return displayCraftText;
-    }
-
-    @Override
-    public void setDisplayCraftText(boolean displayCraftText) {
-        this.displayCraftText = displayCraftText;
-
-        if (displayCraftText) {
-            this.stack.setCount(1);
-        }
     }
 
     @Override
@@ -142,7 +126,8 @@ public class ItemGridStack implements IGridStack {
 
     @Override
     public int getQuantity() {
-        return doesDisplayCraftText() ? 0 : stack.getCount();
+        // The isCraftable check is needed so sorting is applied correctly
+        return isCraftable() ? 0 : stack.getCount();
     }
 
     @Override
@@ -154,7 +139,7 @@ public class ItemGridStack implements IGridStack {
     public void draw(BaseScreen gui, int x, int y) {
         String text = null;
 
-        if (displayCraftText) {
+        if (craftable) {
             text = I18n.format("gui.refinedstorage.grid.craft");
         } else if (stack.getCount() > 1) {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());

@@ -77,7 +77,7 @@ public final class WorldUtils {
     }
 
     public static void sendNoPermissionMessage(PlayerEntity player) {
-        player.sendMessage(new TranslationTextComponent("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
     }
 
     public static RayTraceResult rayTracePlayer(World world, PlayerEntity player) {

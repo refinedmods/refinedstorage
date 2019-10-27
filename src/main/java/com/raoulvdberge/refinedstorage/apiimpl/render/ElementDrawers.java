@@ -9,17 +9,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 public class ElementDrawers implements IElementDrawers {
-    protected BaseScreen gui;
+    protected BaseScreen screen;
     private FontRenderer fontRenderer;
 
-    public ElementDrawers(BaseScreen gui, FontRenderer fontRenderer) {
-        this.gui = gui;
+    public ElementDrawers(BaseScreen screen, FontRenderer fontRenderer) {
+        this.screen = screen;
         this.fontRenderer = fontRenderer;
     }
 
     @Override
     public IElementDrawer<ItemStack> getItemDrawer() {
-        return gui::renderItem;
+        return screen::renderItem;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ElementDrawers implements IElementDrawers {
 
     @Override
     public IElementDrawer<String> getStringDrawer() {
-        return gui::renderString;
+        return screen::renderString;
     }
 
     @Override

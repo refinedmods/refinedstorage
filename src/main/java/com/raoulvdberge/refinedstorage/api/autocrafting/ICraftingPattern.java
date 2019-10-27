@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
@@ -75,7 +76,7 @@ public interface ICraftingPattern {
     /**
      * @return the id of the factory that creates a crafting task for this pattern, as defined in the {@link com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry}
      */
-    String getId();
+    ResourceLocation getId();
 
     /**
      * @param other the other pattern

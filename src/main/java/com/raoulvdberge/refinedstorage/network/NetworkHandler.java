@@ -54,6 +54,10 @@ public class NetworkHandler {
         handler.registerMessage(id++, PortableGridItemDeltaMessage.class, PortableGridItemDeltaMessage::encode, PortableGridItemDeltaMessage::decode, PortableGridItemDeltaMessage::handle);
         handler.registerMessage(id++, PortableGridFluidUpdateMessage.class, PortableGridFluidUpdateMessage::encode, PortableGridFluidUpdateMessage::decode, PortableGridFluidUpdateMessage::handle);
         handler.registerMessage(id++, PortableGridFluidDeltaMessage.class, PortableGridFluidDeltaMessage::encode, PortableGridFluidDeltaMessage::decode, PortableGridFluidDeltaMessage::handle);
+        handler.registerMessage(id++, GridCraftingPreviewRequestMessage.class, GridCraftingPreviewRequestMessage::encode, GridCraftingPreviewRequestMessage::decode, GridCraftingPreviewRequestMessage::handle);
+        handler.registerMessage(id++, GridCraftingPreviewResponseMessage.class, GridCraftingPreviewResponseMessage::encode, GridCraftingPreviewResponseMessage::decode, GridCraftingPreviewResponseMessage::handle);
+        handler.registerMessage(id++, GridCraftingStartRequestMessage.class, GridCraftingStartRequestMessage::encode, GridCraftingStartRequestMessage::decode, GridCraftingStartRequestMessage::handle);
+        handler.registerMessage(id++, GridCraftingStartResponseMessage.class, GridCraftingStartResponseMessage::encode, GridCraftingStartResponseMessage::decode, GridCraftingStartResponseMessage::handle);
     }
 
     public void sendToServer(Object message) {

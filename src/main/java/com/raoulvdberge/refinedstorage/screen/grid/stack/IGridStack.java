@@ -33,8 +33,4 @@ public interface IGridStack {
     void setTrackerEntry(@Nullable StorageTrackerEntry entry);
 
     boolean isCraftable();
-
-    boolean doesDisplayCraftText();
-
-    void setDisplayCraftText(boolean displayCraftText);
 }

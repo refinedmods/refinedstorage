@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.network.grid;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
@@ -49,22 +48,16 @@ public class GridFluidUpdateMessage {
     public static void encode(GridFluidUpdateMessage message, PacketBuffer buf) {
         buf.writeBoolean(message.canCraft);
 
-        int size = message.network.getFluidStorageCache().getList().getStacks().size();
-
-        for (ICraftingPattern pattern : message.network.getCraftingManager().getPatterns()) {
-            size += pattern.getFluidOutputs().size();
-        }
+        int size = message.network.getFluidStorageCache().getList().getStacks().size() + message.network.getFluidStorageCache().getCraftablesList().getStacks().size();
 
         buf.writeInt(size);
 
         for (StackListEntry<FluidStack> stack : message.network.getFluidStorageCache().getList().getStacks()) {
-            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), message.network, false, message.network.getFluidStorageTracker().get(stack.getStack()));
+            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), false, message.network, message.network.getFluidStorageTracker().get(stack.getStack()));
         }
 
-        for (ICraftingPattern pattern : message.network.getCraftingManager().getPatterns()) {
-            for (FluidStack output : pattern.getFluidOutputs()) {
-                // TODO
-            }
+        for (StackListEntry<FluidStack> stack : message.network.getFluidStorageCache().getCraftablesList().getStacks()) {
+            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), true, message.network, message.network.getFluidStorageTracker().get(stack.getStack()));
         }
     }
 

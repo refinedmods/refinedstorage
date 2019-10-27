@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.google.common.collect.Maps;
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
@@ -18,8 +17,8 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementError;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementFluidRender;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementItemRender;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementFluidStack;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementItemStack;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.FluidStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.ItemStorageDisk;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.factory.FluidStorageDiskFactory;
@@ -332,9 +331,10 @@ public class CraftingTask implements ICraftingTask {
         ICraftingPattern pattern,
         boolean root) {
 
+        /* TODO
         if (System.currentTimeMillis() - calculationStarted > RS.INSTANCE.config.calculationTimeoutMs) {
             return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
-        }
+        }*/
 
         if (!patternsUsed.add(pattern)) {
             return new CraftingTaskError(CraftingTaskErrorType.RECURSIVE, pattern);
@@ -1111,16 +1111,16 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public List<ICraftingPreviewElement> getPreviewStacks() {
-        Map<Integer, CraftingPreviewElementItemStack> map = new LinkedHashMap<>();
-        Map<Integer, CraftingPreviewElementFluidStack> mapFluids = new LinkedHashMap<>();
+        Map<Integer, ItemCraftingPreviewElement> map = new LinkedHashMap<>();
+        Map<Integer, FluidCraftingPreviewElement> mapFluids = new LinkedHashMap<>();
 
         for (StackListEntry<ItemStack> stack : toCraft.getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack.getStack());
 
-            CraftingPreviewElementItemStack previewStack = map.get(hash);
+            ItemCraftingPreviewElement previewStack = map.get(hash);
 
             if (previewStack == null) {
-                previewStack = new CraftingPreviewElementItemStack(stack.getStack());
+                previewStack = new ItemCraftingPreviewElement(stack.getStack());
             }
 
             previewStack.addToCraft(stack.getStack().getCount());
@@ -1131,10 +1131,10 @@ public class CraftingTask implements ICraftingTask {
         for (StackListEntry<FluidStack> stack : toCraftFluids.getStacks()) {
             int hash = API.instance().getFluidStackHashCode(stack.getStack());
 
-            CraftingPreviewElementFluidStack previewStack = mapFluids.get(hash);
+            FluidCraftingPreviewElement previewStack = mapFluids.get(hash);
 
             if (previewStack == null) {
-                previewStack = new CraftingPreviewElementFluidStack(stack.getStack());
+                previewStack = new FluidCraftingPreviewElement(stack.getStack());
             }
 
             previewStack.addToCraft(stack.getStack().getAmount());
@@ -1145,10 +1145,10 @@ public class CraftingTask implements ICraftingTask {
         for (StackListEntry<ItemStack> stack : missing.getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack.getStack());
 
-            CraftingPreviewElementItemStack previewStack = map.get(hash);
+            ItemCraftingPreviewElement previewStack = map.get(hash);
 
             if (previewStack == null) {
-                previewStack = new CraftingPreviewElementItemStack(stack.getStack());
+                previewStack = new ItemCraftingPreviewElement(stack.getStack());
             }
 
             previewStack.setMissing(true);
@@ -1160,10 +1160,10 @@ public class CraftingTask implements ICraftingTask {
         for (StackListEntry<FluidStack> stack : missingFluids.getStacks()) {
             int hash = API.instance().getFluidStackHashCode(stack.getStack());
 
-            CraftingPreviewElementFluidStack previewStack = mapFluids.get(hash);
+            FluidCraftingPreviewElement previewStack = mapFluids.get(hash);
 
             if (previewStack == null) {
-                previewStack = new CraftingPreviewElementFluidStack(stack.getStack());
+                previewStack = new FluidCraftingPreviewElement(stack.getStack());
             }
 
             previewStack.setMissing(true);
@@ -1175,10 +1175,10 @@ public class CraftingTask implements ICraftingTask {
         for (StackListEntry<ItemStack> stack : toTake.getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack.getStack());
 
-            CraftingPreviewElementItemStack previewStack = map.get(hash);
+            ItemCraftingPreviewElement previewStack = map.get(hash);
 
             if (previewStack == null) {
-                previewStack = new CraftingPreviewElementItemStack(stack.getStack());
+                previewStack = new ItemCraftingPreviewElement(stack.getStack());
             }
 
             previewStack.addAvailable(stack.getStack().getCount());
@@ -1189,10 +1189,10 @@ public class CraftingTask implements ICraftingTask {
         for (StackListEntry<FluidStack> stack : toTakeFluids.getStacks()) {
             int hash = API.instance().getFluidStackHashCode(stack.getStack());
 
-            CraftingPreviewElementFluidStack previewStack = mapFluids.get(hash);
+            FluidCraftingPreviewElement previewStack = mapFluids.get(hash);
 
             if (previewStack == null) {
-                previewStack = new CraftingPreviewElementFluidStack(stack.getStack());
+                previewStack = new FluidCraftingPreviewElement(stack.getStack());
             }
 
             previewStack.addAvailable(stack.getStack().getAmount());

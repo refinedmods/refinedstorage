@@ -28,6 +28,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     public static final String NBT_ITEMS = "Items";
     public static final int VERSION = 1;
 
+    @Nullable
     private ServerWorld world;
     private int capacity;
     private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
@@ -36,11 +37,7 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public ItemStorageDisk(ServerWorld world, int capacity) {
-        if (world == null) {
-            throw new IllegalArgumentException("World cannot be null");
-        }
-
+    public ItemStorageDisk(@Nullable ServerWorld world, int capacity) {
         this.world = world;
         this.capacity = capacity;
     }
@@ -206,6 +203,8 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
             listener.onChanged();
         }
 
-        API.instance().getStorageDiskManager(world).markForSaving();
+        if (world != null) {
+            API.instance().getStorageDiskManager(world).markForSaving();
+        }
     }
 }

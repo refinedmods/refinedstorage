@@ -1,20 +1,20 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskErrorType;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 
-public class CraftingPreviewElementError implements ICraftingPreviewElement<ItemStack> {
-    public static final String ID = "error";
+public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "error");
 
     private CraftingTaskErrorType type;
     private ItemStack stack;
 
-    public CraftingPreviewElementError(CraftingTaskErrorType type, ItemStack stack) {
+    public ErrorCraftingPreviewElement(CraftingTaskErrorType type, ItemStack stack) {
         this.type = type;
         this.stack = stack;
     }
@@ -44,36 +44,26 @@ public class CraftingPreviewElementError implements ICraftingPreviewElement<Item
         return false;
     }
 
-    // TODO: Rename to writeToBuffer.
     @Override
-    public void writeToByteBuf(PacketBuffer buf) {
+    public void write(PacketBuffer buf) {
         buf.writeInt(type.ordinal());
-        // TODO can't we use writeItemStack here?
-        buf.writeInt(Item.getIdFromItem(stack.getItem()));
-        buf.writeCompoundTag(stack.getTag());
+        buf.writeItemStack(stack);
     }
 
     public CraftingTaskErrorType getType() {
         return type;
     }
 
-    // TODO: Rename to fromBuffer
-    public static CraftingPreviewElementError fromByteBuf(PacketBuffer buf) {
+    public static ErrorCraftingPreviewElement read(PacketBuffer buf) {
         int errorIdx = buf.readInt();
         CraftingTaskErrorType error = errorIdx >= 0 && errorIdx < CraftingTaskErrorType.values().length ? CraftingTaskErrorType.values()[errorIdx] : CraftingTaskErrorType.TOO_COMPLEX;
+        ItemStack stack = buf.readItemStack();
 
-        // TODO can't we use readItemStack here?
-        Item item = Item.getItemById(buf.readInt());
-        CompoundNBT tag = buf.readCompoundTag();
-
-        ItemStack stack = new ItemStack(item, 1);
-        stack.setTag(tag);
-
-        return new CraftingPreviewElementError(error, stack);
+        return new ErrorCraftingPreviewElement(error, stack);
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 }

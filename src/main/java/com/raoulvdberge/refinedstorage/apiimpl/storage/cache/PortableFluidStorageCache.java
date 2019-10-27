@@ -80,6 +80,11 @@ public class PortableFluidStorageCache implements IStorageCache<FluidStack> {
     }
 
     @Override
+    public IStackList<FluidStack> getCraftablesList() {
+        throw new RuntimeException("Unsupported");
+    }
+
+    @Override
     public List<IStorage<FluidStack>> getStorages() {
         return Collections.emptyList();
     }

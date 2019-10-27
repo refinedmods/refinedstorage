@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.network.grid;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
@@ -49,22 +48,16 @@ public class GridItemUpdateMessage {
     public static void encode(GridItemUpdateMessage message, PacketBuffer buf) {
         buf.writeBoolean(message.canCraft);
 
-        int size = message.network.getItemStorageCache().getList().getStacks().size();
-
-        for (ICraftingPattern pattern : message.network.getCraftingManager().getPatterns()) {
-            size += pattern.getOutputs().size();
-        }
+        int size = message.network.getItemStorageCache().getList().getStacks().size() + message.network.getItemStorageCache().getCraftablesList().getStacks().size();
 
         buf.writeInt(size);
 
         for (StackListEntry<ItemStack> stack : message.network.getItemStorageCache().getList().getStacks()) {
-            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), message.network, false, message.network.getItemStorageTracker().get(stack.getStack()));
+            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), false, message.network, message.network.getItemStorageTracker().get(stack.getStack()));
         }
 
-        for (ICraftingPattern pattern : message.network.getCraftingManager().getPatterns()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                // TODO StackUtils.writeItemGridStack(buf, output, message.network, true, message.network.getItemStorageTracker().get(output));
-            }
+        for (StackListEntry<ItemStack> stack : message.network.getItemStorageCache().getCraftablesList().getStacks()) {
+            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), true, message.network, message.network.getItemStorageTracker().get(stack.getStack()));
         }
     }
 

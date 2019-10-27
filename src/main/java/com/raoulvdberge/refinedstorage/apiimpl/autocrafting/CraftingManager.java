@@ -16,6 +16,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -128,7 +129,7 @@ public class CraftingManager implements ICraftingManager {
                 for (int i = 0; i < tasksToRead.size(); ++i) {
                     CompoundNBT taskTag = tasksToRead.getCompound(i);
 
-                    String taskType = taskTag.getString(NBT_TASK_TYPE);
+                    ResourceLocation taskType = new ResourceLocation(taskTag.getString(NBT_TASK_TYPE));
                     CompoundNBT taskData = taskTag.getCompound(NBT_TASK_DATA);
 
                     ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(taskType);
@@ -196,7 +197,7 @@ public class CraftingManager implements ICraftingManager {
         for (ICraftingTask task : tasks.values()) {
             CompoundNBT taskTag = new CompoundNBT();
 
-            taskTag.putString(NBT_TASK_TYPE, task.getPattern().getId());
+            taskTag.putString(NBT_TASK_TYPE, task.getPattern().getId().toString());
             taskTag.put(NBT_TASK_DATA, task.writeToNbt(new CompoundNBT()));
 
             list.add(taskTag);
@@ -355,7 +356,10 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void rebuild() {
+    public void invalidate() {
+        this.network.getItemStorageCache().getCraftablesList().clear();
+        this.network.getFluidStorageCache().getCraftablesList().clear();
+
         this.patterns.clear();
         this.containerInventories.clear();
 
@@ -370,7 +374,17 @@ public class CraftingManager implements ICraftingManager {
         containers.sort((a, b) -> b.getPosition().compareTo(a.getPosition()));
 
         for (ICraftingPatternContainer container : containers) {
-            this.patterns.addAll(container.getPatterns());
+            for (ICraftingPattern pattern : container.getPatterns()) {
+                this.patterns.add(pattern);
+
+                for (ItemStack output : pattern.getOutputs()) {
+                    network.getItemStorageCache().getCraftablesList().add(output);
+                }
+
+                for (FluidStack output : pattern.getFluidOutputs()) {
+                    network.getFluidStorageCache().getCraftablesList().add(output);
+                }
+            }
 
             IItemHandlerModifiable handler = container.getPatternInventory();
             if (handler != null) {

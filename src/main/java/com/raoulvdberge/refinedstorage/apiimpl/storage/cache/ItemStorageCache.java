@@ -21,11 +21,12 @@ import java.util.function.Consumer;
 public class ItemStorageCache implements IStorageCache<ItemStack> {
     public static final Consumer<INetwork> INVALIDATE = network -> network.getItemStorageCache().invalidate();
 
-    private INetwork network;
-    private CopyOnWriteArrayList<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
-    private IStackList<ItemStack> list = API.instance().createItemStackList();
-    private List<IStorageCacheListener<ItemStack>> listeners = new LinkedList<>();
-    private List<StackListResult<ItemStack>> batchedChanges = new ArrayList<>();
+    private final INetwork network;
+    private final CopyOnWriteArrayList<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
+    private final IStackList<ItemStack> list = API.instance().createItemStackList();
+    private final IStackList<ItemStack> craftables = API.instance().createItemStackList();
+    private final List<IStorageCacheListener<ItemStack>> listeners = new LinkedList<>();
+    private final List<StackListResult<ItemStack>> batchedChanges = new ArrayList<>();
 
     public ItemStorageCache(INetwork network) {
         this.network = network;
@@ -117,6 +118,11 @@ public class ItemStorageCache implements IStorageCache<ItemStack> {
     @Override
     public IStackList<ItemStack> getList() {
         return list;
+    }
+
+    @Override
+    public IStackList<ItemStack> getCraftablesList() {
+        return craftables;
     }
 
     @Override

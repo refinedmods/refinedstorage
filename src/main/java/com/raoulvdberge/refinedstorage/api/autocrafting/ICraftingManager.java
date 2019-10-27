@@ -131,14 +131,14 @@ public interface ICraftingManager {
     int track(@Nonnull FluidStack stack, int size);
 
     /**
-     * @return a list of crafting patterns in this network, do NOT modify this list
+     * @return the crafting patterns in this network
      */
     List<ICraftingPattern> getPatterns();
 
     /**
      * Rebuilds the pattern list.
      */
-    void rebuild();
+    void invalidate();
 
     /**
      * Return a crafting pattern from an item stack.

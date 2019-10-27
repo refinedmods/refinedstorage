@@ -1,15 +1,16 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid.handler;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
+import com.raoulvdberge.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
+import com.raoulvdberge.refinedstorage.network.grid.GridCraftingStartResponseMessage;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -19,6 +20,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.UUID;
 
 public class ItemGridHandler implements IItemGridHandler {
@@ -152,15 +154,7 @@ public class ItemGridHandler implements IItemGridHandler {
             return;
         }
 
-        IStackList<ItemStack> cache = API.instance().createItemStackList();
-
-        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                cache.add(output);
-            }
-        }
-
-        ItemStack stack = cache.get(id);
+        ItemStack stack = network.getItemStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
             Thread calculationThread = new Thread(() -> {
@@ -172,13 +166,29 @@ public class ItemGridHandler implements IItemGridHandler {
                 ICraftingTaskError error = task.calculate();
 
                 if (error != null) {
-                    // TODO RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(Collections.singletonList(new CraftingPreviewElementError(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())), hash, quantity, false), player);
+                    RS.NETWORK_HANDLER.sendTo(
+                        player,
+                        new GridCraftingPreviewResponseMessage(
+                            Collections.singletonList(new ErrorCraftingPreviewElement(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())),
+                            id,
+                            quantity,
+                            false
+                        )
+                    );
                 } else if (noPreview && !task.hasMissing()) {
                     network.getCraftingManager().add(task);
 
-                    // TODO  RS.INSTANCE.network.sendTo(new MessageGridCraftingStartResponse(), player);
+                    RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
                 } else {
-                    // TODO RS.INSTANCE.network.sendTo(new MessageGridCraftingPreviewResponse(task.getPreviewStacks(), hash, quantity, false), player);
+                    RS.NETWORK_HANDLER.sendTo(
+                        player,
+                        new GridCraftingPreviewResponseMessage(
+                            task.getPreviewStacks(),
+                            id,
+                            quantity,
+                            false
+                        )
+                    );
                 }
             }, "RS crafting preview calculation");
 
@@ -192,21 +202,7 @@ public class ItemGridHandler implements IItemGridHandler {
             return;
         }
 
-        ItemStack stack = null;
-
-        for (ICraftingPattern pattern : network.getCraftingManager().getPatterns()) {
-            for (ItemStack output : pattern.getOutputs()) {
-                if (/* TODO API.instance().getItemStackHashCode(output) == hash*/false) {
-                    stack = output;
-
-                    break;
-                }
-            }
-
-            if (stack != null) {
-                break;
-            }
-        }
+        ItemStack stack = network.getItemStorageCache().getCraftablesList().get(id);
 
         if (stack != null) {
             ICraftingTask task = network.getCraftingManager().create(stack, quantity);

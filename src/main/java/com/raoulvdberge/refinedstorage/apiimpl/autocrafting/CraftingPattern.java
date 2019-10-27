@@ -14,6 +14,7 @@ import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -82,14 +83,14 @@ public class CraftingPattern implements ICraftingPattern {
                 }
 
                 FluidStack fluidInput = PatternItem.getFluidInputSlot(stack, i);
-                if (fluidInput != null) {
+                if (!fluidInput.isEmpty()) {
                     this.valid = true;
 
                     fluidInputs.add(fluidInput);
                 }
 
                 FluidStack fluidOutput = PatternItem.getFluidOutputSlot(stack, i);
-                if (fluidOutput != null) {
+                if (!fluidOutput.isEmpty()) {
                     this.valid = true;
 
                     fluidOutputs.add(fluidOutput);
@@ -241,7 +242,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return CraftingTaskFactory.ID;
     }
 

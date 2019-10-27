@@ -4,30 +4,21 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChain;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainList;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CraftingPatternChainList implements ICraftingPatternChainList {
-    /*private Map<ICraftingPattern, CraftingPatternChain> map = new TCustomHashMap<>(new HashingStrategy<ICraftingPattern>() {
-        @Override
-        public int computeHashCode(ICraftingPattern pattern) {
-            return pattern.getChainHashCode();
-        }
+    private final Map<Key, CraftingPatternChain> map = new HashMap<>();
 
-        @Override
-        public boolean equals(ICraftingPattern left, ICraftingPattern right) {
-            return left.canBeInChainWith(right);
-        }
-    });*/
-    // TODO: broken
-    private Map<ICraftingPattern, CraftingPatternChain> map = new HashMap<>();
-
-    public CraftingPatternChainList(List<ICraftingPattern> patterns) {
+    public CraftingPatternChainList(Collection<ICraftingPattern> patterns) {
         for (ICraftingPattern pattern : patterns) {
-            CraftingPatternChain chain = map.get(pattern);
+            Key key = new Key(pattern);
+
+            CraftingPatternChain chain = map.get(key);
+
             if (chain == null) {
-                map.put(pattern, chain = new CraftingPatternChain());
+                map.put(key, chain = new CraftingPatternChain());
             }
 
             chain.addPattern(pattern);
@@ -36,11 +27,30 @@ public class CraftingPatternChainList implements ICraftingPatternChainList {
 
     @Override
     public ICraftingPatternChain getChain(ICraftingPattern pattern) {
-        ICraftingPatternChain chain = map.get(pattern);
+        ICraftingPatternChain chain = map.get(new Key(pattern));
+
         if (chain == null) {
             throw new IllegalStateException("Pattern was not found in pattern chain");
         }
 
         return chain;
+    }
+
+    private class Key {
+        private final ICraftingPattern pattern;
+
+        public Key(ICraftingPattern pattern) {
+            this.pattern = pattern;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return other instanceof Key && pattern.canBeInChainWith(((Key) other).pattern);
+        }
+
+        @Override
+        public int hashCode() {
+            return pattern.getChainHashCode();
+        }
     }
 }

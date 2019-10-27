@@ -27,6 +27,7 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     public static final String NBT_FLUIDS = "Fluids";
     public static final int VERSION = 1;
 
+    @Nullable
     private ServerWorld world;
     private int capacity;
     private Multimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
@@ -35,11 +36,7 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     private IStorageDiskListener listener;
     private IStorageDiskContainerContext context;
 
-    public FluidStorageDisk(ServerWorld world, int capacity) {
-        if (world == null) {
-            throw new IllegalArgumentException("World cannot be null");
-        }
-
+    public FluidStorageDisk(@Nullable ServerWorld world, int capacity) {
         this.world = world;
         this.capacity = capacity;
     }
@@ -205,6 +202,8 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
             listener.onChanged();
         }
 
-        API.instance().getStorageDiskManager(world).markForSaving();
+        if (world != null) {
+            API.instance().getStorageDiskManager(world).markForSaving();
+        }
     }
 }
