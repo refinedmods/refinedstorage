@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.network;
 
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
+import com.raoulvdberge.refinedstorage.util.PacketBufferUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -28,7 +29,7 @@ public class FilterUpdateMessage {
             buf.readInt(),
             buf.readInt(),
             buf.readBoolean(),
-            buf.readString(),
+            PacketBufferUtils.readString(buf),
             buf.readInt()
         );
     }
