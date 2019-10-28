@@ -1,12 +1,15 @@
 package com.raoulvdberge.refinedstorage.container;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
+import com.raoulvdberge.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -16,7 +19,7 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     private ICraftingMonitor craftingMonitor;
     private boolean addedListener;
 
-    public CraftingMonitorContainer(ICraftingMonitor craftingMonitor, @Nullable TileCraftingMonitor craftingMonitorTile, PlayerEntity player, int windowId) {
+    public CraftingMonitorContainer(ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile craftingMonitorTile, PlayerEntity player, int windowId) {
         super(RSContainers.CRAFTING_MONITOR, craftingMonitorTile, player, windowId);
 
         this.craftingMonitor = craftingMonitor;
@@ -91,6 +94,6 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
 
     @Override
     public void onChanged() {
-        // TODO RS.INSTANCE.network.sendTo(new MessageCraftingMonitorElements(craftingMonitor), (ServerPlayerEntity) getPlayer());
+        RS.NETWORK_HANDLER.sendTo((ServerPlayerEntity) getPlayer(), new CraftingMonitorUpdateMessage(craftingMonitor));
     }
 }

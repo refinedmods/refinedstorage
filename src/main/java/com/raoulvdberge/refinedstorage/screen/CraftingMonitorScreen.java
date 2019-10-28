@@ -13,6 +13,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.render.CraftingMonitorElementDrawers;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
 import com.raoulvdberge.refinedstorage.container.CraftingMonitorContainer;
+import com.raoulvdberge.refinedstorage.network.craftingmonitor.CraftingMonitorCancelMessage;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.TabListWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
@@ -24,6 +25,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -32,8 +34,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
-    public static class CraftingMonitorTask implements IGridTab {
+public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> {
+    public static class Task implements IGridTab {
         private UUID id;
         private ICraftingRequestInfo requested;
         private int qty;
@@ -41,7 +43,7 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
         private int completionPercentage;
         private List<ICraftingMonitorElement> elements;
 
-        public CraftingMonitorTask(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, int completionPercentage, List<ICraftingMonitorElement> elements) {
+        public Task(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, int completionPercentage, List<ICraftingMonitorElement> elements) {
             this.id = id;
             this.requested = requested;
             this.qty = qty;
@@ -64,7 +66,7 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
             int minutes = (totalSecs % 3600) / 60;
             int seconds = totalSecs % 60;
 
-            smallTextLines.add(I18n.format("gui.refinedstorage:crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
+            smallTextLines.add(I18n.format("gui.refinedstorage.crafting_monitor.tooltip.requested", requested.getFluid() != null ? API.instance().getQuantityFormatter().formatInBucketForm(qty) : API.instance().getQuantityFormatter().format(qty)));
             smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
             smallTextLines.add(String.format("%d%%", completionPercentage));
 
@@ -102,10 +104,10 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
 
     private IElementDrawers drawers = new CraftingMonitorElementDrawers(this, font, ITEM_WIDTH, ITEM_HEIGHT);
 
-    public GuiCraftingMonitor(CraftingMonitorContainer container, ICraftingMonitor craftingMonitor, PlayerInventory inventory) {
-        super(container, 254, 201, inventory, null);
+    public CraftingMonitorScreen(CraftingMonitorContainer container, PlayerInventory inventory, ITextComponent title) {
+        super(container, 254, 201, inventory, title);
 
-        this.craftingMonitor = craftingMonitor;
+        this.craftingMonitor = container.getCraftingMonitor();
 
         this.tabs = new TabListWidget(this, new ElementDrawers(this, font), () -> tasks, () -> (int) Math.floor((float) Math.max(0, tasks.size() - 1) / (float) ICraftingMonitor.TABS_PER_PAGE), craftingMonitor::getTabPage, () -> {
             IGridTab tab = getCurrentTab();
@@ -116,11 +118,10 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
 
             return tasks.indexOf(tab);
         }, ICraftingMonitor.TABS_PER_PAGE);
-
         this.tabs.addListener(new TabListWidget.ITabListListener() {
             @Override
             public void onSelectionChanged(int tab) {
-                craftingMonitor.onTabSelectionChanged(Optional.of(((CraftingMonitorTask) tasks.get(tab)).id));
+                craftingMonitor.onTabSelectionChanged(Optional.of(((Task) tasks.get(tab)).id));
 
                 scrollbar.setOffset(0);
             }
@@ -130,6 +131,8 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
                 craftingMonitor.onTabPageChanged(page);
             }
         });
+
+        this.scrollbar = new ScrollbarWidget(this, 235, 20, 12, 149);
     }
 
     public void setTasks(List<IGridTab> tasks) {
@@ -147,28 +150,32 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
             return Collections.emptyList();
         }
 
-        return ((CraftingMonitorTask) tab).elements;
+        return ((Task) tab).elements;
     }
 
     @Override
     public void onPostInit(int x, int y) {
         this.tabs.init(xSize);
 
-        this.scrollbar = new ScrollbarWidget(this, 235, 20, 12, 149);
-
         if (craftingMonitor.getRedstoneModeParameter() != null) {
             addSideButton(new RedstoneModeSideButton(this, craftingMonitor.getRedstoneModeParameter()));
         }
 
         String cancel = I18n.format("gui.cancel");
-        String cancelAll = I18n.format("misc.refinedstorage:cancel_all");
+        String cancelAll = I18n.format("misc.refinedstorage.cancel_all");
 
         int cancelButtonWidth = 14 + font.getStringWidth(cancel);
         int cancelAllButtonWidth = 14 + font.getStringWidth(cancelAll);
 
         this.cancelButton = addButton(x + 7, y + 201 - 20 - 7, cancelButtonWidth, 20, cancel, false, true, btn -> {
+            if (hasValidTabSelected()) {
+                RS.NETWORK_HANDLER.sendToServer(new CraftingMonitorCancelMessage(((Task) getCurrentTab()).id));
+            }
         });
         this.cancelAllButton = addButton(x + 7 + cancelButtonWidth + 4, y + 201 - 20 - 7, cancelAllButtonWidth, 20, cancelAll, false, true, btn -> {
+            if (!tasks.isEmpty()) {
+                RS.NETWORK_HANDLER.sendToServer(new CraftingMonitorCancelMessage(null));
+            }
         });
     }
 
@@ -223,7 +230,7 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
 
     @Nullable
     private IGridTab getTabById(UUID id) {
-        return tasks.stream().filter(t -> ((CraftingMonitorTask) t).id.equals(id)).findFirst().orElse(null);
+        return tasks.stream().filter(t -> ((Task) t).id.equals(id)).findFirst().orElse(null);
     }
 
     @Override
@@ -236,12 +243,14 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
 
         blit(x, y, 0, 0, xSize, ySize);
 
+        scrollbar.render();
+
         tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActive());
     }
 
     @Override
     public void renderForeground(int mouseX, int mouseY) {
-        renderString(7, 7, I18n.format(craftingMonitor.getGuiTitle()));
+        renderString(7, 7, title.getFormattedText());
 
         int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
@@ -280,26 +289,33 @@ public class GuiCraftingMonitor extends BaseScreen<CraftingMonitorContainer> {
         tabs.drawTooltip(font, mouseX, mouseY);
     }
 
-    /* TODO
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
-        super.actionPerformed(button);
-
-        tabs.actionPerformed(button);
-
-        if (button == cancelButton && hasValidTabSelected()) {
-            RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(((CraftingMonitorTask) getCurrentTab()).id));
-        } else if (button == cancelAllButton && tasks.size() > 0) {
-            RS.INSTANCE.network.sendToServer(new MessageCraftingMonitorCancel(null));
-        }
-    }*/
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (super.mouseClicked(mouseX, mouseY, mouseButton)) {
+    public boolean mouseClicked(double mouseX, double mouseY, int clickedButton) {
+        if (tabs.mouseClicked()) {
             return true;
         }
 
-        return this.tabs.mouseClicked();
+        if (scrollbar.mouseClicked(mouseX, mouseY, clickedButton)) {
+            return true;
+        }
+
+        return super.mouseClicked(mouseX, mouseY, clickedButton);
+    }
+
+    @Override
+    public void mouseMoved(double mx, double my) {
+        scrollbar.mouseMoved(mx, my);
+
+        super.mouseMoved(mx, my);
+    }
+
+    @Override
+    public boolean mouseReleased(double mx, double my, int button) {
+        return scrollbar.mouseReleased(mx, my, button) || super.mouseReleased(mx, my, button);
+    }
+
+    @Override
+    public boolean mouseScrolled(double x, double y, double delta) {
+        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
     }
 }

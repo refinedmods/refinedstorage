@@ -225,6 +225,6 @@ public class ItemGridHandler implements IItemGridHandler {
 
         network.getCraftingManager().cancel(id);
 
-        network.getNetworkItemManager().drainEnergy(player, id == null ? RS.INSTANCE.config.wirelessCraftingMonitorCancelAllUsage : RS.INSTANCE.config.wirelessCraftingMonitorCancelUsage);
+        // TODO network.getNetworkItemManager().drainEnergy(player, id == null ? RS.INSTANCE.config.wirelessCraftingMonitorCancelAllUsage : RS.INSTANCE.config.wirelessCraftingMonitorCancelUsage);
     }
 }

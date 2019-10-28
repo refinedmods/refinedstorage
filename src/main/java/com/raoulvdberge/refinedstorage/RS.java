@@ -5,6 +5,9 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.ErrorCraftingMonitorElement;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.FluidCraftingMonitorElement;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.ItemCraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingPreviewElement;
@@ -29,6 +32,7 @@ import com.raoulvdberge.refinedstorage.config.ClientConfig;
 import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.container.factory.CrafterManagerContainerFactory;
+import com.raoulvdberge.refinedstorage.container.factory.CraftingMonitorContainerFactory;
 import com.raoulvdberge.refinedstorage.container.factory.GridContainerFactory;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerFactory;
 import com.raoulvdberge.refinedstorage.item.*;
@@ -40,6 +44,7 @@ import com.raoulvdberge.refinedstorage.loottable.StorageBlockLootFunctionSeriali
 import com.raoulvdberge.refinedstorage.network.NetworkHandler;
 import com.raoulvdberge.refinedstorage.recipe.UpgradeWithEnchantedBookRecipeSerializer;
 import com.raoulvdberge.refinedstorage.tile.*;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridTile;
@@ -139,6 +144,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(DiskManipulatorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new DiskManipulatorNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(CrafterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new CrafterNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(CrafterManagerNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new CrafterManagerNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(CraftingMonitorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new CraftingMonitorNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
         API.instance().getGridManager().add(WirelessGridGridFactory.ID, new WirelessGridGridFactory());
@@ -152,6 +158,10 @@ public final class RS {
         API.instance().getCraftingPreviewElementRegistry().add(ItemCraftingPreviewElement.ID, ItemCraftingPreviewElement::read);
         API.instance().getCraftingPreviewElementRegistry().add(FluidCraftingPreviewElement.ID, FluidCraftingPreviewElement::read);
         API.instance().getCraftingPreviewElementRegistry().add(ErrorCraftingPreviewElement.ID, ErrorCraftingPreviewElement::read);
+
+        API.instance().getCraftingMonitorElementRegistry().add(ItemCraftingMonitorElement.ID, ItemCraftingMonitorElement::read);
+        API.instance().getCraftingMonitorElementRegistry().add(FluidCraftingMonitorElement.ID, FluidCraftingMonitorElement::read);
+        API.instance().getCraftingMonitorElementRegistry().add(ErrorCraftingMonitorElement.ID, ErrorCraftingMonitorElement::read);
 
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
 
@@ -211,6 +221,7 @@ public final class RS {
         e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.CREATIVE));
         e.getRegistry().register(new CrafterBlock());
         e.getRegistry().register(new CrafterManagerBlock());
+        e.getRegistry().register(new CraftingMonitorBlock());
     }
 
     @SubscribeEvent
@@ -253,6 +264,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DiskManipulatorTile::new, RSBlocks.DISK_MANIPULATOR).build(null).setRegistryName(RS.ID, "disk_manipulator")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(CrafterTile::new, RSBlocks.CRAFTER).build(null).setRegistryName(RS.ID, "crafter")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(CrafterManagerTile::new, RSBlocks.CRAFTER_MANAGER).build(null).setRegistryName(RS.ID, "crafter_manager")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(CraftingMonitorTile::new, RSBlocks.CRAFTING_MONITOR).build(null).setRegistryName(RS.ID, "crafting_monitor")));
 
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new PortableGridTile(PortableGridBlockItem.Type.CREATIVE), RSBlocks.CREATIVE_PORTABLE_GRID).build(null).setRegistryName(RS.ID, "creative_portable_grid")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new PortableGridTile(PortableGridBlockItem.Type.NORMAL), RSBlocks.PORTABLE_GRID).build(null).setRegistryName(RS.ID, "portable_grid")));
@@ -290,6 +302,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DiskManipulatorContainer, DiskManipulatorTile>((windowId, inv, tile) -> new DiskManipulatorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "disk_manipulator"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<CrafterContainer, CrafterTile>((windowId, inv, tile) -> new CrafterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "crafter"));
         e.getRegistry().register(IForgeContainerType.create(new CrafterManagerContainerFactory()).setRegistryName(RS.ID, "crafter_manager"));
+        e.getRegistry().register(IForgeContainerType.create(new CraftingMonitorContainerFactory()).setRegistryName(RS.ID, "crafting_monitor"));
     }
 
     @SubscribeEvent
@@ -376,6 +389,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DISK_MANIPULATOR));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CRAFTER));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CRAFTER_MANAGER));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CRAFTING_MONITOR));
 
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.NORMAL));
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.CREATIVE));

@@ -33,6 +33,7 @@ public class ServerConfig {
     private PortableGrid portableGrid;
     private Crafter crafter;
     private CrafterManager crafterManager;
+    private CraftingMonitor craftingMonitor;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -62,6 +63,7 @@ public class ServerConfig {
         portableGrid = new PortableGrid();
         crafter = new Crafter();
         crafterManager = new CrafterManager();
+        craftingMonitor = new CraftingMonitor();
 
         spec = builder.build();
     }
@@ -176,6 +178,10 @@ public class ServerConfig {
 
     public CrafterManager getCrafterManager() {
         return crafterManager;
+    }
+
+    public CraftingMonitor getCraftingMonitor() {
+        return craftingMonitor;
     }
 
     public class Controller {
@@ -829,6 +835,22 @@ public class ServerConfig {
             builder.push("crafterManager");
 
             usage = builder.comment("The energy used by the Crafter Manager").defineInRange("usage", 8, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
+        }
+    }
+
+    public class CraftingMonitor {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public CraftingMonitor() {
+            builder.push("craftingMonitor");
+
+            usage = builder.comment("The energy used by the Crafting Monitor").defineInRange("usage", 8, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }

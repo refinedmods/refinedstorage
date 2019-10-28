@@ -2,20 +2,22 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import io.netty.buffer.ByteBufUtil;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.util.PacketBufferUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 
-public class CraftingMonitorElementError implements ICraftingMonitorElement {
-    public static final String ID = "error";
+public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
+    public static final ResourceLocation ID = new ResourceLocation("error");
 
     private ICraftingMonitorElement base;
     private String message;
 
-    public CraftingMonitorElementError(ICraftingMonitorElement base, String message) {
+    public ErrorCraftingMonitorElement(ICraftingMonitorElement base, String message) {
         this.base = base;
         this.message = message;
     }
@@ -35,21 +37,31 @@ public class CraftingMonitorElementError implements ICraftingMonitorElement {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return ID;
     }
 
     @Override
     public void write(PacketBuffer buf) {
-        ByteBufUtil.writeUtf8(buf, base.getId());
-        ByteBufUtil.writeUtf8(buf, message);
+        buf.writeResourceLocation(base.getId());
+        buf.writeString(message);
 
         base.write(buf);
     }
 
+    public static ErrorCraftingMonitorElement read(PacketBuffer buf) {
+        ResourceLocation id = buf.readResourceLocation();
+        String message = PacketBufferUtils.readString(buf);
+
+        return new ErrorCraftingMonitorElement(
+            API.instance().getCraftingMonitorElementRegistry().get(id).apply(buf),
+            message
+        );
+    }
+
     @Override
     public boolean merge(ICraftingMonitorElement element) {
-        return elementHashCode() == element.elementHashCode() && base.merge(((CraftingMonitorElementError) element).base);
+        return elementHashCode() == element.elementHashCode() && base.merge(((ErrorCraftingMonitorElement) element).base);
     }
 
     @Override

@@ -106,7 +106,7 @@ public final class StackUtils {
 
         StorageTrackerEntry entry = null;
         if (buf.readBoolean()) {
-            entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
+            entry = new StorageTrackerEntry(buf.readLong(), PacketBufferUtils.readString(buf));
         }
 
         return new ItemGridStack(id, stack, craftable, entry);
@@ -135,7 +135,7 @@ public final class StackUtils {
 
         StorageTrackerEntry entry = null;
         if (buf.readBoolean()) {
-            entry = new StorageTrackerEntry(buf.readLong(), buf.readString());
+            entry = new StorageTrackerEntry(buf.readLong(), PacketBufferUtils.readString(buf));
         }
 
         return new FluidGridStack(id, stack, entry, craftable);

@@ -9,6 +9,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -34,8 +36,8 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public String getGuiTitle() {
-        return "gui.refinedstorage:wireless_crafting_monitor";
+    public ITextComponent getTitle() {
+        return new TranslationTextComponent("gui.refinedstorage.wireless_crafting_monitor");
     }
 
     @Override

@@ -1,10 +1,6 @@
 package com.raoulvdberge.refinedstorage;
 
 public class RSOldConfig {
-    //region Energy
-    public int craftingMonitorUsage;
-    //endregion
-
     //region Wireless Crafting Monitor
     public boolean wirelessCraftingMonitorUsesEnergy;
     public int wirelessCraftingMonitorCapacity;
@@ -18,16 +14,11 @@ public class RSOldConfig {
     //endregion
 
     //region Categories
-    private static final String ENERGY = "energy";
     private static final String WIRELESS_CRAFTING_MONITOR = "wirelessCraftingMonitor";
     private static final String AUTOCRAFTING = "autocrafting";
     //endregion
 
     /*private void loadConfig() {
-        //region Energy
-        craftingMonitorUsage = config.getInt("craftingMonitor", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");
-        //endregion
-
         //region Wireless Crafting Monitor
         wirelessCraftingMonitorUsesEnergy = config.getBoolean("usesEnergy", WIRELESS_CRAFTING_MONITOR, true, "Whether the Wireless Crafting Monitor uses energy");
         wirelessCraftingMonitorCapacity = config.getInt("capacity", WIRELESS_CRAFTING_MONITOR, 3200, 0, Integer.MAX_VALUE, "The energy capacity of the Wireless Crafting Monitor");

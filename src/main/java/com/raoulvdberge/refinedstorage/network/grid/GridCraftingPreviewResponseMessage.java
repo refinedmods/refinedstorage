@@ -72,7 +72,6 @@ public class GridCraftingPreviewResponseMessage {
 
     public static void handle(GridCraftingPreviewResponseMessage message, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> ClientProxy.onReceivedCraftingPreviewResponseMessage(message));
-
         ctx.get().setPacketHandled(true);
     }
 }

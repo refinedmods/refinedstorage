@@ -82,6 +82,6 @@ public final class RSBlocks {
     public static final CrafterBlock CRAFTER = null;
     @ObjectHolder(RS.ID + ":crafter_manager")
     public static final CrafterManagerBlock CRAFTER_MANAGER = null;
-
-    public static final BlockCraftingMonitor CRAFTING_MONITOR = null;
+    @ObjectHolder(RS.ID + ":crafting_monitor")
+    public static final CraftingMonitorBlock CRAFTING_MONITOR = null;
 }

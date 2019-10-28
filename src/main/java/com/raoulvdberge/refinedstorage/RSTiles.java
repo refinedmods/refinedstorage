@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.tile.*;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridTile;
 import net.minecraft.tileentity.TileEntityType;
@@ -82,7 +82,6 @@ public class RSTiles {
     public static final TileEntityType<CrafterTile> CRAFTER = null;
     @ObjectHolder(RS.ID + ":crafter_manager")
     public static final TileEntityType<CrafterManagerTile> CRAFTER_MANAGER = null;
-    
-    //@ObjectHolder(RS.ID + ":crafting_monitor")
-    public static final TileEntityType<TileCraftingMonitor> CRAFTING_MONITOR = null;
+    @ObjectHolder(RS.ID + ":crafting_monitor")
+    public static final TileEntityType<CraftingMonitorTile> CRAFTING_MONITOR = null;
 }

@@ -42,7 +42,7 @@ public class FluidStorageTracker implements IStorageTracker<FluidStack> {
 
             FluidStack stack = FluidStack.loadFluidStackFromNBT(tag.getCompound(NBT_STACK));
 
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 changes.put(new Key(stack), new StorageTrackerEntry(tag.getLong(NBT_TIME), tag.getString(NBT_NAME)));
             }
         }

@@ -172,9 +172,9 @@ public class FilterItem extends Item {
         }
     }
 
-    @Nullable
+    @Nonnull
     public static FluidStack getFluidIcon(ItemStack stack) {
-        return stack.hasTag() && stack.getTag().contains(NBT_FLUID_ICON) ? FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound(NBT_FLUID_ICON)) : null;
+        return stack.hasTag() && stack.getTag().contains(NBT_FLUID_ICON) ? FluidStack.loadFluidStackFromNBT(stack.getTag().getCompound(NBT_FLUID_ICON)) : FluidStack.EMPTY;
     }
 
     public static int getType(ItemStack stack) {

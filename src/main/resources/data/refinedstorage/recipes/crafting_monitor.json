@@ -7,14 +7,13 @@
   ],
   "key": {
     "P": {
-      "item": "#improved_processor"
+      "item": "refinedstorage:improved_processor"
     },
     "A": {
       "item": "refinedstorage:pattern"
     },
     "G": {
-      "type": "forge:ore_dict",
-      "ore": "blockGlass"
+      "tag": "forge:glass"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"

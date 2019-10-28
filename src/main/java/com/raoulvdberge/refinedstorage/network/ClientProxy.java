@@ -1,7 +1,10 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridCraftingStartResponseMessage;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.screen.CraftingMonitorScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.CraftingPreviewScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.CraftingSettingsScreen;
 import net.minecraft.client.Minecraft;
@@ -25,5 +28,9 @@ public class ClientProxy {
         if (screen instanceof CraftingSettingsScreen) {
             ((CraftingSettingsScreen) screen).close();
         }
+    }
+
+    public static void onReceivedCraftingMonitorUpdateMessage(CraftingMonitorUpdateMessage message) {
+        BaseScreen.executeLater(CraftingMonitorScreen.class, craftingMonitor -> craftingMonitor.setTasks(message.getTasks()));
     }
 }

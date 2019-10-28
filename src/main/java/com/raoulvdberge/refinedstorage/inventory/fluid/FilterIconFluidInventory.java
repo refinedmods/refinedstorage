@@ -18,7 +18,7 @@ public class FilterIconFluidInventory extends FluidInventory {
         });
 
         FluidStack icon = FilterItem.getFluidIcon(stack);
-        if (icon != null) {
+        if (!icon.isEmpty()) {
             setFluid(0, icon);
         }
     }

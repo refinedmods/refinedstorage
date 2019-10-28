@@ -4,8 +4,8 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
+import com.raoulvdberge.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.TileCraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +13,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -21,7 +23,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
-public class NetworkNodeCraftingMonitor extends NetworkNode implements ICraftingMonitor {
+public class CraftingMonitorNetworkNode extends NetworkNode implements ICraftingMonitor {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "crafting_monitor");
 
     private static final String NBT_TAB_SELECTED = "TabSelected";
@@ -30,13 +32,13 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     private Optional<UUID> tabSelected = Optional.empty();
     private int tabPage;
 
-    public NetworkNodeCraftingMonitor(World world, BlockPos pos) {
+    public CraftingMonitorNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.craftingMonitorUsage;
+        return RS.SERVER_CONFIG.getCraftingMonitor().getUsage();
     }
 
     @Override
@@ -45,8 +47,8 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
     }
 
     @Override
-    public String getGuiTitle() {
-        return "gui.refinedstorage:crafting_monitor";
+    public ITextComponent getTitle() {
+        return new TranslationTextComponent("gui.refinedstorage.crafting_monitor");
     }
 
     @Override
@@ -58,7 +60,7 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
     @Override
     public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return TileCraftingMonitor.REDSTONE_MODE;
+        return CraftingMonitorTile.REDSTONE_MODE;
     }
 
     @Override
@@ -118,23 +120,23 @@ public class NetworkNodeCraftingMonitor extends NetworkNode implements ICrafting
 
     @Override
     public Optional<UUID> getTabSelected() {
-        return world.isRemote ? TileCraftingMonitor.TAB_SELECTED.getValue() : tabSelected;
+        return world.isRemote ? CraftingMonitorTile.TAB_SELECTED.getValue() : tabSelected;
     }
 
     @Override
     public int getTabPage() {
-        return world.isRemote ? TileCraftingMonitor.TAB_PAGE.getValue() : tabPage;
+        return world.isRemote ? CraftingMonitorTile.TAB_PAGE.getValue() : tabPage;
     }
 
     @Override
     public void onTabSelectionChanged(Optional<UUID> tab) {
-        TileDataManager.setParameter(TileCraftingMonitor.TAB_SELECTED, tab);
+        TileDataManager.setParameter(CraftingMonitorTile.TAB_SELECTED, tab);
     }
 
     @Override
     public void onTabPageChanged(int page) {
         if (page >= 0) {
-            TileDataManager.setParameter(TileCraftingMonitor.TAB_PAGE, page);
+            TileDataManager.setParameter(CraftingMonitorTile.TAB_PAGE, page);
         }
     }
 }

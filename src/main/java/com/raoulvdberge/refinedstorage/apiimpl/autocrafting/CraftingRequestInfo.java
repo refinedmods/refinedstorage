@@ -26,8 +26,8 @@ public class CraftingRequestInfo implements ICraftingRequestInfo {
         } else {
             fluid = FluidStack.loadFluidStackFromNBT(tag.getCompound(NBT_STACK));
 
-            if (fluid == null) {
-                throw new CraftingTaskReadException("Extractor fluid stack is emty");
+            if (fluid.isEmpty()) {
+                throw new CraftingTaskReadException("Extractor fluid stack is empty");
             }
         }
     }

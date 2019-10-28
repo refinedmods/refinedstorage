@@ -78,7 +78,7 @@ public class FilterItemHandler extends BaseItemHandler {
         ItemStack icon = FilterItem.getIcon(filter);
         FluidStack fluidIcon = FilterItem.getFluidIcon(filter);
 
-        if (icon.isEmpty() && fluidIcon == null) {
+        if (icon.isEmpty() && fluidIcon.isEmpty()) {
             this.filters.addAll(filters);
         } else {
             tabs.add(new GridTab(filters, FilterItem.getName(filter), icon, fluidIcon));

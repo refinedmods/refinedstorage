@@ -110,6 +110,7 @@ public class ClientSetup {
         ));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter_manager"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/crafter_manager/cutouts/front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_monitor"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/crafting_monitor/cutouts/front_connected")));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
@@ -186,6 +187,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
         ScreenManager.registerFactory(RSContainers.CRAFTER, CrafterScreen::new);
         ScreenManager.registerFactory(RSContainers.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
+        ScreenManager.registerFactory(RSContainers.CRAFTING_MONITOR, CraftingMonitorScreen::new);
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_GRID);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);
