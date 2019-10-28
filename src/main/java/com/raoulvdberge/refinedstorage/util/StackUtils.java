@@ -15,6 +15,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -25,6 +26,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
@@ -274,7 +276,9 @@ public final class StackUtils {
         return Pair.of(ItemStack.EMPTY, FluidStack.EMPTY);
     }
 
+    // TODO Remove Type
     private static final String NBT_ITEM_TYPE = "Type";
+    private static final String NBT_ITEM_ID = "Id";
     private static final String NBT_ITEM_QUANTITY = "Quantity";
     private static final String NBT_ITEM_NBT = "NBT";
     private static final String NBT_ITEM_CAPS = "Caps";
@@ -284,7 +288,7 @@ public final class StackUtils {
 
         CompoundNBT itemTag = new CompoundNBT();
 
-        itemTag.putInt(NBT_ITEM_TYPE, Item.getIdFromItem(stack.getItem()));
+        itemTag.putString(NBT_ITEM_ID, stack.getItem().getRegistryName().toString());
         itemTag.putInt(NBT_ITEM_QUANTITY, stack.getCount());
 
         if (stack.hasTag()) {
@@ -304,8 +308,21 @@ public final class StackUtils {
 
     @Nonnull
     public static ItemStack deserializeStackFromNbt(CompoundNBT tag) {
+        Item item;
+        if (tag.contains(NBT_ITEM_TYPE)) {
+            item = Item.getItemById(tag.getInt(NBT_ITEM_TYPE));
+        } else if (tag.contains(NBT_ITEM_ID)) {
+            item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tag.getString(NBT_ITEM_ID)));
+        } else {
+            throw new IllegalStateException("Cannot deserialize ItemStack: no " + NBT_ITEM_TYPE + " (legacy tag) or " + NBT_ITEM_ID + " tag was found!");
+        }
+
+        if (item == null) {
+            return ItemStack.EMPTY;
+        }
+
         ItemStack stack = new ItemStack(
-            Item.getItemById(tag.getInt(NBT_ITEM_TYPE)),
+            item,
             tag.getInt(NBT_ITEM_QUANTITY),
             tag.contains(NBT_ITEM_CAPS) ? tag.getCompound(NBT_ITEM_CAPS) : null
         );
