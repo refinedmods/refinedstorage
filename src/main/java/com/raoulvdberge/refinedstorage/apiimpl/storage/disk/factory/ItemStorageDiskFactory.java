@@ -17,6 +17,10 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
 
     @Override
     public IStorageDisk<ItemStack> createFromNbt(ServerWorld world, CompoundNBT tag) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
         ItemStorageDisk disk = new ItemStorageDisk(world, tag.getInt(ItemStorageDisk.NBT_CAPACITY));
 
         ListNBT list = tag.getList(ItemStorageDisk.NBT_ITEMS, Constants.NBT.TAG_COMPOUND);
@@ -34,6 +38,10 @@ public class ItemStorageDiskFactory implements IStorageDiskFactory<ItemStack> {
 
     @Override
     public IStorageDisk<ItemStack> create(ServerWorld world, int capacity) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
         return new ItemStorageDisk(world, capacity);
     }
 }

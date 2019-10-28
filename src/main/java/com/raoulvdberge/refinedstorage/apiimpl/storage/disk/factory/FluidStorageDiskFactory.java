@@ -16,6 +16,10 @@ public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> 
 
     @Override
     public IStorageDisk<FluidStack> createFromNbt(ServerWorld world, CompoundNBT tag) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
         FluidStorageDisk disk = new FluidStorageDisk(world, tag.getInt(FluidStorageDisk.NBT_CAPACITY));
 
         ListNBT list = tag.getList(FluidStorageDisk.NBT_FLUIDS, Constants.NBT.TAG_COMPOUND);
@@ -33,6 +37,10 @@ public class FluidStorageDiskFactory implements IStorageDiskFactory<FluidStack> 
 
     @Override
     public IStorageDisk<FluidStack> create(ServerWorld world, int capacity) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
         return new FluidStorageDisk(world, capacity);
     }
 }

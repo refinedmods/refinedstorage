@@ -203,12 +203,20 @@ public class API implements IRSAPI {
     @Override
     @Nonnull
     public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
         return new ItemStorageDisk(world, capacity);
     }
 
     @Override
     @Nonnull
     public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+        
         return new FluidStorageDisk(world, capacity);
     }
 
