@@ -25,6 +25,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -35,6 +37,8 @@ import java.util.function.Consumer;
 public abstract class BaseScreen<T extends Container> extends ContainerScreen<T> {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
     private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
+
+    private Logger logger = LogManager.getLogger(getClass());
 
     private int sideButtonY;
 
@@ -227,38 +231,26 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderItem(int x, int y, ItemStack stack) {
-        renderItem(x, y, stack, false);
+        renderItem(x, y, stack, false, null);
     }
 
-    public void renderItem(int x, int y, ItemStack stack, boolean withOverlay) {
-        renderItem(x, y, stack, withOverlay, null);
-    }
-
-    public void renderItem(int x, int y, ItemStack stack, boolean withOverlay, @Nullable String text) {
-        itemRenderer.zLevel = 200.0F;
-
+    public void renderItem(int x, int y, ItemStack stack, boolean overlay, @Nullable String text) {
         try {
+            itemRenderer.zLevel = 200.0F;
+
             itemRenderer.renderItemIntoGUI(stack, x, y);
+
+            if (overlay) {
+                this.itemRenderer.renderItemOverlayIntoGUI(font, stack, x, y, "");
+            }
+
+            if (text != null) {
+                renderQuantity(x, y, text);
+            }
+
+            itemRenderer.zLevel = 0.0F;
         } catch (Throwable t) {
-            // NO OP
-        }
-
-        if (withOverlay) {
-            renderItemOverlay(stack, text, x, y);
-        }
-
-        itemRenderer.zLevel = 0.0F;
-    }
-
-    public void renderItemOverlay(ItemStack stack, @Nullable String text, int x, int y) {
-        try {
-            this.itemRenderer.renderItemOverlayIntoGUI(font, stack, x, y, "");
-        } catch (Throwable t) {
-            // NO OP
-        }
-
-        if (text != null) {
-            renderQuantity(x, y, text);
+            logger.warn("Couldn't render stack: " + stack.getItem().toString(), t);
         }
     }
 

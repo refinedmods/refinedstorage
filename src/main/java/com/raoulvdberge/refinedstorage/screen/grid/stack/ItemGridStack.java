@@ -8,6 +8,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -15,6 +17,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ItemGridStack implements IGridStack {
+    private Logger logger = LogManager.getLogger(getClass());
+
     private UUID id;
     private ItemStack stack;
     private String cachedName;
@@ -22,9 +26,10 @@ public class ItemGridStack implements IGridStack {
     private String[] oreIds = null;
     @Nullable
     private StorageTrackerEntry entry;
-    private String modId;
-    private String modName;
-    private String tooltip;
+
+    private String cachedModId;
+    private String cachedModName;
+    private String cachedTooltip;
 
     public ItemGridStack(ItemStack stack) {
         this.stack = stack;
@@ -60,41 +65,43 @@ public class ItemGridStack implements IGridStack {
 
     @Override
     public String getName() {
-        try {
-            if (cachedName == null) {
+        if (cachedName == null) {
+            try {
                 cachedName = stack.getDisplayName().getFormattedText();
-            }
+            } catch (Throwable t) {
+                logger.warn("Could not retrieve item name of " + stack.getItem().toString(), t);
 
-            return cachedName;
-        } catch (Throwable t) {
-            return "";
+                cachedName = "<Error>";
+            }
         }
+
+        return cachedName;
     }
 
     @Override
     public String getModId() {
-        if (modId == null) {
-            modId = stack.getItem().getCreatorModId(stack);
+        if (cachedModId == null) {
+            cachedModId = stack.getItem().getCreatorModId(stack);
 
-            if (modId == null) {
-                modId = "???";
+            if (cachedModId == null) {
+                cachedModId = "<Error>";
             }
         }
 
-        return modId;
+        return cachedModId;
     }
 
     @Override
     public String getModName() {
-        if (modName == null) {
-            modName = getModNameByModId(getModId());
+        if (cachedModName == null) {
+            cachedModName = getModNameByModId(getModId());
 
-            if (modName == null) {
-                modName = "???";
+            if (cachedModName == null) {
+                cachedModName = "<Error>";
             }
         }
 
-        return modName;
+        return cachedModName;
     }
 
     @Override
@@ -113,15 +120,17 @@ public class ItemGridStack implements IGridStack {
 
     @Override
     public String getTooltip() {
-        if (tooltip == null) {
+        if (cachedTooltip == null) {
             try {
-                tooltip = RenderUtils.getTooltipFromItem(stack).stream().collect(Collectors.joining("\n"));
+                cachedTooltip = RenderUtils.getTooltipFromItem(stack).stream().collect(Collectors.joining("\n"));
             } catch (Throwable t) {
-                tooltip = "";
+                logger.warn("Could not retrieve item tooltip of " + stack.getItem().toString(), t);
+
+                cachedTooltip = "<Error>";
             }
         }
 
-        return tooltip;
+        return cachedTooltip;
     }
 
     @Override

@@ -7,18 +7,25 @@ import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
 public class FluidGridStack implements IGridStack {
+    private Logger logger = LogManager.getLogger(getClass());
+
     private UUID id;
     private FluidStack stack;
     @Nullable
     private StorageTrackerEntry entry;
     private boolean craftable;
-    private String modId;
-    private String modName;
+
+    private String cachedName;
+    private String cachedTooltip;
+    private String cachedModId;
+    private String cachedModName;
 
     public FluidGridStack(UUID id, FluidStack stack, @Nullable StorageTrackerEntry entry, boolean craftable) {
         this.id = id;
@@ -43,35 +50,45 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public String getName() {
-        return stack.getDisplayName().getFormattedText();
+        if (cachedName == null) {
+            try {
+                cachedName = stack.getDisplayName().getFormattedText();
+            } catch (Throwable t) {
+                logger.warn("Could not retrieve fluid name of " + stack.getFluid().getRegistryName().toString(), t);
+
+                cachedName = "<Error>";
+            }
+        }
+
+        return cachedName;
     }
 
     @Override
     public String getModId() {
-        if (modId == null) {
+        if (cachedModId == null) {
             ResourceLocation registryName = stack.getFluid().getRegistryName();
 
             if (registryName != null) {
-                modId = registryName.getNamespace();
+                cachedModId = registryName.getNamespace();
             } else {
-                modId = "???";
+                cachedModId = "<Error>";
             }
         }
 
-        return modId;
+        return cachedModId;
     }
 
     @Override
     public String getModName() {
-        if (modName == null) {
-            modName = ItemGridStack.getModNameByModId(getModId());
+        if (cachedModName == null) {
+            cachedModName = ItemGridStack.getModNameByModId(getModId());
 
-            if (modName == null) {
-                modName = "???";
+            if (cachedModName == null) {
+                cachedModName = "<Error>";
             }
         }
 
-        return modName;
+        return cachedModName;
     }
 
     @Override
@@ -82,7 +99,17 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public String getTooltip() {
-        return stack.getDisplayName().getFormattedText();
+        if (cachedTooltip == null) {
+            try {
+                cachedTooltip = stack.getDisplayName().getFormattedText();
+            } catch (Throwable t) {
+                cachedTooltip = "<Error>";
+
+                logger.warn("Could not retrieve fluid tooltip of " + stack.getFluid().getRegistryName().toString(), t);
+            }
+        }
+
+        return cachedTooltip;
     }
 
     @Override
