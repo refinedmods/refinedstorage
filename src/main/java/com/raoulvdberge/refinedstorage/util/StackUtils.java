@@ -28,6 +28,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,6 +41,8 @@ public final class StackUtils {
 
     private static final String NBT_INVENTORY = "Inventory_%d";
     private static final String NBT_SLOT = "Slot";
+
+    private static final Logger LOGGER = LogManager.getLogger(StackUtils.class);
 
     // @Volatile: from PacketBuffer#writeItemStack, with some tweaks to allow int stack counts
     public static void writeItemStack(PacketBuffer buf, @Nonnull ItemStack stack) {
@@ -311,8 +315,16 @@ public final class StackUtils {
         Item item;
         if (tag.contains(NBT_ITEM_TYPE)) {
             item = Item.getItemById(tag.getInt(NBT_ITEM_TYPE));
+
+            if (item == null) {
+                LOGGER.warn("Could not deserialize item from numerical ID, it no longer exists: " + tag.getInt(NBT_ITEM_TYPE));
+            }
         } else if (tag.contains(NBT_ITEM_ID)) {
             item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tag.getString(NBT_ITEM_ID)));
+
+            if (item == null) {
+                LOGGER.warn("Could not deserialize item from string ID, it no longer exists: " + tag.getString(NBT_ITEM_ID));
+            }
         } else {
             throw new IllegalStateException("Cannot deserialize ItemStack: no " + NBT_ITEM_TYPE + " (legacy tag) or " + NBT_ITEM_ID + " tag was found!");
         }
