@@ -279,7 +279,7 @@ public class CraftingTask implements ICraftingTask {
         return null;
     }
 
-    class PossibleInputs {
+    static class PossibleInputs {
         private List<ItemStack> possibilities;
         private int pos;
 
@@ -317,6 +317,48 @@ public class CraftingTask implements ICraftingTask {
                 ItemStack br = results.get(b);
 
                 return (br == null ? 0 : br.getCount()) - (ar == null ? 0 : ar.getCount());
+            });
+        }
+    }
+
+    static class PossibleFluidInputs {
+        private List<FluidStack> possibilities;
+        private int pos;
+
+        PossibleFluidInputs(List<FluidStack> possibilities) {
+            this.possibilities = possibilities;
+        }
+
+        FluidStack get() {
+            return possibilities.get(pos);
+        }
+
+        // Return false if we're exhausted.
+        boolean cycle() {
+            if (pos + 1 >= possibilities.size()) {
+                pos = 0;
+
+                return false;
+            }
+
+            pos++;
+
+            return true;
+        }
+
+        void sort(IStackList<FluidStack> mutatedStorage, IStackList<FluidStack> results) {
+            possibilities.sort((a, b) -> {
+                FluidStack ar = mutatedStorage.get(a);
+                FluidStack br = mutatedStorage.get(b);
+
+                return (br == null ? 0 : br.getAmount()) - (ar == null ? 0 : ar.getAmount());
+            });
+
+            possibilities.sort((a, b) -> {
+                FluidStack ar = results.get(a);
+                FluidStack br = results.get(b);
+
+                return (br == null ? 0 : br.getAmount()) - (ar == null ? 0 : ar.getAmount());
             });
         }
     }
@@ -436,39 +478,48 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        for (FluidStack input : pattern.getFluidInputs()) {
-            FluidStack fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
-            FluidStack fromNetwork = mutatedFluidStorage.get(input, IComparer.COMPARE_NBT);
+        for (NonNullList<FluidStack> inputs : pattern.getFluidInputs()) {
+            if (inputs.isEmpty()) {
+                continue;
+            }
 
-            int remaining = input.getAmount();
+            PossibleFluidInputs possibleInputs = new PossibleFluidInputs(new ArrayList<>(inputs));
+            possibleInputs.sort(mutatedFluidStorage, fluidResults);
+
+            FluidStack possibleInput = possibleInputs.get();
+
+            FluidStack fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
+            FluidStack fromNetwork = mutatedFluidStorage.get(possibleInput, IComparer.COMPARE_NBT);
+
+            int remaining = possibleInput.getAmount();
 
             while (remaining > 0) {
                 if (fromSelf != null) {
                     int toTake = Math.min(remaining, fromSelf.getAmount());
 
-                    fluidsToExtract.add(input, toTake);
+                    fluidsToExtract.add(possibleInput, toTake);
 
-                    fluidResults.remove(input, toTake);
+                    fluidResults.remove(possibleInput, toTake);
 
                     remaining -= toTake;
 
-                    fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
+                    fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
                 } else if (fromNetwork != null) {
                     int toTake = Math.min(remaining, fromNetwork.getAmount());
 
-                    this.toTakeFluids.add(input, toTake);
+                    this.toTakeFluids.add(possibleInput, toTake);
 
-                    fluidsToExtract.add(input, toTake);
+                    fluidsToExtract.add(possibleInput, toTake);
 
                     mutatedFluidStorage.remove(fromNetwork, toTake);
 
                     remaining -= toTake;
 
-                    fromNetwork = mutatedFluidStorage.get(input, IComparer.COMPARE_NBT);
+                    fromNetwork = mutatedFluidStorage.get(possibleInput, IComparer.COMPARE_NBT);
 
-                    toExtractInitialFluids.add(input);
+                    toExtractInitialFluids.add(possibleInput);
                 } else {
-                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(input);
+                    ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
 
                     if (subPattern != null) {
                         ICraftingPatternChain subPatternChain = patternChainList.getChain(subPattern);
@@ -480,22 +531,22 @@ public class CraftingTask implements ICraftingTask {
                                 return result;
                             }
 
-                            fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
+                            fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
                             if (fromSelf == null) {
                                 throw new IllegalStateException("Recursive fluid calculation didn't yield anything");
                             }
 
-                            fromNetwork = mutatedFluidStorage.get(input, IComparer.COMPARE_NBT);
+                            fromNetwork = mutatedFluidStorage.get(possibleInput, IComparer.COMPARE_NBT);
 
                             subPatternChain.cycle();
                         }
 
                         // fromSelf contains the amount crafted after the loop.
-                        this.toCraftFluids.add(input, fromSelf.getAmount());
+                        this.toCraftFluids.add(possibleInput, fromSelf.getAmount());
                     } else {
-                        this.missingFluids.add(input, remaining);
+                        this.missingFluids.add(possibleInput, remaining);
 
-                        fluidsToExtract.add(input, remaining);
+                        fluidsToExtract.add(possibleInput, remaining);
 
                         remaining = 0;
                     }

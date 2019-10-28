@@ -23,7 +23,6 @@ import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.SearchWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.TabListWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.*;
-import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
@@ -135,12 +134,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
             });
 
-            boolean showExactPatternOption = true;
-            if (((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.FLUIDS) {
-                showExactPatternOption = false;
-            }
-
-            if (showExactPatternOption) {
+            if (((GridNetworkNode) grid).isProcessingPattern()) {
                 exactPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.exact"), GridTile.EXACT_PATTERN.getValue(), btn -> {
                     TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.isChecked());
                 });

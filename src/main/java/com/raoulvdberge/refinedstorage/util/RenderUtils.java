@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
@@ -71,7 +70,7 @@ public final class RenderUtils {
         }
     }
 
-    public static void addCombinedFluidsToTooltip(List<ITextComponent> tooltip, boolean displayMb, NonNullList<FluidStack> stacks) {
+    public static void addCombinedFluidsToTooltip(List<ITextComponent> tooltip, boolean displayMb, List<FluidStack> stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.size(); ++i) {

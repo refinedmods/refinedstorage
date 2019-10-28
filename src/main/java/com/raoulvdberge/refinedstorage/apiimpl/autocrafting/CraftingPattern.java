@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.item.PatternItem;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +36,7 @@ public class CraftingPattern implements ICraftingPattern {
     private List<NonNullList<ItemStack>> inputs = new ArrayList<>();
     private NonNullList<ItemStack> outputs = NonNullList.create();
     private NonNullList<ItemStack> byproducts = NonNullList.create();
-    private NonNullList<FluidStack> fluidInputs = NonNullList.create();
+    private List<NonNullList<FluidStack>> fluidInputs = new ArrayList<>();
     private NonNullList<FluidStack> fluidOutputs = NonNullList.create();
 
     public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
@@ -45,38 +47,54 @@ public class CraftingPattern implements ICraftingPattern {
 
         if (processing) {
             for (int i = 0; i < 9; ++i) {
-                ItemStack input = PatternItem.getInputSlot(stack, i);
+                {
+                    ItemStack input = PatternItem.getInputSlot(stack, i);
 
-                if (input.isEmpty()) {
-                    inputs.add(NonNullList.create());
-                } else if (!exact) {
-                    NonNullList<ItemStack> possibilities = NonNullList.create();
+                    if (input.isEmpty()) {
+                        inputs.add(NonNullList.create());
+                    } else if (!exact) {
+                        NonNullList<ItemStack> possibilities = NonNullList.create();
 
-                    possibilities.add(input.copy());
+                        possibilities.add(input.copy());
 
-                    for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(input.getItem())) {
-                        for (Item element : ItemTags.getCollection().get(owningTag).getAllElements()) {
-                            possibilities.add(new ItemStack(element, input.getCount()));
+                        for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(input.getItem())) {
+                            for (Item element : ItemTags.getCollection().get(owningTag).getAllElements()) {
+                                possibilities.add(new ItemStack(element, input.getCount()));
+                            }
                         }
+
+                        inputs.add(possibilities);
+                    } else {
+                        inputs.add(NonNullList.from(ItemStack.EMPTY, input));
                     }
 
-                    inputs.add(possibilities);
-                } else {
-                    inputs.add(NonNullList.from(ItemStack.EMPTY, input));
+                    ItemStack output = PatternItem.getOutputSlot(stack, i);
+                    if (!output.isEmpty()) {
+                        this.valid = true; // As soon as we have one output, we are valid.
+
+                        outputs.add(output);
+                    }
                 }
 
-                ItemStack output = PatternItem.getOutputSlot(stack, i);
-                if (!output.isEmpty()) {
-                    this.valid = true; // As soon as we have one output, we are valid.
+                {
+                    FluidStack fluidInput = PatternItem.getFluidInputSlot(stack, i);
+                    if (fluidInput.isEmpty()) {
+                        fluidInputs.add(NonNullList.create());
+                    } else if (!exact) {
+                        NonNullList<FluidStack> possibilities = NonNullList.create();
 
-                    outputs.add(output);
-                }
+                        possibilities.add(fluidInput.copy());
 
-                FluidStack fluidInput = PatternItem.getFluidInputSlot(stack, i);
-                if (!fluidInput.isEmpty()) {
-                    this.valid = true;
+                        for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(fluidInput.getFluid())) {
+                            for (Fluid element : FluidTags.getCollection().get(owningTag).getAllElements()) {
+                                possibilities.add(new FluidStack(element, fluidInput.getAmount()));
+                            }
+                        }
 
-                    fluidInputs.add(fluidInput);
+                        fluidInputs.add(possibilities);
+                    } else {
+                        fluidInputs.add(NonNullList.from(FluidStack.EMPTY, fluidInput));
+                    }
                 }
 
                 FluidStack fluidOutput = PatternItem.getFluidOutputSlot(stack, i);
@@ -222,7 +240,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public NonNullList<FluidStack> getFluidInputs() {
+    public List<NonNullList<FluidStack>> getFluidInputs() {
         return fluidInputs;
     }
 
@@ -269,8 +287,17 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         for (int i = 0; i < fluidInputs.size(); ++i) {
-            if (!API.instance().getComparer().isEqual(fluidInputs.get(i), other.getFluidInputs().get(i), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
+            List<FluidStack> inputs = this.fluidInputs.get(i);
+            List<FluidStack> otherInputs = other.getFluidInputs().get(i);
+
+            if (inputs.size() != otherInputs.size()) {
                 return false;
+            }
+
+            for (int j = 0; j < inputs.size(); ++j) {
+                if (!API.instance().getComparer().isEqual(inputs.get(j), otherInputs.get(j), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
+                    return false;
+                }
             }
         }
 
@@ -310,8 +337,10 @@ public class CraftingPattern implements ICraftingPattern {
             }
         }
 
-        for (FluidStack input : this.fluidInputs) {
-            result = 31 * result + API.instance().getFluidStackHashCode(input);
+        for (List<FluidStack> inputs : this.fluidInputs) {
+            for (FluidStack input : inputs) {
+                result = 31 * result + API.instance().getFluidStackHashCode(input);
+            }
         }
 
         for (ItemStack output : this.outputs) {

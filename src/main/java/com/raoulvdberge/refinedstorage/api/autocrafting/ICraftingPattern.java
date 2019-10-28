@@ -64,9 +64,9 @@ public interface ICraftingPattern {
     NonNullList<ItemStack> getByproducts(NonNullList<ItemStack> took);
 
     /**
-     * @return the fluid inputs
+     * @return the fluid inputs per slot
      */
-    NonNullList<FluidStack> getFluidInputs();
+    List<NonNullList<FluidStack>> getFluidInputs();
 
     /**
      * @return the fluid outputs

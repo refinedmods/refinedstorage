@@ -77,7 +77,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
                 tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.inputs").setStyle(yellow));
 
                 RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> i.size() > 0 ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
-                RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidInputs());
+                RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidInputs().stream().map(i -> i.size() > 0 ? i.get(0) : FluidStack.EMPTY).collect(Collectors.toList()));
 
                 tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.outputs").setStyle(yellow));
             }
