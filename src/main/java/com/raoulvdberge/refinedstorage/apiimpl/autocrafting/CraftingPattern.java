@@ -49,7 +49,7 @@ public class CraftingPattern implements ICraftingPattern {
 
                 if (input.isEmpty()) {
                     inputs.add(NonNullList.create());
-                } else if (exact) {
+                } else if (!exact) {
                     NonNullList<ItemStack> possibilities = NonNullList.create();
 
                     possibilities.add(input.copy());
