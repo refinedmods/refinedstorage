@@ -1097,6 +1097,8 @@ public class CraftingTask implements ICraftingTask {
                         element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept_fluid");
                     } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
                         element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                    } else if (processing.getState() == ProcessingState.LOCKED) {
+                        element = new CraftingMonitorElementError(element, "gui.refinedstorage:crafting_monitor.crafter_is_locked");
                     }
 
                     elements.add(element);
