@@ -9,6 +9,7 @@ import com.raoulvdberge.refinedstorage.render.color.PatternItemColor;
 import com.raoulvdberge.refinedstorage.render.model.*;
 import com.raoulvdberge.refinedstorage.render.tesr.StorageMonitorTileRenderer;
 import com.raoulvdberge.refinedstorage.screen.*;
+import com.raoulvdberge.refinedstorage.screen.factory.CrafterManagerScreenFactory;
 import com.raoulvdberge.refinedstorage.screen.factory.GridScreenFactory;
 import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import net.minecraft.client.Minecraft;
@@ -108,6 +109,8 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/crafter/cutouts/front_connected")
         ));
 
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter_manager"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/crafter_manager/cutouts/front_connected")));
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
         ModelLoader.addSpecialModel(new ResourceLocation(RS.ID + ":block/disks/disk"));
@@ -182,6 +185,7 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.DESTRUCTOR, DestructorScreen::new);
         ScreenManager.registerFactory(RSContainers.DISK_MANIPULATOR, DiskManipulatorScreen::new);
         ScreenManager.registerFactory(RSContainers.CRAFTER, CrafterScreen::new);
+        ScreenManager.registerFactory(RSContainers.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
 
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_GRID);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);

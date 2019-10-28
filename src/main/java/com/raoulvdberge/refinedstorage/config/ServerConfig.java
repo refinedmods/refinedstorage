@@ -32,6 +32,7 @@ public class ServerConfig {
     private DiskManipulator diskManipulator;
     private PortableGrid portableGrid;
     private Crafter crafter;
+    private CrafterManager crafterManager;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -60,8 +61,13 @@ public class ServerConfig {
         diskManipulator = new DiskManipulator();
         portableGrid = new PortableGrid();
         crafter = new Crafter();
+        crafterManager = new CrafterManager();
 
         spec = builder.build();
+    }
+
+    public ForgeConfigSpec getSpec() {
+        return spec;
     }
 
     public Upgrades getUpgrades() {
@@ -168,8 +174,8 @@ public class ServerConfig {
         return crafter;
     }
 
-    public ForgeConfigSpec getSpec() {
-        return spec;
+    public CrafterManager getCrafterManager() {
+        return crafterManager;
     }
 
     public class Controller {
@@ -813,6 +819,22 @@ public class ServerConfig {
 
         public int getPatternUsage() {
             return patternUsage.get();
+        }
+    }
+
+    public class CrafterManager {
+        private final ForgeConfigSpec.IntValue usage;
+
+        public CrafterManager() {
+            builder.push("crafterManager");
+
+            usage = builder.comment("The energy used by the Crafter Manager").defineInRange("usage", 8, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getUsage() {
+            return usage.get();
         }
     }
 }

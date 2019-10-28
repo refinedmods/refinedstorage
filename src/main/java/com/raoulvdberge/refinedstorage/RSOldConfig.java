@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage;
 public class RSOldConfig {
     //region Energy
     public int craftingMonitorUsage;
-    public int crafterManagerUsage;
     //endregion
 
     //region Wireless Crafting Monitor
@@ -27,7 +26,6 @@ public class RSOldConfig {
     /*private void loadConfig() {
         //region Energy
         craftingMonitorUsage = config.getInt("craftingMonitor", ENERGY, 2, 0, Integer.MAX_VALUE, "The energy used by Crafting Monitors");
-        crafterManagerUsage = config.getInt("crafterManager", ENERGY, 4, 0, Integer.MAX_VALUE, "The energy used by Crafter Managers");
         //endregion
 
         //region Wireless Crafting Monitor

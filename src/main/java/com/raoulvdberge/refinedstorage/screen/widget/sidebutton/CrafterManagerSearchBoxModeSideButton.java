@@ -2,32 +2,32 @@ package com.raoulvdberge.refinedstorage.screen.widget.sidebutton;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
-import com.raoulvdberge.refinedstorage.screen.GuiCrafterManager;
-import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
+import com.raoulvdberge.refinedstorage.screen.CrafterManagerScreen;
+import com.raoulvdberge.refinedstorage.tile.CrafterManagerTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class CrafterManagerSearchBoxModeSideButton extends SideButton {
-    public CrafterManagerSearchBoxModeSideButton(GuiCrafterManager screen) {
+    public CrafterManagerSearchBoxModeSideButton(CrafterManagerScreen screen) {
         super(screen);
     }
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.grid.search_box_mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.grid.search_box_mode." + ((GuiCrafterManager) screen).getCrafterManager().getSearchBoxMode());
+        return I18n.format("sidebutton.refinedstorage.grid.search_box_mode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.grid.search_box_mode." + ((CrafterManagerScreen) screen).getCrafterManager().getSearchBoxMode());
     }
 
     @Override
     protected void renderButtonIcon(int x, int y) {
-        int mode = ((GuiCrafterManager) screen).getCrafterManager().getSearchBoxMode();
+        int mode = ((CrafterManagerScreen) screen).getCrafterManager().getSearchBoxMode();
 
         screen.blit(x, y, mode == IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED ? 16 : 0, 96, 16, 16);
     }
 
     @Override
     public void onPress() {
-        int mode = ((GuiCrafterManager) screen).getCrafterManager().getSearchBoxMode();
+        int mode = ((CrafterManagerScreen) screen).getCrafterManager().getSearchBoxMode();
 
         if (mode == IGrid.SEARCH_BOX_MODE_NORMAL) {
             mode = IGrid.SEARCH_BOX_MODE_NORMAL_AUTOSELECTED;
@@ -43,6 +43,6 @@ public class CrafterManagerSearchBoxModeSideButton extends SideButton {
             mode = IGrid.SEARCH_BOX_MODE_NORMAL;
         }
 
-        TileDataManager.setParameter(TileCrafterManager.SEARCH_BOX_MODE, mode);
+        TileDataManager.setParameter(CrafterManagerTile.SEARCH_BOX_MODE, mode);
     }
 }

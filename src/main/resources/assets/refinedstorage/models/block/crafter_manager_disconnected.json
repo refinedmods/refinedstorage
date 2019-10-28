@@ -1,0 +1,6 @@
+{
+  "parent": "refinedstorage:block/crafter_manager",
+  "textures": {
+    "cutout": "refinedstorage:block/crafter_manager/cutouts/front_disconnected"
+  }
+}

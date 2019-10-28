@@ -28,6 +28,7 @@ import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.config.ClientConfig;
 import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.*;
+import com.raoulvdberge.refinedstorage.container.factory.CrafterManagerContainerFactory;
 import com.raoulvdberge.refinedstorage.container.factory.GridContainerFactory;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerFactory;
 import com.raoulvdberge.refinedstorage.item.*;
@@ -137,6 +138,7 @@ public final class RS {
         API.instance().getNetworkNodeRegistry().add(DestructorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new DestructorNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(DiskManipulatorNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new DiskManipulatorNetworkNode(world, pos)));
         API.instance().getNetworkNodeRegistry().add(CrafterNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new CrafterNetworkNode(world, pos)));
+        API.instance().getNetworkNodeRegistry().add(CrafterManagerNetworkNode.ID, (tag, world, pos) -> readAndReturn(tag, new CrafterManagerNetworkNode(world, pos)));
 
         API.instance().getGridManager().add(GridBlockGridFactory.ID, new GridBlockGridFactory());
         API.instance().getGridManager().add(WirelessGridGridFactory.ID, new WirelessGridGridFactory());
@@ -208,6 +210,7 @@ public final class RS {
         e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.NORMAL));
         e.getRegistry().register(new PortableGridBlock(PortableGridBlockItem.Type.CREATIVE));
         e.getRegistry().register(new CrafterBlock());
+        e.getRegistry().register(new CrafterManagerBlock());
     }
 
     @SubscribeEvent
@@ -249,6 +252,7 @@ public final class RS {
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DestructorTile::new, RSBlocks.DESTRUCTOR).build(null).setRegistryName(RS.ID, "destructor")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(DiskManipulatorTile::new, RSBlocks.DISK_MANIPULATOR).build(null).setRegistryName(RS.ID, "disk_manipulator")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(CrafterTile::new, RSBlocks.CRAFTER).build(null).setRegistryName(RS.ID, "crafter")));
+        e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(CrafterManagerTile::new, RSBlocks.CRAFTER_MANAGER).build(null).setRegistryName(RS.ID, "crafter_manager")));
 
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new PortableGridTile(PortableGridBlockItem.Type.CREATIVE), RSBlocks.CREATIVE_PORTABLE_GRID).build(null).setRegistryName(RS.ID, "creative_portable_grid")));
         e.getRegistry().register(registerTileDataParameters(TileEntityType.Builder.create(() -> new PortableGridTile(PortableGridBlockItem.Type.NORMAL), RSBlocks.PORTABLE_GRID).build(null).setRegistryName(RS.ID, "portable_grid")));
@@ -285,6 +289,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DestructorContainer, DestructorTile>((windowId, inv, tile) -> new DestructorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "destructor"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<DiskManipulatorContainer, DiskManipulatorTile>((windowId, inv, tile) -> new DiskManipulatorContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "disk_manipulator"));
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<CrafterContainer, CrafterTile>((windowId, inv, tile) -> new CrafterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "crafter"));
+        e.getRegistry().register(IForgeContainerType.create(new CrafterManagerContainerFactory()).setRegistryName(RS.ID, "crafter_manager"));
     }
 
     @SubscribeEvent
@@ -370,6 +375,7 @@ public final class RS {
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DESTRUCTOR));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.DISK_MANIPULATOR));
         e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CRAFTER));
+        e.getRegistry().register(BlockUtils.createBlockItemFor(RSBlocks.CRAFTER_MANAGER));
 
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.NORMAL));
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.CREATIVE));

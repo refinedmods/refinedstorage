@@ -7,14 +7,13 @@
   ],
   "key": {
     "P": {
-      "item": "#advanced_processor"
+      "item": "refinedstorage:advanced_processor"
     },
     "C": {
       "item": "refinedstorage:crafter"
     },
     "G": {
-      "type": "forge:ore_dict",
-      "ore": "blockGlass"
+      "tag": "forge:glass"
     },
     "E": {
       "item": "refinedstorage:quartz_enriched_iron"

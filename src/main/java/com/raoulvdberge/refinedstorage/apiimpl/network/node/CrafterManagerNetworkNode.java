@@ -3,14 +3,13 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
-import com.raoulvdberge.refinedstorage.tile.TileCrafterManager;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import com.raoulvdberge.refinedstorage.tile.CrafterManagerTile;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class NetworkNodeCrafterManager extends NetworkNode {
+public class CrafterManagerNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "crafter_manager");
 
     private static final String NBT_SIZE = "Size";
@@ -19,13 +18,13 @@ public class NetworkNodeCrafterManager extends NetworkNode {
     private int size = IGrid.SIZE_STRETCH;
     private int searchBoxMode = IGrid.SEARCH_BOX_MODE_NORMAL;
 
-    public NetworkNodeCrafterManager(World world, BlockPos pos) {
+    public CrafterManagerNetworkNode(World world, BlockPos pos) {
         super(world, pos);
     }
 
     @Override
     public int getEnergyUsage() {
-        return RS.INSTANCE.config.crafterManagerUsage;
+        return RS.SERVER_CONFIG.getCrafterManager().getUsage();
     }
 
     @Override
@@ -33,14 +32,8 @@ public class NetworkNodeCrafterManager extends NetworkNode {
         return ID;
     }
 
-    public void sendTo(ServerPlayerEntity player) {
-        if (network != null) {
-            // TODO RS.INSTANCE.network.sendTo(new MessageCrafterManagerSlotSizes(network.getCraftingManager().getNamedContainers()), player);
-        }
-    }
-
     public int getSize() {
-        return world.isRemote ? TileCrafterManager.SIZE.getValue() : size;
+        return world.isRemote ? CrafterManagerTile.SIZE.getValue() : size;
     }
 
     public void setSize(int size) {
@@ -71,7 +64,7 @@ public class NetworkNodeCrafterManager extends NetworkNode {
     }
 
     public int getSearchBoxMode() {
-        return world.isRemote ? TileCrafterManager.SEARCH_BOX_MODE.getValue() : searchBoxMode;
+        return world.isRemote ? CrafterManagerTile.SEARCH_BOX_MODE.getValue() : searchBoxMode;
     }
 
     public void setSearchBoxMode(int searchBoxMode) {

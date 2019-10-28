@@ -9,10 +9,10 @@ import net.minecraft.util.text.ITextComponent;
 public class GridScreenFactory implements ScreenManager.IScreenFactory<GridContainer, GridScreen> {
     @Override
     public GridScreen create(GridContainer container, PlayerInventory inv, ITextComponent title) {
-        GridScreen grid = new GridScreen(container, container.getGrid(), inv, title);
+        GridScreen screen = new GridScreen(container, container.getGrid(), inv, title);
 
-        container.setScreenInfoProvider(grid);
+        container.setScreenInfoProvider(screen);
 
-        return grid;
+        return screen;
     }
 }

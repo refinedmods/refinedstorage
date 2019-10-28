@@ -1,0 +1,12 @@
+{
+  "parent": "refinedstorage:block/cube_north_cutout",
+  "textures": {
+    "particle": "refinedstorage:block/side",
+    "north": "refinedstorage:block/crafter_manager/front",
+    "east": "refinedstorage:block/crafter_manager/left",
+    "south": "refinedstorage:block/crafter_manager/back",
+    "west": "refinedstorage:block/crafter_manager/right",
+    "up": "refinedstorage:block/crafter_manager/top",
+    "down": "refinedstorage:block/bottom"
+  }
+}

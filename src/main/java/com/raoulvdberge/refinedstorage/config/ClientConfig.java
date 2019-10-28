@@ -7,9 +7,11 @@ public class ClientConfig {
     private ForgeConfigSpec spec;
 
     private Grid grid;
+    private CrafterManager crafterManager;
 
     public ClientConfig() {
         grid = new Grid();
+        crafterManager = new CrafterManager();
 
         spec = builder.build();
     }
@@ -20,6 +22,10 @@ public class ClientConfig {
 
     public Grid getGrid() {
         return grid;
+    }
+
+    public CrafterManager getCrafterManager() {
+        return crafterManager;
     }
 
     public class Grid {
@@ -47,6 +53,22 @@ public class ClientConfig {
 
         public boolean getLargeFont() {
             return largeFont.get();
+        }
+    }
+
+    public class CrafterManager {
+        private final ForgeConfigSpec.IntValue maxRowsStretch;
+
+        public CrafterManager() {
+            builder.push("crafterManager");
+
+            maxRowsStretch = builder.comment("The maximum amount of rows that the Crafter Manager can show when stretched").defineInRange("maxRowsStretch", Integer.MAX_VALUE, 3, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getMaxRowsStretch() {
+            return maxRowsStretch.get();
         }
     }
 }
