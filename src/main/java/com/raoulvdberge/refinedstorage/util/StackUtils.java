@@ -316,7 +316,7 @@ public final class StackUtils {
         if (tag.contains(NBT_ITEM_TYPE)) {
             item = Item.getItemById(tag.getInt(NBT_ITEM_TYPE));
 
-            if (item == null) {
+            if (item == Items.AIR) {
                 LOGGER.warn("Could not deserialize item from numerical ID, it no longer exists: " + tag.getInt(NBT_ITEM_TYPE));
             }
         } else if (tag.contains(NBT_ITEM_ID)) {

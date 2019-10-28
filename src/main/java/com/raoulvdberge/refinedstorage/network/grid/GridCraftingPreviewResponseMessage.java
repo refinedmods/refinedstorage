@@ -2,13 +2,9 @@ package com.raoulvdberge.refinedstorage.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.screen.grid.CraftingPreviewScreen;
-import com.raoulvdberge.refinedstorage.screen.grid.CraftingSettingsScreen;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
+import com.raoulvdberge.refinedstorage.network.ClientProxy;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.LinkedList;
@@ -27,6 +23,22 @@ public class GridCraftingPreviewResponseMessage {
         this.id = id;
         this.quantity = quantity;
         this.fluids = fluids;
+    }
+
+    public List<ICraftingPreviewElement> getStacks() {
+        return stacks;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public boolean isFluids() {
+        return fluids;
     }
 
     public static GridCraftingPreviewResponseMessage decode(PacketBuffer buf) {
@@ -59,15 +71,7 @@ public class GridCraftingPreviewResponseMessage {
     }
 
     public static void handle(GridCraftingPreviewResponseMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            Screen screen = Minecraft.getInstance().currentScreen;
-
-            if (screen instanceof CraftingSettingsScreen) {
-                screen = ((CraftingSettingsScreen) screen).getParent();
-            }
-
-            Minecraft.getInstance().displayGuiScreen(new CraftingPreviewScreen(screen, message.stacks, message.id, message.quantity, message.fluids, new TranslationTextComponent("gui.refinedstorage.crafting_preview")));
-        });
+        ctx.get().enqueueWork(() -> ClientProxy.onReceivedCraftingPreviewResponseMessage(message));
 
         ctx.get().setPacketHandled(true);
     }
