@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.widget;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.integration.jei.GridRecipeTransferHandler;
 import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
@@ -57,6 +58,8 @@ public class ScrollbarWidget implements IGuiEventListener {
     }
 
     public void render() {
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
         screen.bindTexture(RS.ID, "icons.png");
         screen.blit(screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
     }
