@@ -51,4 +51,6 @@ public final class RSContainers {
     public static final ContainerType<CrafterManagerContainer> CRAFTER_MANAGER = null;
     @ObjectHolder(RS.ID + ":crafting_monitor")
     public static final ContainerType<CraftingMonitorContainer> CRAFTING_MONITOR = null;
+    @ObjectHolder(RS.ID + ":wireless_crafting_monitor")
+    public static final ContainerType<CraftingMonitorContainer> WIRELESS_CRAFTING_MONITOR = null;
 }

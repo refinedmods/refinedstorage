@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.container.factory;
 
+import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.container.CraftingMonitorContainer;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,11 +15,6 @@ public class CraftingMonitorContainerFactory implements IContainerFactory<Crafti
 
         CraftingMonitorTile tile = (CraftingMonitorTile) inv.player.world.getTileEntity(pos);
 
-        return new CraftingMonitorContainer(
-            tile.getNode(),
-            tile,
-            inv.player,
-            windowId
-        );
+        return new CraftingMonitorContainer(RSContainers.CRAFTING_MONITOR, tile.getNode(), tile, inv.player, windowId);
     }
 }

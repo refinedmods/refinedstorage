@@ -188,11 +188,13 @@ public class ClientSetup {
         ScreenManager.registerFactory(RSContainers.CRAFTER, CrafterScreen::new);
         ScreenManager.registerFactory(RSContainers.CRAFTER_MANAGER, new CrafterManagerScreenFactory());
         ScreenManager.registerFactory(RSContainers.CRAFTING_MONITOR, CraftingMonitorScreen::new);
+        ScreenManager.registerFactory(RSContainers.WIRELESS_CRAFTING_MONITOR, CraftingMonitorScreen::new);
 
-        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_GRID);
-        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);
         ClientRegistry.registerKeyBinding(RSKeyBindings.FOCUS_SEARCH_BAR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.CLEAR_GRID_CRAFTING_MATRIX);
+        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_GRID);
+        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_FLUID_GRID);
+        ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
 
         ClientRegistry.bindTileEntitySpecialRenderer(StorageMonitorTile.class, new StorageMonitorTileRenderer());

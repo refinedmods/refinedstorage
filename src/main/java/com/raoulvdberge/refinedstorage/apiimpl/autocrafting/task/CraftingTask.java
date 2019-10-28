@@ -1109,11 +1109,11 @@ public class CraftingTask implements ICraftingTask {
                     ICraftingMonitorElement element = new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, receive.getStack().getCount(), 0);
 
                     if (processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
-                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept_item");
+                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_item");
                     } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
-                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_none");
                     } else if (processing.getState() == ProcessingState.LOCKED) {
-                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage:crafting_monitor.crafter_is_locked");
+                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
                     }
 
                     elements.add(element);
@@ -1145,11 +1145,11 @@ public class CraftingTask implements ICraftingTask {
                     ICraftingMonitorElement element = new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, receive.getStack().getAmount(), 0);
 
                     if (processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
-                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage:crafting_monitor.machine_does_not_accept_fluid");
+                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_fluid");
                     } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
-                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage:crafting_monitor.machine_none");
+                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_none");
                     } else if (processing.getState() == ProcessingState.LOCKED) {
-                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage:crafting_monitor.crafter_is_locked");
+                        element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
                     }
 
                     elements.add(element);

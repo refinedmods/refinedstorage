@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.container;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
@@ -10,6 +9,7 @@ import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
@@ -19,8 +19,8 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     private ICraftingMonitor craftingMonitor;
     private boolean addedListener;
 
-    public CraftingMonitorContainer(ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile craftingMonitorTile, PlayerEntity player, int windowId) {
-        super(RSContainers.CRAFTING_MONITOR, craftingMonitorTile, player, windowId);
+    public CraftingMonitorContainer(ContainerType<CraftingMonitorContainer> type, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile craftingMonitorTile, PlayerEntity player, int windowId) {
+        super(type, craftingMonitorTile, player, windowId);
 
         this.craftingMonitor = craftingMonitor;
     }
@@ -29,8 +29,9 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
 
-        ICraftingManager manager = craftingMonitor.getCraftingManager();
         if (!getPlayer().world.isRemote) {
+            ICraftingManager manager = craftingMonitor.getCraftingManager();
+
             if (manager != null && !addedListener) {
                 manager.addListener(this);
 
@@ -45,9 +46,12 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     public void onContainerClosed(PlayerEntity player) {
         super.onContainerClosed(player);
 
-        ICraftingManager manager = craftingMonitor.getCraftingManager();
-        if (!player.getEntityWorld().isRemote && manager != null && addedListener) {
-            manager.removeListener(this);
+        if (!player.getEntityWorld().isRemote) {
+            ICraftingManager manager = craftingMonitor.getCraftingManager();
+
+            if (manager != null && addedListener) {
+                manager.removeListener(this);
+            }
         }
     }
 

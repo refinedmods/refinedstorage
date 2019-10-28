@@ -34,6 +34,7 @@ public class ServerConfig {
     private Crafter crafter;
     private CrafterManager crafterManager;
     private CraftingMonitor craftingMonitor;
+    private WirelessCraftingMonitor wirelessCraftingMonitor;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -64,6 +65,7 @@ public class ServerConfig {
         crafter = new Crafter();
         crafterManager = new CrafterManager();
         craftingMonitor = new CraftingMonitor();
+        wirelessCraftingMonitor = new WirelessCraftingMonitor();
 
         spec = builder.build();
     }
@@ -182,6 +184,10 @@ public class ServerConfig {
 
     public CraftingMonitor getCraftingMonitor() {
         return craftingMonitor;
+    }
+
+    public WirelessCraftingMonitor getWirelessCraftingMonitor() {
+        return wirelessCraftingMonitor;
     }
 
     public class Controller {
@@ -857,6 +863,46 @@ public class ServerConfig {
 
         public int getUsage() {
             return usage.get();
+        }
+    }
+
+    public class WirelessCraftingMonitor {
+        private final ForgeConfigSpec.BooleanValue useEnergy;
+        private final ForgeConfigSpec.IntValue capacity;
+        private final ForgeConfigSpec.IntValue openUsage;
+        private final ForgeConfigSpec.IntValue cancelUsage;
+        private final ForgeConfigSpec.IntValue cancelAllUsage;
+
+        public WirelessCraftingMonitor() {
+            builder.push("wirelessCraftingMonitor");
+
+            useEnergy = builder.comment("Whether the Wireless Crafting Monitor uses energy").define("useEnergy", true);
+            capacity = builder.comment("The energy capacity of the Wireless Crafting Monitor").defineInRange("capacity", 3200, 0, Integer.MAX_VALUE);
+            openUsage = builder.comment("The energy used by the Wireless Crafting Monitor to open").defineInRange("openUsage", 30, 0, Integer.MAX_VALUE);
+            cancelUsage = builder.comment("The energy used by the Wireless Crafting Monitor to cancel a crafting task").defineInRange("cancelUsage", 5, 0, Integer.MAX_VALUE);
+            cancelAllUsage = builder.comment("The energy used by the Wireless Crafting Monitor to cancel all crafting tasks").defineInRange("cancelAllUsage", 10, 0, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public boolean getUseEnergy() {
+            return useEnergy.get();
+        }
+
+        public int getCapacity() {
+            return capacity.get();
+        }
+
+        public int getOpenUsage() {
+            return openUsage.get();
+        }
+
+        public int getCancelUsage() {
+            return cancelUsage.get();
+        }
+
+        public int getCancelAllUsage() {
+            return cancelAllUsage.get();
         }
     }
 }

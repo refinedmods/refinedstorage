@@ -10,17 +10,16 @@
       "item": "refinedstorage:quartz_enriched_iron"
     },
     "P": {
-      "item": "minecraft:ender_pearl"
+      "tag": "forge:ender_pearls"
     },
     "M": {
       "item": "refinedstorage:crafting_monitor"
     },
     "A": {
-      "item": "#advanced_processor"
+      "item": "refinedstorage:advanced_processor"
     }
   },
   "result": {
-    "item": "refinedstorage:wireless_crafting_monitor",
-    "data": 0
+    "item": "refinedstorage:wireless_crafting_monitor"
   }
 }

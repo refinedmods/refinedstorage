@@ -7,17 +7,20 @@ import net.minecraftforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
 
 public final class RSKeyBindings {
-    /* TODO
-    public static final KeyBinding OPEN_WIRELESS_CRAFTING_MONITOR = new KeyBinding("key.refinedstorage.openWirelessCraftingMonitor", KeyConflictContext.IN_GAME, 0, "Refined Storage");
+    public static final KeyBinding FOCUS_SEARCH_BAR = new KeyBinding(
+        "key.refinedstorage.focusSearchBar",
+        KeyConflictContext.GUI,
+        InputMappings.Type.KEYSYM,
+        GLFW.GLFW_KEY_TAB,
+        "Refined Storage"
+    );
 
-    public static void init() {
-        ClientRegistry.registerKeyBinding(OPEN_WIRELESS_CRAFTING_MONITOR);
-    }*/
-
-    public static final KeyBinding OPEN_PORTABLE_GRID = new KeyBinding(
-        "key.refinedstorage.openPortableGrid",
-        KeyConflictContext.IN_GAME,
-        InputMappings.INPUT_INVALID,
+    public static final KeyBinding CLEAR_GRID_CRAFTING_MATRIX = new KeyBinding(
+        "key.refinedstorage.clearGridCraftingMatrix",
+        KeyConflictContext.GUI,
+        KeyModifier.CONTROL,
+        InputMappings.Type.KEYSYM,
+        GLFW.GLFW_KEY_X,
         "Refined Storage"
     );
 
@@ -35,20 +38,17 @@ public final class RSKeyBindings {
         "Refined Storage"
     );
 
-    public static final KeyBinding FOCUS_SEARCH_BAR = new KeyBinding(
-        "key.refinedstorage.focusSearchBar",
-        KeyConflictContext.GUI,
-        InputMappings.Type.KEYSYM,
-        GLFW.GLFW_KEY_TAB,
+    public static final KeyBinding OPEN_WIRELESS_CRAFTING_MONITOR = new KeyBinding(
+        "key.refinedstorage.openWirelessCraftingMonitor",
+        KeyConflictContext.IN_GAME,
+        InputMappings.INPUT_INVALID,
         "Refined Storage"
     );
 
-    public static final KeyBinding CLEAR_GRID_CRAFTING_MATRIX = new KeyBinding(
-        "key.refinedstorage.clearGridCraftingMatrix",
-        KeyConflictContext.GUI,
-        KeyModifier.CONTROL,
-        InputMappings.Type.KEYSYM,
-        GLFW.GLFW_KEY_X,
+    public static final KeyBinding OPEN_PORTABLE_GRID = new KeyBinding(
+        "key.refinedstorage.openPortableGrid",
+        KeyConflictContext.IN_GAME,
+        InputMappings.INPUT_INVALID,
         "Refined Storage"
     );
 }

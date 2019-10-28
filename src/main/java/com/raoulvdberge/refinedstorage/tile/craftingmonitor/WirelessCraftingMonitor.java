@@ -1,17 +1,25 @@
 package com.raoulvdberge.refinedstorage.tile.craftingmonitor;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
+import com.raoulvdberge.refinedstorage.item.WirelessCraftingMonitorItem;
+import com.raoulvdberge.refinedstorage.network.craftingmonitor.WirelessCraftingMonitorSettingsUpdateMessage;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraftforge.common.DimensionManager;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -21,18 +29,29 @@ import java.util.UUID;
 
 public class WirelessCraftingMonitor implements ICraftingMonitor {
     private ItemStack stack;
-
-    private int networkDimension;
-    private BlockPos network;
+    @Nullable
+    private MinecraftServer server;
+    private DimensionType nodeDimension;
+    private BlockPos nodePos;
     private int tabPage;
     private Optional<UUID> tabSelected;
 
-    public WirelessCraftingMonitor(ItemStack stack) {
+    public WirelessCraftingMonitor(ItemStack stack, @Nullable MinecraftServer server) {
         this.stack = stack;
-        /* TODO this.networkDimension = ItemWirelessCraftingMonitor.getDimensionId(stack);
-        this.network = new BlockPos(ItemWirelessCraftingMonitor.getX(stack), ItemWirelessCraftingMonitor.getY(stack), ItemWirelessCraftingMonitor.getZ(stack));
-        this.tabPage = ItemWirelessCraftingMonitor.getTabPage(stack);
-        this.tabSelected = ItemWirelessCraftingMonitor.getTabSelected(stack);*/
+        this.server = server;
+
+        this.nodeDimension = WirelessCraftingMonitorItem.getDimension(stack);
+        this.nodePos = new BlockPos(WirelessCraftingMonitorItem.getX(stack), WirelessCraftingMonitorItem.getY(stack), WirelessCraftingMonitorItem.getZ(stack));
+        this.tabPage = WirelessCraftingMonitorItem.getTabPage(stack);
+        this.tabSelected = WirelessCraftingMonitorItem.getTabSelected(stack);
+    }
+
+    public void setSettings(Optional<UUID> tabSelected, int tabPage) {
+        this.tabSelected = tabSelected;
+        this.tabPage = tabPage;
+
+        WirelessCraftingMonitorItem.setTabSelected(stack, tabSelected);
+        WirelessCraftingMonitorItem.setTabPage(stack, tabPage);
     }
 
     @Override
@@ -78,13 +97,18 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     private INetwork getNetwork() {
-        // TODO World world = DimensionManager.getWorld(networkDimension);
-        World world = null;
+        World world = DimensionManager.getWorld(server, nodeDimension, true, true);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(network);
+            TileEntity tile = world.getTileEntity(nodePos);
 
-            return tile instanceof INetwork ? (INetwork) tile : null;
+            if (tile != null) {
+                INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
+
+                if (proxy != null) {
+                    return proxy.getNode().getNetwork();
+                }
+            }
         }
 
         return null;
@@ -126,7 +150,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
             this.tabSelected = taskId;
         }
 
-        // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(tabSelected, tabPage));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessCraftingMonitorSettingsUpdateMessage(tabSelected, tabPage));
     }
 
     @Override
@@ -134,7 +158,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         if (page >= 0) {
             this.tabPage = page;
 
-            // TODO RS.INSTANCE.network.sendToServer(new MessageWirelessCraftingMonitorSettings(tabSelected, tabPage));
+            RS.NETWORK_HANDLER.sendToServer(new WirelessCraftingMonitorSettingsUpdateMessage(tabSelected, tabPage));
         }
     }
 }

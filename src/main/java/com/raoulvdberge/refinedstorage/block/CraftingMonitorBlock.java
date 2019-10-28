@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSContainers;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.factory.CraftingMonitorContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
@@ -51,7 +52,7 @@ public class CraftingMonitorBlock extends NetworkNodeBlock {
 
             return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
-                new CraftingMonitorContainerProvider(tile.getNode(), tile),
+                new CraftingMonitorContainerProvider(RSContainers.CRAFTING_MONITOR, tile.getNode(), tile),
                 pos
             ), Permission.MODIFY, Permission.AUTOCRAFTING);
         }

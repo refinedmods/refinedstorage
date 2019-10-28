@@ -31,10 +31,7 @@ import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.config.ClientConfig;
 import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.container.*;
-import com.raoulvdberge.refinedstorage.container.factory.CrafterManagerContainerFactory;
-import com.raoulvdberge.refinedstorage.container.factory.CraftingMonitorContainerFactory;
-import com.raoulvdberge.refinedstorage.container.factory.GridContainerFactory;
-import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerFactory;
+import com.raoulvdberge.refinedstorage.container.factory.*;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.*;
 import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
@@ -303,6 +300,7 @@ public final class RS {
         e.getRegistry().register(IForgeContainerType.create(new PositionalTileContainerFactory<CrafterContainer, CrafterTile>((windowId, inv, tile) -> new CrafterContainer(tile, inv.player, windowId))).setRegistryName(RS.ID, "crafter"));
         e.getRegistry().register(IForgeContainerType.create(new CrafterManagerContainerFactory()).setRegistryName(RS.ID, "crafter_manager"));
         e.getRegistry().register(IForgeContainerType.create(new CraftingMonitorContainerFactory()).setRegistryName(RS.ID, "crafting_monitor"));
+        e.getRegistry().register(IForgeContainerType.create(new WirelessCraftingMonitorContainerFactory()).setRegistryName(RS.ID, "wireless_crafting_monitor"));
     }
 
     @SubscribeEvent
@@ -395,6 +393,8 @@ public final class RS {
         e.getRegistry().register(new WirelessGridItem(WirelessGridItem.Type.CREATIVE));
         e.getRegistry().register(new WirelessFluidGridItem(WirelessFluidGridItem.Type.NORMAL));
         e.getRegistry().register(new WirelessFluidGridItem(WirelessFluidGridItem.Type.CREATIVE));
+        e.getRegistry().register(new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.NORMAL));
+        e.getRegistry().register(new WirelessCraftingMonitorItem(WirelessCraftingMonitorItem.Type.CREATIVE));
     }
 
     /* TODO

@@ -105,6 +105,8 @@ public final class RSItems {
     public static final PortableGridBlockItem PORTABLE_GRID = null;
     @ObjectHolder(RS.ID + ":creative_portable_grid")
     public static final PortableGridBlockItem CREATIVE_PORTABLE_GRID = null;
-
-    public static final ItemWirelessCraftingMonitor WIRELESS_CRAFTING_MONITOR = null;
+    @ObjectHolder(RS.ID + ":wireless_crafting_monitor")
+    public static final WirelessCraftingMonitorItem WIRELESS_CRAFTING_MONITOR = null;
+    @ObjectHolder(RS.ID + ":creative_wireless_crafting_monitor")
+    public static final WirelessCraftingMonitorItem CREATIVE_WIRELESS_CRAFTING_MONITOR = null;
 }

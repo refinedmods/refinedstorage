@@ -64,31 +64,31 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
         int yy = y + 7;
 
         if (stored > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.stored", stored));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.stored", stored));
 
             yy += 7;
         }
 
         if (missing > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.missing", missing));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.missing", missing));
 
             yy += 7;
         }
 
         if (processing > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.processing", processing));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.processing", processing));
 
             yy += 7;
         }
 
         if (scheduled > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.scheduled", scheduled));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.scheduled", scheduled));
 
             yy += 7;
         }
 
         if (crafting > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.crafting", crafting));
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", crafting));
         }
 
         GlStateManager.popMatrix();

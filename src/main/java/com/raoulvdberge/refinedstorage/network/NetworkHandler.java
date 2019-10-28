@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.network;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.network.craftingmonitor.CraftingMonitorCancelMessage;
 import com.raoulvdberge.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
+import com.raoulvdberge.refinedstorage.network.craftingmonitor.WirelessCraftingMonitorSettingsUpdateMessage;
 import com.raoulvdberge.refinedstorage.network.disk.StorageDiskSizeRequestMessage;
 import com.raoulvdberge.refinedstorage.network.disk.StorageDiskSizeResponseMessage;
 import com.raoulvdberge.refinedstorage.network.grid.*;
@@ -62,6 +63,7 @@ public class NetworkHandler {
         handler.registerMessage(id++, GridCraftingStartResponseMessage.class, GridCraftingStartResponseMessage::encode, GridCraftingStartResponseMessage::decode, GridCraftingStartResponseMessage::handle);
         handler.registerMessage(id++, CraftingMonitorUpdateMessage.class, CraftingMonitorUpdateMessage::encode, CraftingMonitorUpdateMessage::decode, CraftingMonitorUpdateMessage::handle);
         handler.registerMessage(id++, CraftingMonitorCancelMessage.class, CraftingMonitorCancelMessage::encode, CraftingMonitorCancelMessage::decode, CraftingMonitorCancelMessage::handle);
+        handler.registerMessage(id++, WirelessCraftingMonitorSettingsUpdateMessage.class, WirelessCraftingMonitorSettingsUpdateMessage::encode, WirelessCraftingMonitorSettingsUpdateMessage::decode, WirelessCraftingMonitorSettingsUpdateMessage::handle);
     }
 
     public void sendToServer(Object message) {
