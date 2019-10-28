@@ -32,9 +32,9 @@ public interface ICraftingPattern {
     boolean isProcessing();
 
     /**
-     * @return true if the crafting pattern is oredicted, false otherwise
+     * @return true if the crafting pattern is in exact mode, false otherwise
      */
-    boolean isOredict();
+    boolean isExact();
 
     /**
      * @return the inputs per slot

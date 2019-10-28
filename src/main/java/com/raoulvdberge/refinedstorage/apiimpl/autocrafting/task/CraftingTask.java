@@ -65,7 +65,7 @@ public class CraftingTask implements ICraftingTask {
 
     private static final int DEFAULT_EXTRACT_FLAGS = IComparer.COMPARE_NBT;
 
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(CraftingTask.class);
 
     private INetwork network;
     private ICraftingRequestInfo requested;

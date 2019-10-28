@@ -47,7 +47,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     private IGridView view;
 
     private SearchWidget searchField;
-    private GuiCheckBox oredictPattern;
+    private GuiCheckBox exactPattern;
     private GuiCheckBox processingPattern;
 
     private ScrollbarWidget scrollbar;
@@ -135,14 +135,14 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
             });
 
-            boolean showOredict = true;
+            boolean showExactPatternOption = true;
             if (((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.FLUIDS) {
-                showOredict = false;
+                showExactPatternOption = false;
             }
 
-            if (showOredict) {
-                oredictPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage:oredict"), GridTile.OREDICT_PATTERN.getValue(), btn -> {
-                    TileDataManager.setParameter(GridTile.OREDICT_PATTERN, oredictPattern.isChecked());
+            if (showExactPatternOption) {
+                exactPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.exact"), GridTile.EXACT_PATTERN.getValue(), btn -> {
+                    TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.isChecked());
                 });
             }
 
@@ -540,9 +540,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         return searchField;
     }
 
-    public void updateOredictPattern(boolean checked) {
-        if (oredictPattern != null) {
-            oredictPattern.setIsChecked(checked);
+    public void updateExactPattern(boolean checked) {
+        if (exactPattern != null) {
+            exactPattern.setIsChecked(checked);
         }
     }
 

@@ -39,7 +39,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     private static final String NBT_OUTPUT_SLOT = "Output_%d";
     private static final String NBT_FLUID_INPUT_SLOT = "FluidInput_%d";
     private static final String NBT_FLUID_OUTPUT_SLOT = "FluidOutput_%d";
-    private static final String NBT_OREDICT = "Oredict"; // TODO - Rename since oredict is gone
+    private static final String NBT_EXACT = "Exact";
     private static final String NBT_PROCESSING = "Processing";
 
     private static final int VERSION = 1;
@@ -85,8 +85,8 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
             RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidOutputs());
 
-            if (isOredict(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.oredict").setStyle(blue));
+            if (isExact(stack)) {
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.exact").setStyle(blue));
             }
 
             if (isProcessing(stack)) {
@@ -198,16 +198,20 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         pattern.getTag().putBoolean(NBT_PROCESSING, processing);
     }
 
-    public static boolean isOredict(ItemStack pattern) {
-        return pattern.hasTag() && pattern.getTag().contains(NBT_OREDICT) && pattern.getTag().getBoolean(NBT_OREDICT);
+    public static boolean isExact(ItemStack pattern) {
+        if (!pattern.hasTag() || !pattern.getTag().contains(NBT_EXACT)) {
+            return true;
+        }
+
+        return pattern.getTag().getBoolean(NBT_EXACT);
     }
 
-    public static void setOredict(ItemStack pattern, boolean oredict) {
+    public static void setExact(ItemStack pattern, boolean exact) {
         if (!pattern.hasTag()) {
             pattern.setTag(new CompoundNBT());
         }
 
-        pattern.getTag().putBoolean(NBT_OREDICT, oredict);
+        pattern.getTag().putBoolean(NBT_EXACT, exact);
     }
 
     public static void setToCurrentVersion(ItemStack pattern) {

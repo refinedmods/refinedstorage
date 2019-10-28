@@ -66,7 +66,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     public static final String NBT_SORTING_DIRECTION = "SortingDirection";
     public static final String NBT_SORTING_TYPE = "SortingType";
     public static final String NBT_SEARCH_BOX_MODE = "SearchBoxMode";
-    private static final String NBT_OREDICT_PATTERN = "OredictPattern";
+    private static final String NBT_EXACT_MODE = "Exact";
     public static final String NBT_TAB_SELECTED = "TabSelected";
     public static final String NBT_TAB_PAGE = "TabPage";
     public static final String NBT_SIZE = "Size";
@@ -159,7 +159,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private int tabSelected = -1;
     private int tabPage = 0;
 
-    private boolean oredictPattern = false;
+    private boolean exactPattern = true;
     private boolean processingPattern = false;
     private int processingType = IType.ITEMS;
 
@@ -213,12 +213,12 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         this.size = size;
     }
 
-    public boolean isOredictPattern() {
-        return oredictPattern;
+    public boolean isExactPattern() {
+        return exactPattern;
     }
 
-    public void setOredictPattern(boolean oredictPattern) {
-        this.oredictPattern = oredictPattern;
+    public void setExactPattern(boolean exactPattern) {
+        this.exactPattern = exactPattern;
     }
 
     public boolean isProcessingPattern() {
@@ -402,7 +402,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
             PatternItem.setToCurrentVersion(pattern);
-            PatternItem.setOredict(pattern, oredictPattern);
+            PatternItem.setExact(pattern, exactPattern);
             PatternItem.setProcessing(pattern, processingPattern);
 
             if (processingPattern) {
@@ -633,7 +633,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         tag.putInt(NBT_SEARCH_BOX_MODE, searchBoxMode);
         tag.putInt(NBT_SIZE, size);
 
-        tag.putBoolean(NBT_OREDICT_PATTERN, oredictPattern);
+        tag.putBoolean(NBT_EXACT_MODE, exactPattern);
         tag.putBoolean(NBT_PROCESSING_PATTERN, processingPattern);
         tag.putInt(NBT_PROCESSING_TYPE, processingType);
 
@@ -664,8 +664,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             size = tag.getInt(NBT_SIZE);
         }
 
-        if (tag.contains(NBT_OREDICT_PATTERN)) {
-            oredictPattern = tag.getBoolean(NBT_OREDICT_PATTERN);
+        if (tag.contains(NBT_EXACT_MODE)) {
+            exactPattern = tag.getBoolean(NBT_EXACT_MODE);
         }
 
         if (tag.contains(NBT_PROCESSING_PATTERN)) {

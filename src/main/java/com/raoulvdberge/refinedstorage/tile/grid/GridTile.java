@@ -62,10 +62,10 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
             t.getNode().markDirty();
         }
     });
-    public static final TileDataParameter<Boolean, GridTile> OREDICT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isOredictPattern(), (t, v) -> {
-        t.getNode().setOredictPattern(v);
+    public static final TileDataParameter<Boolean, GridTile> EXACT_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, true, t -> t.getNode().isExactPattern(), (t, v) -> {
+        t.getNode().setExactPattern(v);
         t.getNode().markDirty();
-    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.updateOredictPattern(p)));
+    }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, grid -> grid.updateExactPattern(p)));
     public static final TileDataParameter<Boolean, GridTile> PROCESSING_PATTERN = new TileDataParameter<>(DataSerializers.BOOLEAN, false, t -> t.getNode().isProcessingPattern(), (t, v) -> {
         t.getNode().setProcessingPattern(v);
         t.getNode().clearMatrix();
@@ -95,7 +95,7 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
         dataManager.addWatchedParameter(SIZE);
         dataManager.addWatchedParameter(TAB_SELECTED);
         dataManager.addWatchedParameter(TAB_PAGE);
-        dataManager.addWatchedParameter(OREDICT_PATTERN);
+        dataManager.addWatchedParameter(EXACT_PATTERN);
         dataManager.addWatchedParameter(PROCESSING_PATTERN);
         dataManager.addWatchedParameter(PROCESSING_TYPE);
     }

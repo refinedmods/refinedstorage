@@ -9,10 +9,12 @@ import com.raoulvdberge.refinedstorage.item.PatternItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -26,7 +28,7 @@ public class CraftingPattern implements ICraftingPattern {
     private ICraftingPatternContainer container;
     private ItemStack stack;
     private boolean processing;
-    private boolean oredict;
+    private boolean exact;
     private boolean valid;
     private ICraftingRecipe recipe;
     private List<NonNullList<ItemStack>> inputs = new ArrayList<>();
@@ -39,7 +41,7 @@ public class CraftingPattern implements ICraftingPattern {
         this.container = container;
         this.stack = stack;
         this.processing = PatternItem.isProcessing(stack);
-        this.oredict = PatternItem.isOredict(stack);
+        this.exact = PatternItem.isExact(stack);
 
         if (processing) {
             for (int i = 0; i < 9; ++i) {
@@ -47,30 +49,18 @@ public class CraftingPattern implements ICraftingPattern {
 
                 if (input.isEmpty()) {
                     inputs.add(NonNullList.create());
-                } else if (oredict) {
-                    NonNullList<ItemStack> ores = NonNullList.create();
+                } else if (exact) {
+                    NonNullList<ItemStack> possibilities = NonNullList.create();
 
-                    ores.add(input.copy());
+                    possibilities.add(input.copy());
 
-                    // TODO: OREDICT
-                    /*for (int id : OreDictionary.getOreIDs(input)) {
-                        String name = OreDictionary.getOreName(id);
-
-                        for (ItemStack ore : OreDictionary.getOres(name)) {
-                            if (ore.getMetadata() == OreDictionary.WILDCARD_VALUE) {
-                                ore.getItem().getSubItems(CreativeTabs.SEARCH, ores);
-                            } else {
-                                ores.add(ore.copy());
-                            }
+                    for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(input.getItem())) {
+                        for (Item element : ItemTags.getCollection().get(owningTag).getAllElements()) {
+                            possibilities.add(new ItemStack(element, input.getCount()));
                         }
-                    }*/
-
-                    // Fix item count
-                    for (ItemStack ore : ores) {
-                        ore.setCount(input.getCount());
                     }
 
-                    inputs.add(ores);
+                    inputs.add(possibilities);
                 } else {
                     inputs.add(NonNullList.from(ItemStack.EMPTY, input));
                 }
@@ -120,7 +110,7 @@ public class CraftingPattern implements ICraftingPattern {
 
                     outputs.add(output);
 
-                    if (oredict) {
+                    if (exact) {
                         if (recipe.getIngredients().size() > 0) {
                             inputs.clear();
 
@@ -157,8 +147,8 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public boolean isOredict() {
-        return oredict;
+    public boolean isExact() {
+        return exact;
     }
 
     @Override
@@ -248,7 +238,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public boolean canBeInChainWith(ICraftingPattern other) {
-        if (other.isProcessing() != processing || other.isOredict() != oredict) {
+        if (other.isProcessing() != processing || other.isExact() != exact) {
             return false;
         }
 
@@ -312,7 +302,7 @@ public class CraftingPattern implements ICraftingPattern {
         int result = 0;
 
         result = 31 * result + (processing ? 1 : 0);
-        result = 31 * result + (oredict ? 1 : 0);
+        result = 31 * result + (exact ? 1 : 0);
 
         for (List<ItemStack> inputs : this.inputs) {
             for (ItemStack input : inputs) {
