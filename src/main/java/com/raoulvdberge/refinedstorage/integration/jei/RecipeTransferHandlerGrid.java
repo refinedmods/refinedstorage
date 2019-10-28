@@ -162,6 +162,37 @@ public class RecipeTransferHandlerGrid implements IRecipeTransferHandler<Contain
                         }
                     }
 
+                    // Check grid crafting slots
+                    InventoryCrafting craftingMatrix = grid.getCraftingMatrix();
+                    if (craftingMatrix != null) {
+                        for (int matrixSlot = 0; matrixSlot < craftingMatrix.getSizeInventory(); matrixSlot++) {
+                            if (!ingredientsToSlotsToStacks.containsKey(craftingMatrix.getStackInSlot(matrixSlot).getItem())) {
+                                continue;
+                            }
+                            ItemStack stack = craftingMatrix.getStackInSlot(matrixSlot);
+
+                            Item item = stack.getItem();
+                            List<List<ItemStack>> slots = ingredientsToSlotsToStacks.get(item);
+
+                            int available = stack.getCount();
+                            int compareDamage = item.isDamageable() ? 0 : IComparer.COMPARE_DAMAGE;
+                            for (int i = 0; i < 9; i++) {
+                                if (isFound[i]) {
+                                    continue;
+                                }
+                                for (ItemStack possibility : slots.get(i)) {
+                                    if (comparer.isEqual(possibility, stack, IComparer.COMPARE_NBT | compareDamage)) {
+                                        if (possibility.getCount() <= available) {
+                                            isFound[i] = true;
+                                            available -= possibility.getCount();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     // Check inventory
                     for (int inventorySlot = 0; inventorySlot < player.inventory.getSizeInventory(); inventorySlot++) {
                         if (!ingredientsToSlotsToStacks.containsKey(player.inventory.getStackInSlot(inventorySlot).getItem())) {
