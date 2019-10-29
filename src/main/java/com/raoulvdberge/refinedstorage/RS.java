@@ -100,6 +100,7 @@ public final class RS {
 
         MinecraftForge.EVENT_BUS.register(new NetworkNodeListener());
         MinecraftForge.EVENT_BUS.register(new NetworkListener());
+        MinecraftForge.EVENT_BUS.register(new BlockListener());
 
         API.instance().getStorageDiskRegistry().add(ItemStorageDiskFactory.ID, new ItemStorageDiskFactory());
         API.instance().getStorageDiskRegistry().add(FluidStorageDiskFactory.ID, new FluidStorageDiskFactory());
