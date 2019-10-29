@@ -71,9 +71,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public final class RS {
     public static final String ID = "refinedstorage";
 
-    public static RS INSTANCE;
-    public RSOldConfig config = new RSOldConfig();
-
     public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
     public static final ItemGroup MAIN_GROUP = new MainItemGroup();
     public static final ServerConfig SERVER_CONFIG = new ServerConfig();

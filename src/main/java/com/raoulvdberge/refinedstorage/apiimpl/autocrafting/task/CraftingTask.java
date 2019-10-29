@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.google.common.collect.Maps;
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
@@ -373,10 +374,9 @@ public class CraftingTask implements ICraftingTask {
         ICraftingPattern pattern,
         boolean root) {
 
-        /* TODO
-        if (System.currentTimeMillis() - calculationStarted > RS.INSTANCE.config.calculationTimeoutMs) {
+        if (System.currentTimeMillis() - calculationStarted > RS.SERVER_CONFIG.getAutocrafting().getCalculationTimeoutMs()) {
             return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
-        }*/
+        }
 
         if (!patternsUsed.add(pattern)) {
             return new CraftingTaskError(CraftingTaskErrorType.RECURSIVE, pattern);

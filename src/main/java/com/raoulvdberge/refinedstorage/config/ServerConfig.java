@@ -35,6 +35,7 @@ public class ServerConfig {
     private CrafterManager crafterManager;
     private CraftingMonitor craftingMonitor;
     private WirelessCraftingMonitor wirelessCraftingMonitor;
+    private Autocrafting autocrafting;
 
     public ServerConfig() {
         upgrades = new Upgrades();
@@ -66,6 +67,7 @@ public class ServerConfig {
         crafterManager = new CrafterManager();
         craftingMonitor = new CraftingMonitor();
         wirelessCraftingMonitor = new WirelessCraftingMonitor();
+        autocrafting = new Autocrafting();
 
         spec = builder.build();
     }
@@ -188,6 +190,10 @@ public class ServerConfig {
 
     public WirelessCraftingMonitor getWirelessCraftingMonitor() {
         return wirelessCraftingMonitor;
+    }
+
+    public Autocrafting getAutocrafting() {
+        return autocrafting;
     }
 
     public class Controller {
@@ -903,6 +909,22 @@ public class ServerConfig {
 
         public int getCancelAllUsage() {
             return cancelAllUsage.get();
+        }
+    }
+
+    public class Autocrafting {
+        private final ForgeConfigSpec.IntValue calculationTimeoutMs;
+
+        public Autocrafting() {
+            builder.push("autocrafting");
+
+            calculationTimeoutMs = builder.comment("The autocrafting calculation timeout in milliseconds, crafting tasks taking longer than this to calculate are cancelled to avoid server strain").defineInRange("calculationTimeoutMs", 5000, 5000, Integer.MAX_VALUE);
+
+            builder.pop();
+        }
+
+        public int getCalculationTimeoutMs() {
+            return calculationTimeoutMs.get();
         }
     }
 }
