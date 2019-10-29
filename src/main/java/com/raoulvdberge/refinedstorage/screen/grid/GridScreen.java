@@ -134,11 +134,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
             });
 
-            if (((GridNetworkNode) grid).isProcessingPattern()) {
-                exactPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.exact"), GridTile.EXACT_PATTERN.getValue(), btn -> {
-                    TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.isChecked());
-                });
-            }
+            exactPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.exact"), GridTile.EXACT_PATTERN.getValue(), btn -> TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.isChecked()));
 
             addSideButton(new TypeSideButton(this, GridTile.PROCESSING_TYPE));
         }
