@@ -52,7 +52,7 @@ public final class GridFilterParser {
             } else if (part.startsWith("#")) {
                 gridFilters.add(new TooltipGridFilter(part.substring(1)));
             } else if (part.startsWith("$")) {
-                gridFilters.add(new OredictGridFilter(part.substring(1)));
+                gridFilters.add(new TagGridFilter(part.substring(1)));
             } else {
                 gridFilters.add(new NameGridFilter(part));
             }

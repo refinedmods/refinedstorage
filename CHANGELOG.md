@@ -4,6 +4,8 @@
 - Port to Minecraft 1.14 (raoulvdberge)
 - Removed the Reader and Writer (raoulvdberge)
 - Removed covers (raoulvdberge)
+- Oredict mode for Patterns has been replaced with "Exact mode" (by default on). When exact mode is off, Refined Storage will use equivalent items or fluids from the Minecraft item/fluid tag system (raoulvdberge)
+- Grid filtering with "$" now does filtering based on item/fluid tag name instead of oredict name (raoulvdberge)
 - When binding a network item to a network you can now bind to any network block, not only the Controller (raoulvdberge)
 
 ### 1.6.16

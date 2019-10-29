@@ -6,13 +6,17 @@ import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -27,6 +31,7 @@ public class ItemGridStack implements IGridStack {
     @Nullable
     private StorageTrackerEntry entry;
 
+    private Set<String> cachedTags;
     private String cachedModId;
     private String cachedModName;
     private String cachedTooltip;
@@ -105,17 +110,16 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public String[] getOreIds() {
-        if (oreIds == null) {
-            if (stack.isEmpty()) {
-                oreIds = new String[]{};
-            } else {
-                oreIds = new String[]{};//TODO OreDict
-                //oreIds = Arrays.stream(OreDictionary.getOreIDs(stack)).mapToObj(OreDictionary::getOreName).toArray(String[]::new);
+    public Set<String> getTags() {
+        if (cachedTags == null) {
+            cachedTags = new HashSet<>();
+
+            for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(stack.getItem())) {
+                cachedTags.add(owningTag.getPath());
             }
         }
 
-        return oreIds;
+        return cachedTags;
     }
 
     @Override

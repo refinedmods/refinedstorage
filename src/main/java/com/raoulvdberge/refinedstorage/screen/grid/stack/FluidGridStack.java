@@ -5,12 +5,15 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class FluidGridStack implements IGridStack {
@@ -22,6 +25,7 @@ public class FluidGridStack implements IGridStack {
     private StorageTrackerEntry entry;
     private boolean craftable;
 
+    private Set<String> cachedTags;
     private String cachedName;
     private String cachedTooltip;
     private String cachedModId;
@@ -92,9 +96,16 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public String[] getOreIds() {
-        return new String[]{};
-        //return new String[]{stack.getFluid().getName()};
+    public Set<String> getTags() {
+        if (cachedTags == null) {
+            cachedTags = new HashSet<>();
+
+            for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(stack.getFluid())) {
+                cachedTags.add(owningTag.getPath());
+            }
+        }
+
+        return cachedTags;
     }
 
     @Override
