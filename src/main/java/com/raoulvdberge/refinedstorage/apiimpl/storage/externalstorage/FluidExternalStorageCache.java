@@ -32,7 +32,7 @@ public class FluidExternalStorageCache {
             FluidStack actual = handler.getFluidInTank(i);
 
             if (i >= cache.size()) { // ENLARGED
-                if (actual != null) {
+                if (!actual.isEmpty()) {
                     network.getFluidStorageCache().add(actual, actual.getAmount(), false, true);
 
                     cache.add(actual.copy());
@@ -43,15 +43,15 @@ public class FluidExternalStorageCache {
 
             FluidStack cached = cache.get(i);
 
-            if (actual == null && cached == null) { // NONE
+            if (actual.isEmpty() && cached.isEmpty()) { // NONE
                 continue;
             }
 
-            if (actual == null && cached != null) { // REMOVED
+            if (actual.isEmpty() && !cached.isEmpty()) { // REMOVED
                 network.getFluidStorageCache().remove(cached, cached.getAmount(), true);
 
                 cache.set(i, null);
-            } else if (actual != null && cached == null) { // ADDED
+            } else if (!actual.isEmpty() && cached.isEmpty()) { // ADDED
                 network.getFluidStorageCache().add(actual, actual.getAmount(), false, true);
 
                 cache.set(i, actual.copy());
@@ -75,7 +75,7 @@ public class FluidExternalStorageCache {
             for (int i = cache.size() - 1; i >= handler.getTanks(); --i) { // Reverse order for the remove call.
                 FluidStack cached = cache.get(i);
 
-                if (cached != null) {
+                if (!cached.isEmpty()) {
                     network.getFluidStorageCache().remove(cached, cached.getAmount(), true);
                 }
 

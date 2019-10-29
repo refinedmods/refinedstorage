@@ -59,6 +59,7 @@ public final class WorldUtils {
         if (tile != null) {
             return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null);
         }
+
         return null;
     }
 
