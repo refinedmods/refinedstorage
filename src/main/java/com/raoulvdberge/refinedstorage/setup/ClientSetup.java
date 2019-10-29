@@ -1,5 +1,9 @@
-package com.raoulvdberge.refinedstorage;
+package com.raoulvdberge.refinedstorage.setup;
 
+import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.RSContainers;
+import com.raoulvdberge.refinedstorage.RSItems;
+import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.CrafterContainer;
 import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
