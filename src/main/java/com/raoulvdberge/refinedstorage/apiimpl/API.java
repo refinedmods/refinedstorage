@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl;
 
 import com.raoulvdberge.refinedstorage.api.IRSAPI;
+import com.raoulvdberge.refinedstorage.api.RSAPIInject;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
@@ -45,11 +46,20 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.ModFileScanData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class API implements IRSAPI {
+    private static final Logger LOGGER = LogManager.getLogger(API.class);
+
     private static final IRSAPI INSTANCE = new API();
 
     private final IComparer comparer = new Comparer();
@@ -69,24 +79,32 @@ public class API implements IRSAPI {
         return INSTANCE;
     }
 
-    /* TODO API DELIVERY public static void deliver(ASMDataTable asmDataTable) {
-        String annotationClassName = RSAPIInject.class.getCanonicalName();
+    public static void deliver() {
+        Type annotationType = Type.getType(RSAPIInject.class);
 
-        Set<ASMDataTable.ASMData> asmDataSet = asmDataTable.getAll(annotationClassName);
+        List<ModFileScanData.AnnotationData> annotations = ModList.get().getAllScanData().stream()
+            .map(ModFileScanData::getAnnotations)
+            .flatMap(Collection::stream)
+            .filter(a -> annotationType.equals(a.getAnnotationType()))
+            .collect(Collectors.toList());
 
-        for (ASMDataTable.ASMData asmData : asmDataSet) {
+        LOGGER.info("Found {} RS API injection {}", annotations.size(), annotations.size() == 1 ? "point" : "points");
+
+        for (ModFileScanData.AnnotationData annotation : annotations) {
             try {
-                Class clazz = Class.forName(asmData.getClassName());
-                Field field = clazz.getField(asmData.getObjectName());
+                Class clazz = Class.forName(annotation.getClassType().getClassName());
+                Field field = clazz.getField(annotation.getMemberName());
 
                 if (field.getType() == IRSAPI.class) {
                     field.set(null, INSTANCE);
                 }
-            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException("Failed to set: {}" + asmData.getClassName() + "." + asmData.getObjectName(), e);
+
+                LOGGER.info("Injected RS API in {} {}", annotation.getClassType().getClassName(), annotation.getMemberName());
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
+                LOGGER.error("Could not inject RS API in {} {}", annotation.getClassType().getClassName(), annotation.getMemberName(), e);
             }
         }
-    }*/
+    }
 
     @Nonnull
     @Override
@@ -216,7 +234,7 @@ public class API implements IRSAPI {
         if (world == null) {
             throw new IllegalArgumentException("World cannot be null");
         }
-        
+
         return new FluidStorageDisk(world, capacity);
     }
 

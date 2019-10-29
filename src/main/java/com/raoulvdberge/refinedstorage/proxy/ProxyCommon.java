@@ -5,8 +5,6 @@ public class ProxyCommon {
     public void preInit(FMLPreInitializationEvent e) {
         MinecraftForge.EVENT_BUS.register(this);
 
-        API.deliver(e.getAsmData());
-
         IntegrationInventorySorter.register();
     }
 
