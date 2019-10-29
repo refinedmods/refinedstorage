@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:wireless_fluid_grid"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage.wireless_fluids"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage.wireless_fluids.description"
+    }
+  },
+  "parent": "refinedstorage:wireless",
+  "criteria": {
+    "wireless_fluid_grid_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:wireless_fluid_grid"
+          }
+        ]
+      }
+    }
+  }
+}

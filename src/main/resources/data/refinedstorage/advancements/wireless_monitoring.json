@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:wireless_crafting_monitor"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage.wireless_monitoring"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage.wireless_monitoring.description"
+    }
+  },
+  "parent": "refinedstorage:wireless",
+  "criteria": {
+    "wireless_crafting_monitor_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:wireless_crafting_monitor"
+          }
+        ]
+      }
+    }
+  }
+}
