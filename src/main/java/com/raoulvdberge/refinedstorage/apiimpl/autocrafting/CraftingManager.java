@@ -21,6 +21,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +30,8 @@ import java.util.*;
 
 public class CraftingManager implements ICraftingManager {
     private static final int THROTTLE_DELAY_MS = 3000;
+
+    private static final Logger LOGGER = LogManager.getLogger(CraftingManager.class);
 
     private static final String NBT_TASKS = "Tasks";
     private static final String NBT_TASK_TYPE = "Type";
@@ -140,7 +144,7 @@ public class CraftingManager implements ICraftingManager {
 
                             tasks.put(task.getId(), task);
                         } catch (CraftingTaskReadException e) {
-                            e.printStackTrace();
+                            LOGGER.error("Could not deserialize crafting task", e);
                         }
                     }
                 }

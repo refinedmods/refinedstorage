@@ -11,6 +11,8 @@ import com.raoulvdberge.refinedstorage.screen.CraftingMonitorScreen;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CraftingMonitorUpdateMessage {
+    private static final Logger LOGGER = LogManager.getLogger(CraftingMonitorUpdateMessage.class);
+
     private ICraftingMonitor craftingMonitor;
 
     private List<IGridTab> tasks = new ArrayList<>();
@@ -47,7 +51,7 @@ public class CraftingMonitorUpdateMessage {
             try {
                 requested = API.instance().createCraftingRequestInfo(buf.readCompoundTag());
             } catch (CraftingTaskReadException e) {
-                e.printStackTrace();
+                LOGGER.error("Could not create crafting request info", e);
             }
 
             int qty = buf.readInt();
