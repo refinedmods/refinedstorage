@@ -78,24 +78,6 @@ public interface ICraftingManager {
     ICraftingPatternChainList createPatternChainList();
 
     /**
-     * @deprecated Use {@link #request(Object, ItemStack, int)}
-     */
-    @Nullable
-    @Deprecated
-    default ICraftingTask request(ItemStack stack, int amount) {
-        return request(null, stack, amount);
-    }
-
-    /**
-     * @deprecated Use {@link #request(Object, FluidStack, int)}
-     */
-    @Nullable
-    @Deprecated
-    default ICraftingTask request(FluidStack stack, int amount) {
-        return request(null, stack, amount);
-    }
-
-    /**
      * Schedules a crafting task if the task isn't scheduled yet.
      *
      * @param source the source
