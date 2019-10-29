@@ -35,6 +35,7 @@ import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -82,7 +83,13 @@ public class Network implements INetwork, IRedstoneConfigurable {
         this.world = world;
         this.type = type;
         this.root = new RootNetworkNode(this, world, pos);
-        this.nodeGraph.addListener(() -> ((ControllerTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(ControllerTile.NODES));
+        this.nodeGraph.addListener(() -> {
+            TileEntity tile = world.getTileEntity(pos);
+
+            if (tile instanceof ControllerTile) {
+                ((ControllerTile) tile).getDataManager().sendParameterToWatchers(ControllerTile.NODES);
+            }
+        });
     }
 
     public RootNetworkNode getRoot() {

@@ -6,12 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "refinedstorage:controller",
-          "functions": [
-            {
-              "function": "refinedstorage:controller"
-            }
-          ]
+          "name": "refinedstorage:creative_controller"
         }
       ],
       "conditions": [

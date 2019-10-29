@@ -44,6 +44,9 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
     private final LazyOptional<INetworkNodeProxy<RootNetworkNode>> networkNodeProxyCap = LazyOptional.of(() -> this);
 
     private final NetworkType type;
+
+    private INetwork removedNetwork;
+
     private Network dummyNetwork;
 
     public ControllerTile(NetworkType type) {
@@ -117,11 +120,17 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
 
             INetwork network = manager.getNetwork(pos);
 
+            removedNetwork = network;
+
             manager.removeNetwork(pos);
             manager.markForSaving();
 
             network.onRemoved();
         }
+    }
+
+    public INetwork getRemovedNetwork() {
+        return removedNetwork;
     }
 
     @Override

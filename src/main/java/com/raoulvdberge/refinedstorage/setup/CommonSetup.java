@@ -34,6 +34,7 @@ import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.container.factory.*;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.*;
+import com.raoulvdberge.refinedstorage.loottable.ControllerLootFunctionSerializer;
 import com.raoulvdberge.refinedstorage.loottable.CrafterLootFunctionSerializer;
 import com.raoulvdberge.refinedstorage.loottable.PortableGridBlockLootFunctionSerializer;
 import com.raoulvdberge.refinedstorage.loottable.StorageBlockLootFunctionSerializer;
@@ -132,6 +133,7 @@ public class CommonSetup {
         LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
         LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());
         LootFunctionManager.registerFunction(new CrafterLootFunctionSerializer());
+        LootFunctionManager.registerFunction(new ControllerLootFunctionSerializer());
     }
 
     private INetworkNode readAndReturn(CompoundNBT tag, NetworkNode node) {
