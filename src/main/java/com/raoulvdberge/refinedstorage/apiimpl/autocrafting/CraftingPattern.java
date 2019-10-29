@@ -14,7 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
@@ -128,12 +127,12 @@ public class CraftingPattern implements ICraftingPattern {
 
                     outputs.add(output);
 
-                    if (exact) {
+                    if (!exact) {
                         if (recipe.getIngredients().size() > 0) {
                             inputs.clear();
 
                             for (int i = 0; i < recipe.getIngredients().size(); ++i) {
-                                inputs.add(i, NonNullList.from(ItemStack.EMPTY, ((Ingredient) recipe.getIngredients().get(i)).getMatchingStacks()));
+                                inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
                             }
                         } else {
                             this.valid = false;
