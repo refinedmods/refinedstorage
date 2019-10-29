@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.tile.CrafterManagerTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -47,10 +48,10 @@ public class CrafterManagerContainer extends BaseContainer {
         addPlayerInventory(8, screenInfoProvider.getYPlayerInventory());
 
         if (crafterManager.getNetwork() != null) {
-            for (Map.Entry<String, List<IItemHandlerModifiable>> entry : crafterManager.getNetwork().getCraftingManager().getNamedContainers().entrySet()) {
+            for (Map.Entry<ITextComponent, List<IItemHandlerModifiable>> entry : crafterManager.getNetwork().getCraftingManager().getNamedContainers().entrySet()) {
                 for (IItemHandlerModifiable handler : entry.getValue()) {
                     for (int i = 0; i < handler.getSlots(); ++i) {
-                        addSlot(new CrafterManagerSlot(handler, i, 0, 0, true, screenInfoProvider, this.crafterManager));
+                        addSlot(new CrafterManagerSlot(handler, i, 0, 0, true, screenInfoProvider, crafterManager));
                     }
                 }
             }

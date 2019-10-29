@@ -17,11 +17,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
 
 public class CrafterManagerBlock extends NetworkNodeBlock {
     public CrafterManagerBlock() {
@@ -53,23 +50,7 @@ public class CrafterManagerBlock extends NetworkNodeBlock {
             return NetworkUtils.attempt(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new CrafterManagerContainerProvider((CrafterManagerTile) world.getTileEntity(pos)),
-                buf -> {
-                    buf.writeBlockPos(pos);
-
-                    Map<String, List<IItemHandlerModifiable>> containerData = ((CrafterManagerTile) world.getTileEntity(pos)).getNode().getNetwork().getCraftingManager().getNamedContainers();
-
-                    buf.writeInt(containerData.size());
-
-                    for (Map.Entry<String, List<IItemHandlerModifiable>> entry : containerData.entrySet()) {
-                        buf.writeString(entry.getKey());
-
-                        int slots = 0;
-                        for (IItemHandlerModifiable handler : entry.getValue()) {
-                            slots += handler.getSlots();
-                        }
-                        buf.writeInt(slots);
-                    }
-                }
+                buf -> CrafterManagerContainerProvider.writeToBuffer(buf, world, pos)
             ), Permission.MODIFY, Permission.AUTOCRAFTING);
         }
 

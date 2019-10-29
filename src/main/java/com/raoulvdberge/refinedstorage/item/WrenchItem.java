@@ -1,8 +1,9 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
-import com.raoulvdberge.refinedstorage.tile.NetworkNodeTile;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
@@ -30,13 +31,16 @@ public class WrenchItem extends Item {
 
         TileEntity tile = ctx.getWorld().getTileEntity(ctx.getPos());
 
-        // TODO - Better INetworkNode check
-        if (tile instanceof NetworkNodeTile &&
-            ((NetworkNodeTile) tile).getNode().getNetwork() != null &&
-            !((NetworkNodeTile) tile).getNode().getNetwork().getSecurityManager().hasPermission(Permission.BUILD, ctx.getPlayer())) {
-            WorldUtils.sendNoPermissionMessage(ctx.getPlayer());
+        if (tile != null) {
+            INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, ctx.getFace().getOpposite()).orElse(null);
 
-            return ActionResultType.FAIL;
+            if (proxy != null &&
+                proxy.getNode().getNetwork() != null &&
+                !proxy.getNode().getNetwork().getSecurityManager().hasPermission(Permission.BUILD, ctx.getPlayer())) {
+                WorldUtils.sendNoPermissionMessage(ctx.getPlayer());
+
+                return ActionResultType.FAIL;
+            }
         }
 
         BlockState state = ctx.getWorld().getBlockState(ctx.getPos());

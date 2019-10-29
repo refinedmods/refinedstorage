@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.container.factory;
 import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
 import com.raoulvdberge.refinedstorage.screen.EmptyScreenInfoProvider;
 import com.raoulvdberge.refinedstorage.tile.CrafterManagerTile;
-import com.raoulvdberge.refinedstorage.util.PacketBufferUtils;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +21,7 @@ public class CrafterManagerContainerFactory implements IContainerFactory<Crafter
         int size = buf.readInt();
 
         for (int i = 0; i < size; ++i) {
-            data.put(PacketBufferUtils.readString(buf), buf.readInt());
+            data.put(buf.readTextComponent().getFormattedText(), buf.readInt());
         }
 
         CrafterManagerContainer container = new CrafterManagerContainer((CrafterManagerTile) inv.player.world.getTileEntity(pos), inv.player, windowId);

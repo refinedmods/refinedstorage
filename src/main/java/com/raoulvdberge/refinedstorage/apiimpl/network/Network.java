@@ -29,6 +29,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.FluidStorageTrack
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
 import com.raoulvdberge.refinedstorage.energy.BaseEnergyStorage;
+import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
@@ -81,8 +82,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
         this.world = world;
         this.type = type;
         this.root = new RootNetworkNode(this, world, pos);
-
-        // TODO: Update ControllerTile.NODES when graph changes?
+        this.nodeGraph.addListener(() -> ((ControllerTile) world.getTileEntity(pos)).getDataManager().sendParameterToWatchers(ControllerTile.NODES));
     }
 
     public RootNetworkNode getRoot() {

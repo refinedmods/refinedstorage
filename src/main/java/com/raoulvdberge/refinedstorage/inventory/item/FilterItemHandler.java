@@ -47,7 +47,7 @@ public class FilterItemHandler extends BaseItemHandler {
             }
         }
 
-        if (EffectiveSide.get() == LogicalSide.CLIENT) { // TODO check
+        if (EffectiveSide.get() == LogicalSide.CLIENT) {
             BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
         }
     }

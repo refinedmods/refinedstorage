@@ -59,7 +59,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         @Override
         public void drawTooltip(int x, int y, int xSize, int ySize, FontRenderer fontRenderer) {
-            List<String> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getDisplayName().getFormattedText() : requested.getFluid().getDisplayName().getFormattedText()); // TODO
+            List<String> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getDisplayName().getFormattedText() : requested.getFluid().getDisplayName().getFormattedText());
             List<String> smallTextLines = Lists.newArrayList();
 
             int totalSecs = (int) (System.currentTimeMillis() - executionStarted) / 1000;

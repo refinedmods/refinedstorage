@@ -37,7 +37,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
                         public void accept(I ingredient) {
                             slot.putStack((ItemStack) ingredient);
 
-                            // TODO RS.INSTANCE.network.sendToServer(new MessageSlotFilterSet(slot.slotNumber, (ItemStack) ingredient));
+                            // RS.INSTANCE.network.sendToServer(new MessageSlotFilterSet(slot.slotNumber, (ItemStack) ingredient));
                         }
                     });
                 }
@@ -51,7 +51,7 @@ public class GhostIngredientHandler implements IGhostIngredientHandler<BaseScree
 
                         @Override
                         public void accept(I ingredient) {
-                            // TODO RS.INSTANCE.network.sendToServer(new MessageSlotFilterSetFluid(slot.slotNumber, StackUtils.copy((FluidStack) ingredient, Fluid.BUCKET_VOLUME)));
+                            // RS.INSTANCE.network.sendToServer(new MessageSlotFilterSetFluid(slot.slotNumber, StackUtils.copy((FluidStack) ingredient, Fluid.BUCKET_VOLUME)));
                         }
                     });
                 }

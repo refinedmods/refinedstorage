@@ -11,10 +11,6 @@ public class ProxyCommon {
     }
 
     public void init(FMLInitializationEvent e) {
-        if (IntegrationOC.isLoaded()) {
-            DriverNetwork.register();
-        }
-
         if (IntegrationCraftingTweaks.isLoaded()) {
             IntegrationCraftingTweaks.register();
         }

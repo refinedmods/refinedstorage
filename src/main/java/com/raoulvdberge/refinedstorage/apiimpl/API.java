@@ -245,7 +245,6 @@ public class API implements IRSAPI {
         return patternRenderHandlers;
     }
 
-    // TODO: Remove eventually
     @Override
     public int getItemStackHashCode(ItemStack stack) {
         int result = stack.getItem().hashCode();
@@ -286,7 +285,6 @@ public class API implements IRSAPI {
         return result;
     }
 
-    // TODO: Remove eventually
     @Override
     public int getFluidStackHashCode(FluidStack stack) {
         int result = stack.getFluid().hashCode();

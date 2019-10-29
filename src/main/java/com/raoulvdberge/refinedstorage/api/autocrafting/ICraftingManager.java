@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -35,7 +36,7 @@ public interface ICraftingManager {
     /**
      * @return named crafting pattern containers
      */
-    Map<String, List<IItemHandlerModifiable>> getNamedContainers();
+    Map<ITextComponent, List<IItemHandlerModifiable>> getNamedContainers();
 
     /**
      * Adds a crafting task.
