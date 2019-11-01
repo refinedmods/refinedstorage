@@ -33,6 +33,7 @@ import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.container.factory.*;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
+import com.raoulvdberge.refinedstorage.integration.inventorysorter.InventorySorterIntegration;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.*;
 import com.raoulvdberge.refinedstorage.loottable.ControllerLootFunctionSerializer;
@@ -138,6 +139,10 @@ public class CommonSetup {
 
         if (CraftingTweaksIntegration.isLoaded()) {
             CraftingTweaksIntegration.register();
+        }
+
+        if (InventorySorterIntegration.isLoaded()) {
+            InventorySorterIntegration.register();
         }
     }
 
