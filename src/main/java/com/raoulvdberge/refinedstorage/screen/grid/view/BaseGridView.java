@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.screen.grid.sorting.IGridSorter;
 import com.raoulvdberge.refinedstorage.screen.grid.sorting.SortingDirection;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -31,6 +32,12 @@ public abstract class BaseGridView implements IGridView {
         return stacks;
     }
 
+    @Nullable
+    @Override
+    public IGridStack get(UUID id) {
+        return map.get(id);
+    }
+
     @Override
     public void sort() {
         List<IGridStack> stacks = new ArrayList<>();
@@ -50,6 +57,15 @@ public abstract class BaseGridView implements IGridView {
 
             while (it.hasNext()) {
                 IGridStack stack = it.next();
+
+                // TODO Make working with grid sorting mode.
+                if (stack.isCraftable() &&
+                    stack.getOtherId() != null &&
+                    map.containsKey(stack.getOtherId())) {
+                    it.remove();
+
+                    continue;
+                }
 
                 for (Predicate<IGridStack> filter : filters) {
                     if (!filter.test(stack)) {

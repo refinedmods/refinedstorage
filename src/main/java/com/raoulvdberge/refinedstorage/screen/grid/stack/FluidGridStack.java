@@ -20,6 +20,8 @@ public class FluidGridStack implements IGridStack {
     private Logger logger = LogManager.getLogger(getClass());
 
     private UUID id;
+    @Nullable
+    private UUID otherId;
     private FluidStack stack;
     @Nullable
     private StorageTrackerEntry entry;
@@ -31,8 +33,9 @@ public class FluidGridStack implements IGridStack {
     private String cachedModId;
     private String cachedModName;
 
-    public FluidGridStack(UUID id, FluidStack stack, @Nullable StorageTrackerEntry entry, boolean craftable) {
+    public FluidGridStack(UUID id, @Nullable UUID otherId, FluidStack stack, @Nullable StorageTrackerEntry entry, boolean craftable) {
         this.id = id;
+        this.otherId = otherId;
         this.stack = stack;
         this.entry = entry;
         this.craftable = craftable;
@@ -50,6 +53,17 @@ public class FluidGridStack implements IGridStack {
     @Override
     public UUID getId() {
         return id;
+    }
+
+    @Nullable
+    @Override
+    public UUID getOtherId() {
+        return otherId;
+    }
+
+    @Override
+    public void updateOtherId(@Nullable UUID otherId) {
+        this.otherId = otherId;
     }
 
     @Override

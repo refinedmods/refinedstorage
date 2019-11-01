@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
@@ -53,11 +54,15 @@ public class GridItemUpdateMessage {
         buf.writeInt(size);
 
         for (StackListEntry<ItemStack> stack : message.network.getItemStorageCache().getList().getStacks()) {
-            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), false, message.network, message.network.getItemStorageTracker().get(stack.getStack()));
+            StackListEntry<ItemStack> craftingEntry = message.network.getItemStorageCache().getCraftablesList().getEntry(stack.getStack(), IComparer.COMPARE_NBT);
+
+            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), craftingEntry != null ? craftingEntry.getId() : null, false, message.network.getItemStorageTracker().get(stack.getStack()));
         }
 
         for (StackListEntry<ItemStack> stack : message.network.getItemStorageCache().getCraftablesList().getStacks()) {
-            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), true, message.network, message.network.getItemStorageTracker().get(stack.getStack()));
+            StackListEntry<ItemStack> regularEntry = message.network.getItemStorageCache().getList().getEntry(stack.getStack(), IComparer.COMPARE_NBT);
+
+            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), regularEntry != null ? regularEntry.getId() : null, true, message.network.getItemStorageTracker().get(stack.getStack()));
         }
     }
 

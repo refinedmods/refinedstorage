@@ -46,7 +46,7 @@ public class PortableGridItemUpdateMessage {
         buf.writeInt(size);
 
         for (StackListEntry<ItemStack> stack : message.portableGrid.getItemCache().getList().getStacks()) {
-            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), false, null, message.portableGrid.getItemStorageTracker().get(stack.getStack()));
+            StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), null, false, message.portableGrid.getItemStorageTracker().get(stack.getStack()));
         }
     }
 

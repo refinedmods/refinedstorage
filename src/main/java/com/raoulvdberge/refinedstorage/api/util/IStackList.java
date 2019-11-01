@@ -67,6 +67,16 @@ public interface IStackList<T> {
     T get(@Nonnull T stack, int flags);
 
     /**
+     * Returns a stack entry.
+     *
+     * @param stack the stack to search for
+     * @param flags the flags to compare on, see {@link IComparer}
+     * @return the stack entry, or null if no stack entry was found
+     */
+    @Nullable
+    StackListEntry<T> getEntry(@Nonnull T stack, int flags);
+
+    /**
      * Returns a stack.
      *
      * @param id the id of the entry to search for

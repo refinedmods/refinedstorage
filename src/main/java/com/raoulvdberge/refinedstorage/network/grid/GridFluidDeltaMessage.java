@@ -1,6 +1,8 @@
 package com.raoulvdberge.refinedstorage.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
@@ -52,7 +54,9 @@ public class GridFluidDeltaMessage {
         for (StackListResult<FluidStack> delta : message.deltas) {
             buf.writeInt(delta.getChange());
 
-            StackUtils.writeFluidGridStack(buf, delta.getStack(), delta.getId(), false, message.network, message.network.getFluidStorageTracker().get(delta.getStack()));
+            StackListEntry<FluidStack> craftingEntry = message.network.getFluidStorageCache().getCraftablesList().getEntry(delta.getStack(), IComparer.COMPARE_NBT);
+
+            StackUtils.writeFluidGridStack(buf, delta.getStack(), delta.getId(), craftingEntry != null ? craftingEntry.getId() : null, false, message.network.getFluidStorageTracker().get(delta.getStack()));
         }
     }
 

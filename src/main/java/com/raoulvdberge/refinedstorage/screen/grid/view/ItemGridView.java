@@ -27,6 +27,14 @@ public class ItemGridView extends BaseGridView {
             return;
         }
 
+        // Update the other id reference if needed.
+        // Taking a stack out - and then re-inserting it - gives the new stack a new ID
+        // With that new id, the reference for the crafting stack would be outdated.
+        if (!stack.isCraftable() &&
+            stack.getOtherId() != null) {
+            map.get(stack.getOtherId()).updateOtherId(stack.getId());
+        }
+
         ItemGridStack existing = (ItemGridStack) map.get(stack.getId());
 
         if (existing == null) {

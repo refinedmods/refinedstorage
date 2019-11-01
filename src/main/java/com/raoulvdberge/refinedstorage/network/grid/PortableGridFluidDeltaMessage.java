@@ -50,7 +50,7 @@ public class PortableGridFluidDeltaMessage {
         for (StackListResult<FluidStack> delta : message.deltas) {
             buf.writeInt(delta.getChange());
 
-            StackUtils.writeFluidGridStack(buf, delta.getStack(), delta.getId(), false, null, message.portableGrid.getFluidStorageTracker().get(delta.getStack()));
+            StackUtils.writeFluidGridStack(buf, delta.getStack(), delta.getId(), null, false, message.portableGrid.getFluidStorageTracker().get(delta.getStack()));
         }
     }
 

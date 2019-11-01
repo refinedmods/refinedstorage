@@ -14,6 +14,7 @@ public class CraftableGridFilter implements Predicate<IGridStack> {
 
     @Override
     public boolean test(IGridStack stack) {
+        // TODO Make working with fluids.
         return stack instanceof ItemGridStack && stack.isCraftable() == craftable;
     }
 }

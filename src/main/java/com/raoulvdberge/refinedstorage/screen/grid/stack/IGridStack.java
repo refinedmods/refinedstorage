@@ -10,6 +10,11 @@ import java.util.UUID;
 public interface IGridStack {
     UUID getId();
 
+    @Nullable
+    UUID getOtherId();
+
+    void updateOtherId(@Nullable UUID otherId);
+
     String getName();
 
     String getModId();

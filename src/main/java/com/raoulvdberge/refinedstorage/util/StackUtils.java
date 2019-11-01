@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.util;
 
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
@@ -82,11 +81,16 @@ public final class StackUtils {
         }
     }
 
-    public static void writeItemGridStack(PacketBuffer buf, ItemStack stack, UUID id, boolean craftable, @Nullable INetwork network, @Nullable StorageTrackerEntry entry) {
+    public static void writeItemGridStack(PacketBuffer buf, ItemStack stack, UUID id, @Nullable UUID otherId, boolean craftable, @Nullable StorageTrackerEntry entry) {
         writeItemStack(buf, stack);
 
         buf.writeBoolean(craftable);
         buf.writeUniqueId(id);
+
+        buf.writeBoolean(otherId != null);
+        if (otherId != null) {
+            buf.writeUniqueId(otherId);
+        }
 
         if (entry == null) {
             buf.writeBoolean(false);
@@ -104,19 +108,29 @@ public final class StackUtils {
         boolean craftable = buf.readBoolean();
         UUID id = buf.readUniqueId();
 
+        UUID otherId = null;
+        if (buf.readBoolean()) {
+            otherId = buf.readUniqueId();
+        }
+
         StorageTrackerEntry entry = null;
         if (buf.readBoolean()) {
             entry = new StorageTrackerEntry(buf.readLong(), PacketBufferUtils.readString(buf));
         }
 
-        return new ItemGridStack(id, stack, craftable, entry);
+        return new ItemGridStack(id, otherId, stack, craftable, entry);
     }
 
-    public static void writeFluidGridStack(PacketBuffer buf, FluidStack stack, UUID id, boolean craftable, @Nullable INetwork network, @Nullable StorageTrackerEntry entry) {
+    public static void writeFluidGridStack(PacketBuffer buf, FluidStack stack, UUID id, @Nullable UUID otherId, boolean craftable, @Nullable StorageTrackerEntry entry) {
         stack.writeToPacket(buf);
 
         buf.writeBoolean(craftable);
         buf.writeUniqueId(id);
+
+        buf.writeBoolean(otherId != null);
+        if (otherId != null) {
+            buf.writeUniqueId(otherId);
+        }
 
         if (entry == null) {
             buf.writeBoolean(false);
@@ -133,12 +147,17 @@ public final class StackUtils {
         boolean craftable = buf.readBoolean();
         UUID id = buf.readUniqueId();
 
+        UUID otherId = null;
+        if (buf.readBoolean()) {
+            otherId = buf.readUniqueId();
+        }
+
         StorageTrackerEntry entry = null;
         if (buf.readBoolean()) {
             entry = new StorageTrackerEntry(buf.readLong(), PacketBufferUtils.readString(buf));
         }
 
-        return new FluidGridStack(id, stack, entry, craftable);
+        return new FluidGridStack(id, otherId, stack, entry, craftable);
     }
 
     @SuppressWarnings("unchecked")

@@ -96,6 +96,20 @@ public class FluidStackList implements IStackList<FluidStack> {
         return null;
     }
 
+    @Nullable
+    @Override
+    public StackListEntry<FluidStack> getEntry(@Nonnull FluidStack stack, int flags) {
+        for (StackListEntry<FluidStack> entry : stacks.get(stack.getFluid())) {
+            FluidStack otherStack = entry.getStack();
+
+            if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
+                return entry;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     @Nullable
     public FluidStack get(UUID id) {

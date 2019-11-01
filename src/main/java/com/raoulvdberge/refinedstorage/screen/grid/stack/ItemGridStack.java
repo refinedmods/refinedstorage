@@ -24,14 +24,15 @@ public class ItemGridStack implements IGridStack {
     private Logger logger = LogManager.getLogger(getClass());
 
     private UUID id;
+    @Nullable
+    private UUID otherId;
     private ItemStack stack;
-    private String cachedName;
     private boolean craftable;
-    private String[] oreIds = null;
     @Nullable
     private StorageTrackerEntry entry;
 
     private Set<String> cachedTags;
+    private String cachedName;
     private String cachedModId;
     private String cachedModName;
     private String cachedTooltip;
@@ -40,8 +41,9 @@ public class ItemGridStack implements IGridStack {
         this.stack = stack;
     }
 
-    public ItemGridStack(UUID id, ItemStack stack, boolean craftable, StorageTrackerEntry entry) {
+    public ItemGridStack(UUID id, @Nullable UUID otherId, ItemStack stack, boolean craftable, StorageTrackerEntry entry) {
         this.id = id;
+        this.otherId = otherId;
         this.stack = stack;
         this.craftable = craftable;
         this.entry = entry;
@@ -66,6 +68,17 @@ public class ItemGridStack implements IGridStack {
     @Override
     public UUID getId() {
         return id;
+    }
+
+    @Nullable
+    @Override
+    public UUID getOtherId() {
+        return otherId;
+    }
+
+    @Override
+    public void updateOtherId(@Nullable UUID otherId) {
+        this.otherId = otherId;
     }
 
     @Override

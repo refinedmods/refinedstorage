@@ -94,6 +94,20 @@ public class ItemStackList implements IStackList<ItemStack> {
         return null;
     }
 
+    @Nullable
+    @Override
+    public StackListEntry<ItemStack> getEntry(@Nonnull ItemStack stack, int flags) {
+        for (StackListEntry<ItemStack> entry : stacks.get(stack.getItem())) {
+            ItemStack otherStack = entry.getStack();
+
+            if (API.instance().getComparer().isEqual(otherStack, stack, flags)) {
+                return entry;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     @Nullable
     public ItemStack get(UUID id) {

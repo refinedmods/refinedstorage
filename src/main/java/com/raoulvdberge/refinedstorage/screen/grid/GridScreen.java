@@ -455,8 +455,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 IGridStack stack = view.getStacks().get(slotNumber);
 
                 if (isPulling) {
-                    if (stack.isCraftable() && view.canCraft()) {
+                    if (view.canCraft() && stack.isCraftable()) {
                         minecraft.displayGuiScreen(new CraftingSettingsScreen(this, playerInventory.player, stack));
+                    } else if (view.canCraft() && !stack.isCraftable() && stack.getOtherId() != null && hasShiftDown() && hasControlDown()) {
+                        minecraft.displayGuiScreen(new CraftingSettingsScreen(this, playerInventory.player, view.get(stack.getOtherId())));
                     } else if (grid.getGridType() == GridType.FLUID && held.isEmpty()) {
                         RS.NETWORK_HANDLER.sendToServer(new GridFluidPullMessage(view.getStacks().get(slotNumber).getId(), hasShiftDown()));
                     } else if (grid.getGridType() != GridType.FLUID) {

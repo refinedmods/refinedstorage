@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
@@ -53,11 +54,15 @@ public class GridFluidUpdateMessage {
         buf.writeInt(size);
 
         for (StackListEntry<FluidStack> stack : message.network.getFluidStorageCache().getList().getStacks()) {
-            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), false, message.network, message.network.getFluidStorageTracker().get(stack.getStack()));
+            StackListEntry<FluidStack> craftingEntry = message.network.getFluidStorageCache().getCraftablesList().getEntry(stack.getStack(), IComparer.COMPARE_NBT);
+
+            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), craftingEntry != null ? craftingEntry.getId() : null, false, message.network.getFluidStorageTracker().get(stack.getStack()));
         }
 
         for (StackListEntry<FluidStack> stack : message.network.getFluidStorageCache().getCraftablesList().getStacks()) {
-            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), true, message.network, message.network.getFluidStorageTracker().get(stack.getStack()));
+            StackListEntry<FluidStack> regularEntry = message.network.getFluidStorageCache().getList().getEntry(stack.getStack(), IComparer.COMPARE_NBT);
+
+            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), regularEntry != null ? regularEntry.getId() : null, true, message.network.getFluidStorageTracker().get(stack.getStack()));
         }
     }
 

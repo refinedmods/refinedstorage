@@ -52,7 +52,7 @@ public class PortableGridItemDeltaMessage {
         for (StackListResult<ItemStack> delta : message.deltas) {
             buf.writeInt(delta.getChange());
 
-            StackUtils.writeItemGridStack(buf, delta.getStack(), delta.getId(), false, null, message.portableGrid.getItemStorageTracker().get(delta.getStack()));
+            StackUtils.writeItemGridStack(buf, delta.getStack(), delta.getId(), null, false, message.portableGrid.getItemStorageTracker().get(delta.getStack()));
         }
     }
 
