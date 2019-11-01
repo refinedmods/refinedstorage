@@ -19,10 +19,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.glfw.GLFW;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.Map;
 
-// TODO @MouseTweaksDisableWheelTweak
+@MouseTweaksDisableWheelTweak
 public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> implements IScreenInfoProvider {
     private CrafterManagerNetworkNode crafterManager;
 
