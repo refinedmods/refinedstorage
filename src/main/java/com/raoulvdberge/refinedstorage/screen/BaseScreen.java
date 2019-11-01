@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
+import com.raoulvdberge.refinedstorage.screen.grid.InputConfigurationScreen;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -23,8 +24,8 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -175,13 +176,17 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         if (valid && slot instanceof FilterSlot && slot.isEnabled() && ((FilterSlot) slot).isSizeAllowed()) {
             if (!slot.getStack().isEmpty()) {
-                minecraft.displayGuiScreen(new AmountScreen(
-                    this,
-                    minecraft.player,
-                    slot.slotNumber,
-                    slot.getStack(),
-                    slot.getSlotStackLimit()
-                ));
+                if (hasControlDown()) {
+                    minecraft.displayGuiScreen(new InputConfigurationScreen(this, minecraft.player, new TranslationTextComponent("gui.refinedstorage.input_configuration"), slot.getStack()));
+                } else {
+                    minecraft.displayGuiScreen(new AmountScreen(
+                        this,
+                        minecraft.player,
+                        slot.slotNumber,
+                        slot.getStack(),
+                        slot.getSlotStackLimit()
+                    ));
+                }
             }
         } else if (valid && slot instanceof FluidFilterSlot && slot.isEnabled() && ((FluidFilterSlot) slot).isSizeAllowed()) {
             FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
@@ -202,7 +207,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
     }
 
-    public GuiCheckBox addCheckBox(int x, int y, String text, boolean checked, Button.IPressable onPress) {
+    public CheckBoxWidget addCheckBox(int x, int y, String text, boolean checked, Button.IPressable onPress) {
         CheckBoxWidget checkBox = new CheckBoxWidget(x, y, text, checked, onPress);
 
         this.addButton(checkBox);

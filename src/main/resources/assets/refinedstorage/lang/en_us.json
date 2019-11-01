@@ -84,6 +84,8 @@
   "gui.refinedstorage.security_manager.permission.5.tooltip": "Ability to change security options",
   "gui.refinedstorage.storage_monitor": "Storage Monitor",
   "gui.refinedstorage.crafter_manager": "Crafter Manager",
+  "gui.refinedstorage.input_configuration": "Input configuration",
+  "gui.refinedstorage.input_configuration.apply": "Apply",
   "misc.refinedstorage.energy_stored": "%d / %d FE",
   "misc.refinedstorage.energy_usage": "Usage: %d FE/t",
   "misc.refinedstorage.energy_usage_minimal": "%d FE/t",

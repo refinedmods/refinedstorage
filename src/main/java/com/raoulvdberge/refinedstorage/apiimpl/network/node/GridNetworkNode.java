@@ -160,6 +160,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private int tabPage = 0;
 
     private boolean exactPattern = true;
+    private List<Set<ResourceLocation>> allowedTagsPerSlot = new ArrayList<>();
     private boolean processingPattern = false;
     private int processingType = IType.ITEMS;
 
@@ -167,6 +168,10 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         super(world, pos);
 
         this.type = type;
+
+        for (int i = 0; i < 9; ++i) {
+            allowedTagsPerSlot.add(new HashSet<>());
+        }
     }
 
     @Override
