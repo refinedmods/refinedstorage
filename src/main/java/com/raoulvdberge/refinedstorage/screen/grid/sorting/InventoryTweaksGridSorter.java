@@ -3,10 +3,7 @@ package com.raoulvdberge.refinedstorage.screen.grid.sorting;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
 
-// TODO
-public class InvTweaksGridSorter implements IGridSorter {
-    public static final String MOD_ID = "inventorytweaks";
-
+public class InventoryTweaksGridSorter implements IGridSorter {
     @Override
     public boolean isApplicable(IGrid grid) {
         return false;
@@ -44,5 +41,4 @@ public class InvTweaksGridSorter implements IGridSorter {
 
         return 0;
     }*/
-
 }

@@ -547,7 +547,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         sorters.add(new QuantityGridSorter());
         sorters.add(new IdGridSorter());
         sorters.add(new LastModifiedGridSorter());
-        sorters.add(new InvTweaksGridSorter());
+        sorters.add(new InventoryTweaksGridSorter());
 
         return sorters;
     }

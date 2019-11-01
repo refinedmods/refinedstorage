@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.screen.widget.sidebutton;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.raoulvdberge.refinedstorage.integration.inventorytweaks.InventoryTweaksIntegration;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -45,7 +46,7 @@ public class GridSortingTypeSideButton extends SideButton {
         } else if (type == IGrid.SORTING_TYPE_ID) {
             type = IGrid.SORTING_TYPE_LAST_MODIFIED;
         } else if (type == GridNetworkNode.SORTING_TYPE_LAST_MODIFIED) {
-            if (grid.getGridType() == GridType.FLUID || /* TODO !Loader.isModLoaded(GridSorterInventoryTweaks.MOD_ID)*/false) {
+            if (grid.getGridType() == GridType.FLUID || !InventoryTweaksIntegration.isLoaded()) {
                 type = IGrid.SORTING_TYPE_QUANTITY;
             } else {
                 type = IGrid.SORTING_TYPE_INVENTORYTWEAKS;
