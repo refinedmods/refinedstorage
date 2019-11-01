@@ -32,6 +32,7 @@ import com.raoulvdberge.refinedstorage.block.*;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.container.*;
 import com.raoulvdberge.refinedstorage.container.factory.*;
+import com.raoulvdberge.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.raoulvdberge.refinedstorage.item.*;
 import com.raoulvdberge.refinedstorage.item.blockitem.*;
 import com.raoulvdberge.refinedstorage.loottable.ControllerLootFunctionSerializer;
@@ -134,6 +135,10 @@ public class CommonSetup {
         LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());
         LootFunctionManager.registerFunction(new CrafterLootFunctionSerializer());
         LootFunctionManager.registerFunction(new ControllerLootFunctionSerializer());
+
+        if (CraftingTweaksIntegration.isLoaded()) {
+            CraftingTweaksIntegration.register();
+        }
     }
 
     private INetworkNode readAndReturn(CompoundNBT tag, NetworkNode node) {

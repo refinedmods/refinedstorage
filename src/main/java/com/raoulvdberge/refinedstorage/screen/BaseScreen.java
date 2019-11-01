@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
+import com.raoulvdberge.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButton;
@@ -73,8 +74,13 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         super.init();
 
-        buttons.clear();
-        children.clear();
+        if (CraftingTweaksIntegration.isLoaded()) {
+            buttons.removeIf(b -> !CraftingTweaksIntegration.isCraftingTweaksClass(b.getClass()));
+            children.removeIf(c -> !CraftingTweaksIntegration.isCraftingTweaksClass(c.getClass()));
+        } else {
+            buttons.clear();
+            children.clear();
+        }
 
         sideButtonY = 6;
 
