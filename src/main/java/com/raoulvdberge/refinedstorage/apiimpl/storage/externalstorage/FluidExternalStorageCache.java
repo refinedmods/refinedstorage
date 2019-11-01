@@ -50,7 +50,7 @@ public class FluidExternalStorageCache {
             if (actual.isEmpty() && !cached.isEmpty()) { // REMOVED
                 network.getFluidStorageCache().remove(cached, cached.getAmount(), true);
 
-                cache.set(i, null);
+                cache.set(i, FluidStack.EMPTY);
             } else if (!actual.isEmpty() && cached.isEmpty()) { // ADDED
                 network.getFluidStorageCache().add(actual, actual.getAmount(), false, true);
 
