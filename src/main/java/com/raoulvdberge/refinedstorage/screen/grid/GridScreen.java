@@ -115,7 +115,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         addButton(searchField);
 
-        if (grid.getGridType() != GridType.FLUID && grid.getViewType() != -1) {
+        if (grid.getViewType() != -1) {
             addSideButton(new GridViewTypeSideButton(this, grid));
         }
 

@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.grid.filtering;
 
 import com.raoulvdberge.refinedstorage.screen.grid.stack.IGridStack;
-import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
 
 import java.util.function.Predicate;
 
@@ -14,7 +13,10 @@ public class CraftableGridFilter implements Predicate<IGridStack> {
 
     @Override
     public boolean test(IGridStack stack) {
-        // TODO Make working with fluids.
-        return stack instanceof ItemGridStack && stack.isCraftable() == craftable;
+        if (craftable) {
+            return stack.isCraftable();
+        } else {
+            return !stack.isCraftable() && stack.getOtherId() == null;
+        }
     }
 }

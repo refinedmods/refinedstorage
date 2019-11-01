@@ -58,8 +58,12 @@ public abstract class BaseGridView implements IGridView {
             while (it.hasNext()) {
                 IGridStack stack = it.next();
 
-                // TODO Make working with grid sorting mode.
-                if (stack.isCraftable() &&
+                // If this is a crafting stack,
+                // and there is a regular matching stack in the view too,
+                // and we aren't in "view only craftables" mode,
+                // we don't want the duplicate stacks and we will remove this stack.
+                if (screen.getGrid().getViewType() != IGrid.VIEW_TYPE_CRAFTABLES &&
+                    stack.isCraftable() &&
                     stack.getOtherId() != null &&
                     map.containsKey(stack.getOtherId())) {
                     it.remove();
