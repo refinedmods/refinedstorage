@@ -134,7 +134,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                             Collections.singletonList(new ErrorCraftingPreviewElement(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())),
                             id,
                             quantity,
-                            false
+                            true
                         )
                     );
                 } else if (noPreview && !task.hasMissing()) {
@@ -148,7 +148,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                             task.getPreviewStacks(),
                             id,
                             quantity,
-                            false
+                            true
                         )
                     );
                 }
