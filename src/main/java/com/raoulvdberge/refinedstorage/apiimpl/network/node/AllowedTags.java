@@ -6,21 +6,23 @@ import net.minecraft.nbt.StringNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class AllowedTags {
-    private static final String NBT_ITEM_TAGS = "ItemTags";
-    private static final String NBT_FLUID_TAGS = "FluidTags";
+    private static final String NBT_ALLOWED_ITEM_TAGS = "AllowedItemTags";
+    private static final String NBT_ALLOWED_FLUID_TAGS = "AllowedFluidTags";
 
     private List<Set<ResourceLocation>> allowedItemTags = new ArrayList<>();
     private List<Set<ResourceLocation>> allowedFluidTags = new ArrayList<>();
 
-    private Runnable listener;
+    @Nullable
+    private final Runnable listener;
 
-    public AllowedTags(Runnable listener) {
+    public AllowedTags(@Nullable Runnable listener) {
         for (int i = 0; i < 9; ++i) {
             allowedItemTags.add(new HashSet<>());
             allowedFluidTags.add(new HashSet<>());
@@ -32,19 +34,19 @@ public class AllowedTags {
     public CompoundNBT writeToNbt() {
         CompoundNBT tag = new CompoundNBT();
 
-        tag.put(NBT_ITEM_TAGS, getList(allowedItemTags));
-        tag.put(NBT_FLUID_TAGS, getList(allowedFluidTags));
+        tag.put(NBT_ALLOWED_ITEM_TAGS, getList(allowedItemTags));
+        tag.put(NBT_ALLOWED_FLUID_TAGS, getList(allowedFluidTags));
 
         return tag;
     }
 
     public void readFromNbt(CompoundNBT tag) {
-        if (tag.contains(NBT_ITEM_TAGS)) {
-            applyList(allowedItemTags, tag.getList(NBT_ITEM_TAGS, Constants.NBT.TAG_LIST));
+        if (tag.contains(NBT_ALLOWED_ITEM_TAGS)) {
+            applyList(allowedItemTags, tag.getList(NBT_ALLOWED_ITEM_TAGS, Constants.NBT.TAG_LIST));
         }
 
-        if (tag.contains(NBT_FLUID_TAGS)) {
-            applyList(allowedFluidTags, tag.getList(NBT_FLUID_TAGS, Constants.NBT.TAG_LIST));
+        if (tag.contains(NBT_ALLOWED_FLUID_TAGS)) {
+            applyList(allowedFluidTags, tag.getList(NBT_ALLOWED_FLUID_TAGS, Constants.NBT.TAG_LIST));
         }
     }
 
@@ -82,21 +84,31 @@ public class AllowedTags {
 
     public void setAllowedItemTags(List<Set<ResourceLocation>> allowedItemTags) {
         this.allowedItemTags = allowedItemTags;
-        this.listener.run();
+
+        notifyListener();
     }
 
     public void setAllowedFluidTags(List<Set<ResourceLocation>> allowedFluidTags) {
         this.allowedFluidTags = allowedFluidTags;
-        this.listener.run();
+
+        notifyListener();
     }
 
     public void clearItemTags(int slot) {
         this.allowedItemTags.get(slot).clear();
-        this.listener.run();
+
+        notifyListener();
     }
 
     public void clearFluidTags(int slot) {
         this.allowedFluidTags.get(slot).clear();
-        this.listener.run();
+
+        notifyListener();
+    }
+
+    private void notifyListener() {
+        if (listener != null) {
+            listener.run();
+        }
     }
 }

@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.AllowedTags;
 import com.raoulvdberge.refinedstorage.render.tesr.PatternItemStackTileRenderer;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
@@ -29,6 +31,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PatternItem extends Item implements ICraftingPatternProvider {
@@ -41,6 +44,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     private static final String NBT_FLUID_OUTPUT_SLOT = "FluidOutput_%d";
     private static final String NBT_EXACT = "Exact";
     private static final String NBT_PROCESSING = "Processing";
+    private static final String NBT_ALLOWED_TAGS = "AllowedTags";
 
     private static final int VERSION = 1;
 
@@ -66,10 +70,11 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             return;
         }
 
-        ICraftingPattern pattern = fromCache(world, stack);
+        CraftingPattern pattern = fromCache(world, stack);
 
         Style yellow = new Style().setColor(TextFormatting.YELLOW);
         Style blue = new Style().setColor(TextFormatting.BLUE);
+        Style aqua = new Style().setColor(TextFormatting.AQUA);
         Style red = new Style().setColor(TextFormatting.RED);
 
         if (pattern.isValid()) {
@@ -84,6 +89,32 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
             RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
             RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidOutputs());
+
+            if (pattern.getAllowedTags() != null) {
+                for (int i = 0; i < pattern.getAllowedTags().getAllowedItemTags().size(); ++i) {
+                    Set<ResourceLocation> allowedTags = pattern.getAllowedTags().getAllowedItemTags().get(i);
+
+                    for (ResourceLocation tag : allowedTags) {
+                        tooltip.add(new TranslationTextComponent(
+                            "misc.refinedstorage.pattern.allowed_item_tag",
+                            tag.toString(),
+                            pattern.getInputs().get(i).get(0).getDisplayName()
+                        ).setStyle(aqua));
+                    }
+                }
+
+                for (int i = 0; i < pattern.getAllowedTags().getAllowedFluidTags().size(); ++i) {
+                    Set<ResourceLocation> allowedTags = pattern.getAllowedTags().getAllowedFluidTags().get(i);
+
+                    for (ResourceLocation tag : allowedTags) {
+                        tooltip.add(new TranslationTextComponent(
+                            "misc.refinedstorage.pattern.allowed_fluid_tag",
+                            tag.toString(),
+                            pattern.getFluidInputs().get(i).get(0).getDisplayName()
+                        ).setStyle(aqua));
+                    }
+                }
+            }
 
             if (isExact(stack)) {
                 tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.exact").setStyle(blue));
@@ -200,7 +231,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static boolean isExact(ItemStack pattern) {
         if (!pattern.hasTag() || !pattern.getTag().contains(NBT_EXACT)) {
-            return true;
+            return false;
         }
 
         return pattern.getTag().getBoolean(NBT_EXACT);
@@ -220,5 +251,26 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         }
 
         pattern.getTag().putInt(NBT_VERSION, VERSION);
+    }
+
+    public static void setAllowedTags(ItemStack pattern, AllowedTags allowedTags) {
+        if (!pattern.hasTag()) {
+            pattern.setTag(new CompoundNBT());
+        }
+
+        pattern.getTag().put(NBT_ALLOWED_TAGS, allowedTags.writeToNbt());
+    }
+
+    @Nullable
+    public static AllowedTags getAllowedTags(ItemStack pattern) {
+        if (!pattern.hasTag() || !pattern.getTag().contains(NBT_ALLOWED_TAGS)) {
+            return null;
+        }
+
+        AllowedTags allowedTags = new AllowedTags(null);
+
+        allowedTags.readFromNbt(pattern.getTag().getCompound(NBT_ALLOWED_TAGS));
+
+        return allowedTags;
     }
 }

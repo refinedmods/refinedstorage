@@ -433,8 +433,13 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
             PatternItem.setToCurrentVersion(pattern);
-            PatternItem.setExact(pattern, exactPattern);
             PatternItem.setProcessing(pattern, processingPattern);
+
+            if (!processingPattern) {
+                PatternItem.setExact(pattern, exactPattern);
+            } else {
+                PatternItem.setAllowedTags(pattern, allowedTags);
+            }
 
             if (processingPattern) {
                 for (int i = 0; i < 18; ++i) {
