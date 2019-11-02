@@ -1,6 +1,8 @@
 # Refined Storage Changelog
 
 ### 1.7
+NOTE: This is an alpha release. Bugs may happen. Remember to take backups.
+
 - Port to Minecraft 1.14 (raoulvdberge)
 - Removed the Reader and Writer (raoulvdberge)
 - Removed covers (raoulvdberge)
