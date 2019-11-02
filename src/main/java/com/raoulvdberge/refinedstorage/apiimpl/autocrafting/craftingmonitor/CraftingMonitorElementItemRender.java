@@ -61,12 +61,6 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
 
         int yy = y + 7;
 
-        if (stored > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.stored", stored));
-
-            yy += 7;
-        }
-
         if (missing > 0) {
             drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.missing", missing));
 
@@ -87,6 +81,12 @@ public class CraftingMonitorElementItemRender implements ICraftingMonitorElement
 
         if (crafting > 0) {
             drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.crafting", crafting));
+
+            yy += 7;
+        }
+
+        if (stored > 0) {
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage:crafting_monitor.stored", stored));
         }
 
         GlStateManager.popMatrix();

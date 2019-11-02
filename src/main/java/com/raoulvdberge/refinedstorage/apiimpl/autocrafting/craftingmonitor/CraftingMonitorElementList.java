@@ -7,7 +7,9 @@ import java.util.*;
 
 public class CraftingMonitorElementList implements ICraftingMonitorElementList {
     private List<ICraftingMonitorElement> elements = new LinkedList<>();
-    private Map<String, Map<Integer, ICraftingMonitorElement>> currentLists = new LinkedHashMap<>();
+    private Map<String, Map<Integer, ICraftingMonitorElement>> currentCraftingLists = new LinkedHashMap<>();
+    private Map<String, Map<Integer, ICraftingMonitorElement>> currentProcessingLists = new LinkedHashMap<>();
+    private Map<String, Map<Integer, ICraftingMonitorElement>> currentStorageLists = new LinkedHashMap<>();
 
     @Override
     public void directAdd(ICraftingMonitorElement element) {
@@ -15,34 +17,72 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
     }
 
     @Override
-    public void add(ICraftingMonitorElement element) {
-        Map<Integer, ICraftingMonitorElement> currentElements = currentLists.get(element.getId());
+    public void addStorage(ICraftingMonitorElement element) {
+        Map<Integer, ICraftingMonitorElement> craftingElements = currentCraftingLists.get(element.getId());
+        Map<Integer, ICraftingMonitorElement> processingElements = currentProcessingLists.get(element.getId());
+        Map<Integer, ICraftingMonitorElement> storedElements = currentStorageLists.get(element.getId());
+        boolean merged = false;
+        if (craftingElements != null) {
+            ICraftingMonitorElement existingElement = craftingElements.get(element.elementHashCode());
+            if (existingElement != null) {
+                existingElement.merge(element);
+                merged = true;
+            }
+        }
+        if (processingElements != null) {
+            ICraftingMonitorElement existingElement = processingElements.get(element.elementHashCode());
+            if (existingElement != null) {
+                existingElement.merge(element);
+                merged = true;
+            }
+        }
+        if (!merged) {
+            if (storedElements == null) {
+                storedElements = new HashMap<>();
+            }
+            storedElements.put(element.elementHashCode(), element);
+            currentStorageLists.put(element.getId(), storedElements);
+        }
+    }
+
+    @Override
+    public void add(ICraftingMonitorElement element, boolean isProcessing) {
+        Map<Integer, ICraftingMonitorElement> currentElements = isProcessing ? currentProcessingLists.get(element.getId()) : currentCraftingLists.get(element.getId());
 
         if (currentElements == null) {
-            currentElements = new HashMap<>();
+            currentElements = new LinkedHashMap<>();
         }
 
-        ICraftingMonitorElement exitingElement = currentElements.get(element.elementHashCode());
+        ICraftingMonitorElement existingElement = currentElements.get(element.elementHashCode());
 
-        if (exitingElement == null) {
-            exitingElement = element;
+        if (existingElement == null) {
+            existingElement = element;
         } else {
-            exitingElement.merge(element);
+            existingElement.merge(element);
         }
 
-        currentElements.put(exitingElement.elementHashCode(), exitingElement);
-        currentLists.put(exitingElement.getId(), currentElements);
+        currentElements.put(existingElement.elementHashCode(), existingElement);
+        if (isProcessing) {
+            currentProcessingLists.put(existingElement.getId(), currentElements);
+        } else {
+            currentCraftingLists.put(existingElement.getId(), currentElements);
+        }
+
     }
 
     @Override
     public void commit() {
-        currentLists.values().stream().map(Map::values).flatMap(Collection::stream).forEach(elements::add);
-        currentLists.clear();
+        currentCraftingLists.values().stream().map(Map::values).flatMap(Collection::stream).forEach(elements::add);
+        currentCraftingLists.clear();
+        currentProcessingLists.values().stream().map(Map::values).flatMap(Collection::stream).forEach(elements::add);
+        currentProcessingLists.clear();
+        currentStorageLists.values().stream().map(Map::values).flatMap(Collection::stream).forEach(elements::add);
+        currentStorageLists.clear();
     }
 
     @Override
     public List<ICraftingMonitorElement> getElements() {
-        if (!currentLists.isEmpty()) {
+        if (!currentCraftingLists.isEmpty() || !currentProcessingLists.isEmpty() || !currentStorageLists.isEmpty()) {
             commit();
         }
 
