@@ -74,6 +74,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
     private static final String NBT_PROCESSING_TYPE = "ProcessingType";
     private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
+    private static final String NBT_ALLOWED_TAGS = "AllowedTags";
 
     private final AllowedTags allowedTags = new AllowedTags(this::updateAllowedTags);
 
@@ -189,6 +190,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     }
 
     private void updateAllowedTags() {
+        markDirty();
+
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof GridTile) {
@@ -608,6 +611,10 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     public void read(CompoundNBT tag) {
         super.read(tag);
 
+        if (tag.contains(NBT_ALLOWED_TAGS)) {
+            allowedTags.readFromNbt(tag.getCompound(NBT_ALLOWED_TAGS));
+        }
+
         reading = true;
 
         StackUtils.readItems(matrix, 0, tag);
@@ -638,6 +645,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
+
+        tag.put(NBT_ALLOWED_TAGS, allowedTags.writeToNbt());
 
         StackUtils.writeItems(matrix, 0, tag);
         StackUtils.writeItems(patterns, 1, tag);
