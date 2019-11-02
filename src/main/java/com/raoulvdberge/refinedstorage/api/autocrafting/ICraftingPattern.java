@@ -32,11 +32,6 @@ public interface ICraftingPattern {
     boolean isProcessing();
 
     /**
-     * @return true if the crafting pattern is in exact mode, false otherwise
-     */
-    boolean isExact();
-
-    /**
      * @return the inputs per slot
      */
     List<NonNullList<ItemStack>> getInputs();

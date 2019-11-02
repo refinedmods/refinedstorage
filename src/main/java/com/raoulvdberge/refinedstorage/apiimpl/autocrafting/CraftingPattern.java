@@ -46,77 +46,19 @@ public class CraftingPattern implements ICraftingPattern {
 
         if (processing) {
             for (int i = 0; i < 9; ++i) {
-                {
-                    ItemStack input = PatternItem.getInputSlot(stack, i);
-
-                    if (input.isEmpty()) {
-                        inputs.add(NonNullList.create());
-                    } else if (!exact) {
-                        NonNullList<ItemStack> possibilities = NonNullList.create();
-
-                        possibilities.add(input.copy());
-
-                        for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(input.getItem())) {
-                            for (Item element : ItemTags.getCollection().get(owningTag).getAllElements()) {
-                                possibilities.add(new ItemStack(element, input.getCount()));
-                            }
-                        }
-
-                        inputs.add(possibilities);
-                    } else {
-                        inputs.add(NonNullList.from(ItemStack.EMPTY, input));
-                    }
-
-                    ItemStack output = PatternItem.getOutputSlot(stack, i);
-                    if (!output.isEmpty()) {
-                        this.valid = true; // As soon as we have one output, we are valid.
-
-                        outputs.add(output);
-                    }
-                }
-
-                {
-                    FluidStack fluidInput = PatternItem.getFluidInputSlot(stack, i);
-                    if (fluidInput.isEmpty()) {
-                        fluidInputs.add(NonNullList.create());
-                    } else if (!exact) {
-                        NonNullList<FluidStack> possibilities = NonNullList.create();
-
-                        possibilities.add(fluidInput.copy());
-
-                        for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(fluidInput.getFluid())) {
-                            for (Fluid element : FluidTags.getCollection().get(owningTag).getAllElements()) {
-                                possibilities.add(new FluidStack(element, fluidInput.getAmount()));
-                            }
-                        }
-
-                        fluidInputs.add(possibilities);
-                    } else {
-                        fluidInputs.add(NonNullList.from(FluidStack.EMPTY, fluidInput));
-                    }
-                }
-
-                FluidStack fluidOutput = PatternItem.getFluidOutputSlot(stack, i);
-                if (!fluidOutput.isEmpty()) {
-                    this.valid = true;
-
-                    fluidOutputs.add(fluidOutput);
-                }
+                initProcessingItems(i);
+                initProcessingFluids(i);
             }
         } else {
             CraftingInventory inv = new DummyCraftingInventory();
 
             for (int i = 0; i < 9; ++i) {
-                ItemStack input = PatternItem.getInputSlot(stack, i);
-
-                inputs.add(input.isEmpty() ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
-
-                inv.setInventorySlotContents(i, input);
+                initCraftingItemInputs(inv, i);
             }
 
-            Optional<ICraftingRecipe> potentialRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inv, world);
-            if (potentialRecipe.isPresent()) {
-                this.recipe = potentialRecipe.get();
+            Optional<ICraftingRecipe> foundRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inv, world);
+            if (foundRecipe.isPresent()) {
+                this.recipe = foundRecipe.get();
 
                 this.byproducts = recipe.getRemainingItems(inv);
 
@@ -128,18 +70,87 @@ public class CraftingPattern implements ICraftingPattern {
                     outputs.add(output);
 
                     if (!exact) {
-                        if (recipe.getIngredients().size() > 0) {
-                            inputs.clear();
-
-                            for (int i = 0; i < recipe.getIngredients().size(); ++i) {
-                                inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
-                            }
-                        } else {
-                            this.valid = false;
-                        }
+                        modifyCraftingItemInputsToUtiliseTags();
                     }
                 }
             }
+        }
+    }
+
+    private void initProcessingItems(int i) {
+        ItemStack input = PatternItem.getInputSlot(stack, i);
+
+        if (input.isEmpty()) {
+            inputs.add(NonNullList.create());
+        } else if (!exact) {
+            NonNullList<ItemStack> possibilities = NonNullList.create();
+
+            possibilities.add(input.copy());
+
+            for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(input.getItem())) {
+                for (Item element : ItemTags.getCollection().get(owningTag).getAllElements()) {
+                    possibilities.add(new ItemStack(element, input.getCount()));
+                }
+            }
+
+            inputs.add(possibilities);
+        } else {
+            inputs.add(NonNullList.from(ItemStack.EMPTY, input));
+        }
+
+        ItemStack output = PatternItem.getOutputSlot(stack, i);
+        if (!output.isEmpty()) {
+            this.valid = true;
+
+            outputs.add(output);
+        }
+    }
+
+    private void initProcessingFluids(int i) {
+        FluidStack fluidInput = PatternItem.getFluidInputSlot(stack, i);
+        if (fluidInput.isEmpty()) {
+            fluidInputs.add(NonNullList.create());
+        } else if (!exact) {
+            NonNullList<FluidStack> possibilities = NonNullList.create();
+
+            possibilities.add(fluidInput.copy());
+
+            for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(fluidInput.getFluid())) {
+                for (Fluid element : FluidTags.getCollection().get(owningTag).getAllElements()) {
+                    possibilities.add(new FluidStack(element, fluidInput.getAmount()));
+                }
+            }
+
+            fluidInputs.add(possibilities);
+        } else {
+            fluidInputs.add(NonNullList.from(FluidStack.EMPTY, fluidInput));
+        }
+
+        FluidStack fluidOutput = PatternItem.getFluidOutputSlot(stack, i);
+        if (!fluidOutput.isEmpty()) {
+            this.valid = true;
+
+            fluidOutputs.add(fluidOutput);
+        }
+    }
+
+    private void initCraftingItemInputs(CraftingInventory inv, int i) {
+        ItemStack input = PatternItem.getInputSlot(stack, i);
+
+        inputs.add(input.isEmpty() ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
+
+        inv.setInventorySlotContents(i, input);
+    }
+
+    private void modifyCraftingItemInputsToUtiliseTags() {
+        if (recipe.getIngredients().size() > 0) {
+            inputs.clear();
+
+            for (int i = 0; i < recipe.getIngredients().size(); ++i) {
+                inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
+            }
+        } else {
+            this.valid = false;
         }
     }
 
@@ -161,11 +172,6 @@ public class CraftingPattern implements ICraftingPattern {
     @Override
     public boolean isProcessing() {
         return processing;
-    }
-
-    @Override
-    public boolean isExact() {
-        return exact;
     }
 
     @Override
@@ -255,7 +261,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public boolean canBeInChainWith(ICraftingPattern other) {
-        if (other.isProcessing() != processing || other.isExact() != exact) {
+        if (other.isProcessing() != processing) {
             return false;
         }
 
