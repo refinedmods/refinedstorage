@@ -4,7 +4,8 @@
 NOTE: This is an alpha release. Bugs may happen. Remember to take backups.
 
 - Port to Minecraft 1.14 (raoulvdberge)
-- Removed the Reader and Writer (raoulvdberge)
+- Removed the Reader and Writer, this will return later in an addon mod (raoulvdberge)
+- Removed cross dimensional functionality on the Network Transmitter for the moment, this will return later (raoulvdberge)
 - Removed covers (raoulvdberge)
 - Fixed the Fluid Grid not having a View type setting (raoulvdberge)
 - Oredict mode for Patterns has been replaced with "Exact mode" (by default on). When exact mode is off, Refined Storage will use equivalent items or fluids from the Minecraft item/fluid tag system (raoulvdberge)
