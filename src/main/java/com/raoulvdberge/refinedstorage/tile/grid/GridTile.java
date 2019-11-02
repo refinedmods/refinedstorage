@@ -7,10 +7,12 @@ import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
 import com.raoulvdberge.refinedstorage.tile.NetworkNodeTile;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.util.GridUtils;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -20,6 +22,9 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class GridTile extends NetworkNodeTile<GridNetworkNode> {
     public static final TileDataParameter<Integer, GridTile> VIEW_TYPE = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getViewType(), (t, v) -> {
@@ -73,6 +78,14 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
     public static final TileDataParameter<Integer, GridTile> PROCESSING_TYPE = IType.createParameter((initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
 
+    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_ITEM_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTags().getAllowedItemTags(), (t, v) -> {
+        t.getNode().getAllowedTags().setAllowedItemTags(v);
+    });
+
+    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_FLUID_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTags().getAllowedFluidTags(), (t, v) -> {
+        t.getNode().getAllowedTags().setAllowedFluidTags(v);
+    });
+
     public static void trySortGrid(boolean initial) {
         if (!initial) {
             BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
@@ -98,6 +111,8 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
         dataManager.addWatchedParameter(EXACT_PATTERN);
         dataManager.addWatchedParameter(PROCESSING_PATTERN);
         dataManager.addWatchedParameter(PROCESSING_TYPE);
+        dataManager.addParameter(ALLOWED_ITEM_TAGS);
+        dataManager.addParameter(ALLOWED_FLUID_TAGS);
     }
 
     @Override

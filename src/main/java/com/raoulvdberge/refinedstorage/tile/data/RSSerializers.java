@@ -9,9 +9,7 @@ import net.minecraft.network.datasync.IDataSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public final class RSSerializers {
     public static final IDataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new IDataSerializer<List<ClientNode>>() {
@@ -140,6 +138,49 @@ public final class RSSerializers {
 
         @Override
         public Optional<ResourceLocation> copyValue(Optional<ResourceLocation> value) {
+            return value;
+        }
+    };
+
+    public static final IDataSerializer<List<Set<ResourceLocation>>> LIST_OF_SET_SERIALIZER = new IDataSerializer<List<Set<ResourceLocation>>>() {
+        @Override
+        public void write(PacketBuffer buf, List<Set<ResourceLocation>> value) {
+            buf.writeInt(value.size());
+
+            for (Set<ResourceLocation> values : value) {
+                buf.writeInt(values.size());
+
+                values.forEach(buf::writeResourceLocation);
+            }
+        }
+
+        @Override
+        public List<Set<ResourceLocation>> read(PacketBuffer buf) {
+            List<Set<ResourceLocation>> value = new ArrayList<>();
+
+            int size = buf.readInt();
+            for (int i = 0; i < size; ++i) {
+                int setSize = buf.readInt();
+
+                Set<ResourceLocation> values = new HashSet<>();
+
+                for (int j = 0; j < setSize; ++j) {
+                    values.add(buf.readResourceLocation());
+                }
+
+                value.add(values);
+            }
+
+            return value;
+        }
+
+        @Override
+        public DataParameter<List<Set<ResourceLocation>>> createKey(int id) {
+            return null;
+        }
+
+        @Override
+        public List<Set<ResourceLocation>> copyValue(List<Set<ResourceLocation>> value) {
             return value;
         }
     };

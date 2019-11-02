@@ -177,7 +177,13 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         if (valid && slot instanceof FilterSlot && slot.isEnabled() && ((FilterSlot) slot).isSizeAllowed()) {
             if (!slot.getStack().isEmpty()) {
                 if (hasControlDown()) {
-                    minecraft.displayGuiScreen(new InputConfigurationScreen(this, minecraft.player, new TranslationTextComponent("gui.refinedstorage.input_configuration"), slot.getStack()));
+                    minecraft.displayGuiScreen(new InputConfigurationScreen(
+                        this,
+                        minecraft.player,
+                        new TranslationTextComponent("gui.refinedstorage.input_configuration"),
+                        slot.getStack(),
+                        slot.getSlotIndex()
+                    ));
                 } else {
                     minecraft.displayGuiScreen(new AmountScreen(
                         this,
@@ -192,13 +198,23 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
             FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
             if (!stack.isEmpty()) {
-                minecraft.displayGuiScreen(new FluidAmountScreen(
-                    this,
-                    minecraft.player,
-                    slot.slotNumber,
-                    stack,
-                    ((FluidFilterSlot) slot).getFluidInventory().getMaxAmount()
-                ));
+                if (hasControlDown()) {
+                    minecraft.displayGuiScreen(new InputConfigurationScreen(
+                        this,
+                        minecraft.player,
+                        new TranslationTextComponent("gui.refinedstorage.input_configuration"),
+                        stack,
+                        slot.getSlotIndex()
+                    ));
+                } else {
+                    minecraft.displayGuiScreen(new FluidAmountScreen(
+                        this,
+                        minecraft.player,
+                        slot.slotNumber,
+                        stack,
+                        ((FluidFilterSlot) slot).getFluidInventory().getMaxAmount()
+                    ));
+                }
             } else {
                 super.handleMouseClick(slot, slotId, mouseButton, type);
             }

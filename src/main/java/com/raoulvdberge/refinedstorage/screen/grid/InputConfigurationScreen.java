@@ -2,70 +2,125 @@ package com.raoulvdberge.refinedstorage.screen.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.InputConfigurationContainer;
+import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class InputConfigurationScreen extends BaseScreen {
     private final Screen parent;
     private final List<Line> lines = new ArrayList<>();
     private final ScrollbarWidget scrollbar;
 
-    private final ItemStack stack;
+    private final int type;
+    private final int slot;
 
-    public InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title, ItemStack stack) {
+    private final ItemStack item;
+    private final FluidStack fluid;
+
+    public InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title, ItemStack item, int slot) {
         super(new InputConfigurationContainer(player), 175, 143, null, title);
 
         this.parent = parent;
 
         this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);
 
-        this.stack = stack;
+        this.type = IType.ITEMS;
+        this.slot = slot;
+        this.item = item;
+        this.fluid = null;
+    }
+
+    public InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title, FluidStack fluid, int slot) {
+        super(new InputConfigurationContainer(player), 175, 143, null, title);
+
+        this.parent = parent;
+
+        this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);
+
+        this.type = IType.FLUIDS;
+        this.slot = slot;
+        this.item = null;
+        this.fluid = fluid;
     }
 
     @Override
     public void onPostInit(int x, int y) {
-        Button apply = addButton(x + 7, y + 114, 50, 20, I18n.format("gui.refinedstorage.input_configuration.apply"), true, true, btn -> close());
+        Button apply = addButton(x + 7, y + 114, 50, 20, I18n.format("gui.refinedstorage.input_configuration.apply"), true, true, btn -> apply());
         addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
 
         lines.clear();
 
-        lines.add(new ItemLine(stack));
+        if (item != null) {
+            lines.add(new ItemLine(item));
 
-        for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(stack.getItem())) {
-            lines.add(new ItemTagLine(owningTag));
+            for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(item.getItem())) {
+                lines.add(new TagLine(owningTag, GridTile.ALLOWED_ITEM_TAGS.getValue().get(slot).contains(owningTag)));
 
-            int itemCount = 0;
+                int itemCount = 0;
 
-            ItemListLine line = new ItemListLine();
+                ItemListLine line = new ItemListLine();
 
-            for (Item item : ItemTags.getCollection().get(owningTag).getAllElements()) {
-                if (itemCount > 0 && itemCount % 7 == 0) {
-                    lines.add(line);
-                    line = new ItemListLine();
+                for (Item item : ItemTags.getCollection().get(owningTag).getAllElements()) {
+                    if (itemCount > 0 && itemCount % 7 == 0) {
+                        lines.add(line);
+                        line = new ItemListLine();
+                    }
+
+                    itemCount++;
+
+                    line.addItem(new ItemStack(item));
                 }
 
-                itemCount++;
-
-                line.addItem(new ItemStack(item));
+                lines.add(line);
             }
+        } else if (fluid != null) {
+            lines.add(new FluidLine(fluid));
 
-            lines.add(line);
+            for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(fluid.getFluid())) {
+                lines.add(new TagLine(owningTag, GridTile.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag)));
+
+                int fluidCount = 0;
+
+                FluidListLine line = new FluidListLine();
+
+                for (Fluid fluid : FluidTags.getCollection().get(owningTag).getAllElements()) {
+                    if (fluidCount > 0 && fluidCount % 7 == 0) {
+                        lines.add(line);
+                        line = new FluidListLine();
+                    }
+
+                    fluidCount++;
+
+                    line.addFluid(new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME));
+                }
+
+                lines.add(line);
+            }
         }
     }
 
@@ -165,6 +220,36 @@ public class InputConfigurationScreen extends BaseScreen {
         minecraft.displayGuiScreen(parent);
     }
 
+    private void apply() {
+        Set<ResourceLocation> allowed = new HashSet<>();
+
+        for (Line line : lines) {
+            if (line instanceof TagLine) {
+                TagLine tagLine = (TagLine) line;
+
+                if (tagLine.widget.isChecked()) {
+                    allowed.add(tagLine.tagName);
+                }
+            }
+        }
+
+        if (type == IType.ITEMS) {
+            List<Set<ResourceLocation>> existing = GridTile.ALLOWED_ITEM_TAGS.getValue();
+
+            existing.set(slot, allowed);
+
+            TileDataManager.setParameter(GridTile.ALLOWED_ITEM_TAGS, existing);
+        } else if (type == IType.FLUIDS) {
+            List<Set<ResourceLocation>> existing = GridTile.ALLOWED_FLUID_TAGS.getValue();
+
+            existing.set(slot, allowed);
+
+            TileDataManager.setParameter(GridTile.ALLOWED_FLUID_TAGS, existing);
+        }
+
+        close();
+    }
+
     private interface Line {
         default void render(int x, int y) {
         }
@@ -190,12 +275,27 @@ public class InputConfigurationScreen extends BaseScreen {
         }
     }
 
-    private class ItemTagLine implements Line {
+    private class FluidLine implements Line {
+        private final FluidStack fluid;
+
+        public FluidLine(FluidStack item) {
+            this.fluid = item;
+        }
+
+        @Override
+        public void render(int x, int y) {
+            FluidRenderer.INSTANCE.render(x + 3, y + 2, fluid);
+            renderString(x + 4 + 19, y + 7, fluid.getDisplayName().getFormattedText());
+        }
+    }
+
+    private class TagLine implements Line {
+        private final ResourceLocation tagName;
         private final CheckBoxWidget widget;
 
-        public ItemTagLine(ResourceLocation tagName) {
-            widget = addCheckBox(-100, -100, RenderUtils.shorten(tagName.toString(), 22), true, (btn) -> {
-
+        public TagLine(ResourceLocation tagName, boolean checked) {
+            this.tagName = tagName;
+            this.widget = addCheckBox(-100, -100, RenderUtils.shorten(tagName.toString(), 22), checked, (btn) -> {
             });
 
             widget.setFGColor(0xFF373737);
@@ -233,6 +333,36 @@ public class InputConfigurationScreen extends BaseScreen {
             for (ItemStack item : items) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
                     InputConfigurationScreen.this.renderTooltip(item, mx, my, RenderUtils.getTooltipFromItem(item));
+                }
+
+                x += 18;
+            }
+        }
+    }
+
+    private class FluidListLine implements Line {
+        private final List<FluidStack> fluids = new ArrayList<>();
+
+        public FluidListLine addFluid(FluidStack stack) {
+            fluids.add(stack);
+
+            return this;
+        }
+
+        @Override
+        public void render(int x, int y) {
+            for (FluidStack fluid : fluids) {
+                FluidRenderer.INSTANCE.render(x + 3, y, fluid);
+
+                x += 18;
+            }
+        }
+
+        @Override
+        public void renderTooltip(int x, int y, int mx, int my) {
+            for (FluidStack fluid : fluids) {
+                if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
+                    InputConfigurationScreen.this.renderTooltip(mx, my, fluid.getDisplayName().getFormattedText());
                 }
 
                 x += 18;

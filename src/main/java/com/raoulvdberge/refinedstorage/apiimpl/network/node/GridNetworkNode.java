@@ -37,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -74,6 +75,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private static final String NBT_PROCESSING_TYPE = "ProcessingType";
     private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
 
+    private final AllowedTags allowedTags = new AllowedTags(this::updateAllowedTags);
+
     private Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
         @Override
         public boolean canInteractWith(PlayerEntity player) {
@@ -90,8 +93,20 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private ICraftingRecipe currentRecipe;
     private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
     private CraftResultInventory result = new CraftResultInventory();
-    private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64).addListener(new NetworkNodeFluidInventoryListener(this));
+    private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2)
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            if (!reading && slot < 9) {
+                allowedTags.clearItemTags(slot);
+            }
+        });
+    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64)
+        .addListener(new NetworkNodeFluidInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            if (!reading && slot < 9) {
+                allowedTags.clearFluidTags(slot);
+            }
+        });
 
     private boolean reading;
 
@@ -160,7 +175,6 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private int tabPage = 0;
 
     private boolean exactPattern = true;
-    private List<Set<ResourceLocation>> allowedTagsPerSlot = new ArrayList<>();
     private boolean processingPattern = false;
     private int processingType = IType.ITEMS;
 
@@ -168,9 +182,18 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         super(world, pos);
 
         this.type = type;
+    }
 
-        for (int i = 0; i < 9; ++i) {
-            allowedTagsPerSlot.add(new HashSet<>());
+    public AllowedTags getAllowedTags() {
+        return allowedTags;
+    }
+
+    private void updateAllowedTags() {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof GridTile) {
+            ((GridTile) tile).getDataManager().sendParameterToWatchers(GridTile.ALLOWED_ITEM_TAGS);
+            ((GridTile) tile).getDataManager().sendParameterToWatchers(GridTile.ALLOWED_FLUID_TAGS);
         }
     }
 
