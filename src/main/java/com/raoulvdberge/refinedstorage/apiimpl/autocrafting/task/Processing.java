@@ -90,13 +90,6 @@ class Processing extends Craft {
         return (totalQuantity - getQuantity()) == finished; // no items are in processing
     }
 
-    int getProcessing(FluidStack stack) {
-        if (fluidsToPut.get(stack) != null) {
-            return fluidsToPut.get(stack).amount * ((totalQuantity - getQuantity()) - finished);
-        }
-        return 0;
-    }
-
     int getScheduled(ItemStack stack) {
         if (itemsToReceiveTotal.get(stack) != null) {
             int scheduled = itemsToReceiveTotal.get(stack).getCount();

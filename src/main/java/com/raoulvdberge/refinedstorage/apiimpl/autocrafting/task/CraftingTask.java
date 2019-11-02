@@ -200,7 +200,7 @@ public class CraftingTask implements ICraftingTask {
             NBTTagCompound compound = new NBTTagCompound();
             compound.setInteger(NBT_FLUID_HASHCODE, entry.getKey());
             compound.setInteger(NBT_PATTERN_HASHCODE, entry.getValue().getPattern().getChainHashCode());
-            expectedItemList.appendTag(compound);
+            expectedFluidList.appendTag(compound);
         }
         tag.setTag(NBT_FLUIDS_TO_EXPECT, expectedFluidList);
 
@@ -1111,7 +1111,7 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public int onTrackedInsert(FluidStack stack, int size) {
-        Set<Processing> set = itemsToExpect.get(API.instance().getFluidStackHashCode(stack));
+        Set<Processing> set = fluidsToExpect.get(API.instance().getFluidStackHashCode(stack));
         if (set != null) {
             for (Processing p : set) {
                 if (p.getFluidsToReceiveTotal().get(stack) == null) {
@@ -1221,9 +1221,8 @@ public class CraftingTask implements ICraftingTask {
                     }
                 }
                 for (FluidStack p : processing.getFluidsToPut().getStacks()) {
-                    int count = processing.getProcessing(p);
-                    if (count != 0) {
-                        ICraftingMonitorElement element = new CraftingMonitorElementFluidRender(p, 0, 0, count, 0, 0);
+                    if (p.amount != 0) {
+                        ICraftingMonitorElement element = new CraftingMonitorElementFluidRender(p, 0, 0, p.amount * processing.getInserted(), 0, 0);
                         elements.add(element, true);
                     }
 
