@@ -9,7 +9,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.*;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -65,7 +64,6 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_MISSING_FLUIDS = "MissingFluids";
     private static final String NBT_TOTAL_STEPS = "TotalSteps";
     private static final String NBT_CURRENT_STEP = "CurrentStep";
-    private static final String NBT_CONTAINER = "Container";
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
 
@@ -209,28 +207,6 @@ public class CraftingTask implements ICraftingTask {
         tag.setTag(NBT_MISSING_FLUIDS, writeFluidStackList(missingFluids));
 
         return tag;
-    }
-
-    static NBTTagList writeContainerList(List<ICraftingPatternContainer> containers) {
-        NBTTagList list = new NBTTagList();
-        for (int i = 0; i < containers.size(); ++i) {
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setLong(NBT_CONTAINER + i, containers.get(i).getPosition().toLong());
-            list.appendTag(tag);
-        }
-        return list;
-    }
-
-    static List<ICraftingPatternContainer> readContainerList(NBTTagList list, World world) {
-        List<ICraftingPatternContainer> containers = new ArrayList<>();
-
-        for (int i = 0; i < list.tagCount(); ++i) {
-            INetworkNodeProxy node = (INetworkNodeProxy) world.getTileEntity(BlockPos.fromLong(list.getCompoundTagAt(i).getLong(NBT_CONTAINER + i)));
-            if (node != null) {
-                containers.add((ICraftingPatternContainer) node.getNode());
-            }
-        }
-        return containers;
     }
 
     static NBTTagList writeItemStackList(IStackList<ItemStack> stacks) {
@@ -634,24 +610,11 @@ public class CraftingTask implements ICraftingTask {
 
     private Craft createCraft(int quantity, NonNullList<ItemStack> recipe, ICraftingPattern pattern, boolean root) {
         Craft c = crafts.get(pattern.getChainHashCode());
-        if (c != null) {
-            boolean found = false;
-            c.addQuantity(quantity);
-            for (ICraftingPatternContainer container : c.getContainer()) {
-                if (API.instance().isNetworkNodeEqual((INetworkNode) container, pattern.getContainer())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                c.addContainer(pattern.getContainer());
-            }
-
-        } else {
+        if (c == null) {
             c = pattern.isProcessing() ? new Processing(pattern, root) : new Crafting(recipe, pattern, root);
-            c.addQuantity(quantity);
             crafts.put(pattern.getChainHashCode(), c);
         }
+        c.addQuantity(quantity);
         return c;
     }
 
@@ -707,7 +670,7 @@ public class CraftingTask implements ICraftingTask {
             craftsToRemove.add(c);
             return;
         }
-        for (ICraftingPatternContainer container : c.getContainer()) {
+        for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(c.getPattern())) {
             int interval = container.getUpdateInterval();
 
             if (interval < 0) {
@@ -771,7 +734,7 @@ public class CraftingTask implements ICraftingTask {
 
         ProcessingState originalState = p.getState();
 
-        for (ICraftingPatternContainer container : p.getContainer()) {
+        for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(p.getPattern())) {
 
             int interval = container.getUpdateInterval();
             if (interval < 0) {

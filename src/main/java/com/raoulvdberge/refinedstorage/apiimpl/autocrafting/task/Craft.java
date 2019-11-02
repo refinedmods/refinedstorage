@@ -1,15 +1,17 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.Action;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 
 import java.util.*;
@@ -19,7 +21,6 @@ public abstract class Craft {
     private static final String NBT_PATTERN = "Pattern";
     private static final String NBT_ROOT = "Root";
     private static final String NBT_QUANTITY = "Quantity";
-    private static final String NBT_CONTAINERS = "Containers";
     private static final String NBT_Type = "Type";
     private static final String NBT_INGREDIENT_NUMBER = "IngredientNumber";
     private static final String NBT_COUNT_PER_RECIPE = "CountPerRecipe";
@@ -32,14 +33,12 @@ public abstract class Craft {
     private boolean root;
 
     ICraftingPattern pattern;
-    private List<ICraftingPatternContainer> containers = new ArrayList<>();
     private List<ItemStack> defaultSet = new ArrayList<>();
     private Map<Integer, oreDictStorage> itemsToUse = new LinkedHashMap<>();
 
     public Craft(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
         this.pattern = CraftingTask.readPatternFromNbt(tag.getCompoundTag(NBT_PATTERN), network.world());
         this.root = tag.getBoolean(NBT_ROOT);
-        this.containers = CraftingTask.readContainerList(tag.getTagList(NBT_CONTAINERS, Constants.NBT.TAG_COMPOUND), network.world());
         this.quantity = tag.getInteger(NBT_QUANTITY);
 
         NBTTagList list = tag.getTagList(NBT_ITEMS_TO_USE, Constants.NBT.TAG_COMPOUND);
@@ -59,7 +58,6 @@ public abstract class Craft {
     public Craft(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
         this.root = root;
-        this.containers.add(pattern.getContainer());
     }
 
     public void finishCalculation() {
@@ -110,14 +108,6 @@ public abstract class Craft {
         quantity--;
     }
 
-    void addContainer(ICraftingPatternContainer container) {
-        containers.add(container);
-    }
-
-    public List<ICraftingPatternContainer> getContainer() {
-        return containers;
-    }
-
     public ICraftingPattern getPattern() {
         return pattern;
     }
@@ -132,7 +122,6 @@ public abstract class Craft {
         tag.setBoolean(NBT_ROOT, root);
         tag.setInteger(NBT_QUANTITY, quantity);
         tag.setTag(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
-        tag.setTag(NBT_CONTAINERS, CraftingTask.writeContainerList(containers));
         NBTTagList list = new NBTTagList();
         for (Map.Entry<Integer, oreDictStorage> entry : itemsToUse.entrySet()) {
             NBTTagCompound compound = new NBTTagCompound();
@@ -146,15 +135,15 @@ public abstract class Craft {
 
     static class oreDictStorage {
         int countPerRecipe;
-        Map<ItemStack, Integer> stored = new LinkedHashMap<>();
+        Queue<Pair<ItemStack,Integer>> stored = new LinkedList<>();
 
         public void writeToNBT(NBTTagCompound compound) {
             compound.setInteger(NBT_COUNT_PER_RECIPE, countPerRecipe);
             NBTTagList list = new NBTTagList();
-            for (Map.Entry<ItemStack, Integer> entry : stored.entrySet()) {
+            for (Pair<ItemStack,Integer>  pair : stored) {
                 NBTTagCompound compound2 = new NBTTagCompound();
-                compound2.setInteger(NBT_NUMBER_STORED, entry.getValue());
-                compound2.setTag(NBT_ITEM_STORED, StackUtils.serializeStackToNbt(entry.getKey()));
+                compound2.setInteger(NBT_NUMBER_STORED, pair.getValue());
+                compound2.setTag(NBT_ITEM_STORED, StackUtils.serializeStackToNbt(pair.getKey()));
                 list.appendTag(compound2);
             }
             compound.setTag(NBT_OREDICT_ITEM_LIST, list);
@@ -169,24 +158,33 @@ public abstract class Craft {
         }
 
         public void add(ItemStack stack, int count) {
-            stored.merge(stack, count, Integer::sum);
+            boolean exists = false;
+            for( Pair<ItemStack,Integer> pair: stored){
+                if(API.instance().getComparer().isEqualNoQuantity(stack, pair.getLeft())){
+                    pair.setValue(pair.getRight()+count);
+                    exists = true;
+                }
+            }
+            if(!exists){
+                stored.add(new MutablePair<>(stack,count));
+            }
         }
 
         public ItemStack get(int needed, boolean simulate) {
             if (stored.isEmpty()) {
                 throw new IllegalStateException("Craft Requested More items than available");
             }
-            Map.Entry<ItemStack, Integer> entry = stored.entrySet().iterator().next();
-            int contained = entry.getValue();
-            ItemStack toReturn = entry.getKey().copy();
+            Pair<ItemStack,Integer> pair = stored.peek();
+            int contained = pair.getRight();
+            ItemStack toReturn = pair.getLeft().copy();
             if (needed < contained) {
                 if (!simulate) {
-                    stored.replace(entry.getKey(), contained - needed);
+                    pair.setValue(contained-needed);
                 }
                 toReturn.setCount(needed);
             } else {
                 if (!simulate) {
-                    stored.remove(entry.getKey());
+                    stored.remove();
                 }
                 toReturn.setCount(contained);
             }

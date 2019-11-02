@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
@@ -36,6 +35,7 @@ public class CraftingManager implements ICraftingManager {
     private TileController network;
 
     private Map<String, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
+    private Map<Integer, List<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -364,12 +364,24 @@ public class CraftingManager implements ICraftingManager {
 
         for (ICraftingPatternContainer container : containers) {
             this.patterns.addAll(container.getPatterns());
+            container.getPatterns().forEach(pattern -> {
+                List<ICraftingPatternContainer> list = patternToContainer.get(pattern.getChainHashCode());
+                if (list == null) {
+                    list = new ArrayList<>();
+                }
+                list.add(container);
+                patternToContainer.put(pattern.getChainHashCode(),list);
+            });
 
             IItemHandlerModifiable handler = container.getPatternInventory();
             if (handler != null) {
                 this.containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
             }
         }
+    }
+    @Override
+    public List<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern){
+        return patternToContainer.getOrDefault(pattern.getChainHashCode(),new ArrayList<>());
     }
 
     @Nullable

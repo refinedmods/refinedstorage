@@ -78,12 +78,6 @@ public interface ICraftingPattern {
     String getId();
 
     /**
-     * @param other the other pattern
-     * @return true if this pattern chain be in a chain with the other pattern, false otherwise
-     */
-    boolean canBeInChainWith(ICraftingPattern other);
-
-    /**
      * @return the hashcode used to store the pattern chains
      */
     int getChainHashCode();

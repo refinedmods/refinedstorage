@@ -2,7 +2,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
@@ -257,67 +256,6 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public boolean canBeInChainWith(ICraftingPattern other) {
-        if (other.isProcessing() != processing || other.isOredict() != oredict) {
-            return false;
-        }
-
-        if ((other.getInputs().size() != inputs.size()) ||
-            (other.getFluidInputs().size() != fluidInputs.size()) ||
-            (other.getOutputs().size() != outputs.size()) ||
-            (other.getFluidOutputs().size() != fluidOutputs.size())) {
-            return false;
-        }
-
-        if (!processing && other.getByproducts().size() != byproducts.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < inputs.size(); ++i) {
-            List<ItemStack> inputs = this.inputs.get(i);
-            List<ItemStack> otherInputs = other.getInputs().get(i);
-
-            if (inputs.size() != otherInputs.size()) {
-                return false;
-            }
-
-            for (int j = 0; j < inputs.size(); ++j) {
-                if (!API.instance().getComparer().isEqual(inputs.get(j), otherInputs.get(j))) {
-                    return false;
-                }
-            }
-        }
-
-        for (int i = 0; i < fluidInputs.size(); ++i) {
-            if (!API.instance().getComparer().isEqual(fluidInputs.get(i), other.getFluidInputs().get(i), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
-                return false;
-            }
-        }
-
-        for (int i = 0; i < outputs.size(); ++i) {
-            if (!API.instance().getComparer().isEqual(outputs.get(i), other.getOutputs().get(i))) {
-                return false;
-            }
-        }
-
-        for (int i = 0; i < fluidOutputs.size(); ++i) {
-            if (!API.instance().getComparer().isEqual(fluidOutputs.get(i), other.getFluidOutputs().get(i), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
-                return false;
-            }
-        }
-
-        if (!processing) {
-            for (int i = 0; i < byproducts.size(); ++i) {
-                if (!API.instance().getComparer().isEqual(byproducts.get(i), other.getByproducts().get(i))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    @Override
     public int getChainHashCode() {
         int result = 0;
 
@@ -345,7 +283,6 @@ public class CraftingPattern implements ICraftingPattern {
         for (ItemStack byproduct : this.byproducts) {
             result = 31 * result + API.instance().getItemStackHashCode(byproduct);
         }
-
         return result;
     }
 

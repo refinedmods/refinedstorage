@@ -136,6 +136,12 @@ public interface ICraftingManager {
     void rebuild();
 
     /**
+     * @param pattern to search for
+     * @return a list of all container that contain this pattern
+     */
+    List<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern);
+
+    /**
      * Return a crafting pattern from an item stack.
      *
      * @param pattern the stack to get a pattern for
