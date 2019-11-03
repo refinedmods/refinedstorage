@@ -23,9 +23,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class CraftingPattern implements ICraftingPattern {
     private ICraftingPatternContainer container;
@@ -51,8 +49,16 @@ public class CraftingPattern implements ICraftingPattern {
 
         if (processing) {
             for (int i = 0; i < 9; ++i) {
-                initProcessingItems(i);
-                initProcessingFluids(i);
+                // We return false from initProcessingItems/initProcessingFluids if
+                // one of the declared allowed tags no longer exists, or if it is no longer applicable to the item or fluid.
+                // Then here, we return early, making the pattern invalid.
+                if (!initProcessingItems(i)) {
+                    return;
+                }
+
+                if (!initProcessingFluids(i)) {
+                    return;
+                }
             }
         } else {
             CraftingInventory inv = new DummyCraftingInventory();
@@ -87,7 +93,7 @@ public class CraftingPattern implements ICraftingPattern {
         return allowedTags;
     }
 
-    private void initProcessingItems(int i) {
+    private boolean initProcessingItems(int i) {
         ItemStack input = PatternItem.getInputSlot(stack, i);
 
         if (input.isEmpty()) {
@@ -98,9 +104,16 @@ public class CraftingPattern implements ICraftingPattern {
             possibilities.add(input.copy());
 
             if (allowedTags != null) {
-                for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(input.getItem())) {
-                    if (allowedTags.getAllowedItemTags().get(i).contains(owningTag)) {
-                        for (Item element : ItemTags.getCollection().get(owningTag).getAllElements()) {
+                Collection<ResourceLocation> tagsOfItem = ItemTags.getCollection().getOwningTags(input.getItem());
+                Set<ResourceLocation> declaredAllowedTags = allowedTags.getAllowedItemTags().get(i);
+
+                for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
+                    if (!tagsOfItem.contains(declaredAllowedTag)) {
+                        this.valid = false; // valid can be true (L128)
+
+                        return false;
+                    } else {
+                        for (Item element : ItemTags.getCollection().get(declaredAllowedTag).getAllElements()) {
                             possibilities.add(new ItemStack(element, input.getCount()));
                         }
                     }
@@ -116,9 +129,11 @@ public class CraftingPattern implements ICraftingPattern {
 
             outputs.add(output);
         }
+
+        return true;
     }
 
-    private void initProcessingFluids(int i) {
+    private boolean initProcessingFluids(int i) {
         FluidStack input = PatternItem.getFluidInputSlot(stack, i);
         if (input.isEmpty()) {
             fluidInputs.add(NonNullList.create());
@@ -128,9 +143,16 @@ public class CraftingPattern implements ICraftingPattern {
             possibilities.add(input.copy());
 
             if (allowedTags != null) {
-                for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(input.getFluid())) {
-                    if (allowedTags.getAllowedFluidTags().get(i).contains(owningTag)) {
-                        for (Fluid element : FluidTags.getCollection().get(owningTag).getAllElements()) {
+                Collection<ResourceLocation> tagsOfFluid = FluidTags.getCollection().getOwningTags(input.getFluid());
+                Set<ResourceLocation> declaredAllowedTags = allowedTags.getAllowedFluidTags().get(i);
+
+                for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
+                    if (!tagsOfFluid.contains(declaredAllowedTag)) {
+                        this.valid = false; // valid can be true (L165)
+
+                        return false;
+                    } else {
+                        for (Fluid element : FluidTags.getCollection().get(declaredAllowedTag).getAllElements()) {
                             possibilities.add(new FluidStack(element, input.getAmount()));
                         }
                     }
@@ -146,6 +168,8 @@ public class CraftingPattern implements ICraftingPattern {
 
             fluidOutputs.add(output);
         }
+
+        return true;
     }
 
     private void initCraftingItemInputs(CraftingInventory inv, int i) {

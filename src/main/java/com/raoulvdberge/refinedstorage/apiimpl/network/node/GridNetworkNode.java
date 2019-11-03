@@ -152,6 +152,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                         processingMatrix.setStackInSlot(9 + i, PatternItem.getOutputSlot(pattern, i));
                         processingMatrixFluids.setFluid(9 + i, PatternItem.getFluidOutputSlot(pattern, i));
                     }
+
+                    // TODO set alllowed tags
+                    // TODO settings are reset when pattern is created?
                 } else if (!isPatternProcessing && !isProcessingPattern()) {
                     for (int i = 0; i < 9; ++i) {
                         matrix.setInventorySlotContents(i, PatternItem.getInputSlot(pattern, i));
