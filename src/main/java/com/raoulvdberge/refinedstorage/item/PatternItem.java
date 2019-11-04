@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPatternFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.AllowedTags;
 import com.raoulvdberge.refinedstorage.render.tesr.PatternItemStackTileRenderer;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -19,10 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -56,7 +54,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     public static CraftingPattern fromCache(World world, ItemStack stack) {
         if (!CACHE.containsKey(stack)) {
-            CACHE.put(stack, new CraftingPattern(world, null, stack));
+            CACHE.put(stack, CraftingPatternFactory.INSTANCE.create(world, null, stack));
         }
 
         return CACHE.get(stack);
@@ -125,6 +123,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             }
         } else {
             tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").setStyle(red));
+            tooltip.add(new StringTextComponent(pattern.getErrorMessage()).setStyle(new Style().setColor(TextFormatting.GRAY)));
         }
     }
 
@@ -140,7 +139,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     @Override
     @Nonnull
     public ICraftingPattern create(World world, ItemStack stack, ICraftingPatternContainer container) {
-        return new CraftingPattern(world, container, stack);
+        return CraftingPatternFactory.INSTANCE.create(world, container, stack);
     }
 
     public static void setInputSlot(ItemStack pattern, int slot, ItemStack stack) {

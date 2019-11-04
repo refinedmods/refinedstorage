@@ -5,6 +5,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -25,6 +26,12 @@ public interface ICraftingPattern {
      * @return true if the crafting pattern is valid, false otherwise
      */
     boolean isValid();
+
+    /**
+     * @return an error message when this pattern is not valid
+     */
+    @Nullable
+    String getErrorMessage();
 
     /**
      * @return true if the crafting pattern can be treated as a processing pattern, false otherwise
