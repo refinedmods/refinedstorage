@@ -3,13 +3,13 @@ package com.raoulvdberge.refinedstorage.integration.jei;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
 import com.raoulvdberge.refinedstorage.network.grid.GridProcessingTransferMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridTransferMessage;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,18 +26,6 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler {
     public static final long TRANSFER_SCROLLBAR_DELAY_MS = 200;
     public static long LAST_TRANSFER_TIME;
 
-    private static final IRecipeTransferError ERROR_CANNOT_TRANSFER = new IRecipeTransferError() {
-        @Override
-        public Type getType() {
-            return Type.INTERNAL;
-        }
-
-        @Override
-        public void showError(int i, int i1, IRecipeLayout iRecipeLayout, int i2, int i3) {
-
-        }
-    };
-
     @Override
     public Class<? extends Container> getContainerClass() {
         return GridContainer.class;
@@ -50,7 +38,7 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler {
         if (doTransfer) {
             LAST_TRANSFER_TIME = System.currentTimeMillis();
 
-            if (grid.getGridType() == GridType.PATTERN && ((GridNetworkNode) grid).isProcessingPattern()) {
+            if (grid.getGridType() == GridType.PATTERN && !isCraftingRecipe(recipeLayout.getRecipeCategory())) {
                 List<ItemStack> inputs = new LinkedList<>();
                 List<ItemStack> outputs = new LinkedList<>();
 
@@ -88,18 +76,12 @@ public class GridRecipeTransferHandler implements IRecipeTransferHandler {
                     container.inventorySlots.stream().filter(s -> s.inventory instanceof CraftingInventory).collect(Collectors.toList())
                 ));
             }
-        } else {
-            if (grid.getGridType() == GridType.PATTERN && ((GridNetworkNode) grid).isProcessingPattern()) {
-                if (recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
-                    return ERROR_CANNOT_TRANSFER;
-                }
-            } else {
-                if (!recipeLayout.getRecipeCategory().getUid().equals(VanillaRecipeCategoryUid.CRAFTING)) {
-                    return ERROR_CANNOT_TRANSFER;
-                }
-            }
         }
 
         return null;
+    }
+
+    private boolean isCraftingRecipe(IRecipeCategory<?> recipeCategory) {
+        return recipeCategory.getUid().equals(VanillaRecipeCategoryUid.CRAFTING);
     }
 }

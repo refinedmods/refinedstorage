@@ -113,6 +113,9 @@ public class GridProcessingTransferMessage {
 
                         setFluidInputs(handlerFluid, message.fluidInputs);
                         setFluidOutputs(handlerFluid, message.fluidOutputs);
+
+                        ((GridNetworkNode) grid).setProcessingPattern(true);
+                        ((GridNetworkNode) grid).markDirty();
                     }
                 }
             });

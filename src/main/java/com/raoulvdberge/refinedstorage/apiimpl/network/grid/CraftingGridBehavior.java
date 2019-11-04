@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -188,6 +189,11 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                     grid.getCraftingMatrix().setInventorySlotContents(i, possibilities.length == 0 ? ItemStack.EMPTY : possibilities[0]);
                 }
             }
+        }
+
+        if (grid.getGridType() == GridType.PATTERN) {
+            ((GridNetworkNode) grid).setProcessingPattern(false);
+            ((GridNetworkNode) grid).markDirty();
         }
     }
 }
