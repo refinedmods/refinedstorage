@@ -20,7 +20,10 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -123,7 +126,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             }
         } else {
             tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").setStyle(red));
-            tooltip.add(new StringTextComponent(pattern.getErrorMessage()).setStyle(new Style().setColor(TextFormatting.GRAY)));
+            tooltip.add(pattern.getErrorMessage().setStyle(new Style().setColor(TextFormatting.GRAY)));
         }
     }
 

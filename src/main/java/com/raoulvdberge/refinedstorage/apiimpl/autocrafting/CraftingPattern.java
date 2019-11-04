@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -25,7 +26,7 @@ public class CraftingPattern implements ICraftingPattern {
     private final boolean exact;
     private final boolean valid;
     @Nullable
-    private final String errorMessage;
+    private final ITextComponent errorMessage;
     @Nullable
     private final ICraftingRecipe recipe;
     private final List<NonNullList<ItemStack>> inputs;
@@ -36,7 +37,7 @@ public class CraftingPattern implements ICraftingPattern {
     @Nullable
     private final AllowedTags allowedTags;
 
-    public CraftingPattern(ICraftingPatternContainer container, ItemStack stack, boolean processing, boolean exact, @Nullable String errorMessage, boolean valid, @Nullable ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, NonNullList<ItemStack> byproducts, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTags allowedTags) {
+    public CraftingPattern(ICraftingPatternContainer container, ItemStack stack, boolean processing, boolean exact, @Nullable ITextComponent errorMessage, boolean valid, @Nullable ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, NonNullList<ItemStack> byproducts, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTags allowedTags) {
         this.container = container;
         this.stack = stack;
         this.processing = processing;
@@ -74,7 +75,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Nullable
     @Override
-    public String getErrorMessage() {
+    public ITextComponent getErrorMessage() {
         return errorMessage;
     }
 

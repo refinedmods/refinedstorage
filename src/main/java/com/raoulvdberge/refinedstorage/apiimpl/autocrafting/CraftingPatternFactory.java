@@ -13,6 +13,8 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -34,7 +36,7 @@ public class CraftingPatternFactory {
         NonNullList<FluidStack> fluidOutputs = NonNullList.create();
         ICraftingRecipe recipe = null;
         boolean valid = true;
-        String errorMessage = null;
+        ITextComponent errorMessage = null;
 
         try {
             if (processing) {
@@ -44,7 +46,7 @@ public class CraftingPatternFactory {
                 }
 
                 if (outputs.isEmpty() && fluidOutputs.isEmpty()) {
-                    throw new Exception("Processing pattern has no outputs");
+                    throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.processing_no_outputs"));
                 }
             } else {
                 CraftingInventory inv = new CraftingPattern.DummyCraftingInventory();
@@ -68,21 +70,21 @@ public class CraftingPatternFactory {
                             modifyCraftingInputsToUseAlternatives(recipe, inputs);
                         }
                     } else {
-                        throw new Exception("Recipe has no output");
+                        throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.no_output"));
                     }
                 } else {
-                    throw new Exception("Recipe doesn't exist");
+                    throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.recipe_does_not_exist"));
                 }
             }
-        } catch (Exception e) {
+        } catch (CraftingPatternFactoryException e) {
             valid = false;
-            errorMessage = e.getMessage();
+            errorMessage = e.getErrorMessage();
         }
 
         return new CraftingPattern(container, stack, processing, exact, errorMessage, valid, recipe, inputs, outputs, byproducts, fluidInputs, fluidOutputs, allowedTags);
     }
 
-    private void fillProcessingInputs(int i, ItemStack stack, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, @Nullable AllowedTags allowedTags) throws Exception {
+    private void fillProcessingInputs(int i, ItemStack stack, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, @Nullable AllowedTags allowedTags) throws CraftingPatternFactoryException {
         ItemStack input = PatternItem.getInputSlot(stack, i);
 
         if (input.isEmpty()) {
@@ -98,7 +100,13 @@ public class CraftingPatternFactory {
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfItem.contains(declaredAllowedTag)) {
-                        throw new Exception("Tag " + declaredAllowedTag.toString() + " is no longer applicable for " + input.getItem().getRegistryName().toString());
+                        throw new CraftingPatternFactoryException(
+                            new TranslationTextComponent(
+                                "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
+                                declaredAllowedTag.toString(),
+                                input.getDisplayName()
+                            )
+                        );
                     } else {
                         for (Item element : ItemTags.getCollection().get(declaredAllowedTag).getAllElements()) {
                             possibilities.add(new ItemStack(element, input.getCount()));
@@ -116,7 +124,7 @@ public class CraftingPatternFactory {
         }
     }
 
-    private void fillProcessingFluidInputs(int i, ItemStack stack, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTags allowedTags) throws Exception {
+    private void fillProcessingFluidInputs(int i, ItemStack stack, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTags allowedTags) throws CraftingPatternFactoryException {
         FluidStack input = PatternItem.getFluidInputSlot(stack, i);
         if (input.isEmpty()) {
             fluidInputs.add(NonNullList.create());
@@ -131,7 +139,13 @@ public class CraftingPatternFactory {
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfFluid.contains(declaredAllowedTag)) {
-                        throw new Exception("Tag " + declaredAllowedTag.toString() + " is no longer applicable for " + input.getFluid().getRegistryName().toString());
+                        throw new CraftingPatternFactoryException(
+                            new TranslationTextComponent(
+                                "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
+                                declaredAllowedTag.toString(),
+                                input.getDisplayName()
+                            )
+                        );
                     } else {
                         for (Fluid element : FluidTags.getCollection().get(declaredAllowedTag).getAllElements()) {
                             possibilities.add(new FluidStack(element, input.getAmount()));
@@ -157,7 +171,7 @@ public class CraftingPatternFactory {
         inv.setInventorySlotContents(i, input);
     }
 
-    private void modifyCraftingInputsToUseAlternatives(ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs) throws Exception {
+    private void modifyCraftingInputsToUseAlternatives(ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs) throws CraftingPatternFactoryException {
         if (!recipe.getIngredients().isEmpty()) {
             inputs.clear();
 
@@ -165,7 +179,7 @@ public class CraftingPatternFactory {
                 inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
             }
         } else {
-            throw new Exception("Recipe has no ingredients");
+            throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.recipe_no_ingredients"));
         }
     }
 }
