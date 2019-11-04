@@ -108,3 +108,26 @@ jar {
         ])
     }
 }
+
+task apiJar(type: Jar, dependsOn: 'classes') {
+    classifier = 'api'
+    from(sourceSets.main.output) {
+        include 'com/raoulvdberge/refinedstorage/api/**'
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task deobfJar(type:Jar) {
+    from sourceSets.main.output
+    classifier 'deobf'
+}
+
+artifacts {
+    archives sourcesJar
+    archives deobfJar
+    archives apiJar
+}
