@@ -351,6 +351,7 @@ public class CraftingManager implements ICraftingManager {
     public void rebuild() {
         this.patterns.clear();
         this.containerInventories.clear();
+        patternToContainer.clear();
 
         List<ICraftingPatternContainer> containers = new ArrayList<>();
 

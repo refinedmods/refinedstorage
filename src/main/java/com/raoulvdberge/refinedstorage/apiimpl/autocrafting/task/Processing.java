@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
@@ -11,7 +10,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.List;
 
 class Processing extends Craft {
     private static final String NBT_ITEMS_TO_RECEIVE = "ItemsToReceive";
@@ -79,11 +77,9 @@ class Processing extends Craft {
     }
 
     @Override
-    public List<ItemStack> getNextSet(Action action) {
-        if(action == Action.PERFORM){
-            inserted++;
-        }
-        return super.getNextSet(action);
+    public void nextSet() {
+        super.nextSet();
+        inserted++;
     }
 
     boolean isNothingProcessing() {

@@ -440,7 +440,7 @@ public class CraftingTask implements ICraftingTask {
 
                     fromSelf = results.get(possibleInput.getLeft());
 
-                    craft.addToItemSets(possibleInput.getLeft(), toTake, entry.getValue(), IngredientNumber);
+                    craft.addToOredictLists(possibleInput.getLeft(), toTake, entry.getValue(), IngredientNumber);
                 }
                 if (fromNetwork != null && remaining > 0) {
                     int toTake = Math.min(remaining, fromNetwork.getCount());
@@ -457,7 +457,7 @@ public class CraftingTask implements ICraftingTask {
 
                     fromNetwork = mutatedStorage.get(possibleInput.getLeft());
 
-                    craft.addToItemSets(possibleInput.getLeft(), toTake, entry.getValue(), IngredientNumber);
+                    craft.addToOredictLists(possibleInput.getLeft(), toTake, entry.getValue(), IngredientNumber);
                 }
                 if (remaining > 0) {
                     ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput.getLeft());
@@ -680,16 +680,15 @@ public class CraftingTask implements ICraftingTask {
             if (interval == 0 || ticks % interval == 0) {
 
                 for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
+
                     if (c.getQuantity() <= 0) {
                         return;
                     }
 
-                    if (extractFromInternalItemStorage(c.getNextSet(Action.SIMULATE), internalStorage, Action.SIMULATE)) {
+                    if (extractFromInternalItemStorage(c.getCurrentSet(), internalStorage, Action.SIMULATE)) {
 
-                        extractFromInternalItemStorage(c.getNextSet(Action.PERFORM), internalStorage, Action.PERFORM);
+                        extractFromInternalItemStorage(c.getCurrentSet(), internalStorage, Action.PERFORM);
 
-
-                        //Double checks the recipe, could technically be converted to just and output stack
                         ItemStack output = c.getPattern().getOutput(c.getRecipe());
 
                         if (!c.isRoot()) {
@@ -707,8 +706,10 @@ public class CraftingTask implements ICraftingTask {
                         for (ItemStack byp : c.getPattern().getByproducts(c.getRecipe())) {
                             this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
                         }
-                        c.reduceQuantity();
+
+                        c.nextSet();
                         curentstep++;
+
                         network.getCraftingManager().onTaskChanged();
 
                     } else {
@@ -766,14 +767,14 @@ public class CraftingTask implements ICraftingTask {
                         allNull = false;
                     }
 
-                    boolean hasAll = extractFromInternalItemStorage(p.getNextSet(Action.SIMULATE), internalStorage, Action.SIMULATE);
+                    boolean hasAll = extractFromInternalItemStorage(p.getCurrentSet(), internalStorage, Action.SIMULATE);
                     if (hasAll) {
                         hasAll = extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), internalFluidStorage, Action.SIMULATE);
                     }
 
                     boolean canInsert = false;
                     if (hasAll) {
-                        canInsert = insertIntoInventory(container.getConnectedInventory(), p.getNextSet(Action.SIMULATE), Action.SIMULATE);
+                        canInsert = insertIntoInventory(container.getConnectedInventory(), p.getCurrentSet(), Action.SIMULATE);
                         if (canInsert) {
                             canInsert = insertIntoTank(container.getConnectedFluidInventory(), p.getFluidsToPut().getStacks(), Action.SIMULATE);
                         }
@@ -790,13 +791,14 @@ public class CraftingTask implements ICraftingTask {
 
                     if (hasAll && canInsert) {
                         p.setState(ProcessingState.READY_OR_PROCESSING);
-                        extractFromInternalItemStorage(p.getNextSet(Action.SIMULATE), internalStorage, Action.PERFORM); // SIMULATE because the items need to be there for insertion
+                        extractFromInternalItemStorage(p.getCurrentSet(), internalStorage, Action.PERFORM);
                         extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), internalFluidStorage, Action.PERFORM);
 
-                        insertIntoInventory(container.getConnectedInventory(), p.getNextSet(Action.PERFORM), Action.PERFORM);
+                        insertIntoInventory(container.getConnectedInventory(), p.getCurrentSet(), Action.PERFORM);
                         insertIntoTank(container.getConnectedFluidInventory(), p.getFluidsToPut().getStacks(), Action.PERFORM);
+
+                        p.nextSet();
                         curentstep++;
-                        p.reduceQuantity();
 
                         network.getCraftingManager().onTaskChanged();
                         container.onUsedForProcessing();
@@ -860,8 +862,8 @@ public class CraftingTask implements ICraftingTask {
             for (int i = 0; i < availableSlots.size(); ++i) {
                 int slot = availableSlots.get(i);
 
-                // .copy() happens in getNextSet()
-                remainder = dest.insertItem(slot, current, action == Action.SIMULATE);
+                // .copy() mandatory if not simulation!
+                remainder = dest.insertItem(slot, action == Action.SIMULATE ? current : current.copy(), action == Action.SIMULATE);
 
                 // If we inserted *something*
                 if (remainder.isEmpty() || current.getCount() != remainder.getCount()) {
@@ -912,7 +914,7 @@ public class CraftingTask implements ICraftingTask {
             return 0;
         }
 
-        return 100 - (int)(((float)curentstep /(float) totalSteps)*100);
+        return 100 - (int) (((float) curentstep / (float) totalSteps) * 100);
     }
 
     @Override
