@@ -169,8 +169,18 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         int y = headerAndSlots + 4;
 
         for (int i = 0; i < 9 * 2; ++i) {
-            addSlot(new FilterSlot(((GridNetworkNode) grid).getProcessingMatrix(), i, x, y, FilterSlot.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.ITEMS));
-            addSlot(new FluidFilterSlot(((GridNetworkNode) grid).getProcessingMatrixFluids(), i, x, y, FilterSlot.FILTER_ALLOW_SIZE).setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.FLUIDS));
+            int itemFilterSlotConfig = FilterSlot.FILTER_ALLOW_SIZE;
+            if (i < 9) {
+                itemFilterSlotConfig |= FilterSlot.FILTER_ALLOW_INPUT_CONFIGURATION;
+            }
+
+            int fluidFilterSlotConfig = FluidFilterSlot.FILTER_ALLOW_SIZE;
+            if (i < 9) {
+                fluidFilterSlotConfig |= FluidFilterSlot.FILTER_ALLOW_INPUT_CONFIGURATION;
+            }
+
+            addSlot(new FilterSlot(((GridNetworkNode) grid).getProcessingMatrix(), i, x, y, itemFilterSlotConfig).setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.ITEMS));
+            addSlot(new FluidFilterSlot(((GridNetworkNode) grid).getProcessingMatrixFluids(), i, x, y, fluidFilterSlotConfig).setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.FLUIDS));
 
             x += 18;
 

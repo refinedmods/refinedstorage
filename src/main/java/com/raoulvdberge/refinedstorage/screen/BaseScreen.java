@@ -176,7 +176,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         if (valid && slot instanceof FilterSlot && slot.isEnabled() && ((FilterSlot) slot).isSizeAllowed()) {
             if (!slot.getStack().isEmpty()) {
-                if (hasControlDown()) {
+                if (((FilterSlot) slot).isInputConfigurationAllowed() && hasControlDown()) {
                     minecraft.displayGuiScreen(new InputConfigurationScreen(
                         this,
                         minecraft.player,
@@ -198,7 +198,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
             FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
             if (!stack.isEmpty()) {
-                if (hasControlDown()) {
+                if (((FluidFilterSlot) slot).isInputConfigurationAllowed() && hasControlDown()) {
                     minecraft.displayGuiScreen(new InputConfigurationScreen(
                         this,
                         minecraft.player,
