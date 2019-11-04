@@ -37,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -73,6 +74,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private static final String NBT_PROCESSING_PATTERN = "ProcessingPattern";
     private static final String NBT_PROCESSING_TYPE = "ProcessingType";
     private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
+    private static final String NBT_ALLOWED_TAGS = "AllowedTags";
+
+    private final AllowedTags allowedTags = new AllowedTags(this::updateAllowedTags);
 
     private Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
         @Override
@@ -90,8 +94,20 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private ICraftingRecipe currentRecipe;
     private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
     private CraftResultInventory result = new CraftResultInventory();
-    private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64).addListener(new NetworkNodeFluidInventoryListener(this));
+    private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2)
+        .addListener(new NetworkNodeInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            if (!reading && slot < 9) {
+                allowedTags.clearItemTags(slot);
+            }
+        });
+    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64)
+        .addListener(new NetworkNodeFluidInventoryListener(this))
+        .addListener((handler, slot, reading) -> {
+            if (!reading && slot < 9) {
+                allowedTags.clearFluidTags(slot);
+            }
+        });
 
     private boolean reading;
 
@@ -124,9 +140,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             ItemStack pattern = handler.getStackInSlot(slot);
 
             if (slot == 1 && !pattern.isEmpty()) {
-                boolean isPatternProcessing = PatternItem.isProcessing(pattern);
+                boolean processing = PatternItem.isProcessing(pattern);
 
-                if (isPatternProcessing && isProcessingPattern()) {
+                if (processing) {
                     for (int i = 0; i < 9; ++i) {
                         processingMatrix.setStackInSlot(i, PatternItem.getInputSlot(pattern, i));
                         processingMatrixFluids.setFluid(i, PatternItem.getFluidInputSlot(pattern, i));
@@ -136,11 +152,21 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                         processingMatrix.setStackInSlot(9 + i, PatternItem.getOutputSlot(pattern, i));
                         processingMatrixFluids.setFluid(9 + i, PatternItem.getFluidOutputSlot(pattern, i));
                     }
-                } else if (!isPatternProcessing && !isProcessingPattern()) {
+
+                    AllowedTags allowedTagsFromPattern = PatternItem.getAllowedTags(pattern);
+
+                    if (allowedTagsFromPattern != null) {
+                        allowedTags.setAllowedItemTags(allowedTagsFromPattern.getAllowedItemTags());
+                        allowedTags.setAllowedFluidTags(allowedTagsFromPattern.getAllowedFluidTags());
+                    }
+                } else {
                     for (int i = 0; i < 9; ++i) {
                         matrix.setInventorySlotContents(i, PatternItem.getInputSlot(pattern, i));
                     }
                 }
+
+                setProcessingPattern(processing);
+                markDirty();
             }
         }));
 
@@ -167,6 +193,21 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         super(world, pos);
 
         this.type = type;
+    }
+
+    public AllowedTags getAllowedTags() {
+        return allowedTags;
+    }
+
+    private void updateAllowedTags() {
+        markDirty();
+
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof GridTile) {
+            ((GridTile) tile).getDataManager().sendParameterToWatchers(GridTile.ALLOWED_ITEM_TAGS);
+            ((GridTile) tile).getDataManager().sendParameterToWatchers(GridTile.ALLOWED_FLUID_TAGS);
+        }
     }
 
     @Override
@@ -402,8 +443,13 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             ItemStack pattern = new ItemStack(RSItems.PATTERN);
 
             PatternItem.setToCurrentVersion(pattern);
-            PatternItem.setExact(pattern, exactPattern);
             PatternItem.setProcessing(pattern, processingPattern);
+
+            if (!processingPattern) {
+                PatternItem.setExact(pattern, exactPattern);
+            } else {
+                PatternItem.setAllowedTags(pattern, allowedTags);
+            }
 
             if (processingPattern) {
                 for (int i = 0; i < 18; ++i) {
@@ -580,6 +626,10 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     public void read(CompoundNBT tag) {
         super.read(tag);
 
+        if (tag.contains(NBT_ALLOWED_TAGS)) {
+            allowedTags.readFromNbt(tag.getCompound(NBT_ALLOWED_TAGS));
+        }
+
         reading = true;
 
         StackUtils.readItems(matrix, 0, tag);
@@ -610,6 +660,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     @Override
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
+
+        tag.put(NBT_ALLOWED_TAGS, allowedTags.writeToNbt());
 
         StackUtils.writeItems(matrix, 0, tag);
         StackUtils.writeItems(patterns, 1, tag);

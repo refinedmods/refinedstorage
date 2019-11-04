@@ -5,142 +5,57 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.item.PatternItem;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.AllowedTags;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 
 public class CraftingPattern implements ICraftingPattern {
-    private ICraftingPatternContainer container;
-    private ItemStack stack;
-    private boolean processing;
-    private boolean exact;
-    private boolean valid;
-    private ICraftingRecipe recipe;
-    private List<NonNullList<ItemStack>> inputs = new ArrayList<>();
-    private NonNullList<ItemStack> outputs = NonNullList.create();
-    private NonNullList<ItemStack> byproducts = NonNullList.create();
-    private List<NonNullList<FluidStack>> fluidInputs = new ArrayList<>();
-    private NonNullList<FluidStack> fluidOutputs = NonNullList.create();
+    private final ICraftingPatternContainer container;
+    private final ItemStack stack;
+    private final boolean processing;
+    private final boolean exact;
+    private final boolean valid;
+    @Nullable
+    private final ITextComponent errorMessage;
+    @Nullable
+    private final ICraftingRecipe recipe;
+    private final List<NonNullList<ItemStack>> inputs;
+    private final NonNullList<ItemStack> outputs;
+    private final NonNullList<ItemStack> byproducts;
+    private final List<NonNullList<FluidStack>> fluidInputs;
+    private final NonNullList<FluidStack> fluidOutputs;
+    @Nullable
+    private final AllowedTags allowedTags;
 
-    public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
+    public CraftingPattern(ICraftingPatternContainer container, ItemStack stack, boolean processing, boolean exact, @Nullable ITextComponent errorMessage, boolean valid, @Nullable ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, NonNullList<ItemStack> byproducts, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTags allowedTags) {
         this.container = container;
         this.stack = stack;
-        this.processing = PatternItem.isProcessing(stack);
-        this.exact = PatternItem.isExact(stack);
+        this.processing = processing;
+        this.exact = exact;
+        this.valid = valid;
+        this.errorMessage = errorMessage;
+        this.recipe = recipe;
+        this.inputs = inputs;
+        this.outputs = outputs;
+        this.byproducts = byproducts;
+        this.fluidInputs = fluidInputs;
+        this.fluidOutputs = fluidOutputs;
+        this.allowedTags = allowedTags;
+    }
 
-        if (processing) {
-            for (int i = 0; i < 9; ++i) {
-                {
-                    ItemStack input = PatternItem.getInputSlot(stack, i);
-
-                    if (input.isEmpty()) {
-                        inputs.add(NonNullList.create());
-                    } else if (!exact) {
-                        NonNullList<ItemStack> possibilities = NonNullList.create();
-
-                        possibilities.add(input.copy());
-
-                        for (ResourceLocation owningTag : ItemTags.getCollection().getOwningTags(input.getItem())) {
-                            for (Item element : ItemTags.getCollection().get(owningTag).getAllElements()) {
-                                possibilities.add(new ItemStack(element, input.getCount()));
-                            }
-                        }
-
-                        inputs.add(possibilities);
-                    } else {
-                        inputs.add(NonNullList.from(ItemStack.EMPTY, input));
-                    }
-
-                    ItemStack output = PatternItem.getOutputSlot(stack, i);
-                    if (!output.isEmpty()) {
-                        this.valid = true; // As soon as we have one output, we are valid.
-
-                        outputs.add(output);
-                    }
-                }
-
-                {
-                    FluidStack fluidInput = PatternItem.getFluidInputSlot(stack, i);
-                    if (fluidInput.isEmpty()) {
-                        fluidInputs.add(NonNullList.create());
-                    } else if (!exact) {
-                        NonNullList<FluidStack> possibilities = NonNullList.create();
-
-                        possibilities.add(fluidInput.copy());
-
-                        for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(fluidInput.getFluid())) {
-                            for (Fluid element : FluidTags.getCollection().get(owningTag).getAllElements()) {
-                                possibilities.add(new FluidStack(element, fluidInput.getAmount()));
-                            }
-                        }
-
-                        fluidInputs.add(possibilities);
-                    } else {
-                        fluidInputs.add(NonNullList.from(FluidStack.EMPTY, fluidInput));
-                    }
-                }
-
-                FluidStack fluidOutput = PatternItem.getFluidOutputSlot(stack, i);
-                if (!fluidOutput.isEmpty()) {
-                    this.valid = true;
-
-                    fluidOutputs.add(fluidOutput);
-                }
-            }
-        } else {
-            CraftingInventory inv = new DummyCraftingInventory();
-
-            for (int i = 0; i < 9; ++i) {
-                ItemStack input = PatternItem.getInputSlot(stack, i);
-
-                inputs.add(input.isEmpty() ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
-
-                inv.setInventorySlotContents(i, input);
-            }
-
-            Optional<ICraftingRecipe> potentialRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inv, world);
-            if (potentialRecipe.isPresent()) {
-                this.recipe = potentialRecipe.get();
-
-                this.byproducts = recipe.getRemainingItems(inv);
-
-                ItemStack output = recipe.getCraftingResult(inv);
-
-                if (!output.isEmpty()) {
-                    this.valid = true;
-
-                    outputs.add(output);
-
-                    if (!exact) {
-                        if (recipe.getIngredients().size() > 0) {
-                            inputs.clear();
-
-                            for (int i = 0; i < recipe.getIngredients().size(); ++i) {
-                                inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
-                            }
-                        } else {
-                            this.valid = false;
-                        }
-                    }
-                }
-            }
-        }
+    @Nullable
+    public AllowedTags getAllowedTags() {
+        return allowedTags;
     }
 
     @Override
@@ -158,14 +73,15 @@ public class CraftingPattern implements ICraftingPattern {
         return valid;
     }
 
+    @Nullable
     @Override
-    public boolean isProcessing() {
-        return processing;
+    public ITextComponent getErrorMessage() {
+        return errorMessage;
     }
 
     @Override
-    public boolean isExact() {
-        return exact;
+    public boolean isProcessing() {
+        return processing;
     }
 
     @Override
@@ -255,7 +171,7 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public boolean canBeInChainWith(ICraftingPattern other) {
-        if (other.isProcessing() != processing || other.isExact() != exact) {
+        if (other.isProcessing() != processing) {
             return false;
         }
 
@@ -357,7 +273,7 @@ public class CraftingPattern implements ICraftingPattern {
         return result;
     }
 
-    private class DummyCraftingInventory extends CraftingInventory {
+    public static class DummyCraftingInventory extends CraftingInventory {
         public DummyCraftingInventory() {
             super(new Container(null, 0) {
                 @Override

@@ -10,8 +10,9 @@ import javax.annotation.Nonnull;
 public class FilterSlot extends BaseSlot {
     public static final int FILTER_ALLOW_SIZE = 1;
     public static final int FILTER_ALLOW_BLOCKS = 2;
+    public static final int FILTER_ALLOW_INPUT_CONFIGURATION = 4;
 
-    private int flags = 0;
+    private int flags;
 
     public FilterSlot(IItemHandler handler, int inventoryIndex, int x, int y, int flags) {
         super(handler, inventoryIndex, x, y);
@@ -51,5 +52,9 @@ public class FilterSlot extends BaseSlot {
 
     public boolean isBlockAllowed() {
         return (flags & FILTER_ALLOW_BLOCKS) == FILTER_ALLOW_BLOCKS;
+    }
+
+    public boolean isInputConfigurationAllowed() {
+        return (flags & FILTER_ALLOW_INPUT_CONFIGURATION) == FILTER_ALLOW_INPUT_CONFIGURATION;
     }
 }

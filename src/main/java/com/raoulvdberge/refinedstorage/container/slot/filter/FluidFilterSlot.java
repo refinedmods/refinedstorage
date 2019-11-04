@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 
 public class FluidFilterSlot extends BaseSlot {
     public static final int FILTER_ALLOW_SIZE = 1;
+    public static final int FILTER_ALLOW_INPUT_CONFIGURATION = 2;
 
     private int flags;
     private FluidInventory fluidInventory;
@@ -36,6 +37,10 @@ public class FluidFilterSlot extends BaseSlot {
 
     public boolean isSizeAllowed() {
         return (flags & FILTER_ALLOW_SIZE) == FILTER_ALLOW_SIZE;
+    }
+
+    public boolean isInputConfigurationAllowed() {
+        return (flags & FILTER_ALLOW_INPUT_CONFIGURATION) == FILTER_ALLOW_INPUT_CONFIGURATION;
     }
 
     public FluidInventory getFluidInventory() {

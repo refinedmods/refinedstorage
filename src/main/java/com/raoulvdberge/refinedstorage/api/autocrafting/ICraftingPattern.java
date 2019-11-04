@@ -3,8 +3,10 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -27,14 +29,15 @@ public interface ICraftingPattern {
     boolean isValid();
 
     /**
+     * @return an error message when this pattern is not valid, or null if there's no message
+     */
+    @Nullable
+    ITextComponent getErrorMessage();
+
+    /**
      * @return true if the crafting pattern can be treated as a processing pattern, false otherwise
      */
     boolean isProcessing();
-
-    /**
-     * @return true if the crafting pattern is in exact mode, false otherwise
-     */
-    boolean isExact();
 
     /**
      * @return the inputs per slot
