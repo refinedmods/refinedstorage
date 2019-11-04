@@ -140,9 +140,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             ItemStack pattern = handler.getStackInSlot(slot);
 
             if (slot == 1 && !pattern.isEmpty()) {
-                boolean isPatternProcessing = PatternItem.isProcessing(pattern);
+                boolean processing = PatternItem.isProcessing(pattern);
 
-                if (isPatternProcessing && isProcessingPattern()) {
+                if (processing) {
                     for (int i = 0; i < 9; ++i) {
                         processingMatrix.setStackInSlot(i, PatternItem.getInputSlot(pattern, i));
                         processingMatrixFluids.setFluid(i, PatternItem.getFluidInputSlot(pattern, i));
@@ -159,11 +159,14 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                         allowedTags.setAllowedItemTags(allowedTagsFromPattern.getAllowedItemTags());
                         allowedTags.setAllowedFluidTags(allowedTagsFromPattern.getAllowedFluidTags());
                     }
-                } else if (!isPatternProcessing && !isProcessingPattern()) {
+                } else {
                     for (int i = 0; i < 9; ++i) {
                         matrix.setInventorySlotContents(i, PatternItem.getInputSlot(pattern, i));
                     }
                 }
+
+                setProcessingPattern(processing);
+                markDirty();
             }
         }));
 
