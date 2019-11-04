@@ -251,12 +251,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return false;
     }
 
+    @Override
     public void setOwner(@Nullable UUID owner) {
         this.owner = owner;
 
         markDirty();
     }
 
+    @Override
     @Nullable
     public UUID getOwner() {
         return owner;

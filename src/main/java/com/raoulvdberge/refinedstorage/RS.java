@@ -51,10 +51,5 @@ public final class RS {
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent e) {
         e.registerServerCommand(new CommandCreateDisk());
-    }
-
-    @EventHandler
-    public void onFingerprintViolation(FMLFingerprintViolationEvent e) {
-        FMLLog.bigWarning("Invalid fingerprint detected for the Refined Storage jar file! The file " + e.getSource().getName() + " may have been tampered with. This version will NOT be supported!");
     }*/
 }

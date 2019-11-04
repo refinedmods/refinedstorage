@@ -2,9 +2,8 @@ package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.item.INetworkItemProvider;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.render.Styles;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -12,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -72,19 +70,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             return;
         }
 
-        TileEntity node = nodeWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)));
-        if (node == null) {
-            onError.accept(notFound);
-            return;
-        }
-
-        INetworkNodeProxy proxy = node.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
-        if (proxy == null) {
-            onError.accept(notFound);
-            return;
-        }
-
-        INetwork network = proxy.getNode().getNetwork();
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(nodeWorld.getTileEntity(new BlockPos(getX(stack), getY(stack), getZ(stack)))));
         if (network == null) {
             onError.accept(notFound);
             return;
@@ -106,30 +92,22 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
     public ActionResultType onItemUse(ItemUseContext ctx) {
         ItemStack stack = ctx.getPlayer().getHeldItem(ctx.getHand());
 
-        TileEntity tile = ctx.getWorld().getTileEntity(ctx.getPos());
-        if (tile != null) {
-            INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
+        INetwork network = NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(ctx.getWorld().getTileEntity(ctx.getPos())));
+        if (network != null) {
+            CompoundNBT tag = stack.getTag();
 
-            if (proxy != null) {
-                INetwork network = proxy.getNode().getNetwork();
-
-                if (network != null) {
-                    CompoundNBT tag = stack.getTag();
-
-                    if (tag == null) {
-                        tag = new CompoundNBT();
-                    }
-
-                    tag.putInt(NBT_NODE_X, network.getPosition().getX());
-                    tag.putInt(NBT_NODE_Y, network.getPosition().getY());
-                    tag.putInt(NBT_NODE_Z, network.getPosition().getZ());
-                    tag.putString(NBT_DIMENSION, DimensionType.getKey(ctx.getWorld().getDimension().getType()).toString());
-
-                    stack.setTag(tag);
-
-                    return ActionResultType.SUCCESS;
-                }
+            if (tag == null) {
+                tag = new CompoundNBT();
             }
+
+            tag.putInt(NBT_NODE_X, network.getPosition().getX());
+            tag.putInt(NBT_NODE_Y, network.getPosition().getY());
+            tag.putInt(NBT_NODE_Z, network.getPosition().getZ());
+            tag.putString(NBT_DIMENSION, DimensionType.getKey(ctx.getWorld().getDimension().getType()).toString());
+
+            stack.setTag(tag);
+
+            return ActionResultType.SUCCESS;
         }
 
         return ActionResultType.PASS;

@@ -10,6 +10,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.network.Network;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.RootNetworkNode;
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
+import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.tile.data.RSSerializers;
@@ -28,8 +29,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY;
 
 public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNetworkNode>, IRedstoneConfigurable {
     public static final TileDataParameter<Integer, ControllerTile> REDSTONE_MODE = RedstoneMode.createParameter();
@@ -156,7 +155,7 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
             return energyProxyCap.cast();
         }
 
-        if (cap == NETWORK_NODE_PROXY_CAPABILITY) {
+        if (cap == NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY) {
             return networkNodeProxyCap.cast();
         }
 

@@ -1,12 +1,12 @@
 package com.raoulvdberge.refinedstorage.apiimpl.storage.externalstorage;
 
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
-import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.tile.InterfaceTile;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -18,9 +18,9 @@ import java.util.function.Supplier;
 public class ItemExternalStorageProvider implements IExternalStorageProvider<ItemStack> {
     @Override
     public boolean canProvide(TileEntity tile, Direction direction) {
-        INetworkNodeProxy nodeProxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction.getOpposite()).orElse(null);
+        INetworkNode node = NetworkUtils.getNodeFromTile(tile);
 
-        if (nodeProxy != null && nodeProxy.getNode() instanceof IStorageProvider) {
+        if (node instanceof IStorageProvider) {
             return false;
         }
 

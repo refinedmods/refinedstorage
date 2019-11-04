@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetworkNodeGraphListener;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -17,8 +17,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
-
-import static com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY;
 
 public class NetworkNodeGraph implements INetworkNodeGraph {
     private INetwork network;
@@ -39,15 +37,9 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
 
         Operator operator = new Operator(action);
 
-        TileEntity tile = world.getTileEntity(origin);
-        if (tile != null) {
-            tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, null).ifPresent(proxy -> {
-                INetworkNode node = proxy.getNode();
-
-                if (node instanceof INetworkNodeVisitor) {
-                    ((INetworkNodeVisitor) node).visit(operator);
-                }
-            });
+        INetworkNode originNode = NetworkUtils.getNodeFromTile(world.getTileEntity(origin));
+        if (originNode instanceof INetworkNodeVisitor) {
+            ((INetworkNodeVisitor) originNode).visit(operator);
         }
 
         Visitor currentVisitor;
@@ -134,31 +126,29 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
         public void apply(World world, BlockPos pos, @Nullable Direction side) {
             TileEntity tile = world.getTileEntity(pos);
 
-            if (tile != null) {
-                tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, side).ifPresent(otherNodeProxy -> {
-                    INetworkNode otherNode = otherNodeProxy.getNode();
+            INetworkNode otherNode = NetworkUtils.getNodeFromTile(tile);
 
-                    if (otherNode.getNetwork() != null && !otherNode.getNetwork().equals(network)) {
-                        if (action == Action.PERFORM) {
-                            dropConflictingBlock(world, tile.getPos());
-                        }
-
-                        return;
+            if (otherNode != null) {
+                if (otherNode.getNetwork() != null && !otherNode.getNetwork().equals(network)) {
+                    if (action == Action.PERFORM) {
+                        dropConflictingBlock(world, pos);
                     }
 
-                    if (foundNodes.add(otherNode)) {
-                        if (!nodes.contains(otherNode)) {
-                            // We can't let the node connect immediately
-                            // We can only let the node connect AFTER the nodes list has changed in the graph
-                            // This is so that storage nodes can refresh the item/fluid cache, and the item/fluid cache will notice it then (otherwise not)
-                            newNodes.add(otherNode);
-                        }
+                    return;
+                }
 
-                        previousNodes.remove(otherNode);
-
-                        toCheck.add(new Visitor(otherNode, world, pos, side, tile));
+                if (foundNodes.add(otherNode)) {
+                    if (!nodes.contains(otherNode)) {
+                        // We can't let the node connect immediately
+                        // We can only let the node connect AFTER the nodes list has changed in the graph
+                        // This is so that storage nodes can refresh the item/fluid cache, and the item/fluid cache will notice it then (otherwise not)
+                        newNodes.add(otherNode);
                     }
-                });
+
+                    previousNodes.remove(otherNode);
+
+                    toCheck.add(new Visitor(otherNode, world, pos, side, tile));
+                }
             }
         }
 
@@ -190,13 +180,11 @@ public class NetworkNodeGraph implements INetworkNodeGraph {
             } else {
                 for (Direction checkSide : Direction.values()) {
                     if (checkSide != side) { // Avoid going backward
-                        tile.getCapability(NETWORK_NODE_PROXY_CAPABILITY, checkSide).ifPresent(nodeOnSideProxy -> {
-                            INetworkNode nodeOnSide = nodeOnSideProxy.getNode();
+                        INetworkNode nodeOnSide = NetworkUtils.getNodeFromTile(tile);
 
-                            if (nodeOnSide == node) {
-                                operator.apply(world, pos.offset(checkSide), checkSide.getOpposite());
-                            }
-                        });
+                        if (nodeOnSide == node) {
+                            operator.apply(world, pos.offset(checkSide), checkSide.getOpposite());
+                        }
                     }
                 }
             }

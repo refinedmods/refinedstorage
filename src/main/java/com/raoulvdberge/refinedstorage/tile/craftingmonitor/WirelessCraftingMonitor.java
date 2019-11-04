@@ -4,16 +4,14 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
-import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import com.raoulvdberge.refinedstorage.item.WirelessCraftingMonitorItem;
 import com.raoulvdberge.refinedstorage.network.craftingmonitor.WirelessCraftingMonitorSettingsUpdateMessage;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -100,15 +98,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
         World world = DimensionManager.getWorld(server, nodeDimension, true, true);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(nodePos);
-
-            if (tile != null) {
-                INetworkNodeProxy proxy = tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY).orElse(null);
-
-                if (proxy != null) {
-                    return proxy.getNode().getNetwork();
-                }
-            }
+            return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getTileEntity(nodePos)));
         }
 
         return null;

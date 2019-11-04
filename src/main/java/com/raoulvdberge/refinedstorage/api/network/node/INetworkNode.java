@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Represents a node in the network.
@@ -87,4 +88,15 @@ public interface INetworkNode {
      * @return the id of this node as specified in {@link INetworkNodeRegistry}
      */
     ResourceLocation getId();
+
+    /**
+     * @param owner the owner
+     */
+    void setOwner(@Nullable UUID owner);
+
+    /**
+     * @return the owner
+     */
+    @Nullable
+    UUID getOwner();
 }

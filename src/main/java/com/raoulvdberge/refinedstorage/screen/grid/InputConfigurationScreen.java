@@ -85,7 +85,7 @@ public class InputConfigurationScreen extends BaseScreen {
                 ItemListLine line = new ItemListLine();
 
                 for (Item item : ItemTags.getCollection().get(owningTag).getAllElements()) {
-                    if (itemCount > 0 && itemCount % 7 == 0) {
+                    if (itemCount > 0 && itemCount % 8 == 0) {
                         lines.add(line);
                         line = new ItemListLine();
                     }
@@ -108,7 +108,7 @@ public class InputConfigurationScreen extends BaseScreen {
                 FluidListLine line = new FluidListLine();
 
                 for (Fluid fluid : FluidTags.getCollection().get(owningTag).getAllElements()) {
-                    if (fluidCount > 0 && fluidCount % 7 == 0) {
+                    if (fluidCount > 0 && fluidCount % 8 == 0) {
                         lines.add(line);
                         line = new FluidListLine();
                     }
@@ -337,7 +337,7 @@ public class InputConfigurationScreen extends BaseScreen {
             for (ItemStack item : items) {
                 renderItem(x + 3, y, item);
 
-                x += 18;
+                x += 17;
             }
         }
 
@@ -348,7 +348,7 @@ public class InputConfigurationScreen extends BaseScreen {
                     InputConfigurationScreen.this.renderTooltip(item, mx, my, RenderUtils.getTooltipFromItem(item));
                 }
 
-                x += 18;
+                x += 17;
             }
         }
     }
@@ -367,7 +367,7 @@ public class InputConfigurationScreen extends BaseScreen {
             for (FluidStack fluid : fluids) {
                 FluidRenderer.INSTANCE.render(x + 3, y, fluid);
 
-                x += 18;
+                x += 17;
             }
         }
 
@@ -378,7 +378,7 @@ public class InputConfigurationScreen extends BaseScreen {
                     InputConfigurationScreen.this.renderTooltip(mx, my, fluid.getDisplayName().getFormattedText());
                 }
 
-                x += 18;
+                x += 17;
             }
         }
     }
