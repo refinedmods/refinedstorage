@@ -61,7 +61,7 @@ public class TextFieldSearch extends GuiTextField {
 
     @Override
     public boolean textboxKeyTyped(char typedChar, int keyCode) {
-        boolean canLoseFocus = ObfuscationReflectionHelper.getPrivateValue(GuiTextField.class, this, 10);
+        @SuppressWarnings("deprecation") boolean canLoseFocus = ObfuscationReflectionHelper.getPrivateValue(GuiTextField.class, this, 10);
 
         boolean result = super.textboxKeyTyped(typedChar, keyCode);
 

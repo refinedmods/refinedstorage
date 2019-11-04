@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.integration.jei;
 
 import com.raoulvdberge.refinedstorage.RSItems;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.wrapper.ICraftingRecipeWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -25,7 +26,7 @@ public class RecipeWrapperCover implements ICraftingRecipeWrapper {
         inputs.add(new ItemStack(RSItems.CUTTING_TOOL));
         inputs.add(stack);
 
-        ingredients.setInputs(ItemStack.class, inputs);
-        ingredients.setOutput(ItemStack.class, cover);
+        ingredients.setInputs(VanillaTypes.ITEM, inputs);
+        ingredients.setOutput(VanillaTypes.ITEM, cover);
     }
 }

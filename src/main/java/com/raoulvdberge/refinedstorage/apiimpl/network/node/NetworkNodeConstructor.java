@@ -162,7 +162,7 @@ public class NetworkNodeConstructor extends NetworkNode implements IComparable, 
     }
 
     private boolean canPlace(BlockPos pos, IBlockState state) {
-        BlockEvent.PlaceEvent e = new BlockEvent.PlaceEvent(new BlockSnapshot(world, pos, state), world.getBlockState(pos), getFakePlayer(), EnumHand.MAIN_HAND);
+        BlockEvent.EntityPlaceEvent e = new BlockEvent.EntityPlaceEvent(new BlockSnapshot(world, pos, state), world.getBlockState(pos), getFakePlayer());
 
         return !MinecraftForge.EVENT_BUS.post(e);
     }

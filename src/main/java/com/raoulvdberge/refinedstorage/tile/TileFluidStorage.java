@@ -18,7 +18,7 @@ public class TileFluidStorage extends TileNode<NetworkNodeFluidStorage> {
     public static final TileDataParameter<Integer, TileFluidStorage> COMPARE = IComparable.createParameter();
     public static final TileDataParameter<Integer, TileFluidStorage> MODE = IFilterable.createParameter();
     public static final TileDataParameter<AccessType, TileFluidStorage> ACCESS_TYPE = IAccessType.createParameter();
-    public static final TileDataParameter<Long, TileFluidStorage> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> (long) t.getNode().getStorage().getStored());
+    public static final TileDataParameter<Long, TileFluidStorage> STORED = new TileDataParameter<>(RSSerializers.LONG_SERIALIZER, 0L, t -> t.getNode().getStorage() != null ? (long) t.getNode().getStorage().getStored() : 0);
 
     public TileFluidStorage() {
         dataManager.addWatchedParameter(PRIORITY);
