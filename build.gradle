@@ -131,3 +131,25 @@ artifacts {
     archives deobfJar
     archives apiJar
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+            artifact jar
+            artifact sourcesJar
+            artifact deobfJar
+            artifact apiJar
+        }
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            url "/var/www/repo"
+        }
+    }
+}
