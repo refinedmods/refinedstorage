@@ -299,8 +299,6 @@ public final class StackUtils {
         return Pair.of(ItemStack.EMPTY, FluidStack.EMPTY);
     }
 
-    // TODO Remove Type
-    private static final String NBT_ITEM_TYPE = "Type";
     private static final String NBT_ITEM_ID = "Id";
     private static final String NBT_ITEM_QUANTITY = "Quantity";
     private static final String NBT_ITEM_NBT = "NBT";
@@ -332,20 +330,14 @@ public final class StackUtils {
     @Nonnull
     public static ItemStack deserializeStackFromNbt(CompoundNBT tag) {
         Item item;
-        if (tag.contains(NBT_ITEM_TYPE)) {
-            item = Item.getItemById(tag.getInt(NBT_ITEM_TYPE));
-
-            if (item == Items.AIR) {
-                LOGGER.warn("Could not deserialize item from numerical ID, it no longer exists: " + tag.getInt(NBT_ITEM_TYPE));
-            }
-        } else if (tag.contains(NBT_ITEM_ID)) {
+        if (tag.contains(NBT_ITEM_ID)) {
             item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tag.getString(NBT_ITEM_ID)));
 
             if (item == null) {
                 LOGGER.warn("Could not deserialize item from string ID, it no longer exists: " + tag.getString(NBT_ITEM_ID));
             }
         } else {
-            throw new IllegalStateException("Cannot deserialize ItemStack: no " + NBT_ITEM_TYPE + " (legacy tag) or " + NBT_ITEM_ID + " tag was found!");
+            throw new IllegalStateException("Cannot deserialize ItemStack: no " + NBT_ITEM_ID + " tag was found!");
         }
 
         if (item == null) {
