@@ -16,4 +16,7 @@ node {
   stage('Archive artifacts') {
     archiveArtifacts 'build/libs/*.jar'
   }
+  stage('Publish artifacts') {
+    sh "./gradlew publish"
+  }
 }
