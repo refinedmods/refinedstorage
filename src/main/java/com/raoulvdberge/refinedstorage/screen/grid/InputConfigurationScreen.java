@@ -33,21 +33,24 @@ import java.util.Set;
 
 public class InputConfigurationScreen extends BaseScreen {
     private final Screen parent;
-    private final List<Line> lines = new ArrayList<>();
     private final ScrollbarWidget scrollbar;
 
-    private final int type;
-    private final int slot;
+    private final List<Line> lines = new ArrayList<>();
 
-    private final ItemStack item;
-    private final FluidStack fluid;
+    private int type;
+    private int slot;
+    private ItemStack item;
+    private FluidStack fluid;
 
-    public InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title, ItemStack item, int slot) {
+    private InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title) {
         super(new InputConfigurationContainer(player), 175, 143, null, title);
 
         this.parent = parent;
-
         this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);
+    }
+
+    public InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title, ItemStack item, int slot) {
+        this(parent, player, title);
 
         this.type = IType.ITEMS;
         this.slot = slot;
@@ -56,11 +59,7 @@ public class InputConfigurationScreen extends BaseScreen {
     }
 
     public InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title, FluidStack fluid, int slot) {
-        super(new InputConfigurationContainer(player), 175, 143, null, title);
-
-        this.parent = parent;
-
-        this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);
+        this(parent, player, title);
 
         this.type = IType.FLUIDS;
         this.slot = slot;
