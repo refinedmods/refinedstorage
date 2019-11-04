@@ -121,6 +121,20 @@ public class InputConfigurationScreen extends BaseScreen {
                 lines.add(line);
             }
         }
+
+        // Do an initial layout
+        int xx = 8;
+        int yy = 20;
+
+        for (int i = 0; i < lines.size(); ++i) {
+            boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();
+
+            if (visible) {
+                lines.get(i).layoutDependantControls(true, guiLeft + xx + 3, guiTop + yy + 3);
+
+                yy += 18;
+            }
+        }
     }
 
     @Override
