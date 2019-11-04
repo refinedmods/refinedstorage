@@ -37,7 +37,7 @@ public class KeyInputListener {
         }
     }
 
-    private void findAndOpen(IInventory inv, Consumer<ITextComponent> onError, Item... items) {
+    public static void findAndOpen(IInventory inv, Consumer<ITextComponent> onError, Item... items) {
         Set<Item> validItems = new HashSet<>(Arrays.asList(items));
 
         int slotFound = -1;
