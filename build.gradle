@@ -23,6 +23,10 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = '1.7.1'
+def env = System.getenv()
+if (env.BUILD_NUMBER) {
+    version = version + "-" + "${env.BUILD_NUMBER}"
+}
 group = 'com.raoulvdberge'
 archivesBaseName = 'refinedstorage'
 
