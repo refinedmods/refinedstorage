@@ -77,14 +77,8 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
         t.getNode().markDirty();
     }, (initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
     public static final TileDataParameter<Integer, GridTile> PROCESSING_TYPE = IType.createParameter((initial, p) -> BaseScreen.executeLater(GridScreen.class, BaseScreen::init));
-
-    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_ITEM_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTags().getAllowedItemTags(), (t, v) -> {
-        t.getNode().getAllowedTags().setAllowedItemTags(v);
-    });
-
-    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_FLUID_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTags().getAllowedFluidTags(), (t, v) -> {
-        t.getNode().getAllowedTags().setAllowedFluidTags(v);
-    });
+    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_ITEM_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedItemTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedItemTags(v));
+    public static final TileDataParameter<List<Set<ResourceLocation>>, GridTile> ALLOWED_FLUID_TAGS = new TileDataParameter<>(RSSerializers.LIST_OF_SET_SERIALIZER, new ArrayList<>(), t -> t.getNode().getAllowedTagList().getAllowedFluidTags(), (t, v) -> t.getNode().getAllowedTagList().setAllowedFluidTags(v));
 
     public static void trySortGrid(boolean initial) {
         if (!initial) {

@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.AllowedTagList;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
@@ -76,7 +77,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private static final String NBT_PROCESSING_MATRIX_FLUIDS = "ProcessingMatrixFluids";
     private static final String NBT_ALLOWED_TAGS = "AllowedTags";
 
-    private final AllowedTags allowedTags = new AllowedTags(this::updateAllowedTags);
+    private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags);
 
     private Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
         @Override
@@ -98,14 +99,14 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && slot < 9) {
-                allowedTags.clearItemTags(slot);
+                allowedTagList.clearItemTags(slot);
             }
         });
     private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64)
         .addListener(new NetworkNodeFluidInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && slot < 9) {
-                allowedTags.clearFluidTags(slot);
+                allowedTagList.clearFluidTags(slot);
             }
         });
 
@@ -153,11 +154,11 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                         processingMatrixFluids.setFluid(9 + i, PatternItem.getFluidOutputSlot(pattern, i));
                     }
 
-                    AllowedTags allowedTagsFromPattern = PatternItem.getAllowedTags(pattern);
+                    AllowedTagList allowedTagsFromPattern = PatternItem.getAllowedTags(pattern);
 
                     if (allowedTagsFromPattern != null) {
-                        allowedTags.setAllowedItemTags(allowedTagsFromPattern.getAllowedItemTags());
-                        allowedTags.setAllowedFluidTags(allowedTagsFromPattern.getAllowedFluidTags());
+                        allowedTagList.setAllowedItemTags(allowedTagsFromPattern.getAllowedItemTags());
+                        allowedTagList.setAllowedFluidTags(allowedTagsFromPattern.getAllowedFluidTags());
                     }
                 } else {
                     for (int i = 0; i < 9; ++i) {
@@ -195,8 +196,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         this.type = type;
     }
 
-    public AllowedTags getAllowedTags() {
-        return allowedTags;
+    public AllowedTagList getAllowedTagList() {
+        return allowedTagList;
     }
 
     private void updateAllowedTags() {
@@ -448,7 +449,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             if (!processingPattern) {
                 PatternItem.setExact(pattern, exactPattern);
             } else {
-                PatternItem.setAllowedTags(pattern, allowedTags);
+                PatternItem.setAllowedTags(pattern, allowedTagList);
             }
 
             if (processingPattern) {
@@ -627,7 +628,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         super.read(tag);
 
         if (tag.contains(NBT_ALLOWED_TAGS)) {
-            allowedTags.readFromNbt(tag.getCompound(NBT_ALLOWED_TAGS));
+            allowedTagList.readFromNbt(tag.getCompound(NBT_ALLOWED_TAGS));
         }
 
         reading = true;
@@ -661,7 +662,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     public CompoundNBT write(CompoundNBT tag) {
         super.write(tag);
 
-        tag.put(NBT_ALLOWED_TAGS, allowedTags.writeToNbt());
+        tag.put(NBT_ALLOWED_TAGS, allowedTagList.writeToNbt());
 
         StackUtils.writeItems(matrix, 0, tag);
         StackUtils.writeItems(patterns, 1, tag);

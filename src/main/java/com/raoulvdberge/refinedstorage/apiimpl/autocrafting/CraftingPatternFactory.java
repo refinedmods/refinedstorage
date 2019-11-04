@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.AllowedTags;
 import com.raoulvdberge.refinedstorage.item.PatternItem;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.CraftingInventory;
@@ -27,7 +26,7 @@ public class CraftingPatternFactory {
     public CraftingPattern create(World world, ICraftingPatternContainer container, ItemStack stack) {
         boolean processing = PatternItem.isProcessing(stack);
         boolean exact = PatternItem.isExact(stack);
-        AllowedTags allowedTags = PatternItem.getAllowedTags(stack);
+        AllowedTagList allowedTagList = PatternItem.getAllowedTags(stack);
 
         List<NonNullList<ItemStack>> inputs = new ArrayList<>();
         NonNullList<ItemStack> outputs = NonNullList.create();
@@ -41,8 +40,8 @@ public class CraftingPatternFactory {
         try {
             if (processing) {
                 for (int i = 0; i < 9; ++i) {
-                    fillProcessingInputs(i, stack, inputs, outputs, allowedTags);
-                    fillProcessingFluidInputs(i, stack, fluidInputs, fluidOutputs, allowedTags);
+                    fillProcessingInputs(i, stack, inputs, outputs, allowedTagList);
+                    fillProcessingFluidInputs(i, stack, fluidInputs, fluidOutputs, allowedTagList);
                 }
 
                 if (outputs.isEmpty() && fluidOutputs.isEmpty()) {
@@ -81,10 +80,10 @@ public class CraftingPatternFactory {
             errorMessage = e.getErrorMessage();
         }
 
-        return new CraftingPattern(container, stack, processing, exact, errorMessage, valid, recipe, inputs, outputs, byproducts, fluidInputs, fluidOutputs, allowedTags);
+        return new CraftingPattern(container, stack, processing, exact, errorMessage, valid, recipe, inputs, outputs, byproducts, fluidInputs, fluidOutputs, allowedTagList);
     }
 
-    private void fillProcessingInputs(int i, ItemStack stack, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, @Nullable AllowedTags allowedTags) throws CraftingPatternFactoryException {
+    private void fillProcessingInputs(int i, ItemStack stack, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, @Nullable AllowedTagList allowedTagList) throws CraftingPatternFactoryException {
         ItemStack input = PatternItem.getInputSlot(stack, i);
 
         if (input.isEmpty()) {
@@ -94,9 +93,9 @@ public class CraftingPatternFactory {
 
             possibilities.add(input.copy());
 
-            if (allowedTags != null) {
+            if (allowedTagList != null) {
                 Collection<ResourceLocation> tagsOfItem = ItemTags.getCollection().getOwningTags(input.getItem());
-                Set<ResourceLocation> declaredAllowedTags = allowedTags.getAllowedItemTags().get(i);
+                Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedItemTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfItem.contains(declaredAllowedTag)) {
@@ -124,7 +123,7 @@ public class CraftingPatternFactory {
         }
     }
 
-    private void fillProcessingFluidInputs(int i, ItemStack stack, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTags allowedTags) throws CraftingPatternFactoryException {
+    private void fillProcessingFluidInputs(int i, ItemStack stack, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTagList allowedTagList) throws CraftingPatternFactoryException {
         FluidStack input = PatternItem.getFluidInputSlot(stack, i);
         if (input.isEmpty()) {
             fluidInputs.add(NonNullList.create());
@@ -133,9 +132,9 @@ public class CraftingPatternFactory {
 
             possibilities.add(input.copy());
 
-            if (allowedTags != null) {
+            if (allowedTagList != null) {
                 Collection<ResourceLocation> tagsOfFluid = FluidTags.getCollection().getOwningTags(input.getFluid());
-                Set<ResourceLocation> declaredAllowedTags = allowedTags.getAllowedFluidTags().get(i);
+                Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedFluidTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfFluid.contains(declaredAllowedTag)) {

@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.apiimpl.network.node;
+package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AllowedTags {
+public class AllowedTagList {
     private static final String NBT_ALLOWED_ITEM_TAGS = "AllowedItemTags";
     private static final String NBT_ALLOWED_FLUID_TAGS = "AllowedFluidTags";
 
@@ -22,7 +22,7 @@ public class AllowedTags {
     @Nullable
     private final Runnable listener;
 
-    public AllowedTags(@Nullable Runnable listener) {
+    public AllowedTagList(@Nullable Runnable listener) {
         for (int i = 0; i < 9; ++i) {
             allowedItemTags.add(new HashSet<>());
             allowedFluidTags.add(new HashSet<>());

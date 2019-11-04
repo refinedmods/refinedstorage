@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.AllowedTags;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
@@ -35,9 +34,9 @@ public class CraftingPattern implements ICraftingPattern {
     private final List<NonNullList<FluidStack>> fluidInputs;
     private final NonNullList<FluidStack> fluidOutputs;
     @Nullable
-    private final AllowedTags allowedTags;
+    private final AllowedTagList allowedTagList;
 
-    public CraftingPattern(ICraftingPatternContainer container, ItemStack stack, boolean processing, boolean exact, @Nullable ITextComponent errorMessage, boolean valid, @Nullable ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, NonNullList<ItemStack> byproducts, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTags allowedTags) {
+    public CraftingPattern(ICraftingPatternContainer container, ItemStack stack, boolean processing, boolean exact, @Nullable ITextComponent errorMessage, boolean valid, @Nullable ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, NonNullList<ItemStack> byproducts, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTagList allowedTagList) {
         this.container = container;
         this.stack = stack;
         this.processing = processing;
@@ -50,12 +49,12 @@ public class CraftingPattern implements ICraftingPattern {
         this.byproducts = byproducts;
         this.fluidInputs = fluidInputs;
         this.fluidOutputs = fluidOutputs;
-        this.allowedTags = allowedTags;
+        this.allowedTagList = allowedTagList;
     }
 
     @Nullable
-    public AllowedTags getAllowedTags() {
-        return allowedTags;
+    public AllowedTagList getAllowedTagList() {
+        return allowedTagList;
     }
 
     @Override

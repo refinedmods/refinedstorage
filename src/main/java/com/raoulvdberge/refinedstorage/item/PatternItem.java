@@ -5,9 +5,9 @@ import com.raoulvdberge.refinedstorage.RSItems;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.AllowedTagList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPatternFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.network.node.AllowedTags;
 import com.raoulvdberge.refinedstorage.render.tesr.PatternItemStackTileRenderer;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -91,9 +91,9 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
             RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
             RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidOutputs());
 
-            if (pattern.getAllowedTags() != null) {
-                for (int i = 0; i < pattern.getAllowedTags().getAllowedItemTags().size(); ++i) {
-                    Set<ResourceLocation> allowedTags = pattern.getAllowedTags().getAllowedItemTags().get(i);
+            if (pattern.getAllowedTagList() != null) {
+                for (int i = 0; i < pattern.getAllowedTagList().getAllowedItemTags().size(); ++i) {
+                    Set<ResourceLocation> allowedTags = pattern.getAllowedTagList().getAllowedItemTags().get(i);
 
                     for (ResourceLocation tag : allowedTags) {
                         tooltip.add(new TranslationTextComponent(
@@ -104,8 +104,8 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
                     }
                 }
 
-                for (int i = 0; i < pattern.getAllowedTags().getAllowedFluidTags().size(); ++i) {
-                    Set<ResourceLocation> allowedTags = pattern.getAllowedTags().getAllowedFluidTags().get(i);
+                for (int i = 0; i < pattern.getAllowedTagList().getAllowedFluidTags().size(); ++i) {
+                    Set<ResourceLocation> allowedTags = pattern.getAllowedTagList().getAllowedFluidTags().get(i);
 
                     for (ResourceLocation tag : allowedTags) {
                         tooltip.add(new TranslationTextComponent(
@@ -255,24 +255,24 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
         pattern.getTag().putInt(NBT_VERSION, VERSION);
     }
 
-    public static void setAllowedTags(ItemStack pattern, AllowedTags allowedTags) {
+    public static void setAllowedTags(ItemStack pattern, AllowedTagList allowedTagList) {
         if (!pattern.hasTag()) {
             pattern.setTag(new CompoundNBT());
         }
 
-        pattern.getTag().put(NBT_ALLOWED_TAGS, allowedTags.writeToNbt());
+        pattern.getTag().put(NBT_ALLOWED_TAGS, allowedTagList.writeToNbt());
     }
 
     @Nullable
-    public static AllowedTags getAllowedTags(ItemStack pattern) {
+    public static AllowedTagList getAllowedTags(ItemStack pattern) {
         if (!pattern.hasTag() || !pattern.getTag().contains(NBT_ALLOWED_TAGS)) {
             return null;
         }
 
-        AllowedTags allowedTags = new AllowedTags(null);
+        AllowedTagList allowedTagList = new AllowedTagList(null);
 
-        allowedTags.readFromNbt(pattern.getTag().getCompound(NBT_ALLOWED_TAGS));
+        allowedTagList.readFromNbt(pattern.getTag().getCompound(NBT_ALLOWED_TAGS));
 
-        return allowedTags;
+        return allowedTagList;
     }
 }
