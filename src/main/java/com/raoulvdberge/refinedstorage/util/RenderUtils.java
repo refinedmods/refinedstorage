@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.render.Styles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
@@ -13,7 +14,6 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.common.ForgeMod;
@@ -65,7 +65,7 @@ public final class RenderUtils {
                     data = new StringTextComponent(amount + "x ").appendSibling(data);
                 }
 
-                tooltip.add(data.setStyle(new Style().setColor(TextFormatting.GRAY)));
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
@@ -93,7 +93,7 @@ public final class RenderUtils {
                     data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").appendSibling(data);
                 }
 
-                tooltip.add(data.setStyle(new Style().setColor(TextFormatting.GRAY)));
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }

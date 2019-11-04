@@ -8,6 +8,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.AllowedTagList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPattern;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPatternFactory;
+import com.raoulvdberge.refinedstorage.render.Styles;
 import com.raoulvdberge.refinedstorage.render.tesr.PatternItemStackTileRenderer;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -21,8 +22,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -73,19 +72,14 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
         CraftingPattern pattern = fromCache(world, stack);
 
-        Style yellow = new Style().setColor(TextFormatting.YELLOW);
-        Style blue = new Style().setColor(TextFormatting.BLUE);
-        Style aqua = new Style().setColor(TextFormatting.AQUA);
-        Style red = new Style().setColor(TextFormatting.RED);
-
         if (pattern.isValid()) {
             if (ContainerScreen.hasShiftDown() || isProcessing(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.inputs").setStyle(yellow));
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.inputs").setStyle(Styles.YELLOW));
 
                 RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getInputs().stream().map(i -> i.size() > 0 ? i.get(0) : ItemStack.EMPTY).collect(Collectors.toList()));
                 RenderUtils.addCombinedFluidsToTooltip(tooltip, true, pattern.getFluidInputs().stream().map(i -> i.size() > 0 ? i.get(0) : FluidStack.EMPTY).collect(Collectors.toList()));
 
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.outputs").setStyle(yellow));
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.outputs").setStyle(Styles.YELLOW));
             }
 
             RenderUtils.addCombinedItemsToTooltip(tooltip, true, pattern.getOutputs());
@@ -100,7 +94,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
                             "misc.refinedstorage.pattern.allowed_item_tag",
                             tag.toString(),
                             pattern.getInputs().get(i).get(0).getDisplayName()
-                        ).setStyle(aqua));
+                        ).setStyle(Styles.AQUA));
                     }
                 }
 
@@ -112,21 +106,21 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
                             "misc.refinedstorage.pattern.allowed_fluid_tag",
                             tag.toString(),
                             pattern.getFluidInputs().get(i).get(0).getDisplayName()
-                        ).setStyle(aqua));
+                        ).setStyle(Styles.AQUA));
                     }
                 }
             }
 
             if (isExact(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.exact").setStyle(blue));
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.exact").setStyle(Styles.BLUE));
             }
 
             if (isProcessing(stack)) {
-                tooltip.add(new TranslationTextComponent("misc.refinedstorage.processing").setStyle(blue));
+                tooltip.add(new TranslationTextComponent("misc.refinedstorage.processing").setStyle(Styles.BLUE));
             }
         } else {
-            tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").setStyle(red));
-            tooltip.add(pattern.getErrorMessage().setStyle(new Style().setColor(TextFormatting.GRAY)));
+            tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").setStyle(Styles.RED));
+            tooltip.add(pattern.getErrorMessage().setStyle(Styles.GRAY));
         }
     }
 

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.mojang.authlib.GameProfile;
+import com.raoulvdberge.refinedstorage.render.Styles;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -12,8 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -78,7 +77,7 @@ public final class WorldUtils {
     }
 
     public static void sendNoPermissionMessage(PlayerEntity player) {
-        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.security.no_permission").setStyle(Styles.RED));
     }
 
     public static RayTraceResult rayTracePlayer(World world, PlayerEntity player) {

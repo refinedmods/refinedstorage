@@ -1,12 +1,11 @@
 package com.raoulvdberge.refinedstorage.item;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.render.Styles;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
@@ -93,7 +92,7 @@ public class UpgradeItem extends Item {
                 new TranslationTextComponent("enchantment.minecraft.fortune")
                     .appendText(" ")
                     .appendSibling(new TranslationTextComponent("enchantment.level." + type.getFortuneLevel()))
-                    .setStyle(new Style().setColor(TextFormatting.GRAY))
+                    .setStyle(Styles.GRAY)
             );
         }
     }

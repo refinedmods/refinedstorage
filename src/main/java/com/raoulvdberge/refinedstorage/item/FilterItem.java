@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FilterFluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.FilterItemsItemHandler;
+import com.raoulvdberge.refinedstorage.render.Styles;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.util.ITooltipFlag;
@@ -21,8 +22,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -79,10 +78,10 @@ public class FilterItem extends Item {
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
 
-        tooltip.add(new TranslationTextComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(new Style().setColor(TextFormatting.YELLOW)));
+        tooltip.add(new TranslationTextComponent("sidebutton.refinedstorage.mode." + (getMode(stack) == IFilter.MODE_WHITELIST ? "whitelist" : "blacklist")).setStyle(Styles.YELLOW));
 
         if (isModFilter(stack)) {
-            tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").setStyle(new Style().setColor(TextFormatting.BLUE)));
+            tooltip.add(new TranslationTextComponent("gui.refinedstorage.filter.mod_filter").setStyle(Styles.BLUE));
         }
 
         FilterItemsItemHandler items = new FilterItemsItemHandler(stack);
