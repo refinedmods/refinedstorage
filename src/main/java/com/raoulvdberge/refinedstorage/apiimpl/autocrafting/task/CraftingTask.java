@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.*;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
@@ -96,8 +97,8 @@ public class CraftingTask implements ICraftingTask {
     private IStackList<ItemStack> toTake = API.instance().createItemStackList();
     private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
 
-    private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
-    private IStackList<FluidStack> toCraftFluids = API.instance().createFluidStackList();
+    private List<ItemStack> toCraft = new ArrayList<>();
+    private List<FluidStack> toCraftFluids = new ArrayList<>();
 
     public CraftingTask(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
         this.network = network;
@@ -272,9 +273,13 @@ public class CraftingTask implements ICraftingTask {
 
 
         if (requested.getItem() != null) {
-            this.toCraft.add(requested.getItem(), qty * qtyPerCraft);
-        } else {
-            this.toCraftFluids.add(requested.getFluid(), qty * qtyPerCraft);
+            ItemStack req = requested.getItem();
+            req.setCount(qty*qtyPerCraft);
+            this.toCraft.add(req);
+        } else if (requested.getFluid() != null) {
+            FluidStack reqf = requested.getFluid();
+            reqf.amount = qty*qtyPerCraft;
+            this.toCraftFluids.add(reqf);
         }
 
         return null;
@@ -546,7 +551,8 @@ public class CraftingTask implements ICraftingTask {
 
 
                         // fromSelf contains the amount crafted after the loop.
-                        this.toCraftFluids.add(input, fromSelf.amount);
+                        input.amount = fromSelf.amount;
+                        this.toCraftFluids.add(input);
                     } else {
                         this.missingFluids.add(input, remaining);
 
@@ -1219,34 +1225,6 @@ public class CraftingTask implements ICraftingTask {
         Map<Integer, CraftingPreviewElementItemStack> map = new LinkedHashMap<>();
         Map<Integer, CraftingPreviewElementFluidStack> mapFluids = new LinkedHashMap<>();
 
-        for (ItemStack stack : toCraft.getStacks()) {
-            int hash = API.instance().getItemStackHashCode(stack);
-
-            CraftingPreviewElementItemStack previewStack = map.get(hash);
-
-            if (previewStack == null) {
-                previewStack = new CraftingPreviewElementItemStack(stack);
-            }
-
-            previewStack.addToCraft(stack.getCount());
-
-            map.put(hash, previewStack);
-        }
-
-        for (FluidStack stack : toCraftFluids.getStacks()) {
-            int hash = API.instance().getFluidStackHashCode(stack);
-
-            CraftingPreviewElementFluidStack previewStack = mapFluids.get(hash);
-
-            if (previewStack == null) {
-                previewStack = new CraftingPreviewElementFluidStack(stack);
-            }
-
-            previewStack.addToCraft(stack.amount);
-
-            mapFluids.put(hash, previewStack);
-        }
-
         for (ItemStack stack : missing.getStacks()) {
             int hash = API.instance().getItemStackHashCode(stack);
 
@@ -1272,6 +1250,34 @@ public class CraftingTask implements ICraftingTask {
             }
 
             previewStack.setMissing(true);
+            previewStack.addToCraft(stack.amount);
+
+            mapFluids.put(hash, previewStack);
+        }
+
+        for (ItemStack stack : ImmutableList.copyOf(toCraft).reverse()) {
+            int hash = API.instance().getItemStackHashCode(stack);
+
+            CraftingPreviewElementItemStack previewStack = map.get(hash);
+
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewElementItemStack(stack);
+            }
+
+            previewStack.addToCraft(stack.getCount());
+
+            map.put(hash, previewStack);
+        }
+
+        for (FluidStack stack : ImmutableList.copyOf(toCraftFluids).reverse()) {
+            int hash = API.instance().getFluidStackHashCode(stack);
+
+            CraftingPreviewElementFluidStack previewStack = mapFluids.get(hash);
+
+            if (previewStack == null) {
+                previewStack = new CraftingPreviewElementFluidStack(stack);
+            }
+
             previewStack.addToCraft(stack.amount);
 
             mapFluids.put(hash, previewStack);
