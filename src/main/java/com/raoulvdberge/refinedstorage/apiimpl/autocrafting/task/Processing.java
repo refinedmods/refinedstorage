@@ -9,6 +9,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.*;
 
 
 class Processing extends Craft {
@@ -20,6 +23,7 @@ class Processing extends Craft {
     private static final String NBT_ITEMS_RECEIVED = "ItemsReceived";
     private static final String NBT_FLUIDS_RECEIVED = "FluidsReceived";
     private static final String NBT_INSERTED = "Inserted";
+    private static final String NBT_HAS_DUPLICATES = "HasDuplicates";
 
 
     private IStackList<ItemStack> itemsToReceive;
@@ -36,6 +40,8 @@ class Processing extends Craft {
     private int finished;
     private int inserted;
     boolean isInitialized;
+    private boolean hasDuplicates;
+    private List<Set<ItemStack>> noDupeSets = new ArrayList<>();
 
     Processing(ICraftingPattern pattern, boolean root) {
         super(pattern, root);
@@ -58,7 +64,11 @@ class Processing extends Craft {
         this.itemsReceived = CraftingTask.readItemStackList(tag.getTagList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
         this.fluidsReceived = CraftingTask.readFluidStackList(tag.getTagList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
         this.inserted = tag.getInteger(NBT_INSERTED);
+        this.hasDuplicates = tag.getBoolean(NBT_HAS_DUPLICATES);
         setTotals();
+        if (hasDuplicates) {
+            createNoDuplicateLists();
+        }
     }
 
     @Override
@@ -66,6 +76,26 @@ class Processing extends Craft {
         super.finishCalculation();
         totalQuantity = getQuantity();
         setTotals();
+        if (hasDuplicates) {
+            createNoDuplicateLists();
+        }
+
+    }
+
+    private void createNoDuplicateLists() {
+        for (List<ItemStack> list : itemSetsToUse) {
+            Map<String, ItemStack> map = new LinkedHashMap<>();
+            for(ItemStack stack : list){
+                if(map.containsKey(stack.getTranslationKey())){
+                    ItemStack in = map.get(stack.getTranslationKey());
+                    ItemStack copy = ItemHandlerHelper.copyStackWithSize(in,in.getCount()+stack.getCount());
+                    map.replace(stack.getTranslationKey(),copy);
+                } else {
+                    map.put(stack.getTranslationKey(),stack);
+                }
+            }
+            noDupeSets.add(new LinkedHashSet<>(map.values()));
+        }
     }
 
     private void setTotals() {
@@ -80,6 +110,15 @@ class Processing extends Craft {
     public void nextSet() {
         super.nextSet();
         inserted++;
+    }
+
+    //Simulation of extraction can go wrong if the Collection has duplicates
+    public Collection<ItemStack> getCurrentSetNoDupes() {
+        if (hasDuplicates) {
+            return noDupeSets.get(setIndex);
+        } else {
+            return super.getCurrentSet();
+        }
     }
 
     boolean isNothingProcessing() {
@@ -207,7 +246,12 @@ class Processing extends Craft {
         tag.setTag(NBT_ITEMS_RECEIVED, CraftingTask.writeItemStackList(itemsReceived));
         tag.setTag(NBT_FLUIDS_RECEIVED, CraftingTask.writeFluidStackList(fluidsReceived));
         tag.setInteger(NBT_INSERTED, inserted);
+        tag.setBoolean(NBT_HAS_DUPLICATES, hasDuplicates);
 
         return tag;
+    }
+
+    public void enableDupeSets() {
+        hasDuplicates = true;
     }
 }

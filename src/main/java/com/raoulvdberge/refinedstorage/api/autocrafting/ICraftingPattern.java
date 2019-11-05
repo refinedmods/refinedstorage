@@ -76,9 +76,4 @@ public interface ICraftingPattern {
      * @return the id of the factory that creates a crafting task for this pattern, as defined in the {@link com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry}
      */
     String getId();
-
-    /**
-     * @return the hashcode used to store the pattern chains
-     */
-    int getChainHashCode();
 }

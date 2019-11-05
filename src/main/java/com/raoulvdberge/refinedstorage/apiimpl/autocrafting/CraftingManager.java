@@ -35,7 +35,7 @@ public class CraftingManager implements ICraftingManager {
     private TileController network;
 
     private Map<String, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
-    private Map<Integer, List<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
+    private Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -366,12 +366,12 @@ public class CraftingManager implements ICraftingManager {
         for (ICraftingPatternContainer container : containers) {
             this.patterns.addAll(container.getPatterns());
             container.getPatterns().forEach(pattern -> {
-                List<ICraftingPatternContainer> list = patternToContainer.get(pattern.getChainHashCode());
+                Set<ICraftingPatternContainer> list = patternToContainer.get(pattern);
                 if (list == null) {
-                    list = new ArrayList<>();
+                    list = new HashSet<>();
                 }
                 list.add(container);
-                patternToContainer.put(pattern.getChainHashCode(),list);
+                patternToContainer.put(pattern,list);
             });
 
             IItemHandlerModifiable handler = container.getPatternInventory();
@@ -381,8 +381,8 @@ public class CraftingManager implements ICraftingManager {
         }
     }
     @Override
-    public List<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern){
-        return patternToContainer.getOrDefault(pattern.getChainHashCode(),new ArrayList<>());
+    public Set<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern){
+        return patternToContainer.getOrDefault(pattern,new HashSet<>());
     }
 
     @Nullable

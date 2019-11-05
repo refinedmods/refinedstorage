@@ -11,8 +11,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
-
-
 import java.util.*;
 
 
@@ -30,9 +28,9 @@ public abstract class Craft {
 
     ICraftingPattern pattern;
     private List<ItemStack> defaultSet = new ArrayList<>();
-    private List<List<ItemStack>> itemSetsToUse = new ArrayList<>();
+    protected List<List<ItemStack>> itemSetsToUse = new ArrayList<>();
     private List<Integer> itemSetCounts = new ArrayList<>();
-    private int setIndex = 0;
+    protected int setIndex = 0;
 
     //these are all irrelevant after calculation is finished
     private List<List<ItemStack>> oredictedItems = new ArrayList<>();
@@ -49,10 +47,10 @@ public abstract class Craft {
 
         NBTTagList list = tag.getTagList(NBT_ITEM_SETS_TO_USE, Constants.NBT.TAG_LIST);
         for(int i = 0; i<list.tagCount(); i++) {
-            NBTTagList innerlist = (NBTTagList)list.get(i);
+            NBTTagList innerList = (NBTTagList)list.get(i);
             List<ItemStack> itemList = new ArrayList<>();
-            for(int j = 0; j<innerlist.tagCount();j++){
-                itemList.add(StackUtils.deserializeStackFromNbt(innerlist.getCompoundTagAt(j)));
+            for(int j = 0; j<innerList.tagCount();j++){
+                itemList.add(StackUtils.deserializeStackFromNbt(innerList.getCompoundTagAt(j)));
             }
             itemSetsToUse.add(itemList);
         }
@@ -185,7 +183,7 @@ public abstract class Craft {
     public void addToOredictLists(ItemStack stack, int count, int countInRecipe, int ingredientNumber) {
         List<ItemStack> itemList;
         List<Integer> countList;
-        if (oredictedItems.size() != ingredientNumber) { // this type of item was stored before
+        if (oredictedItems.size() > ingredientNumber) { // this type of item was stored before
          itemList = oredictedItems.get(ingredientNumber);
          countList = oredictCounts.get(ingredientNumber);
             for (int i = 0; i < itemList.size(); i++) { //if same item already in list just add to countList

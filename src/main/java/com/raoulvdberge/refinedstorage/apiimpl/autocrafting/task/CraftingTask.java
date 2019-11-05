@@ -55,11 +55,6 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_TO_EXTRACT_INITIAL = "ToExtractInitial";
     private static final String NBT_TO_EXTRACT_INITIAL_FLUIDS = "ToExtractInitialFluids";
     private static final String NBT_CRAFTS = "Crafts";
-    private static final String NBT_ITEMS_TO_EXPECT = "ItemsToExpect";
-    private static final String NBT_FLUIDS_TO_EXPECT = "FluidsToExpect";
-    private static final String NBT_ITEM_HASHCODE = "ItemHashcode";
-    private static final String NBT_PATTERN_HASHCODE = "PatternHashcode";
-    private static final String NBT_FLUID_HASHCODE = "FluidHashcode";
     private static final String NBT_MISSING = "Missing";
     private static final String NBT_MISSING_FLUIDS = "MissingFluids";
     private static final String NBT_TOTAL_STEPS = "TotalSteps";
@@ -89,7 +84,7 @@ public class CraftingTask implements ICraftingTask {
     private IStackList<ItemStack> toExtractInitial = API.instance().createItemStackList();
     private IStackList<FluidStack> toExtractInitialFluids = API.instance().createFluidStackList();
 
-    private Map<Integer, Craft> crafts = new LinkedHashMap<>();
+    private Map<ICraftingPattern, Craft> crafts = new LinkedHashMap<>();
 
     private List<Craft> craftsToRemove = new ArrayList<>();
     private HashMultimap<Integer, Processing> itemsToExpect = HashMultimap.create();
@@ -144,19 +139,10 @@ public class CraftingTask implements ICraftingTask {
         NBTTagList craftingList = tag.getTagList(NBT_CRAFTS, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < craftingList.tagCount(); ++i) {
             Craft c = Craft.createCraftFromNBT(network, craftingList.getCompoundTagAt(i));
-            crafts.put(c.getPattern().getChainHashCode(), c);
-        }
-
-        NBTTagList expectedItemList = tag.getTagList(NBT_ITEMS_TO_EXPECT, Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < expectedItemList.tagCount(); ++i) {
-            NBTTagCompound compound = expectedItemList.getCompoundTagAt(i);
-            itemsToExpect.put(compound.getInteger(NBT_ITEM_HASHCODE), (Processing) crafts.get(compound.getInteger(NBT_PATTERN_HASHCODE)));
-        }
-
-        NBTTagList expectedFluidList = tag.getTagList(NBT_FLUIDS_TO_EXPECT, Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < expectedFluidList.tagCount(); ++i) {
-            NBTTagCompound compound = expectedFluidList.getCompoundTagAt(i);
-            fluidsToExpect.put(compound.getInteger(NBT_FLUID_HASHCODE), (Processing) crafts.get(compound.getInteger(NBT_PATTERN_HASHCODE)));
+            crafts.put(c.getPattern(), c);
+            if (c instanceof Processing) {
+                createExpectedLists((Processing) c);
+            }
         }
 
         this.missing = readItemStackList(tag.getTagList(NBT_MISSING, Constants.NBT.TAG_COMPOUND));
@@ -183,24 +169,6 @@ public class CraftingTask implements ICraftingTask {
             craftingList.appendTag(craft.writeToNbt());
         }
         tag.setTag(NBT_CRAFTS, craftingList);
-
-        NBTTagList expectedItemList = new NBTTagList();
-        for (Map.Entry<Integer, Processing> entry : itemsToExpect.entries()) {
-            NBTTagCompound compound = new NBTTagCompound();
-            compound.setInteger(NBT_ITEM_HASHCODE, entry.getKey());
-            compound.setInteger(NBT_PATTERN_HASHCODE, entry.getValue().getPattern().getChainHashCode());
-            expectedItemList.appendTag(compound);
-        }
-        tag.setTag(NBT_ITEMS_TO_EXPECT, expectedItemList);
-
-        NBTTagList expectedFluidList = new NBTTagList();
-        for (Map.Entry<Integer, Processing> entry : fluidsToExpect.entries()) {
-            NBTTagCompound compound = new NBTTagCompound();
-            compound.setInteger(NBT_FLUID_HASHCODE, entry.getKey());
-            compound.setInteger(NBT_PATTERN_HASHCODE, entry.getValue().getPattern().getChainHashCode());
-            expectedFluidList.appendTag(compound);
-        }
-        tag.setTag(NBT_FLUIDS_TO_EXPECT, expectedFluidList);
 
 
         tag.setTag(NBT_MISSING, writeItemStackList(missing));
@@ -294,14 +262,7 @@ public class CraftingTask implements ICraftingTask {
             for (Craft c : crafts.values()) {
                 c.finishCalculation();
                 if (c instanceof Processing) {
-                    Processing p = (Processing) c;
-                    for (ItemStack stack : p.pattern.getOutputs()) {
-                        itemsToExpect.put(API.instance().getItemStackHashCode(stack), p);
-                    }
-                    for (FluidStack stack : p.pattern.getFluidOutputs()) {
-                        fluidsToExpect.put(API.instance().getFluidStackHashCode(stack), p);
-                    }
-
+                    createExpectedLists((Processing) c);
                 }
             }
         }
@@ -314,6 +275,15 @@ public class CraftingTask implements ICraftingTask {
         }
 
         return null;
+    }
+
+    private void createExpectedLists(Processing p) {
+        for (ItemStack stack : p.pattern.getOutputs()) {
+            itemsToExpect.put(API.instance().getItemStackHashCode(stack), p);
+        }
+        for (FluidStack stack : p.pattern.getFluidOutputs()) {
+            fluidsToExpect.put(API.instance().getFluidStackHashCode(stack), p);
+        }
     }
 
 
@@ -375,12 +345,19 @@ public class CraftingTask implements ICraftingTask {
         boolean duplicate;
         NonNullList<ItemStack> recipe = NonNullList.create();
         Map<NonNullList<ItemStack>, Integer> ingredientList = new LinkedHashMap<>();
+        boolean processingHasDuplicateItems = false;
+
 
         if (pattern.isProcessing()) {
+            Map<Integer, ItemStack> dupeTestSet = new HashMap<>();
             for (NonNullList<ItemStack> in : pattern.getInputs()) {
                 if (!in.isEmpty()) {
                     ingredientList.put(in, in.get(0).getCount());
+                    dupeTestSet.put(API.instance().getItemStackHashCode(in.get(0)), in.get(0));
                 }
+            }
+            if (dupeTestSet.size() != ingredientList.size()) {
+                processingHasDuplicateItems = true;
             }
         } else {
             for (NonNullList<ItemStack> in : pattern.getInputs()) {
@@ -407,6 +384,9 @@ public class CraftingTask implements ICraftingTask {
         }
 
         Craft craft = createCraft(qty, recipe, pattern, root);
+        if (craft instanceof Processing && processingHasDuplicateItems) {
+            ((Processing) craft).enableDupeSets();
+        }
         int IngredientNumber = -1;
 
         for (Map.Entry<NonNullList<ItemStack>, Integer> entry : ingredientList.entrySet()) {
@@ -609,10 +589,10 @@ public class CraftingTask implements ICraftingTask {
     }
 
     private Craft createCraft(int quantity, NonNullList<ItemStack> recipe, ICraftingPattern pattern, boolean root) {
-        Craft c = crafts.get(pattern.getChainHashCode());
+        Craft c = crafts.get(pattern);
         if (c == null) {
             c = pattern.isProcessing() ? new Processing(pattern, root) : new Crafting(recipe, pattern, root);
-            crafts.put(pattern.getChainHashCode(), c);
+            crafts.put(pattern, c);
         }
         c.addQuantity(quantity);
         return c;
@@ -767,7 +747,7 @@ public class CraftingTask implements ICraftingTask {
                         allNull = false;
                     }
 
-                    boolean hasAll = extractFromInternalItemStorage(p.getCurrentSet(), internalStorage, Action.SIMULATE);
+                    boolean hasAll = extractFromInternalItemStorage(p.getCurrentSetNoDupes(), internalStorage, Action.SIMULATE);
                     if (hasAll) {
                         hasAll = extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), internalFluidStorage, Action.SIMULATE);
                     }
@@ -975,7 +955,7 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
             for (Craft c : craftsToRemove) {
-                crafts.remove(c.getPattern().getChainHashCode());
+                crafts.remove(c.getPattern());
             }
             craftsToRemove.clear();
 
@@ -1067,6 +1047,8 @@ public class CraftingTask implements ICraftingTask {
                     if (size == 0) {
                         return 0;
                     }
+                } else {
+                    itemsToExpect.remove(API.instance().getItemStackHashCode(stack), p);
                 }
             }
         }
@@ -1112,6 +1094,8 @@ public class CraftingTask implements ICraftingTask {
                     if (size == 0) {
                         return 0;
                     }
+                } else {
+                    fluidsToExpect.remove(API.instance().getFluidStackHashCode(stack), p);
                 }
             }
         }
