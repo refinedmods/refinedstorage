@@ -75,7 +75,7 @@ public class CraftingTask implements ICraftingTask {
     private long calculationStarted = -1;
     private long executionStarted = -1;
     private int totalSteps = 0;
-    private int curentstep = 0;
+    private int currentstep = 0;
     private Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
     private IStorageDisk<ItemStack> internalStorage;
@@ -125,7 +125,7 @@ public class CraftingTask implements ICraftingTask {
         this.id = tag.getUniqueId(NBT_ID);
         this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
         this.totalSteps = tag.getInteger(NBT_TOTAL_STEPS);
-        this.curentstep = tag.getInteger(NBT_CURRENT_STEP);
+        this.currentstep = tag.getInteger(NBT_CURRENT_STEP);
 
         StorageDiskFactoryItem factoryItem = new StorageDiskFactoryItem();
         StorageDiskFactoryFluid factoryFluid = new StorageDiskFactoryFluid();
@@ -162,7 +162,7 @@ public class CraftingTask implements ICraftingTask {
         tag.setTag(NBT_TO_EXTRACT_INITIAL, writeItemStackList(toExtractInitial));
         tag.setTag(NBT_TO_EXTRACT_INITIAL_FLUIDS, writeFluidStackList(toExtractInitialFluids));
         tag.setInteger(NBT_TOTAL_STEPS, totalSteps);
-        tag.setInteger(NBT_CURRENT_STEP, curentstep);
+        tag.setInteger(NBT_CURRENT_STEP, currentstep);
 
         NBTTagList craftingList = new NBTTagList();
         for (Craft craft : this.crafts.values()) {
@@ -263,6 +263,9 @@ public class CraftingTask implements ICraftingTask {
                 c.finishCalculation();
                 if (c instanceof Processing) {
                     createExpectedLists((Processing) c);
+                    totalSteps += ((Processing)c).getTotalQuantity();
+                } else {
+                    totalSteps += c.getQuantity();
                 }
             }
         }
@@ -420,7 +423,7 @@ public class CraftingTask implements ICraftingTask {
 
                     fromSelf = results.get(possibleInput.getLeft());
 
-                    craft.addToOredictLists(possibleInput.getLeft(), toTake, entry.getValue(), IngredientNumber);
+                    craft.addToOredictStorage(possibleInput.getLeft(), toTake, entry.getValue(), IngredientNumber);
                 }
                 if (fromNetwork != null && remaining > 0) {
                     int toTake = Math.min(remaining, fromNetwork.getCount());
@@ -437,7 +440,7 @@ public class CraftingTask implements ICraftingTask {
 
                     fromNetwork = mutatedStorage.get(possibleInput.getLeft());
 
-                    craft.addToOredictLists(possibleInput.getLeft(), toTake, entry.getValue(), IngredientNumber);
+                    craft.addToOredictStorage(possibleInput.getLeft(), toTake, entry.getValue(), IngredientNumber);
                 }
                 if (remaining > 0) {
                     ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput.getLeft());
@@ -493,6 +496,10 @@ public class CraftingTask implements ICraftingTask {
             FluidStack fromSelf = fluidResults.get(input, IComparer.COMPARE_NBT);
             FluidStack fromNetwork = mutatedFluidStorage.get(input, IComparer.COMPARE_NBT);
             int remaining = input.amount;
+            if (remaining < 0) { // int overflow
+                return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
+            }
+
 
             while (remaining > 0) {
                 if (fromSelf != null) {
@@ -665,9 +672,9 @@ public class CraftingTask implements ICraftingTask {
                         return;
                     }
 
-                    if (extractFromInternalItemStorage(c.getCurrentSet(), internalStorage, Action.SIMULATE)) {
+                    if (extractFromInternalItemStorage(c.getNextSet(Action.SIMULATE), internalStorage, Action.SIMULATE)) {
 
-                        extractFromInternalItemStorage(c.getCurrentSet(), internalStorage, Action.PERFORM);
+                        extractFromInternalItemStorage(c.getNextSet(Action.PERFORM), internalStorage, Action.PERFORM);
 
                         ItemStack output = c.getPattern().getOutput(c.getRecipe());
 
@@ -687,8 +694,8 @@ public class CraftingTask implements ICraftingTask {
                             this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
                         }
 
-                        c.nextSet();
-                        curentstep++;
+                        c.reduceQuantity();
+                        currentstep++;
 
                         network.getCraftingManager().onTaskChanged();
 
@@ -747,14 +754,14 @@ public class CraftingTask implements ICraftingTask {
                         allNull = false;
                     }
 
-                    boolean hasAll = extractFromInternalItemStorage(p.getCurrentSetNoDupes(), internalStorage, Action.SIMULATE);
+                    boolean hasAll = extractFromInternalItemStorage(p.getNoDupeSet(Action.SIMULATE), internalStorage, Action.SIMULATE);
                     if (hasAll) {
                         hasAll = extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), internalFluidStorage, Action.SIMULATE);
                     }
 
                     boolean canInsert = false;
                     if (hasAll) {
-                        canInsert = insertIntoInventory(container.getConnectedInventory(), p.getCurrentSet(), Action.SIMULATE);
+                        canInsert = insertIntoInventory(container.getConnectedInventory(), p.getNextSet(Action.SIMULATE), Action.SIMULATE);
                         if (canInsert) {
                             canInsert = insertIntoTank(container.getConnectedFluidInventory(), p.getFluidsToPut().getStacks(), Action.SIMULATE);
                         }
@@ -771,14 +778,15 @@ public class CraftingTask implements ICraftingTask {
 
                     if (hasAll && canInsert) {
                         p.setState(ProcessingState.READY_OR_PROCESSING);
-                        extractFromInternalItemStorage(p.getCurrentSet(), internalStorage, Action.PERFORM);
+                        // SIMULATE is correct because the items need to be there for insertion
+                        extractFromInternalItemStorage(p.getNextSet(Action.SIMULATE), internalStorage, Action.PERFORM);
                         extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), internalFluidStorage, Action.PERFORM);
 
-                        insertIntoInventory(container.getConnectedInventory(), p.getCurrentSet(), Action.PERFORM);
+                        insertIntoInventory(container.getConnectedInventory(), p.getNextSet(Action.PERFORM), Action.PERFORM);
                         insertIntoTank(container.getConnectedFluidInventory(), p.getFluidsToPut().getStacks(), Action.PERFORM);
 
-                        p.nextSet();
-                        curentstep++;
+                        currentstep++;
+                        p.reduceQuantity();
 
                         network.getCraftingManager().onTaskChanged();
                         container.onUsedForProcessing();
@@ -842,8 +850,8 @@ public class CraftingTask implements ICraftingTask {
             for (int i = 0; i < availableSlots.size(); ++i) {
                 int slot = availableSlots.get(i);
 
-                // .copy() mandatory if not simulation!
-                remainder = dest.insertItem(slot, action == Action.SIMULATE ? current : current.copy(), action == Action.SIMULATE);
+                // .copy() happens in getNextSet()
+                remainder = dest.insertItem(slot, current, action == Action.SIMULATE);
 
                 // If we inserted *something*
                 if (remainder.isEmpty() || current.getCount() != remainder.getCount()) {
@@ -893,8 +901,7 @@ public class CraftingTask implements ICraftingTask {
         if (totalSteps == 0) {
             return 0;
         }
-
-        return 100 - (int) (((float) curentstep / (float) totalSteps) * 100);
+        return (int) ((float) currentstep*100/totalSteps);
     }
 
     @Override
@@ -907,8 +914,6 @@ public class CraftingTask implements ICraftingTask {
 
         if (executionStarted == -1) {
             executionStarted = System.currentTimeMillis();
-
-            crafts.values().forEach((c) -> totalSteps += quantity);
         }
 
         ++ticks;

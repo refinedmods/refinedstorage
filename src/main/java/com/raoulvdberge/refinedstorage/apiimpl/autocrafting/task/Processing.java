@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
@@ -41,7 +42,6 @@ class Processing extends Craft {
     private int inserted;
     boolean isInitialized;
     private boolean hasDuplicates;
-    private List<Set<ItemStack>> noDupeSets = new ArrayList<>();
 
     Processing(ICraftingPattern pattern, boolean root) {
         super(pattern, root);
@@ -66,9 +66,6 @@ class Processing extends Craft {
         this.inserted = tag.getInteger(NBT_INSERTED);
         this.hasDuplicates = tag.getBoolean(NBT_HAS_DUPLICATES);
         setTotals();
-        if (hasDuplicates) {
-            createNoDuplicateLists();
-        }
     }
 
     @Override
@@ -76,26 +73,7 @@ class Processing extends Craft {
         super.finishCalculation();
         totalQuantity = getQuantity();
         setTotals();
-        if (hasDuplicates) {
-            createNoDuplicateLists();
-        }
 
-    }
-
-    private void createNoDuplicateLists() {
-        for (List<ItemStack> list : itemSetsToUse) {
-            Map<String, ItemStack> map = new LinkedHashMap<>();
-            for(ItemStack stack : list){
-                if(map.containsKey(stack.getTranslationKey())){
-                    ItemStack in = map.get(stack.getTranslationKey());
-                    ItemStack copy = ItemHandlerHelper.copyStackWithSize(in,in.getCount()+stack.getCount());
-                    map.replace(stack.getTranslationKey(),copy);
-                } else {
-                    map.put(stack.getTranslationKey(),stack);
-                }
-            }
-            noDupeSets.add(new LinkedHashSet<>(map.values()));
-        }
     }
 
     private void setTotals() {
@@ -106,19 +84,32 @@ class Processing extends Craft {
 
     }
 
-    @Override
-    public void nextSet() {
-        super.nextSet();
-        inserted++;
+    //Simulation of extraction can go wrong if the Collection has duplicates
+    public Collection<ItemStack> getNoDupeSet(Action action) {
+        if (hasDuplicates) {
+            Collection<ItemStack> list = super.getNextSet(action);
+            Map<String, ItemStack> map = new LinkedHashMap<>();
+            for (ItemStack stack : list) {
+                if (map.containsKey(stack.getTranslationKey())) {
+                    ItemStack in = map.get(stack.getTranslationKey());
+                    ItemStack copy = ItemHandlerHelper.copyStackWithSize(in, in.getCount() + stack.getCount());
+                    map.replace(stack.getTranslationKey(), copy);
+                } else {
+                    map.put(stack.getTranslationKey(), stack);
+                }
+            }
+            return new LinkedHashSet<>(map.values());
+        } else {
+            return getNextSet(action);
+        }
     }
 
-    //Simulation of extraction can go wrong if the Collection has duplicates
-    public Collection<ItemStack> getCurrentSetNoDupes() {
-        if (hasDuplicates) {
-            return noDupeSets.get(setIndex);
-        } else {
-            return super.getCurrentSet();
+    @Override
+    public Collection<ItemStack> getNextSet(Action action) {
+        if (action == Action.PERFORM) {
+            inserted++;
         }
+        return super.getNextSet(action);
     }
 
     boolean isNothingProcessing() {
@@ -234,6 +225,7 @@ class Processing extends Craft {
         return state;
     }
 
+
     @Override
     public NBTTagCompound writeToNbt() {
         NBTTagCompound tag = super.writeToNbt();
@@ -253,5 +245,9 @@ class Processing extends Craft {
 
     public void enableDupeSets() {
         hasDuplicates = true;
+    }
+
+    public int getTotalQuantity() {
+        return totalQuantity;
     }
 }
