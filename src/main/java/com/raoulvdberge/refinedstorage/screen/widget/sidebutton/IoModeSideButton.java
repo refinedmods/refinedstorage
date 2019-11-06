@@ -1,0 +1,29 @@
+package com.raoulvdberge.refinedstorage.screen.widget.sidebutton;
+
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.diskmanipulator.DiskManipulatorNetworkNode;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.tile.DiskManipulatorTile;
+import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
+
+public class IoModeSideButton extends SideButton {
+    public IoModeSideButton(BaseScreen screen) {
+        super(screen);
+    }
+
+    @Override
+    public String getTooltip() {
+        return I18n.format("sidebutton.refinedstorage.iomode") + "\n" + TextFormatting.GRAY + I18n.format("sidebutton.refinedstorage.iomode." + (DiskManipulatorTile.IO_MODE.getValue() == DiskManipulatorNetworkNode.IO_MODE_INSERT ? "insert" : "extract"));
+    }
+
+    @Override
+    protected void renderButtonIcon(int x, int y) {
+        screen.blit(x, y, DiskManipulatorTile.IO_MODE.getValue() == DiskManipulatorNetworkNode.IO_MODE_EXTRACT ? 0 : 16, 160, 16, 16);
+    }
+
+    @Override
+    public void onPress() {
+        TileDataManager.setParameter(DiskManipulatorTile.IO_MODE, DiskManipulatorTile.IO_MODE.getValue() == DiskManipulatorNetworkNode.IO_MODE_INSERT ? DiskManipulatorNetworkNode.IO_MODE_EXTRACT : DiskManipulatorNetworkNode.IO_MODE_INSERT);
+    }
+}

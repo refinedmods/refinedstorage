@@ -1,41 +1,36 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "refinedstorage:cube_north_cutout",
-    "textures": {
-      "particle": "refinedstorage:blocks/side",
-      "north": "refinedstorage:blocks/crafter_manager/front",
-      "east": "refinedstorage:blocks/crafter_manager/left",
-      "south": "refinedstorage:blocks/crafter_manager/back",
-      "west": "refinedstorage:blocks/crafter_manager/right",
-      "up": "refinedstorage:blocks/crafter_manager/top",
-      "cutout": "refinedstorage:blocks/crafter_manager/cutouts/front_disconnected",
-      "down": "refinedstorage:blocks/bottom"
-    }
-  },
   "variants": {
-    "connected": {
-      "true": {
-        "textures": {
-          "cutout": "refinedstorage:blocks/crafter_manager/cutouts/front_connected"
-        }
-      },
-      "false": {
-      }
+    "connected=true,direction=north": {
+      "model": "refinedstorage:block/crafter_manager_connected",
+      "y": 0
     },
-    "direction": {
-      "north": {
-        "y": 0
-      },
-      "east": {
-        "y": 90
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      }
+    "connected=true,direction=east": {
+      "model": "refinedstorage:block/crafter_manager_connected",
+      "y": 90
+    },
+    "connected=true,direction=south": {
+      "model": "refinedstorage:block/crafter_manager_connected",
+      "y": 180
+    },
+    "connected=true,direction=west": {
+      "model": "refinedstorage:block/crafter_manager_connected",
+      "y": 270
+    },
+    "connected=false,direction=north": {
+      "model": "refinedstorage:block/crafter_manager_disconnected",
+      "y": 0
+    },
+    "connected=false,direction=east": {
+      "model": "refinedstorage:block/crafter_manager_disconnected",
+      "y": 90
+    },
+    "connected=false,direction=south": {
+      "model": "refinedstorage:block/crafter_manager_disconnected",
+      "y": 180
+    },
+    "connected=false,direction=west": {
+      "model": "refinedstorage:block/crafter_manager_disconnected",
+      "y": 270
     }
   }
 }

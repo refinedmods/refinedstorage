@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.item;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -18,5 +18,5 @@ public interface INetworkItemProvider {
      * @return the network item
      */
     @Nonnull
-    INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack);
+    INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack);
 }

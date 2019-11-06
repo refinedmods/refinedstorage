@@ -1,0 +1,12 @@
+{
+  "parent": "refinedstorage:block/cube_north_cutout",
+  "textures": {
+    "particle": "refinedstorage:block/crafting_monitor/front",
+    "north": "refinedstorage:block/crafting_monitor/front",
+    "east": "refinedstorage:block/crafting_monitor/left",
+    "south": "refinedstorage:block/crafting_monitor/back",
+    "west": "refinedstorage:block/crafting_monitor/right",
+    "up": "refinedstorage:block/crafting_monitor/top",
+    "down": "refinedstorage:block/bottom"
+  }
+}

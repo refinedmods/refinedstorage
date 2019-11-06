@@ -5,145 +5,56 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContaine
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
-import com.raoulvdberge.refinedstorage.item.ItemPattern;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
-import java.util.ArrayList;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class CraftingPattern implements ICraftingPattern {
-    private ICraftingPatternContainer container;
-    private ItemStack stack;
-    private boolean processing;
-    private boolean oredict;
-    private boolean valid;
-    private IRecipe recipe;
-    private List<NonNullList<ItemStack>> inputs = new ArrayList<>();
-    private NonNullList<ItemStack> outputs = NonNullList.create();
-    private NonNullList<ItemStack> byproducts = NonNullList.create();
-    private NonNullList<FluidStack> fluidInputs = NonNullList.create();
-    private NonNullList<FluidStack> fluidOutputs = NonNullList.create();
+    private final ICraftingPatternContainer container;
+    private final ItemStack stack;
+    private final boolean processing;
+    private final boolean exact;
+    private final boolean valid;
+    @Nullable
+    private final ITextComponent errorMessage;
+    @Nullable
+    private final ICraftingRecipe recipe;
+    private final List<NonNullList<ItemStack>> inputs;
+    private final NonNullList<ItemStack> outputs;
+    private final NonNullList<ItemStack> byproducts;
+    private final List<NonNullList<FluidStack>> fluidInputs;
+    private final NonNullList<FluidStack> fluidOutputs;
+    @Nullable
+    private final AllowedTagList allowedTagList;
 
-    public CraftingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
-        if (!OneSixMigrationHelper.isValidOneSixPattern(stack)) {
-            this.valid = false;
-
-            return;
-        }
-
+    public CraftingPattern(ICraftingPatternContainer container, ItemStack stack, boolean processing, boolean exact, @Nullable ITextComponent errorMessage, boolean valid, @Nullable ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, NonNullList<ItemStack> byproducts, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, @Nullable AllowedTagList allowedTagList) {
         this.container = container;
         this.stack = stack;
-        this.processing = ItemPattern.isProcessing(stack);
-        this.oredict = ItemPattern.isOredict(stack);
+        this.processing = processing;
+        this.exact = exact;
+        this.valid = valid;
+        this.errorMessage = errorMessage;
+        this.recipe = recipe;
+        this.inputs = inputs;
+        this.outputs = outputs;
+        this.byproducts = byproducts;
+        this.fluidInputs = fluidInputs;
+        this.fluidOutputs = fluidOutputs;
+        this.allowedTagList = allowedTagList;
+    }
 
-        if (processing) {
-            for (int i = 0; i < 9; ++i) {
-                ItemStack input = ItemPattern.getInputSlot(stack, i);
-
-                if (input == null) {
-                    inputs.add(NonNullList.create());
-                } else if (oredict) {
-                    NonNullList<ItemStack> ores = NonNullList.create();
-
-                    ores.add(input.copy());
-
-                    for (int id : OreDictionary.getOreIDs(input)) {
-                        String name = OreDictionary.getOreName(id);
-
-                        for (ItemStack ore : OreDictionary.getOres(name)) {
-                            if (ore.getMetadata() == OreDictionary.WILDCARD_VALUE) {
-                                ore.getItem().getSubItems(CreativeTabs.SEARCH, ores);
-                            } else {
-                                ores.add(ore.copy());
-                            }
-                        }
-                    }
-
-                    // Fix item count
-                    for (ItemStack ore: ores) {
-                        ore.setCount(input.getCount());
-                    }
-
-                    inputs.add(ores);
-                } else {
-                    inputs.add(NonNullList.from(ItemStack.EMPTY, input));
-                }
-
-                ItemStack output = ItemPattern.getOutputSlot(stack, i);
-                if (output != null) {
-                    this.valid = true; // As soon as we have one output, we are valid.
-
-                    outputs.add(output);
-                }
-
-                FluidStack fluidInput = ItemPattern.getFluidInputSlot(stack, i);
-                if (fluidInput != null) {
-                    this.valid = true;
-
-                    fluidInputs.add(fluidInput);
-                }
-
-                FluidStack fluidOutput = ItemPattern.getFluidOutputSlot(stack, i);
-                if (fluidOutput != null) {
-                    this.valid = true;
-
-                    fluidOutputs.add(fluidOutput);
-                }
-            }
-        } else {
-            InventoryCrafting inv = new InventoryCraftingDummy();
-
-            for (int i = 0; i < 9; ++i) {
-                ItemStack input = ItemPattern.getInputSlot(stack, i);
-
-                inputs.add(input == null ? NonNullList.create() : NonNullList.from(ItemStack.EMPTY, input));
-
-                if (input != null) {
-                    inv.setInventorySlotContents(i, input);
-                }
-            }
-
-            for (IRecipe r : CraftingManager.REGISTRY) {
-                if (r.matches(inv, world)) {
-                    this.recipe = r;
-
-                    this.byproducts = recipe.getRemainingItems(inv);
-
-                    ItemStack output = recipe.getCraftingResult(inv);
-
-                    if (!output.isEmpty()) {
-                        this.valid = true;
-
-                        outputs.add(output);
-
-                        if (oredict) {
-                            if (recipe.getIngredients().size() > 0) {
-                                inputs.clear();
-
-                                for (int i = 0; i < recipe.getIngredients().size(); ++i) {
-                                    inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
-                                }
-                            } else {
-                                this.valid = false;
-                            }
-                        }
-                    }
-
-                    break;
-                }
-            }
-        }
+    @Nullable
+    public AllowedTagList getAllowedTagList() {
+        return allowedTagList;
     }
 
     @Override
@@ -161,14 +72,15 @@ public class CraftingPattern implements ICraftingPattern {
         return valid;
     }
 
+    @Nullable
     @Override
-    public boolean isProcessing() {
-        return processing;
+    public ITextComponent getErrorMessage() {
+        return errorMessage;
     }
 
     @Override
-    public boolean isOredict() {
-        return oredict;
+    public boolean isProcessing() {
+        return processing;
     }
 
     @Override
@@ -190,7 +102,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
         }
 
-        InventoryCrafting inv = new InventoryCraftingDummy();
+        CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -223,7 +135,7 @@ public class CraftingPattern implements ICraftingPattern {
             throw new IllegalArgumentException("The items that are taken (" + took.size() + ") should match the inputs for this pattern (" + inputs.size() + ")");
         }
 
-        InventoryCrafting inv = new InventoryCraftingDummy();
+        CraftingInventory inv = new DummyCraftingInventory();
 
         for (int i = 0; i < took.size(); ++i) {
             inv.setInventorySlotContents(i, took.get(i));
@@ -242,7 +154,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public NonNullList<FluidStack> getFluidInputs() {
+    public List<NonNullList<FluidStack>> getFluidInputs() {
         return fluidInputs;
     }
 
@@ -252,7 +164,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public String getId() {
+    public ResourceLocation getId() {
         return CraftingTaskFactory.ID;
     }
 
@@ -261,15 +173,18 @@ public class CraftingPattern implements ICraftingPattern {
         int result = 0;
 
         result = 31 * result + (processing ? 1 : 0);
-        result = 31 * result + (oredict ? 1 : 0);
+        result = 31 * result + (exact ? 1 : 0);
 
         for (List<ItemStack> inputs : this.inputs) {
             for (ItemStack input : inputs) {
                 result = 31 * result + API.instance().getItemStackHashCode(input);
             }
         }
-        for (FluidStack input : this.fluidInputs) {
-            result = 31 * result + API.instance().getFluidStackHashCode(input);
+
+        for (List<FluidStack> inputs : this.fluidInputs) {
+            for (FluidStack input : inputs) {
+                result = 31 * result + API.instance().getFluidStackHashCode(input);
+            }
         }
 
         for (ItemStack output : this.outputs) {
@@ -286,12 +201,23 @@ public class CraftingPattern implements ICraftingPattern {
         return result;
     }
 
+    public static class DummyCraftingInventory extends CraftingInventory {
+        public DummyCraftingInventory() {
+            super(new Container(null, 0) {
+                @Override
+                public boolean canInteractWith(PlayerEntity player) {
+                    return true;
+                }
+            }, 3, 3);
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
-        if(!(o instanceof ICraftingPattern)){
+        if (!(o instanceof ICraftingPattern)) {
             return false;
         }
-        ICraftingPattern pattern  = (ICraftingPattern)o;
+        ICraftingPattern pattern = (ICraftingPattern) o;
         if (pattern.isProcessing() == processing && pattern.isOredict() == oredict) {
             if (outputs.size() > 0 && outputs.size() == pattern.getOutputs().size()) {
                 for (int i = 0; i < outputs.size(); i++) {
@@ -300,14 +226,14 @@ public class CraftingPattern implements ICraftingPattern {
                     }
                 }
             }
-            if (fluidOutputs.size() > 0 && fluidOutputs.size() == pattern.getFluidOutputs().size() ) {
+            if (fluidOutputs.size() > 0 && fluidOutputs.size() == pattern.getFluidOutputs().size()) {
                 for (int i = 0; i < fluidOutputs.size(); i++) {
                     if (!API.instance().getComparer().isEqual(pattern.getFluidOutputs().get(i), fluidOutputs.get(i), IComparer.COMPARE_NBT)) {
                         return false;
                     }
                 }
             }
-            if (fluidInputs.size() > 0 && fluidInputs.size() == pattern.getFluidInputs().size() ) {
+            if (fluidInputs.size() > 0 && fluidInputs.size() == pattern.getFluidInputs().size()) {
                 for (int i = 0; i < fluidInputs.size(); i++) {
                     if (!API.instance().getComparer().isEqual(pattern.getFluidInputs().get(i), fluidInputs.get(i), IComparer.COMPARE_NBT)) {
                         return false;
@@ -325,8 +251,7 @@ public class CraftingPattern implements ICraftingPattern {
                 for (int i = 0; i < inputs.size(); i++) {
                     if (inputs.get(i).size() == pattern.getInputs().get(i).size()) {
                         for (int j = 0; j < inputs.get(i).size(); j++) {
-                            if (!API.instance().getComparer().isEqual(pattern.getInputs().get(i).get(j), inputs.get(i).get(j)))
-                            {
+                            if (!API.instance().getComparer().isEqual(pattern.getInputs().get(i).get(j), inputs.get(i).get(j))) {
                                 return false;
                             }
                         }
@@ -337,16 +262,5 @@ public class CraftingPattern implements ICraftingPattern {
             return false;
         }
         return true;
-    }
-
-    public static class InventoryCraftingDummy extends InventoryCrafting {
-        public InventoryCraftingDummy() {
-            super(new Container() {
-                @Override
-                public boolean canInteractWith(EntityPlayer player) {
-                    return true;
-                }
-            }, 3, 3);
-        }
     }
 }

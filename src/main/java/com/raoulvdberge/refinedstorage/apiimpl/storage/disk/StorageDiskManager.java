@@ -6,16 +6,17 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class StorageDiskManager extends WorldSavedData implements IStorageDiskManager {
     public static final String NAME = "refinedstorage_disks";
@@ -25,13 +26,13 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     private static final String NBT_DISK_TYPE = "Type";
     private static final String NBT_DISK_DATA = "Data";
 
-    private boolean canReadDisks;
-    private NBTTagList disksTag;
+    private final Map<UUID, IStorageDisk> disks = new HashMap<>();
+    private final ServerWorld world;
 
-    private ConcurrentHashMap<UUID, IStorageDisk> disks = new ConcurrentHashMap<>();
-
-    public StorageDiskManager(String name) {
+    public StorageDiskManager(String name, ServerWorld world) {
         super(name);
+
+        this.world = world;
     }
 
     @Override
@@ -93,25 +94,18 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        if (tag.hasKey(NBT_DISKS)) {
-            this.disksTag = tag.getTagList(NBT_DISKS, Constants.NBT.TAG_COMPOUND);
-            this.canReadDisks = true;
-        }
-    }
+    public void read(CompoundNBT tag) {
+        if (tag.contains(NBT_DISKS)) {
+            ListNBT disksTag = tag.getList(NBT_DISKS, Constants.NBT.TAG_COMPOUND);
 
-    public void tryReadDisks(World world) {
-        if (this.canReadDisks) {
-            this.canReadDisks = false;
-
-            for (int i = 0; i < disksTag.tagCount(); ++i) {
-                NBTTagCompound diskTag = disksTag.getCompoundTagAt(i);
+            for (int i = 0; i < disksTag.size(); ++i) {
+                CompoundNBT diskTag = disksTag.getCompound(i);
 
                 UUID id = diskTag.getUniqueId(NBT_DISK_ID);
-                NBTTagCompound data = diskTag.getCompoundTag(NBT_DISK_DATA);
+                CompoundNBT data = diskTag.getCompound(NBT_DISK_DATA);
                 String type = diskTag.getString(NBT_DISK_TYPE);
 
-                IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(type);
+                IStorageDiskFactory factory = API.instance().getStorageDiskRegistry().get(new ResourceLocation(type));
                 if (factory != null) {
                     disks.put(id, factory.createFromNbt(world, data));
                 }
@@ -120,20 +114,20 @@ public class StorageDiskManager extends WorldSavedData implements IStorageDiskMa
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        NBTTagList disks = new NBTTagList();
+    public CompoundNBT write(CompoundNBT tag) {
+        ListNBT disks = new ListNBT();
 
         for (Map.Entry<UUID, IStorageDisk> entry : this.disks.entrySet()) {
-            NBTTagCompound diskTag = new NBTTagCompound();
+            CompoundNBT diskTag = new CompoundNBT();
 
-            diskTag.setUniqueId(NBT_DISK_ID, entry.getKey());
-            diskTag.setTag(NBT_DISK_DATA, entry.getValue().writeToNbt());
-            diskTag.setString(NBT_DISK_TYPE, entry.getValue().getId());
+            diskTag.putUniqueId(NBT_DISK_ID, entry.getKey());
+            diskTag.put(NBT_DISK_DATA, entry.getValue().writeToNbt());
+            diskTag.putString(NBT_DISK_TYPE, entry.getValue().getFactoryId().toString());
 
-            disks.appendTag(diskTag);
+            disks.add(diskTag);
         }
 
-        tag.setTag(NBT_DISKS, disks);
+        tag.put(NBT_DISKS, disks);
 
         return tag;
     }

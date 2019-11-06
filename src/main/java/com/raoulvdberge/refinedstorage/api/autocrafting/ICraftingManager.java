@@ -3,7 +3,8 @@ package com.raoulvdberge.refinedstorage.api.autocrafting;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -32,7 +33,7 @@ public interface ICraftingManager {
     /**
      * @return named crafting pattern containers
      */
-    Map<String, List<IItemHandlerModifiable>> getNamedContainers();
+    Map<ITextComponent, List<IItemHandlerModifiable>> getNamedContainers();
 
     /**
      * Adds a crafting task.
@@ -69,24 +70,6 @@ public interface ICraftingManager {
     ICraftingTask create(FluidStack stack, int quantity);
 
     /**
-     * @deprecated Use {@link #request(Object, ItemStack, int)}
-     */
-    @Nullable
-    @Deprecated
-    default ICraftingTask request(ItemStack stack, int amount) {
-        return request(null, stack, amount);
-    }
-
-    /**
-     * @deprecated Use {@link #request(Object, FluidStack, int)}
-     */
-    @Nullable
-    @Deprecated
-    default ICraftingTask request(FluidStack stack, int amount) {
-        return request(null, stack, amount);
-    }
-
-    /**
      * Schedules a crafting task if the task isn't scheduled yet.
      *
      * @param source the source
@@ -111,26 +94,26 @@ public interface ICraftingManager {
     /**
      * Tracks an incoming stack.
      *
-     * @param stack the stack
+     * @param stack the stack, can be empty
      */
-    int track(ItemStack stack, int size);
+    int track(@Nonnull ItemStack stack, int size);
 
     /**
      * Tracks an incoming stack.
      *
-     * @param stack the stack
+     * @param stack the stack, can be empty
      */
-    int track(FluidStack stack, int size);
+    int track(@Nonnull FluidStack stack, int size);
 
     /**
-     * @return a list of crafting patterns in this network, do NOT modify this list
+     * @return the crafting patterns in this network
      */
     List<ICraftingPattern> getPatterns();
 
     /**
      * Rebuilds the pattern list.
      */
-    void rebuild();
+    void invalidate();
 
     /**
      * @param pattern to search for
@@ -164,13 +147,13 @@ public interface ICraftingManager {
     /**
      * @param tag the tag to read from
      */
-    void readFromNbt(NBTTagCompound tag);
+    void readFromNbt(CompoundNBT tag);
 
     /**
      * @param tag the tag to write to
      * @return the written tag
      */
-    NBTTagCompound writeToNbt(NBTTagCompound tag);
+    CompoundNBT writeToNbt(CompoundNBT tag);
 
     /**
      * @param listener the listener

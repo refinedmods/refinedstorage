@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "EOE",
+    "CUC",
+    "EEE"
+  ],
+  "key": {
+    "E": {
+      "item": "refinedstorage:quartz_enriched_iron"
+    },
+    "C": {
+      "tag": "refinedstorage:crafting_tables"
+    },
+    "O": {
+      "item": "refinedstorage:construction_core"
+    },
+    "U": {
+      "item": "refinedstorage:upgrade"
+    }
+  },
+  "result": {
+    "item": "refinedstorage:crafting_upgrade"
+  }
+}

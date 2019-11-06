@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "refinedstorage:items/silicon"
+    "layer0": "refinedstorage:item/silicon"
   }
 }

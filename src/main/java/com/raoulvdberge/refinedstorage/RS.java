@@ -1,83 +1,55 @@
 package com.raoulvdberge.refinedstorage;
 
-import com.raoulvdberge.refinedstorage.command.CommandCreateDisk;
-import com.raoulvdberge.refinedstorage.item.ItemCover;
-import com.raoulvdberge.refinedstorage.proxy.ProxyCommon;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.common.FMLLog;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.config.ClientConfig;
+import com.raoulvdberge.refinedstorage.config.ServerConfig;
+import com.raoulvdberge.refinedstorage.item.group.MainItemGroup;
+import com.raoulvdberge.refinedstorage.network.NetworkHandler;
+import com.raoulvdberge.refinedstorage.setup.ClientSetup;
+import com.raoulvdberge.refinedstorage.setup.CommonSetup;
+import net.minecraft.block.Block;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(modid = RS.ID, version = RS.VERSION, acceptedMinecraftVersions = "[1.12.2,1.13)", guiFactory = RS.GUI_FACTORY, updateJSON = RS.UPDATE_JSON, certificateFingerprint = RS.FINGERPRINT, dependencies = RS.DEPENDENCIES)
+@Mod(RS.ID)
 public final class RS {
-    static {
-        FluidRegistry.enableUniversalBucket();
-    }
-
     public static final String ID = "refinedstorage";
-    public static final String VERSION = "@version@";
-    public static final String GUI_FACTORY = "com.raoulvdberge.refinedstorage.gui.config.ModGuiFactory";
-    public static final String UPDATE_JSON = "https://refinedstorage.raoulvdberge.com/update";
-    public static final String FINGERPRINT = "57893d5b90a7336e8c63fe1c1e1ce472c3d59578";
-    public static final String DEPENDENCIES = "after:forge@[14.23.3.2694,);";
 
-    @SidedProxy(clientSide = "com.raoulvdberge.refinedstorage.proxy.ProxyClient", serverSide = "com.raoulvdberge.refinedstorage.proxy.ProxyCommon")
-    public static ProxyCommon PROXY;
+    public static final NetworkHandler NETWORK_HANDLER = new NetworkHandler();
+    public static final ItemGroup MAIN_GROUP = new MainItemGroup();
+    public static final ServerConfig SERVER_CONFIG = new ServerConfig();
+    public static final ClientConfig CLIENT_CONFIG = new ClientConfig();
 
-    @Instance
-    public static RS INSTANCE;
+    public RS() {
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> ClientSetup::new);
 
-    public RSConfig config;
-    public final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(ID);
-    public final CreativeTabs tab = new CreativeTabs(ID) {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(RSItems.STORAGE_HOUSING);
-        }
-    };
-    public final CreativeTabs coversTab = new CreativeTabs(ID + ".covers") {
-        @Override
-        public ItemStack createIcon() {
-            ItemStack stack = new ItemStack(RSItems.COVER);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_CONFIG.getSpec());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_CONFIG.getSpec());
 
-            ItemCover.setItem(stack, new ItemStack(Blocks.STONE));
+        CommonSetup commonSetup = new CommonSetup();
 
-            return stack;
-        }
-    };
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(commonSetup::onCommonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, commonSetup::onRegisterBlocks);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, commonSetup::onRegisterTiles);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, commonSetup::onRegisterItems);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(IRecipeSerializer.class, commonSetup::onRegisterRecipeSerializers);
+        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, commonSetup::onRegisterContainers);
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent e) {
-        config = new RSConfig(null, e.getSuggestedConfigurationFile());
-
-        PROXY.preInit(e);
+        API.deliver();
     }
 
-    @EventHandler
-    public void init(FMLInitializationEvent e) {
-        PROXY.init(e);
-    }
-
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent e) {
-        PROXY.postInit(e);
-    }
-
+    /* TODO
     @EventHandler
     public void onServerStarting(FMLServerStartingEvent e) {
         e.registerServerCommand(new CommandCreateDisk());
-    }
-
-    @EventHandler
-    public void onFingerprintViolation(FMLFingerprintViolationEvent e) {
-        FMLLog.bigWarning("Invalid fingerprint detected for the Refined Storage jar file! The file " + e.getSource().getName() + " may have been tampered with. This version will NOT be supported!");
-    }
+    }*/
 }

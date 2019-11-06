@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -79,7 +79,7 @@ public interface ICraftingTask {
      * @param tag the tag
      * @return the written tag
      */
-    NBTTagCompound writeToNbt(NBTTagCompound tag);
+    CompoundNBT writeToNbt(CompoundNBT tag);
 
     /**
      * {@link ICraftingTask#calculate()} must be run before this!

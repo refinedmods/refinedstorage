@@ -9,86 +9,99 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.INetworkManager;
+import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
-import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
-import com.raoulvdberge.refinedstorage.api.util.*;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
+import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.network.grid.CraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.GridManager;
-import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.apiimpl.network.readerwriter.ReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.disk.*;
-import com.raoulvdberge.refinedstorage.apiimpl.util.*;
-import com.raoulvdberge.refinedstorage.capability.CapabilityNetworkNodeProxy;
+import com.raoulvdberge.refinedstorage.apiimpl.util.Comparer;
+import com.raoulvdberge.refinedstorage.apiimpl.util.FluidStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.util.ItemStackList;
+import com.raoulvdberge.refinedstorage.apiimpl.util.QuantityFormatter;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.MapStorage;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.forgespi.language.ModFileScanData;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.objectweb.asm.Type;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class API implements IRSAPI {
+    private static final Logger LOGGER = LogManager.getLogger(API.class);
+
     private static final IRSAPI INSTANCE = new API();
 
-    private IComparer comparer = new Comparer();
-    private IQuantityFormatter quantityFormatter = new QuantityFormatter();
-    private INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
-    private ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
-    private ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
-    private ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
-    private IReaderWriterHandlerRegistry readerWriterHandlerRegistry = new ReaderWriterHandlerRegistry();
-    private IGridManager gridManager = new GridManager();
-    private IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
-    private IStorageDiskSync storageDiskSync = new StorageDiskSync();
-    private IOneSixMigrationHelper oneSixMigrationHelper = new OneSixMigrationHelper();
-    private Map<StorageType, TreeSet<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
-    private List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
+    private final IComparer comparer = new Comparer();
+    private final IQuantityFormatter quantityFormatter = new QuantityFormatter();
+    private final INetworkNodeRegistry networkNodeRegistry = new NetworkNodeRegistry();
+    private final ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
+    private final ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
+    private final ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
+    private final IGridManager gridManager = new GridManager();
+    private final ICraftingGridBehavior craftingGridBehavior = new CraftingGridBehavior();
+    private final IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
+    private final IStorageDiskSync storageDiskSync = new StorageDiskSync();
+    private final Map<StorageType, TreeSet<IExternalStorageProvider>> externalStorageProviders = new HashMap<>();
+    private final List<ICraftingPatternRenderHandler> patternRenderHandlers = new LinkedList<>();
 
     public static IRSAPI instance() {
         return INSTANCE;
     }
 
-    public static void deliver(ASMDataTable asmDataTable) {
-        String annotationClassName = RSAPIInject.class.getCanonicalName();
+    public static void deliver() {
+        Type annotationType = Type.getType(RSAPIInject.class);
 
-        Set<ASMDataTable.ASMData> asmDataSet = asmDataTable.getAll(annotationClassName);
+        List<ModFileScanData.AnnotationData> annotations = ModList.get().getAllScanData().stream()
+            .map(ModFileScanData::getAnnotations)
+            .flatMap(Collection::stream)
+            .filter(a -> annotationType.equals(a.getAnnotationType()))
+            .collect(Collectors.toList());
 
-        for (ASMDataTable.ASMData asmData : asmDataSet) {
+        LOGGER.info("Found {} RS API injection {}", annotations.size(), annotations.size() == 1 ? "point" : "points");
+
+        for (ModFileScanData.AnnotationData annotation : annotations) {
             try {
-                Class clazz = Class.forName(asmData.getClassName());
-                Field field = clazz.getField(asmData.getObjectName());
+                Class clazz = Class.forName(annotation.getClassType().getClassName());
+                Field field = clazz.getField(annotation.getMemberName());
 
                 if (field.getType() == IRSAPI.class) {
                     field.set(null, INSTANCE);
                 }
-            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException("Failed to set: {}" + asmData.getClassName() + "." + asmData.getObjectName(), e);
+
+                LOGGER.info("Injected RS API in {} {}", annotation.getClassType().getClassName(), annotation.getMemberName());
+            } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
+                LOGGER.error("Could not inject RS API in {} {}", annotation.getClassType().getClassName(), annotation.getMemberName(), e);
             }
         }
     }
@@ -112,23 +125,17 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public INetworkNodeManager getNetworkNodeManager(World world) {
-        if (world.isRemote) {
-            throw new IllegalArgumentException("Attempting to access network node manager on the client");
-        }
+    public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
+        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkNodeManager.NAME;
 
-        MapStorage storage = world.getPerWorldStorage();
-        NetworkNodeManager instance = (NetworkNodeManager) storage.getOrLoadData(NetworkNodeManager.class, NetworkNodeManager.NAME);
+        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(name, world), name);
+    }
 
-        if (instance == null) {
-            instance = new NetworkNodeManager(NetworkNodeManager.NAME);
+    @Override
+    public INetworkManager getNetworkManager(ServerWorld world) {
+        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkManager.NAME;
 
-            storage.setData(NetworkNodeManager.NAME, instance);
-        } else {
-            instance.tryReadNodes(world);
-        }
-
-        return instance;
+        return world.getSavedData().getOrCreate(() -> new NetworkManager(name, world), name);
     }
 
     @Override
@@ -151,26 +158,14 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
-    public IReaderWriterHandlerRegistry getReaderWriterHandlerRegistry() {
-        return readerWriterHandlerRegistry;
-    }
-
-    @Nonnull
-    @Override
-    public IReaderWriterChannel createReaderWriterChannel(String name, INetwork network) {
-        return new ReaderWriterChannel(name, network);
-    }
-
-    @Nonnull
-    @Override
     public IStackList<ItemStack> createItemStackList() {
-        return new StackListItem();
+        return new ItemStackList();
     }
 
     @Override
     @Nonnull
     public IStackList<FluidStack> createFluidStackList() {
-        return new StackListFluid();
+        return new FluidStackList();
     }
 
     @Override
@@ -187,29 +182,22 @@ public class API implements IRSAPI {
 
     @Nonnull
     @Override
+    public ICraftingGridBehavior getCraftingGridBehavior() {
+        return craftingGridBehavior;
+    }
+
+    @Nonnull
+    @Override
     public IStorageDiskRegistry getStorageDiskRegistry() {
         return storageDiskRegistry;
     }
 
     @Nonnull
     @Override
-    public IStorageDiskManager getStorageDiskManager(World world) {
-        if (world.isRemote) {
-            throw new IllegalArgumentException("Attempting to access storage disk manager on the client");
-        }
+    public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
+        ServerWorld world = anyWorld.getServer().getWorld(DimensionType.OVERWORLD);
 
-        MapStorage storage = world.getMapStorage();
-        StorageDiskManager instance = (StorageDiskManager) storage.getOrLoadData(StorageDiskManager.class, StorageDiskManager.NAME);
-
-        if (instance == null) {
-            instance = new StorageDiskManager(StorageDiskManager.NAME);
-
-            storage.setData(StorageDiskManager.NAME, instance);
-        } else {
-            instance.tryReadDisks(world);
-        }
-
-        return instance;
+        return world.getSavedData().getOrCreate(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
     }
 
     @Nonnull
@@ -232,14 +220,22 @@ public class API implements IRSAPI {
 
     @Override
     @Nonnull
-    public IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity) {
-        return new StorageDiskItem(world, capacity);
+    public IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
+        return new ItemStorageDisk(world, capacity);
     }
 
     @Override
     @Nonnull
-    public IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity) {
-        return new StorageDiskFluid(world, capacity);
+    public IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity) {
+        if (world == null) {
+            throw new IllegalArgumentException("World cannot be null");
+        }
+
+        return new FluidStorageDisk(world, capacity);
     }
 
     @Override
@@ -253,14 +249,8 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public ICraftingRequestInfo createCraftingRequestInfo(NBTTagCompound tag) throws CraftingTaskReadException {
+    public ICraftingRequestInfo createCraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException {
         return new CraftingRequestInfo(tag);
-    }
-
-    @Override
-    @Nonnull
-    public IOneSixMigrationHelper getOneSixMigrationHelper() {
-        return oneSixMigrationHelper;
     }
 
     @Override
@@ -274,40 +264,21 @@ public class API implements IRSAPI {
     }
 
     @Override
-    public void discoverNode(World world, BlockPos pos) {
-        for (EnumFacing facing : EnumFacing.VALUES) {
-            TileEntity tile = world.getTileEntity(pos.offset(facing));
-
-            if (tile != null && tile.hasCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite())) {
-                INetworkNodeProxy nodeProxy = tile.getCapability(CapabilityNetworkNodeProxy.NETWORK_NODE_PROXY_CAPABILITY, facing.getOpposite());
-                INetworkNode node = nodeProxy.getNode();
-
-                if (node.getNetwork() != null) {
-                    node.getNetwork().getNodeGraph().invalidate(Action.PERFORM, node.getNetwork().world(), node.getNetwork().getPosition());
-
-                    return;
-                }
-            }
-        }
-    }
-
-    @Override
     public int getItemStackHashCode(ItemStack stack) {
         int result = stack.getItem().hashCode();
-        result = 31 * result + (stack.getItemDamage() + 1);
 
-        if (stack.hasTagCompound()) {
-            result = getHashCode(stack.getTagCompound(), result);
+        if (stack.hasTag()) {
+            result = getHashCode(stack.getTag(), result);
         }
 
         return result;
     }
 
-    private int getHashCode(NBTBase tag, int result) {
-        if (tag instanceof NBTTagCompound) {
-            result = getHashCode((NBTTagCompound) tag, result);
-        } else if (tag instanceof NBTTagList) {
-            result = getHashCode((NBTTagList) tag, result);
+    private int getHashCode(INBT tag, int result) {
+        if (tag instanceof CompoundNBT) {
+            result = getHashCode((CompoundNBT) tag, result);
+        } else if (tag instanceof ListNBT) {
+            result = getHashCode((ListNBT) tag, result);
         } else {
             result = 31 * result + tag.hashCode();
         }
@@ -315,17 +286,17 @@ public class API implements IRSAPI {
         return result;
     }
 
-    private int getHashCode(NBTTagCompound tag, int result) {
-        for (String key : tag.getKeySet()) {
+    private int getHashCode(CompoundNBT tag, int result) {
+        for (String key : tag.keySet()) {
             result = 31 * result + key.hashCode();
-            result = getHashCode(tag.getTag(key), result);
+            result = getHashCode(tag.get(key), result);
         }
 
         return result;
     }
 
-    private int getHashCode(NBTTagList tag, int result) {
-        for (int i = 0; i < tag.tagCount(); ++i) {
+    private int getHashCode(ListNBT tag, int result) {
+        for (int i = 0; i < tag.size(); ++i) {
             result = getHashCode(tag.get(i), result);
         }
 
@@ -336,8 +307,8 @@ public class API implements IRSAPI {
     public int getFluidStackHashCode(FluidStack stack) {
         int result = stack.getFluid().hashCode();
 
-        if (stack.tag != null) {
-            result = getHashCode(stack.tag, result);
+        if (stack.getTag() != null) {
+            result = getHashCode(stack.getTag(), result);
         }
 
         return result;
@@ -346,7 +317,7 @@ public class API implements IRSAPI {
     @Override
     public int getNetworkNodeHashCode(INetworkNode node) {
         int result = node.getPos().hashCode();
-        result = 31 * result + node.getWorld().provider.getDimension();
+        result = 31 * result + node.getWorld().getDimension().getType().getId();
 
         return result;
     }
@@ -363,7 +334,7 @@ public class API implements IRSAPI {
 
         INetworkNode rightNode = (INetworkNode) right;
 
-        if (left.getWorld().provider.getDimension() != rightNode.getWorld().provider.getDimension()) {
+        if (left.getWorld().getDimension().getType().getId() != rightNode.getWorld().getDimension().getType().getId()) {
             return false;
         }
 

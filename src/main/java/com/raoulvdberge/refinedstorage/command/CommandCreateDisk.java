@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.command;
 
+/* TODO
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -7,7 +8,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class CommandCreateDisk extends CommandBase {
+public class CommandCreateDisk extends Command {
     @Override
     public String getName() {
         return "createdisk";
@@ -42,7 +43,7 @@ public class CommandCreateDisk extends CommandBase {
         if (args.length < 4) {
             throw new WrongUsageException("commands.refinedstorage.createdisk.usage");
         } else {
-            EntityPlayer player = getPlayer(server, sender, args[0]);
+            PlayerEntity player = getPlayer(server, sender, args[0]);
             Item item = getItemByText(sender, args[1]);
             int metadata = parseInt(args[2]);
 
@@ -88,3 +89,4 @@ public class CommandCreateDisk extends CommandBase {
         return Collections.emptyList();
     }
 }
+*/

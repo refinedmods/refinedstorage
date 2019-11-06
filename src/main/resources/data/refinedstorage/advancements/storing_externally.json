@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:external_storage"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage.storing_externally"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage.storing_externally.description"
+    }
+  },
+  "parent": "refinedstorage:root",
+  "criteria": {
+    "external_storage_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:external_storage"
+          }
+        ]
+      }
+    }
+  }
+}

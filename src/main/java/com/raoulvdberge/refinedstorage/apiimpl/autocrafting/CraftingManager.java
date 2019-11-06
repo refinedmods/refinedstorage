@@ -8,18 +8,20 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFa
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
+import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
-import com.raoulvdberge.refinedstorage.tile.TileController;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,13 +30,15 @@ import java.util.*;
 public class CraftingManager implements ICraftingManager {
     private static final int THROTTLE_DELAY_MS = 3000;
 
+    private static final Logger LOGGER = LogManager.getLogger(CraftingManager.class);
+
     private static final String NBT_TASKS = "Tasks";
     private static final String NBT_TASK_TYPE = "Type";
     private static final String NBT_TASK_DATA = "Task";
 
-    private TileController network;
+    private INetwork network;
 
-    private Map<String, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
+    private Map<ITextComponent, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
     private Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
@@ -42,13 +46,13 @@ public class CraftingManager implements ICraftingManager {
     private Map<UUID, ICraftingTask> tasks = new LinkedHashMap<>();
     private List<ICraftingTask> tasksToAdd = new ArrayList<>();
     private List<UUID> tasksToCancel = new ArrayList<>();
-    private NBTTagList tasksToRead;
+    private ListNBT tasksToRead;
 
     private Map<Object, Long> throttledRequesters = new HashMap<>();
 
     private Set<ICraftingMonitorListener> listeners = new HashSet<>();
 
-    public CraftingManager(TileController network) {
+    public CraftingManager(INetwork network) {
         this.network = network;
     }
 
@@ -64,7 +68,7 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public Map<String, List<IItemHandlerModifiable>> getNamedContainers() {
+    public Map<ITextComponent, List<IItemHandlerModifiable>> getNamedContainers() {
         return containerInventories;
     }
 
@@ -122,11 +126,11 @@ public class CraftingManager implements ICraftingManager {
     public void update() {
         if (network.canRun()) {
             if (tasksToRead != null) {
-                for (int i = 0; i < tasksToRead.tagCount(); ++i) {
-                    NBTTagCompound taskTag = tasksToRead.getCompoundTagAt(i);
+                for (int i = 0; i < tasksToRead.size(); ++i) {
+                    CompoundNBT taskTag = tasksToRead.getCompound(i);
 
-                    String taskType = taskTag.getString(NBT_TASK_TYPE);
-                    NBTTagCompound taskData = taskTag.getCompoundTag(NBT_TASK_DATA);
+                    ResourceLocation taskType = new ResourceLocation(taskTag.getString(NBT_TASK_TYPE));
+                    CompoundNBT taskData = taskTag.getCompound(NBT_TASK_DATA);
 
                     ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(taskType);
                     if (factory != null) {
@@ -135,7 +139,7 @@ public class CraftingManager implements ICraftingManager {
 
                             tasks.put(task.getId(), task);
                         } catch (CraftingTaskReadException e) {
-                            e.printStackTrace();
+                            LOGGER.error("Could not deserialize crafting task", e);
                         }
                     }
                 }
@@ -182,24 +186,24 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void readFromNbt(NBTTagCompound tag) {
-        this.tasksToRead = tag.getTagList(NBT_TASKS, Constants.NBT.TAG_COMPOUND);
+    public void readFromNbt(CompoundNBT tag) {
+        this.tasksToRead = tag.getList(NBT_TASKS, Constants.NBT.TAG_COMPOUND);
     }
 
     @Override
-    public NBTTagCompound writeToNbt(NBTTagCompound tag) {
-        NBTTagList list = new NBTTagList();
+    public CompoundNBT writeToNbt(CompoundNBT tag) {
+        ListNBT list = new ListNBT();
 
         for (ICraftingTask task : tasks.values()) {
-            NBTTagCompound taskTag = new NBTTagCompound();
+            CompoundNBT taskTag = new CompoundNBT();
 
-            taskTag.setString(NBT_TASK_TYPE, task.getPattern().getId());
-            taskTag.setTag(NBT_TASK_DATA, task.writeToNbt(new NBTTagCompound()));
+            taskTag.putString(NBT_TASK_TYPE, task.getPattern().getId().toString());
+            taskTag.put(NBT_TASK_DATA, task.writeToNbt(new CompoundNBT()));
 
-            list.appendTag(taskTag);
+            list.add(taskTag);
         }
 
-        tag.setTag(NBT_TASKS, list);
+        tag.put(NBT_TASKS, list);
 
         return tag;
     }
@@ -293,17 +297,13 @@ public class CraftingManager implements ICraftingManager {
         return null;
     }
 
-    private void throttle(@Nullable Object source) {
-        OneSixMigrationHelper.removalHook(); // Remove @Nullable source
-
+    private void throttle(Object source) {
         if (source != null) {
-            throttledRequesters.put(source, MinecraftServer.getCurrentTimeMillis());
+            throttledRequesters.put(source, System.currentTimeMillis());
         }
     }
 
-    private boolean isThrottled(@Nullable Object source) {
-        OneSixMigrationHelper.removalHook(); // Remove @Nullable source
-
+    private boolean isThrottled(Object source) {
         if (source == null) {
             return false;
         }
@@ -313,11 +313,15 @@ public class CraftingManager implements ICraftingManager {
             return false;
         }
 
-        return MinecraftServer.getCurrentTimeMillis() - throttledSince < THROTTLE_DELAY_MS;
+        return System.currentTimeMillis() - throttledSince < THROTTLE_DELAY_MS;
     }
 
     @Override
-    public int track(ItemStack stack, int size) {
+    public int track(@Nonnull ItemStack stack, int size) {
+        if (stack.isEmpty()) {
+            return 0;
+        }
+
         for (ICraftingTask task : tasks.values()) {
             size = task.onTrackedInsert(stack, size);
 
@@ -330,7 +334,11 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public int track(FluidStack stack, int size) {
+    public int track(@Nonnull FluidStack stack, int size) {
+        if (stack.isEmpty()) {
+            return 0;
+        }
+
         for (ICraftingTask task : tasks.values()) {
             size = task.onTrackedInsert(stack, size);
 
@@ -348,7 +356,10 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void rebuild() {
+    public void invalidate() {
+        this.network.getItemStorageCache().getCraftablesList().clear();
+        this.network.getFluidStorageCache().getCraftablesList().clear();
+
         this.patterns.clear();
         this.containerInventories.clear();
         patternToContainer.clear();
@@ -364,15 +375,24 @@ public class CraftingManager implements ICraftingManager {
         containers.sort((a, b) -> b.getPosition().compareTo(a.getPosition()));
 
         for (ICraftingPatternContainer container : containers) {
-            this.patterns.addAll(container.getPatterns());
-            container.getPatterns().forEach(pattern -> {
+            for (ICraftingPattern pattern : container.getPatterns()) {
+                this.patterns.add(pattern);
+
+                for (ItemStack output : pattern.getOutputs()) {
+                    network.getItemStorageCache().getCraftablesList().add(output);
+                }
+
+                for (FluidStack output : pattern.getFluidOutputs()) {
+                    network.getFluidStorageCache().getCraftablesList().add(output);
+                }
+
                 Set<ICraftingPatternContainer> list = patternToContainer.get(pattern);
                 if (list == null) {
                     list = new HashSet<>();
                 }
                 list.add(container);
                 patternToContainer.put(pattern,list);
-            });
+            }
 
             IItemHandlerModifiable handler = container.getPatternInventory();
             if (handler != null) {

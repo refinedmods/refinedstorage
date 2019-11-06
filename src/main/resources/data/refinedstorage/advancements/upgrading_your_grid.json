@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:crafting_grid"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage.upgrading_your_grid"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage.upgrading_your_grid.description"
+    }
+  },
+  "parent": "refinedstorage:viewing_items",
+  "criteria": {
+    "crafting_grid_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:crafting_grid"
+          }
+        ]
+      }
+    }
+  }
+}

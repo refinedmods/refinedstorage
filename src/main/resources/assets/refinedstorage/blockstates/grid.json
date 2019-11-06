@@ -1,80 +1,36 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "refinedstorage:cube_north_cutout",
-    "textures": {
-      "particle": "refinedstorage:blocks/side",
-      "east": "refinedstorage:blocks/grid/left",
-      "south": "refinedstorage:blocks/grid/back",
-      "west": "refinedstorage:blocks/grid/right",
-      "up": "refinedstorage:blocks/grid/top",
-      "down": "refinedstorage:blocks/bottom",
-      "north_normal": "refinedstorage:blocks/grid/front",
-      "north_crafting": "refinedstorage:blocks/grid/crafting_front",
-      "north_pattern": "refinedstorage:blocks/grid/pattern_front",
-      "north_fluid": "refinedstorage:blocks/grid/fluid_front",
-      "cutout_normal": "refinedstorage:blocks/grid/cutouts/front_disconnected",
-      "cutout_crafting": "refinedstorage:blocks/grid/cutouts/crafting_front_disconnected",
-      "cutout_pattern": "refinedstorage:blocks/grid/cutouts/pattern_front_disconnected",
-      "cutout_fluid": "refinedstorage:blocks/grid/cutouts/fluid_front_disconnected"
-    }
-  },
   "variants": {
-    "connected": {
-      "true": {
-        "textures": {
-          "cutout_normal": "refinedstorage:blocks/grid/cutouts/front_connected",
-          "cutout_crafting": "refinedstorage:blocks/grid/cutouts/crafting_front_connected",
-          "cutout_pattern": "refinedstorage:blocks/grid/cutouts/pattern_front_connected",
-          "cutout_fluid": "refinedstorage:blocks/grid/cutouts/fluid_front_connected"
-        }
-      },
-      "false": {
-      }
+    "connected=true,direction=north": {
+      "model": "refinedstorage:block/grid/normal/connected",
+      "y": 0
     },
-    "type": {
-      "normal": {
-        "textures": {
-          "north": "#north_normal",
-          "cutout": "#cutout_normal"
-        }
-      },
-      "crafting": {
-        "textures": {
-          "north": "#north_crafting",
-          "cutout": "#cutout_crafting"
-        }
-      },
-      "pattern": {
-        "textures": {
-          "north": "#north_pattern",
-          "cutout": "#cutout_pattern"
-        }
-      },
-      "fluid": {
-        "textures": {
-          "north": "#north_fluid",
-          "cutout": "#cutout_fluid",
-          "east": "refinedstorage:blocks/grid/fluid_left",
-          "south": "refinedstorage:blocks/grid/fluid_back",
-          "west": "refinedstorage:blocks/grid/fluid_right",
-          "up": "refinedstorage:blocks/grid/fluid_top"
-        }
-      }
+    "connected=true,direction=east": {
+      "model": "refinedstorage:block/grid/normal/connected",
+      "y": 90
     },
-    "direction": {
-      "north": {
-        "y": 0
-      },
-      "east": {
-        "y": 90
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      }
+    "connected=true,direction=south": {
+      "model": "refinedstorage:block/grid/normal/connected",
+      "y": 180
+    },
+    "connected=true,direction=west": {
+      "model": "refinedstorage:block/grid/normal/connected",
+      "y": 270
+    },
+    "connected=false,direction=north": {
+      "model": "refinedstorage:block/grid/normal/disconnected",
+      "y": 0
+    },
+    "connected=false,direction=east": {
+      "model": "refinedstorage:block/grid/normal/disconnected",
+      "y": 90
+    },
+    "connected=false,direction=south": {
+      "model": "refinedstorage:block/grid/normal/disconnected",
+      "y": 180
+    },
+    "connected=false,direction=west": {
+      "model": "refinedstorage:block/grid/normal/disconnected",
+      "y": 270
     }
   }
 }

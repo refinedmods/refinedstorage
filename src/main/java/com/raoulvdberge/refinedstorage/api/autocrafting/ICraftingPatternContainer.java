@@ -1,8 +1,9 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -15,15 +16,6 @@ import java.util.UUID;
  * Represents a network node that contains crafting patterns.
  */
 public interface ICraftingPatternContainer {
-    /**
-     * @deprecated Use {@link #getUpdateInterval()} and/or {@link #getMaximumSuccessfulCraftingUpdates()}
-     * @return the amount of speed upgrades in the container
-     */
-    @Deprecated
-    default int getSpeedUpgradeCount() {
-        return 0;
-    }
-
     /**
      * Returns the interval of when a crafting step with a pattern in this container can update.
      * Minimum value is 0 (each tick).
@@ -74,7 +66,7 @@ public interface ICraftingPatternContainer {
     /**
      * @return the direction to the facing tile
      */
-    EnumFacing getDirection();
+    Direction getDirection();
 
     /**
      * @return the patterns stored in this container
@@ -89,12 +81,10 @@ public interface ICraftingPatternContainer {
 
     /**
      * The name of this container for categorizing in the Crafting Manager GUI.
-     * Can be a localized or unlocalized name.
-     * If it's unlocalized, it will automatically localize the name.
      *
      * @return the name of this container
      */
-    String getName();
+    ITextComponent getName();
 
     /**
      * @return the position of this container

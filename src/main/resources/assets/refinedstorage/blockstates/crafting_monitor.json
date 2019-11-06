@@ -1,47 +1,36 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "refinedstorage:cube_north_cutout",
-    "textures": {
-      "particle": "refinedstorage:blocks/crafting_monitor/front",
-      "north": "refinedstorage:blocks/crafting_monitor/front",
-      "east": "refinedstorage:blocks/crafting_monitor/left",
-      "south": "refinedstorage:blocks/crafting_monitor/back",
-      "west": "refinedstorage:blocks/crafting_monitor/right",
-      "up": "refinedstorage:blocks/crafting_monitor/top",
-      "down": "refinedstorage:blocks/bottom",
-      "cutout": "refinedstorage:blocks/crafting_monitor/cutouts/front_disconnected"
-    }
-  },
   "variants": {
-    "inventory": [
-      {
-        "transform": "forge:default-block",
-        "y": 0
-      }
-    ],
-    "connected": {
-      "true": {
-        "textures": {
-          "cutout": "refinedstorage:blocks/crafting_monitor/cutouts/front_connected"
-        }
-      },
-      "false": {
-      }
+    "connected=true,direction=north": {
+      "model": "refinedstorage:block/crafting_monitor_connected",
+      "y": 0
     },
-    "direction": {
-      "north": {
-        "y": 0
-      },
-      "east": {
-        "y": 90
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      }
+    "connected=true,direction=east": {
+      "model": "refinedstorage:block/crafting_monitor_connected",
+      "y": 90
+    },
+    "connected=true,direction=south": {
+      "model": "refinedstorage:block/crafting_monitor_connected",
+      "y": 180
+    },
+    "connected=true,direction=west": {
+      "model": "refinedstorage:block/crafting_monitor_connected",
+      "y": 270
+    },
+    "connected=false,direction=north": {
+      "model": "refinedstorage:block/crafting_monitor_disconnected",
+      "y": 0
+    },
+    "connected=false,direction=east": {
+      "model": "refinedstorage:block/crafting_monitor_disconnected",
+      "y": 90
+    },
+    "connected=false,direction=south": {
+      "model": "refinedstorage:block/crafting_monitor_disconnected",
+      "y": 180
+    },
+    "connected=false,direction=west": {
+      "model": "refinedstorage:block/crafting_monitor_disconnected",
+      "y": 270
     }
   }
 }

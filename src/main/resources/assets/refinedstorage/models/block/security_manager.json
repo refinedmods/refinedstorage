@@ -1,5 +1,14 @@
 {
   "parent": "block/cube",
+  "textures": {
+    "particle": "refinedstorage:block/security_manager/front",
+    "down": "refinedstorage:block/security_manager/bottom",
+    "up": "refinedstorage:block/security_manager/top",
+    "north": "refinedstorage:block/security_manager/front",
+    "east": "refinedstorage:block/security_manager/left",
+    "south": "refinedstorage:block/security_manager/back",
+    "west": "refinedstorage:block/security_manager/right"
+  },
   "elements": [
     {
       "from": [

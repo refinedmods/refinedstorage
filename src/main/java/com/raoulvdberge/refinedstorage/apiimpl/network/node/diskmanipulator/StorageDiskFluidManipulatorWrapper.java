@@ -5,11 +5,12 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -17,16 +18,16 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidStack> {
-    private NetworkNodeDiskManipulator diskManipulator;
+    private DiskManipulatorNetworkNode diskManipulator;
     private IStorageDisk<FluidStack> parent;
-    private int lastState;
+    private DiskState lastState;
 
-    public StorageDiskFluidManipulatorWrapper(NetworkNodeDiskManipulator diskManipulator, IStorageDisk<FluidStack> parent) {
+    public StorageDiskFluidManipulatorWrapper(DiskManipulatorNetworkNode diskManipulator, IStorageDisk<FluidStack> parent) {
         this.diskManipulator = diskManipulator;
         this.parent = parent;
         this.setSettings(
             () -> {
-                int currentState = ConstantsDisk.getDiskState(getStored(), getCapacity());
+                DiskState currentState = DiskState.get(getStored(), getCapacity());
 
                 if (lastState != currentState) {
                     lastState = currentState;
@@ -36,7 +37,7 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
             },
             diskManipulator
         );
-        this.lastState = ConstantsDisk.getDiskState(getStored(), getCapacity());
+        this.lastState = DiskState.get(getStored(), getCapacity());
     }
 
     @Override
@@ -50,13 +51,13 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
+    public CompoundNBT writeToNbt() {
         return parent.writeToNbt();
     }
 
     @Override
-    public String getId() {
-        return parent.getId();
+    public ResourceLocation getFactoryId() {
+        return parent.getFactoryId();
     }
 
     @Override
@@ -65,9 +66,9 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
-        if (!IFilterable.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
 
@@ -75,10 +76,10 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public FluidStack extract(@Nonnull FluidStack stack, int size, int flags, Action action) {
-        if (!IFilterable.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
-            return null;
+        if (!IWhitelistBlacklist.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
+            return FluidStack.EMPTY;
         }
 
         return parent.extract(stack, size, flags, action);

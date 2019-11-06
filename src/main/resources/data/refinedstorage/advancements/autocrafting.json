@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:crafter"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage.autocrafting"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage.autocrafting.description"
+    }
+  },
+  "parent": "refinedstorage:root",
+  "criteria": {
+    "crafter_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:crafter"
+          }
+        ]
+      }
+    }
+  }
+}

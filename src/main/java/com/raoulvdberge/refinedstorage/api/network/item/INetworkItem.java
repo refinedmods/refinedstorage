@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.item;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * Represents a network item (an item that is connected to the network somehow).
@@ -12,7 +12,7 @@ public interface INetworkItem {
     /**
      * @return the player using the network item
      */
-    EntityPlayer getPlayer();
+    PlayerEntity getPlayer();
 
     /**
      * Called when the network item is being opened.

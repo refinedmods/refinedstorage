@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -53,7 +53,7 @@ class Processing extends Craft {
         this.fluidsToPut = fluidsToPut;
         isInitialized = true;
     }
-
+        //TODO check
     Processing(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
         super(network, tag);
         this.itemsToReceive = CraftingTask.readItemStackList(tag.getTagList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
@@ -225,20 +225,19 @@ class Processing extends Craft {
         return state;
     }
 
-
     @Override
-    public NBTTagCompound writeToNbt() {
-        NBTTagCompound tag = super.writeToNbt();
+    public CompoundNBT writeToNbt() {
+        CompoundNBT tag = super.writeToNbt();
 
-        tag.setTag(NBT_ITEMS_TO_RECEIVE, CraftingTask.writeItemStackList(itemsToReceive));
-        tag.setTag(NBT_FLUIDS_TO_RECEIVE, CraftingTask.writeFluidStackList(fluidsToReceive));
-        tag.setTag(NBT_FLUIDS_TO_PUT, CraftingTask.writeFluidStackList(fluidsToPut));
-        tag.setInteger(NBT_STATE, state.ordinal());
-        tag.setInteger(NBT_QUANTITY_TOTAL, totalQuantity);
-        tag.setTag(NBT_ITEMS_RECEIVED, CraftingTask.writeItemStackList(itemsReceived));
-        tag.setTag(NBT_FLUIDS_RECEIVED, CraftingTask.writeFluidStackList(fluidsReceived));
-        tag.setInteger(NBT_INSERTED, inserted);
-        tag.setBoolean(NBT_HAS_DUPLICATES, hasDuplicates);
+        tag.put(NBT_ITEMS_TO_RECEIVE, CraftingTask.writeItemStackList(itemsToReceive));
+        tag.put(NBT_FLUIDS_TO_RECEIVE, CraftingTask.writeFluidStackList(fluidsToReceive));
+        tag.put(NBT_FLUIDS_TO_PUT, CraftingTask.writeFluidStackList(fluidsToPut));
+        tag.putInt(NBT_STATE, state.ordinal());
+        tag.putInt(NBT_QUANTITY_TOTAL, totalQuantity);
+        tag.put(NBT_ITEMS_RECEIVED, CraftingTask.writeItemStackList(itemsReceived));
+        tag.put(NBT_FLUIDS_RECEIVED, CraftingTask.writeFluidStackList(fluidsReceived));
+        tag.putInt(NBT_INSERTED, inserted);
+        tag.putBoolean(NBT_HAS_DUPLICATES, hasDuplicates);
 
         return tag;
     }

@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "refinedstorage:items/security_card_inactive"
+    "layer0": "refinedstorage:item/security_card_inactive"
   },
   "overrides": [
     {

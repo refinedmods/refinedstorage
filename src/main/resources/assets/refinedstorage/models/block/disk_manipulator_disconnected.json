@@ -1,13 +1,13 @@
 {
   "parent": "refinedstorage:block/cube_north_cutout",
   "textures": {
-    "particle": "refinedstorage:blocks/disk_manipulator/disk_manipulator",
-    "north": "refinedstorage:blocks/disk_manipulator/disk_manipulator",
-    "east": "refinedstorage:blocks/side",
-    "south": "refinedstorage:blocks/side",
-    "west": "refinedstorage:blocks/side",
-    "up": "refinedstorage:blocks/side",
-    "down": "refinedstorage:blocks/side",
-    "cutout": "refinedstorage:blocks/disk_manipulator/cutouts/disconnected"
+    "particle": "refinedstorage:block/disk_manipulator/disk_manipulator",
+    "north": "refinedstorage:block/disk_manipulator/disk_manipulator",
+    "east": "refinedstorage:block/side",
+    "south": "refinedstorage:block/side",
+    "west": "refinedstorage:block/side",
+    "up": "refinedstorage:block/side",
+    "down": "refinedstorage:block/side",
+    "cutout": "refinedstorage:block/disk_manipulator/cutouts/disconnected"
   }
 }

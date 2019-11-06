@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.storage.externalstorage;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
@@ -17,7 +17,7 @@ public interface IExternalStorageProvider<T> {
      * @param direction the direction of the external storage
      * @return true if the provider can provide, false otherwise
      */
-    boolean canProvide(TileEntity tile, EnumFacing direction);
+    boolean canProvide(TileEntity tile, Direction direction);
 
     /**
      * @param context   the context of the external storage
@@ -26,7 +26,7 @@ public interface IExternalStorageProvider<T> {
      * @return the external storage handler
      */
     @Nonnull
-    IStorageExternal<T> provide(IExternalStorageContext context, Supplier<TileEntity> tile, EnumFacing direction);
+    IExternalStorage<T> provide(IExternalStorageContext context, Supplier<TileEntity> tile, Direction direction);
 
     /**
      * Returns the priority of this external storage provider.

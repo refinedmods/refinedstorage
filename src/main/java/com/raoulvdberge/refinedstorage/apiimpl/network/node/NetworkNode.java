@@ -1,33 +1,32 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 
-import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.INetworkNodeVisitor;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.util.OneSixMigrationHelper;
+import com.raoulvdberge.refinedstorage.block.BaseBlock;
+import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
-import com.raoulvdberge.refinedstorage.util.WorldUtils;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-// TODO: getId: return a ResourceLocation.
 public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private static final String NBT_OWNER = "Owner";
-    private static final String NBT_DIRECTION = "Direction";
     private static final String NBT_VERSION = "Version";
+    private static final int VERSION = 1;
 
     @Nullable
     protected INetwork network;
@@ -39,7 +38,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     protected UUID owner;
     protected String version;
 
-    private EnumFacing direction = EnumFacing.NORTH;
+    private Direction direction;
 
     // Disable throttling for the first tick.
     // This is to make sure couldUpdate is going to be correctly set.
@@ -50,8 +49,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     private boolean throttlingDisabled = true;
     private boolean couldUpdate;
     private int ticksSinceUpdateChanged;
-
-    private boolean active;
 
     public NetworkNode(World world, BlockPos pos) {
         if (world == null) {
@@ -75,9 +72,8 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Nonnull
     @Override
     public ItemStack getItemStack() {
-        IBlockState state = world.getBlockState(pos);
-
-        return new ItemStack(Item.getItemFromBlock(state.getBlock()), 1, state.getBlock().getMetaFromState(state));
+        // TODO This doesn't work crossdim.
+        return new ItemStack(Item.BLOCK_TO_ITEM.get(world.getBlockState(pos).getBlock()), 1);
     }
 
     @Override
@@ -101,7 +97,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     @Override
     public void markDirty() {
         if (!world.isRemote) {
-            API.instance().getNetworkNodeManager(world).markForSaving();
+            API.instance().getNetworkNodeManager((ServerWorld) world).markForSaving();
         }
     }
 
@@ -142,15 +138,17 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
                 couldUpdate = canUpdate;
                 throttlingDisabled = false;
 
-                if (hasConnectivityState()) {
-                    WorldUtils.updateBlock(world, pos);
+                BlockState blockState = world.getBlockState(pos);
+
+                if (blockState.getBlock() instanceof NetworkNodeBlock && ((NetworkNodeBlock) blockState.getBlock()).hasConnectedState()) {
+                    world.setBlockState(pos, world.getBlockState(pos).with(NetworkNodeBlock.CONNECTED, canUpdate));
                 }
 
                 if (network != null) {
                     onConnectedStateChange(network, canUpdate);
 
                     if (shouldRebuildGraphOnChange()) {
-                        network.getNodeGraph().invalidate(Action.PERFORM, network.world(), network.getPosition());
+                        network.getNodeGraph().invalidate(Action.PERFORM, network.getWorld(), network.getPosition());
                     }
                 }
             }
@@ -160,49 +158,37 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound tag) {
+    public CompoundNBT write(CompoundNBT tag) {
         if (owner != null) {
-            tag.setUniqueId(NBT_OWNER, owner);
+            tag.putUniqueId(NBT_OWNER, owner);
         }
 
-        tag.setString(NBT_VERSION, RS.VERSION);
-
-        tag.setInteger(NBT_DIRECTION, direction.ordinal());
+        tag.putInt(NBT_VERSION, VERSION);
 
         writeConfiguration(tag);
 
         return tag;
     }
 
-    public NBTTagCompound writeConfiguration(NBTTagCompound tag) {
+    public CompoundNBT writeConfiguration(CompoundNBT tag) {
         redstoneMode.write(tag);
 
         return tag;
     }
 
-    public void read(NBTTagCompound tag) {
+    public void read(CompoundNBT tag) {
         if (tag.hasUniqueId(NBT_OWNER)) {
             owner = tag.getUniqueId(NBT_OWNER);
         }
 
-        if (tag.hasKey(NBT_DIRECTION)) {
-            direction = EnumFacing.byIndex(tag.getInteger(NBT_DIRECTION));
-        }
-
-        if (tag.hasKey(NBT_VERSION)) {
+        if (tag.contains(NBT_VERSION)) {
             version = tag.getString(NBT_VERSION);
         }
 
         readConfiguration(tag);
-
-        // We do this after readConfiguration so the 1.6 migration calls see that version is null.
-        OneSixMigrationHelper.removalHook();
-        if (version == null) {
-            version = RS.VERSION;
-        }
     }
 
-    public void readConfiguration(NBTTagCompound tag) {
+    public void readConfiguration(CompoundNBT tag) {
         redstoneMode = RedstoneMode.read(tag);
     }
 
@@ -222,13 +208,13 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return world;
     }
 
-    public boolean canConduct(@Nullable EnumFacing direction) {
+    public boolean canConduct(@Nullable Direction direction) {
         return true;
     }
 
     @Override
     public void visit(Operator operator) {
-        for (EnumFacing facing : EnumFacing.VALUES) {
+        for (Direction facing : Direction.values()) {
             if (canConduct(facing)) {
                 operator.apply(world, pos.offset(facing), facing.getOpposite());
             }
@@ -240,20 +226,20 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return world.getTileEntity(pos.offset(getDirection()));
     }
 
-    public EnumFacing getDirection() {
+    public Direction getDirection() {
+        if (direction == null) {
+            BlockState state = world.getBlockState(pos);
+
+            if (state.getBlock() instanceof BaseBlock) {
+                direction = state.get(((BaseBlock) state.getBlock()).getDirection().getProperty());
+            }
+        }
+
         return direction;
     }
 
-    public void setDirection(EnumFacing direction) {
+    public void onDirectionChanged(Direction direction) {
         this.direction = direction;
-
-        onDirectionChanged();
-
-        markDirty();
-    }
-
-    protected void onDirectionChanged() {
-        // NO OP
     }
 
     @Nullable
@@ -265,24 +251,14 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return false;
     }
 
-    public boolean hasConnectivityState() {
-        return false;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
+    @Override
     public void setOwner(@Nullable UUID owner) {
         this.owner = owner;
 
         markDirty();
     }
 
+    @Override
     @Nullable
     public UUID getOwner() {
         return owner;

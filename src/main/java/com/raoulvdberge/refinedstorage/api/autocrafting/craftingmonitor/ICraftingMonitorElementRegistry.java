@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor;
 
-import io.netty.buffer.ByteBuf;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
@@ -15,7 +16,7 @@ public interface ICraftingMonitorElementRegistry {
      * @param id      the id, as specified in {@link ICraftingMonitorElement#getId()}
      * @param factory the factory
      */
-    void add(String id, Function<ByteBuf, ICraftingMonitorElement> factory);
+    void add(ResourceLocation id, Function<PacketBuffer, ICraftingMonitorElement> factory);
 
     /**
      * Returns a factory from the registry.
@@ -24,5 +25,5 @@ public interface ICraftingMonitorElementRegistry {
      * @return the factory, or null if no factory was found
      */
     @Nullable
-    Function<ByteBuf, ICraftingMonitorElement> get(String id);
+    Function<PacketBuffer, ICraftingMonitorElement> get(ResourceLocation id);
 }

@@ -1,0 +1,10 @@
+{
+  "parent": "refinedstorage:block/security_manager",
+  "textures": {
+    "cutout_up": "refinedstorage:block/security_manager/cutouts/top_disconnected",
+    "cutout_north": "refinedstorage:block/security_manager/cutouts/front_disconnected",
+    "cutout_east": "refinedstorage:block/security_manager/cutouts/left_disconnected",
+    "cutout_south": "refinedstorage:block/security_manager/cutouts/back_disconnected",
+    "cutout_west": "refinedstorage:block/security_manager/cutouts/right_disconnected"
+  }
+}

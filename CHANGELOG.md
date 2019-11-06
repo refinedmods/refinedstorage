@@ -1,5 +1,23 @@
 # Refined Storage Changelog
 
+### 1.7.1
+- Exact mode for processing patterns no longer exist, you can now define per-slot which item/fluid tags are allowed to be used by autocrafting, by using CTRL + click on the filter slot in the Pattern Grid (raoulvdberge)
+- The Pattern Grid now switches automatically between crafting pattern and processing pattern mode when using JEI transfer (raoulvdberge)
+- The Pattern Grid now switches automatically between crafting pattern and processing pattern mode when re-inserting an existing Pattern (raoulvdberge)
+- Removed migration code for the development builds that were released on Discord (not on CurseForge). If you used the development builds and never used version 1.7 before, first switch to 1.7, open your world, modify a storage disk, and then upgrade to 1.7.1 (raoulvdberge)
+
+### 1.7
+NOTE: This is an alpha release. Bugs may happen. Remember to take backups.
+
+- Port to Minecraft 1.14 (raoulvdberge)
+- Removed the Reader and Writer, this will return later in an addon mod (raoulvdberge)
+- Removed cross dimensional functionality on the Network Transmitter for the moment, this will return later (raoulvdberge)
+- Removed covers (raoulvdberge)
+- Fixed the Fluid Grid not having a View type setting (raoulvdberge)
+- Oredict mode for Patterns has been replaced with "Exact mode" (by default on). When exact mode is off, Refined Storage will use equivalent items or fluids from the Minecraft item/fluid tag system (raoulvdberge)
+- Grid filtering with "$" now does filtering based on item/fluid tag name instead of oredict name (raoulvdberge)
+- When binding a network item to a network you can now bind to any network block, not only the Controller (raoulvdberge)
+
 ### 1.6.16
 - Updated Russian translation (Bytegm)
 

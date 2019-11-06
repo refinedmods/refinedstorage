@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:1k_storage_disk"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage.storing_items"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage.storing_items.description"
+    }
+  },
+  "parent": "refinedstorage:drives",
+  "criteria": {
+    "storage_disk_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:1k_storage_disk"
+          }
+        ]
+      }
+    }
+  }
+}

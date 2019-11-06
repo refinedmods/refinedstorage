@@ -10,7 +10,6 @@ node {
       sh "./gradlew clean"
     }
     stage('Build') {
-      sh "./gradlew setupCIWorkspace"
       sh "./gradlew build"
     }
   }

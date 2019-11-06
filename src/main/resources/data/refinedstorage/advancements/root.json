@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:creative_controller"
+    },
+    "title": {
+      "translate": "itemGroup.refinedstorage"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage.controlling.description"
+    },
+    "background": "refinedstorage:textures/gui/advancements.png"
+  },
+  "criteria": {
+    "controller_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:controller"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "refinedstorage:items/wireless_crafting_monitor_disconnected"
+    "layer0": "refinedstorage:item/wireless_crafting_monitor_disconnected"
   }
 }

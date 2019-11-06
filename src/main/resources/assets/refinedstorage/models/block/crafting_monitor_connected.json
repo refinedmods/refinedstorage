@@ -1,0 +1,6 @@
+{
+  "parent": "refinedstorage:block/crafting_monitor",
+  "textures": {
+    "cutout": "refinedstorage:block/crafting_monitor/cutouts/front_connected"
+  }
+}

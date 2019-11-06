@@ -2,8 +2,8 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage.disk;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
-import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSyncData;
-import com.raoulvdberge.refinedstorage.network.MessageStorageDiskSizeRequest;
+import com.raoulvdberge.refinedstorage.api.storage.disk.StorageDiskSyncData;
+import com.raoulvdberge.refinedstorage.network.disk.StorageDiskSizeRequestMessage;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -13,16 +13,16 @@ import java.util.UUID;
 public class StorageDiskSync implements IStorageDiskSync {
     private static final int THROTTLE_MS = 500;
 
-    private Map<UUID, IStorageDiskSyncData> data = new HashMap<>();
+    private Map<UUID, StorageDiskSyncData> data = new HashMap<>();
     private Map<UUID, Long> syncTime = new HashMap<>();
 
     @Nullable
     @Override
-    public IStorageDiskSyncData getData(UUID id) {
+    public StorageDiskSyncData getData(UUID id) {
         return data.get(id);
     }
 
-    public void setData(UUID id, IStorageDiskSyncData data) {
+    public void setData(UUID id, StorageDiskSyncData data) {
         this.data.put(id, data);
     }
 
@@ -31,7 +31,7 @@ public class StorageDiskSync implements IStorageDiskSync {
         long lastSync = syncTime.getOrDefault(id, 0L);
 
         if (System.currentTimeMillis() - lastSync > THROTTLE_MS) {
-            RS.INSTANCE.network.sendToServer(new MessageStorageDiskSizeRequest(id));
+            RS.NETWORK_HANDLER.sendToServer(new StorageDiskSizeRequestMessage(id));
 
             syncTime.put(id, System.currentTimeMillis());
         }

@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "refinedstorage:block/4096k_fluid_storage_block"
+  }
+}

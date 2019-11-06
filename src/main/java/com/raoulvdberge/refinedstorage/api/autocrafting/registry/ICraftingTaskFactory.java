@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadExc
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 
@@ -33,5 +33,5 @@ public interface ICraftingTaskFactory {
      * @param tag     the tag
      * @return the crafting task
      */
-    ICraftingTask createFromNbt(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException;
+    ICraftingTask createFromNbt(INetwork network, CompoundNBT tag) throws CraftingTaskReadException;
 }

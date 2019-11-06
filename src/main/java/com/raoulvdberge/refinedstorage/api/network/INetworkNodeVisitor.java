@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network;
 
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -31,7 +31,7 @@ public interface INetworkNodeVisitor {
          * @param pos   the position
          * @param side  the side
          */
-        void apply(World world, BlockPos pos, @Nullable EnumFacing side);
+        void apply(World world, BlockPos pos, @Nullable Direction side);
 
         /**
          * Returns whether the network graph is scanning in simulation mode.

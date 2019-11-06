@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.tile.data;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.network.MessageTileDataParameterUpdate;
+import com.raoulvdberge.refinedstorage.network.tiledata.TileDataParameterUpdateMessage;
 import net.minecraft.tileentity.TileEntity;
 
 import java.util.ArrayList;
@@ -70,6 +70,6 @@ public class TileDataManager {
     }
 
     public static void setParameter(TileDataParameter parameter, Object value) {
-        RS.INSTANCE.network.sendToServer(new MessageTileDataParameterUpdate(parameter, value));
+        RS.NETWORK_HANDLER.sendToServer(new TileDataParameterUpdateMessage(parameter, value));
     }
 }

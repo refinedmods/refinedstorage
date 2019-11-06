@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.api.network.grid;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +21,7 @@ public interface IGridFactory {
      * @return the grid, or null if a problem occurred
      */
     @Nullable
-    IGrid createFromStack(EntityPlayer player, ItemStack stack);
+    IGrid createFromStack(PlayerEntity player, ItemStack stack);
 
     /**
      * Creates a grid from a block. Used when {@link #getType()} is BLOCK.
@@ -30,7 +31,7 @@ public interface IGridFactory {
      * @return the grid, or null if a problem occurred
      */
     @Nullable
-    IGrid createFromBlock(EntityPlayer player, BlockPos pos);
+    IGrid createFromBlock(PlayerEntity player, BlockPos pos);
 
     /**
      * Returns a possible tile for this grid if {@link #getType()} is BLOCK.

@@ -2,33 +2,23 @@ package com.raoulvdberge.refinedstorage.apiimpl.util;
 
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumActionResult;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 public class Comparer implements IComparer {
     @Override
-    public boolean isEqual(@Nullable ItemStack left, @Nullable ItemStack right, int flags) {
-        EnumActionResult validity = getResult(left, right);
-
-        if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
-            return validity == EnumActionResult.SUCCESS;
+    public boolean isEqual(@Nonnull ItemStack left, @Nonnull ItemStack right, int flags) {
+        if (left.isEmpty() && right.isEmpty()) {
+            return true;
         }
 
-        if (left.getItem() != right.getItem()) {
+        if (!ItemStack.areItemsEqual(left, right)) {
             return false;
         }
 
-        if ((flags & COMPARE_DAMAGE) == COMPARE_DAMAGE && left.getItemDamage() != OreDictionary.WILDCARD_VALUE && right.getItemDamage() != OreDictionary.WILDCARD_VALUE) {
-            if (left.getItemDamage() != right.getItemDamage()) {
-                return false;
-            }
-        }
-
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (!isEqualNbt(left, right)) {
+            if (!ItemStack.areItemStackTagsEqual(left, right)) {
                 return false;
             }
         }
@@ -43,77 +33,27 @@ public class Comparer implements IComparer {
     }
 
     @Override
-    public boolean isEqual(@Nullable FluidStack left, @Nullable FluidStack right, int flags) {
-        if (left == null && right == null) {
+    public boolean isEqual(@Nonnull FluidStack left, @Nonnull FluidStack right, int flags) {
+        if (left.isEmpty() && right.isEmpty()) {
             return true;
-        }
-
-        if ((left == null && right != null) || (left != null && right == null)) {
-            return false;
         }
 
         if (left.getFluid() != right.getFluid()) {
             return false;
         }
 
-        if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
-            if (left.amount != right.amount) {
-                return false;
-            }
-        }
-
         if ((flags & COMPARE_NBT) == COMPARE_NBT) {
-            if (left.tag != null && !left.tag.equals(right.tag)) {
+            if (!FluidStack.areFluidStackTagsEqual(left, right)) {
+                return false;
+            }
+        }
+
+        if ((flags & COMPARE_QUANTITY) == COMPARE_QUANTITY) {
+            if (left.getAmount() != right.getAmount()) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    @Override
-    public boolean isEqualNbt(@Nullable ItemStack left, @Nullable ItemStack right) {
-        EnumActionResult validity = getResult(left, right);
-
-        if (validity == EnumActionResult.FAIL || validity == EnumActionResult.SUCCESS) {
-            return validity == EnumActionResult.SUCCESS;
-        }
-
-        if (!ItemStack.areItemStackTagsEqual(left, right)) {
-            if (left.hasTagCompound() && !right.hasTagCompound() && left.getTagCompound().isEmpty()) {
-                return true;
-            } else if (!left.hasTagCompound() && right.hasTagCompound() && right.getTagCompound().isEmpty()) {
-                return true;
-            } else if (!left.hasTagCompound() && !right.hasTagCompound()) {
-                return true;
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private EnumActionResult getResult(@Nullable ItemStack left, @Nullable ItemStack right) {
-        if (left == null && right == null) {
-            return EnumActionResult.SUCCESS;
-        }
-
-        if ((left == null && right != null) || (left != null && right == null)) {
-            return EnumActionResult.FAIL;
-        }
-
-        boolean leftEmpty = left.isEmpty();
-        boolean rightEmpty = right.isEmpty();
-
-        if (leftEmpty && rightEmpty) {
-            return EnumActionResult.SUCCESS;
-        }
-
-        if ((leftEmpty && !rightEmpty) || (!leftEmpty && rightEmpty)) {
-            return EnumActionResult.FAIL;
-        }
-
-        return EnumActionResult.PASS;
     }
 }

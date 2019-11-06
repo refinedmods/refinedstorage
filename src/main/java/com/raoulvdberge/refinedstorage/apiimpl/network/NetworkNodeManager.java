@@ -4,12 +4,15 @@ import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeFactory;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -23,34 +26,30 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
     private static final String NBT_NODE_DATA = "Data";
     private static final String NBT_NODE_POS = "Pos";
 
-    private boolean canReadNodes;
-    private NBTTagList nodesTag;
+    private final World world;
+
+    private Logger logger = LogManager.getLogger(getClass());
 
     private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
-    public NetworkNodeManager(String name) {
+    public NetworkNodeManager(String name, World world) {
         super(name);
+
+        this.world = world;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        if (tag.hasKey(NBT_NODES)) {
-            this.nodesTag = tag.getTagList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
-            this.canReadNodes = true;
-        }
-    }
-
-    public void tryReadNodes(World world) {
-        if (this.canReadNodes) {
-            this.canReadNodes = false;
+    public void read(CompoundNBT tag) {
+        if (tag.contains(NBT_NODES)) {
+            ListNBT nodesTag = tag.getList(NBT_NODES, Constants.NBT.TAG_COMPOUND);
 
             this.nodes.clear();
 
-            for (int i = 0; i < nodesTag.tagCount(); ++i) {
-                NBTTagCompound nodeTag = nodesTag.getCompoundTagAt(i);
+            for (int i = 0; i < nodesTag.size(); ++i) {
+                CompoundNBT nodeTag = nodesTag.getCompound(i);
 
-                String id = nodeTag.getString(NBT_NODE_ID);
-                NBTTagCompound data = nodeTag.getCompoundTag(NBT_NODE_DATA);
+                ResourceLocation id = new ResourceLocation(nodeTag.getString(NBT_NODE_ID));
+                CompoundNBT data = nodeTag.getCompound(NBT_NODE_DATA);
                 BlockPos pos = BlockPos.fromLong(nodeTag.getLong(NBT_NODE_POS));
 
                 INetworkNodeFactory factory = API.instance().getNetworkNodeRegistry().get(id);
@@ -61,36 +60,38 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
                     try {
                         node = factory.create(data, world, pos);
                     } catch (Throwable t) {
-                        t.printStackTrace();
+                        logger.error("Could not read network node", t);
                     }
 
                     if (node != null) {
                         this.nodes.put(pos, node);
                     }
+                } else {
+                    logger.warn("Factory for " + id + " not found in network node registry");
                 }
             }
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        NBTTagList list = new NBTTagList();
+    public CompoundNBT write(CompoundNBT tag) {
+        ListNBT list = new ListNBT();
 
         for (INetworkNode node : all()) {
             try {
-                NBTTagCompound nodeTag = new NBTTagCompound();
+                CompoundNBT nodeTag = new CompoundNBT();
 
-                nodeTag.setString(NBT_NODE_ID, node.getId());
-                nodeTag.setLong(NBT_NODE_POS, node.getPos().toLong());
-                nodeTag.setTag(NBT_NODE_DATA, node.write(new NBTTagCompound()));
+                nodeTag.putString(NBT_NODE_ID, node.getId().toString());
+                nodeTag.putLong(NBT_NODE_POS, node.getPos().toLong());
+                nodeTag.put(NBT_NODE_DATA, node.write(new CompoundNBT()));
 
-                list.appendTag(nodeTag);
+                list.add(nodeTag);
             } catch (Throwable t) {
-                t.printStackTrace();
+                logger.error("Error while saving network node", t);
             }
         }
 
-        tag.setTag(NBT_NODES, list);
+        tag.put(NBT_NODES, list);
 
         return tag;
     }

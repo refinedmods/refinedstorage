@@ -2,12 +2,14 @@ package com.raoulvdberge.refinedstorage.api.network.node;
 
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Represents a node in the network.
@@ -65,7 +67,7 @@ public interface INetworkNode {
      * @param tag the tag
      * @return the written tag
      */
-    NBTTagCompound write(NBTTagCompound tag);
+    CompoundNBT write(CompoundNBT tag);
 
     /**
      * @return the position of this network node
@@ -85,5 +87,16 @@ public interface INetworkNode {
     /**
      * @return the id of this node as specified in {@link INetworkNodeRegistry}
      */
-    String getId();
+    ResourceLocation getId();
+
+    /**
+     * @param owner the owner
+     */
+    void setOwner(@Nullable UUID owner);
+
+    /**
+     * @return the owner
+     */
+    @Nullable
+    UUID getOwner();
 }

@@ -1,87 +1,115 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {
-      "cable": "refinedstorage:blocks/cable",
-      "particle": "refinedstorage:blocks/cable",
-      "border": "refinedstorage:blocks/cable_part_border"
+  "multipart": [
+    {
+      "apply": {
+        "model": "refinedstorage:block/cable_core"
+      }
     },
-    "model": "refinedstorage:cable_core",
-    "uvlock": false,
-    "transform": "forge:default-block"
-  },
-  "variants": {
-    "direction": {
-      "north": {
-        "submodel": "refinedstorage:exporter"
+    {
+      "when": {
+        "north": true
       },
-      "east": {
-        "submodel": "refinedstorage:exporter",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension"
+      }
+    },
+    {
+      "when": {
+        "east": true
+      },
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "y": 90
+      }
+    },
+    {
+      "when": {
+        "south": true
       },
-      "south": {
-        "submodel": "refinedstorage:exporter",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "x": 180
+      }
+    },
+    {
+      "when": {
+        "west": true
       },
-      "west": {
-        "submodel": "refinedstorage:exporter",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "y": 270
+      }
+    },
+    {
+      "when": {
+        "up": true
       },
-      "up": {
-        "submodel": "refinedstorage:exporter",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "x": 270
+      }
+    },
+    {
+      "when": {
+        "down": true
       },
-      "down": {
-        "submodel": "refinedstorage:exporter",
+      "apply": {
+        "model": "refinedstorage:block/cable_extension",
         "x": 90
       }
     },
-    "north": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension"
+    {
+      "when": {
+        "direction": "north"
       },
-      "false": {
+      "apply": {
+        "model": "refinedstorage:block/exporter"
       }
     },
-    "east": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "direction": "east"
+      },
+      "apply": {
+        "model": "refinedstorage:block/exporter",
         "y": 90
-      },
-      "false": {
       }
     },
-    "south": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "direction": "south"
+      },
+      "apply": {
+        "model": "refinedstorage:block/exporter",
         "x": 180
-      },
-      "false": {
       }
     },
-    "west": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "direction": "west"
+      },
+      "apply": {
+        "model": "refinedstorage:block/exporter",
         "y": 270
-      },
-      "false": {
       }
     },
-    "up": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
+    {
+      "when": {
+        "direction": "up"
+      },
+      "apply": {
+        "model": "refinedstorage:block/exporter",
         "x": 270
-      },
-      "false": {
       }
     },
-    "down": {
-      "true": {
-        "submodel": "refinedstorage:cable_extension",
-        "x": 90
+    {
+      "when": {
+        "direction": "down"
       },
-      "false": {
+      "apply": {
+        "model": "refinedstorage:block/exporter",
+        "x": 90
       }
     }
-  }
+  ]
 }

@@ -5,26 +5,29 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.*;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import com.raoulvdberge.refinedstorage.apiimpl.storage.StorageCacheListenerGridItem;
-import com.raoulvdberge.refinedstorage.gui.GuiBase;
-import com.raoulvdberge.refinedstorage.gui.grid.GuiGrid;
-import com.raoulvdberge.refinedstorage.inventory.item.ItemHandlerFilter;
-import com.raoulvdberge.refinedstorage.item.ItemWirelessGrid;
-import com.raoulvdberge.refinedstorage.network.MessageGridSettingsUpdate;
+import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
+import com.raoulvdberge.refinedstorage.inventory.item.FilterItemHandler;
+import com.raoulvdberge.refinedstorage.item.WirelessGridItem;
+import com.raoulvdberge.refinedstorage.network.grid.WirelessGridSettingsUpdateMessage;
+import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.screen.grid.GridScreen;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -32,13 +35,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WirelessGrid implements IGridNetworkAware {
-    public static int ID;
-
+public class WirelessGrid implements INetworkAwareGrid {
     private ItemStack stack;
-
-    private int networkDimension;
-    private BlockPos network;
+    @Nullable
+    private final MinecraftServer server;
+    private final DimensionType nodeDimension;
+    private final BlockPos nodePos;
 
     private int viewType;
     private int sortingType;
@@ -50,35 +52,31 @@ public class WirelessGrid implements IGridNetworkAware {
 
     private List<IFilter> filters = new ArrayList<>();
     private List<IGridTab> tabs = new ArrayList<>();
-    private ItemHandlerFilter filter = new ItemHandlerFilter(filters, tabs, null) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            super.onContentsChanged(slot);
-
-            if (!stack.hasTagCompound()) {
-                stack.setTagCompound(new NBTTagCompound());
+    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
+        .addListener((handler, slot, reading) -> {
+            if (!stack.hasTag()) {
+                stack.setTag(new CompoundNBT());
             }
 
-            StackUtils.writeItems(this, 0, stack.getTagCompound());
-        }
-    };
+            StackUtils.writeItems(handler, 0, stack.getTag());
+        });
 
-    public WirelessGrid(ItemStack stack) {
-        this.networkDimension = ItemWirelessGrid.getDimensionId(stack);
-        this.network = new BlockPos(ItemWirelessGrid.getX(stack), ItemWirelessGrid.getY(stack), ItemWirelessGrid.getZ(stack));
-
+    public WirelessGrid(ItemStack stack, @Nullable MinecraftServer server) {
         this.stack = stack;
+        this.server = server;
+        this.nodeDimension = WirelessGridItem.getDimension(stack);
+        this.nodePos = new BlockPos(WirelessGridItem.getX(stack), WirelessGridItem.getY(stack), WirelessGridItem.getZ(stack));
 
-        this.viewType = ItemWirelessGrid.getViewType(stack);
-        this.sortingType = ItemWirelessGrid.getSortingType(stack);
-        this.sortingDirection = ItemWirelessGrid.getSortingDirection(stack);
-        this.searchBoxMode = ItemWirelessGrid.getSearchBoxMode(stack);
-        this.tabSelected = ItemWirelessGrid.getTabSelected(stack);
-        this.tabPage = ItemWirelessGrid.getTabPage(stack);
-        this.size = ItemWirelessGrid.getSize(stack);
+        this.viewType = WirelessGridItem.getViewType(stack);
+        this.sortingType = WirelessGridItem.getSortingType(stack);
+        this.sortingDirection = WirelessGridItem.getSortingDirection(stack);
+        this.searchBoxMode = WirelessGridItem.getSearchBoxMode(stack);
+        this.tabSelected = WirelessGridItem.getTabSelected(stack);
+        this.tabPage = WirelessGridItem.getTabPage(stack);
+        this.size = WirelessGridItem.getSize(stack);
 
-        if (stack.hasTagCompound()) {
-            StackUtils.readItems(filter, 0, stack.getTagCompound());
+        if (stack.hasTag()) {
+            StackUtils.readItems(filter, 0, stack.getTag());
         }
     }
 
@@ -94,20 +92,18 @@ public class WirelessGrid implements IGridNetworkAware {
     @Override
     @Nullable
     public INetwork getNetwork() {
-        World world = DimensionManager.getWorld(networkDimension);
+        World world = DimensionManager.getWorld(server, nodeDimension, true, true);
 
         if (world != null) {
-            TileEntity tile = world.getTileEntity(network);
-
-            return tile instanceof INetwork ? (INetwork) tile : null;
+            return NetworkUtils.getNetworkFromNode(NetworkUtils.getNodeFromTile(world.getTileEntity(nodePos)));
         }
 
         return null;
     }
 
     @Override
-    public IStorageCacheListener createListener(EntityPlayerMP player) {
-        return new StorageCacheListenerGridItem(player, getNetwork());
+    public IStorageCacheListener createListener(ServerPlayerEntity player) {
+        return new ItemGridStorageCacheListener(player, getNetwork());
     }
 
     @Nullable
@@ -133,18 +129,18 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public void addCraftingListener(IGridCraftingListener listener) {
+    public void addCraftingListener(ICraftingGridListener listener) {
         // NO OP
     }
 
     @Override
-    public void removeCraftingListener(IGridCraftingListener listener) {
+    public void removeCraftingListener(ICraftingGridListener listener) {
         // NO OP
     }
 
     @Override
-    public String getGuiTitle() {
-        return "gui.refinedstorage:grid";
+    public ITextComponent getTitle() {
+        return new TranslationTextComponent("gui.refinedstorage.grid");
     }
 
     @Override
@@ -189,62 +185,60 @@ public class WirelessGrid implements IGridNetworkAware {
 
     @Override
     public void onViewTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(type, getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.viewType = type;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
     public void onSortingTypeChanged(int type) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), type, getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingType = type;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
     public void onSortingDirectionChanged(int direction) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), direction, getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), getTabPage()));
 
         this.sortingDirection = direction;
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
     public void onSearchBoxModeChanged(int searchBoxMode) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), searchBoxMode, getSize(), getTabSelected(), getTabPage()));
 
         this.searchBoxMode = searchBoxMode;
     }
 
     @Override
     public void onSizeChanged(int size) {
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), size, getTabSelected(), getTabPage()));
 
         this.size = size;
 
-        if (Minecraft.getMinecraft().currentScreen != null) {
-            Minecraft.getMinecraft().currentScreen.initGui();
-        }
+        BaseScreen.executeLater(GridScreen.class, BaseScreen::init);
     }
 
     @Override
     public void onTabSelectionChanged(int tab) {
         this.tabSelected = tab == tabSelected ? -1 : tab;
 
-        RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
+        RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), tabSelected, getTabPage()));
 
-        GuiBase.executeLater(GuiGrid.class, grid -> grid.getView().sort());
+        BaseScreen.executeLater(GridScreen.class, grid -> grid.getView().sort());
     }
 
     @Override
     public void onTabPageChanged(int page) {
         if (page >= 0 && page <= getTotalTabPages()) {
-            RS.INSTANCE.network.sendToServer(new MessageGridSettingsUpdate(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
+            RS.NETWORK_HANDLER.sendToServer(new WirelessGridSettingsUpdateMessage(getViewType(), getSortingDirection(), getSortingType(), getSearchBoxMode(), getSize(), getTabSelected(), page));
 
             this.tabPage = page;
         }
@@ -266,12 +260,12 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public InventoryCrafting getCraftingMatrix() {
+    public CraftingInventory getCraftingMatrix() {
         return null;
     }
 
     @Override
-    public InventoryCraftResult getCraftingResult() {
+    public CraftResultInventory getCraftingResult() {
         return null;
     }
 
@@ -281,17 +275,22 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public void onCrafted(EntityPlayer player) {
+    public void onCrafted(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onCraftedShift(EntityPlayer player) {
+    public void onClear(PlayerEntity player) {
         // NO OP
     }
 
     @Override
-    public void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe) {
+    public void onCraftedShift(PlayerEntity player) {
+        // NO OP
+    }
+
+    @Override
+    public void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe) {
         // NO OP
     }
 
@@ -301,11 +300,11 @@ public class WirelessGrid implements IGridNetworkAware {
     }
 
     @Override
-    public void onClosed(EntityPlayer player) {
+    public void onClosed(PlayerEntity player) {
         INetwork network = getNetwork();
 
         if (network != null) {
-            network.getNetworkItemHandler().close(player);
+            network.getNetworkItemManager().close(player);
         }
     }
 }

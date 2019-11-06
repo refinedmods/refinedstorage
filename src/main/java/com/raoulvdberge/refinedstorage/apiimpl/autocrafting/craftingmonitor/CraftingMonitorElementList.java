@@ -2,14 +2,15 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 
 public class CraftingMonitorElementList implements ICraftingMonitorElementList {
     private List<ICraftingMonitorElement> elements = new LinkedList<>();
-    private Map<String, Map<Integer, ICraftingMonitorElement>> currentCraftingLists = new LinkedHashMap<>();
-    private Map<String, Map<Integer, ICraftingMonitorElement>> currentProcessingLists = new LinkedHashMap<>();
-    private Map<String, Map<Integer, ICraftingMonitorElement>> currentStorageLists = new LinkedHashMap<>();
+    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentCraftingLists = new LinkedHashMap<>();
+    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentProcessingLists = new LinkedHashMap<>();
+    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentStorageLists = new LinkedHashMap<>();
 
     @Override
     public void directAdd(ICraftingMonitorElement element) {

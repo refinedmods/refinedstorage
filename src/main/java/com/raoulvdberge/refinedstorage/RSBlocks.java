@@ -1,35 +1,87 @@
 package com.raoulvdberge.refinedstorage;
 
 import com.raoulvdberge.refinedstorage.block.*;
+import net.minecraftforge.registries.ObjectHolder;
 
 public final class RSBlocks {
-    public static final BlockController CONTROLLER = new BlockController();
-    public static final BlockCable CABLE = new BlockCable();
-    public static final BlockGrid GRID = new BlockGrid();
-    public static final BlockDiskDrive DISK_DRIVE = new BlockDiskDrive();
-    public static final BlockExternalStorage EXTERNAL_STORAGE = new BlockExternalStorage();
-    public static final BlockImporter IMPORTER = new BlockImporter();
-    public static final BlockExporter EXPORTER = new BlockExporter();
-    public static final BlockDetector DETECTOR = new BlockDetector();
-    public static final BlockMachineCasing MACHINE_CASING = new BlockMachineCasing();
-    public static final BlockDestructor DESTRUCTOR = new BlockDestructor();
-    public static final BlockConstructor CONSTRUCTOR = new BlockConstructor();
-    public static final BlockStorage STORAGE = new BlockStorage();
-    public static final BlockRelay RELAY = new BlockRelay();
-    public static final BlockInterface INTERFACE = new BlockInterface();
-    public static final BlockCraftingMonitor CRAFTING_MONITOR = new BlockCraftingMonitor();
-    public static final BlockWirelessTransmitter WIRELESS_TRANSMITTER = new BlockWirelessTransmitter();
-    public static final BlockCrafter CRAFTER = new BlockCrafter();
-    public static final BlockNetworkTransmitter NETWORK_TRANSMITTER = new BlockNetworkTransmitter();
-    public static final BlockNetworkReceiver NETWORK_RECEIVER = new BlockNetworkReceiver();
-    public static final BlockFluidInterface FLUID_INTERFACE = new BlockFluidInterface();
-    public static final BlockFluidStorage FLUID_STORAGE = new BlockFluidStorage();
-    public static final BlockDiskManipulator DISK_MANIPULATOR = new BlockDiskManipulator();
-    public static final BlockReader READER = new BlockReader();
-    public static final BlockWriter WRITER = new BlockWriter();
-    public static final BlockSecurityManager SECURITY_MANAGER = new BlockSecurityManager();
-    public static final BlockQuartzEnrichedIron QUARTZ_ENRICHED_IRON = new BlockQuartzEnrichedIron();
-    public static final BlockStorageMonitor STORAGE_MONITOR = new BlockStorageMonitor();
-    public static final BlockPortableGrid PORTABLE_GRID = new BlockPortableGrid();
-    public static final BlockCrafterManager CRAFTER_MANAGER = new BlockCrafterManager();
+    @ObjectHolder(RS.ID + ":importer")
+    public static final ImporterBlock IMPORTER = null;
+    @ObjectHolder(RS.ID + ":exporter")
+    public static final ExporterBlock EXPORTER = null;
+    @ObjectHolder(RS.ID + ":detector")
+    public static final DetectorBlock DETECTOR = null;
+    @ObjectHolder(RS.ID + ":relay")
+    public static final RelayBlock RELAY = null;
+    @ObjectHolder(RS.ID + ":network_transmitter")
+    public static final NetworkTransmitterBlock NETWORK_TRANSMITTER = null;
+    @ObjectHolder(RS.ID + ":network_receiver")
+    public static final NetworkReceiverBlock NETWORK_RECEIVER = null;
+    @ObjectHolder(RS.ID + ":quartz_enriched_iron_block")
+    public static final QuartzEnrichedIronBlock QUARTZ_ENRICHED_IRON = null;
+    @ObjectHolder(RS.ID + ":machine_casing")
+    public static final MachineCasingBlock MACHINE_CASING = null;
+    @ObjectHolder(RS.ID + ":controller")
+    public static final ControllerBlock CONTROLLER = null;
+    @ObjectHolder(RS.ID + ":creative_controller")
+    public static final ControllerBlock CREATIVE_CONTROLLER = null;
+    @ObjectHolder(RS.ID + ":cable")
+    public static final CableBlock CABLE = null;
+    @ObjectHolder(RS.ID + ":disk_drive")
+    public static final DiskDriveBlock DISK_DRIVE = null;
+    @ObjectHolder(RS.ID + ":external_storage")
+    public static final ExternalStorageBlock EXTERNAL_STORAGE = null;
+    @ObjectHolder(RS.ID + ":grid")
+    public static final GridBlock GRID = null;
+    @ObjectHolder(RS.ID + ":crafting_grid")
+    public static final GridBlock CRAFTING_GRID = null;
+    @ObjectHolder(RS.ID + ":pattern_grid")
+    public static final GridBlock PATTERN_GRID = null;
+    @ObjectHolder(RS.ID + ":fluid_grid")
+    public static final GridBlock FLUID_GRID = null;
+    @ObjectHolder(RS.ID + ":1k_storage_block")
+    public static final StorageBlock ONE_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":4k_storage_block")
+    public static final StorageBlock FOUR_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":16k_storage_block")
+    public static final StorageBlock SIXTEEN_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":64k_storage_block")
+    public static final StorageBlock SIXTY_FOUR_K_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":creative_storage_block")
+    public static final StorageBlock CREATIVE_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":64k_fluid_storage_block")
+    public static final FluidStorageBlock SIXTY_FOUR_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":256k_fluid_storage_block")
+    public static final FluidStorageBlock TWO_HUNDRED_FIFTY_SIX_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":1024k_fluid_storage_block")
+    public static final FluidStorageBlock THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":4096k_fluid_storage_block")
+    public static final FluidStorageBlock FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":creative_fluid_storage_block")
+    public static final FluidStorageBlock CREATIVE_FLUID_STORAGE_BLOCK = null;
+    @ObjectHolder(RS.ID + ":security_manager")
+    public static final SecurityManagerBlock SECURITY_MANAGER = null;
+    @ObjectHolder(RS.ID + ":interface")
+    public static final InterfaceBlock INTERFACE = null;
+    @ObjectHolder(RS.ID + ":fluid_interface")
+    public static final FluidInterfaceBlock FLUID_INTERFACE = null;
+    @ObjectHolder(RS.ID + ":wireless_transmitter")
+    public static final WirelessTransmitterBlock WIRELESS_TRANSMITTER = null;
+    @ObjectHolder(RS.ID + ":storage_monitor")
+    public static final StorageMonitorBlock STORAGE_MONITOR = null;
+    @ObjectHolder(RS.ID + ":constructor")
+    public static final ConstructorBlock CONSTRUCTOR = null;
+    @ObjectHolder(RS.ID + ":destructor")
+    public static final DestructorBlock DESTRUCTOR = null;
+    @ObjectHolder(RS.ID + ":disk_manipulator")
+    public static final DiskManipulatorBlock DISK_MANIPULATOR = null;
+    @ObjectHolder(RS.ID + ":portable_grid")
+    public static final PortableGridBlock PORTABLE_GRID = null;
+    @ObjectHolder(RS.ID + ":creative_portable_grid")
+    public static final PortableGridBlock CREATIVE_PORTABLE_GRID = null;
+    @ObjectHolder(RS.ID + ":crafter")
+    public static final CrafterBlock CRAFTER = null;
+    @ObjectHolder(RS.ID + ":crafter_manager")
+    public static final CrafterManagerBlock CRAFTER_MANAGER = null;
+    @ObjectHolder(RS.ID + ":crafting_monitor")
+    public static final CraftingMonitorBlock CRAFTING_MONITOR = null;
 }

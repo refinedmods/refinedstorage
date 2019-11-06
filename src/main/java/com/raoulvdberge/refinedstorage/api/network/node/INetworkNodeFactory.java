@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.node;
 
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -19,5 +19,5 @@ public interface INetworkNodeFactory {
      * @return the network node
      */
     @Nonnull
-    INetworkNode create(NBTTagCompound tag, World world, BlockPos pos);
+    INetworkNode create(CompoundNBT tag, World world, BlockPos pos);
 }

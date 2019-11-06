@@ -2,14 +2,15 @@ package com.raoulvdberge.refinedstorage.api.network.grid;
 
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCache;
-import com.raoulvdberge.refinedstorage.api.storage.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
+import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
@@ -53,7 +54,7 @@ public interface IGrid {
      * @param player the player to create a listener for
      * @return a listener for this grid, will be attached to the storage cache in {@link #getStorageCache()}
      */
-    IStorageCacheListener createListener(EntityPlayerMP player);
+    IStorageCacheListener createListener(ServerPlayerEntity player);
 
     /**
      * @return the storage cache for this grid, or null if this grid is unavailable
@@ -76,19 +77,19 @@ public interface IGrid {
     /**
      * @param listener the listener
      */
-    default void addCraftingListener(IGridCraftingListener listener) {
+    default void addCraftingListener(ICraftingGridListener listener) {
     }
 
     /**
      * @param listener the listener
      */
-    default void removeCraftingListener(IGridCraftingListener listener) {
+    default void removeCraftingListener(ICraftingGridListener listener) {
     }
 
     /**
-     * @return an unlocalized gui title
+     * @return the title
      */
-    String getGuiTitle();
+    ITextComponent getTitle();
 
     /**
      * @return the view type
@@ -184,13 +185,13 @@ public interface IGrid {
      * @return the crafting matrix, or null if not a crafting grid
      */
     @Nullable
-    InventoryCrafting getCraftingMatrix();
+    CraftingInventory getCraftingMatrix();
 
     /**
      * @return the crafting result inventory, or null if not a crafting grid
      */
     @Nullable
-    InventoryCraftResult getCraftingResult();
+    CraftResultInventory getCraftingResult();
 
     /**
      * Called when the crafting matrix changes.
@@ -202,14 +203,19 @@ public interface IGrid {
      *
      * @param player the player that crafted the item
      */
-    void onCrafted(EntityPlayer player);
+    void onCrafted(PlayerEntity player);
+
+    /**
+     * Called when the clear button is pressed in the pattern grid or crafting grid.
+     */
+    void onClear(PlayerEntity player);
 
     /**
      * Called when an item is crafted with shift click (up to 64 items) in a crafting grid.
      *
      * @param player the player that crafted the item
      */
-    void onCraftedShift(EntityPlayer player);
+    void onCraftedShift(PlayerEntity player);
 
     /**
      * Called when a JEI recipe transfer occurs.
@@ -217,14 +223,14 @@ public interface IGrid {
      * @param player the player
      * @param recipe a 9*x array stack array, where x is the possible combinations for the given slot
      */
-    void onRecipeTransfer(EntityPlayer player, ItemStack[][] recipe);
+    void onRecipeTransfer(PlayerEntity player, ItemStack[][] recipe);
 
     /**
      * Called when the grid is closed.
      *
      * @param player the player
      */
-    void onClosed(EntityPlayer player);
+    void onClosed(PlayerEntity player);
 
     /**
      * @return true if the grid is active, false otherwise

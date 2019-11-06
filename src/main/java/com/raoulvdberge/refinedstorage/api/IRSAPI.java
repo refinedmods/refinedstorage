@@ -7,13 +7,12 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreview
 import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
-import com.raoulvdberge.refinedstorage.api.network.INetwork;
+import com.raoulvdberge.refinedstorage.api.network.INetworkManager;
+import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeManager;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeRegistry;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterChannel;
-import com.raoulvdberge.refinedstorage.api.network.readerwriter.IReaderWriterHandlerRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskManager;
@@ -21,13 +20,11 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskRegistry;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskSync;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.api.util.IOneSixMigrationHelper;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
@@ -59,13 +56,19 @@ public interface IRSAPI {
 
     /**
      * Gets a network node manager for a given world.
-     * This can only be called on the server side!
-     * There is no such concept of a network node manager on the client.
      *
-     * @param world the world
-     * @return the network node manager for the given world
+     * @param world world
+     * @return the network node manager for a given world
      */
-    INetworkNodeManager getNetworkNodeManager(World world);
+    INetworkNodeManager getNetworkNodeManager(ServerWorld world);
+
+    /**
+     * Gets a network manager for a given world.
+     *
+     * @param world world
+     * @return the network manager for a given world
+     */
+    INetworkManager getNetworkManager(ServerWorld world);
 
     /**
      * @return the crafting task registry
@@ -84,20 +87,6 @@ public interface IRSAPI {
      */
     @Nonnull
     ICraftingPreviewElementRegistry getCraftingPreviewElementRegistry();
-
-    /**
-     * @return the reader writer handler registry
-     */
-    @Nonnull
-    IReaderWriterHandlerRegistry getReaderWriterHandlerRegistry();
-
-    /**
-     * @param name    the name of the channel
-     * @param network the network
-     * @return a new reader writer channel
-     */
-    @Nonnull
-    IReaderWriterChannel createReaderWriterChannel(String name, INetwork network);
 
     /**
      * @return an empty item stack list
@@ -124,17 +113,23 @@ public interface IRSAPI {
     IGridManager getGridManager();
 
     /**
+     * @return the default crafting grid behavior
+     */
+    @Nonnull
+    ICraftingGridBehavior getCraftingGridBehavior();
+
+    /**
      * @return the storage disk registry
      */
     @Nonnull
     IStorageDiskRegistry getStorageDiskRegistry();
 
     /**
-     * @param world the world
+     * @param anyWorld any world associated with the server
      * @return the storage disk manager
      */
     @Nonnull
-    IStorageDiskManager getStorageDiskManager(World world);
+    IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld);
 
     /**
      * @return the storage disk sync manager
@@ -162,7 +157,7 @@ public interface IRSAPI {
      * @return a storage disk
      */
     @Nonnull
-    IStorageDisk<ItemStack> createDefaultItemDisk(World world, int capacity);
+    IStorageDisk<ItemStack> createDefaultItemDisk(ServerWorld world, int capacity);
 
     /**
      * @param world    the world
@@ -170,7 +165,7 @@ public interface IRSAPI {
      * @return a fluid storage disk
      */
     @Nonnull
-    IStorageDisk<FluidStack> createDefaultFluidDisk(World world, int capacity);
+    IStorageDisk<FluidStack> createDefaultFluidDisk(ServerWorld world, int capacity);
 
     /**
      * Creates crafting request info for an item.
@@ -194,16 +189,7 @@ public interface IRSAPI {
      * @param tag the nbt tag
      * @return the request info
      */
-    ICraftingRequestInfo createCraftingRequestInfo(NBTTagCompound tag) throws CraftingTaskReadException;
-
-    /**
-     * Returns a helper for the 1.6.x migration.
-     * Will be removed in 1.7.x!
-     *
-     * @return the 1.6.x migration helper
-     */
-    @Nonnull
-    IOneSixMigrationHelper getOneSixMigrationHelper();
+    ICraftingRequestInfo createCraftingRequestInfo(CompoundNBT tag) throws CraftingTaskReadException;
 
     /**
      * @param renderHandler the render handler to add
@@ -214,14 +200,6 @@ public interface IRSAPI {
      * @return a list of pattern render handlers
      */
     List<ICraftingPatternRenderHandler> getPatternRenderHandlers();
-
-    /**
-     * Notifies the neighbors of a node that there is a node placed at the given position.
-     *
-     * @param world the world
-     * @param pos   the position of the node
-     */
-    void discoverNode(World world, BlockPos pos);
 
     /**
      * @param stack the stack

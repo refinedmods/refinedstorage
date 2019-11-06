@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "refinedstorage:4096k_fluid_storage_block",
+          "functions": [
+            {
+              "function": "refinedstorage:storage_block"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

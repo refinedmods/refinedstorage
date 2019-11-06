@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "refinedstorage:disk_manipulator"
+    },
+    "title": {
+      "translate": "advancements.refinedstorage.manipulating_disks"
+    },
+    "description": {
+      "translate": "advancements.refinedstorage.manipulating_disks.description"
+    }
+  },
+  "parent": "refinedstorage:drives",
+  "criteria": {
+    "disk_manipulator_in_inventory": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "refinedstorage:disk_manipulator"
+          }
+        ]
+      }
+    }
+  }
+}

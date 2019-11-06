@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.security;
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 
 /**
  * The security manager of a network.
@@ -11,7 +11,7 @@ public interface ISecurityManager {
      * @param player     the player to check that permission for
      * @return true if the player has the given permission, false otherwise
      */
-    boolean hasPermission(Permission permission, EntityPlayer player);
+    boolean hasPermission(Permission permission, PlayerEntity player);
 
     /**
      * Invalidates the security list.

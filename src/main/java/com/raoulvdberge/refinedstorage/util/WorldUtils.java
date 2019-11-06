@@ -1,17 +1,23 @@
 package com.raoulvdberge.refinedstorage.util;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import com.mojang.authlib.GameProfile;
+import com.raoulvdberge.refinedstorage.render.Styles;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.server.management.PlayerProfileCache;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.math.RayTraceContext;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -20,22 +26,23 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public final class WorldUtils {
     public static void updateBlock(@Nullable World world, BlockPos pos) {
         if (world != null) {
-            IBlockState state = world.getBlockState(pos);
+            BlockState state = world.getBlockState(pos);
+
             world.notifyBlockUpdate(pos, state, state, 1 | 2);
         }
     }
 
-    public static IItemHandler getItemHandler(@Nullable TileEntity tile, EnumFacing side) {
+    public static IItemHandler getItemHandler(@Nullable TileEntity tile, Direction side) {
         if (tile == null) {
             return null;
         }
 
-        IItemHandler handler = tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side) ? tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side) : null;
-
+        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).orElse(null);
         if (handler == null) {
             if (side != null && tile instanceof ISidedInventory) {
                 handler = new SidedInvWrapper((ISidedInventory) tile, side);
@@ -47,19 +54,39 @@ public final class WorldUtils {
         return handler;
     }
 
-    public static IFluidHandler getFluidHandler(@Nullable TileEntity tile, EnumFacing side) {
-        return (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)) ? tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side) : null;
+    public static IFluidHandler getFluidHandler(@Nullable TileEntity tile, Direction side) {
+        if (tile != null) {
+            return tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).orElse(null);
+        }
+
+        return null;
     }
 
-    public static void sendNoPermissionMessage(EntityPlayer player) {
-        player.sendMessage(new TextComponentTranslation("misc.refinedstorage:security.no_permission").setStyle(new Style().setColor(TextFormatting.RED)));
-    }
+    public static FakePlayer getFakePlayer(ServerWorld world, @Nullable UUID owner) {
+        if (owner != null) {
+            PlayerProfileCache profileCache = world.getServer().getPlayerProfileCache();
 
-    public static void dropInventory(World world, BlockPos pos, IItemHandler handler) {
-        for (int i = 0; i < handler.getSlots(); ++i) {
-            if (!handler.getStackInSlot(i).isEmpty()) {
-                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), handler.getStackInSlot(i));
+            GameProfile profile = profileCache.getProfileByUUID(owner);
+
+            if (profile != null) {
+                return FakePlayerFactory.get(world, profile);
             }
         }
+
+        return FakePlayerFactory.getMinecraft(world);
+    }
+
+    public static void sendNoPermissionMessage(PlayerEntity player) {
+        player.sendMessage(new TranslationTextComponent("misc.refinedstorage.security.no_permission").setStyle(Styles.RED));
+    }
+
+    public static RayTraceResult rayTracePlayer(World world, PlayerEntity player) {
+        double reachDistance = player.getAttribute(PlayerEntity.REACH_DISTANCE).getValue();
+
+        Vec3d base = player.getEyePosition(1.0F);
+        Vec3d look = player.getLookVec();
+        Vec3d target = base.add(look.x * reachDistance, look.y * reachDistance, look.z * reachDistance);
+
+        return world.rayTraceBlocks(new RayTraceContext(base, target, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
     }
 }

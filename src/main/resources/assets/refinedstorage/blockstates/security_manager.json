@@ -1,54 +1,36 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "refinedstorage:security_manager",
-    "textures": {
-      "particle": "refinedstorage:blocks/security_manager/front",
-      "down": "refinedstorage:blocks/security_manager/bottom",
-      "up": "refinedstorage:blocks/security_manager/top",
-      "north": "refinedstorage:blocks/security_manager/front",
-      "east": "refinedstorage:blocks/security_manager/left",
-      "south": "refinedstorage:blocks/security_manager/back",
-      "west": "refinedstorage:blocks/security_manager/right",
-      "cutout_up": "refinedstorage:blocks/security_manager/cutouts/top_disconnected",
-      "cutout_north": "refinedstorage:blocks/security_manager/cutouts/front_disconnected",
-      "cutout_east": "refinedstorage:blocks/security_manager/cutouts/left_disconnected",
-      "cutout_south": "refinedstorage:blocks/security_manager/cutouts/back_disconnected",
-      "cutout_west": "refinedstorage:blocks/security_manager/cutouts/right_disconnected"
-    }
-  },
   "variants": {
-    "inventory": [
-      {
-        "transform": "forge:default-block"
-      }
-    ],
-    "connected": {
-      "true": {
-        "textures": {
-          "cutout_up": "refinedstorage:blocks/security_manager/cutouts/top_connected",
-          "cutout_north": "refinedstorage:blocks/security_manager/cutouts/front_connected",
-          "cutout_east": "refinedstorage:blocks/security_manager/cutouts/left_connected",
-          "cutout_south": "refinedstorage:blocks/security_manager/cutouts/back_connected",
-          "cutout_west": "refinedstorage:blocks/security_manager/cutouts/right_connected"
-        }
-      },
-      "false": {
-      }
+    "connected=true,direction=north": {
+      "model": "refinedstorage:block/security_manager_connected",
+      "y": 0
     },
-    "direction": {
-      "north": {
-        "y": 0
-      },
-      "east": {
-        "y": 90
-      },
-      "south": {
-        "y": 180
-      },
-      "west": {
-        "y": 270
-      }
+    "connected=true,direction=east": {
+      "model": "refinedstorage:block/security_manager_connected",
+      "y": 90
+    },
+    "connected=true,direction=south": {
+      "model": "refinedstorage:block/security_manager_connected",
+      "y": 180
+    },
+    "connected=true,direction=west": {
+      "model": "refinedstorage:block/security_manager_connected",
+      "y": 270
+    },
+    "connected=false,direction=north": {
+      "model": "refinedstorage:block/security_manager_disconnected",
+      "y": 0
+    },
+    "connected=false,direction=east": {
+      "model": "refinedstorage:block/security_manager_disconnected",
+      "y": 90
+    },
+    "connected=false,direction=south": {
+      "model": "refinedstorage:block/security_manager_disconnected",
+      "y": 180
+    },
+    "connected=false,direction=west": {
+      "model": "refinedstorage:block/security_manager_disconnected",
+      "y": 270
     }
   }
 }

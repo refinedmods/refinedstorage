@@ -5,23 +5,20 @@ import com.raoulvdberge.refinedstorage.tile.ClientNode;
 import com.raoulvdberge.refinedstorage.util.AccessTypeUtils;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializer;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.network.datasync.IDataSerializer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public final class RSSerializers {
-    public static final DataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new DataSerializer<List<ClientNode>>() {
+    public static final IDataSerializer<List<ClientNode>> CLIENT_NODE_SERIALIZER = new IDataSerializer<List<ClientNode>>() {
         @Override
         public void write(PacketBuffer buf, List<ClientNode> nodes) {
             buf.writeInt(nodes.size());
 
             for (ClientNode node : nodes) {
-                ByteBufUtils.writeItemStack(buf, node.getStack());
+                buf.writeItemStack(node.getStack());
                 buf.writeInt(node.getAmount());
                 buf.writeInt(node.getEnergyUsage());
             }
@@ -34,7 +31,7 @@ public final class RSSerializers {
             int size = buf.readInt();
 
             for (int i = 0; i < size; ++i) {
-                nodes.add(new ClientNode(ByteBufUtils.readItemStack(buf), buf.readInt(), buf.readInt()));
+                nodes.add(new ClientNode(buf.readItemStack(), buf.readInt(), buf.readInt()));
             }
 
             return nodes;
@@ -51,30 +48,15 @@ public final class RSSerializers {
         }
     };
 
-    public static final DataSerializer<FluidStack> FLUID_STACK_SERIALIZER = new DataSerializer<FluidStack>() {
+    public static final IDataSerializer<FluidStack> FLUID_STACK_SERIALIZER = new IDataSerializer<FluidStack>() {
         @Override
         public void write(PacketBuffer buf, FluidStack value) {
-            if (value == null) {
-                buf.writeBoolean(false);
-            } else {
-                buf.writeBoolean(true);
-                ByteBufUtils.writeUTF8String(buf, FluidRegistry.getFluidName(value));
-                buf.writeInt(value.amount);
-                buf.writeCompoundTag(value.tag);
-            }
+            value.writeToPacket(buf);
         }
 
         @Override
         public FluidStack read(PacketBuffer buf) {
-            try {
-                if (buf.readBoolean()) {
-                    return new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), buf.readCompoundTag());
-                }
-            } catch (IOException e) {
-                // NO OP
-            }
-
-            return null;
+            return FluidStack.readFromPacket(buf);
         }
 
         @Override
@@ -88,7 +70,7 @@ public final class RSSerializers {
         }
     };
 
-    public static final DataSerializer<AccessType> ACCESS_TYPE_SERIALIZER = new DataSerializer<AccessType>() {
+    public static final IDataSerializer<AccessType> ACCESS_TYPE_SERIALIZER = new IDataSerializer<AccessType>() {
         @Override
         public void write(PacketBuffer buf, AccessType value) {
             buf.writeInt(value.getId());
@@ -110,14 +92,14 @@ public final class RSSerializers {
         }
     };
 
-    public static final DataSerializer<Long> LONG_SERIALIZER = new DataSerializer<Long>() {
+    public static final IDataSerializer<Long> LONG_SERIALIZER = new IDataSerializer<Long>() {
         @Override
         public void write(PacketBuffer buf, Long value) {
             buf.writeLong(value);
         }
 
         @Override
-        public Long read(PacketBuffer buf) throws IOException {
+        public Long read(PacketBuffer buf) {
             return buf.readLong();
         }
 
@@ -128,6 +110,77 @@ public final class RSSerializers {
 
         @Override
         public Long copyValue(Long value) {
+            return value;
+        }
+    };
+
+    public static final IDataSerializer<Optional<ResourceLocation>> OPTIONAL_RESOURCE_LOCATION_SERIALIZER = new IDataSerializer<Optional<ResourceLocation>>() {
+        @Override
+        public void write(PacketBuffer buf, Optional<ResourceLocation> value) {
+            buf.writeBoolean(value.isPresent());
+
+            value.ifPresent(buf::writeResourceLocation);
+        }
+
+        @Override
+        public Optional<ResourceLocation> read(PacketBuffer buf) {
+            if (!buf.readBoolean()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(buf.readResourceLocation());
+        }
+
+        @Override
+        public DataParameter<Optional<ResourceLocation>> createKey(int id) {
+            return null;
+        }
+
+        @Override
+        public Optional<ResourceLocation> copyValue(Optional<ResourceLocation> value) {
+            return value;
+        }
+    };
+
+    public static final IDataSerializer<List<Set<ResourceLocation>>> LIST_OF_SET_SERIALIZER = new IDataSerializer<List<Set<ResourceLocation>>>() {
+        @Override
+        public void write(PacketBuffer buf, List<Set<ResourceLocation>> value) {
+            buf.writeInt(value.size());
+
+            for (Set<ResourceLocation> values : value) {
+                buf.writeInt(values.size());
+
+                values.forEach(buf::writeResourceLocation);
+            }
+        }
+
+        @Override
+        public List<Set<ResourceLocation>> read(PacketBuffer buf) {
+            List<Set<ResourceLocation>> value = new ArrayList<>();
+
+            int size = buf.readInt();
+            for (int i = 0; i < size; ++i) {
+                int setSize = buf.readInt();
+
+                Set<ResourceLocation> values = new HashSet<>();
+
+                for (int j = 0; j < setSize; ++j) {
+                    values.add(buf.readResourceLocation());
+                }
+
+                value.add(values);
+            }
+
+            return value;
+        }
+
+        @Override
+        public DataParameter<List<Set<ResourceLocation>>> createKey(int id) {
+            return null;
+        }
+
+        @Override
+        public List<Set<ResourceLocation>> copyValue(List<Set<ResourceLocation>> value) {
             return value;
         }
     };

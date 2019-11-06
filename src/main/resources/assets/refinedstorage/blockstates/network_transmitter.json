@@ -1,27 +1,10 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "refinedstorage:cube_all_cutout",
-    "textures": {
-      "particle": "refinedstorage:blocks/network_transmitter/network_transmitter",
-      "all": "refinedstorage:blocks/network_transmitter/network_transmitter",
-      "cutout": "refinedstorage:blocks/network_transmitter/cutouts/disconnected"
-    }
-  },
   "variants": {
-    "inventory": [
-      {
-        "transform": "forge:default-block"
-      }
-    ],
-    "connected": {
-      "true": {
-        "textures": {
-          "cutout": "refinedstorage:blocks/network_transmitter/cutouts/connected"
-        }
-      },
-      "false": {
-      }
+    "connected=true": {
+      "model": "refinedstorage:block/network_transmitter_connected"
+    },
+    "connected=false": {
+      "model": "refinedstorage:block/network_transmitter_disconnected"
     }
   }
 }

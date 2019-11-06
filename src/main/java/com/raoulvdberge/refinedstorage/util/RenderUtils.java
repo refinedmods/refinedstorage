@@ -1,56 +1,32 @@
 package com.raoulvdberge.refinedstorage.util;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import net.minecraft.block.state.IBlockState;
+import com.raoulvdberge.refinedstorage.render.Styles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.model.TRSRTransformation;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public final class RenderUtils {
-    public static final Matrix4f EMPTY_MATRIX_TRANSFORM = getTransform(0, 0, 0, 0, 0, 0, 1.0f).getMatrix();
-
-    // @Volatile: From ForgeBlockStateV1
-    private static final TRSRTransformation FLIP_X = new TRSRTransformation(null, null, new Vector3f(-1, 1, 1), null);
-
-    private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_ITEM_TRANSFORM;
-    private static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> DEFAULT_BLOCK_TRANSFORM;
-
     private static final VertexFormat ITEM_FORMAT_WITH_LIGHTMAP = new VertexFormat(DefaultVertexFormats.ITEM).addElement(DefaultVertexFormats.TEX_2S);
 
     public static String shorten(String text, int length) {
@@ -60,188 +36,20 @@ public final class RenderUtils {
         return text;
     }
 
-    private static void setGLColorFromInt(int color) {
-        float red = (color >> 16 & 0xFF) / 255.0F;
-        float green = (color >> 8 & 0xFF) / 255.0F;
-        float blue = (color & 0xFF) / 255.0F;
-
-        GlStateManager.color(red, green, blue, 1.0F);
-    }
-
-    private static void drawFluidTexture(double xCoord, double yCoord, TextureAtlasSprite textureSprite, int maskTop, int maskRight, double zLevel) {
-        double uMin = (double) textureSprite.getMinU();
-        double uMax = (double) textureSprite.getMaxU();
-        double vMin = (double) textureSprite.getMinV();
-        double vMax = (double) textureSprite.getMaxV();
-        uMax = uMax - (maskRight / 16.0 * (uMax - uMin));
-        vMax = vMax - (maskTop / 16.0 * (vMax - vMin));
-
-        Tessellator tessellator = Tessellator.getInstance();
-
-        BufferBuilder vertexBuffer = tessellator.getBuffer();
-        vertexBuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        vertexBuffer.pos(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
-        vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
-        vertexBuffer.pos(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
-        vertexBuffer.pos(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
-        tessellator.draw();
-    }
-
-    private static TRSRTransformation leftifyTransform(TRSRTransformation transform) {
-        return TRSRTransformation.blockCenterToCorner(FLIP_X.compose(TRSRTransformation.blockCornerToCenter(transform)).compose(FLIP_X));
-    }
-
-    private static TRSRTransformation getTransform(float tx, float ty, float tz, float ax, float ay, float az, float s) {
-        return new TRSRTransformation(
-            new Vector3f(tx / 16, ty / 16, tz / 16),
-            TRSRTransformation.quatFromXYZDegrees(new Vector3f(ax, ay, az)),
-            new Vector3f(s, s, s),
-            null
-        );
-    }
-
-    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getDefaultItemTransforms() {
-        if (DEFAULT_ITEM_TRANSFORM != null) {
-            return DEFAULT_ITEM_TRANSFORM;
-        }
-
-        return DEFAULT_ITEM_TRANSFORM = ImmutableMap.<ItemCameraTransforms.TransformType, TRSRTransformation>builder()
-            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, getTransform(0, 3, 1, 0, 0, 0, 0.55f))
-            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, getTransform(0, 3, 1, 0, 0, 0, 0.55f))
-            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, getTransform(1.13f, 3.2f, 1.13f, 0, -90, 25, 0.68f))
-            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, getTransform(1.13f, 3.2f, 1.13f, 0, 90, -25, 0.68f))
-            .put(ItemCameraTransforms.TransformType.GROUND, getTransform(0, 2, 0, 0, 0, 0, 0.5f))
-            .put(ItemCameraTransforms.TransformType.HEAD, getTransform(0, 13, 7, 0, 180, 0, 1))
-            .build();
-    }
-
-    public static ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> getDefaultBlockTransforms() {
-        if (DEFAULT_BLOCK_TRANSFORM != null) {
-            return DEFAULT_BLOCK_TRANSFORM;
-        }
-
-        TRSRTransformation thirdperson = getTransform(0, 2.5f, 0, 75, 45, 0, 0.375f);
-
-        return DEFAULT_BLOCK_TRANSFORM = ImmutableMap.<ItemCameraTransforms.TransformType, TRSRTransformation>builder()
-            .put(ItemCameraTransforms.TransformType.GUI, getTransform(0, 0, 0, 30, 225, 0, 0.625f))
-            .put(ItemCameraTransforms.TransformType.GROUND, getTransform(0, 3, 0, 0, 0, 0, 0.25f))
-            .put(ItemCameraTransforms.TransformType.FIXED, getTransform(0, 0, 0, 0, 0, 0, 0.5f))
-            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdperson)
-            .put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, leftifyTransform(thirdperson))
-            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, getTransform(0, 0, 0, 0, 45, 0, 0.4f))
-            .put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, getTransform(0, 0, 0, 0, 225, 0, 0.4f))
-            .build();
-    }
-
     public static int getOffsetOnScale(int pos, float scale) {
         float multiplier = (pos / scale);
 
         return (int) multiplier;
     }
 
-    public static class FluidRenderer {
-        private static final int TEX_WIDTH = 16;
-        private static final int TEX_HEIGHT = 16;
-        private static final int MIN_FLUID_HEIGHT = 1;
-
-        private final int capacityMb;
-        private final int width;
-        private final int height;
-
-        public FluidRenderer(int capacityMb, int width, int height) {
-            this.capacityMb = capacityMb;
-            this.width = width;
-            this.height = height;
-        }
-
-        public void draw(Minecraft minecraft, int xPosition, int yPosition, FluidStack fluidStack) {
-            GlStateManager.enableBlend();
-            GlStateManager.enableAlpha();
-            GlStateManager.disableLighting();
-
-            drawFluid(minecraft, xPosition, yPosition, fluidStack);
-
-            GlStateManager.color(1, 1, 1, 1);
-
-            GlStateManager.disableAlpha();
-            GlStateManager.disableBlend();
-        }
-
-        private void drawFluid(Minecraft minecraft, int xPosition, int yPosition, FluidStack fluidStack) {
-            if (fluidStack == null) {
-                return;
-            }
-
-            Fluid fluid = fluidStack.getFluid();
-
-            if (fluid == null) {
-                return;
-            }
-
-            TextureMap textureMapBlocks = minecraft.getTextureMapBlocks();
-            ResourceLocation fluidStill = fluid.getStill();
-            TextureAtlasSprite fluidStillSprite = null;
-
-            if (fluidStill != null) {
-                fluidStillSprite = textureMapBlocks.getTextureExtry(fluidStill.toString());
-            }
-
-            if (fluidStillSprite == null) {
-                fluidStillSprite = textureMapBlocks.getMissingSprite();
-            }
-
-            int fluidColor = fluid.getColor(fluidStack);
-
-            int scaledAmount = height;
-
-            if (capacityMb != -1) {
-                scaledAmount = (fluidStack.amount * height) / capacityMb;
-
-                if (fluidStack.amount > 0 && scaledAmount < MIN_FLUID_HEIGHT) {
-                    scaledAmount = MIN_FLUID_HEIGHT;
-                }
-
-                if (scaledAmount > height) {
-                    scaledAmount = height;
-                }
-            }
-
-            minecraft.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-            setGLColorFromInt(fluidColor);
-
-            int xTileCount = width / TEX_WIDTH;
-            int xRemainder = width - (xTileCount * TEX_WIDTH);
-            int yTileCount = scaledAmount / TEX_HEIGHT;
-            int yRemainder = scaledAmount - (yTileCount * TEX_HEIGHT);
-
-            int yStart = yPosition + height;
-
-            for (int xTile = 0; xTile <= xTileCount; xTile++) {
-                for (int yTile = 0; yTile <= yTileCount; yTile++) {
-                    int width = (xTile == xTileCount) ? xRemainder : TEX_WIDTH;
-                    int height = (yTile == yTileCount) ? yRemainder : TEX_HEIGHT;
-                    int x = xPosition + (xTile * TEX_WIDTH);
-                    int y = yStart - ((yTile + 1) * TEX_HEIGHT);
-
-                    if (width > 0 && height > 0) {
-                        int maskTop = TEX_HEIGHT - height;
-                        int maskRight = TEX_WIDTH - width;
-
-                        drawFluidTexture(x, y, fluidStillSprite, maskTop, maskRight, 100);
-                    }
-                }
-            }
-        }
-    }
-
-    public static void addCombinedItemsToTooltip(List<String> tooltip, boolean displayAmount, List<ItemStack> stacks) {
+    public static void addCombinedItemsToTooltip(List<ITextComponent> tooltip, boolean displayAmount, List<ItemStack> stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.size(); ++i) {
             if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
                 ItemStack stack = stacks.get(i);
 
-                String data = stack.getDisplayName();
+                ITextComponent data = stack.getDisplayName();
 
                 int amount = stack.getCount();
 
@@ -253,33 +61,39 @@ public final class RenderUtils {
                     }
                 }
 
-                data = (displayAmount ? (String.valueOf(amount) + "x ") : "") + data;
+                if (displayAmount) {
+                    data = new StringTextComponent(amount + "x ").appendSibling(data);
+                }
 
-                tooltip.add(data);
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
 
-    public static void addCombinedFluidsToTooltip(List<String> tooltip, boolean showMb, NonNullList<FluidStack> stacks) {
+    public static void addCombinedFluidsToTooltip(List<ITextComponent> tooltip, boolean displayMb, List<FluidStack> stacks) {
         Set<Integer> combinedIndices = new HashSet<>();
 
         for (int i = 0; i < stacks.size(); ++i) {
-            if (!combinedIndices.contains(i)) {
+            if (!stacks.get(i).isEmpty() && !combinedIndices.contains(i)) {
                 FluidStack stack = stacks.get(i);
 
-                String data = stack.getLocalizedName();
+                ITextComponent data = stack.getDisplayName();
 
-                int amount = stack.amount;
+                int amount = stack.getAmount();
 
                 for (int j = i + 1; j < stacks.size(); ++j) {
                     if (API.instance().getComparer().isEqual(stack, stacks.get(j), IComparer.COMPARE_NBT)) {
-                        amount += stacks.get(j).amount;
+                        amount += stacks.get(j).getAmount();
 
                         combinedIndices.add(j);
                     }
                 }
 
-                tooltip.add((showMb ? (API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ") : "") + data);
+                if (displayMb) {
+                    data = new StringTextComponent(API.instance().getQuantityFormatter().formatInBucketForm(amount) + " ").appendSibling(data);
+                }
+
+                tooltip.add(data.setStyle(Styles.GRAY));
             }
         }
     }
@@ -301,13 +115,13 @@ public final class RenderUtils {
             FontRenderer font = event.getFontRenderer();
 
             // RS BEGIN
-            float textScale = font.getUnicodeFlag() ? 1F : 0.7F;
+            float textScale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.7F;
             // RS END
 
             GlStateManager.disableRescaleNormal();
             RenderHelper.disableStandardItemLighting();
             GlStateManager.disableLighting();
-            GlStateManager.disableDepth();
+            GlStateManager.disableDepthTest();
             int tooltipTextWidth = 0;
 
             for (String textLine : textLines) {
@@ -388,7 +202,7 @@ public final class RenderUtils {
             // RS BEGIN
             if (showSmallText) {
                 GlStateManager.pushMatrix();
-                GlStateManager.scale(textScale, textScale, 1);
+                GlStateManager.scalef(textScale, textScale, 1);
 
                 int y = tooltipTop + tooltipHeight - 6;
 
@@ -396,7 +210,7 @@ public final class RenderUtils {
                     font.drawStringWithShadow(
                         TextFormatting.GRAY + smallTextLines.get(i),
                         RenderUtils.getOffsetOnScale(tooltipX, textScale),
-                        RenderUtils.getOffsetOnScale(y - (font.getUnicodeFlag() ? 2 : 0), textScale),
+                        RenderUtils.getOffsetOnScale(y - (Minecraft.getInstance().getForceUnicodeFont() ? 2 : 0), textScale),
                         -1
                     );
 
@@ -408,29 +222,26 @@ public final class RenderUtils {
             // RS END
 
             GlStateManager.enableLighting();
-            GlStateManager.enableDepth();
+            GlStateManager.enableDepthTest();
             RenderHelper.enableStandardItemLighting();
             GlStateManager.enableRescaleNormal();
         }
     }
 
-    // @Volatile: From GuiScreen#getItemToolTip
-    public static List<String> getItemTooltip(ItemStack stack) {
-        List<String> lines = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+    // @Volatile: From Screen#getTooltipFromItem
+    public static List<String> getTooltipFromItem(ItemStack stack) {
+        List<ITextComponent> tooltip = stack.getTooltip(Minecraft.getInstance().player, Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+        List<String> tooltipStrings = Lists.newArrayList();
 
-        for (int i = 0; i < lines.size(); ++i) {
-            if (i == 0) {
-                lines.set(i, stack.getItem().getForgeRarity(stack).getColor() + lines.get(i));
-            } else {
-                lines.set(i, TextFormatting.GRAY + lines.get(i));
-            }
+        for (ITextComponent itextcomponent : tooltip) {
+            tooltipStrings.add(itextcomponent.getFormattedText());
         }
 
-        return lines;
+        return tooltipStrings;
     }
 
     public static boolean isLightMapDisabled() {
-        return FMLClientHandler.instance().hasOptifine() || !ForgeModContainer.forgeLightPipelineEnabled;
+        return !ForgeConfig.CLIENT.forgeLightPipelineEnabled.get();
     }
 
     public static VertexFormat getFormatWithLightMap(VertexFormat format) {
@@ -442,7 +253,7 @@ public final class RenderUtils {
             return DefaultVertexFormats.BLOCK;
         } else if (format == DefaultVertexFormats.ITEM) {
             return ITEM_FORMAT_WITH_LIGHTMAP;
-        } else if (!format.hasUvOffset(1)) {
+        } else if (!format.hasUv(1)) {
             VertexFormat result = new VertexFormat(format);
 
             result.addElement(DefaultVertexFormats.TEX_2S);
@@ -453,47 +264,7 @@ public final class RenderUtils {
         return format;
     }
 
-    public static TextureAtlasSprite getSprite(IBakedModel coverModel, IBlockState coverState, EnumFacing facing, long rand) {
-        TextureAtlasSprite sprite = null;
-
-        BlockRenderLayer originalLayer = MinecraftForgeClient.getRenderLayer();
-
-        try {
-            for (BlockRenderLayer layer : BlockRenderLayer.values()) {
-                ForgeHooksClient.setRenderLayer(layer);
-
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, facing, rand)) {
-                    return bakedQuad.getSprite();
-                }
-
-                for (BakedQuad bakedQuad : coverModel.getQuads(coverState, null, rand)) {
-                    if (sprite == null) {
-                        sprite = bakedQuad.getSprite();
-                    }
-
-                    if (bakedQuad.getFace() == facing) {
-                        return bakedQuad.getSprite();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // NO OP
-        } finally {
-            ForgeHooksClient.setRenderLayer(originalLayer);
-        }
-
-        if (sprite == null) {
-            try {
-                sprite = coverModel.getParticleTexture();
-            } catch (Exception e) {
-                // NO OP
-            }
-        }
-
-        if (sprite == null) {
-            sprite = Minecraft.getMinecraft().getTextureMapBlocks().getMissingSprite();
-        }
-
-        return sprite;
+    public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
+        return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
     }
 }

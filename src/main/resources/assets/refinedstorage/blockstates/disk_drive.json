@@ -1,7 +1,7 @@
 {
   "variants": {
-    "normal": {
-      "model": "refinedstorage:disk_drive"
+    "": {
+      "model": "refinedstorage:block/disk_drive"
     }
   }
 }

@@ -1,17 +1,17 @@
 package com.raoulvdberge.refinedstorage.tile.data;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.network.MessageTileDataParameter;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.raoulvdberge.refinedstorage.network.tiledata.TileDataParameterMessage;
+import net.minecraft.entity.player.ServerPlayerEntity;
 
 public class TileDataWatcher {
     private boolean sentInitial;
-    private EntityPlayerMP player;
+    private ServerPlayerEntity player;
     private TileDataManager manager;
 
     private Object[] cache;
 
-    public TileDataWatcher(EntityPlayerMP player, TileDataManager manager) {
+    public TileDataWatcher(ServerPlayerEntity player, TileDataManager manager) {
         this.player = player;
         this.manager = manager;
 
@@ -21,7 +21,7 @@ public class TileDataWatcher {
         }
     }
 
-    public EntityPlayerMP getPlayer() {
+    public ServerPlayerEntity getPlayer() {
         return player;
     }
 
@@ -54,6 +54,6 @@ public class TileDataWatcher {
     }
 
     public void sendParameter(boolean initial, TileDataParameter parameter) {
-        RS.INSTANCE.network.sendTo(new MessageTileDataParameter(manager.getTile(), parameter, initial), player);
+        RS.NETWORK_HANDLER.sendTo(player, new TileDataParameterMessage(manager.getTile(), parameter, initial));
     }
 }

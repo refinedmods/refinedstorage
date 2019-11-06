@@ -1,9 +1,10 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting.preview;
 
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Represents a crafting preview element.
@@ -19,7 +20,7 @@ public interface ICraftingPreviewElement<T> {
      * @param y       position on the y axis to render
      * @param drawers the drawers this element can use
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     void draw(int x, int y, IElementDrawers drawers);
 
     /**
@@ -42,12 +43,12 @@ public interface ICraftingPreviewElement<T> {
     /**
      * @param buf buffer to write to
      */
-    void writeToByteBuf(ByteBuf buf);
+    void write(PacketBuffer buf);
 
     /**
      * Returns the id of this element, used for serialization and deserialization over the network.
      *
      * @return the id
      */
-    String getId();
+    ResourceLocation getId();
 }

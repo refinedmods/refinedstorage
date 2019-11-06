@@ -5,11 +5,12 @@ import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskListener;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.render.constants.ConstantsDisk;
-import com.raoulvdberge.refinedstorage.tile.config.IFilterable;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
+import com.raoulvdberge.refinedstorage.tile.config.IWhitelistBlacklist;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
@@ -17,16 +18,16 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack> {
-    private NetworkNodeDiskManipulator diskManipulator;
+    private DiskManipulatorNetworkNode diskManipulator;
     private IStorageDisk<ItemStack> parent;
-    private int lastState;
+    private DiskState lastState;
 
-    public StorageDiskItemManipulatorWrapper(NetworkNodeDiskManipulator diskManipulator, IStorageDisk<ItemStack> parent) {
+    public StorageDiskItemManipulatorWrapper(DiskManipulatorNetworkNode diskManipulator, IStorageDisk<ItemStack> parent) {
         this.diskManipulator = diskManipulator;
         this.parent = parent;
         this.setSettings(
             () -> {
-                int currentState = ConstantsDisk.getDiskState(getStored(), getCapacity());
+                DiskState currentState = DiskState.get(getStored(), getCapacity());
 
                 if (lastState != currentState) {
                     lastState = currentState;
@@ -36,7 +37,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
             },
             diskManipulator
         );
-        this.lastState = ConstantsDisk.getDiskState(getStored(), getCapacity());
+        this.lastState = DiskState.get(getStored(), getCapacity());
     }
 
     @Override
@@ -50,7 +51,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     }
 
     @Override
-    public NBTTagCompound writeToNbt() {
+    public CompoundNBT writeToNbt() {
         return parent.writeToNbt();
     }
 
@@ -60,9 +61,9 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
-        if (!IFilterable.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
+        if (!IWhitelistBlacklist.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }
 
@@ -70,10 +71,10 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public ItemStack extract(@Nonnull ItemStack stack, int size, int flags, Action action) {
-        if (!IFilterable.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getMode(), diskManipulator.getCompare(), stack)) {
-            return null;
+        if (!IWhitelistBlacklist.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
+            return ItemStack.EMPTY;
         }
 
         return parent.extract(stack, size, flags, action);
@@ -100,7 +101,7 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     }
 
     @Override
-    public String getId() {
-        return parent.getId();
+    public ResourceLocation getFactoryId() {
+        return parent.getFactoryId();
     }
 }

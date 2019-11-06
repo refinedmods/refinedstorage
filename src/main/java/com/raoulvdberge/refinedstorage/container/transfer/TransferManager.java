@@ -2,9 +2,9 @@ package com.raoulvdberge.refinedstorage.container.transfer;
 
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -38,27 +38,27 @@ public class TransferManager {
     }
 
     public void addTransfer(IInventory from, IItemHandler to) {
-        addTransfer(new InventoryWrapperInventory(from), new InventoryWrapperItemHandler(to));
+        addTransfer(new InventoryInventoryWrapper(from), new ItemHandlerInventoryWrapper(to));
     }
 
     public void addTransfer(IInventory from, IInventory to) {
-        addTransfer(new InventoryWrapperInventory(from), new InventoryWrapperInventory(to));
+        addTransfer(new InventoryInventoryWrapper(from), new InventoryInventoryWrapper(to));
     }
 
     public void addFilterTransfer(IInventory from, IItemHandlerModifiable itemTo, FluidInventory fluidTo, Supplier<Integer> typeGetter) {
-        addTransfer(new InventoryWrapperInventory(from), new InventoryWrapperFilter(itemTo, fluidTo, typeGetter));
+        addTransfer(new InventoryInventoryWrapper(from), new FilterInventoryWrapper(itemTo, fluidTo, typeGetter));
     }
 
     public void addItemFilterTransfer(IInventory from, IItemHandlerModifiable to) {
-        addTransfer(new InventoryWrapperInventory(from), new InventoryWrapperFilterItem(to));
+        addTransfer(new InventoryInventoryWrapper(from), new ItemFilterInventoryWrapper(to));
     }
 
     public void addFluidFilterTransfer(IInventory from, FluidInventory to) {
-        addTransfer(new InventoryWrapperInventory(from), new InventoryWrapperFilterFluid(to));
+        addTransfer(new InventoryInventoryWrapper(from), new FluidFilterInventoryWrapper(to));
     }
 
     public void addTransfer(IItemHandler from, IInventory to) {
-        addTransfer(new InventoryWrapperItemHandler(from), new InventoryWrapperInventory(to));
+        addTransfer(new ItemHandlerInventoryWrapper(from), new InventoryInventoryWrapper(to));
     }
 
     public void addBiTransfer(IInventory from, IItemHandler to) {
@@ -77,9 +77,9 @@ public class TransferManager {
 
         IInventoryWrapper key;
         if (slot instanceof SlotItemHandler) {
-            key = new InventoryWrapperItemHandler(((SlotItemHandler) slot).getItemHandler());
+            key = new ItemHandlerInventoryWrapper(((SlotItemHandler) slot).getItemHandler());
         } else {
-            key = new InventoryWrapperInventory(slot.inventory);
+            key = new InventoryInventoryWrapper(slot.inventory);
         }
 
         List<IInventoryWrapper> toList = fromToMap.get(key);
