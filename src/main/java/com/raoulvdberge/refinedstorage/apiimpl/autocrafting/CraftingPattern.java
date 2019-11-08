@@ -218,7 +218,7 @@ public class CraftingPattern implements ICraftingPattern {
             return false;
         }
         ICraftingPattern pattern = (ICraftingPattern) o;
-        if (pattern.isProcessing() == processing && pattern.isOredict() == oredict) {
+        if (pattern.isProcessing() == processing) {
             if (outputs.size() > 0 && outputs.size() == pattern.getOutputs().size()) {
                 for (int i = 0; i < outputs.size(); i++) {
                     if (!API.instance().getComparer().isEqual(pattern.getOutputs().get(i), outputs.get(i))) {
@@ -235,10 +235,15 @@ public class CraftingPattern implements ICraftingPattern {
             }
             if (fluidInputs.size() > 0 && fluidInputs.size() == pattern.getFluidInputs().size()) {
                 for (int i = 0; i < fluidInputs.size(); i++) {
-                    if (!API.instance().getComparer().isEqual(pattern.getFluidInputs().get(i), fluidInputs.get(i), IComparer.COMPARE_NBT)) {
-                        return false;
+                    if (fluidInputs.get(i).size() > 0 && fluidInputs.get(i).size() == pattern.getFluidInputs().get(i).size()) {
+                        for (int j= 0; j < fluidInputs.get(i).size(); j++) {
+                            if (!API.instance().getComparer().isEqual(pattern.getFluidInputs().get(i).get(j), fluidInputs.get(i).get(j), IComparer.COMPARE_NBT)) {
+                                return false;
+                            }
+                        }
                     }
                 }
+
             }
             if (byproducts.size() > 0 && byproducts.size() == pattern.getByproducts().size()) {
                 for (int i = 0; i < byproducts.size(); i++) {

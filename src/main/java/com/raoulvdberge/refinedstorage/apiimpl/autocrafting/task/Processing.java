@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadExc
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
+import com.raoulvdberge.refinedstorage.api.util.StackListEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -53,17 +54,17 @@ class Processing extends Craft {
         this.fluidsToPut = fluidsToPut;
         isInitialized = true;
     }
-        //TODO check
-    Processing(INetwork network, NBTTagCompound tag) throws CraftingTaskReadException {
+
+    Processing(INetwork network,CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
-        this.itemsToReceive = CraftingTask.readItemStackList(tag.getTagList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
-        this.fluidsToReceive = CraftingTask.readFluidStackList(tag.getTagList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
-        this.fluidsToPut = CraftingTask.readFluidStackList(tag.getTagList(NBT_FLUIDS_TO_PUT, Constants.NBT.TAG_COMPOUND));
-        this.state = ProcessingState.values()[tag.getInteger(NBT_STATE)];
-        this.totalQuantity = tag.getInteger(NBT_QUANTITY_TOTAL);
-        this.itemsReceived = CraftingTask.readItemStackList(tag.getTagList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
-        this.fluidsReceived = CraftingTask.readFluidStackList(tag.getTagList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
-        this.inserted = tag.getInteger(NBT_INSERTED);
+        this.itemsToReceive = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
+        this.fluidsToReceive = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
+        this.fluidsToPut = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_TO_PUT, Constants.NBT.TAG_COMPOUND));
+        this.state = ProcessingState.values()[tag.getInt(NBT_STATE)];
+        this.totalQuantity = tag.getInt(NBT_QUANTITY_TOTAL);
+        this.itemsReceived = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_RECEIVED, Constants.NBT.TAG_COMPOUND));
+        this.fluidsReceived = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_RECEIVED, Constants.NBT.TAG_COMPOUND));
+        this.inserted = tag.getInt(NBT_INSERTED);
         this.hasDuplicates = tag.getBoolean(NBT_HAS_DUPLICATES);
         setTotals();
     }
@@ -78,17 +79,17 @@ class Processing extends Craft {
 
     private void setTotals() {
         itemsToReceiveTotal = itemsToReceive.copy();
-        itemsToReceiveTotal.getStacks().forEach(x -> x.setCount(x.getCount() * totalQuantity));
+        itemsToReceiveTotal.getStacks().forEach(x -> x.getStack().setCount(x.getStack().getCount() * totalQuantity));
         fluidsToReceiveTotal = fluidsToReceive.copy();
-        fluidsToReceiveTotal.getStacks().forEach(x -> x.amount *= totalQuantity);
+        fluidsToReceiveTotal.getStacks().forEach(x -> x.getStack().setAmount(x.getStack().getAmount()* totalQuantity));
 
     }
 
     //Simulation of extraction can go wrong if the Collection has duplicates
-    public Collection<ItemStack> getNoDupeSet(Action action) {
+    public Collection<ItemStack> getNoDupeSet() {
         if (hasDuplicates) {
-            Collection<ItemStack> list = super.getNextSet(action);
-            Map<String, ItemStack> map = new LinkedHashMap<>();
+            Collection<ItemStack> list = super.getNextItemSet(Action.SIMULATE);
+            Map<String, ItemStack> map = new HashMap<>();
             for (ItemStack stack : list) {
                 if (map.containsKey(stack.getTranslationKey())) {
                     ItemStack in = map.get(stack.getTranslationKey());
@@ -100,16 +101,8 @@ class Processing extends Craft {
             }
             return new LinkedHashSet<>(map.values());
         } else {
-            return getNextSet(action);
+            return getNextItemSet(Action.SIMULATE);
         }
-    }
-
-    @Override
-    public Collection<ItemStack> getNextSet(Action action) {
-        if (action == Action.PERFORM) {
-            inserted++;
-        }
-        return super.getNextSet(action);
     }
 
     boolean isNothingProcessing() {
@@ -129,9 +122,9 @@ class Processing extends Craft {
 
     int getScheduled(FluidStack stack) {
         if (fluidsToReceiveTotal.get(stack) != null) {
-            int scheduled = fluidsToReceiveTotal.get(stack).amount;
+            int scheduled = fluidsToReceiveTotal.get(stack).getAmount();
             if (fluidsReceived.get(stack) != null) {
-                scheduled -= fluidsReceived.get(stack).amount;
+                scheduled -= fluidsReceived.get(stack).getAmount();
             }
             return scheduled;
         }
@@ -166,10 +159,10 @@ class Processing extends Craft {
     private void updateFinishedPatterns() {
         int temp = totalQuantity;
         if (!itemsToReceive.isEmpty()) {
-            for (ItemStack stack : itemsToReceive.getStacks()) {
-                if (itemsReceived.get(stack) != null) {
-                    if (temp > itemsReceived.get(stack).getCount() / itemsToReceive.get(stack).getCount()) {
-                        temp = itemsReceived.get(stack).getCount() / itemsToReceive.get(stack).getCount();
+            for (StackListEntry<ItemStack> stack : itemsToReceive.getStacks()) {
+                if (itemsReceived.get(stack.getStack()) != null) {
+                    if (temp > itemsReceived.get(stack.getStack()).getCount() / itemsToReceive.get(stack.getStack()).getCount()) {
+                        temp = itemsReceived.get(stack.getStack()).getCount() / itemsToReceive.get(stack.getStack()).getCount();
                     }
                 } else {
                     temp = 0;
@@ -177,10 +170,10 @@ class Processing extends Craft {
             }
         }
         if (!fluidsToReceive.isEmpty()) {
-            for (FluidStack stack : fluidsToReceive.getStacks()) {
-                if (fluidsReceived.get(stack) != null) {
-                    if (temp > fluidsReceived.get(stack).amount / fluidsToReceive.get(stack).amount) {
-                        temp = fluidsReceived.get(stack).amount / fluidsToReceive.get(stack).amount;
+            for (StackListEntry<FluidStack> stack : fluidsToReceive.getStacks()) {
+                if (fluidsReceived.get(stack.getStack()) != null) {
+                    if (temp > fluidsReceived.get(stack.getStack()).getAmount() / fluidsToReceive.get(stack.getStack()).getAmount()) {
+                        temp = fluidsReceived.get(stack.getStack()).getAmount() / fluidsToReceive.get(stack.getStack()).getAmount();
                     }
                 } else {
                     temp = 0;
@@ -190,8 +183,10 @@ class Processing extends Craft {
         finished = temp;
     }
 
-    IStackList<FluidStack> getFluidsToPut() {
-        return fluidsToPut;
+    @Override
+    public void reduceQuantity(){
+        inserted++;
+        super.reduceQuantity();
     }
 
     IStackList<ItemStack> getItemsToReceiveTotal() {
@@ -204,7 +199,7 @@ class Processing extends Craft {
 
     int getFluidReceivedCount(FluidStack stack) {
         if (fluidsReceived.get(stack) != null) {
-            return fluidsReceived.get(stack).amount;
+            return fluidsReceived.get(stack).getAmount();
         }
         return 0;
     }

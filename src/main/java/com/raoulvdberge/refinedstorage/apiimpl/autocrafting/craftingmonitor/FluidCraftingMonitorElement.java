@@ -62,11 +62,6 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
         int yy = y + 7;
 
-        if (stored > 0) {
-            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.stored", API.instance().getQuantityFormatter().formatInBucketForm(stored)));
-
-            yy += 7;
-        }
 
         if (missing > 0) {
             drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.missing", API.instance().getQuantityFormatter().formatInBucketForm(missing)));
@@ -88,6 +83,14 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
         if (crafting > 0) {
             drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", API.instance().getQuantityFormatter().formatInBucketForm(crafting)));
+
+            yy += 7;
+        }
+
+        if (stored > 0) {
+            drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.stored", API.instance().getQuantityFormatter().formatInBucketForm(stored)));
+
+
         }
 
         GlStateManager.popMatrix();
