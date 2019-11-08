@@ -86,7 +86,7 @@ class Processing extends Craft {
     }
 
     //Simulation of extraction can go wrong if the Collection has duplicates
-    public Collection<ItemStack> getNoDupeSet() {
+    Collection<ItemStack> getNoDupeSet() {
         if (hasDuplicates) {
             Collection<ItemStack> list = super.getNextItemSet(Action.SIMULATE);
             Map<String, ItemStack> map = new HashMap<>();
@@ -103,10 +103,6 @@ class Processing extends Craft {
         } else {
             return getNextItemSet(Action.SIMULATE);
         }
-    }
-
-    boolean isNothingProcessing() {
-        return (totalQuantity - getQuantity()) == finished; // no items are in processing
     }
 
     int getScheduled(ItemStack stack) {
@@ -237,7 +233,7 @@ class Processing extends Craft {
         return tag;
     }
 
-    public void enableDupeSets() {
+    void enableDupeSets() {
         hasDuplicates = true;
     }
 

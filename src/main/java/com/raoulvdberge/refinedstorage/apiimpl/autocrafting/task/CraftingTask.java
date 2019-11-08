@@ -852,7 +852,7 @@ public class CraftingTask implements ICraftingTask {
                     if (canInsert) {
                         allRejected = false;
                     } else {
-                        if (hasAll && p.isNothingProcessing() && allRejected) {
+                        if (hasAll && allRejected) {
                             p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
                         }
                     }
