@@ -4,6 +4,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 
 public class Styles {
+    public static final Style WHITE = new Style().setColor(TextFormatting.WHITE);
     public static final Style GRAY = new Style().setColor(TextFormatting.GRAY);
     public static final Style YELLOW = new Style().setColor(TextFormatting.YELLOW);
     public static final Style RED = new Style().setColor(TextFormatting.RED);
