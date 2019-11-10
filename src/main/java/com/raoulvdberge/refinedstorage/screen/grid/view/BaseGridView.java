@@ -40,6 +40,9 @@ public abstract class BaseGridView implements IGridView {
 
     @Override
     public void sort() {
+        if(screen.avoidSorting()){
+            return;
+        }
         List<IGridStack> stacks = new ArrayList<>();
 
         if (screen.getGrid().isActive()) {

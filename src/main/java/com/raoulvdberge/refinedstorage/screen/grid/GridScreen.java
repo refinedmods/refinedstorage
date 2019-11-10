@@ -55,6 +55,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     private TabListWidget tabs;
 
     private boolean wasConnected;
+    boolean doSort;
 
     private int slotNumber;
 
@@ -81,7 +82,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     @Override
     protected void onPreInit() {
         super.onPreInit();
-
+        doSort = true;
         this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
     }
 
@@ -137,7 +138,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             if (!processingPattern.isChecked()) {
                 exactPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.exact"), GridTile.EXACT_PATTERN.getValue(), btn -> TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.isChecked()));
             }
-            
+
             addSideButton(new TypeSideButton(this, GridTile.PROCESSING_TYPE));
         }
 
@@ -420,6 +421,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             return true;
         }
 
+        doSort = !isOverSlotArea(mouseX- guiLeft,mouseY- guiTop) && !isOverCraftingOutputArea(mouseX- guiLeft,mouseY- guiTop);
+
         boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
         boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
@@ -439,7 +442,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             }
 
             ItemStack held = container.getPlayer().inventory.getItemStack();
-
             if (isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !held.isEmpty() && (clickedButton == 0 || clickedButton == 1)) {
                 if (grid.getGridType() == GridType.FLUID) {
                     RS.NETWORK_HANDLER.sendToServer(new GridFluidInsertHeldMessage());
@@ -489,6 +491,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         return super.mouseClicked(mouseX, mouseY, clickedButton);
     }
 
+    private boolean isOverCraftingOutputArea(double mouseX, double mouseY) {
+        if(grid.getGridType() != GridType.CRAFTING){
+            return false;
+        }
+        return RenderUtils.inBounds(130,getTopHeight()+getVisibleRows()*18+18,24,24,mouseX,mouseY);
+    }
+
     @Override
     public void mouseMoved(double mx, double my) {
         scrollbar.mouseMoved(mx, my);
@@ -513,6 +522,14 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         }
 
         return super.charTyped(p_charTyped_1_, p_charTyped_2_);
+    }
+
+    @Override
+    public boolean keyReleased(int key, int p_223281_2_, int p_223281_3_) {
+        if (key == GLFW.GLFW_KEY_LEFT_SHIFT || key == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+            view.sort();
+        }
+        return super.keyReleased(key,p_223281_2_,p_223281_3_);
     }
 
     @Override
@@ -558,5 +575,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     public static IGridSorter getDefaultSorter() {
         return new NameGridSorter();
+    }
+
+    public boolean avoidSorting() {
+        return hasShiftDown() && !doSort;
     }
 }
