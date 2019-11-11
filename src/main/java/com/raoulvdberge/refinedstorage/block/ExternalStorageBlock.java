@@ -1,11 +1,14 @@
 package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
 import com.raoulvdberge.refinedstorage.container.ExternalStorageContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.ExternalStorageTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import com.raoulvdberge.refinedstorage.util.NetworkUtils;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -98,5 +101,20 @@ public class ExternalStorageBlock extends CableBlock {
         }
 
         return true;
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
+
+        if (!world.isRemote) {
+            INetworkNode node = NetworkUtils.getNodeFromTile(world.getTileEntity(pos));
+
+            if (node instanceof ExternalStorageNetworkNode &&
+                node.getNetwork() != null &&
+                fromPos.equals(pos.offset(((ExternalStorageNetworkNode) node).getDirection()))) {
+                ((ExternalStorageNetworkNode) node).updateStorage(node.getNetwork());
+            }
+        }
     }
 }

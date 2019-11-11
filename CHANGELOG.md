@@ -7,6 +7,7 @@
 - Removed migration code for the development builds that were released on Discord (not on CurseForge). If you used the development builds and never used version 1.7 before, first switch to 1.7, open your world, modify a storage disk, and then upgrade to 1.7.1 (raoulvdberge)
 - Grids now do not sort if you interact with it while holding shift (Darkere)
 - Fixed Pattern Grid causing world hanging on load (raoulvdberge)
+- Fixed External Storage not refreshing when the storage is broken or replaced (raoulvdberge)
 
 ### 1.7
 NOTE: This is an alpha release. Bugs may happen. Remember to take backups.
