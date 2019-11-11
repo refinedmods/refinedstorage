@@ -140,7 +140,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         .addListener(((handler, slot, reading) -> {
             ItemStack pattern = handler.getStackInSlot(slot);
 
-            if (slot == 1 && !pattern.isEmpty()) {
+            if (!reading && slot == 1 && !pattern.isEmpty()) {
                 boolean processing = PatternItem.isProcessing(pattern);
 
                 if (processing) {
