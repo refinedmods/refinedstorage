@@ -14,7 +14,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
-// TODO here too
 public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContainer> {
     private int containerSlot;
     private FluidStack stack;

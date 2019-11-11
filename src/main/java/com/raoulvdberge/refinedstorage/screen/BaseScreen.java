@@ -191,13 +191,13 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         slot.slotNumber,
                         slot.getStack(),
                         slot.getSlotStackLimit(),
-                        parent -> new AlternativesScreen(
+                        ((FilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             parent,
                             minecraft.player,
                             new TranslationTextComponent("gui.refinedstorage.alternatives"),
                             slot.getStack(),
                             slot.getSlotIndex()
-                        )
+                        )) : null
                     ));
                 }
             }
@@ -220,13 +220,13 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         slot.slotNumber,
                         stack,
                         ((FluidFilterSlot) slot).getFluidInventory().getMaxAmount(),
-                        parent -> new AlternativesScreen(
+                        ((FluidFilterSlot) slot).isAlternativesAllowed() ? (parent -> new AlternativesScreen(
                             this,
                             minecraft.player,
                             new TranslationTextComponent("gui.refinedstorage.alternatives"),
                             stack,
                             slot.getSlotIndex()
-                        )
+                        )) : null
                     ));
                 }
             } else {
