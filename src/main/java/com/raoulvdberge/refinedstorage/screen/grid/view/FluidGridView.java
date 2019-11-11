@@ -43,7 +43,7 @@ public class FluidGridView extends BaseGridView {
             map.put(stack.getId(), stack);
         } else {
             if (existing.getStack().getAmount() + delta <= 0) {
-                existing.getStack().grow(delta);
+                existing.setZeroed(true);
 
                 map.remove(existing.getId());
             } else {

@@ -30,6 +30,7 @@ public class ItemGridStack implements IGridStack {
     private boolean craftable;
     @Nullable
     private StorageTrackerEntry entry;
+    private boolean zeroed;
 
     private Set<String> cachedTags;
     private String cachedName;
@@ -47,6 +48,10 @@ public class ItemGridStack implements IGridStack {
         this.stack = stack;
         this.craftable = craftable;
         this.entry = entry;
+    }
+
+    public void setZeroed(boolean zeroed) {
+        this.zeroed = zeroed;
     }
 
     @Nullable
@@ -164,14 +169,18 @@ public class ItemGridStack implements IGridStack {
     @Override
     public void draw(BaseScreen gui, int x, int y) {
         String text = null;
+        int color = RenderUtils.DEFAULT_COLOR;
 
-        if (craftable) {
+        if (zeroed) {
+            text = "0";
+            color = 16733525;
+        } else if (craftable) {
             text = I18n.format("gui.refinedstorage.grid.craft");
         } else if (stack.getCount() > 1) {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }
 
-        gui.renderItem(x, y, stack, true, text);
+        gui.renderItem(x, y, stack, true, text, color);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class ItemGridView extends BaseGridView {
             map.put(stack.getId(), stack);
         } else {
             if (existing.getStack().getCount() + delta <= 0) {
-                existing.getStack().grow(delta);
+                existing.setZeroed(true);
 
                 map.remove(existing.getId());
             } else {

@@ -43,6 +43,7 @@ public abstract class BaseGridView implements IGridView {
         if (!screen.canSort()) {
             return;
         }
+
         List<IGridStack> stacks = new ArrayList<>();
 
         if (screen.getGrid().isActive()) {

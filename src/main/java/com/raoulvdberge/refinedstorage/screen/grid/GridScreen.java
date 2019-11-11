@@ -420,9 +420,11 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         if (scrollbar.mouseClicked(mouseX, mouseY, clickedButton)) {
             return true;
         }
-        if (RS.CLIENT_CONFIG.getGrid().getSortGrid()) {
+
+        if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
             doSort = !isOverSlotArea(mouseX - guiLeft, mouseY - guiTop) && !isOverCraftingOutputArea(mouseX - guiLeft, mouseY - guiTop);
         }
+
         boolean clickedClear = clickedButton == 0 && isOverClear(mouseX - guiLeft, mouseY - guiTop);
         boolean clickedCreatePattern = clickedButton == 0 && isOverCreatePattern(mouseX - guiLeft, mouseY - guiTop);
 
@@ -563,6 +565,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         scrollbar.setMaxOffset(getRows() - getVisibleRows());
     }
 
+    public boolean canSort() {
+        return doSort || !hasShiftDown();
+    }
+
     public static List<IGridSorter> getSorters() {
         List<IGridSorter> sorters = new LinkedList<>();
         sorters.add(getDefaultSorter());
@@ -576,9 +582,5 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     public static IGridSorter getDefaultSorter() {
         return new NameGridSorter();
-    }
-
-    public boolean canSort() {
-        return doSort || !hasShiftDown();
     }
 }

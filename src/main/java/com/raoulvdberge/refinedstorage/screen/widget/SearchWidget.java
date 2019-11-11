@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
 import com.raoulvdberge.refinedstorage.integration.jei.RSJeiPlugin;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.lwjgl.glfw.GLFW;
@@ -23,7 +24,7 @@ public class SearchWidget extends TextFieldWidget {
 
         this.setEnableBackgroundDrawing(false);
         this.setVisible(true);
-        this.setTextColor(16777215);
+        this.setTextColor(RenderUtils.DEFAULT_COLOR);
     }
 
     public void updateJei() {

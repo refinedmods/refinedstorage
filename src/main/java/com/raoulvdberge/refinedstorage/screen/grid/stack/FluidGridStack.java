@@ -4,6 +4,7 @@ import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
@@ -26,6 +27,7 @@ public class FluidGridStack implements IGridStack {
     @Nullable
     private StorageTrackerEntry entry;
     private boolean craftable;
+    private boolean zeroed;
 
     private Set<String> cachedTags;
     private String cachedName;
@@ -39,6 +41,10 @@ public class FluidGridStack implements IGridStack {
         this.stack = stack;
         this.entry = entry;
         this.craftable = craftable;
+    }
+
+    public void setZeroed(boolean zeroed) {
+        this.zeroed = zeroed;
     }
 
     public FluidStack getStack() {
@@ -153,14 +159,18 @@ public class FluidGridStack implements IGridStack {
         FluidRenderer.INSTANCE.render(x, y, stack);
 
         String text;
+        int color = RenderUtils.DEFAULT_COLOR;
 
-        if (isCraftable()) {
+        if (zeroed) {
+            text = "0";
+            color = 16733525;
+        } else if (isCraftable()) {
             text = I18n.format("gui.refinedstorage.grid.craft");
         } else {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
         }
 
-        gui.renderQuantity(x, y, text);
+        gui.renderQuantity(x, y, text, color);
     }
 
     @Override

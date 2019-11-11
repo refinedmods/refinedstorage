@@ -131,7 +131,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                     FluidRenderer.INSTANCE.render(guiLeft + slot.xPos, guiTop + slot.yPos, stack);
 
                     if (((FluidFilterSlot) slot).isSizeAllowed()) {
-                        renderQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()));
+                        renderQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), RenderUtils.DEFAULT_COLOR);
 
                         GL11.glDisable(GL11.GL_LIGHTING);
                     }
@@ -272,10 +272,10 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderItem(int x, int y, ItemStack stack) {
-        renderItem(x, y, stack, false, null);
+        renderItem(x, y, stack, false, null, RenderUtils.DEFAULT_COLOR);
     }
 
-    public void renderItem(int x, int y, ItemStack stack, boolean overlay, @Nullable String text) {
+    public void renderItem(int x, int y, ItemStack stack, boolean overlay, @Nullable String text, int textColor) {
         try {
             itemRenderer.zLevel = 200.0F;
 
@@ -286,7 +286,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
             }
 
             if (text != null) {
-                renderQuantity(x, y, text);
+                renderQuantity(x, y, text, textColor);
             }
 
             itemRenderer.zLevel = 0.0F;
@@ -295,7 +295,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
     }
 
-    public void renderQuantity(int x, int y, String qty) {
+    public void renderQuantity(int x, int y, String qty, int color) {
         boolean large = minecraft.getForceUnicodeFont() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
 
         GlStateManager.pushMatrix();
@@ -312,7 +312,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         GlStateManager.blendFunc(770, 771);
         GlStateManager.disableDepthTest();
 
-        font.drawStringWithShadow(qty, (large ? 16 : 30) - font.getStringWidth(qty), large ? 8 : 22, 16777215);
+        font.drawStringWithShadow(qty, (large ? 16 : 30) - font.getStringWidth(qty), large ? 8 : 22, color);
 
         GlStateManager.enableDepthTest();
         GlStateManager.enableTexture();

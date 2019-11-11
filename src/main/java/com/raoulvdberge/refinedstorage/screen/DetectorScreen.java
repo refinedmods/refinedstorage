@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideBut
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.raoulvdberge.refinedstorage.tile.DetectorTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
+import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -34,7 +35,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
         amountField.setVisible(true);
         amountField.setCanLoseFocus(true);
         amountField.setFocused2(false);
-        amountField.setTextColor(16777215);
+        amountField.setTextColor(RenderUtils.DEFAULT_COLOR);
         amountField.func_212954_a(value -> {
             try {
                 int result = Integer.parseInt(value);
