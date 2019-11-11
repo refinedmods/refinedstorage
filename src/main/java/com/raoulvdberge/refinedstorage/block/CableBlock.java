@@ -102,7 +102,7 @@ public class CableBlock extends NetworkNodeBlock {
     }
 
     private boolean hasNode(World world, BlockPos pos, BlockState state, Direction direction) {
-        if (getDirection() != BlockDirection.NONE && state.get(getDirection().getProperty()) == direction.getOpposite()) {
+        if (getDirection() != BlockDirection.NONE && state.get(getDirection().getProperty()).getOpposite() == direction) {
             return false;
         }
 
