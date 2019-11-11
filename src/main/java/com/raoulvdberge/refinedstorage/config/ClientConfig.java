@@ -32,6 +32,7 @@ public class ClientConfig {
         private final ForgeConfigSpec.IntValue maxRowsStretch;
         private final ForgeConfigSpec.BooleanValue detailedTooltip;
         private final ForgeConfigSpec.BooleanValue largeFont;
+        private final ForgeConfigSpec.BooleanValue sortGrid;
 
         public Grid() {
             builder.push("grid");
@@ -39,6 +40,7 @@ public class ClientConfig {
             maxRowsStretch = builder.comment("The maximum amount of rows that the Grid can show when stretched").defineInRange("maxRowsStretch", Integer.MAX_VALUE, 3, Integer.MAX_VALUE);
             detailedTooltip = builder.comment("Whether the Grid should display a detailed tooltip when hovering over an item or fluid").define("detailedTooltip", true);
             largeFont = builder.comment("Whether the Grid should use a large font for stack quantity display").define("largeFont", false);
+            sortGrid = builder.comment("Whether the grid should prevent sorting while Shift is held down").define("sortGrid", true);
 
             builder.pop();
         }
@@ -53,6 +55,10 @@ public class ClientConfig {
 
         public boolean getLargeFont() {
             return largeFont.get();
+        }
+
+        public boolean getSortGrid() {
+            return sortGrid.get();
         }
     }
 
