@@ -15,6 +15,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
 
     protected TextFieldWidget amountField;
     protected Button okButton;
+    protected Button cancelButton;
 
     public AmountSpecifyingScreen(BaseScreen parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
         super(container, width, height, playerInventory, title);
@@ -42,12 +43,16 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         return Pair.of(114, 33);
     }
 
+    protected int getOkCancelButtonWidth() {
+        return 50;
+    }
+
     @Override
     public void onPostInit(int x, int y) {
         Pair<Integer, Integer> pos = getOkCancelPos();
 
-        okButton = addButton(x + pos.getLeft(), y + pos.getRight(), 50, 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
-        addButton(x + pos.getLeft(), y + pos.getRight() + 24, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
+        okButton = addButton(x + pos.getLeft(), y + pos.getRight(), getOkCancelButtonWidth(), 20, getOkButtonText(), true, true, btn -> onOkButtonPressed(hasShiftDown()));
+        cancelButton = addButton(x + pos.getLeft(), y + pos.getRight() + 24, getOkCancelButtonWidth(), 20, I18n.format("gui.cancel"), true, true, btn -> close());
 
         amountField = new TextFieldWidget(font, x + getAmountPos().getLeft(), y + getAmountPos().getRight(), 69 - 6, font.FONT_HEIGHT, "");
         amountField.setEnableBackgroundDrawing(false);

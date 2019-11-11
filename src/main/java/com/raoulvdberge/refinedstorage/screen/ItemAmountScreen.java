@@ -1,29 +1,28 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.container.FluidAmountContainer;
-import com.raoulvdberge.refinedstorage.network.SetFluidFilterSlotMessage;
-import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.raoulvdberge.refinedstorage.container.AmountContainer;
+import com.raoulvdberge.refinedstorage.network.SetFilterSlotMessage;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
-// TODO here too
-public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContainer> {
+public class ItemAmountScreen extends AmountSpecifyingScreen<AmountContainer> {
     private int containerSlot;
-    private FluidStack stack;
+    private ItemStack stack;
     private int maxAmount;
     @Nullable
     private Function<Screen, Screen> alternativesScreenFactory;
 
-    public FluidAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, FluidStack stack, int maxAmount, @Nullable Function<Screen, Screen> alternativesScreenFactory) {
-        super(parent, new FluidAmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage.fluid_amount"));
+    public ItemAmountScreen(BaseScreen parent, PlayerEntity player, int containerSlot, ItemStack stack, int maxAmount, @Nullable Function<Screen, Screen> alternativesScreenFactory) {
+        super(parent, new AmountContainer(player, stack), alternativesScreenFactory != null ? 194 : 172, 99, player.inventory, new TranslationTextComponent("gui.refinedstorage.item_amount"));
 
         this.containerSlot = containerSlot;
         this.stack = stack;
@@ -58,7 +57,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
 
     @Override
     protected int getDefaultAmount() {
-        return stack.getAmount();
+        return stack.getCount();
     }
 
     @Override
@@ -84,8 +83,8 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
     @Override
     protected int[] getIncrements() {
         return new int[]{
-            100, 500, 1000,
-            -100, -500, -1000
+            1, 10, 64,
+            -1, -10, -64
         };
     }
 
@@ -94,7 +93,7 @@ public class FluidAmountScreen extends AmountSpecifyingScreen<FluidAmountContain
         try {
             int amount = Integer.parseInt(amountField.getText());
 
-            RS.NETWORK_HANDLER.sendToServer(new SetFluidFilterSlotMessage(containerSlot, StackUtils.copy(stack, amount)));
+            RS.NETWORK_HANDLER.sendToServer(new SetFilterSlotMessage(containerSlot, ItemHandlerHelper.copyStackWithSize(stack, amount)));
 
             close();
         } catch (NumberFormatException e) {

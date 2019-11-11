@@ -28,7 +28,7 @@ public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSetti
 
     @Override
     protected String getTexture() {
-        return "gui/crafting_settings.png";
+        return "gui/amount_specifying.png";
     }
 
     @Override

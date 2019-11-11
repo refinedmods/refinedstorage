@@ -171,12 +171,12 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         for (int i = 0; i < 9 * 2; ++i) {
             int itemFilterSlotConfig = FilterSlot.FILTER_ALLOW_SIZE;
             if (i < 9) {
-                itemFilterSlotConfig |= FilterSlot.FILTER_ALLOW_INPUT_CONFIGURATION;
+                itemFilterSlotConfig |= FilterSlot.FILTER_ALLOW_ALTERNATIVES;
             }
 
             int fluidFilterSlotConfig = FluidFilterSlot.FILTER_ALLOW_SIZE;
             if (i < 9) {
-                fluidFilterSlotConfig |= FluidFilterSlot.FILTER_ALLOW_INPUT_CONFIGURATION;
+                fluidFilterSlotConfig |= FluidFilterSlot.FILTER_ALLOW_ALTERNATIVES;
             }
 
             addSlot(new FilterSlot(((GridNetworkNode) grid).getProcessingMatrix(), i, x, y, itemFilterSlotConfig).setEnableHandler(() -> ((GridNetworkNode) grid).isProcessingPattern() && ((GridNetworkNode) grid).getType() == IType.ITEMS));

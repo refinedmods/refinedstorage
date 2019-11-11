@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen.grid;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.container.InputConfigurationContainer;
+import com.raoulvdberge.refinedstorage.container.AlternativesContainer;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class InputConfigurationScreen extends BaseScreen {
+public class AlternativesScreen extends BaseScreen {
     private final Screen parent;
     private final ScrollbarWidget scrollbar;
 
@@ -42,14 +42,14 @@ public class InputConfigurationScreen extends BaseScreen {
     private ItemStack item;
     private FluidStack fluid;
 
-    private InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title) {
-        super(new InputConfigurationContainer(player), 175, 143, null, title);
+    private AlternativesScreen(Screen parent, PlayerEntity player, ITextComponent title) {
+        super(new AlternativesContainer(player), 175, 143, null, title);
 
         this.parent = parent;
         this.scrollbar = new ScrollbarWidget(this, 155, 20, 12, 89);
     }
 
-    public InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title, ItemStack item, int slot) {
+    public AlternativesScreen(Screen parent, PlayerEntity player, ITextComponent title, ItemStack item, int slot) {
         this(parent, player, title);
 
         this.type = IType.ITEMS;
@@ -58,7 +58,7 @@ public class InputConfigurationScreen extends BaseScreen {
         this.fluid = null;
     }
 
-    public InputConfigurationScreen(Screen parent, PlayerEntity player, ITextComponent title, FluidStack fluid, int slot) {
+    public AlternativesScreen(Screen parent, PlayerEntity player, ITextComponent title, FluidStack fluid, int slot) {
         this(parent, player, title);
 
         this.type = IType.FLUIDS;
@@ -69,9 +69,6 @@ public class InputConfigurationScreen extends BaseScreen {
 
     @Override
     public void onPostInit(int x, int y) {
-        Button apply = addButton(x + 7, y + 114, 50, 20, I18n.format("gui.refinedstorage.input_configuration.apply"), true, true, btn -> apply());
-        addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
-
         lines.clear();
 
         if (item != null) {
@@ -135,6 +132,9 @@ public class InputConfigurationScreen extends BaseScreen {
                 yy += 18;
             }
         }
+
+        Button apply = addButton(x + 7, y + 114, 50, 20, I18n.format("gui.refinedstorage.alternatives.apply"), lines.size() > 1, true, btn -> apply());
+        addButton(x + apply.getWidth() + 7 + 4, y + 114, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
     }
 
     @Override
@@ -153,7 +153,7 @@ public class InputConfigurationScreen extends BaseScreen {
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        bindTexture(RS.ID, "gui/input_configuration.png");
+        bindTexture(RS.ID, "gui/alternatives.png");
 
         blit(x, y, 0, 0, xSize, ySize);
 
@@ -345,7 +345,7 @@ public class InputConfigurationScreen extends BaseScreen {
         public void renderTooltip(int x, int y, int mx, int my) {
             for (ItemStack item : items) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    InputConfigurationScreen.this.renderTooltip(item, mx, my, RenderUtils.getTooltipFromItem(item));
+                    AlternativesScreen.this.renderTooltip(item, mx, my, RenderUtils.getTooltipFromItem(item));
                 }
 
                 x += 17;
@@ -375,7 +375,7 @@ public class InputConfigurationScreen extends BaseScreen {
         public void renderTooltip(int x, int y, int mx, int my) {
             for (FluidStack fluid : fluids) {
                 if (RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-                    InputConfigurationScreen.this.renderTooltip(mx, my, fluid.getDisplayName().getFormattedText());
+                    AlternativesScreen.this.renderTooltip(mx, my, fluid.getDisplayName().getFormattedText());
                 }
 
                 x += 17;

@@ -7,7 +7,7 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
-import com.raoulvdberge.refinedstorage.screen.grid.InputConfigurationScreen;
+import com.raoulvdberge.refinedstorage.screen.grid.AlternativesScreen;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -176,21 +176,28 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         if (valid && slot instanceof FilterSlot && slot.isEnabled() && ((FilterSlot) slot).isSizeAllowed()) {
             if (!slot.getStack().isEmpty()) {
-                if (((FilterSlot) slot).isInputConfigurationAllowed() && hasControlDown()) {
-                    minecraft.displayGuiScreen(new InputConfigurationScreen(
+                if (((FilterSlot) slot).isAlternativesAllowed() && hasControlDown()) {
+                    minecraft.displayGuiScreen(new AlternativesScreen(
                         this,
                         minecraft.player,
-                        new TranslationTextComponent("gui.refinedstorage.input_configuration"),
+                        new TranslationTextComponent("gui.refinedstorage.alternatives"),
                         slot.getStack(),
                         slot.getSlotIndex()
                     ));
                 } else {
-                    minecraft.displayGuiScreen(new AmountScreen(
+                    minecraft.displayGuiScreen(new ItemAmountScreen(
                         this,
                         minecraft.player,
                         slot.slotNumber,
                         slot.getStack(),
-                        slot.getSlotStackLimit()
+                        slot.getSlotStackLimit(),
+                        parent -> new AlternativesScreen(
+                            parent,
+                            minecraft.player,
+                            new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                            slot.getStack(),
+                            slot.getSlotIndex()
+                        )
                     ));
                 }
             }
@@ -198,11 +205,11 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
             FluidStack stack = ((FluidFilterSlot) slot).getFluidInventory().getFluid(slot.getSlotIndex());
 
             if (!stack.isEmpty()) {
-                if (((FluidFilterSlot) slot).isInputConfigurationAllowed() && hasControlDown()) {
-                    minecraft.displayGuiScreen(new InputConfigurationScreen(
+                if (((FluidFilterSlot) slot).isAlternativesAllowed() && hasControlDown()) {
+                    minecraft.displayGuiScreen(new AlternativesScreen(
                         this,
                         minecraft.player,
-                        new TranslationTextComponent("gui.refinedstorage.input_configuration"),
+                        new TranslationTextComponent("gui.refinedstorage.alternatives"),
                         stack,
                         slot.getSlotIndex()
                     ));
@@ -212,7 +219,14 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                         minecraft.player,
                         slot.slotNumber,
                         stack,
-                        ((FluidFilterSlot) slot).getFluidInventory().getMaxAmount()
+                        ((FluidFilterSlot) slot).getFluidInventory().getMaxAmount(),
+                        parent -> new AlternativesScreen(
+                            this,
+                            minecraft.player,
+                            new TranslationTextComponent("gui.refinedstorage.alternatives"),
+                            stack,
+                            slot.getSlotIndex()
+                        )
                     ));
                 }
             } else {
