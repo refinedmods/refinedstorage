@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
@@ -31,7 +32,14 @@ public class ItemGridHandler implements IItemGridHandler {
     }
 
     @Override
-    public void onExtract(ServerPlayerEntity player, UUID id, int flags) {
+    public void onExtract(ServerPlayerEntity player, ItemStack stack, int preferredSlot, int flags) {
+        if (network.getItemStorageCache().getList().getEntry(stack, IComparer.COMPARE_NBT) != null) {
+            onExtract(player, network.getItemStorageCache().getList().getEntry(stack, IComparer.COMPARE_NBT).getId(), preferredSlot, flags);
+        }
+    }
+
+    @Override
+    public void onExtract(ServerPlayerEntity player, UUID id, int preferredSlot, int flags) {
         ItemStack item = network.getItemStorageCache().getList().get(id);
 
         if (item == null || !network.getSecurityManager().hasPermission(Permission.EXTRACT, player)) {
@@ -82,11 +90,22 @@ public class ItemGridHandler implements IItemGridHandler {
         if (!took.isEmpty()) {
             if ((flags & EXTRACT_SHIFT) == EXTRACT_SHIFT) {
                 IItemHandler playerInventory = player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
+                if (playerInventory != null) {
+                    if (preferredSlot != -1) {
+                        ItemStack remainder = playerInventory.insertItem(preferredSlot, took, true);
+                        if (remainder.getCount() != took.getCount()) {
+                            ItemStack inserted = network.extractItem(item, size - remainder.getCount(), Action.PERFORM);
+                            playerInventory.insertItem(preferredSlot, inserted, false);
+                            took.setCount(remainder.getCount());
+                        }
+                    }
+                    if (!took.isEmpty()) {
+                        if (ItemHandlerHelper.insertItemStacked(playerInventory, took, true).isEmpty()) {
+                            took = network.extractItem(item, size, Action.PERFORM);
 
-                if (playerInventory != null && ItemHandlerHelper.insertItem(playerInventory, took, true).isEmpty()) {
-                    took = network.extractItem(item, size, Action.PERFORM);
-
-                    ItemHandlerHelper.insertItem(playerInventory, took, false);
+                            ItemHandlerHelper.insertItemStacked(playerInventory, took, false);
+                        }
+                    }
                 }
             } else {
                 took = network.extractItem(item, size, Action.PERFORM);
@@ -108,14 +127,23 @@ public class ItemGridHandler implements IItemGridHandler {
 
     @Override
     @Nonnull
-    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack) {
+    public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack, boolean single) {
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
             return stack;
         }
 
         network.getItemStorageTracker().changed(player, stack.copy());
 
-        ItemStack remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
+        ItemStack remainder;
+        if (single) {
+            if (network.insertItem(stack, 1, Action.SIMULATE).isEmpty()) {
+                network.insertItem(stack, 1, Action.PERFORM);
+                stack.shrink(1);
+            }
+            remainder = stack;
+        } else {
+            remainder = network.insertItem(stack, stack.getCount(), Action.PERFORM);
+        }
 
         network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessGrid().getInsertUsage());
 

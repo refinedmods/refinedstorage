@@ -16,23 +16,35 @@ public interface IItemGridHandler {
     int EXTRACT_SHIFT = 4;
 
     /**
+     * Called when a player tries to extract an item from the grid through the Inventory
+     *
+     * @param player        the player that is attempting the extraction
+     * @param stack         the stack we're trying to extract
+     * @param preferredSlot playerInventory slot to prefer when adding or -1
+     * @param flags         how we are extracting, see the flags in {@link IItemGridHandler}
+     */
+    void onExtract(ServerPlayerEntity player, ItemStack stack, int preferredSlot, int flags);
+
+    /**
      * Called when a player tries to extract an item from the grid.
      *
-     * @param player the player that is attempting the extraction
-     * @param id     the id of the item we're trying to extract, this id is the id from {@link com.raoulvdberge.refinedstorage.api.util.StackListEntry}
-     * @param flags  how we are extracting, see the flags in {@link IItemGridHandler}
+     * @param player        the player that is attempting the extraction
+     * @param id            the id of the item we're trying to extract, this id is the id from {@link com.raoulvdberge.refinedstorage.api.util.StackListEntry}
+     * @param preferredSlot playerInventory slot to prefer when adding or -1
+     * @param flags         how we are extracting, see the flags in {@link IItemGridHandler}
      */
-    void onExtract(ServerPlayerEntity player, UUID id, int flags);
+    void onExtract(ServerPlayerEntity player, UUID id, int preferredSlot, int flags);
 
     /**
      * Called when a player tries to insert an item in the grid.
      *
      * @param player the player that is attempting the insert
      * @param stack  the item we're trying to insert
+     * @param single true if we are only inserting a single item, false otherwise
      * @return the remainder, or an empty stack if there is no remainder
      */
     @Nonnull
-    ItemStack onInsert(ServerPlayerEntity player, ItemStack stack);
+    ItemStack onInsert(ServerPlayerEntity player, ItemStack stack, boolean single);
 
     /**
      * Called when a player is trying to insert an item that it is holding in their hand in the GUI.
