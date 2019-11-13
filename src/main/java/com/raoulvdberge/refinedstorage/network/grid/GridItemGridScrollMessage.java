@@ -80,7 +80,6 @@ public class GridItemGridScrollMessage {
                         }
                         if (message.up) { //scroll up
                             grid.getItemHandler().onInsert(player, player.inventory.getItemStack(), true);
-                            player.inventory.getItemStack().shrink(1);
                             player.updateHeldItem();
                         }
 

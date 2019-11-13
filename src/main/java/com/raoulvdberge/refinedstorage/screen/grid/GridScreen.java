@@ -38,11 +38,13 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.lwjgl.glfw.GLFW;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+@MouseTweaksDisableWheelTweak
 public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
     private IGridView view;
 
