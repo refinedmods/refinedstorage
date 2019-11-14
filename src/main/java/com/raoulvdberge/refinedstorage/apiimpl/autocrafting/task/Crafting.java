@@ -11,31 +11,18 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 
-class Crafting {
-    private static final String NBT_PATTERN = "Pattern";
+class Crafting extends Craft {
     private static final String NBT_TOOK = "Took";
-    private static final String NBT_TO_EXTRACT = "ToExtract";
-    private static final String NBT_ROOT = "Root";
-
-    private ICraftingPattern pattern;
     private NonNullList<ItemStack> took;
-    private IStackList<ItemStack> toExtract;
-    private boolean root;
 
-    public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract, boolean root) {
-        this.pattern = pattern;
+    public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> took, IStackList<ItemStack> itemsToUse, boolean root) {
+        super(pattern, root, itemsToUse);
         this.took = took;
-        this.toExtract = toExtract;
-        this.root = root;
     }
 
     public Crafting(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
-        this.pattern = CraftingTask.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
-        this.toExtract = CraftingTask.readItemStackList(tag.getList(NBT_TO_EXTRACT, Constants.NBT.TAG_COMPOUND));
-        this.root = tag.getBoolean(NBT_ROOT);
-
+        super(network, tag);
         this.took = NonNullList.create();
-
         ListNBT tookList = tag.getList(NBT_TOOK, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tookList.size(); ++i) {
             ItemStack stack = StackUtils.deserializeStackFromNbt(tookList.getCompound(i));
@@ -45,28 +32,12 @@ class Crafting {
         }
     }
 
-    public boolean isRoot() {
-        return root;
-    }
-
-    public ICraftingPattern getPattern() {
-        return pattern;
-    }
-
     public NonNullList<ItemStack> getTook() {
         return took;
     }
 
-    public IStackList<ItemStack> getToExtract() {
-        return toExtract;
-    }
-
     public CompoundNBT writeToNbt() {
-        CompoundNBT tag = new CompoundNBT();
-
-        tag.put(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
-        tag.put(NBT_TO_EXTRACT, CraftingTask.writeItemStackList(toExtract));
-        tag.putBoolean(NBT_ROOT, root);
+        CompoundNBT tag = super.writeToNbt();
 
         ListNBT tookList = new ListNBT();
         for (ItemStack took : this.took) {
