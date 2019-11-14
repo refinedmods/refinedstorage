@@ -366,13 +366,13 @@ public class CraftingTask implements ICraftingTask {
 
     @Nullable
     private ICraftingTaskError calculateInternal(
-        IStackList<ItemStack> mutatedStorage,
-        IStackList<FluidStack> mutatedFluidStorage,
-        IStackList<ItemStack> results,
-        IStackList<FluidStack> fluidResults,
-        ICraftingPatternChainList patternChainList,
-        ICraftingPattern pattern,
-        boolean root) {
+            IStackList<ItemStack> mutatedStorage,
+            IStackList<FluidStack> mutatedFluidStorage,
+            IStackList<ItemStack> results,
+            IStackList<FluidStack> fluidResults,
+            ICraftingPatternChainList patternChainList,
+            ICraftingPattern pattern,
+            boolean root) {
 
         if (System.currentTimeMillis() - calculationStarted > RS.SERVER_CONFIG.getAutocrafting().getCalculationTimeoutMs()) {
             return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
@@ -649,34 +649,18 @@ public class CraftingTask implements ICraftingTask {
             int interval = container.getUpdateInterval();
 
             if (interval < 0) {
-                throw new IllegalStateException(c.getPattern().getContainer() + " has an update interval of < 0");
+                throw new IllegalStateException(container + " has an update interval of < 0");
             }
 
             if (interval == 0 || ticks % interval == 0) {
                 if (counter.getOrDefault(container, 0) == container.getMaximumSuccessfulCraftingUpdates()) {
                     continue;
                 }
+                IStackList<ItemStack> extractedItems = extractFromInternalItemStorage(c.getToExtract().getStacks(), this.internalStorage, Action.SIMULATE);
+                if (extractedItems != null) {
 
-                boolean hasAll = true;
-
-                for (StackListEntry<ItemStack> need : c.getToExtract().getStacks()) {
-                    ItemStack result = this.internalStorage.extract(need.getStack(), need.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, Action.SIMULATE);
-
-                    if (result.getCount() != need.getStack().getCount()) {
-                        hasAll = false;
-
-                        break;
-                    }
-                }
-
-                if (hasAll) {
-                    for (StackListEntry<ItemStack> need : c.getToExtract().getStacks()) {
-                        ItemStack result = this.internalStorage.extract(need.getStack(), need.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
-
-                        if (result.getCount() != need.getStack().getCount()) {
-                            throw new IllegalStateException("Extractor check lied");
-                        }
-                    }
+                    //this uses extractedItems instead of getToExtract because getToExtract will become more expensive in the future
+                    extractFromInternalItemStorage(extractedItems.getStacks(), this.internalStorage, Action.PERFORM);
 
                     ItemStack output = c.getPattern().getOutput(c.getTook());
 
@@ -698,7 +682,7 @@ public class CraftingTask implements ICraftingTask {
 
                     network.getCraftingManager().onTaskChanged();
 
-                    counter.merge(container, 1, (a, b) -> a + b);
+                    counter.merge(container, 1, Integer::sum);
                 }
             }
         }
@@ -726,10 +710,10 @@ public class CraftingTask implements ICraftingTask {
                 continue;
             }
 
-            int interval = p.getPattern().getContainer().getUpdateInterval();
+            int interval = container.getUpdateInterval();
 
             if (interval < 0) {
-                throw new IllegalStateException(p.getPattern().getContainer() + " has an update interval of < 0");
+                throw new IllegalStateException(container + " has an update interval of < 0");
             }
 
             if (interval == 0 || ticks % interval == 0) {
@@ -739,84 +723,50 @@ public class CraftingTask implements ICraftingTask {
 
                 ProcessingState originalState = p.getState();
 
-                if (p.getPattern().getContainer().isLocked()) {
+                if (container.isLocked()) {
                     p.setState(ProcessingState.LOCKED);
+                } else if (!p.getItemsToPut().isEmpty() && container.getConnectedInventory() == null
+                        || !p.getFluidsToPut().isEmpty() && container.getConnectedFluidInventory() == null) {
+                    p.setState(ProcessingState.MACHINE_NONE);
                 } else {
-                    boolean hasAll = true;
 
-                    for (StackListEntry<ItemStack> need : p.getItemsToPut().getStacks()) {
-                        if (p.getPattern().getContainer().getConnectedInventory() == null) {
-                            p.setState(ProcessingState.MACHINE_NONE);
-                        } else {
-                            ItemStack result = this.internalStorage.extract(need.getStack(), need.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, Action.SIMULATE);
+                    boolean hasAll = false;
+                    IStackList<ItemStack> extractedItems;
+                    IStackList<FluidStack> extractedFluids = null;
 
-                            if (result.getCount() != need.getStack().getCount()) {
-                                hasAll = false;
-
-                                break;
-                            } else {
-                                p.setState(ProcessingState.READY);
-                            }
+                    extractedItems = extractFromInternalItemStorage(p.getItemsToPut().getStacks(), this.internalStorage, Action.SIMULATE);
+                    if (extractedItems != null) {
+                        extractedFluids = extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), this.internalFluidStorage, Action.SIMULATE);
+                        if (extractedFluids != null) {
+                            hasAll = true;
                         }
                     }
 
-                    if (hasAll && p.getState() == ProcessingState.READY && !insertIntoInventory(p.getPattern().getContainer().getConnectedInventory(), new ArrayDeque<>(p.getItemsToPut().getStacks()), Action.SIMULATE)) {
+                    boolean canInsert = false;
+                    if (hasAll) {
+                        canInsert = insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
+                        if (canInsert) {
+                            canInsert = insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
+                        }
+                    }
+
+                    if (hasAll && !canInsert) {
                         p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
                     }
 
-                    for (StackListEntry<FluidStack> need : p.getFluidsToPut().getStacks()) {
-                        if (p.getPattern().getContainer().getConnectedFluidInventory() == null) {
-                            p.setState(ProcessingState.MACHINE_NONE);
-                        } else {
-                            FluidStack result = this.internalFluidStorage.extract(need.getStack(), need.getStack().getAmount(), IComparer.COMPARE_NBT, Action.SIMULATE);
+                    if (hasAll && canInsert) {
 
-                            if (result.getAmount() != need.getStack().getAmount()) {
-                                hasAll = false;
+                        extractFromInternalItemStorage(p.getItemsToPut().getStacks(), this.internalStorage, Action.PERFORM);
+                        extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), this.internalFluidStorage, Action.PERFORM);
 
-                                break;
-                            } else if (p.getPattern().getContainer().getConnectedFluidInventory().fill(result, IFluidHandler.FluidAction.SIMULATE) != result.getAmount()) {
-                                p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
-
-                                break;
-                            } else if (p.getState() == ProcessingState.READY || p.getItemsToPut().isEmpty()) { // If the items were ok (or if we didn't have items).
-                                p.setState(ProcessingState.READY);
-                            }
-                        }
-                    }
-
-                    if (p.getState() == ProcessingState.READY && hasAll) {
-                        Deque<StackListEntry<ItemStack>> toInsert = new ArrayDeque<>();
-
-                        for (StackListEntry<ItemStack> need : p.getItemsToPut().getStacks()) {
-                            ItemStack result = this.internalStorage.extract(need.getStack(), need.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, Action.PERFORM);
-                            if (result.getCount() != need.getStack().getCount()) {
-                                throw new IllegalStateException("The internal crafting inventory reported that " + need.getStack() + " was available but we got " + result);
-                            }
-
-                            toInsert.add(need);
-                        }
-
-                        if (!insertIntoInventory(p.getPattern().getContainer().getConnectedInventory(), toInsert, Action.PERFORM)) {
-                            LOGGER.warn(p.getPattern().getContainer().getConnectedInventory() + " unexpectedly didn't accept items, the remainder has been voided!");
-                        }
-
-                        for (StackListEntry<FluidStack> need : p.getFluidsToPut().getStacks()) {
-                            FluidStack result = this.internalFluidStorage.extract(need.getStack(), need.getStack().getAmount(), IComparer.COMPARE_NBT, Action.PERFORM);
-                            if (result.getAmount() != need.getStack().getAmount()) {
-                                throw new IllegalStateException("The internal crafting inventory reported that " + need + " was available but we got " + result);
-                            }
-
-                            int filled = p.getPattern().getContainer().getConnectedFluidInventory().fill(result, IFluidHandler.FluidAction.EXECUTE);
-                            if (filled != result.getAmount()) {
-                                LOGGER.warn(p.getPattern().getContainer().getConnectedFluidInventory() + " unexpectedly didn't accept fluids, the remainder has been voided!");
-                            }
-                        }
+                        insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
+                        insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
 
                         p.setState(ProcessingState.EXTRACTED_ALL);
 
-                        p.getPattern().getContainer().onUsedForProcessing();
+                        container.onUsedForProcessing();
 
-                        counter.merge(container, 1, (a, b) -> a + b);
+                        counter.merge(container, 1, Integer::sum);
                     }
                 }
 
@@ -827,10 +777,46 @@ public class CraftingTask implements ICraftingTask {
         }
     }
 
-    private static boolean insertIntoInventory(@Nullable IItemHandler dest, Deque<StackListEntry<ItemStack>> stacks, Action action) {
+    private static IStackList<ItemStack> extractFromInternalItemStorage(Collection<StackListEntry<ItemStack>> stacks, IStorageDisk<ItemStack> storage, Action action) {
+        IStackList<ItemStack> toReturn = API.instance().createItemStackList();
+        for (StackListEntry<ItemStack> entry : stacks) {
+            ItemStack result = storage.extract(entry.getStack(), entry.getStack().getCount(), DEFAULT_EXTRACT_FLAGS, action);
+
+            if (result == ItemStack.EMPTY || result.getCount() != entry.getStack().getCount()) {
+                if (action == Action.PERFORM) {
+                    throw new IllegalStateException("The internal crafting inventory reported that " + entry.getStack() + " was available but we got " + result);
+                }
+                return null;
+            }
+            toReturn.add(result);
+        }
+        return toReturn;
+    }
+
+    private static IStackList<FluidStack> extractFromInternalFluidStorage(Collection<StackListEntry<FluidStack>> stacks, IStorageDisk<FluidStack> storage, Action action) {
+        IStackList<FluidStack> toReturn = API.instance().createFluidStackList();
+        for (StackListEntry<FluidStack> entry : stacks) {
+            FluidStack result = storage.extract(entry.getStack(), entry.getStack().getAmount(), IComparer.COMPARE_NBT, action);
+            if (result == FluidStack.EMPTY || result.getAmount() != entry.getStack().getAmount()) {
+                if (action == Action.PERFORM) {
+                    throw new IllegalStateException("The internal crafting inventory reported that " + entry.getStack() + " was available but we got " + result);
+                }
+                return null;
+            }
+            toReturn.add(result);
+        }
+        return toReturn;
+    }
+
+
+    private static boolean insertIntoInventory(@Nullable IItemHandler dest, Collection<StackListEntry<ItemStack>> toInsert, Action action) {
         if (dest == null) {
             return false;
         }
+        if (toInsert.isEmpty()) {
+            return true;
+        }
+        Deque<StackListEntry<ItemStack>> stacks = new ArrayDeque<>(toInsert);
 
         StackListEntry<ItemStack> currentEntry = stacks.poll();
 
@@ -865,7 +851,24 @@ public class CraftingTask implements ICraftingTask {
             }
         }
 
-        return current == null && stacks.isEmpty();
+        boolean success = current == null && stacks.isEmpty();
+        if (!success && action == Action.PERFORM) {
+            LOGGER.warn("Item Handler unexpectedly didn't accept " + (current != null ? current.getTranslationKey() : null) + ", the remainder has been voided!");
+        }
+        return success;
+    }
+
+    private static boolean insertIntoTank(IFluidHandler dest, Collection<StackListEntry<FluidStack>> toInsert, Action action) {
+        for (StackListEntry<FluidStack> entry : toInsert) {
+            int filled = dest.fill(entry.getStack(), action == Action.SIMULATE ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
+            if (filled != entry.getStack().getAmount()) {
+                if (action == Action.PERFORM) {
+                    LOGGER.warn("Fluid Handler unexpectedly didn't accept all of " + entry.getStack().getTranslationKey() + ", the remainder has been voided!");
+                }
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
