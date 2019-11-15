@@ -43,9 +43,9 @@ public interface ICraftingTask {
     int getQuantity();
 
     /**
-     * @return the amount that this task gives back
+     * @return the amount that this pattern gives back
      */
-    int getQuantityPerCraft();
+    int getQuantityPerCraft(ItemStack item, FluidStack fluid, ICraftingPattern pattern);
 
     /**
      * @return the completion percentage
@@ -53,6 +53,7 @@ public interface ICraftingTask {
     default int getCompletionPercentage() {
         return 0;
     }
+
 
     /**
      * @return the stack requested

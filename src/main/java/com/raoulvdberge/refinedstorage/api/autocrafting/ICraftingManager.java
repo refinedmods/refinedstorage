@@ -73,11 +73,6 @@ public interface ICraftingManager {
     ICraftingTask create(FluidStack stack, int quantity);
 
     /**
-     * @return a new pattern chain list
-     */
-    ICraftingPatternChainList createPatternChainList();
-
-    /**
      * Schedules a crafting task if the task isn't scheduled yet.
      *
      * @param source the source
