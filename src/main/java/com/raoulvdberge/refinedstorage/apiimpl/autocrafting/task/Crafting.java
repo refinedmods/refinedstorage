@@ -12,39 +12,39 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 
 class Crafting extends Craft {
-    private static final String NBT_TOOK = "Took";
-    private NonNullList<ItemStack> took;
+    private static final String NBT_RECIPE = "Recipe";
+    private NonNullList<ItemStack> recipe;
 
-    public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> took, IStackList<ItemStack> itemsToUse, boolean root) {
+    public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> recipe, IStackList<ItemStack> itemsToUse, boolean root) {
         super(pattern, root, itemsToUse);
-        this.took = took;
+        this.recipe = recipe;
     }
 
     public Crafting(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
-        this.took = NonNullList.create();
-        ListNBT tookList = tag.getList(NBT_TOOK, Constants.NBT.TAG_COMPOUND);
+        this.recipe = NonNullList.create();
+        ListNBT tookList = tag.getList(NBT_RECIPE, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tookList.size(); ++i) {
             ItemStack stack = StackUtils.deserializeStackFromNbt(tookList.getCompound(i));
 
             // Can be empty.
-            took.add(stack);
+            recipe.add(stack);
         }
     }
 
-    public NonNullList<ItemStack> getTook() {
-        return took;
+    public NonNullList<ItemStack> getRecipe() {
+        return recipe;
     }
 
     public CompoundNBT writeToNbt() {
         CompoundNBT tag = super.writeToNbt();
 
         ListNBT tookList = new ListNBT();
-        for (ItemStack took : this.took) {
+        for (ItemStack took : this.recipe) {
             tookList.add(StackUtils.serializeStackToNbt(took));
         }
 
-        tag.put(NBT_TOOK, tookList);
+        tag.put(NBT_RECIPE, tookList);
 
         return tag;
     }

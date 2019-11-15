@@ -38,6 +38,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -365,16 +367,14 @@ public class CraftingTask implements ICraftingTask {
         IStackList<ItemStack> itemsToExtract = API.instance().createItemStackList();
         IStackList<FluidStack> fluidsToExtract = API.instance().createFluidStackList();
 
-        NonNullList<ItemStack> took = NonNullList.create();
+        NonNullList<ItemStack> recipe = NonNullList.create();
+        List<Pair<NonNullList<ItemStack>, Integer>> ingredients = new ArrayList<>();
 
-        for (NonNullList<ItemStack> inputs : pattern.getInputs()) {
-            if (inputs.isEmpty()) {
-                took.add(ItemStack.EMPTY);
+        combineCommonStacks(recipe, ingredients, pattern);
 
-                continue;
-            }
+        for (Pair<NonNullList<ItemStack>, Integer> pair : ingredients) {
 
-            PossibleInputs possibleInputs = new PossibleInputs(new ArrayList<>(inputs));
+            PossibleInputs possibleInputs = new PossibleInputs(new ArrayList<>(pair.getLeft()));
             possibleInputs.sort(mutatedStorage, results);
 
             ItemStack possibleInput = possibleInputs.get();
@@ -382,9 +382,7 @@ public class CraftingTask implements ICraftingTask {
             ItemStack fromSelf = results.get(possibleInput);
             ItemStack fromNetwork = mutatedStorage.get(possibleInput);
 
-            took.add(possibleInput);
-
-            int remaining = possibleInput.getCount() * qty;
+            int remaining = pair.getRight() * qty;
 
             if (remaining < 0) { //int overflow
                 return new CraftingTaskError(CraftingTaskErrorType.TOO_COMPLEX);
@@ -566,11 +564,11 @@ public class CraftingTask implements ICraftingTask {
                 throw new IllegalStateException("Cannot extract fluids in normal pattern!");
             }
 
-            crafts.add(new Crafting(pattern, took, itemsToExtract, root));
-            ItemStack output = pattern.getOutput(took);
+            crafts.add(new Crafting(pattern, recipe, itemsToExtract, root));
+            ItemStack output = pattern.getOutput(recipe);
             results.add(output, output.getCount() * qty);
 
-            for (ItemStack byproduct : pattern.getByproducts(took)) {
+            for (ItemStack byproduct : pattern.getByproducts(recipe)) {
                 results.add(byproduct, byproduct.getCount() * qty);
             }
         }
@@ -624,6 +622,36 @@ public class CraftingTask implements ICraftingTask {
         }
     }
 
+    private void combineCommonStacks(NonNullList<ItemStack> recipe, List<Pair<NonNullList<ItemStack>, Integer>> ingredients, ICraftingPattern pattern) {
+        for (NonNullList<ItemStack> inputs : pattern.getInputs()) {
+            if (inputs.isEmpty()) {
+                recipe.add(ItemStack.EMPTY);
+            } else {
+                recipe.add(inputs.get(0));
+
+                boolean match = false;
+                for (Pair<NonNullList<ItemStack>, Integer> pair : ingredients) {
+                    if (pair.getLeft().size() == inputs.size()) {
+                        match = true;
+                        for (int i = 0; i < inputs.size(); i++) {
+                            if (!API.instance().getComparer().isEqualNoQuantity(pair.getLeft().get(i), inputs.get(i))) {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if (match) {
+                            pair.setValue(pair.getRight() + inputs.get(0).getCount());
+                            break;
+                        }
+                    }
+                }
+                if (!match) {
+                    ingredients.add(new MutablePair<>(inputs, inputs.get(0).getCount()));
+                }
+            }
+        }
+    }
+
     private void updateCrafting(Crafting c) {
 
         ICraftingPatternContainer container = c.getPattern().getContainer();
@@ -644,7 +672,7 @@ public class CraftingTask implements ICraftingTask {
                 //this uses extractedItems instead of getToExtract because getToExtract will become more expensive in the future
                 extractFromInternalItemStorage(extractedItems.getStacks(), this.internalStorage, Action.PERFORM);
 
-                ItemStack output = c.getPattern().getOutput(c.getTook());
+                ItemStack output = c.getPattern().getOutput(c.getRecipe());
 
                 if (!c.isRoot()) {
                     this.internalStorage.insert(output, output.getCount(), Action.PERFORM);
@@ -656,7 +684,7 @@ public class CraftingTask implements ICraftingTask {
 
                 // Byproducts need to always be inserted in the internal storage for later reuse further in the task.
                 // Regular outputs can be inserted into the network *IF* it's a root since it's *NOT* expected to be used later on.
-                for (ItemStack byp : c.getPattern().getByproducts(c.getTook())) {
+                for (ItemStack byp : c.getPattern().getByproducts(c.getRecipe())) {
                     this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
                 }
 
