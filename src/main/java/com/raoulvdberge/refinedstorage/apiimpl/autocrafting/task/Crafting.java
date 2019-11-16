@@ -15,8 +15,8 @@ class Crafting extends Craft {
     private static final String NBT_RECIPE = "Recipe";
     private NonNullList<ItemStack> recipe;
 
-    public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> recipe, IStackList<ItemStack> itemsToUse, boolean root) {
-        super(pattern, root, itemsToUse);
+    public Crafting(int quantity, ICraftingPattern pattern, NonNullList<ItemStack> recipe, IStackList<ItemStack> itemsToUse, boolean root) {
+        super(quantity, pattern, root, itemsToUse);
         this.recipe = recipe;
     }
 

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.google.common.collect.Maps;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
@@ -90,7 +89,6 @@ public class CraftingTask implements ICraftingTask {
 
     private List<Craft> crafts = new ArrayList<>();
     private List<Craft> toRemove = new ArrayList<>();
-    private Map<ICraftingPatternContainer, Integer> counter = Maps.newHashMap();
 
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
     private IStackList<FluidStack> missingFluids = API.instance().createFluidStackList();
@@ -391,8 +389,8 @@ public class CraftingTask implements ICraftingTask {
             while (remaining > 0) {
                 if (fromSelf != null) {
                     int toTake = Math.min(remaining, fromSelf.getCount());
-
-                    itemsToExtract.add(possibleInput, toTake);
+                    //TODO Needs fix
+                    itemsToExtract.add(possibleInput, pair.getRight());
 
                     results.remove(fromSelf, toTake);
 
@@ -404,8 +402,8 @@ public class CraftingTask implements ICraftingTask {
                     int toTake = Math.min(remaining, fromNetwork.getCount());
 
                     this.toTake.add(possibleInput, toTake);
-
-                    itemsToExtract.add(possibleInput, toTake);
+                    //TODO Needs fix
+                    itemsToExtract.add(possibleInput, pair.getRight());
 
                     mutatedStorage.remove(fromNetwork, toTake);
 
@@ -482,7 +480,7 @@ public class CraftingTask implements ICraftingTask {
             while (remaining > 0) {
                 if (fromSelf != null) {
                     int toTake = Math.min(remaining, fromSelf.getAmount());
-
+                    //TODO Needs fix
                     fluidsToExtract.add(possibleInput, toTake);
 
                     fluidResults.remove(possibleInput, toTake);
@@ -496,7 +494,7 @@ public class CraftingTask implements ICraftingTask {
                     int toTake = Math.min(remaining, fromNetwork.getAmount());
 
                     this.toTakeFluids.add(possibleInput, toTake);
-
+                    //TODO Needs fix
                     fluidsToExtract.add(possibleInput, toTake);
 
                     mutatedFluidStorage.remove(fromNetwork, toTake);
@@ -558,13 +556,13 @@ public class CraftingTask implements ICraftingTask {
                 fluidsToReceive.add(output);
             }
 
-            crafts.add(new Processing(pattern, itemsToReceive, fluidsToReceive, itemsToExtract, fluidsToExtract, root));
+            crafts.add(new Processing(qty, pattern, itemsToReceive, fluidsToReceive, itemsToExtract, fluidsToExtract, root));
         } else {
             if (!fluidsToExtract.isEmpty()) {
                 throw new IllegalStateException("Cannot extract fluids in normal pattern!");
             }
 
-            crafts.add(new Crafting(pattern, recipe, itemsToExtract, root));
+            crafts.add(new Crafting(qty, pattern, recipe, itemsToExtract, root));
             ItemStack output = pattern.getOutput(recipe);
             results.add(output, output.getCount() * qty);
 
@@ -663,36 +661,39 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (interval == 0 || ticks % interval == 0) {
-            if (counter.getOrDefault(container, 0) >= container.getMaximumSuccessfulCraftingUpdates()) {
-                return;
-            }
-            IStackList<ItemStack> extractedItems = extractFromInternalItemStorage(c.getItemsToUse().getStacks(), this.internalStorage, Action.SIMULATE);
-            if (extractedItems != null) {
+            for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
 
-                //this uses extractedItems instead of getToExtract because getToExtract will become more expensive in the future
-                extractFromInternalItemStorage(extractedItems.getStacks(), this.internalStorage, Action.PERFORM);
-
-                ItemStack output = c.getPattern().getOutput(c.getRecipe());
-
-                if (!c.isRoot()) {
-                    this.internalStorage.insert(output, output.getCount(), Action.PERFORM);
-                } else {
-                    ItemStack remainder = this.network.insertItem(output, output.getCount(), Action.PERFORM);
-
-                    this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
+                if (c.getQuantity() <= 0) {
+                    toRemove.add(c);
+                    return;
                 }
 
-                // Byproducts need to always be inserted in the internal storage for later reuse further in the task.
-                // Regular outputs can be inserted into the network *IF* it's a root since it's *NOT* expected to be used later on.
-                for (ItemStack byp : c.getPattern().getByproducts(c.getRecipe())) {
-                    this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
+                IStackList<ItemStack> extractedItems = extractFromInternalItemStorage(c.getItemsToUse().getStacks(), this.internalStorage, Action.SIMULATE);
+                if (extractedItems != null) {
+
+                    //this uses extractedItems instead of getToExtract because getToExtract will become more expensive in the future
+                    extractFromInternalItemStorage(extractedItems.getStacks(), this.internalStorage, Action.PERFORM);
+
+                    ItemStack output = c.getPattern().getOutput(c.getRecipe());
+
+                    if (!c.isRoot()) {
+                        this.internalStorage.insert(output, output.getCount(), Action.PERFORM);
+                    } else {
+                        ItemStack remainder = this.network.insertItem(output, output.getCount(), Action.PERFORM);
+
+                        this.internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
+                    }
+
+                    // Byproducts need to always be inserted in the internal storage for later reuse further in the task.
+                    // Regular outputs can be inserted into the network *IF* it's a root since it's *NOT* expected to be used later on.
+                    for (ItemStack byp : c.getPattern().getByproducts(c.getRecipe())) {
+                        this.internalStorage.insert(byp, byp.getCount(), Action.PERFORM);
+                    }
+
+                    c.next();
+
+                    network.getCraftingManager().onTaskChanged();
                 }
-
-                toRemove.add(c);
-
-                network.getCraftingManager().onTaskChanged();
-
-                counter.merge(container, 1, Integer::sum);
             }
         }
     }
@@ -719,61 +720,66 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (interval == 0 || ticks % interval == 0) {
-            if (counter.getOrDefault(container, 0) >= container.getMaximumSuccessfulCraftingUpdates()) {
-                return;
-            }
 
-            ProcessingState originalState = p.getState();
-
-            if (container.isLocked()) {
-                p.setState(ProcessingState.LOCKED);
-            } else if (!p.getItemsToUse().isEmpty() && container.getConnectedInventory() == null
-                    || !p.getFluidsToPut().isEmpty() && container.getConnectedFluidInventory() == null) {
-                p.setState(ProcessingState.MACHINE_NONE);
-            } else {
-
-                boolean hasAll = false;
-                IStackList<ItemStack> extractedItems;
-                IStackList<FluidStack> extractedFluids = null;
-
-                extractedItems = extractFromInternalItemStorage(p.getItemsToUse().getStacks(), this.internalStorage, Action.SIMULATE);
-                if (extractedItems != null) {
-                    extractedFluids = extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), this.internalFluidStorage, Action.SIMULATE);
-                    if (extractedFluids != null) {
-                        hasAll = true;
-                    }
-                }
-
-                boolean canInsert = false;
-                if (hasAll) {
-                    canInsert = insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
-                    if (canInsert) {
-                        canInsert = insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
-                    }
-                }
-
-                if (hasAll && !canInsert) {
-                    p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
-                }
-
-                if (hasAll && canInsert) {
-
-                    extractFromInternalItemStorage(p.getItemsToUse().getStacks(), this.internalStorage, Action.PERFORM);
-                    extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), this.internalFluidStorage, Action.PERFORM);
-
-                    insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
-                    insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
-
+            for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
+                if (p.getQuantity() <= 0) {
                     p.setState(ProcessingState.EXTRACTED_ALL);
-
-                    container.onUsedForProcessing();
-
-                    counter.merge(container, 1, Integer::sum);
+                    return;
                 }
-            }
 
-            if (originalState != p.getState()) {
-                network.getCraftingManager().onTaskChanged();
+                ProcessingState originalState = p.getState();
+
+                if (container.isLocked()) {
+                    p.setState(ProcessingState.LOCKED);
+                } else if (!p.getItemsToUse().isEmpty() && container.getConnectedInventory() == null
+                        || !p.getFluidsToPut().isEmpty() && container.getConnectedFluidInventory() == null) {
+                    p.setState(ProcessingState.MACHINE_NONE);
+                } else {
+
+                    boolean hasAll = false;
+                    IStackList<ItemStack> extractedItems;
+                    IStackList<FluidStack> extractedFluids = null;
+
+                    extractedItems = extractFromInternalItemStorage(p.getItemsToUse().getStacks(), this.internalStorage, Action.SIMULATE);
+                    if (extractedItems != null) {
+                        extractedFluids = extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), this.internalFluidStorage, Action.SIMULATE);
+                        if (extractedFluids != null) {
+                            hasAll = true;
+                        }
+                    }
+
+                    boolean canInsert = false;
+                    if (hasAll) {
+                        canInsert = insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
+                        if (canInsert) {
+                            canInsert = insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
+                        }
+                    }
+
+                    if (hasAll && !canInsert) {
+                        p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
+                    }
+
+                    if (hasAll && canInsert) {
+                        p.setState(ProcessingState.READY);
+
+                        extractFromInternalItemStorage(p.getItemsToUse().getStacks(), this.internalStorage, Action.PERFORM);
+                        extractFromInternalFluidStorage(p.getFluidsToPut().getStacks(), this.internalFluidStorage, Action.PERFORM);
+
+                        insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
+                        insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
+
+                        p.next();
+
+                        container.onUsedForProcessing();
+
+                    }
+                }
+
+                //State changed or successful insertion
+                if (originalState != p.getState() || p.getState() == ProcessingState.READY) {
+                    network.getCraftingManager().onTaskChanged();
+                }
             }
         }
     }
@@ -928,8 +934,6 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
 
-            counter.clear();
-
             for (Craft craft : toRemove) {
                 crafts.remove(craft);
             }
@@ -990,25 +994,19 @@ public class CraftingTask implements ICraftingTask {
             if (craft instanceof Processing) {
                 Processing p = (Processing) craft;
 
-                if (p.getState() != ProcessingState.EXTRACTED_ALL) {
-                    continue;
-                }
-
-                ItemStack content = p.getItemsToReceive().get(stack);
-
-                if (content != null) {
-                    int needed = content.getCount();
+                int needed = p.getNeeded(stack);
+                if (needed > 0) {
 
                     if (needed > size) {
                         needed = size;
                     }
 
-                    p.getItemsToReceive().remove(stack, needed);
+                    p.addFinished(stack, needed);
 
                     size -= needed;
 
-                    if (p.getItemsToReceive().isEmpty() && p.getFluidsToReceive().isEmpty()) {
-                        p.setState(ProcessingState.PROCESSED);
+                    if (p.updateFinished()) { //only update if finished changes
+                        network.getCraftingManager().onTaskChanged();
                     }
 
                     if (!p.isRoot()) {
@@ -1035,25 +1033,20 @@ public class CraftingTask implements ICraftingTask {
             if (craft instanceof Processing) {
                 Processing p = (Processing) craft;
 
-                if (p.getState() != ProcessingState.EXTRACTED_ALL) {
-                    continue;
-                }
+                int needed = p.getNeeded(stack);
 
-                FluidStack content = p.getFluidsToReceive().get(stack);
-
-                if (content != null) {
-                    int needed = content.getAmount();
+                if (needed > 0) {
 
                     if (needed > size) {
                         needed = size;
                     }
 
-                    p.getFluidsToReceive().remove(stack, needed);
+                    p.addFinished(stack, needed);
 
                     size -= needed;
 
-                    if (p.getItemsToReceive().isEmpty() && p.getFluidsToReceive().isEmpty()) {
-                        p.setState(ProcessingState.PROCESSED);
+                    if (p.updateFinished()) { //only update if finished changees
+                        network.getCraftingManager().onTaskChanged();
                     }
 
                     if (!p.isRoot()) {
@@ -1116,35 +1109,39 @@ public class CraftingTask implements ICraftingTask {
 
         for (Craft craft : this.crafts) {
             if (craft instanceof Crafting) {
-                Crafting crafting = (Crafting) craft;
-                for (ItemStack receive : crafting.getPattern().getOutputs()) {
-                    elements.add(new ItemCraftingMonitorElement(receive, 0, 0, 0, 0, receive.getCount()));
+                Crafting c = (Crafting) craft;
+                for (ItemStack receive : c.getPattern().getOutputs()) {
+                    elements.add(new ItemCraftingMonitorElement(receive, 0, 0, 0, 0, receive.getCount() * c.getQuantity()));
                 }
             } else {
-                Processing processing = (Processing) craft;
-                if (processing.getState() == ProcessingState.PROCESSED) {
+                Processing p = (Processing) craft;
+                if (p.getState() == ProcessingState.PROCESSED) {
                     continue;
                 }
 
-                if (processing.getState() == ProcessingState.EXTRACTED_ALL) {
-                    for (StackListEntry<ItemStack> put : processing.getItemsToUse().getStacks()) {
-                        elements.add(new ItemCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getCount(), 0, 0));
+                for (StackListEntry<ItemStack> put : p.getItemsToUse().getStacks()) {
+                    if (p.getProcessing() > 0) {
+                        elements.add(new ItemCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getCount() * p.getProcessing(), 0, 0));
                     }
-                } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE || processing.getState() == ProcessingState.LOCKED) {
-                    for (StackListEntry<ItemStack> receive : processing.getItemsToReceive().getStacks()) {
-                        ICraftingMonitorElement element = new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, receive.getStack().getCount(), 0);
+                }
 
-                        if (processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
+
+                for (StackListEntry<ItemStack> receive : p.getItemsToReceive().getStacks()) {
+                    if (p.getScheduled() > 0) {
+                        ICraftingMonitorElement element = new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, receive.getStack().getCount() * p.getScheduled(), 0);
+
+                        if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_item");
-                        } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
+                        } else if (p.getState() == ProcessingState.MACHINE_NONE) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_none");
-                        } else if (processing.getState() == ProcessingState.LOCKED) {
+                        } else if (p.getState() == ProcessingState.LOCKED) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
                         }
 
                         elements.add(element);
                     }
                 }
+
             }
         }
 
@@ -1160,30 +1157,33 @@ public class CraftingTask implements ICraftingTask {
 
         for (Craft craft : this.crafts) {
             if (craft instanceof Processing) {
-                Processing processing = (Processing) craft;
-                if (processing.getState() == ProcessingState.PROCESSED) {
+                Processing p = (Processing) craft;
+                if (p.getState() == ProcessingState.PROCESSED) {
                     continue;
                 }
-
-                if (processing.getState() == ProcessingState.EXTRACTED_ALL) {
-                    for (StackListEntry<FluidStack> put : processing.getFluidsToPut().getStacks()) {
-                        elements.add(new FluidCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getAmount(), 0, 0));
-                    }
-                } else if (processing.getState() == ProcessingState.READY || processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT || processing.getState() == ProcessingState.MACHINE_NONE) {
-                    for (StackListEntry<FluidStack> receive : processing.getFluidsToReceive().getStacks()) {
-                        ICraftingMonitorElement element = new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, receive.getStack().getAmount(), 0);
-
-                        if (processing.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_fluid");
-                        } else if (processing.getState() == ProcessingState.MACHINE_NONE) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_none");
-                        } else if (processing.getState() == ProcessingState.LOCKED) {
-                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
-                        }
-
-                        elements.add(element);
+                for (StackListEntry<FluidStack> put : p.getFluidsToPut().getStacks()) {
+                    if (p.getProcessing() > 0) {
+                        elements.add(new FluidCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getAmount() * p.getProcessing(), 0, 0));
                     }
                 }
+
+                for (StackListEntry<FluidStack> receive : p.getFluidsToReceive().getStacks()) {
+                    if (p.getScheduled() > 0) {
+
+                        ICraftingMonitorElement element = new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, receive.getStack().getAmount() * p.getScheduled(), 0);
+
+                        if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
+                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_fluid");
+                        } else if (p.getState() == ProcessingState.MACHINE_NONE) {
+                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_none");
+                        } else if (p.getState() == ProcessingState.LOCKED) {
+                            element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
+                        }
+                        elements.add(element);
+                    }
+
+                }
+
             }
         }
 
