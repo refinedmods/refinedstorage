@@ -9,6 +9,7 @@
 - Fixed Pattern Grid causing world hanging on load (raoulvdberge)
 - Fixed External Storage not refreshing when the storage is broken or replaced (raoulvdberge)
 - Fixed delay in block update when placing a cable block (raoulvdberge)
+- Fixed holder of cable blocks sometimes conflicting with a cable connection while rendering (raoulvdberge)
 
 ### 1.7
 NOTE: This is an alpha release. Bugs may happen. Remember to take backups.

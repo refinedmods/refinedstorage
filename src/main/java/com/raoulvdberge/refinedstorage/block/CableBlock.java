@@ -18,6 +18,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -93,6 +94,20 @@ public class CableBlock extends NetworkNodeBlock {
         return shape;
     }
 
+    @Override
+    protected void onDirectionChanged(World world, BlockPos pos, Direction newDirection) {
+        // rotate() in BaseBlock "stupidly" changes the direction without checking if our cable connections are still valid.
+        // You'd expect that cable connections are not changing when simply changing the direction.
+        // But they need to. For example, when rotating a constructor to connect to a neighboring cable, the connection to that neighbor
+        // needs to be removed as otherwise the "holder" of the constructor will conflict with the cable connection.
+        // This is already checked in hasNode().
+        // But since rotate() doesn't invalidate that connection, we need to do it here.
+        // Ideally, this code would be in rotate(). But rotate() doesn't have any data about the position and world, so we need to do it here.
+        world.setBlockState(pos, getState(world.getBlockState(pos), world, pos));
+
+        super.onDirectionChanged(world, pos, newDirection);
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext ctx) {
@@ -100,6 +115,7 @@ public class CableBlock extends NetworkNodeBlock {
     }
 
     private boolean hasNode(IWorld world, BlockPos pos, BlockState state, Direction direction) {
+        // Prevent the "holder" of a cable block conflicting with a cable connection.
         if (getDirection() != BlockDirection.NONE && state.get(getDirection().getProperty()).getOpposite() == direction) {
             return false;
         }
