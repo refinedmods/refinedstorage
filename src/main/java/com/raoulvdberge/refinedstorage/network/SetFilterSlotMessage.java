@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.legacy.LegacyFilterSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,7 +43,12 @@ public class SetFilterSlotMessage {
                             Slot slot = container.getSlot(message.containerSlot);
 
                             if (slot instanceof FilterSlot || slot instanceof LegacyFilterSlot) {
-                                slot.putStack(message.stack);
+                                // Avoid resetting allowed tag list in the pattern grid.
+                                if (API.instance().getComparer().isEqualNoQuantity(slot.getStack(), message.stack)) {
+                                    slot.getStack().setCount(message.stack.getCount());
+                                } else {
+                                    slot.putStack(message.stack);
+                                }
                             }
                         }
                     }

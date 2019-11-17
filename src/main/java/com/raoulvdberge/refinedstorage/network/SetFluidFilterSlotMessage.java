@@ -1,5 +1,7 @@
 package com.raoulvdberge.refinedstorage.network;
 
+import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
@@ -40,7 +42,14 @@ public class SetFluidFilterSlotMessage {
                         Slot slot = container.getSlot(message.containerSlot);
 
                         if (slot instanceof FluidFilterSlot) {
-                            ((FluidFilterSlot) slot).getFluidInventory().setFluid(slot.getSlotIndex(), message.stack);
+                            FluidFilterSlot fluidFilterSlot = (FluidFilterSlot) slot;
+
+                            // Avoid resetting allowed tag list in the pattern grid.
+                            if (API.instance().getComparer().isEqual(fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()), message.stack, IComparer.COMPARE_NBT)) {
+                                fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()).setAmount(message.stack.getAmount());
+                            } else {
+                                fluidFilterSlot.getFluidInventory().setFluid(slot.getSlotIndex(), message.stack);
+                            }
                         }
                     }
                 }

@@ -187,7 +187,7 @@ public abstract class BaseContainer extends Container {
                 FluidStack actual = slot.getFluidInventory().getFluid(slot.getSlotIndex());
 
                 if (!API.instance().getComparer().isEqual(cached, actual, IComparer.COMPARE_QUANTITY | IComparer.COMPARE_NBT)) {
-                    this.fluids.set(i, actual);
+                    this.fluids.set(i, actual.copy());
 
                     RS.NETWORK_HANDLER.sendTo((ServerPlayerEntity) getPlayer(), new FluidFilterSlotUpdateMessage(slot.slotNumber, actual));
                 }
