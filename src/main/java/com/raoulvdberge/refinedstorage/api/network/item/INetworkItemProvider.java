@@ -15,8 +15,9 @@ public interface INetworkItemProvider {
      * @param handler the network item handler
      * @param player  the player
      * @param stack   the stack
+     * @param slotId  the slot id, if applicable, otherwise -1
      * @return the network item
      */
     @Nonnull
-    INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack);
+    INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId);
 }

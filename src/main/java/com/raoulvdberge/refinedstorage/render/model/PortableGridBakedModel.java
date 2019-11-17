@@ -103,7 +103,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         @Nullable
         @Override
         public IBakedModel getModelWithOverrides(IBakedModel model, ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
-            PortableGrid portableGrid = new PortableGrid(null, stack);
+            PortableGrid portableGrid = new PortableGrid(null, stack, -1);
 
             IBakedModel myDisk = null;
 

@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.network.grid;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -18,10 +17,11 @@ public interface IGridFactory {
      *
      * @param player the player
      * @param stack  the stack
+     * @param slotId the slot id, if applicable, otherwise -1
      * @return the grid, or null if a problem occurred
      */
     @Nullable
-    IGrid createFromStack(PlayerEntity player, ItemStack stack);
+    IGrid createFromStack(PlayerEntity player, ItemStack stack, int slotId);
 
     /**
      * Creates a grid from a block. Used when {@link #getType()} is BLOCK.

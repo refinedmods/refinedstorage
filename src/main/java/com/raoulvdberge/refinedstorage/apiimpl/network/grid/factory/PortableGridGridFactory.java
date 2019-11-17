@@ -19,8 +19,8 @@ public class PortableGridGridFactory implements IGridFactory {
 
     @Nullable
     @Override
-    public IGrid createFromStack(PlayerEntity player, ItemStack stack) {
-        PortableGrid portableGrid = new PortableGrid(player, stack);
+    public IGrid createFromStack(PlayerEntity player, ItemStack stack, int slotId) {
+        PortableGrid portableGrid = new PortableGrid(player, stack, slotId);
 
         portableGrid.onOpen();
 

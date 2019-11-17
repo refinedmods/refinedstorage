@@ -6,7 +6,6 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftin
 import com.raoulvdberge.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
-import com.raoulvdberge.refinedstorage.tile.craftingmonitor.WirelessCraftingMonitor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
@@ -87,8 +86,8 @@ public class CraftingMonitorContainer extends BaseContainer implements ICrafting
     }
 
     @Override
-    protected boolean isHeldItemDisabled() {
-        return craftingMonitor instanceof WirelessCraftingMonitor;
+    protected int getDisabledSlotNumber() {
+        return craftingMonitor.getSlotId();
     }
 
     @Override

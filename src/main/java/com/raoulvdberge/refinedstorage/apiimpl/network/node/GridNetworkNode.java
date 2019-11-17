@@ -409,6 +409,11 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     }
 
     @Override
+    public int getSlotId() {
+        return -1;
+    }
+
+    @Override
     public void onCrafted(PlayerEntity player) {
         API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player);
     }

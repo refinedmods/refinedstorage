@@ -33,16 +33,16 @@ public class GridManager implements IGridManager {
 
     @Override
     public void openGrid(ResourceLocation id, ServerPlayerEntity player, BlockPos pos) {
-        openGrid(id, player, null, pos);
+        openGrid(id, player, null, pos, -1);
     }
 
     @Override
-    public void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack) {
-        openGrid(id, player, stack, null);
+    public void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack, int slotId) {
+        openGrid(id, player, stack, null, slotId);
     }
 
-    private void openGrid(ResourceLocation id, ServerPlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos) {
-        Pair<IGrid, TileEntity> grid = createGrid(id, player, stack, pos);
+    private void openGrid(ResourceLocation id, ServerPlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId) {
+        Pair<IGrid, TileEntity> grid = createGrid(id, player, stack, pos, slotId);
         if (grid == null) {
             return;
         }
@@ -59,12 +59,14 @@ public class GridManager implements IGridManager {
             if (stack != null) {
                 buf.writeItemStack(stack);
             }
+
+            buf.writeInt(slotId);
         });
     }
 
     @Override
     @Nullable
-    public Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos) {
+    public Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId) {
         IGridFactory factory = get(id);
 
         if (factory == null) {
@@ -76,7 +78,7 @@ public class GridManager implements IGridManager {
 
         switch (factory.getType()) {
             case STACK:
-                grid = factory.createFromStack(player, stack);
+                grid = factory.createFromStack(player, stack, slotId);
                 break;
             case BLOCK:
                 grid = factory.createFromBlock(player, pos);

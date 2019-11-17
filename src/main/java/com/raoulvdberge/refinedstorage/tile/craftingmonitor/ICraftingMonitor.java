@@ -37,4 +37,6 @@ public interface ICraftingMonitor {
     void onTabSelectionChanged(Optional<UUID> taskId);
 
     void onTabPageChanged(int page);
+
+    int getSlotId();
 }

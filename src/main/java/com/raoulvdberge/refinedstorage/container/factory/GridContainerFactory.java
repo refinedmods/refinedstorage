@@ -29,7 +29,9 @@ public class GridContainerFactory implements IContainerFactory<GridContainer> {
             stack = data.readItemStack();
         }
 
-        Pair<IGrid, TileEntity> grid = API.instance().getGridManager().createGrid(id, inv.player, stack, pos);
+        int slotId = data.readInt();
+
+        Pair<IGrid, TileEntity> grid = API.instance().getGridManager().createGrid(id, inv.player, stack, pos, slotId);
 
         return new GridContainer(grid.getLeft(), grid.getRight() instanceof BaseTile ? (BaseTile) grid.getRight() : null, inv.player, windowId);
     }

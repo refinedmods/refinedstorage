@@ -19,7 +19,7 @@ public class PortableGridBlockGridFactory implements IGridFactory {
 
     @Override
     @Nullable
-    public IGrid createFromStack(PlayerEntity player, ItemStack stack) {
+    public IGrid createFromStack(PlayerEntity player, ItemStack stack, int slotId) {
         return null;
     }
 

@@ -34,8 +34,8 @@ public class WirelessFluidGridItem extends NetworkItem {
 
     @Nonnull
     @Override
-    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack) {
-        return new WirelessFluidGridNetworkItem(handler, player, stack);
+    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
+        return new WirelessFluidGridNetworkItem(handler, player, stack, slotId);
     }
 
     public static int getSortingType(ItemStack stack) {

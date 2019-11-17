@@ -139,4 +139,9 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
             TileDataManager.setParameter(CraftingMonitorTile.TAB_PAGE, page);
         }
     }
+
+    @Override
+    public int getSlotId() {
+        return -1;
+    }
 }

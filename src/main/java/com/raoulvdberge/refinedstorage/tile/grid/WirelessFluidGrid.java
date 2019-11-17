@@ -41,6 +41,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     private final MinecraftServer server;
     private final DimensionType nodeDimension;
     private final BlockPos nodePos;
+    private final int slotId;
 
     private int sortingType;
     private int sortingDirection;
@@ -60,11 +61,12 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
             StackUtils.writeItems(handler, 0, stack.getTag());
         }));
 
-    public WirelessFluidGrid(ItemStack stack, @Nullable MinecraftServer server) {
+    public WirelessFluidGrid(ItemStack stack, @Nullable MinecraftServer server, int slotId) {
         this.stack = stack;
         this.server = server;
         this.nodeDimension = WirelessFluidGridItem.getDimension(stack);
         this.nodePos = new BlockPos(WirelessFluidGridItem.getX(stack), WirelessFluidGridItem.getY(stack), WirelessFluidGridItem.getZ(stack));
+        this.slotId = slotId;
 
         this.sortingType = WirelessFluidGridItem.getSortingType(stack);
         this.sortingDirection = WirelessFluidGridItem.getSortingDirection(stack);
@@ -291,6 +293,11 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     @Override
     public boolean isActive() {
         return true;
+    }
+
+    @Override
+    public int getSlotId() {
+        return slotId;
     }
 
     @Override

@@ -10,6 +10,7 @@
 - Fixed External Storage not refreshing when the storage is broken or replaced (raoulvdberge)
 - Fixed delay in block update when placing a cable block (raoulvdberge)
 - Fixed holder of cable blocks sometimes conflicting with a cable connection while rendering (raoulvdberge)
+- Fixed being able to move wireless items in inventory when using a keybinding to open (raoulvdberge)
 
 ### 1.7
 NOTE: This is an alpha release. Bugs may happen. Remember to take backups.

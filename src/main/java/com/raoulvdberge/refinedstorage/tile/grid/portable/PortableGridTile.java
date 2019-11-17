@@ -536,6 +536,11 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     }
 
     @Override
+    public int getSlotId() {
+        return -1;
+    }
+
+    @Override
     @Nullable
     public IStorageCache getCache() {
         return cache;

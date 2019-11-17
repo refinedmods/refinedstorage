@@ -42,8 +42,9 @@ public interface IGridManager {
      * @param id     the grid factory id
      * @param player the player
      * @param stack  the stack
+     * @param slotId the slot id, if applicable, otherwise -1
      */
-    void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack);
+    void openGrid(ResourceLocation id, ServerPlayerEntity player, ItemStack stack, int slotId);
 
     /**
      * Creates a grid.
@@ -52,8 +53,9 @@ public interface IGridManager {
      * @param player the player
      * @param stack  the stack, if there is one
      * @param pos    the block position, if there is one
+     * @param slotId the slot id, if applicable, otherwise -1
      * @return a grid, or null if an error has occurred
      */
     @Nullable
-    Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos);
+    Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId);
 }

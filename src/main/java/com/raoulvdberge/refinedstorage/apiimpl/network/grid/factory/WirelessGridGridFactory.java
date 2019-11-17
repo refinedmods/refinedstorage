@@ -19,8 +19,8 @@ public class WirelessGridGridFactory implements IGridFactory {
 
     @Nullable
     @Override
-    public IGrid createFromStack(PlayerEntity player, ItemStack stack) {
-        return new WirelessGrid(stack, player.getServer());
+    public IGrid createFromStack(PlayerEntity player, ItemStack stack, int slotId) {
+        return new WirelessGrid(stack, player.getServer(), slotId);
     }
 
     @Nullable

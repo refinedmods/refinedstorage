@@ -71,6 +71,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     @Nullable
     private PlayerEntity player;
     private ItemStack stack;
+    private int slotId;
 
     private int sortingType;
     private int sortingDirection;
@@ -135,9 +136,10 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             }
         }));
 
-    public PortableGrid(@Nullable PlayerEntity player, ItemStack stack) {
+    public PortableGrid(@Nullable PlayerEntity player, ItemStack stack, int slotId) {
         this.player = player;
         this.stack = stack;
+        this.slotId = slotId;
 
         this.sortingType = WirelessGridItem.getSortingType(stack);
         this.sortingDirection = WirelessGridItem.getSortingDirection(stack);
@@ -433,6 +435,11 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
         }
 
         return hasDisk();
+    }
+
+    @Override
+    public int getSlotId() {
+        return slotId;
     }
 
     @Nullable

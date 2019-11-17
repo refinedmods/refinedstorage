@@ -34,8 +34,8 @@ public class WirelessGridItem extends NetworkItem {
 
     @Override
     @Nonnull
-    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack) {
-        return new WirelessGridNetworkItem(handler, player, stack);
+    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
+        return new WirelessGridNetworkItem(handler, player, stack, slotId);
     }
 
     public static int getViewType(ItemStack stack) {

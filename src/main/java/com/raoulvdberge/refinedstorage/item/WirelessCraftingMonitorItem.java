@@ -38,16 +38,8 @@ public class WirelessCraftingMonitorItem extends NetworkItem {
 
     @Nonnull
     @Override
-    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack) {
-        int invIndex = 0;
-        for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-            if (player.inventory.getStackInSlot(i) == stack) {
-                invIndex = i;
-                break;
-            }
-        }
-
-        return new WirelessCraftingMonitorNetworkItem(handler, player, stack, invIndex);
+    public INetworkItem provide(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
+        return new WirelessCraftingMonitorNetworkItem(handler, player, stack, slotId);
     }
 
     public static Optional<UUID> getTabSelected(ItemStack stack) {

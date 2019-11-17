@@ -33,10 +33,12 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     private BlockPos nodePos;
     private int tabPage;
     private Optional<UUID> tabSelected;
+    private int slotId;
 
-    public WirelessCraftingMonitor(ItemStack stack, @Nullable MinecraftServer server) {
+    public WirelessCraftingMonitor(ItemStack stack, @Nullable MinecraftServer server, int slotId) {
         this.stack = stack;
         this.server = server;
+        this.slotId = slotId;
 
         this.nodeDimension = WirelessCraftingMonitorItem.getDimension(stack);
         this.nodePos = new BlockPos(WirelessCraftingMonitorItem.getX(stack), WirelessCraftingMonitorItem.getY(stack), WirelessCraftingMonitorItem.getZ(stack));
@@ -150,5 +152,10 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
 
             RS.NETWORK_HANDLER.sendToServer(new WirelessCraftingMonitorSettingsUpdateMessage(tabSelected, tabPage));
         }
+    }
+
+    @Override
+    public int getSlotId() {
+        return slotId;
     }
 }

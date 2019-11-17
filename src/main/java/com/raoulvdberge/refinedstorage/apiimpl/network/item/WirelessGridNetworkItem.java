@@ -20,11 +20,13 @@ public class WirelessGridNetworkItem implements INetworkItem {
     private INetworkItemManager handler;
     private PlayerEntity player;
     private ItemStack stack;
+    private int slotId;
 
-    public WirelessGridNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack) {
+    public WirelessGridNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
+        this.slotId = slotId;
     }
 
     @Override
@@ -41,7 +43,7 @@ public class WirelessGridNetworkItem implements INetworkItem {
             energy != null &&
             energy.getEnergyStored() <= RS.SERVER_CONFIG.getWirelessGrid().getOpenUsage()) {
             sendOutOfEnergyMessage();
-            
+
             return false;
         }
 
@@ -51,7 +53,7 @@ public class WirelessGridNetworkItem implements INetworkItem {
             return false;
         }
 
-        API.instance().getGridManager().openGrid(WirelessGridGridFactory.ID, (ServerPlayerEntity) player, stack);
+        API.instance().getGridManager().openGrid(WirelessGridGridFactory.ID, (ServerPlayerEntity) player, stack, slotId);
 
         drainEnergy(RS.SERVER_CONFIG.getWirelessGrid().getOpenUsage());
 
