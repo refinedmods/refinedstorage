@@ -8,6 +8,7 @@
 - Grids now do not sort if you interact with it while holding shift (Darkere)
 - Fixed Pattern Grid causing world hanging on load (raoulvdberge)
 - Fixed External Storage not refreshing when the storage is broken or replaced (raoulvdberge)
+- Fixed delay in block update when placing a cable block (raoulvdberge)
 
 ### 1.7
 NOTE: This is an alpha release. Bugs may happen. Remember to take backups.

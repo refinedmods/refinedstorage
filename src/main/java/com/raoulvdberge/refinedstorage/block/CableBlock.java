@@ -17,7 +17,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 
 import javax.annotation.Nullable;
 
@@ -57,10 +57,8 @@ public class CableBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, block, fromPos, isMoving);
-
-        world.setBlockState(pos, getState(state, world, pos));
+    public BlockState updatePostPlacement(BlockState state, Direction dir, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
+        return getState(state, world, pos);
     }
 
     @Override
@@ -101,7 +99,7 @@ public class CableBlock extends NetworkNodeBlock {
         return getState(getDefaultState(), ctx.getWorld(), ctx.getPos());
     }
 
-    private boolean hasNode(World world, BlockPos pos, BlockState state, Direction direction) {
+    private boolean hasNode(IWorld world, BlockPos pos, BlockState state, Direction direction) {
         if (getDirection() != BlockDirection.NONE && state.get(getDirection().getProperty()).getOpposite() == direction) {
             return false;
         }
@@ -114,7 +112,7 @@ public class CableBlock extends NetworkNodeBlock {
         return tile.getCapability(NetworkNodeProxyCapability.NETWORK_NODE_PROXY_CAPABILITY, direction).isPresent();
     }
 
-    private BlockState getState(BlockState currentState, World world, BlockPos pos) {
+    private BlockState getState(BlockState currentState, IWorld world, BlockPos pos) {
         boolean north = hasNode(world, pos.offset(Direction.NORTH), currentState, Direction.SOUTH);
         boolean east = hasNode(world, pos.offset(Direction.EAST), currentState, Direction.WEST);
         boolean south = hasNode(world, pos.offset(Direction.SOUTH), currentState, Direction.NORTH);
