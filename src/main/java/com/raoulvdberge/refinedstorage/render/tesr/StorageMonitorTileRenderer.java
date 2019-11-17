@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonitorTile> {
     @Override
+    @SuppressWarnings("deprecation")
     public void render(StorageMonitorTile tile, double x, double y, double z, float partialTicks, int destroyStage) {
         setLightmapDisabled(true);
 

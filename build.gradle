@@ -88,7 +88,7 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.70'
+    minecraft 'net.minecraftforge:forge:1.14.4-28.1.90'
     compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11:api")
     compileOnly 'mouse-tweaks:MouseTweaks:2.12:mc1.14.4'
     runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.14.4:10.1.3')
