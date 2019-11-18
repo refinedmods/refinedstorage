@@ -194,6 +194,8 @@ public abstract class BaseContainer extends Container {
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
 
+        // Prevent sending changes about a tile that doesn't exist anymore.
+        // This prevents crashes when sending network node data (network node would crash because it no longer exists and we're querying it from the various tile data parameters).
         if (listener != null && isTileStillThere()) {
             listener.detectAndSendChanges();
         }
