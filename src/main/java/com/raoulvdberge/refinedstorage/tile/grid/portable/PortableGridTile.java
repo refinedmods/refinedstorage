@@ -47,6 +47,7 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
@@ -519,7 +520,13 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     @Override
     public boolean isActive() {
         if (world.isRemote) {
-            return world.getBlockState(pos).get(PortableGridBlock.ACTIVE);
+            BlockState state = world.getBlockState(pos);
+
+            if (state.getBlock() instanceof PortableGridBlock) {
+                return state.get(PortableGridBlock.ACTIVE);
+            }
+
+            return false;
         }
 
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() &&

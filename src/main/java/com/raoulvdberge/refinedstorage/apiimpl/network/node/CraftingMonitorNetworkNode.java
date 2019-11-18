@@ -3,11 +3,13 @@ package com.raoulvdberge.refinedstorage.apiimpl.network.node;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingManager;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.raoulvdberge.refinedstorage.block.CraftingMonitorBlock;
 import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.CraftingMonitorTile;
 import com.raoulvdberge.refinedstorage.tile.craftingmonitor.ICraftingMonitor;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -76,7 +78,13 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
     @Override
     public boolean isActive() {
-        return world.getBlockState(pos).get(NetworkNodeBlock.CONNECTED);
+        BlockState state = world.getBlockState(pos);
+
+        if (state.getBlock() instanceof CraftingMonitorBlock) {
+            return state.get(NetworkNodeBlock.CONNECTED);
+        }
+
+        return false;
     }
 
     @Override

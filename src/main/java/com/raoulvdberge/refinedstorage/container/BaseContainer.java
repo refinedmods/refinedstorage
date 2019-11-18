@@ -155,6 +155,15 @@ public abstract class BaseContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
+        return isTileStillThere();
+    }
+
+    private boolean isTileStillThere() {
+        if (tile != null) {
+            // @Volatile: Logic from LockableLootTileEntity#isUsableByPlayer
+            return tile.getWorld().getTileEntity(tile.getPos()) == tile;
+        }
+
         return true;
     }
 
@@ -185,7 +194,7 @@ public abstract class BaseContainer extends Container {
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
 
-        if (listener != null) {
+        if (listener != null && isTileStillThere()) {
             listener.detectAndSendChanges();
         }
 

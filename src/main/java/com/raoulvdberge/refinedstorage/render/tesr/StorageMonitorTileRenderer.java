@@ -3,7 +3,9 @@ package com.raoulvdberge.refinedstorage.render.tesr;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.block.StorageMonitorBlock;
 import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -41,7 +43,12 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             }
         }
 
-        Direction direction = tile.getWorld().getBlockState(tile.getPos()).get(RSBlocks.STORAGE_MONITOR.getDirection().getProperty());
+        Direction direction = Direction.NORTH;
+
+        BlockState state = tile.getWorld().getBlockState(tile.getPos());
+        if (state.getBlock() instanceof StorageMonitorBlock) {
+            direction = state.get(RSBlocks.STORAGE_MONITOR.getDirection().getProperty());
+        }
 
         if (direction == Direction.NORTH) {
             disX = 0.5F;

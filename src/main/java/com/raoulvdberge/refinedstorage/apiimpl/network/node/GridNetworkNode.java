@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.AllowedTagList;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
+import com.raoulvdberge.refinedstorage.block.GridBlock;
 import com.raoulvdberge.refinedstorage.block.NetworkNodeBlock;
 import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
@@ -27,6 +28,7 @@ import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
 import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.GridUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
@@ -405,7 +407,13 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     @Override
     public boolean isActive() {
-        return world.getBlockState(pos).get(NetworkNodeBlock.CONNECTED);
+        BlockState state = world.getBlockState(pos);
+
+        if (state.getBlock() instanceof GridBlock) {
+            return state.get(NetworkNodeBlock.CONNECTED);
+        }
+
+        return false;
     }
 
     @Override
