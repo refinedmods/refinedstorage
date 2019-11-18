@@ -3,7 +3,6 @@ package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
-import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,8 +14,8 @@ class Crafting extends Craft {
     private static final String NBT_RECIPE = "Recipe";
     private NonNullList<ItemStack> recipe;
 
-    public Crafting(int quantity, ICraftingPattern pattern, NonNullList<ItemStack> recipe, IStackList<ItemStack> itemsToUse, boolean root) {
-        super(quantity, pattern, root, itemsToUse);
+    public Crafting(int quantity, ICraftingPattern pattern, boolean root, NonNullList<ItemStack> recipe) {
+        super(quantity, pattern, root);
         this.recipe = recipe;
     }
 
