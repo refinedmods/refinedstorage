@@ -13,9 +13,10 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.LogManager;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public abstract class Craft {
@@ -29,8 +30,8 @@ public abstract class Craft {
     private boolean root;
     protected int quantity;
     private ICraftingPattern pattern;
-    private List<IStackList<ItemStack>> itemsToUse = new ArrayList<>();
-    private List<Integer> neededPerCraft = new ArrayList<>();
+    private Map<Integer, IStackList<ItemStack>> itemsToUse = new LinkedHashMap<>();
+    private Map<Integer, Integer> neededPerCraft = new LinkedHashMap<>();
 
     public Craft(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         this.quantity = tag.getInt(NBT_QUANTITY);
@@ -38,9 +39,12 @@ public abstract class Craft {
         this.root = tag.getBoolean(NBT_ROOT);
         ListNBT list = tag.getList(NBT_ITEMS_TO_USE, Constants.NBT.TAG_LIST);
         for (int i = 0; i < list.size(); i++) {
-            this.itemsToUse.add(CraftingTask.readItemStackList(list.getList(i)));
+            this.itemsToUse.put(i, CraftingTask.readItemStackList(list.getList(i)));
         }
-        this.neededPerCraft = Ints.asList(tag.getIntArray(NBT_NEEDED_PER_CRAFT));
+        List<Integer> perCraftList = Ints.asList(tag.getIntArray(NBT_NEEDED_PER_CRAFT));
+        for (int i = 0; i < perCraftList.size(); i++) {
+            neededPerCraft.put(i, perCraftList.get(i));
+        }
     }
 
     public Craft(ICraftingPattern pattern, boolean root) {
@@ -108,11 +112,11 @@ public abstract class Craft {
     }
 
     public void addItemsToUse(int ingredientNumber, ItemStack stack, int size, int perCraft) {
-        if (neededPerCraft.size() <= ingredientNumber) {
-            neededPerCraft.add(perCraft);
+        if (!neededPerCraft.containsKey(ingredientNumber)) {
+            neededPerCraft.put(ingredientNumber, perCraft);
         }
-        if (itemsToUse.size() <= ingredientNumber) {
-            itemsToUse.add(API.instance().createItemStackList());
+        if (!itemsToUse.containsKey(ingredientNumber)) {
+            itemsToUse.put(ingredientNumber, API.instance().createItemStackList());
         }
         itemsToUse.get(ingredientNumber).add(stack, size);
     }
@@ -124,11 +128,11 @@ public abstract class Craft {
         tag.putBoolean(NBT_ROOT, root);
         tag.put(NBT_PATTERN, CraftingTask.writePatternToNbt(pattern));
         ListNBT list = new ListNBT();
-        for (IStackList<ItemStack> stackList : itemsToUse) {
+        for (IStackList<ItemStack> stackList : itemsToUse.values()) {
             list.add(CraftingTask.writeItemStackList(stackList));
         }
         tag.put(NBT_ITEMS_TO_USE, list);
-        tag.putIntArray(NBT_NEEDED_PER_CRAFT, Ints.toArray(neededPerCraft));
+        tag.putIntArray(NBT_NEEDED_PER_CRAFT, Ints.toArray(neededPerCraft.values()));
 
 
         return tag;
