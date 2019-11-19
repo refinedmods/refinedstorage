@@ -62,7 +62,7 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_MISSING = "Missing";
     private static final String NBT_MISSING_FLUIDS = "MissingFluids";
     private static final String NBT_TOTAL_STEPS = "TotalSteps";
-
+    private static final String NBT_CURRENT_STEP = "CurrentStep";
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
 
@@ -79,6 +79,7 @@ public class CraftingTask implements ICraftingTask {
     private long calculationStarted = -1;
     private long executionStarted = -1;
     private int totalSteps;
+    private int currentstep;
     private Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
     private IStorageDisk<ItemStack> internalStorage;
@@ -118,10 +119,8 @@ public class CraftingTask implements ICraftingTask {
         this.ticks = tag.getInt(NBT_TICKS);
         this.id = tag.getUniqueId(NBT_ID);
         this.executionStarted = tag.getLong(NBT_EXECUTION_STARTED);
-
-        if (tag.contains(NBT_TOTAL_STEPS)) {
-            this.totalSteps = tag.getInt(NBT_TOTAL_STEPS);
-        }
+        this.totalSteps = tag.getInt(NBT_TOTAL_STEPS);
+        this.currentstep = tag.getInt(NBT_CURRENT_STEP);
 
         ItemStorageDiskFactory factoryItem = new ItemStorageDiskFactory();
         FluidStorageDiskFactory factoryFluid = new FluidStorageDiskFactory();
@@ -155,6 +154,7 @@ public class CraftingTask implements ICraftingTask {
         tag.put(NBT_TO_EXTRACT_INITIAL, writeItemStackList(toExtractInitial));
         tag.put(NBT_TO_EXTRACT_INITIAL_FLUIDS, writeFluidStackList(toExtractInitialFluids));
         tag.putInt(NBT_TOTAL_STEPS, totalSteps);
+        tag.putInt(NBT_CURRENT_STEP, currentstep);
 
         ListNBT craftingList = new ListNBT();
         for (Craft craft : this.crafts.values()) {
@@ -692,8 +692,10 @@ public class CraftingTask implements ICraftingTask {
                         }
 
                         c.next();
-
+                        currentstep++;
                         network.getCraftingManager().onTaskChanged();
+                    } else {
+                        break;
                     }
                 }
             }
@@ -702,17 +704,17 @@ public class CraftingTask implements ICraftingTask {
 
     private void updateProcessing(Processing p) {
 
-
         if (p.getState() == ProcessingState.PROCESSED) {
             toRemove.add(p);
             network.getCraftingManager().onTaskChanged();
-
             return;
         }
+        //These are for handling multiple crafters with differing states
+        boolean allLocked = true;
+        boolean allNull = true;
+        boolean allRejected = true;
 
-        if (p.getState() == ProcessingState.EXTRACTED_ALL) {
-            return;
-        }
+        ProcessingState originalState = p.getState();
 
         for (ICraftingPatternContainer container : network.getCraftingManager().getAllContainer(p.getPattern())) {
             int interval = container.getUpdateInterval();
@@ -725,67 +727,78 @@ public class CraftingTask implements ICraftingTask {
 
                 for (int i = 0; i < container.getMaximumSuccessfulCraftingUpdates(); i++) {
                     if (p.getQuantity() <= 0) {
-                        p.setState(ProcessingState.EXTRACTED_ALL);
                         return;
                     }
 
-                    ProcessingState originalState = p.getState();
-
                     if (container.isLocked()) {
-                        p.setState(ProcessingState.LOCKED);
-                    } else if (p.hasItems() && container.getConnectedInventory() == null
-                            || p.hasFluids() && container.getConnectedFluidInventory() == null) {
-                        p.setState(ProcessingState.MACHINE_NONE);
+                        if (allLocked) {
+                            p.setState(ProcessingState.LOCKED);
+                        }
+                        break;
                     } else {
-
-                        boolean hasAll = false;
-                        IStackList<ItemStack> extractedItems;
-                        IStackList<FluidStack> extractedFluids = null;
-
-                        extractedItems = extractFromInternalItemStorage(p.getItemsToUse(true).getStacks(), this.internalStorage, Action.SIMULATE);
-                        if (extractedItems != null) {
-                            extractedFluids = extractFromInternalFluidStorage(p.getFluidsToUse().getStacks(), this.internalFluidStorage, Action.SIMULATE);
-                            if (extractedFluids != null) {
-                                hasAll = true;
-                            }
+                        allLocked = false;
+                    }
+                    if (p.hasItems() && container.getConnectedInventory() == null
+                            || p.hasFluids() && container.getConnectedFluidInventory() == null) {
+                        if (allNull) {
+                            p.setState(ProcessingState.MACHINE_NONE);
                         }
+                        break;
+                    } else {
+                        allNull = false;
+                    }
 
-                        boolean canInsert = false;
-                        if (hasAll) {
-                            canInsert = insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
-                            if (canInsert) {
-                                canInsert = insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
-                            }
+                    boolean hasAll = false;
+                    IStackList<ItemStack> extractedItems;
+                    IStackList<FluidStack> extractedFluids = null;
+
+                    extractedItems = extractFromInternalItemStorage(p.getItemsToUse(true).getStacks(), this.internalStorage, Action.SIMULATE);
+                    if (extractedItems != null) {
+                        extractedFluids = extractFromInternalFluidStorage(p.getFluidsToUse().getStacks(), this.internalFluidStorage, Action.SIMULATE);
+                        if (extractedFluids != null) {
+                            hasAll = true;
                         }
+                    }
 
-                        if (hasAll && !canInsert) {
+                    boolean canInsert = false;
+                    if (hasAll) {
+                        canInsert = insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.SIMULATE);
+                        if (canInsert) {
+                            canInsert = insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.SIMULATE);
+                        }
+                    }
+
+                    if (hasAll && !canInsert) {
+                        if (allRejected) {
                             p.setState(ProcessingState.MACHINE_DOES_NOT_ACCEPT);
                         }
-
-                        if (hasAll && canInsert) {
-                            p.setState(ProcessingState.READY);
-
-                            extractFromInternalItemStorage(p.getItemsToUse(false).getStacks(), this.internalStorage, Action.PERFORM);
-                            extractFromInternalFluidStorage(p.getFluidsToUse().getStacks(), this.internalFluidStorage, Action.PERFORM);
-
-                            insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
-                            insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
-
-                            p.next();
-
-                            container.onUsedForProcessing();
-
-                        }
+                        break;
+                    } else {
+                        allRejected = false;
                     }
 
-                    //State changed or successful insertion
-                    if (originalState != p.getState() || p.getState() == ProcessingState.READY) {
+                    if (hasAll && canInsert) {
+                        p.setState(ProcessingState.READY);
+
+                        extractFromInternalItemStorage(p.getItemsToUse(false).getStacks(), this.internalStorage, Action.PERFORM);
+                        extractFromInternalFluidStorage(p.getFluidsToUse().getStacks(), this.internalFluidStorage, Action.PERFORM);
+
+                        insertIntoInventory(container.getConnectedInventory(), extractedItems.getStacks(), Action.PERFORM);
+                        insertIntoTank(container.getConnectedFluidInventory(), extractedFluids.getStacks(), Action.PERFORM);
+
+                        p.next();
+                        currentstep++;
                         network.getCraftingManager().onTaskChanged();
+                        container.onUsedForProcessing();
+
                     }
                 }
+
             }
         }
-
+        if (originalState != p.getState()) {
+            network.getCraftingManager().onTaskChanged();
+        }
     }
 
     private static IStackList<ItemStack> extractFromInternalItemStorage(Collection<StackListEntry<ItemStack>> stacks, IStorageDisk<ItemStack> storage, Action action) {
@@ -887,9 +900,7 @@ public class CraftingTask implements ICraftingTask {
         if (totalSteps == 0) {
             return 0;
         }
-
-        //TODO return 100 - (int) (((float) (crafting.size() + processing.size()) / (float) totalSteps) * 100F);
-        return 0;
+        return (int) ((float) currentstep * 100 / totalSteps);
     }
 
     @Override
@@ -903,7 +914,7 @@ public class CraftingTask implements ICraftingTask {
         if (executionStarted == -1) {
             executionStarted = System.currentTimeMillis();
 
-            //TODO   totalSteps = crafting.size() + processing.size();
+            crafts.values().forEach(c -> totalSteps += c.getQuantity());
         }
 
         ++ticks;
@@ -941,6 +952,7 @@ public class CraftingTask implements ICraftingTask {
             for (Craft craft : toRemove) {
                 crafts.remove(craft.getPattern());
             }
+            toRemove.clear();
 
             return false;
         }
@@ -1009,16 +1021,16 @@ public class CraftingTask implements ICraftingTask {
 
                     size -= needed;
 
-                    if (p.updateFinished()) { //only update if finished changes
-                        network.getCraftingManager().onTaskChanged();
-                    }
-
                     if (!p.isRoot()) {
                         internalStorage.insert(stack, needed, Action.PERFORM);
                     } else {
                         ItemStack remainder = network.insertItem(stack, needed, Action.PERFORM);
 
                         internalStorage.insert(remainder, remainder.getCount(), Action.PERFORM);
+                    }
+
+                    if (p.updateFinished()) { //only update if finished changes
+                        network.getCraftingManager().onTaskChanged();
                     }
 
                     if (size == 0) {
@@ -1049,16 +1061,16 @@ public class CraftingTask implements ICraftingTask {
 
                     size -= needed;
 
-                    if (p.updateFinished()) { //only update if finished changees
-                        network.getCraftingManager().onTaskChanged();
-                    }
-
                     if (!p.isRoot()) {
                         internalFluidStorage.insert(stack, needed, Action.PERFORM);
                     } else {
                         FluidStack remainder = network.insertFluid(stack, needed, Action.PERFORM);
 
                         internalFluidStorage.insert(remainder, remainder.getAmount(), Action.PERFORM);
+                    }
+
+                    if (p.updateFinished()) { //only update if finished changees
+                        network.getCraftingManager().onTaskChanged();
                     }
 
                     if (size == 0) {
@@ -1131,8 +1143,9 @@ public class CraftingTask implements ICraftingTask {
 
 
                 for (StackListEntry<ItemStack> receive : p.getItemsToReceive().getStacks()) {
-                    if (p.getScheduled() > 0) {
-                        ICraftingMonitorElement element = new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, receive.getStack().getCount() * p.getScheduled(), 0);
+                    int count = p.getNeeded(receive.getStack());
+                    if (count > 0) {
+                        ICraftingMonitorElement element = new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0);
 
                         if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_item");
@@ -1172,9 +1185,9 @@ public class CraftingTask implements ICraftingTask {
                 }
 
                 for (StackListEntry<FluidStack> receive : p.getFluidsToReceive().getStacks()) {
-                    if (p.getScheduled() > 0) {
-
-                        ICraftingMonitorElement element = new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, receive.getStack().getAmount() * p.getScheduled(), 0);
+                    int count = p.getNeeded(receive.getStack());
+                    if (count > 0) {
+                        ICraftingMonitorElement element = new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0);
 
                         if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_fluid");

@@ -111,10 +111,6 @@ class Processing extends Craft {
         return totalQuantity - quantity - finished;
     }
 
-    public int getScheduled() {
-        return totalQuantity - finished;
-    }
-
     void addFinished(ItemStack received, int size) {
         itemsReceived.add(received, size);
 
