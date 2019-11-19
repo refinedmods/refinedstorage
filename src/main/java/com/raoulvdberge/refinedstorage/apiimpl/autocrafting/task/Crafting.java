@@ -14,12 +14,12 @@ class Crafting extends Craft {
     private static final String NBT_RECIPE = "Recipe";
     private NonNullList<ItemStack> recipe;
 
-    public Crafting(ICraftingPattern pattern, boolean root, NonNullList<ItemStack> recipe) {
+    Crafting(ICraftingPattern pattern, boolean root, NonNullList<ItemStack> recipe) {
         super(pattern, root);
         this.recipe = recipe;
     }
 
-    public Crafting(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    Crafting(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
         this.recipe = NonNullList.create();
         ListNBT tookList = tag.getList(NBT_RECIPE, Constants.NBT.TAG_COMPOUND);
@@ -31,11 +31,11 @@ class Crafting extends Craft {
         }
     }
 
-    public NonNullList<ItemStack> getRecipe() {
+    NonNullList<ItemStack> getRecipe() {
         return recipe;
     }
 
-    public CompoundNBT writeToNbt() {
+    CompoundNBT writeToNbt() {
         CompoundNBT tag = super.writeToNbt();
 
         ListNBT tookList = new ListNBT();

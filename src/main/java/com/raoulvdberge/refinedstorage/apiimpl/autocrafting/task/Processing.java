@@ -32,11 +32,11 @@ class Processing extends Craft {
     private int finished;
     private int totalQuantity;
 
-    public Processing(ICraftingPattern pattern, boolean root) {
+    Processing(ICraftingPattern pattern, boolean root) {
         super(pattern, root);
     }
 
-    public Processing(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    Processing(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         super(network, tag);
         this.itemsToReceive = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
         this.fluidsToReceive = CraftingTask.readFluidStackList(tag.getList(NBT_FLUIDS_TO_RECEIVE, Constants.NBT.TAG_COMPOUND));
@@ -48,41 +48,9 @@ class Processing extends Craft {
         this.itemsToDisplay = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_DISPLAY, Constants.NBT.TAG_COMPOUND));
     }
 
-    public void finishCalculation() {
+    void finishCalculation() {
         this.totalQuantity = quantity;
         updateItemsToDisplay();
-    }
-
-    public IStackList<ItemStack> getItemsToReceive() {
-        return itemsToReceive;
-    }
-
-    public IStackList<FluidStack> getFluidsToReceive() {
-        return fluidsToReceive;
-    }
-
-    public IStackList<ItemStack> getItemsToDisplay() {
-        return itemsToDisplay;
-    }
-
-    public void updateItemsToDisplay() {
-        itemsToDisplay = getItemsToUse(true);
-    }
-
-    IStackList<FluidStack> getFluidsToUse() {
-        return fluidsToUse;
-    }
-
-    public void addFluidsToUse(FluidStack stack) {
-        fluidsToUse.add(stack);
-    }
-
-    public void addItemsToReceive(ItemStack stack) {
-        itemsToReceive.add(stack);
-    }
-
-    public void addFluidsToReceive(FluidStack stack) {
-        fluidsToReceive.add(stack);
     }
 
     int getNeeded(ItemStack stack) {
@@ -105,19 +73,6 @@ class Processing extends Craft {
             return needed;
         }
         return 0;
-    }
-
-    public int getProcessing() {
-        return totalQuantity - quantity - finished;
-    }
-
-    void addFinished(ItemStack received, int size) {
-        itemsReceived.add(received, size);
-
-    }
-
-    void addFinished(FluidStack received, int size) {
-        fluidsReceived.add(received, size);
     }
 
     boolean updateFinished() {
@@ -161,19 +116,63 @@ class Processing extends Craft {
         finished = temp;
     }
 
-    public void setState(ProcessingState state) {
+    IStackList<ItemStack> getItemsToReceive() {
+        return itemsToReceive;
+    }
+
+    IStackList<FluidStack> getFluidsToReceive() {
+        return fluidsToReceive;
+    }
+
+    IStackList<ItemStack> getItemsToDisplay() {
+        return itemsToDisplay;
+    }
+
+    private void updateItemsToDisplay() {
+        itemsToDisplay = getItemsToUse(true);
+    }
+
+    IStackList<FluidStack> getFluidsToUse() {
+        return fluidsToUse;
+    }
+
+    void addFluidsToUse(FluidStack stack) {
+        fluidsToUse.add(stack);
+    }
+
+    void addItemsToReceive(ItemStack stack) {
+        itemsToReceive.add(stack);
+    }
+
+    void addFluidsToReceive(FluidStack stack) {
+        fluidsToReceive.add(stack);
+    }
+
+    int getProcessing() {
+        return totalQuantity - quantity - finished;
+    }
+
+    void addFinished(ItemStack received, int size) {
+        itemsReceived.add(received, size);
+    }
+
+    void addFinished(FluidStack received, int size) {
+        fluidsReceived.add(received, size);
+    }
+
+    void setState(ProcessingState state) {
         this.state = state;
     }
 
-    public ProcessingState getState() {
+    ProcessingState getState() {
         return state;
     }
 
-    public boolean hasFluids() {
+    boolean hasFluids() {
         return !fluidsToUse.isEmpty();
     }
 
-    public CompoundNBT writeToNbt() {
+    CompoundNBT writeToNbt() {
         CompoundNBT tag = super.writeToNbt();
         tag.put(NBT_ITEMS_TO_RECEIVE, CraftingTask.writeItemStackList(itemsToReceive));
         tag.put(NBT_FLUIDS_TO_RECEIVE, CraftingTask.writeFluidStackList(fluidsToReceive));
