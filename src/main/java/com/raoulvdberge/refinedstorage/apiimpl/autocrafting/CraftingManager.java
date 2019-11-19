@@ -39,6 +39,7 @@ public class CraftingManager implements ICraftingManager {
     private INetwork network;
 
     private Map<ITextComponent, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
+    private Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -361,6 +362,7 @@ public class CraftingManager implements ICraftingManager {
 
         this.patterns.clear();
         this.containerInventories.clear();
+        this.patternToContainer.clear();
 
         List<ICraftingPatternContainer> containers = new ArrayList<>();
 
@@ -383,6 +385,13 @@ public class CraftingManager implements ICraftingManager {
                 for (FluidStack output : pattern.getFluidOutputs()) {
                     network.getFluidStorageCache().getCraftablesList().add(output);
                 }
+
+                Set<ICraftingPatternContainer> list = this.patternToContainer.get(pattern);
+                if (list == null) {
+                    list = new LinkedHashSet<>();
+                }
+                list.add(container);
+                this.patternToContainer.put(pattern, list);
             }
 
             IItemHandlerModifiable handler = container.getPatternInventory();
@@ -393,6 +402,11 @@ public class CraftingManager implements ICraftingManager {
 
         this.network.getItemStorageCache().reAttachListeners();
         this.network.getFluidStorageCache().reAttachListeners();
+    }
+
+    @Override
+    public Set<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern) {
+        return patternToContainer.getOrDefault(pattern, new LinkedHashSet<>());
     }
 
     @Nullable
