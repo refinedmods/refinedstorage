@@ -33,7 +33,12 @@ public abstract class Craft {
     private Map<Integer, IStackList<ItemStack>> itemsToUse = new LinkedHashMap<>();
     private Map<Integer, Integer> neededPerCraft = new LinkedHashMap<>();
 
-    public Craft(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    Craft(ICraftingPattern pattern, boolean root) {
+        this.pattern = pattern;
+        this.root = root;
+    }
+
+    Craft(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         this.quantity = tag.getInt(NBT_QUANTITY);
         this.pattern = CraftingTask.readPatternFromNbt(tag.getCompound(NBT_PATTERN), network.getWorld());
         this.root = tag.getBoolean(NBT_ROOT);
@@ -47,28 +52,23 @@ public abstract class Craft {
         }
     }
 
-    public Craft(ICraftingPattern pattern, boolean root) {
-        this.pattern = pattern;
-        this.root = root;
-    }
-
-    public static Craft createCraftFromNBT(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
+    static Craft createCraftFromNBT(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
         return tag.getBoolean(NBT_IS_PROCESSING) ? new Processing(network, tag) : new Crafting(network, tag);
     }
 
-    public ICraftingPattern getPattern() {
+    ICraftingPattern getPattern() {
         return pattern;
     }
 
-    public int getQuantity() {
+    int getQuantity() {
         return quantity;
     }
 
-    public void addQuantity(int quantity) {
+    void addQuantity(int quantity) {
         this.quantity += quantity;
     }
 
-    public void next() {
+    void next() {
         quantity--;
     }
 
@@ -111,7 +111,7 @@ public abstract class Craft {
         return toReturn;
     }
 
-    public void addItemsToUse(int ingredientNumber, ItemStack stack, int size, int perCraft) {
+    void addItemsToUse(int ingredientNumber, ItemStack stack, int size, int perCraft) {
         if (!neededPerCraft.containsKey(ingredientNumber)) {
             neededPerCraft.put(ingredientNumber, perCraft);
         }
@@ -121,7 +121,7 @@ public abstract class Craft {
         itemsToUse.get(ingredientNumber).add(stack, size);
     }
 
-    public CompoundNBT writeToNbt() {
+    CompoundNBT writeToNbt() {
         CompoundNBT tag = new CompoundNBT();
         tag.putInt(NBT_QUANTITY, quantity);
         tag.putBoolean(NBT_IS_PROCESSING, this instanceof Processing);
