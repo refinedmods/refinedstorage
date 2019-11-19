@@ -169,7 +169,13 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public boolean canBeInChainWith(ICraftingPattern other) {
+    public boolean equals(Object o) {
+        CraftingPattern other;
+        if (o instanceof CraftingPattern) {
+            other = (CraftingPattern) o;
+        } else {
+            return false;
+        }
         if (other.isProcessing() != processing) {
             return false;
         }
@@ -239,7 +245,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public int getChainHashCode() {
+    public int hashCode() {
         int result = 0;
 
         result = 31 * result + (processing ? 1 : 0);

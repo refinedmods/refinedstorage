@@ -10,10 +10,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The crafting manager handles the storing, updating, adding and deleting of crafting tasks in a network.
@@ -117,6 +114,12 @@ public interface ICraftingManager {
      * Rebuilds the pattern list.
      */
     void invalidate();
+
+    /**
+     * @param pattern to search for
+     * @return a list of all container that contain this pattern
+     */
+    Set<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern);
 
     /**
      * Return a crafting pattern from an item stack.

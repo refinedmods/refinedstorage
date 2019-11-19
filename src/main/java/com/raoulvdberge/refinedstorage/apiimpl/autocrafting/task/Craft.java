@@ -43,8 +43,7 @@ public abstract class Craft {
         this.neededPerCraft = Ints.asList(tag.getIntArray(NBT_NEEDED_PER_CRAFT));
     }
 
-    public Craft(int quantity, ICraftingPattern pattern, boolean root) {
-        this.quantity = quantity;
+    public Craft(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
         this.root = root;
     }
@@ -59,6 +58,10 @@ public abstract class Craft {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public void addQuantity(int quantity) {
+        this.quantity += quantity;
     }
 
     public void next() {

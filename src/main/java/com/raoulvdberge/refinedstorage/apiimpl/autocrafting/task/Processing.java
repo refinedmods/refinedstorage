@@ -32,9 +32,8 @@ class Processing extends Craft {
     private int finished;
     private int totalQuantity;
 
-    public Processing(int quantity, ICraftingPattern pattern, boolean root) {
-        super(quantity, pattern, root);
-        this.totalQuantity = quantity;
+    public Processing(ICraftingPattern pattern, boolean root) {
+        super(pattern, root);
     }
 
     public Processing(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
@@ -49,6 +48,10 @@ class Processing extends Craft {
         this.itemsToDisplay = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_DISPLAY, Constants.NBT.TAG_COMPOUND));
     }
 
+    public void finishCalculation() {
+        this.totalQuantity = quantity;
+        updateItemsToDisplay();
+    }
 
     public IStackList<ItemStack> getItemsToReceive() {
         return itemsToReceive;
