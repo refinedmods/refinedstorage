@@ -11,6 +11,7 @@ import com.raoulvdberge.refinedstorage.container.slot.CrafterManagerSlot;
 import com.raoulvdberge.refinedstorage.render.BakedModelOverrideRegistry;
 import com.raoulvdberge.refinedstorage.render.color.PatternItemColor;
 import com.raoulvdberge.refinedstorage.render.model.*;
+import com.raoulvdberge.refinedstorage.render.resourcepack.ResourcePackListener;
 import com.raoulvdberge.refinedstorage.render.tesr.StorageMonitorTileRenderer;
 import com.raoulvdberge.refinedstorage.screen.*;
 import com.raoulvdberge.refinedstorage.screen.factory.CrafterManagerScreenFactory;
@@ -21,6 +22,8 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -34,6 +37,11 @@ public class ClientSetup {
     private BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
 
     public ClientSetup() {
+        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+        if (resourceManager instanceof IReloadableResourceManager) {
+            ((IReloadableResourceManager) resourceManager).addReloadListener(new ResourcePackListener());
+        }
+
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "controller"), (base, registry) -> new FullbrightBakedModel(
             base,
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),

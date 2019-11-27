@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -59,7 +59,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         amountField.setEnableBackgroundDrawing(false);
         amountField.setVisible(true);
         amountField.setText(String.valueOf(getDefaultAmount()));
-        amountField.setTextColor(RenderUtils.DEFAULT_COLOR);
+        amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         amountField.setCanLoseFocus(false);
         amountField.changeFocus(true);
 

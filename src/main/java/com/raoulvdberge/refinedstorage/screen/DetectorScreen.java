@@ -2,12 +2,12 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.DetectorContainer;
+import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.DetectorModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.raoulvdberge.refinedstorage.tile.DetectorTile;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -35,7 +35,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
         amountField.setVisible(true);
         amountField.setCanLoseFocus(true);
         amountField.setFocused2(false);
-        amountField.setTextColor(RenderUtils.DEFAULT_COLOR);
+        amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         amountField.func_212954_a(value -> {
             try {
                 int result = Integer.parseInt(value);

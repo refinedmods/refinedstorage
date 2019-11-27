@@ -6,8 +6,8 @@ import com.raoulvdberge.refinedstorage.api.util.IFilter;
 import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.network.FilterUpdateMessage;
+import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.FilterTypeSideButton;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -72,7 +72,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
         nameField.setVisible(true);
         nameField.setCanLoseFocus(true);
         nameField.setFocused2(false);
-        nameField.setTextColor(RenderUtils.DEFAULT_COLOR);
+        nameField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
         nameField.func_212954_a(name -> sendUpdate());
 
         addButton(nameField);

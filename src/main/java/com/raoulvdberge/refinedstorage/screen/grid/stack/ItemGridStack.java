@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.screen.grid.stack;
 
 import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
@@ -169,7 +170,7 @@ public class ItemGridStack implements IGridStack {
     @Override
     public void draw(BaseScreen gui, int x, int y) {
         String text = null;
-        int color = RenderUtils.DEFAULT_COLOR;
+        int color = RenderSettings.INSTANCE.getSecondaryColor();
 
         if (zeroed) {
             text = "0";

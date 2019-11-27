@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.7.2
+- Resource packs can now define the font colors that Refined Storage GUIs need to use (raoulvdberge)
+
 ### 1.7.1
 - Exact mode for processing patterns no longer exist, you can now define per-slot which item/fluid tags are allowed to be used by autocrafting, by using CTRL + click on the filter slot in the Pattern Grid (raoulvdberge)
 - The Pattern Grid now switches automatically between crafting pattern and processing pattern mode when using JEI transfer (raoulvdberge)

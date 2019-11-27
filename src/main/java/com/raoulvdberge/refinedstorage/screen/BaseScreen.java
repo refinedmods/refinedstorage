@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FluidFilterSlot;
 import com.raoulvdberge.refinedstorage.integration.craftingtweaks.CraftingTweaksIntegration;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
+import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import com.raoulvdberge.refinedstorage.screen.grid.AlternativesScreen;
 import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButton;
@@ -131,7 +132,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
                     FluidRenderer.INSTANCE.render(guiLeft + slot.xPos, guiTop + slot.yPos, stack);
 
                     if (((FluidFilterSlot) slot).isSizeAllowed()) {
-                        renderQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), RenderUtils.DEFAULT_COLOR);
+                        renderQuantity(guiLeft + slot.xPos, guiTop + slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), RenderSettings.INSTANCE.getSecondaryColor());
 
                         GL11.glDisable(GL11.GL_LIGHTING);
                     }
@@ -272,7 +273,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderItem(int x, int y, ItemStack stack) {
-        renderItem(x, y, stack, false, null, RenderUtils.DEFAULT_COLOR);
+        renderItem(x, y, stack, false, null, RenderSettings.INSTANCE.getSecondaryColor());
     }
 
     public void renderItem(int x, int y, ItemStack stack, boolean overlay, @Nullable String text, int textColor) {
@@ -323,7 +324,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderString(int x, int y, String message) {
-        renderString(x, y, message, 4210752);
+        renderString(x, y, message, RenderSettings.INSTANCE.getPrimaryColor());
     }
 
     public void renderString(int x, int y, String message, int color) {

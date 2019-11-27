@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 public final class RenderUtils {
-    public static final int DEFAULT_COLOR = 16777215;
-    
     private static final VertexFormat ITEM_FORMAT_WITH_LIGHTMAP = new VertexFormat(DefaultVertexFormats.ITEM).addElement(DefaultVertexFormats.TEX_2S);
 
     public static String shorten(String text, int length) {

@@ -3,8 +3,8 @@ package com.raoulvdberge.refinedstorage.screen.grid.stack;
 import com.raoulvdberge.refinedstorage.api.storage.tracker.StorageTrackerEntry;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
+import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ResourceLocation;
@@ -159,7 +159,7 @@ public class FluidGridStack implements IGridStack {
         FluidRenderer.INSTANCE.render(x, y, stack);
 
         String text;
-        int color = RenderUtils.DEFAULT_COLOR;
+        int color = RenderSettings.INSTANCE.getSecondaryColor();
 
         if (zeroed) {
             text = "0";
