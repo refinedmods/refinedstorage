@@ -22,7 +22,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.7.2'
+version = '1.8'
 def env = System.getenv()
 if (env.BUILD_NUMBER) {
     version = version + "+" + "${env.BUILD_NUMBER}"
@@ -88,11 +88,11 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.14.4-28.1.90'
-    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11:api")
-    compileOnly 'mouse-tweaks:MouseTweaks:2.12:mc1.14.4'
-    runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.14.4:10.1.3')
-    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11")
+    minecraft 'net.minecraftforge:forge:1.15-29.0.3'
+    //compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11:api")
+    //compileOnly 'mouse-tweaks:MouseTweaks:2.12:mc1.14.4'
+    //runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.14.4:10.1.3')
+    //runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11")
 }
 
 jar {

@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[28,)"
+loaderVersion="[29,)"
 issueTrackerURL="https://github.com/raoulvdberge/refinedstorage"
 [[mods]]
 modId="refinedstorage"
