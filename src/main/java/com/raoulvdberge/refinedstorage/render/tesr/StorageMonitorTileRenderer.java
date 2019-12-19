@@ -116,7 +116,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         RenderSystem.disableRescaleNormal();
         RenderSystem.disableLighting();
         Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-        Minecraft.getInstance().getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+        Minecraft.getInstance().getTextureManager().func_229267_b_(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
         RenderSystem.disableBlend();
         RenderSystem.color4f(1F, 1F, 1F, 1F);
 
@@ -136,7 +136,6 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
 
         RenderSystem.popMatrix();
 
-        this.
-        setLightmapDisabled(false);
+        this.setLightmapDisabled(false);
     }
 }
