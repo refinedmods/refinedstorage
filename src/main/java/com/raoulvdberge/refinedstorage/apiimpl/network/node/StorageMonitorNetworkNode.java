@@ -65,19 +65,19 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         }
     }
 
-    public boolean depositAll(PlayerEntity player) {
+    public ActionResultType depositAll(PlayerEntity player) {
         if (network == null) {
-            return false;
+            return ActionResultType.FAIL;
         }
 
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
-            return false;
+            return ActionResultType.FAIL;
         }
 
         Pair<ItemStack, Long> deposit = deposits.get(player.getGameProfile().getName());
 
         if (deposit == null) {
-            return false;
+            return ActionResultType.FAIL; // TODO correct?
         }
 
         ItemStack inserted = deposit.getKey();
@@ -93,7 +93,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             }
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     public ActionResultType deposit(PlayerEntity player, ItemStack toInsert) {

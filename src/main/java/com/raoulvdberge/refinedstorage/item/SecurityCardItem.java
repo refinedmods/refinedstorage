@@ -45,7 +45,7 @@ public class SecurityCardItem extends Item {
             stack.getTag().putString(NBT_OWNER_NAME, player.getGameProfile().getName());
         }
 
-        return ActionResult.newResult(ActionResultType.SUCCESS, stack);
+        return ActionResult.func_226248_a_(stack);
     }
 
     @Nullable
