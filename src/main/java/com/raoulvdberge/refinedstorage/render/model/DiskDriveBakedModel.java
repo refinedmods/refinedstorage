@@ -7,14 +7,14 @@ import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.tile.DiskDriveTile;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.TransformationMatrix;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.common.model.TRSRTransformation;
 
 import javax.annotation.Nullable;
-import javax.vecmath.Vector3f;
 import java.util.*;
 
 public class DiskDriveBakedModel extends DelegateBakedModel {
@@ -117,14 +117,14 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
                 Vector3f trans = model.transformation.getTranslation();
 
                 if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-                    trans.x += ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1);
+                    trans.add(((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
                 } else if (facing == Direction.EAST || facing == Direction.WEST) {
-                    trans.z += ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1);
+                    trans.add(0, 0, ((2F / 16F) + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Y
                 }
 
-                trans.y -= (2F / 16F) + ((float) y * 3F) / 16F;
+                trans.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
 
-                model.transformation = new TRSRTransformation(trans, model.transformation.getLeftRot(), model.transformation.getScale(), model.transformation.getRightRot());
+                model.transformation = new TransformationMatrix(trans, model.transformation.func_227989_d_(), model.transformation.getScale(), model.transformation.getRightRot());
 
                 disksByFacing.get(facing).get(type).add(model);
             }

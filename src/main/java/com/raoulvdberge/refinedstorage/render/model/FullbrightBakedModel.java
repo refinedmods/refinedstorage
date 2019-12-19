@@ -94,7 +94,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
 
         trans.setParent(builder);
 
-        quad.pipe(trans);
+        // TODO quad.pipe(trans);
 
         builder.setQuadTint(quad.getTintIndex());
         builder.setQuadOrientation(quad.getFace());

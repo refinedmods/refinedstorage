@@ -8,14 +8,14 @@ import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.block.DiskManipulatorBlock;
 import com.raoulvdberge.refinedstorage.tile.DiskManipulatorTile;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.TransformationMatrix;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.common.model.TRSRTransformation;
 
 import javax.annotation.Nullable;
-import javax.vecmath.Vector3f;
 import java.util.*;
 
 public class DiskManipulatorBakedModel extends DelegateBakedModel {
@@ -124,14 +124,14 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
                 Vector3f trans = model.transformation.getTranslation();
 
                 if (facing == Direction.NORTH || facing == Direction.SOUTH) {
-                    trans.x += (2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1);
+                    trans.add((2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.NORTH ? -1 : 1), 0, 0); // Add to X
                 } else if (facing == Direction.EAST || facing == Direction.WEST) {
-                    trans.z += (2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1);
+                    trans.add(0, 0, (2F / 16F + ((float) x * 7F) / 16F) * (facing == Direction.EAST ? -1 : 1)); // Add to Z
                 }
 
-                trans.y -= (6F / 16F) + (3F * y) / 16F;
-
-                model.transformation = new TRSRTransformation(trans, model.transformation.getLeftRot(), model.transformation.getScale(), model.transformation.getRightRot());
+                trans.add(0, -((6F / 16F) + (3F * y) / 16F), 0); // Remove from Y
+                
+                model.transformation = new TransformationMatrix(trans, model.transformation.func_227989_d_(), model.transformation.getScale(), model.transformation.getRightRot());
 
                 disks.get(facing).get(type).add(model);
             }

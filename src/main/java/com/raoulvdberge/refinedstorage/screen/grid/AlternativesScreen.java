@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.grid;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.AlternativesContainer;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
@@ -167,7 +168,7 @@ public class AlternativesScreen extends BaseScreen {
         int x = 8;
         int y = 20;
 
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderSystem.setupGuiFlatDiffuseLighting();
 
         for (int i = 0; i < lines.size(); ++i) {
             boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();

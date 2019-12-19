@@ -351,7 +351,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         int slot = scrollbar != null ? (scrollbar.getOffset() * 9) : 0;
 
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderSystem.setupGuiFlatDiffuseLighting();
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {

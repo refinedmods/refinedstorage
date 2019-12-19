@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.util;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -10,6 +11,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -22,12 +24,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public final class RenderUtils {
-    private static final VertexFormat ITEM_FORMAT_WITH_LIGHTMAP = new VertexFormat(DefaultVertexFormats.ITEM).addElement(DefaultVertexFormats.TEX_2S);
+    private static final VertexFormat ITEM_FORMAT_WITH_LIGHTMAP = addTex2sToVertexFormat(DefaultVertexFormats.field_227849_i_); // TODO Is this item?
 
     public static String shorten(String text, int length) {
         if (text.length() > length) {
@@ -223,7 +226,7 @@ public final class RenderUtils {
 
             RenderSystem.enableLighting();
             RenderSystem.enableDepthTest();
-            RenderHelper.enableStandardItemLighting();
+            RenderSystem.setupGuiFlatDiffuseLighting();
             RenderSystem.enableRescaleNormal();
         }
     }
@@ -241,7 +244,8 @@ public final class RenderUtils {
     }
 
     public static boolean isLightMapDisabled() {
-        return !ForgeConfig.CLIENT.forgeLightPipelineEnabled.get();
+        // TODO return !ForgeConfig.CLIENT.forgeLightPipelineEnabled.get();
+        return true;
     }
 
     public static VertexFormat getFormatWithLightMap(VertexFormat format) {
@@ -251,17 +255,19 @@ public final class RenderUtils {
 
         if (format == DefaultVertexFormats.BLOCK) {
             return DefaultVertexFormats.BLOCK;
-        } else if (format == DefaultVertexFormats.ITEM) {
+        } else if (format == DefaultVertexFormats.field_227849_i_) { // TODO Is this item?
             return ITEM_FORMAT_WITH_LIGHTMAP;
-        } else if (!format.hasUv(1)) {
-            VertexFormat result = new VertexFormat(format);
-
-            result.addElement(DefaultVertexFormats.TEX_2S);
-
-            return result;
+        } else if (!format.hasUV(1)) {
+            return addTex2sToVertexFormat(format);
         }
 
         return format;
+    }
+
+    private static VertexFormat addTex2sToVertexFormat(VertexFormat format) {
+        List<VertexFormatElement> elems = new ArrayList<>(format.func_227894_c_());
+        elems.add(DefaultVertexFormats.TEX_2S);
+        return new VertexFormat(ImmutableList.copyOf(elems));
     }
 
     public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {

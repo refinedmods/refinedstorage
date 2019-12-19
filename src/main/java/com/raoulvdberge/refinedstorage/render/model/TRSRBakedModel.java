@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.render.model;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -13,13 +14,9 @@ import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.client.model.pipeline.VertexTransformer;
-import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.common.model.TransformationHelper;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Matrix3f;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
 import java.util.List;
 import java.util.Random;
 
@@ -29,7 +26,7 @@ import java.util.Random;
 // for those wondering TRSR stands for Translation Rotation Scale Rotation
 public class TRSRBakedModel implements IBakedModel {
     protected final IBakedModel original;
-    protected MatrixStack transformation;
+    protected TransformationMatrix transformation;
     private final int faceOffset;
 
     public TRSRBakedModel(IBakedModel original, float x, float y, float z, float scale) {
@@ -41,15 +38,15 @@ public class TRSRBakedModel implements IBakedModel {
     }
 
     public TRSRBakedModel(IBakedModel original, float x, float y, float z, float rotX, float rotY, float rotZ, float scaleX, float scaleY, float scaleZ) {
-        this(original, new MatrixStack(new Vector3f(x, y, z),
+        this(original, new TransformationMatrix(new Vector3f(x, y, z),
             null,
             new Vector3f(scaleX, scaleY, scaleZ),
-            TRSRTransformation.quatFromXYZ(rotX, rotY, rotZ)));
+            TransformationHelper.quatFromXYZ(new Vector3f(rotX, rotY, rotZ), false)));
     }
 
-    public TRSRBakedModel(IBakedModel original, TRSRTransformation transform) {
+    public TRSRBakedModel(IBakedModel original, TransformationMatrix transform) {
         this.original = original;
-        this.transformation = TRSRTransformation.blockCenterToCorner(transform);
+        this.transformation = TransformationHelper.blockCenterToCorner(transform);
         this.faceOffset = 0;
     }
 
@@ -62,8 +59,8 @@ public class TRSRBakedModel implements IBakedModel {
         this.faceOffset = 4 + Direction.NORTH.getHorizontalIndex() - facing.getHorizontalIndex();
 
         double r = Math.PI * (360 - facing.getOpposite().getHorizontalIndex() * 90) / 180d;
-        TRSRTransformation t = new TRSRTransformation(null, null, null, TRSRTransformation.quatFromXYZ(0, (float) r, 0));
-        this.transformation = TRSRTransformation.blockCenterToCorner(t);
+        TransformationMatrix t = new TransformationMatrix(null, null, null, TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false));
+        this.transformation = TransformationHelper.blockCenterToCorner(t);
     }
 
     @Nonnull
@@ -82,7 +79,7 @@ public class TRSRBakedModel implements IBakedModel {
                 }
                 for (BakedQuad quad : original.getQuads(state, side, rand)) {
                     Transformer transformer = new Transformer(transformation, quad.getFormat());
-                    quad.pipe(transformer);
+                    // TODO quad.pipe(transformer);
                     builder.add(transformer.build());
                 }
             } catch (Exception e) {
@@ -132,19 +129,21 @@ public class TRSRBakedModel implements IBakedModel {
         protected Matrix4f transformation;
         protected Matrix3f normalTransformation;
 
-        public Transformer(TRSRTransformation transformation, VertexFormat format) {
+        public Transformer(TransformationMatrix transformation, VertexFormat format) {
             super(new UnpackedBakedQuad.Builder(format));
+            /* TODO
             // position transform
-            this.transformation = transformation.getMatrixVec();
+            this.transformation = transformation.func_227988_c_();
             // normal transform
             this.normalTransformation = new Matrix3f();
             this.transformation.getRotationScale(this.normalTransformation);
             this.normalTransformation.invert();
-            this.normalTransformation.transpose();
+            this.normalTransformation.transpose();*/
         }
 
         @Override
         public void put(int element, float... data) {
+            /* TODO
             VertexFormatElement.Usage usage = parent.getVertexFormat().getElement(element).getUsage();
 
             // transform normals and position
@@ -159,7 +158,7 @@ public class TRSRBakedModel implements IBakedModel {
                 vec.normalize();
                 data = new float[4];
                 vec.get(data);
-            }
+            }*/
             super.put(element, data);
         }
 

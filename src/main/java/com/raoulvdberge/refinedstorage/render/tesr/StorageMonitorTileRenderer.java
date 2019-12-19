@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.tesr;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RSBlocks;
@@ -8,19 +9,24 @@ import com.raoulvdberge.refinedstorage.block.StorageMonitorBlock;
 import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.lwjgl.opengl.GL11;
 
 public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonitorTile> {
-    @Override
+    public StorageMonitorTileRenderer(TileEntityRendererDispatcher p_i226006_1_) {
+        super(p_i226006_1_);
+    }
+     /* TODO @Override
     @SuppressWarnings("deprecation")
     public void render(StorageMonitorTile tile, double x, double y, double z, float partialTicks, int destroyStage) {
-        setLightmapDisabled(true);
+       setLightmapDisabled(true);
 
         float disX = 0, disXText = 0;
         float disY = 0.5F, disYText = 0.23F;
@@ -137,5 +143,10 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         RenderSystem.popMatrix();
 
         this.setLightmapDisabled(false);
+    }*/
+
+    @Override
+    public void func_225616_a_(StorageMonitorTile storageMonitorTile, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+
     }
 }

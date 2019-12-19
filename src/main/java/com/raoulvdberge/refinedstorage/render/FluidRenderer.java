@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -102,12 +104,10 @@ public class FluidRenderer {
     }
 
     private static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {
-        Minecraft minecraft = Minecraft.getInstance();
-        AtlasTexture textureMapBlocks = minecraft.getTextureMap();
         Fluid fluid = fluidStack.getFluid();
         FluidAttributes attributes = fluid.getAttributes();
         ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
-        return textureMapBlocks.getSprite(fluidStill);
+        return Minecraft.getInstance().func_228015_a_(PlayerContainer.field_226615_c_).apply(fluidStill);
     }
 
     private static void setGLColorFromInt(int color) {
@@ -130,10 +130,10 @@ public class FluidRenderer {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        bufferBuilder.func_225582_a_(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
+        /* TODO bufferBuilder.func_225582_a_(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
         bufferBuilder.func_225582_a_(xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
         bufferBuilder.func_225582_a_(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
-        bufferBuilder.func_225582_a_(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();
+        bufferBuilder.func_225582_a_(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();*/
         tessellator.draw();
     }
 }

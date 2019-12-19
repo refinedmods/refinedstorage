@@ -77,7 +77,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         @Override
         public void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
             if (requested.getItem() != null) {
-                RenderHelper.enableGUIStandardItemLighting();
+                RenderSystem.setupGuiFlatDiffuseLighting();
 
                 itemDrawer.draw(x, y, requested.getItem());
             } else {
@@ -255,7 +255,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderSystem.setupGuiFlatDiffuseLighting();
 
         int x = 7;
         int y = 20;
