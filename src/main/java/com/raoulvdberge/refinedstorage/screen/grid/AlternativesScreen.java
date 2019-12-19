@@ -97,14 +97,14 @@ public class AlternativesScreen extends BaseScreen {
         } else if (fluid != null) {
             lines.add(new FluidLine(fluid));
 
-            for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(fluid.getFluid())) {
+            for (ResourceLocation owningTag : FluidTags.func_226157_a_().getOwningTags(fluid.getFluid())) {
                 lines.add(new TagLine(owningTag, GridTile.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag)));
 
                 int fluidCount = 0;
 
                 FluidListLine line = new FluidListLine();
 
-                for (Fluid fluid : FluidTags.getCollection().get(owningTag).getAllElements()) {
+                for (Fluid fluid : FluidTags.func_226157_a_().get(owningTag).getAllElements()) {
                     if (fluidCount > 0 && fluidCount % 8 == 0) {
                         lines.add(line);
                         line = new FluidListLine();

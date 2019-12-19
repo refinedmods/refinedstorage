@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen.widget.sidebutton;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -22,8 +23,8 @@ public abstract class SideButton extends Button {
 
     @Override
     public void renderButton(int mouseX, int mouseY, float partialTicks) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.enableAlphaTest();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.enableAlphaTest();
 
         isHovered = RenderUtils.inBounds(x, y, width, height, mouseX, mouseY);
 
@@ -33,11 +34,11 @@ public abstract class SideButton extends Button {
         renderButtonIcon(x + 1, y + 1);
 
         if (isHovered) {
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GlStateManager.color4f(1.0f, 1.0f, 1.0f, 0.5f);
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            RenderSystem.color4f(1.0f, 1.0f, 1.0f, 0.5f);
             screen.blit(x, y, 238, 54, 18, 18);
-            GlStateManager.disableBlend();
+            RenderSystem.disableBlend();
         }
     }
 

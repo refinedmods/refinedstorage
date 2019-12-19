@@ -15,6 +15,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.client.model.pipeline.VertexLighterFlat;
+import net.minecraftforge.common.model.TransformationHelper;
 
 import javax.annotation.Nullable;
 import java.util.*;

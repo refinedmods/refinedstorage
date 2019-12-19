@@ -6,6 +6,10 @@ import net.minecraft.util.math.BlockPos;
 
 public final class DirectionUtils {
     public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        return Direction.getFacingFromVector((float) (entity.posX - clickedBlock.getX()), (float) (entity.posY - clickedBlock.getY()), (float) (entity.posZ - clickedBlock.getZ()));
+        return Direction.getFacingFromVector(
+            (float) (entity.getPosition().getX() - clickedBlock.getX()),
+            (float) (entity.getPosition().getY() - clickedBlock.getY()),
+            (float) (entity.getPosition().getZ() - clickedBlock.getZ())
+        );
     }
 }

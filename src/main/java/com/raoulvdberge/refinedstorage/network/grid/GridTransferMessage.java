@@ -4,7 +4,6 @@ import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.container.GridContainer;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
-import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -16,8 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+// TODO
 public class GridTransferMessage {
-    private Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs;
+    //private Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs;
     private List<Slot> slots;
 
     private ItemStack[][] recipe = new ItemStack[9][];
@@ -25,10 +25,10 @@ public class GridTransferMessage {
     public GridTransferMessage() {
     }
 
-    public GridTransferMessage(Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs, List<Slot> slots) {
+    /*public GridTransferMessage(Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs, List<Slot> slots) {
         this.inputs = inputs;
         this.slots = slots;
-    }
+    }*/
 
     public static GridTransferMessage decode(PacketBuffer buf) {
         GridTransferMessage msg = new GridTransferMessage();
@@ -52,7 +52,7 @@ public class GridTransferMessage {
         buf.writeInt(message.slots.size());
 
         for (Slot slot : message.slots) {
-            IGuiIngredient<ItemStack> ingredient = message.inputs.get(slot.getSlotIndex() + 1);
+            /*IGuiIngredient<ItemStack> ingredient = message.inputs.get(slot.getSlotIndex() + 1);
 
             List<ItemStack> ingredients = new ArrayList<>();
 
@@ -68,7 +68,7 @@ public class GridTransferMessage {
 
             for (ItemStack possibleStack : ingredients) {
                 StackUtils.writeItemStack(buf, possibleStack);
-            }
+            }*/
         }
     }
 

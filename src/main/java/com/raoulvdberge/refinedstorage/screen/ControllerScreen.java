@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.network.Network;
 import com.raoulvdberge.refinedstorage.container.ControllerContainer;
@@ -102,8 +103,8 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
                 float scale = minecraft.getForceUnicodeFont() ? 1F : 0.5F;
 
-                GlStateManager.pushMatrix();
-                GlStateManager.scalef(scale, scale, 1);
+                RenderSystem.pushMatrix();
+                RenderSystem.scalef(scale, scale, 1);
 
                 renderString(
                     RenderUtils.getOffsetOnScale(x + 1, scale),
@@ -112,7 +113,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
                 );
                 renderString(RenderUtils.getOffsetOnScale(x + 21, scale), RenderUtils.getOffsetOnScale(y + 10, scale), node.getAmount() + "x");
 
-                GlStateManager.popMatrix();
+                RenderSystem.popMatrix();
 
                 if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY)) {
                     hoveringNode = node;

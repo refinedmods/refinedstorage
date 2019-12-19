@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.screen.grid;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.GridType;
@@ -364,13 +365,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
                 int color = grid.isActive() ? -2130706433 : 0xFF5B5B5B;
 
-                GlStateManager.disableLighting();
-                GlStateManager.disableDepthTest();
-                GlStateManager.colorMask(true, true, true, false);
+                RenderSystem.disableLighting();
+                RenderSystem.disableDepthTest();
+                RenderSystem.colorMask(true, true, true, false);
                 fillGradient(x, y, x + 16, y + 16, color, color);
-                GlStateManager.colorMask(true, true, true, true);
-                GlStateManager.enableLighting();
-                GlStateManager.enableDepthTest();
+                RenderSystem.colorMask(true, true, true, true);
+                RenderSystem.enableLighting();
+                RenderSystem.enableDepthTest();
             }
 
             slot++;

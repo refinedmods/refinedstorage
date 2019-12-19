@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.slot.filter.FilterSlot;
@@ -118,7 +119,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float renderPartialTicks, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         renderBackground(guiLeft, guiTop, mouseX, mouseY);
 
@@ -143,7 +144,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         mouseX -= guiLeft;
         mouseY -= guiTop;
@@ -299,28 +300,28 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     public void renderQuantity(int x, int y, String qty, int color) {
         boolean large = minecraft.getForceUnicodeFont() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translatef(x, y, 1);
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef(x, y, 1);
 
         if (!large) {
-            GlStateManager.scalef(0.5f, 0.5f, 1);
+            RenderSystem.scalef(0.5f, 0.5f, 1);
         }
 
-        GlStateManager.disableLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.depthMask(false);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(770, 771);
-        GlStateManager.disableDepthTest();
+        RenderSystem.disableLighting();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(770, 771);
+        RenderSystem.disableDepthTest();
 
         font.drawStringWithShadow(qty, (large ? 16 : 30) - font.getStringWidth(qty), large ? 8 : 22, color);
 
-        GlStateManager.enableDepthTest();
-        GlStateManager.enableTexture();
-        GlStateManager.depthMask(true);
-        GlStateManager.enableLighting();
-        GlStateManager.disableBlend();
-        GlStateManager.popMatrix();
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableTexture();
+        RenderSystem.depthMask(true);
+        RenderSystem.enableLighting();
+        RenderSystem.disableBlend();
+        RenderSystem.popMatrix();
     }
 
     public void renderString(int x, int y, String message) {
@@ -328,9 +329,9 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderString(int x, int y, String message, int color) {
-        GlStateManager.disableLighting();
+        RenderSystem.disableLighting();
         font.drawString(message, x, y, color);
-        GlStateManager.enableLighting();
+        RenderSystem.enableLighting();
     }
 
     public void renderTooltip(int x, int y, String lines) {
@@ -342,9 +343,9 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderTooltip(@Nonnull ItemStack stack, int x, int y, List<String> lines) {
-        GlStateManager.disableLighting();
+        RenderSystem.disableLighting();
         GuiUtils.drawHoveringText(stack, lines, x, y, width - guiLeft, height, -1, font);
-        GlStateManager.enableLighting();
+        RenderSystem.enableLighting();
     }
 
     protected void onPreInit() {
@@ -352,7 +353,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public static boolean isKeyDown(KeyBinding keybinding) {
-        return InputMappings.isKeyDown(Minecraft.getInstance().mainWindow.getHandle(), keybinding.getKey().getKeyCode()) &&
+        return InputMappings.isKeyDown(Minecraft.getInstance().func_228018_at_().getHandle(), keybinding.getKey().getKeyCode()) &&
             keybinding.getKeyConflictContext().isActive() &&
             keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
     }

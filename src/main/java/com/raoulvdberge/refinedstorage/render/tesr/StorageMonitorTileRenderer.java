@@ -136,6 +136,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
 
         RenderSystem.popMatrix();
 
+        this.
         setLightmapDisabled(false);
     }
 }

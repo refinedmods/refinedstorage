@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.model;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -61,7 +62,7 @@ public class DelegateBakedModel implements IBakedModel {
 
     @Override
     @SuppressWarnings("deprecation")
-    public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
-        return base.handlePerspective(cameraTransformType);
+    public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack matrixStack) {
+        return base.handlePerspective(cameraTransformType, matrixStack);
     }
 }

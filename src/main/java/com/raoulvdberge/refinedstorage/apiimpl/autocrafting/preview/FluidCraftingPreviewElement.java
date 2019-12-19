@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
@@ -72,8 +73,8 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement<Flui
 
         y += 2;
 
-        GlStateManager.pushMatrix();
-        GlStateManager.scalef(scale, scale, 1);
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(scale, scale, 1);
 
         if (getToCraft() > 0) {
             String format = hasMissing() ? "gui.refinedstorage.crafting_preview.missing" : "gui.refinedstorage.crafting_preview.to_craft";
@@ -86,7 +87,7 @@ public class FluidCraftingPreviewElement implements ICraftingPreviewElement<Flui
             drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 23, scale), RenderUtils.getOffsetOnScale(y, scale), I18n.format("gui.refinedstorage.crafting_preview.available", API.instance().getQuantityFormatter().formatInBucketForm(getAvailable())));
         }
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     public void addAvailable(int amount) {

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawers;
@@ -57,8 +58,8 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
-        GlStateManager.pushMatrix();
-        GlStateManager.scalef(scale, scale, 1);
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(scale, scale, 1);
 
         int yy = y + 7;
 
@@ -90,7 +91,7 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
             drawers.getStringDrawer().draw(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy, scale), I18n.format("gui.refinedstorage.crafting_monitor.crafting", API.instance().getQuantityFormatter().formatInBucketForm(crafting)));
         }
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 
     @Override

@@ -133,7 +133,7 @@ public class CraftingPatternFactory {
             possibilities.add(input.copy());
 
             if (allowedTagList != null) {
-                Collection<ResourceLocation> tagsOfFluid = FluidTags.getCollection().getOwningTags(input.getFluid());
+                Collection<ResourceLocation> tagsOfFluid = FluidTags.func_226157_a_().getOwningTags(input.getFluid());
                 Set<ResourceLocation> declaredAllowedTags = allowedTagList.getAllowedFluidTags().get(i);
 
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
@@ -146,7 +146,7 @@ public class CraftingPatternFactory {
                             )
                         );
                     } else {
-                        for (Fluid element : FluidTags.getCollection().get(declaredAllowedTag).getAllElements()) {
+                        for (Fluid element : FluidTags.func_226157_a_().get(declaredAllowedTag).getAllElements()) {
                             possibilities.add(new FluidStack(element, input.getAmount()));
                         }
                     }

@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen.grid;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
@@ -115,8 +116,8 @@ public class CraftingPreviewScreen extends BaseScreen {
         float scale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.5F;
 
         if (getErrorType() != null) {
-            GlStateManager.pushMatrix();
-            GlStateManager.scalef(scale, scale, 1);
+            RenderSystem.pushMatrix();
+            RenderSystem.scalef(scale, scale, 1);
 
             renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 11, scale), I18n.format("gui.refinedstorage.crafting_preview.error"));
 
@@ -129,20 +130,20 @@ public class CraftingPreviewScreen extends BaseScreen {
 
                     renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 61, scale), I18n.format("gui.refinedstorage.crafting_preview.error.recursive.4"));
 
-                    GlStateManager.popMatrix();
+                    RenderSystem.popMatrix();
 
                     ICraftingPattern pattern = PatternItem.fromCache(parent.getMinecraft().world, (ItemStack) stacks.get(0).getElement());
 
                     int yy = 83;
                     for (ItemStack output : pattern.getOutputs()) {
                         if (output != null) {
-                            GlStateManager.pushMatrix();
-                            GlStateManager.scalef(scale, scale, 1);
+                            RenderSystem.pushMatrix();
+                            RenderSystem.scalef(scale, scale, 1);
                             renderString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getFormattedText());
-                            GlStateManager.popMatrix();
+                            RenderSystem.popMatrix();
 
                             RenderHelper.enableGUIStandardItemLighting();
-                            GlStateManager.enableDepthTest();
+                            RenderSystem.enableDepthTest();
                             renderItem(x + 5, yy, output);
                             RenderHelper.disableStandardItemLighting();
 
@@ -156,7 +157,7 @@ public class CraftingPreviewScreen extends BaseScreen {
                     renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 21, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.0"));
                     renderString(RenderUtils.getOffsetOnScale(x + 5, scale), RenderUtils.getOffsetOnScale(y + 31, scale), I18n.format("gui.refinedstorage.crafting_preview.error.too_complex.1"));
 
-                    GlStateManager.popMatrix();
+                    RenderSystem.popMatrix();
 
                     break;
                 }
@@ -165,7 +166,7 @@ public class CraftingPreviewScreen extends BaseScreen {
             int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 
             RenderHelper.enableGUIStandardItemLighting();
-            GlStateManager.enableDepthTest();
+            RenderSystem.enableDepthTest();
 
             this.hoveringStack = null;
             this.hoveringFluid = null;

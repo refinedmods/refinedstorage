@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -8,6 +9,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,15 +38,15 @@ public class FluidRenderer {
     }
 
     public void render(final int xPosition, final int yPosition, @Nonnull FluidStack fluidStack) {
-        GlStateManager.enableBlend();
-        GlStateManager.enableAlphaTest();
+        RenderSystem.enableBlend();
+        RenderSystem.enableAlphaTest();
 
         drawFluid(xPosition, yPosition, fluidStack);
 
-        GlStateManager.color4f(1, 1, 1, 1);
+        RenderSystem.color4f(1, 1, 1, 1);
 
-        GlStateManager.disableAlphaTest();
-        GlStateManager.disableBlend();
+        RenderSystem.disableAlphaTest();
+        RenderSystem.disableBlend();
     }
 
     private void drawFluid(final int xPosition, final int yPosition, @Nonnull FluidStack fluidStack) {
@@ -73,7 +75,7 @@ public class FluidRenderer {
 
     private void drawTiledSprite(final int xPosition, final int yPosition, final int tiledWidth, final int tiledHeight, int color, int scaledAmount, TextureAtlasSprite sprite) {
         Minecraft minecraft = Minecraft.getInstance();
-        minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+        minecraft.getTextureManager().bindTexture(PlayerContainer.field_226615_c_);
         setGLColorFromInt(color);
 
         final int xTileCount = tiledWidth / TEX_WIDTH;
@@ -104,7 +106,7 @@ public class FluidRenderer {
         AtlasTexture textureMapBlocks = minecraft.getTextureMap();
         Fluid fluid = fluidStack.getFluid();
         FluidAttributes attributes = fluid.getAttributes();
-        ResourceLocation fluidStill = attributes.getStill(fluidStack);
+        ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
         return textureMapBlocks.getSprite(fluidStill);
     }
 
@@ -114,7 +116,7 @@ public class FluidRenderer {
         float blue = (color & 0xFF) / 255.0F;
         float alpha = ((color >> 24) & 0xFF) / 255F;
 
-        GlStateManager.color4f(red, green, blue, alpha);
+        RenderSystem.color4f(red, green, blue, alpha);
     }
 
     private static void drawTextureWithMasking(double xCoord, double yCoord, TextureAtlasSprite textureSprite, int maskTop, int maskRight, double zLevel) {

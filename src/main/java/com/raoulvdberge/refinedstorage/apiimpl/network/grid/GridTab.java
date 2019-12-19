@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.apiimpl.network.grid;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.api.render.IElementDrawer;
 import com.raoulvdberge.refinedstorage.api.util.IFilter;
@@ -51,7 +52,7 @@ public class GridTab implements IGridTab {
         } else {
             fluidDrawer.draw(x, y, fluidIcon);
 
-            GlStateManager.enableAlphaTest();
+            RenderSystem.enableAlphaTest();
         }
     }
 }

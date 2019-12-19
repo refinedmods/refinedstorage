@@ -1,8 +1,8 @@
 package com.raoulvdberge.refinedstorage.screen.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.integration.jei.GridRecipeTransferHandler;
 import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -58,7 +58,7 @@ public class ScrollbarWidget implements IGuiEventListener {
     }
 
     public void render() {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         screen.bindTexture(RS.ID, "icons.png");
         screen.blit(screen.getGuiLeft() + x, screen.getGuiTop() + y + (int) Math.min(height - SCROLLER_HEIGHT, (float) offset / (float) maxOffset * (float) (height - SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
@@ -71,9 +71,9 @@ public class ScrollbarWidget implements IGuiEventListener {
 
         if (button == 0 && RenderUtils.inBounds(x, y, width, height, mx, my)) {
             // Prevent accidental scrollbar click after clicking recipe transfer button
-            if (JeiIntegration.isLoaded() && System.currentTimeMillis() - GridRecipeTransferHandler.LAST_TRANSFER_TIME <= GridRecipeTransferHandler.TRANSFER_SCROLLBAR_DELAY_MS) {
+            /* TODO if (JeiIntegration.isLoaded() && System.currentTimeMillis() - GridRecipeTransferHandler.LAST_TRANSFER_TIME <= GridRecipeTransferHandler.TRANSFER_SCROLLBAR_DELAY_MS) {
                 return false;
-            }
+            }*/
 
             updateOffset(my);
 
