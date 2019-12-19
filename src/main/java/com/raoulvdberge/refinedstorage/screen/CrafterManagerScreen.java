@@ -1,6 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.CrafterManagerNetworkNode;
@@ -19,11 +19,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.glfw.GLFW;
-import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.Map;
 
-@MouseTweaksDisableWheelTweak
+// TODO @MouseTweaksDisableWheelTweak
 public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> implements IScreenInfoProvider {
     private CrafterManagerNetworkNode crafterManager;
 
@@ -120,8 +119,8 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
                 int y = heading.getValue();
 
                 if (y >= getTopHeight() - 1 && y < getTopHeight() + getVisibleRows() * 18 - 1) {
-                    GlStateManager.disableLighting();
-                    GlStateManager.color3f(1, 1, 1);
+                    RenderSystem.disableLighting();
+                    RenderSystem.color3f(1, 1, 1);
 
                     bindTexture(RS.ID, "gui/crafter_manager.png");
 

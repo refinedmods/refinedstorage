@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.screen;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
@@ -82,7 +83,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             } else {
                 fluidDrawer.draw(x, y, requested.getFluid());
 
-                GlStateManager.enableAlphaTest();
+                RenderSystem.enableAlphaTest();
             }
         }
     }

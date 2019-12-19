@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.render.model;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -28,7 +29,7 @@ import java.util.Random;
 // for those wondering TRSR stands for Translation Rotation Scale Rotation
 public class TRSRBakedModel implements IBakedModel {
     protected final IBakedModel original;
-    protected TRSRTransformation transformation;
+    protected MatrixStack transformation;
     private final int faceOffset;
 
     public TRSRBakedModel(IBakedModel original, float x, float y, float z, float scale) {
@@ -40,7 +41,7 @@ public class TRSRBakedModel implements IBakedModel {
     }
 
     public TRSRBakedModel(IBakedModel original, float x, float y, float z, float rotX, float rotY, float rotZ, float scaleX, float scaleY, float scaleZ) {
-        this(original, new TRSRTransformation(new Vector3f(x, y, z),
+        this(original, new MatrixStack(new Vector3f(x, y, z),
             null,
             new Vector3f(scaleX, scaleY, scaleZ),
             TRSRTransformation.quatFromXYZ(rotX, rotY, rotZ)));

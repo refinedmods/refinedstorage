@@ -11,6 +11,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -35,7 +36,7 @@ public class SecurityManagerBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote) {
             Runnable action = () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
@@ -54,7 +55,7 @@ public class SecurityManagerBlock extends NetworkNodeBlock {
             }
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Nullable

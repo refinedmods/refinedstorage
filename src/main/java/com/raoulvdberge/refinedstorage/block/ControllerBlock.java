@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
@@ -106,7 +107,7 @@ public class ControllerBlock extends BaseBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
@@ -125,6 +126,6 @@ public class ControllerBlock extends BaseBlock {
             ));
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 }

@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,13 +37,13 @@ public class NetworkUtils {
         return null;
     }
 
-    public static boolean attemptModify(World world, BlockPos pos, Direction facing, PlayerEntity player, Runnable action) {
+    public static ActionResultType attemptModify(World world, BlockPos pos, Direction facing, PlayerEntity player, Runnable action) {
         return attempt(world, pos, facing, player, action, Permission.MODIFY);
     }
 
-    public static boolean attempt(World world, BlockPos pos, Direction facing, PlayerEntity player, Runnable action, Permission... permissionsRequired) {
+    public static ActionResultType attempt(World world, BlockPos pos, Direction facing, PlayerEntity player, Runnable action, Permission... permissionsRequired) {
         if (world.isRemote) {
-            return true;
+            return ActionResultType.SUCCESS;
         }
 
         INetwork network = getNetworkFromNode(getNodeFromTile(world.getTileEntity(pos)));
@@ -52,13 +53,13 @@ public class NetworkUtils {
                 if (!network.getSecurityManager().hasPermission(permission, player)) {
                     WorldUtils.sendNoPermissionMessage(player);
 
-                    return true;
+                    return ActionResultType.SUCCESS;
                 }
             }
         }
 
         action.run();
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 }

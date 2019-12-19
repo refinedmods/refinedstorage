@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -62,7 +63,7 @@ public class FluidStorageBlock extends NetworkNodeBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if (!world.isRemote) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui((ServerPlayerEntity) player, new PositionalTileContainerProvider<FluidStorageTile>(
                 ((FluidStorageTile) world.getTileEntity(pos)).getNode().getTitle(),
@@ -71,6 +72,6 @@ public class FluidStorageBlock extends NetworkNodeBlock {
             ), pos));
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 }

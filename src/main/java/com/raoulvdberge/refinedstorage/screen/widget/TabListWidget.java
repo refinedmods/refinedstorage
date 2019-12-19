@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.screen.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridTab;
 import com.raoulvdberge.refinedstorage.apiimpl.render.ElementDrawers;
@@ -125,7 +126,7 @@ public class TabListWidget {
         int tx = x + getXOffset() + ((IGridTab.TAB_WIDTH + 1) * num);
         int ty = y;
 
-        GlStateManager.enableAlphaTest();
+        RenderSystem.enableAlphaTest();
 
         gui.bindTexture(RS.ID, "icons.png");
 

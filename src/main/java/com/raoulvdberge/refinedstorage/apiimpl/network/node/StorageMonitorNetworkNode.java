@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -95,13 +96,13 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         return true;
     }
 
-    public boolean deposit(PlayerEntity player, ItemStack toInsert) {
+    public ActionResultType deposit(PlayerEntity player, ItemStack toInsert) {
         if (network == null) {
-            return false;
+            return ActionResultType.FAIL; // TODO Correct?
         }
 
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
-            return false;
+            return ActionResultType.FAIL; // TODO Correct?
         }
 
         ItemStack filter = itemFilter.getStackInSlot(0);
@@ -112,7 +113,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, System.currentTimeMillis()));
         }
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     public void extract(PlayerEntity player, Direction side) {

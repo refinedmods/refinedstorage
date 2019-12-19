@@ -1,7 +1,7 @@
 package com.raoulvdberge.refinedstorage.util;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.render.Styles;
@@ -118,10 +118,10 @@ public final class RenderUtils {
             float textScale = Minecraft.getInstance().getForceUnicodeFont() ? 1F : 0.7F;
             // RS END
 
-            GlStateManager.disableRescaleNormal();
+            RenderSystem.disableRescaleNormal();
             RenderHelper.disableStandardItemLighting();
-            GlStateManager.disableLighting();
-            GlStateManager.disableDepthTest();
+            RenderSystem.disableLighting();
+            RenderSystem.disableDepthTest();
             int tooltipTextWidth = 0;
 
             for (String textLine : textLines) {
@@ -201,8 +201,8 @@ public final class RenderUtils {
 
             // RS BEGIN
             if (showSmallText) {
-                GlStateManager.pushMatrix();
-                GlStateManager.scalef(textScale, textScale, 1);
+                RenderSystem.pushMatrix();
+                RenderSystem.scalef(textScale, textScale, 1);
 
                 int y = tooltipTop + tooltipHeight - 6;
 
@@ -217,14 +217,14 @@ public final class RenderUtils {
                     y -= 9;
                 }
 
-                GlStateManager.popMatrix();
+                RenderSystem.popMatrix();
             }
             // RS END
 
-            GlStateManager.enableLighting();
-            GlStateManager.enableDepthTest();
+            RenderSystem.enableLighting();
+            RenderSystem.enableDepthTest();
             RenderHelper.enableStandardItemLighting();
-            GlStateManager.enableRescaleNormal();
+            RenderSystem.enableRescaleNormal();
         }
     }
 
