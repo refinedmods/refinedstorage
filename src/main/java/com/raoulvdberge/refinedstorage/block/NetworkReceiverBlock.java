@@ -5,7 +5,6 @@ import com.raoulvdberge.refinedstorage.tile.NetworkReceiverTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;

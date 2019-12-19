@@ -1,6 +1,7 @@
 package com.raoulvdberge.refinedstorage.render.tesr;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.StorageMonitorBlock;
@@ -86,24 +87,24 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             rotX = -1F;
         }
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translated(x + disX, y + disY, z + disZ);
-        GlStateManager.rotated(180F, rotX, rotY, rotZ);
-        GlStateManager.color4f(1F, 1F, 1F, 1F);
-        GlStateManager.depthMask(false);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.depthMask(true);
-        GlStateManager.scalef(0.4F, -0.4F, -0.015F);
+        RenderSystem.pushMatrix();
+        RenderSystem.translated(x + disX, y + disY, z + disZ);
+        RenderSystem.rotatef(180F, rotX, rotY, rotZ);
+        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        RenderSystem.depthMask(true);
+        RenderSystem.scalef(0.4F, -0.4F, -0.015F);
         Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
         Minecraft.getInstance().getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.enableAlphaTest();
-        GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        GlStateManager.color4f(1F, 1F, 1F, 1F);
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.color4f(1F, 1F, 1F, 1F);
 
         if (tile.getItemStack() != null) {
             IBakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(tile.getItemStack(), null, Minecraft.getInstance().player);
@@ -111,29 +112,29 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             Minecraft.getInstance().getItemRenderer().renderItem(tile.getItemStack(), bakedModel);
         }
 
-        GlStateManager.disableAlphaTest();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.disableLighting();
+        RenderSystem.disableAlphaTest();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.disableLighting();
         Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
         Minecraft.getInstance().getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
-        GlStateManager.disableBlend();
-        GlStateManager.color4f(1F, 1F, 1F, 1F);
+        RenderSystem.disableBlend();
+        RenderSystem.color4f(1F, 1F, 1F, 1F);
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
 
-        GlStateManager.translated(x + disXText, y + disYText, z + disZText);
-        GlStateManager.rotated(180F, rotX, rotY, rotZ);
+        RenderSystem.translated(x + disXText, y + disYText, z + disZText);
+        RenderSystem.rotatef(180F, rotX, rotY, rotZ);
         float size = 0.00450F;
         float factor = 2.0f;
-        GlStateManager.scaled(size * factor, size * factor, size);
+        RenderSystem.scaled(size * factor, size * factor, size);
 
         if (tile.getItemStack() != null) {
             Minecraft.getInstance().fontRenderer.drawString(amount, 0, 0, 0xFFFFFF);
         }
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
         setLightmapDisabled(false);
     }
