@@ -28,11 +28,6 @@ public class CrafterManagerBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
     public BlockDirection getDirection() {
         return BlockDirection.HORIZONTAL;
     }

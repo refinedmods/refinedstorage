@@ -53,12 +53,6 @@ public class DetectorBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-
-    @Override
     @SuppressWarnings("deprecation")
     public boolean canProvidePower(BlockState state) {
         return true;

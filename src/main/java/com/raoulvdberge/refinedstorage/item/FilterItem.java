@@ -51,7 +51,7 @@ public class FilterItem extends Item {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            if (player.isSneaking()) {
+            if (player.isCrouching()) {
                 return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.FILTER));
             }
 

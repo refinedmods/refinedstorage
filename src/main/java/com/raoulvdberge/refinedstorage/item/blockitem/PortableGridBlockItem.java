@@ -66,7 +66,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        if (!context.getPlayer().isSneaking()) {
+        if (!context.getPlayer().isCrouching()) {
             return ActionResultType.FAIL;
         }
 

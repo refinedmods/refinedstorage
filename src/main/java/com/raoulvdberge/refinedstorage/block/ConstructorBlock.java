@@ -82,6 +82,8 @@ public class ConstructorBlock extends CableBlock {
         return shape;
     }
 
+
+
     @Override
     @SuppressWarnings("deprecation")
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {

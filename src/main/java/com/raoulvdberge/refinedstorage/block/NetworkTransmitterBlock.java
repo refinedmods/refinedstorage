@@ -28,11 +28,6 @@ public class NetworkTransmitterBlock extends NetworkNodeBlock {
         this.setRegistryName(RS.ID, "network_transmitter");
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

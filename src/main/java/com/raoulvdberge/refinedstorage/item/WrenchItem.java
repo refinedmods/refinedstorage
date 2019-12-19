@@ -20,7 +20,7 @@ public class WrenchItem extends Item {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext ctx) {
-        if (!ctx.getPlayer().isSneaking()) {
+        if (!ctx.getPlayer().isCrouching()) {
             return ActionResultType.FAIL;
         }
 

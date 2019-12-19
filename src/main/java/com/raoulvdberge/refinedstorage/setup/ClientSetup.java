@@ -1,9 +1,6 @@
 package com.raoulvdberge.refinedstorage.setup;
 
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.RSContainers;
-import com.raoulvdberge.refinedstorage.RSItems;
-import com.raoulvdberge.refinedstorage.RSKeyBindings;
+import com.raoulvdberge.refinedstorage.*;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.container.CrafterContainer;
 import com.raoulvdberge.refinedstorage.container.CrafterManagerContainer;
@@ -20,6 +17,8 @@ import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.resources.IReloadableResourceManager;
@@ -209,7 +208,27 @@ public class ClientSetup {
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
 
-        ClientRegistry.bindTileEntitySpecialRenderer(StorageMonitorTile.class, new StorageMonitorTileRenderer());
+        RenderType cutout = RenderType.func_228643_e_();
+
+        RenderTypeLookup.setRenderLayer(RSBlocks.CONTROLLER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.CREATIVE_CONTROLLER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.CABLE, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER_MANAGER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_MONITOR, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.DETECTOR, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.DISK_MANIPULATOR, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.GRID, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_GRID, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.PATTERN_GRID, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.FLUID_GRID, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_RECEIVER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_TRANSMITTER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.RELAY, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.SECURITY_MANAGER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.WIRELESS_TRANSMITTER, cutout);
+
+        // TODO ClientRegistry.bindTileEntitySpecialRenderer(StorageMonitorTile.class, new StorageMonitorTileRenderer());
 
         e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN);
     }

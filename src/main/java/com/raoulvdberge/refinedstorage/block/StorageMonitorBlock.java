@@ -48,7 +48,7 @@ public class StorageMonitorBlock extends NetworkNodeBlock {
         if (!world.isRemote) {
             ItemStack held = player.inventory.getCurrentItem();
 
-            if (player.isSneaking()) {
+            if (player.isCrouching()) {
                 return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                     (ServerPlayerEntity) player,
                     new PositionalTileContainerProvider<StorageMonitorTile>(

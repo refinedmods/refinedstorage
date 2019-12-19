@@ -68,7 +68,7 @@ public class StorageBlockItem extends BaseBlockItem {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack storageStack = player.getHeldItem(hand);
 
-        if (!world.isRemote && player.isSneaking() && type != ItemStorageType.CREATIVE) {
+        if (!world.isRemote && player.isCrouching() && type != ItemStorageType.CREATIVE) {
             UUID diskId = null;
             IStorageDisk disk = null;
 

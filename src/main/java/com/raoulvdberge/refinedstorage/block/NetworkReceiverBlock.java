@@ -24,11 +24,6 @@ public class NetworkReceiverBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
     public boolean hasConnectedState() {
         return true;
     }

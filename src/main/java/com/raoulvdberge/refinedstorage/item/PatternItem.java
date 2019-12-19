@@ -126,7 +126,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        if (!world.isRemote && player.isSneaking()) {
+        if (!world.isRemote && player.isCrouching()) {
             return new ActionResult<>(ActionResultType.SUCCESS, new ItemStack(RSItems.PATTERN, player.getHeldItem(hand).getCount()));
         }
 

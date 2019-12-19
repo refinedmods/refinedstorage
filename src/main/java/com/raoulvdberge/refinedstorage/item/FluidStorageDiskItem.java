@@ -84,7 +84,7 @@ public class FluidStorageDiskItem extends Item implements IStorageDiskProvider {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack diskStack = player.getHeldItem(hand);
 
-        if (!world.isRemote && player.isSneaking() && type != FluidStorageType.CREATIVE) {
+        if (!world.isRemote && player.isCrouching() && type != FluidStorageType.CREATIVE) {
             IStorageDisk disk = API.instance().getStorageDiskManager((ServerWorld) world).getByStack(diskStack);
 
             if (disk != null && disk.getStored() == 0) {

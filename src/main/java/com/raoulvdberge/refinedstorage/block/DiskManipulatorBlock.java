@@ -28,11 +28,6 @@ public class DiskManipulatorBlock extends NetworkNodeBlock {
         this.setRegistryName(RS.ID, "disk_manipulator");
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

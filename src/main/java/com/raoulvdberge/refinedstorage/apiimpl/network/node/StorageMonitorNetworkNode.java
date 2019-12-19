@@ -126,7 +126,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
         ItemStack filter = itemFilter.getStackInSlot(0);
 
-        int toExtract = player.isSneaking() ? 1 : 64;
+        int toExtract = player.isCrouching() ? 1 : 64;
 
         if (!filter.isEmpty()) {
             ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);

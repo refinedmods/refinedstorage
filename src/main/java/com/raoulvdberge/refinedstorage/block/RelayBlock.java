@@ -28,11 +28,6 @@ public class RelayBlock extends NetworkNodeBlock {
         this.setRegistryName(RS.ID, "relay");
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

@@ -50,11 +50,6 @@ public class WirelessTransmitterBlock extends NetworkNodeBlock {
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
     public boolean hasConnectedState() {
         return true;
     }
@@ -70,6 +65,8 @@ public class WirelessTransmitterBlock extends NetworkNodeBlock {
     public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
         return facing == Direction.DOWN && !this.isValidPosition(state, world, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
     }
+
+
 
     @Override
     @SuppressWarnings("deprecation")

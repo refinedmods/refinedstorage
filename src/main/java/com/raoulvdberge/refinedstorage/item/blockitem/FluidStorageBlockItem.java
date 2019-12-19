@@ -69,7 +69,7 @@ public class FluidStorageBlockItem extends BaseBlockItem {
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack storageStack = player.getHeldItem(hand);
 
-        if (!world.isRemote && player.isSneaking() && type != FluidStorageType.CREATIVE) {
+        if (!world.isRemote && player.isCrouching() && type != FluidStorageType.CREATIVE) {
             UUID diskId = null;
             IStorageDisk disk = null;
 
