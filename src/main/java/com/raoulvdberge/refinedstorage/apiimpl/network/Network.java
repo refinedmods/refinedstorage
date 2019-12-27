@@ -28,6 +28,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.ItemStorageCache;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.FluidStorageTracker;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.tracker.ItemStorageTracker;
 import com.raoulvdberge.refinedstorage.block.ControllerBlock;
+import com.raoulvdberge.refinedstorage.config.ServerConfig;
 import com.raoulvdberge.refinedstorage.energy.BaseEnergyStorage;
 import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
@@ -170,7 +171,9 @@ public class Network implements INetwork, IRedstoneConfigurable {
             if (lastEnergyType != energyType) {
                 lastEnergyType = energyType;
 
-                world.setBlockState(pos, world.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, energyType));
+                if (world.getBlockState(pos).getBlock() instanceof ControllerBlock) {
+                    world.setBlockState(pos, world.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, energyType));
+                }
             }
         }
     }
