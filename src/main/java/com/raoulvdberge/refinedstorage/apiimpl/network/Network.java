@@ -66,7 +66,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private final ItemStorageTracker itemStorageTracker = new ItemStorageTracker(this::markDirty);
     private final IStorageCache<FluidStack> fluidStorage = new FluidStorageCache(this);
     private final FluidStorageTracker fluidStorageTracker = new FluidStorageTracker(this::markDirty);
-    private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer());
+    private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer(), 0);
     private final RootNetworkNode root;
 
     private final BlockPos pos;
@@ -140,8 +140,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
             if (type == NetworkType.NORMAL) {
                 if (!RS.SERVER_CONFIG.getController().getUseEnergy()) {
                     this.energy.setStored(this.energy.getMaxEnergyStored());
-                } else if (this.energy.extractEnergy(getEnergyUsage(), true) >= 0) {
-                    this.energy.extractEnergy(getEnergyUsage(), false);
+                } else if (this.energy.extractEnergyInternal(getEnergyUsage(), true) >= 0) {
+                    this.energy.extractEnergyInternal(getEnergyUsage(), false);
                 } else {
                     this.energy.setStored(0);
                 }
