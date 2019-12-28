@@ -396,6 +396,9 @@ public class CraftingManager implements ICraftingManager {
                 this.containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
             }
         }
+
+        this.network.getItemStorageCache().reAttachListeners();
+        this.network.getFluidStorageCache().reAttachListeners();
     }
 
     @Nullable

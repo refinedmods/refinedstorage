@@ -70,6 +70,11 @@ public class PortableItemStorageCache implements IStorageCache<ItemStack> {
     }
 
     @Override
+    public void reAttachListeners() {
+        listeners.forEach(IStorageCacheListener::onAttached);
+    }
+
+    @Override
     public void sort() {
         // NO OP
     }

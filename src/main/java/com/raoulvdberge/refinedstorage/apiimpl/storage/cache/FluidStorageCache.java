@@ -111,6 +111,11 @@ public class FluidStorageCache implements IStorageCache<FluidStack> {
     }
 
     @Override
+    public void reAttachListeners() {
+        listeners.forEach(IStorageCacheListener::onAttached);
+    }
+
+    @Override
     public void sort() {
         storages.sort(IStorage.COMPARATOR);
     }
