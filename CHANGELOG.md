@@ -4,6 +4,7 @@
 - Resource packs can now define the font colors that Refined Storage GUIs need to use (raoulvdberge)
 - Fixed crash when loading a network (raoulvdberge, LezChap)
 - Fixed being able to drain energy from the Refined Storage Controller (raoulvdberge)
+- Fixed the Grid crashing on a item/fluid update-heavy storage system (raoulvdberge, Darkere, noobanidus)
 
 ### 1.7.1
 - Exact mode for processing patterns no longer exist, you can now define per-slot which item/fluid tags are allowed to be used by autocrafting, by using CTRL + click on the filter slot in the Pattern Grid (raoulvdberge)
