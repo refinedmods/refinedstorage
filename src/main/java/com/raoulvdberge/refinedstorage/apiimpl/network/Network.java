@@ -33,6 +33,7 @@ import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -170,7 +171,10 @@ public class Network implements INetwork, IRedstoneConfigurable {
             if (lastEnergyType != energyType) {
                 lastEnergyType = energyType;
 
-                world.setBlockState(pos, world.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, energyType));
+                BlockState state = world.getBlockState(pos);
+                if (state.getBlock() instanceof ControllerBlock) {
+                    world.setBlockState(pos, state.with(ControllerBlock.ENERGY_TYPE, energyType));
+                }
             }
         }
     }
