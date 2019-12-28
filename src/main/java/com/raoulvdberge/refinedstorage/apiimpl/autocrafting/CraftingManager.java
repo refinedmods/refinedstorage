@@ -371,7 +371,7 @@ public class CraftingManager implements ICraftingManager {
         List<ICraftingPatternContainer> containers = new ArrayList<>();
 
         for (INetworkNode node : network.getNodeGraph().all()) {
-            if (node instanceof ICraftingPatternContainer && node.canUpdate()) {
+            if (node instanceof ICraftingPatternContainer && node.isActive()) {
                 containers.add((ICraftingPatternContainer) node);
             }
         }
@@ -396,6 +396,9 @@ public class CraftingManager implements ICraftingManager {
                 this.containerInventories.computeIfAbsent(container.getName(), k -> new ArrayList<>()).add(handler);
             }
         }
+
+        this.network.getItemStorageCache().reAttachListeners();
+        this.network.getFluidStorageCache().reAttachListeners();
     }
 
     @Nullable

@@ -63,6 +63,10 @@ public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack
     @Override
     @Nonnull
     public ItemStack insert(@Nonnull ItemStack stack, int size, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         if (!IWhitelistBlacklist.acceptsItem(diskManipulator.getItemFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return ItemHandlerHelper.copyStackWithSize(stack, size);
         }

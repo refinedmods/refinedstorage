@@ -406,7 +406,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isGridActive() {
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() instanceof GridBlock) {

@@ -37,7 +37,7 @@ public class FluidStorageCache implements IStorageCache<FluidStack> {
         storages.clear();
 
         network.getNodeGraph().all().stream()
-            .filter(node -> node.canUpdate() && node instanceof IStorageProvider)
+            .filter(node -> node.isActive() && node instanceof IStorageProvider)
             .forEach(node -> ((IStorageProvider) node).addFluidStorages(storages));
 
         list.clear();
@@ -108,6 +108,11 @@ public class FluidStorageCache implements IStorageCache<FluidStack> {
     @Override
     public void removeListener(IStorageCacheListener<FluidStack> listener) {
         listeners.remove(listener);
+    }
+
+    @Override
+    public void reAttachListeners() {
+        listeners.forEach(IStorageCacheListener::onAttached);
     }
 
     @Override

@@ -77,7 +77,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActiveOnClient() {
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() instanceof CraftingMonitorBlock) {

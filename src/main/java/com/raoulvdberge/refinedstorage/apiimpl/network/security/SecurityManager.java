@@ -49,7 +49,7 @@ public class SecurityManager implements ISecurityManager {
         this.globalCard = null;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
-            if (node instanceof ISecurityCardContainer && node.canUpdate()) {
+            if (node instanceof ISecurityCardContainer && node.isActive()) {
                 ISecurityCardContainer container = (ISecurityCardContainer) node;
 
                 for (ISecurityCard card : container.getCards()) {

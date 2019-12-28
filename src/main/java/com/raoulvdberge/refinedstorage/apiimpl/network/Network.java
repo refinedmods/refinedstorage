@@ -33,6 +33,7 @@ import com.raoulvdberge.refinedstorage.tile.ControllerTile;
 import com.raoulvdberge.refinedstorage.tile.config.IRedstoneConfigurable;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -65,13 +66,14 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private final ItemStorageTracker itemStorageTracker = new ItemStorageTracker(this::markDirty);
     private final IStorageCache<FluidStack> fluidStorage = new FluidStorageCache(this);
     private final FluidStorageTracker fluidStorageTracker = new FluidStorageTracker(this::markDirty);
-    private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer());
+    private final BaseEnergyStorage energy = new BaseEnergyStorage(RS.SERVER_CONFIG.getController().getCapacity(), RS.SERVER_CONFIG.getController().getMaxTransfer(), 0);
     private final RootNetworkNode root;
 
     private final BlockPos pos;
     private final World world;
     private final NetworkType type;
     private ControllerBlock.EnergyType lastEnergyType = ControllerBlock.EnergyType.OFF;
+    private int lastEnergyUsage;
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private boolean throttlingDisabled = true; // Will be enabled after first update
@@ -107,7 +109,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public boolean canRun() {
-        return this.energy.getEnergyStored() > 0 && redstoneMode.isEnabled(world, pos);
+        return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -128,6 +130,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
     @Override
     public void update() {
         if (!world.isRemote) {
+            updateEnergyUsage();
+
             if (canRun()) {
                 craftingManager.update();
 
@@ -138,14 +142,12 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
             if (type == NetworkType.NORMAL) {
                 if (!RS.SERVER_CONFIG.getController().getUseEnergy()) {
-                    this.energy.setStored(this.energy.getMaxEnergyStored());
-                } else if (this.energy.extractEnergy(getEnergyUsage(), true) >= 0) {
-                    this.energy.extractEnergy(getEnergyUsage(), false);
+                    energy.setStored(this.energy.getMaxEnergyStored());
                 } else {
-                    this.energy.setStored(0);
+                    energy.extractEnergyBypassCanExtract(getEnergyUsage(), false);
                 }
             } else if (type == NetworkType.CREATIVE) {
-                this.energy.setStored(this.energy.getMaxEnergyStored());
+                energy.setStored(energy.getMaxEnergyStored());
             }
 
             boolean canRun = canRun();
@@ -170,7 +172,10 @@ public class Network implements INetwork, IRedstoneConfigurable {
             if (lastEnergyType != energyType) {
                 lastEnergyType = energyType;
 
-                world.setBlockState(pos, world.getBlockState(pos).with(ControllerBlock.ENERGY_TYPE, energyType));
+                BlockState state = world.getBlockState(pos);
+                if (state.getBlock() instanceof ControllerBlock) {
+                    world.setBlockState(pos, state.with(ControllerBlock.ENERGY_TYPE, energyType));
+                }
             }
         }
     }
@@ -513,17 +518,21 @@ public class Network implements INetwork, IRedstoneConfigurable {
         markDirty();
     }
 
-    @Override
-    public int getEnergyUsage() {
+    private void updateEnergyUsage() {
         int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
 
         for (INetworkNode node : nodeGraph.all()) {
-            if (node.canUpdate()) {
+            if (node.isActive()) {
                 usage += node.getEnergyUsage();
             }
         }
 
-        return usage;
+        this.lastEnergyUsage = usage;
+    }
+
+    @Override
+    public int getEnergyUsage() {
+        return lastEnergyUsage;
     }
 
     @Override

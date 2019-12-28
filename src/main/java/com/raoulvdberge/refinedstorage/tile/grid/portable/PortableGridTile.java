@@ -222,7 +222,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
 
         this.loadStorage();
 
-        active = isActive();
+        active = isGridActive();
         diskState = getDiskState();
     }
 
@@ -518,7 +518,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isGridActive() {
         if (world.isRemote) {
             BlockState state = world.getBlockState(pos);
 
@@ -585,7 +585,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
             return PortableGridDiskState.NONE;
         }
 
-        if (!isActive()) {
+        if (!isGridActive()) {
             return PortableGridDiskState.DISCONNECTED;
         }
 
@@ -610,7 +610,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
             world.setBlockState(pos, world.getBlockState(pos).with(PortableGridBlock.DISK_STATE, diskState));
         }
 
-        boolean isActive = isActive();
+        boolean isActive = isGridActive();
 
         if (this.active != isActive) {
             this.active = isActive;

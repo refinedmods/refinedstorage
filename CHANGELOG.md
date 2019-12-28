@@ -1,7 +1,18 @@
 # Refined Storage Changelog
 
+### 1.7.3
+- Fixed severe energy update lag introduced by version 1.7.2 (raoulvdberge)
+
 ### 1.7.2
 - Resource packs can now define the font colors that Refined Storage GUIs need to use (raoulvdberge)
+- Patterns being added or removed from the network are now propagated as well to clients that are watching a Grid (raoulvdberge)
+- When pressing ESCAPE in the search box on the Grid or Crafter Manager, focus on the search bar will be lost first before closing the GUI immediately. Then on the next ESCAPE press, the GUI will be closed (raoulvdberge)
+- Fixed crash when loading a network (raoulvdberge, LezChap)
+- Fixed being able to drain energy from the Refined Storage Controller (raoulvdberge)
+- Fixed the Grid crashing on a item/fluid update-heavy storage system (raoulvdberge, Darkere, noobanidus)
+- Fixed the Grid displaying the old quantity when shift clicking an entire stack out (raoulvdberge)
+- Fixed crash with the Disk Manipulator and using item/fluid filters when inserting into the network (raoulvdberge)
+- Fixed the network being able to run off 1 FE/t (raoulvdberge)
 
 ### 1.7.1
 - Exact mode for processing patterns no longer exist, you can now define per-slot which item/fluid tags are allowed to be used by autocrafting, by using CTRL + click on the filter slot in the Pattern Grid (raoulvdberge)

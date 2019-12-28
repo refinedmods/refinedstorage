@@ -65,7 +65,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         this.grid = grid;
         this.view = grid.getGridType() == GridType.FLUID ? new FluidGridView(this, getDefaultSorter(), getSorters()) : new ItemGridView(this, getDefaultSorter(), getSorters());
-        this.wasConnected = this.grid.isActive();
+        this.wasConnected = this.grid.isGridActive();
         this.tabs = new TabListWidget(this, new ElementDrawers(this, font), grid::getTabs, grid::getTotalTabPages, grid::getTabPage, grid::getTabSelected, IGrid.TABS_PER_PAGE);
         this.tabs.addListener(new TabListWidget.ITabListListener() {
             @Override
@@ -160,8 +160,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public void tick(int x, int y) {
-        if (wasConnected != grid.isActive()) {
-            wasConnected = grid.isActive();
+        if (wasConnected != grid.isGridActive()) {
+            wasConnected = grid.isGridActive();
 
             view.sort();
         }
@@ -238,7 +238,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     }
 
     private boolean isOverSlotWithStack() {
-        return grid.isActive() && isOverSlot() && slotNumber < view.getStacks().size();
+        return grid.isGridActive() && isOverSlot() && slotNumber < view.getStacks().size();
     }
 
     private boolean isOverSlot() {
@@ -354,7 +354,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         RenderSystem.setupGui3DDiffuseLighting();
 
         for (int i = 0; i < 9 * getVisibleRows(); ++i) {
-            if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
+            if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
                 this.slotNumber = slot;
             }
 
@@ -362,8 +362,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 view.getStacks().get(slot).draw(this, x, y);
             }
 
-            if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isActive()) {
-                int color = grid.isActive() ? -2130706433 : 0xFF5B5B5B;
+            if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
+                int color = grid.isGridActive() ? -2130706433 : 0xFF5B5B5B;
 
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
@@ -435,7 +435,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             RS.NETWORK_HANDLER.sendToServer(new GridPatternCreateMessage(((GridNetworkNode) grid).getPos()));
 
             return true;
-        } else if (grid.isActive()) {
+        } else if (grid.isGridActive()) {
             if (clickedClear) {
                 minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 
@@ -538,12 +538,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (key == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft.player.closeScreen();
-
-            return true;
-        }
-
         if (searchField.keyPressed(key, scanCode, modifiers) || searchField.func_212955_f()) {
             return true;
         }

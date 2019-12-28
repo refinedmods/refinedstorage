@@ -111,7 +111,7 @@ public class WirelessCraftingMonitor implements ICraftingMonitor {
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActiveOnClient() {
         return true;
     }
 

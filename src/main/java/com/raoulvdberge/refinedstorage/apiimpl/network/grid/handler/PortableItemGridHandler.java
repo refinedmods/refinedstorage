@@ -29,7 +29,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onExtract(ServerPlayerEntity player, UUID id, int flags) {
-        if (portableGrid.getStorage() == null || !grid.isActive()) {
+        if (portableGrid.getStorage() == null || !grid.isGridActive()) {
             return;
         }
 
@@ -108,7 +108,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
     @Override
     @Nonnull
     public ItemStack onInsert(ServerPlayerEntity player, ItemStack stack) {
-        if (portableGrid.getStorage() == null || !grid.isActive()) {
+        if (portableGrid.getStorage() == null || !grid.isGridActive()) {
             return stack;
         }
 
@@ -123,7 +123,7 @@ public class PortableItemGridHandler implements IItemGridHandler {
 
     @Override
     public void onInsertHeldItem(ServerPlayerEntity player, boolean single) {
-        if (player.inventory.getItemStack().isEmpty() || portableGrid.getStorage() == null || !grid.isActive()) {
+        if (player.inventory.getItemStack().isEmpty() || portableGrid.getStorage() == null || !grid.isGridActive()) {
             return;
         }
 

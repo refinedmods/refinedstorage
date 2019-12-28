@@ -291,7 +291,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isGridActive() {
         return true;
     }
 

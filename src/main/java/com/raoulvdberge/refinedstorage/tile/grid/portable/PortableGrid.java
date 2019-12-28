@@ -427,7 +427,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isGridActive() {
         if (RS.SERVER_CONFIG.getPortableGrid().getUseEnergy() &&
             ((PortableGridBlockItem) stack.getItem()).getType() != PortableGridBlockItem.Type.CREATIVE &&
             stack.getCapability(CapabilityEnergy.ENERGY).orElse(null).getEnergyStored() <= RS.SERVER_CONFIG.getPortableGrid().getOpenUsage()) {
@@ -469,7 +469,7 @@ public class PortableGrid implements IGrid, IPortableGrid, IStorageDiskContainer
             return PortableGridDiskState.NONE;
         }
 
-        if (!isActive()) {
+        if (!isGridActive()) {
             return PortableGridDiskState.DISCONNECTED;
         }
 

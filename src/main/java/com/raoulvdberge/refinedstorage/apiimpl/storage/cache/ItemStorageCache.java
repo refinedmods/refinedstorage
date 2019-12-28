@@ -37,7 +37,7 @@ public class ItemStorageCache implements IStorageCache<ItemStack> {
         storages.clear();
 
         network.getNodeGraph().all().stream()
-            .filter(node -> node.canUpdate() && node instanceof IStorageProvider)
+            .filter(node -> node.isActive() && node instanceof IStorageProvider)
             .forEach(node -> ((IStorageProvider) node).addItemStorages(storages));
 
         list.clear();
@@ -108,6 +108,11 @@ public class ItemStorageCache implements IStorageCache<ItemStack> {
     @Override
     public void removeListener(IStorageCacheListener<ItemStack> listener) {
         listeners.remove(listener);
+    }
+
+    @Override
+    public void reAttachListeners() {
+        listeners.forEach(IStorageCacheListener::onAttached);
     }
 
     @Override

@@ -73,7 +73,7 @@ public class CrafterManagerNetworkNode extends NetworkNode {
         this.searchBoxMode = searchBoxMode;
     }
 
-    public boolean isActive() {
+    public boolean isActiveOnClient() {
         BlockState state = world.getBlockState(pos);
 
         if (state.getBlock() instanceof CrafterManagerBlock) {
