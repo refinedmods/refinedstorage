@@ -32,7 +32,7 @@ public class ItemGridView extends BaseGridView {
         // Taking a stack out - and then re-inserting it - gives the new stack a new ID
         // With that new id, the reference for the crafting stack would be outdated.
 
-        // COMMENT 2 (about !map.containsKey(stack.getOtherId()))
+        // COMMENT 2 (about map.containsKey(stack.getOtherId()))
         // This check is needed or the .updateOtherId() call will crash with a NPE in high-update environments.
         // This is because we might have scenarios where we process "old" delta packets from another session when we haven't received any initial update packet from the new session.
         // (This is because of the executeLater system)
