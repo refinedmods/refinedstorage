@@ -164,6 +164,10 @@ public class ItemGridStack implements IGridStack {
 
     @Override
     public String getFormattedFullQuantity() {
+        if (zeroed) {
+            return "0";
+        }
+
         return API.instance().getQuantityFormatter().format(getQuantity());
     }
 

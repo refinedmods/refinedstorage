@@ -6,6 +6,7 @@
 - Fixed crash when loading a network (raoulvdberge, LezChap)
 - Fixed being able to drain energy from the Refined Storage Controller (raoulvdberge)
 - Fixed the Grid crashing on a item/fluid update-heavy storage system (raoulvdberge, Darkere, noobanidus)
+- Fixed the Grid displaying the old quantity when shift clicking an entire stack out (raoulvdberge)
 - Fixed crash with the Disk Manipulator and using item/fluid filters when inserting into the network (raoulvdberge)
 - Fixed the network being able to run off 1 FE/t (raoulvdberge)
 

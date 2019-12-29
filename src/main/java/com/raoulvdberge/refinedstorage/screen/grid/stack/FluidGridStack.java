@@ -151,6 +151,10 @@ public class FluidGridStack implements IGridStack {
 
     @Override
     public String getFormattedFullQuantity() {
+        if (zeroed) {
+            return "0 mB";
+        }
+
         return API.instance().getQuantityFormatter().format(getQuantity()) + " mB";
     }
 
