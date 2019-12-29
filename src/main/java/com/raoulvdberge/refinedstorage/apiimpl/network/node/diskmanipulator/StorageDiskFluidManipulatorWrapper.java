@@ -68,6 +68,10 @@ public class StorageDiskFluidManipulatorWrapper implements IStorageDisk<FluidSta
     @Override
     @Nonnull
     public FluidStack insert(@Nonnull FluidStack stack, int size, Action action) {
+        if (stack.isEmpty()) {
+            return stack;
+        }
+
         if (!IWhitelistBlacklist.acceptsFluid(diskManipulator.getFluidFilters(), diskManipulator.getWhitelistBlacklistMode(), diskManipulator.getCompare(), stack)) {
             return StackUtils.copy(stack, size);
         }
