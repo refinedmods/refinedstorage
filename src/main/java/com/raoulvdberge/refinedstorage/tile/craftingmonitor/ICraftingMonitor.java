@@ -26,7 +26,7 @@ public interface ICraftingMonitor {
     @Nullable
     ICraftingManager getCraftingManager();
 
-    boolean isActive();
+    boolean isActiveOnClient();
 
     void onClosed(PlayerEntity player);
 

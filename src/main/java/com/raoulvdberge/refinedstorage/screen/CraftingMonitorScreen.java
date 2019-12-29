@@ -140,7 +140,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
     }
 
     public List<ICraftingMonitorElement> getElements() {
-        if (!craftingMonitor.isActive()) {
+        if (!craftingMonitor.isActiveOnClient()) {
             return Collections.emptyList();
         }
 
@@ -235,7 +235,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
     @Override
     public void renderBackground(int x, int y, int mouseX, int mouseY) {
-        if (craftingMonitor.isActive()) {
+        if (craftingMonitor.isActiveOnClient()) {
             tabs.drawBackground(x, y - tabs.getHeight());
         }
 
@@ -245,7 +245,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         scrollbar.render();
 
-        tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActive());
+        tabs.drawForeground(x, y - tabs.getHeight(), mouseX, mouseY, craftingMonitor.isActiveOnClient());
     }
 
     @Override

@@ -45,7 +45,7 @@ public interface IPortableGrid {
 
     IStorageTracker<FluidStack> getFluidStorageTracker();
 
-    boolean isActive();
+    boolean isGridActive();
 
     PortableGridDiskState getDiskState();
 }

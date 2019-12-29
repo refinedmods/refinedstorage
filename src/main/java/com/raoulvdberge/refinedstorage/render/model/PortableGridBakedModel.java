@@ -124,7 +124,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
                     break;
             }
 
-            if (portableGrid.isActive()) {
+            if (portableGrid.isGridActive()) {
                 return new PortableGridItemBakedModel(baseConnected, myDisk);
             } else {
                 return new PortableGridItemBakedModel(baseDisconnected, myDisk);

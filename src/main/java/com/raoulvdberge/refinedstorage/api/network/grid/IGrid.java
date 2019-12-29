@@ -235,7 +235,7 @@ public interface IGrid {
     /**
      * @return true if the grid is active, false otherwise
      */
-    boolean isActive();
+    boolean isGridActive();
 
     /**
      * @return the slot id where this grid is located, if applicable, otherwise -1

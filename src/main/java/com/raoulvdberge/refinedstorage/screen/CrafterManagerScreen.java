@@ -97,7 +97,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
         blit(x, yy, 0, getTopHeight() + (18 * 3), xSize, getBottomHeight());
 
-        if (crafterManager.isActive()) {
+        if (crafterManager.isActiveOnClient()) {
             for (Slot slot : container.inventorySlots) {
                 if (slot instanceof CrafterManagerSlot && slot.isEnabled()) {
                     blit(x + slot.xPos - 1, y + slot.yPos - 1, 0, 193, 18, 18);
@@ -115,7 +115,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
         renderString(7, 7, title.getFormattedText());
         renderString(7, getYPlayerInventory() - 12, I18n.format("container.inventory"));
 
-        if (container != null && crafterManager.isActive()) {
+        if (container != null && crafterManager.isActiveOnClient()) {
             for (Map.Entry<String, Integer> heading : container.getHeadings().entrySet()) {
                 int y = heading.getValue();
 
@@ -221,7 +221,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public int getRows() {
-        return !crafterManager.isActive() ? 0 : container.getRows();
+        return !crafterManager.isActiveOnClient() ? 0 : container.getRows();
     }
 
     @Override

@@ -46,7 +46,7 @@ public abstract class BaseGridView implements IGridView {
 
         List<IGridStack> stacks = new ArrayList<>();
 
-        if (screen.getGrid().isActive()) {
+        if (screen.getGrid().isGridActive()) {
             stacks.addAll(map.values());
 
             IGrid grid = screen.getGrid();
