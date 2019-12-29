@@ -537,12 +537,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (key == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft.player.closeScreen();
-
-            return true;
-        }
-
         if (searchField.keyPressed(key, scanCode, modifiers) || searchField.func_212955_f()) {
             return true;
         }

@@ -18,7 +18,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
-import org.lwjgl.glfw.GLFW;
 import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.Map;
@@ -153,12 +152,6 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (key == GLFW.GLFW_KEY_ESCAPE) {
-            minecraft.player.closeScreen();
-
-            return true;
-        }
-
         if (searchField.keyPressed(key, scanCode, modifiers) || searchField.func_212955_f()) {
             return true;
         }

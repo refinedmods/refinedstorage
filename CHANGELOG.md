@@ -3,6 +3,7 @@
 ### 1.7.2
 - Resource packs can now define the font colors that Refined Storage GUIs need to use (raoulvdberge)
 - Patterns being added or removed from the network are now propagated as well to clients that are watching a Grid (raoulvdberge)
+- When pressing ESCAPE in the search box on the Grid or Crafter Manager, focus on the search bar will be lost first before closing the GUI immediately. Then on the next ESCAPE press, the GUI will be closed (raoulvdberge)
 - Fixed crash when loading a network (raoulvdberge, LezChap)
 - Fixed being able to drain energy from the Refined Storage Controller (raoulvdberge)
 - Fixed the Grid crashing on a item/fluid update-heavy storage system (raoulvdberge, Darkere, noobanidus)

@@ -72,6 +72,26 @@ public class SearchWidget extends TextFieldWidget {
                 }
 
                 result = true;
+            } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+                saveHistory();
+
+                if (!canLoseFocus) {
+                    // If we can't lose focus,
+                    // and we press escape,
+                    // we unfocus ourselves,
+                    // and close the screen immediately.
+                    setFocused(false);
+
+                    result = false; // Bubble the event up to the screen.
+                } else {
+                    // If we can lose focus,
+                    // and we press escape,
+                    // we unfocus ourselves.
+                    // On the next escape press, the screen will close.
+                    setFocused(false);
+
+                    result = true;
+                }
             }
         }
 
