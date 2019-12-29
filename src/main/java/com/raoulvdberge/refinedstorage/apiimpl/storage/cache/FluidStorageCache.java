@@ -37,7 +37,7 @@ public class FluidStorageCache implements IStorageCache<FluidStack> {
         storages.clear();
 
         network.getNodeGraph().all().stream()
-            .filter(node -> node.canUpdate() && node instanceof IStorageProvider)
+            .filter(node -> node.isActive() && node instanceof IStorageProvider)
             .forEach(node -> ((IStorageProvider) node).addFluidStorages(storages));
 
         list.clear();

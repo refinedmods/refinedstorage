@@ -371,7 +371,7 @@ public class CraftingManager implements ICraftingManager {
         List<ICraftingPatternContainer> containers = new ArrayList<>();
 
         for (INetworkNode node : network.getNodeGraph().all()) {
-            if (node instanceof ICraftingPatternContainer && node.canUpdate()) {
+            if (node instanceof ICraftingPatternContainer && node.isActive()) {
                 containers.add((ICraftingPatternContainer) node);
             }
         }

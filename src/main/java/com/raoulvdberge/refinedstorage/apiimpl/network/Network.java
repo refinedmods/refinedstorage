@@ -108,7 +108,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public boolean canRun() {
-        return this.energy.getEnergyStored() > 0 && redstoneMode.isEnabled(world, pos);
+        return this.energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -140,10 +140,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
             if (type == NetworkType.NORMAL) {
                 if (!RS.SERVER_CONFIG.getController().getUseEnergy()) {
                     this.energy.setStored(this.energy.getMaxEnergyStored());
-                } else if (this.energy.extractEnergyInternal(getEnergyUsage(), true) >= 0) {
-                    this.energy.extractEnergyInternal(getEnergyUsage(), false);
                 } else {
-                    this.energy.setStored(0);
+                    this.energy.extractEnergyBypassCanExtract(getEnergyUsage(), false);
                 }
             } else if (type == NetworkType.CREATIVE) {
                 this.energy.setStored(this.energy.getMaxEnergyStored());
@@ -522,7 +520,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
         int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
 
         for (INetworkNode node : nodeGraph.all()) {
-            if (node.canUpdate()) {
+            if (node.isActive()) {
                 usage += node.getEnergyUsage();
             }
         }

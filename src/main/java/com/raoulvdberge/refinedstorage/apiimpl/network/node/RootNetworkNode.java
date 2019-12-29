@@ -69,7 +69,7 @@ public class RootNetworkNode implements INetworkNode, INetworkNodeVisitor {
     }
 
     @Override
-    public boolean canUpdate() {
+    public boolean isActive() {
         return false;
     }
 

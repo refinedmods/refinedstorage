@@ -158,7 +158,7 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
             INetworkNode facingNode = API.instance().getNetworkNodeManager((ServerWorld) world).getNode(pos.offset(facing));
 
             if (facingNode instanceof ExternalStorageNetworkNode &&
-                facingNode.canUpdate() &&
+                facingNode.isActive() &&
                 ((ExternalStorageNetworkNode) facingNode).getDirection() == facing.getOpposite() &&
                 ((ExternalStorageNetworkNode) facingNode).getType() == IType.FLUIDS) {
                 return true;

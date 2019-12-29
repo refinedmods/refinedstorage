@@ -27,7 +27,8 @@ public class NetworkItemManager implements INetworkItemManager {
 
         for (INetworkNode node : network.getNodeGraph().all()) {
             if (node instanceof IWirelessTransmitter &&
-                node.canUpdate() &&
+                network.canRun() &&
+                node.isActive() &&
                 ((IWirelessTransmitter) node).getDimension() == player.dimension) {
                 IWirelessTransmitter transmitter = (IWirelessTransmitter) node;
 

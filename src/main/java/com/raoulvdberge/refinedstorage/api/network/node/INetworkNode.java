@@ -44,11 +44,11 @@ public interface INetworkNode {
     void onDisconnected(INetwork network);
 
     /**
-     * If a node can be updated typically depends on the redstone configuration.
+     * Whether this node is active, independent of the network.
      *
-     * @return true if this node can be treated as updatable, false otherwise
+     * @return true if this node is active, false otherwise
      */
-    boolean canUpdate();
+    boolean isActive();
 
     /**
      * @return the network, or null if this node is not connected to any network

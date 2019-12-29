@@ -166,7 +166,7 @@ public class ControllerTile extends BaseTile implements INetworkNodeProxy<RootNe
         List<ClientNode> nodes = new ArrayList<>();
 
         for (INetworkNode node : tile.getNetwork().getNodeGraph().all()) {
-            if (node.canUpdate()) {
+            if (node.isActive()) {
                 ItemStack stack = node.getItemStack();
 
                 if (stack.isEmpty()) {
