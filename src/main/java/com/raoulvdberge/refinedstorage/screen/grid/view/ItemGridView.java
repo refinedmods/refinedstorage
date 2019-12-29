@@ -42,7 +42,10 @@ public class ItemGridView extends BaseGridView {
         if (!stack.isCraftable() &&
             stack.getOtherId() != null &&
             map.containsKey(stack.getOtherId())) {
-            map.get(stack.getOtherId()).updateOtherId(stack.getId());
+            IGridStack craftingStack = map.get(stack.getOtherId());
+
+            craftingStack.updateOtherId(stack.getId());
+            craftingStack.setTrackerEntry(stack.getTrackerEntry());
         }
 
         ItemGridStack existing = (ItemGridStack) map.get(stack.getId());
