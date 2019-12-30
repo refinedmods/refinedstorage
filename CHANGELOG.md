@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.7.3
+- Fixed severe energy update lag introduced by version 1.7.2 (raoulvdberge)
+
 ### 1.7.2
 - Resource packs can now define the font colors that Refined Storage GUIs need to use (raoulvdberge)
 - Patterns being added or removed from the network are now propagated as well to clients that are watching a Grid (raoulvdberge)

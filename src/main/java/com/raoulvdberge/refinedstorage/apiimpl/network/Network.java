@@ -73,6 +73,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private final World world;
     private final NetworkType type;
     private ControllerBlock.EnergyType lastEnergyType = ControllerBlock.EnergyType.OFF;
+    private int lastEnergyUsage;
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
     private boolean throttlingDisabled = true; // Will be enabled after first update
@@ -108,7 +109,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public boolean canRun() {
-        return this.energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
+        return energy.getEnergyStored() >= lastEnergyUsage && redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -129,6 +130,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
     @Override
     public void update() {
         if (!world.isRemote) {
+            this.lastEnergyUsage = getEnergyUsage();
+
             if (canRun()) {
                 craftingManager.update();
 
@@ -139,12 +142,12 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
             if (type == NetworkType.NORMAL) {
                 if (!RS.SERVER_CONFIG.getController().getUseEnergy()) {
-                    this.energy.setStored(this.energy.getMaxEnergyStored());
+                    energy.setStored(this.energy.getMaxEnergyStored());
                 } else {
-                    this.energy.extractEnergyBypassCanExtract(getEnergyUsage(), false);
+                    energy.extractEnergyBypassCanExtract(lastEnergyUsage, false);
                 }
             } else if (type == NetworkType.CREATIVE) {
-                this.energy.setStored(this.energy.getMaxEnergyStored());
+                energy.setStored(energy.getMaxEnergyStored());
             }
 
             boolean canRun = canRun();
