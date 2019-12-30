@@ -109,7 +109,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public boolean canRun() {
-        return energy.getEnergyStored() >= lastEnergyUsage && redstoneMode.isEnabled(world, pos);
+        return energy.getEnergyStored() >= getEnergyUsage() && redstoneMode.isEnabled(world, pos);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     @Override
     public void update() {
         if (!world.isRemote) {
-            this.lastEnergyUsage = getEnergyUsage();
+            updateEnergyUsage();
 
             if (canRun()) {
                 craftingManager.update();
@@ -144,7 +144,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
                 if (!RS.SERVER_CONFIG.getController().getUseEnergy()) {
                     energy.setStored(this.energy.getMaxEnergyStored());
                 } else {
-                    energy.extractEnergyBypassCanExtract(lastEnergyUsage, false);
+                    energy.extractEnergyBypassCanExtract(getEnergyUsage(), false);
                 }
             } else if (type == NetworkType.CREATIVE) {
                 energy.setStored(energy.getMaxEnergyStored());
@@ -518,8 +518,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
         markDirty();
     }
 
-    @Override
-    public int getEnergyUsage() {
+    private void updateEnergyUsage() {
         int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
 
         for (INetworkNode node : nodeGraph.all()) {
@@ -528,7 +527,12 @@ public class Network implements INetwork, IRedstoneConfigurable {
             }
         }
 
-        return usage;
+        this.lastEnergyUsage = usage;
+    }
+
+    @Override
+    public int getEnergyUsage() {
+        return lastEnergyUsage;
     }
 
     @Override
