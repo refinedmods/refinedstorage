@@ -76,13 +76,15 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
 
             for (int i = 0; i < 8; ++i) {
                 if (key.diskState[i] != DiskState.NONE) {
-                    quads.addAll(disksByFacing.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, key.random));
+            //        quads.addAll(disksByFacing.get(facing).get(key.diskState[i]).get(i).getQuads(key.state, key.side, key.random));
                 }
             }
 
             return quads;
         }
     });
+
+    private Runnable init;
 
     public DiskDriveBakedModel(IBakedModel base,
                                IBakedModel disk,
@@ -91,20 +93,24 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
                                IBakedModel diskDisconnected) {
         super(base);
 
-        for (Direction facing : Direction.values()) {
-            if (facing.getHorizontalIndex() == -1) {
-                continue;
+        this.init = () -> {
+            for (Direction facing : Direction.values()) {
+                if (facing.getHorizontalIndex() == -1) {
+                    continue;
+                }
+
+                baseByFacing.put(facing, new TRSRBakedModel(base, facing));
+
+                disksByFacing.put(facing, new HashMap<>());
+
+                addDiskModels(disk, DiskState.NORMAL, facing);
+                addDiskModels(diskNearCapacity, DiskState.NEAR_CAPACITY, facing);
+                addDiskModels(diskFull, DiskState.FULL, facing);
+                addDiskModels(diskDisconnected, DiskState.DISCONNECTED, facing);
             }
+        };
 
-            baseByFacing.put(facing, new TRSRBakedModel(base, facing));
-
-            disksByFacing.put(facing, new HashMap<>());
-
-            addDiskModels(disk, DiskState.NORMAL, facing);
-            addDiskModels(diskNearCapacity, DiskState.NEAR_CAPACITY, facing);
-            addDiskModels(diskFull, DiskState.FULL, facing);
-            addDiskModels(diskDisconnected, DiskState.DISCONNECTED, facing);
-        }
+        init.run();
     }
 
     private void addDiskModels(IBakedModel disk, DiskState type, Direction facing) {
@@ -112,7 +118,7 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
 
         for (int y = 0; y < 4; ++y) {
             for (int x = 0; x < 2; ++x) {
-                TRSRBakedModel model = new TRSRBakedModel(disk, facing);
+                /*TRSRBakedModel model = new TRSRBakedModel(disk, facing);
 
                 Vector3f trans = model.transformation.getTranslation();
 
@@ -124,9 +130,14 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
 
                 trans.add(0, -((2F / 16F) + ((float) y * 3F) / 16F), 0); // Remove from Y
 
-                model.transformation = new TransformationMatrix(trans, model.transformation.func_227989_d_(), model.transformation.getScale(), model.transformation.getRightRot());
+                model.transformation = new TransformationMatrix(
+                    trans,
+                    model.transformation.getRightRot(),
+                    model.transformation.getScale(),
+                    model.transformation.func_227989_d_()
+                );*/
 
-                disksByFacing.get(facing).get(type).add(model);
+                disksByFacing.get(facing).get(type).add(disk);
             }
         }
     }
@@ -140,6 +151,9 @@ public class DiskDriveBakedModel extends DelegateBakedModel {
         }
 
         CacheKey key = new CacheKey(state, side, diskState, rand);
+
+        init.run();
+        cache.refresh(key);
 
         return cache.getUnchecked(key);
     }
