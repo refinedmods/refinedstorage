@@ -244,8 +244,8 @@ public final class RenderUtils {
     }
 
     public static boolean isLightMapDisabled() {
-        // TODO return !ForgeConfig.CLIENT.forgeLightPipelineEnabled.get();
-        return true;
+        // return ForgeConfig.CLIENT.forgeLightPipelineEnabled.get();
+        return false;
     }
 
     public static VertexFormat getFormatWithLightMap(VertexFormat format) {

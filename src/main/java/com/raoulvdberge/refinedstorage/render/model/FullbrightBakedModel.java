@@ -8,14 +8,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
+import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.VertexLighterFlat;
-import net.minecraftforge.common.model.TransformationHelper;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -75,9 +73,7 @@ public class FullbrightBakedModel extends DelegateBakedModel {
             return quad;
         }
 
-        VertexFormat newFormat = RenderUtils.getFormatWithLightMap(quad.getFormat());
-
-        UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(newFormat);
+        BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
 
         VertexLighterFlat trans = new VertexLighterFlat(Minecraft.getInstance().getBlockColors()) {
             @Override
@@ -94,12 +90,11 @@ public class FullbrightBakedModel extends DelegateBakedModel {
 
         trans.setParent(builder);
 
-        // TODO quad.pipe(trans);
-
-        builder.setQuadTint(quad.getTintIndex());
         builder.setQuadOrientation(quad.getFace());
         builder.setTexture(quad.getSprite());
         builder.setApplyDiffuseLighting(false);
+
+        quad.pipe(trans);
 
         return builder.build();
     }

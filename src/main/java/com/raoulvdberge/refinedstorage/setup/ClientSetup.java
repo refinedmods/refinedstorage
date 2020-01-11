@@ -73,14 +73,15 @@ public class ClientSetup {
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "constructor"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/constructor/cutouts/connected")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "destructor"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/destructor/cutouts/connected")));
 
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) ->
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
             new DiskDriveBakedModel(
                 base,
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
-            ));
+            )
+        ).disableCache());
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_manipulator"), (base, registry) -> new FullbrightBakedModel(
             new DiskManipulatorBakedModel(

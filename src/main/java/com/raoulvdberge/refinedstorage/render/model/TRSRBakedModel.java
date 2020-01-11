@@ -10,18 +10,15 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
+import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.TRSRTransformer;
-import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.common.model.TransformationHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-/**
- * @link https://github.com/SlimeKnights/Mantle/blob/1.14/src/main/java/slimeknights/mantle/client/model/TRSRBakedModel.java
- */
-// for those wondering TRSR stands for Translation Rotation Scale Rotation
 public class TRSRBakedModel implements IBakedModel {
     protected final IBakedModel original;
     protected TransformationMatrix transformation;
@@ -35,10 +32,7 @@ public class TRSRBakedModel implements IBakedModel {
     }
 
     public TRSRBakedModel(IBakedModel original, float x, float y, float z, float rotX, float rotY, float rotZ, float scaleX, float scaleY, float scaleZ) {
-        this(original, new TransformationMatrix(new Vector3f(x, y, z),
-            null,
-            new Vector3f(scaleX, scaleY, scaleZ),
-            TransformationHelper.quatFromXYZ(new Vector3f(rotX, rotY, rotZ), false)));
+        this(original, new TransformationMatrix(new Vector3f(x, y, z), null, new Vector3f(scaleX, scaleY, scaleZ), TransformationHelper.quatFromXYZ(new Vector3f(rotX, rotY, rotZ), true)));
     }
 
     public TRSRBakedModel(IBakedModel original, TransformationMatrix transform) {
@@ -46,39 +40,31 @@ public class TRSRBakedModel implements IBakedModel {
         this.transformation = transform;
     }
 
-    /**
-     * Rotates around the Y axis and adjusts culling appropriately. South is default.
-     */
     public TRSRBakedModel(IBakedModel original, Direction facing) {
+        this(original,facing,null);
+    }
+
+    public TRSRBakedModel(IBakedModel original, Direction facing, @Nullable Vector3f translation) {
         this.original = original;
 
         double r = Math.PI * (360 - facing.getOpposite().getHorizontalIndex() * 90) / 180d;
 
-        this.transformation = new TransformationMatrix(null, TransformationHelper.quatFromXYZ(new Vector3f(0,(float)r,0), false), null, null).blockCenterToCorner();
-        //new TransformationMatrix(null, TransformationHelper.quatFromXYZ(new Vector3f(0, 180, 0), true), null, null);
+        this.transformation = new TransformationMatrix(translation, TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false), null, null);
     }
 
     @Nonnull
     @Override
     @SuppressWarnings("deprecation")
     public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
-        // transform quads obtained from parent
         ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
-        if (!original.isBuiltInRenderer()) {
-            // adjust side to facing-rotation
-            /*if (side != null && side.getHorizontalIndex() > -1) {
-                side = Direction.byHorizontalIndex((side.getHorizontalIndex() + faceOffset) % 4);
-            }*/
+        for (BakedQuad quad : original.getQuads(state, side, rand)) {
+            BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
+            TRSRTransformer transformer = new TRSRTransformer(builder, transformation.blockCenterToCorner());
 
-            for (BakedQuad quad : original.getQuads(state, side, rand)) {
-                UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(quad.getFormat());
-                TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
+            quad.pipe(transformer);
 
-                quad.pipe(transformer);
-
-                quads.add(builder.build());
-            }
+            quads.add(builder.build());
         }
 
         return quads.build();
