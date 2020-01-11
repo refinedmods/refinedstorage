@@ -17,10 +17,11 @@ public interface IGridFactory {
      *
      * @param player the player
      * @param stack  the stack
+     * @param slotId the slot id, if applicable, otherwise -1
      * @return the grid, or null if a problem occurred
      */
     @Nullable
-    IGrid createFromStack(EntityPlayer player, ItemStack stack);
+    IGrid createFromStack(EntityPlayer player, ItemStack stack, int slotId);
 
     /**
      * Creates a grid from a block. Used when {@link #getType()} is BLOCK.

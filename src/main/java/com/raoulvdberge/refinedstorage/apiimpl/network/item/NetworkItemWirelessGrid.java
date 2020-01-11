@@ -19,11 +19,13 @@ public class NetworkItemWirelessGrid implements INetworkItem {
     private INetworkItemHandler handler;
     private EntityPlayer player;
     private ItemStack stack;
+    private int slotId;
 
-    public NetworkItemWirelessGrid(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
+    public NetworkItemWirelessGrid(INetworkItemHandler handler, EntityPlayer player, ItemStack stack, int slotId) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
+        this.slotId = slotId;
     }
 
     @Override
@@ -43,7 +45,7 @@ public class NetworkItemWirelessGrid implements INetworkItem {
             return false;
         }
 
-        API.instance().getGridManager().openGrid(WirelessGrid.ID, (EntityPlayerMP) player, stack);
+        API.instance().getGridManager().openGrid(WirelessGrid.ID, (EntityPlayerMP) player, stack, slotId);
 
         drainEnergy(RS.INSTANCE.config.wirelessGridOpenUsage);
 

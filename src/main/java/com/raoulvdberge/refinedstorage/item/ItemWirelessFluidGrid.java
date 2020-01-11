@@ -29,8 +29,8 @@ public class ItemWirelessFluidGrid extends ItemNetworkItem {
 
     @Override
     @Nonnull
-    public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack) {
-        return new NetworkItemWirelessFluidGrid(handler, player, stack);
+    public INetworkItem provide(INetworkItemHandler handler, EntityPlayer player, ItemStack stack, int slotId) {
+        return new NetworkItemWirelessFluidGrid(handler, player, stack, slotId);
     }
 
     public static int getSortingType(ItemStack stack) {

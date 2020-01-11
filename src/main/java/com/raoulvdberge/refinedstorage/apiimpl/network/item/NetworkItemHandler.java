@@ -23,7 +23,7 @@ public class NetworkItemHandler implements INetworkItemHandler {
     }
 
     @Override
-    public void open(EntityPlayer player, ItemStack stack) {
+    public void open(EntityPlayer player, ItemStack stack, int slotId) {
         boolean inRange = false;
 
         for (INetworkNode node : network.getNodeGraph().all()) {
@@ -46,7 +46,7 @@ public class NetworkItemHandler implements INetworkItemHandler {
             return;
         }
 
-        INetworkItem item = ((INetworkItemProvider) stack.getItem()).provide(this, player, stack);
+        INetworkItem item = ((INetworkItemProvider) stack.getItem()).provide(this, player, stack, slotId);
 
         if (item.onOpen(network)) {
             items.put(player, item);

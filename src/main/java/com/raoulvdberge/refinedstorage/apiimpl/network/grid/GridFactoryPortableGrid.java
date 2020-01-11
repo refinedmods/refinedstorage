@@ -15,8 +15,8 @@ import javax.annotation.Nullable;
 public class GridFactoryPortableGrid implements IGridFactory {
     @Nullable
     @Override
-    public IGrid createFromStack(EntityPlayer player, ItemStack stack) {
-        return new PortableGrid(player, stack);
+    public IGrid createFromStack(EntityPlayer player, ItemStack stack, int slotId) {
+        return new PortableGrid(player, stack, slotId);
     }
 
     @Nullable

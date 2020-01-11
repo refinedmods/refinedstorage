@@ -450,6 +450,11 @@ public class NetworkNodeGrid extends NetworkNode implements IGridNetworkAware, I
     }
 
     @Override
+    public int getSlotId() {
+        return -1;
+    }
+
+    @Override
     public void onCrafted(EntityPlayer player) {
         onCrafted(this, world, player);
     }

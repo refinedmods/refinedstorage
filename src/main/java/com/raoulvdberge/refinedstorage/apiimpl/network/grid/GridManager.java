@@ -43,16 +43,16 @@ public class GridManager implements IGridManager {
 
     @Override
     public void openGrid(int id, EntityPlayerMP player, BlockPos pos) {
-        openGrid(id, player, null, pos);
+        openGrid(id, player, null, pos, -1);
     }
 
     @Override
-    public void openGrid(int id, EntityPlayerMP player, ItemStack stack) {
-        openGrid(id, player, stack, null);
+    public void openGrid(int id, EntityPlayerMP player, ItemStack stack, int slotId) {
+        openGrid(id, player, stack, null, slotId);
     }
 
-    private void openGrid(int id, EntityPlayerMP player, @Nullable ItemStack stack, @Nullable BlockPos pos) {
-        Pair<IGrid, TileEntity> grid = createGrid(id, player, stack, pos);
+    private void openGrid(int id, EntityPlayerMP player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId) {
+        Pair<IGrid, TileEntity> grid = createGrid(id, player, stack, pos, slotId);
         if (grid == null) {
             return;
         }
@@ -73,7 +73,7 @@ public class GridManager implements IGridManager {
         // So we first send the window id in MessageGridOpen.
 
         // The order is preserved by TCP.
-        RS.INSTANCE.network.sendTo(new MessageGridOpen(player.currentWindowId, pos, id, stack), player);
+        RS.INSTANCE.network.sendTo(new MessageGridOpen(player.currentWindowId, pos, id, stack, slotId), player);
 
         player.openContainer = new ContainerGrid(grid.getLeft(), new ResizableDisplayDummy(), grid.getRight() instanceof TileBase ? (TileBase) grid.getRight() : null, player);
         player.openContainer.windowId = player.currentWindowId;
@@ -84,7 +84,7 @@ public class GridManager implements IGridManager {
 
     @Override
     @Nullable
-    public Pair<IGrid, TileEntity> createGrid(int id, EntityPlayer player, @Nullable ItemStack stack, @Nullable BlockPos pos) {
+    public Pair<IGrid, TileEntity> createGrid(int id, EntityPlayer player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId) {
         IGridFactory factory = get(id);
 
         if (factory == null) {
@@ -96,7 +96,7 @@ public class GridManager implements IGridManager {
 
         switch (factory.getType()) {
             case STACK:
-                grid = factory.createFromStack(player, stack);
+                grid = factory.createFromStack(player, stack, slotId);
                 break;
             case BLOCK:
                 grid = factory.createFromBlock(player, pos);

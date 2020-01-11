@@ -18,9 +18,7 @@ import com.raoulvdberge.refinedstorage.container.slot.legacy.SlotLegacyFilter;
 import com.raoulvdberge.refinedstorage.gui.IResizableDisplay;
 import com.raoulvdberge.refinedstorage.tile.TileBase;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
-import com.raoulvdberge.refinedstorage.tile.grid.WirelessGrid;
 import com.raoulvdberge.refinedstorage.tile.grid.portable.IPortableGrid;
-import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGrid;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IContainerListener;
@@ -271,8 +269,7 @@ public class ContainerGrid extends ContainerBase implements IGridCraftingListene
     }
 
     @Override
-    protected boolean isHeldItemDisabled() {
-        // Here we check for the concrete portable grid type, not IPortableGrid, because we *CAN* move the held item in the portable grid tile
-        return grid instanceof WirelessGrid || grid instanceof PortableGrid;
+    protected int getDisabledSlotNumber() {
+        return grid.getSlotId();
     }
 }

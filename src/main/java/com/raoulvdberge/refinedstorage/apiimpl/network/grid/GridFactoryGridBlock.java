@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 public class GridFactoryGridBlock implements IGridFactory {
     @Override
     @Nullable
-    public IGrid createFromStack(EntityPlayer player, ItemStack stack) {
+    public IGrid createFromStack(EntityPlayer player, ItemStack stack, int slotId) {
         return null;
     }
 

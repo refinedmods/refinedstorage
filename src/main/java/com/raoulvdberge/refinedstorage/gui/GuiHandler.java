@@ -143,7 +143,7 @@ public class GuiHandler implements IGuiHandler {
     }
 
     private WirelessCraftingMonitor getWirelessCraftingMonitor(EntityPlayer player, int invIndex) {
-        return new WirelessCraftingMonitor(player.inventory.getStackInSlot(invIndex));
+        return new WirelessCraftingMonitor(player.inventory.getStackInSlot(invIndex), invIndex);
     }
 
     private GuiCraftingMonitor getWirelessCraftingMonitorGui(EntityPlayer player, int invIndex) {
