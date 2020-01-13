@@ -32,14 +32,9 @@ public class FullbrightBakedModel extends DelegateBakedModel {
         this.doCaching = doCaching;
     }
 
-    private boolean canRenderFullbright() {
-        // return ForgeConfig.CLIENT.forgeLightPipelineEnabled.get();
-        return true;
-    }
-
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand, IModelData data) {
-        if (state == null || !canRenderFullbright()) {
+        if (state == null) {
             return base.getQuads(state, side, rand, data);
         }
 
@@ -65,11 +60,21 @@ public class FullbrightBakedModel extends DelegateBakedModel {
     }
 
     private static BakedQuad transformQuad(BakedQuad quad) {
-        int[] vertexData = quad.getVertexData();
+        int[] vertexData = quad.getVertexData().clone();
 
-        vertexData[6] = 0xF000F000;
+        // Set lighting to fullbright on all vertices
+        vertexData[6] = 0x00F000F0;
+        vertexData[6 + 8] = 0x00F000F0;
+        vertexData[6 + 8 + 8] = 0x00F000F0;
+        vertexData[6 + 8 + 8 + 8] = 0x00F000F0;
 
-        return quad;
+        return new BakedQuad(
+            vertexData,
+            quad.getTintIndex(),
+            quad.getFace(),
+            quad.getSprite(),
+            quad.shouldApplyDiffuseLighting()
+        );
     }
 
     private class CacheKey {
