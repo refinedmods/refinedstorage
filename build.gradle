@@ -39,13 +39,19 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
+            property 'forge.logging.markers', ''
+            property 'forge.logging.console.level', 'info'
             mods {
                 refinedstorage {
                     source sourceSets.main
                 }
             }
+        }
+
+        intellijClient {
+            parent runs.client
+            ideaModule "${project.name}.main"
+            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
         }
 
         server {
@@ -88,7 +94,7 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.1-30.0.36'
+    minecraft 'net.minecraftforge:forge:1.15.1-30.0.39'
     //compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11:api")
     //compileOnly 'mouse-tweaks:MouseTweaks:2.12:mc1.14.4'
     //runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.14.4:10.1.3')
