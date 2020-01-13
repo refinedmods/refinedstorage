@@ -43,35 +43,38 @@ public class ClientSetup {
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "controller"), (base, registry) -> new FullbrightBakedModel(
             base,
+            true,
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"),
             new ResourceLocation(RS.ID, "block/controller/cutouts/on")
         ));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "creative_controller"), (base, registry) -> new FullbrightBakedModel(
             base,
+            true,
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_off"),
             new ResourceLocation(RS.ID, "block/controller/cutouts/nearly_on"),
             new ResourceLocation(RS.ID, "block/controller/cutouts/on")
         ));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "grid"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/grid/cutouts/front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_grid"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/grid/cutouts/crafting_front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern_grid"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/grid/cutouts/pattern_front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "fluid_grid"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/grid/cutouts/fluid_front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_receiver"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/network_receiver/cutouts/connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/network_transmitter/cutouts/connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "relay"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/relay/cutouts/connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "detector"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/detector/cutouts/on")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "grid"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/grid/cutouts/front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_grid"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/grid/cutouts/crafting_front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern_grid"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/grid/cutouts/pattern_front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "fluid_grid"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/grid/cutouts/fluid_front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_receiver"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/network_receiver/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "network_transmitter"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/network_transmitter/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "relay"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/relay/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "detector"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/detector/cutouts/on")));
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "security_manager"), (base, registry) -> new FullbrightBakedModel(
             base,
+            true,
             new ResourceLocation(RS.ID, "block/security_manager/cutouts/top_connected"),
             new ResourceLocation(RS.ID, "block/security_manager/cutouts/front_connected"),
             new ResourceLocation(RS.ID, "block/security_manager/cutouts/left_connected"),
             new ResourceLocation(RS.ID, "block/security_manager/cutouts/back_connected"),
             new ResourceLocation(RS.ID, "block/security_manager/cutouts/right_connected")
         ));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "wireless_transmitter"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/wireless_transmitter/cutouts/connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "constructor"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/constructor/cutouts/connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "destructor"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/destructor/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "wireless_transmitter"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/wireless_transmitter/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "constructor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/constructor/cutouts/connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "destructor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/destructor/cutouts/connected")));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_drive"), (base, registry) -> new FullbrightBakedModel(
             new DiskDriveBakedModel(
@@ -80,8 +83,10 @@ public class ClientSetup {
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_near_capacity")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
-            )
-        ).disableCache());
+            ),
+            false,
+            new ResourceLocation(RS.ID, "block/disks/leds")
+        ));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "disk_manipulator"), (base, registry) -> new FullbrightBakedModel(
             new DiskManipulatorBakedModel(
@@ -92,9 +97,10 @@ public class ClientSetup {
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_full")),
                 registry.get(new ResourceLocation(RS.ID + ":block/disks/disk_disconnected"))
             ),
+            false,
             new ResourceLocation(RS.ID, "block/disk_manipulator/cutouts/connected"),
             new ResourceLocation(RS.ID, "block/disks/leds")
-        ).disableCache());
+        ));
 
         for (String portableGridName : new String[]{"portable_grid", "creative_portable_grid"}) {
             bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, portableGridName), (base, registry) -> new FullbrightBakedModel(
@@ -106,12 +112,14 @@ public class ClientSetup {
                     registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_full")),
                     registry.get(new ResourceLocation(RS.ID + ":block/disks/portable_grid_disk_disconnected"))
                 ),
+                false,
                 new ResourceLocation(RS.ID + ":block/disks/leds")
-            ).disableCache());
+            ));
         }
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter"), (base, registry) -> new FullbrightBakedModel(
             base,
+            true,
             new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected"),
             new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected_90"),
             new ResourceLocation(RS.ID, "block/crafter/cutouts/side_connected_180"),
@@ -119,8 +127,8 @@ public class ClientSetup {
             new ResourceLocation(RS.ID, "block/crafter/cutouts/front_connected")
         ));
 
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter_manager"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/crafter_manager/cutouts/front_connected")));
-        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_monitor"), (base, registry) -> new FullbrightBakedModel(base, new ResourceLocation(RS.ID, "block/crafting_monitor/cutouts/front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafter_manager"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/crafter_manager/cutouts/front_connected")));
+        bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "crafting_monitor"), (base, registry) -> new FullbrightBakedModel(base, true, new ResourceLocation(RS.ID, "block/crafting_monitor/cutouts/front_connected")));
 
         bakedModelOverrideRegistry.add(new ResourceLocation(RS.ID, "pattern"), (base, registry) -> new PatternBakedModel(base));
 
@@ -143,6 +151,7 @@ public class ClientSetup {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onModelBake);
 
         API.instance().addPatternRenderHandler(pattern -> Screen.hasShiftDown());
+
         API.instance().addPatternRenderHandler(pattern -> {
             Container container = Minecraft.getInstance().player.openContainer;
 
@@ -156,6 +165,7 @@ public class ClientSetup {
 
             return false;
         });
+
         API.instance().addPatternRenderHandler(pattern -> {
             Container container = Minecraft.getInstance().player.openContainer;
 

@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Set;
 
 public final class RenderUtils {
-    private static final VertexFormat ITEM_FORMAT_WITH_LIGHTMAP = addTex2sToVertexFormat(DefaultVertexFormats.field_227849_i_); // TODO Is this item?
-
     public static String shorten(String text, int length) {
         if (text.length() > length) {
             text = text.substring(0, length) + "...";
@@ -241,33 +239,6 @@ public final class RenderUtils {
         }
 
         return tooltipStrings;
-    }
-
-    public static boolean isLightMapDisabled() {
-        // return ForgeConfig.CLIENT.forgeLightPipelineEnabled.get();
-        return false;
-    }
-
-    public static VertexFormat getFormatWithLightMap(VertexFormat format) {
-        if (isLightMapDisabled()) {
-            return format;
-        }
-
-        if (format == DefaultVertexFormats.BLOCK) {
-            return DefaultVertexFormats.BLOCK;
-        } else if (format == DefaultVertexFormats.field_227849_i_) { // TODO Is this item?
-            return ITEM_FORMAT_WITH_LIGHTMAP;
-        } else if (!format.hasUV(1)) {
-            return addTex2sToVertexFormat(format);
-        }
-
-        return format;
-    }
-
-    private static VertexFormat addTex2sToVertexFormat(VertexFormat format) {
-        List<VertexFormatElement> elems = new ArrayList<>(format.func_227894_c_());
-        elems.add(DefaultVertexFormats.TEX_2S);
-        return new VertexFormat(ImmutableList.copyOf(elems));
     }
 
     public static boolean inBounds(int x, int y, int w, int h, double ox, double oy) {
