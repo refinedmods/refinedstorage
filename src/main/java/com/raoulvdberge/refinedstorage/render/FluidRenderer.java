@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 
 /**
- * @link https://github.com/mezz/JustEnoughItems/blob/1.14/src/main/java/mezz/jei/plugins/vanilla/ingredients/fluid/FluidStackRenderer.java
+ * @link https://github.com/mezz/JustEnoughItems/blob/1.15/src/main/java/mezz/jei/plugins/vanilla/ingredients/fluid/FluidStackRenderer.java
  */
 public class FluidRenderer {
     public static final FluidRenderer INSTANCE = new FluidRenderer(FluidAttributes.BUCKET_VOLUME, 16, 16, 16);
@@ -130,10 +130,10 @@ public class FluidRenderer {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
-        /* TODO bufferBuilder.func_225582_a_(xCoord, yCoord + 16, zLevel).tex(uMin, vMax).endVertex();
-        bufferBuilder.func_225582_a_(xCoord + 16 - maskRight, yCoord + 16, zLevel).tex(uMax, vMax).endVertex();
-        bufferBuilder.func_225582_a_(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).tex(uMax, vMin).endVertex();
-        bufferBuilder.func_225582_a_(xCoord, yCoord + maskTop, zLevel).tex(uMin, vMin).endVertex();*/
+        bufferBuilder.func_225582_a_(xCoord, yCoord + 16, zLevel).func_225583_a_((float) uMin, (float) vMax).endVertex();
+        bufferBuilder.func_225582_a_(xCoord + 16 - maskRight, yCoord + 16, zLevel).func_225583_a_((float) uMax, (float) vMax).endVertex();
+        bufferBuilder.func_225582_a_(xCoord + 16 - maskRight, yCoord + maskTop, zLevel).func_225583_a_((float) uMax, (float) vMin).endVertex();
+        bufferBuilder.func_225582_a_(xCoord, yCoord + maskTop, zLevel).func_225583_a_((float) uMin, (float) vMin).endVertex();
         tessellator.draw();
     }
 }
