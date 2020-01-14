@@ -159,7 +159,7 @@ public class TabListWidget {
 
     public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY) {
         if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
-            tabs.get().get(tabHovering).drawTooltip(mouseX, mouseY, gui.getXSize(), gui.getYSize(), fontRenderer);
+            tabs.get().get(tabHovering).drawTooltip(mouseX, mouseY, gui.width, gui.height, fontRenderer);
         }
     }
 

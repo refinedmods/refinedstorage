@@ -168,8 +168,6 @@ public class AlternativesScreen extends BaseScreen {
         int x = 8;
         int y = 20;
 
-        RenderSystem.setupGuiFlatDiffuseLighting();
-
         for (int i = 0; i < lines.size(); ++i) {
             boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();
 
@@ -284,6 +282,7 @@ public class AlternativesScreen extends BaseScreen {
 
         @Override
         public void render(int x, int y) {
+            RenderSystem.color4f(1,1,1,1);
             renderItem(x + 3, y + 2, item);
             renderString(x + 4 + 19, y + 7, item.getDisplayName().getFormattedText());
         }

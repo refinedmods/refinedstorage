@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -39,6 +40,10 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class BaseScreen<T extends Container> extends ContainerScreen<T> {
+    public static final int Z_LEVEL_ITEMS = 100;
+    public static final int Z_LEVEL_TOOLTIPS = 500;
+    public static final int Z_LEVEL_QTY = 300;
+
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
     private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
 
@@ -274,24 +279,26 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderItem(int x, int y, ItemStack stack) {
-        renderItem(x, y, stack, false, null, RenderSettings.INSTANCE.getSecondaryColor());
+        renderItem(x, y, stack, false, null, 0);
     }
 
     public void renderItem(int x, int y, ItemStack stack, boolean overlay, @Nullable String text, int textColor) {
         try {
-            itemRenderer.zLevel = 200.0F;
+            setBlitOffset(Z_LEVEL_ITEMS);
+            itemRenderer.zLevel = Z_LEVEL_ITEMS;
 
             itemRenderer.renderItemIntoGUI(stack, x, y);
 
             if (overlay) {
-                this.itemRenderer.renderItemOverlayIntoGUI(font, stack, x, y, "");
+                itemRenderer.renderItemOverlayIntoGUI(font, stack, x, y, "");
             }
+
+            setBlitOffset(0);
+            itemRenderer.zLevel = 0;
 
             if (text != null) {
                 renderQuantity(x, y, text, textColor);
             }
-
-            itemRenderer.zLevel = 0.0F;
         } catch (Throwable t) {
             logger.warn("Couldn't render stack: " + stack.getItem().toString(), t);
         }
@@ -301,7 +308,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         boolean large = minecraft.getForceUnicodeFont() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
 
         RenderSystem.pushMatrix();
-        RenderSystem.translatef(x, y, 1);
+        RenderSystem.translatef(x, y, Z_LEVEL_QTY);
 
         if (!large) {
             RenderSystem.scalef(0.5f, 0.5f, 1);
@@ -329,9 +336,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderString(int x, int y, String message, int color) {
-        RenderSystem.disableLighting();
         font.drawString(message, x, y, color);
-        RenderSystem.enableLighting();
     }
 
     public void renderTooltip(int x, int y, String lines) {
@@ -343,9 +348,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public void renderTooltip(@Nonnull ItemStack stack, int x, int y, List<String> lines) {
-        RenderSystem.disableLighting();
-        GuiUtils.drawHoveringText(stack, lines, x, y, width - guiLeft, height, -1, font);
-        RenderSystem.enableLighting();
+        GuiUtils.drawHoveringText(stack, lines, x, y, width, height, -1, font);
     }
 
     protected void onPreInit() {

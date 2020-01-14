@@ -236,6 +236,11 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(RSBlocks.RELAY, cutout);
         RenderTypeLookup.setRenderLayer(RSBlocks.SECURITY_MANAGER, cutout);
         RenderTypeLookup.setRenderLayer(RSBlocks.WIRELESS_TRANSMITTER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.IMPORTER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.EXPORTER, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.EXTERNAL_STORAGE, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR, cutout);
 
         // TODO ClientRegistry.bindTileEntitySpecialRenderer(StorageMonitorTile.class, new StorageMonitorTileRenderer());
 

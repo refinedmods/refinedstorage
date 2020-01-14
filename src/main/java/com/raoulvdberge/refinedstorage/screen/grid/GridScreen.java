@@ -365,13 +365,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             if (RenderUtils.inBounds(x, y, 16, 16, mouseX, mouseY) || !grid.isGridActive()) {
                 int color = grid.isGridActive() ? -2130706433 : 0xFF5B5B5B;
 
+                RenderSystem.pushMatrix();
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 RenderSystem.colorMask(true, true, true, false);
                 fillGradient(x, y, x + 16, y + 16, color, color);
                 RenderSystem.colorMask(true, true, true, true);
-                RenderSystem.enableLighting();
-                RenderSystem.enableDepthTest();
+                RenderSystem.popMatrix();
             }
 
             slot++;
@@ -409,7 +409,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         ItemStack stack = gridStack instanceof ItemGridStack ? ((ItemGridStack) gridStack).getStack() : ItemStack.EMPTY;
 
-        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, RS.CLIENT_CONFIG.getGrid().getDetailedTooltip(), stack, mouseX, mouseY, xSize, ySize, font);
+        RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, RS.CLIENT_CONFIG.getGrid().getDetailedTooltip(), stack, mouseX, mouseY, width, height, font);
     }
 
     @Override

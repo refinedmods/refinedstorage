@@ -142,7 +142,7 @@ public class CraftingPreviewScreen extends BaseScreen {
                             renderString(RenderUtils.getOffsetOnScale(x + 25, scale), RenderUtils.getOffsetOnScale(yy + 6, scale), output.getDisplayName().getFormattedText());
                             RenderSystem.popMatrix();
 
-                            RenderSystem.setupGuiFlatDiffuseLighting();
+                            RenderSystem.setupGui3DDiffuseLighting();
                             RenderSystem.enableDepthTest();
                             renderItem(x + 5, yy, output);
                             RenderHelper.disableStandardItemLighting();
@@ -165,7 +165,7 @@ public class CraftingPreviewScreen extends BaseScreen {
         } else {
             int slot = scrollbar != null ? (scrollbar.getOffset() * 3) : 0;
 
-            RenderSystem.setupGuiFlatDiffuseLighting();
+            RenderSystem.setupGui3DDiffuseLighting();
             RenderSystem.enableDepthTest();
 
             this.hoveringStack = null;

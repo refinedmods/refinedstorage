@@ -89,7 +89,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
 
         int slot = scrollbar.getOffset() * 2;
 
-        RenderSystem.setupGuiFlatDiffuseLighting();
+        RenderSystem.setupGui3DDiffuseLighting();
 
         List<ClientNode> nodes = ControllerTile.NODES.getValue();
 

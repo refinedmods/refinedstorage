@@ -54,12 +54,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
         }
 
         @Override
-        public List<IFilter> getFilters() {
-            return null;
-        }
-
-        @Override
-        public void drawTooltip(int x, int y, int xSize, int ySize, FontRenderer fontRenderer) {
+        public void drawTooltip(int x, int y, int screenWidth, int screenHeight, FontRenderer fontRenderer) {
             List<String> textLines = Lists.newArrayList(requested.getItem() != null ? requested.getItem().getDisplayName().getFormattedText() : requested.getFluid().getDisplayName().getFormattedText());
             List<String> smallTextLines = Lists.newArrayList();
 
@@ -71,13 +66,18 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
             smallTextLines.add(String.format("%02d:%02d", minutes, seconds));
             smallTextLines.add(String.format("%d%%", completionPercentage));
 
-            RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, ItemStack.EMPTY, x, y, xSize, ySize, fontRenderer);
+            RenderUtils.drawTooltipWithSmallText(textLines, smallTextLines, true, ItemStack.EMPTY, x, y, screenWidth, screenHeight, fontRenderer);
+        }
+
+        @Override
+        public List<IFilter> getFilters() {
+            return null;
         }
 
         @Override
         public void drawIcon(int x, int y, IElementDrawer<ItemStack> itemDrawer, IElementDrawer<FluidStack> fluidDrawer) {
             if (requested.getItem() != null) {
-                RenderSystem.setupGuiFlatDiffuseLighting();
+                RenderSystem.setupGui3DDiffuseLighting();
 
                 itemDrawer.draw(x, y, requested.getItem());
             } else {
@@ -255,7 +255,7 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
 
         int item = scrollbar != null ? scrollbar.getOffset() * 3 : 0;
 
-        RenderSystem.setupGuiFlatDiffuseLighting();
+        RenderSystem.setupGui3DDiffuseLighting();
 
         int x = 7;
         int y = 20;
