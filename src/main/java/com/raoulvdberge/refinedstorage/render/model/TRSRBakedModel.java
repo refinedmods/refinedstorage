@@ -22,6 +22,7 @@ import java.util.Random;
 public class TRSRBakedModel implements IBakedModel {
     protected final IBakedModel original;
     protected TransformationMatrix transformation;
+    private final int faceOffset;
 
     public TRSRBakedModel(IBakedModel original, float x, float y, float z, float scale) {
         this(original, x, y, z, 0, 0, 0, scale, scale, scale);
@@ -38,6 +39,7 @@ public class TRSRBakedModel implements IBakedModel {
     public TRSRBakedModel(IBakedModel original, TransformationMatrix transform) {
         this.original = original;
         this.transformation = transform;
+        this.faceOffset = 0;
     }
 
     public TRSRBakedModel(IBakedModel original, Direction facing) {
@@ -50,6 +52,7 @@ public class TRSRBakedModel implements IBakedModel {
         double r = Math.PI * (360 - facing.getOpposite().getHorizontalIndex() * 90) / 180d;
 
         this.transformation = new TransformationMatrix(translation, TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false), null, null);
+        this.faceOffset = 4 + Direction.NORTH.getHorizontalIndex() - facing.getHorizontalIndex();
     }
 
     @Nonnull
@@ -57,6 +60,10 @@ public class TRSRBakedModel implements IBakedModel {
     @SuppressWarnings("deprecation")
     public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
         ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
+
+        if (side != null && side.getHorizontalIndex() > -1) {
+            side = Direction.byHorizontalIndex((side.getHorizontalIndex() + this.faceOffset) % 4);
+        }
 
         for (BakedQuad quad : original.getQuads(state, side, rand)) {
             BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
