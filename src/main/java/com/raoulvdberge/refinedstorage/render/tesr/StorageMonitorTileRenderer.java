@@ -1,8 +1,6 @@
 package com.raoulvdberge.refinedstorage.render.tesr;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RSBlocks;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.block.StorageMonitorBlock;
@@ -10,46 +8,22 @@ import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
-import net.minecraftforge.client.ForgeHooksClient;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.model.TransformationHelper;
 
 public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonitorTile> {
-    public StorageMonitorTileRenderer(TileEntityRendererDispatcher p_i226006_1_) {
-        super(p_i226006_1_);
+    public StorageMonitorTileRenderer(TileEntityRendererDispatcher dispatcher) {
+        super(dispatcher);
     }
-     /* TODO @Override
-    @SuppressWarnings("deprecation")
-    public void render(StorageMonitorTile tile, double x, double y, double z, float partialTicks, int destroyStage) {
-       setLightmapDisabled(true);
 
-        float disX = 0, disXText = 0;
-        float disY = 0.5F, disYText = 0.23F;
-        float disZ = 0, disZText = 0;
-        float spacing = 0.01F;
-
-        float rotX = 0;
-        float rotY = 0;
-        float rotZ = 0;
-
-        String amount = API.instance().getQuantityFormatter().formatWithUnits(tile.getAmount());
-
-        // Very bad, but I don't know how to translate a 2D font width to a 3D font width...
-        float textWidth = 0;
-        for (int i = 0; i < amount.length(); ++i) {
-            char c = amount.charAt(i);
-            if (c == '.') {
-                textWidth += 0.005F;
-            } else {
-                textWidth += 0.026F;
-            }
-        }
-
+    @Override
+    public void func_225616_a_(StorageMonitorTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int i, int i1) {
         Direction direction = Direction.NORTH;
 
         BlockState state = tile.getWorld().getBlockState(tile.getPos());
@@ -57,96 +31,42 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             direction = state.get(RSBlocks.STORAGE_MONITOR.getDirection().getProperty());
         }
 
-        if (direction == Direction.NORTH) {
-            disX = 0.5F;
-            disXText = disX + textWidth;
-
-            disZ = -spacing;
-            disZText = disZ - spacing;
-
-            rotZ = 1F;
-        } else if (direction == Direction.WEST) {
-            disX = -spacing;
-            disXText = disX - spacing;
-
-            disZ = 0.5F;
-            disZText = disZ - textWidth;
-
-            rotZ = 1F;
-            rotX = 1F;
-        } else if (direction == Direction.SOUTH) {
-            disX = 0.5F;
-            disXText = disX - textWidth;
-
-            disZ = 1F + spacing;
-            disZText = disZ + spacing;
-
-            rotX = 1F;
-        } else if (direction == Direction.EAST) {
-            disX = 1F + spacing;
-            disXText = disX + spacing;
-
-            disZ = 0.5F;
-            disZText = disZ + textWidth;
-
-            rotZ = 1F;
-            rotX = -1F;
-        }
-
-        RenderSystem.pushMatrix();
-        RenderSystem.translated(x + disX, y + disY, z + disZ);
-        RenderSystem.rotatef(180F, rotX, rotY, rotZ);
-        RenderSystem.color4f(1F, 1F, 1F, 1F);
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        RenderSystem.depthMask(true);
-        RenderSystem.scalef(0.4F, -0.4F, -0.015F);
-        Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-        Minecraft.getInstance().getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.enableAlphaTest();
-        RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        String amount = API.instance().getQuantityFormatter().formatWithUnits(tile.getAmount());
 
         if (tile.getItemStack() != null) {
-            IBakedModel bakedModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(tile.getItemStack(), null, Minecraft.getInstance().player);
-            bakedModel = ForgeHooksClient.handleCameraTransforms(bakedModel, ItemCameraTransforms.TransformType.GUI, false);
-            Minecraft.getInstance().getItemRenderer().renderItem(tile.getItemStack(), bakedModel);
+            Vec3d offset = getOffset(direction);
+
+            matrixStack.func_227860_a_();
+
+            double r = Math.PI * (360 - direction.getOpposite().getHorizontalIndex() * 90) / 180d;
+
+            matrixStack.func_227861_a_(0.5D, 0.5D, 0.5D);
+            matrixStack.func_227861_a_(offset.getX(), offset.getY(), offset.getZ());
+            matrixStack.func_227863_a_(TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false));
+
+            matrixStack.func_227860_a_();
+            matrixStack.func_227862_a_(0.5F, 0.5F, 0.5F);
+            Minecraft.getInstance().getItemRenderer().func_229110_a_(tile.getItemStack(), ItemCameraTransforms.TransformType.FIXED, 0x00F000F0, OverlayTexture.field_229196_a_, matrixStack, renderTypeBuffer);
+            matrixStack.func_227865_b_();
+
+            Minecraft.getInstance().fontRenderer.func_228079_a_(
+                "Hello",
+                0,
+                0,
+                -1,
+                false,
+                matrixStack.func_227866_c_().func_227870_a_(),
+                renderTypeBuffer,
+                false,
+                0,
+                15728880
+            );
+
+            matrixStack.func_227865_b_();
         }
+    }
 
-        RenderSystem.disableAlphaTest();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.disableLighting();
-        Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-        Minecraft.getInstance().getTextureManager().func_229267_b_(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
-        RenderSystem.disableBlend();
-        RenderSystem.color4f(1F, 1F, 1F, 1F);
-
-        RenderSystem.popMatrix();
-
-        RenderSystem.pushMatrix();
-
-        RenderSystem.translated(x + disXText, y + disYText, z + disZText);
-        RenderSystem.rotatef(180F, rotX, rotY, rotZ);
-        float size = 0.00450F;
-        float factor = 2.0f;
-        RenderSystem.scaled(size * factor, size * factor, size);
-
-        if (tile.getItemStack() != null) {
-            Minecraft.getInstance().fontRenderer.drawString(amount, 0, 0, 0xFFFFFF);
-        }
-
-        RenderSystem.popMatrix();
-
-        this.setLightmapDisabled(false);
-    }*/
-
-    @Override
-    public void func_225616_a_(StorageMonitorTile storageMonitorTile, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
-
+    public Vec3d getOffset(Direction direction) {
+        return new Vec3d(((float) direction.getXOffset() * 0.4F), 0, ((float) direction.getZOffset() * 0.4F));
     }
 }

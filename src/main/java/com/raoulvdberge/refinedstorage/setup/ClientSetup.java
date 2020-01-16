@@ -13,7 +13,6 @@ import com.raoulvdberge.refinedstorage.render.tesr.StorageMonitorTileRenderer;
 import com.raoulvdberge.refinedstorage.screen.*;
 import com.raoulvdberge.refinedstorage.screen.factory.CrafterManagerScreenFactory;
 import com.raoulvdberge.refinedstorage.screen.factory.GridScreenFactory;
-import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
@@ -242,7 +241,7 @@ public class ClientSetup {
         RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR, cutout);
         RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR, cutout);
 
-        // TODO ClientRegistry.bindTileEntitySpecialRenderer(StorageMonitorTile.class, new StorageMonitorTileRenderer());
+        ClientRegistry.bindTileEntityRenderer(RSTiles.STORAGE_MONITOR, StorageMonitorTileRenderer::new);
 
         e.getMinecraftSupplier().get().getItemColors().register(new PatternItemColor(), RSItems.PATTERN);
     }
