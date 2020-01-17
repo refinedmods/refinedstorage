@@ -34,23 +34,51 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         String amount = API.instance().getQuantityFormatter().formatWithUnits(tile.getAmount());
 
         if (tile.getItemStack() != null) {
-            Vec3d offset = getOffset(direction);
-
+            // Push
             matrixStack.func_227860_a_();
 
             double r = Math.PI * (360 - direction.getOpposite().getHorizontalIndex() * 90) / 180d;
 
             matrixStack.func_227861_a_(0.5D, 0.5D, 0.5D);
-            matrixStack.func_227861_a_(offset.getX(), offset.getY(), offset.getZ());
+            matrixStack.func_227861_a_((float) direction.getXOffset() * 0.4F, 0, (float) direction.getZOffset() * 0.4F);
             matrixStack.func_227863_a_(TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false));
 
             matrixStack.func_227860_a_();
             matrixStack.func_227862_a_(0.5F, 0.5F, 0.5F);
-            Minecraft.getInstance().getItemRenderer().func_229110_a_(tile.getItemStack(), ItemCameraTransforms.TransformType.FIXED, 0x00F000F0, OverlayTexture.field_229196_a_, matrixStack, renderTypeBuffer);
+
+            Minecraft.getInstance().getItemRenderer().func_229110_a_(
+                tile.getItemStack(),
+                ItemCameraTransforms.TransformType.FIXED,
+                0x00F000F0,
+                OverlayTexture.field_229196_a_,
+                matrixStack,
+                renderTypeBuffer
+            );
+
             matrixStack.func_227865_b_();
 
+            // Pop
+            matrixStack.func_227865_b_();
+
+            // Push
+            matrixStack.func_227860_a_();
+
+            float stringOffset = -(Minecraft.getInstance().fontRenderer.getStringWidth(amount) * 0.01F) / 2F;
+
+            matrixStack.func_227861_a_(0.5D, 0.5D, 0.5D);
+            matrixStack.func_227861_a_(
+                ((float) direction.getXOffset() * 0.5F) + (direction.getZOffset() * stringOffset),
+                -0.225,
+                ((float) direction.getZOffset() * 0.5F) - (direction.getXOffset() * stringOffset)
+            );
+
+            matrixStack.func_227863_a_(TransformationHelper.quatFromXYZ(new Vector3f(direction.getXOffset() * 180, 0, direction.getZOffset() * 180), true));
+            matrixStack.func_227863_a_(TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false));
+
+            matrixStack.func_227862_a_(0.01F, 0.01F, 0.01F);
+
             Minecraft.getInstance().fontRenderer.func_228079_a_(
-                "Hello",
+                amount,
                 0,
                 0,
                 -1,
@@ -62,11 +90,8 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
                 15728880
             );
 
+            // Pop
             matrixStack.func_227865_b_();
         }
-    }
-
-    public Vec3d getOffset(Direction direction) {
-        return new Vec3d(((float) direction.getXOffset() * 0.4F), 0, ((float) direction.getZOffset() * 0.4F));
     }
 }
