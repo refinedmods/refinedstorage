@@ -314,20 +314,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
             RenderSystem.scalef(0.5f, 0.5f, 1);
         }
 
-        RenderSystem.disableLighting();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(770, 771);
-        RenderSystem.disableDepthTest();
-
         font.drawStringWithShadow(qty, (large ? 16 : 30) - font.getStringWidth(qty), large ? 8 : 22, color);
 
-        RenderSystem.enableDepthTest();
-        RenderSystem.enableTexture();
-        RenderSystem.depthMask(true);
-        RenderSystem.enableLighting();
-        RenderSystem.disableBlend();
         RenderSystem.popMatrix();
     }
 
