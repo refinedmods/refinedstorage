@@ -21,7 +21,7 @@ public class GuiContainerHandler implements IGuiContainerHandler<BaseScreen> {
             GridScreen grid = (GridScreen) screen;
 
             if (!grid.getSearchField().isFocused() && grid.isOverSlotArea(mouseX, mouseY)) {
-                return grid.getSlotNumber() >= 0 && grid.getSlotNumber() < grid.getView().getStacks().size() ? grid.getView().getStacks().get(grid.getSlotNumber()).getIngredient() : null;
+                return (grid.getSlotNumber() >= 0 && grid.getSlotNumber() < grid.getView().getStacks().size()) ? grid.getView().getStacks().get(grid.getSlotNumber()).getIngredient() : null;
             }
         }
 

@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.screen.widget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
+import com.raoulvdberge.refinedstorage.integration.jei.GridRecipeTransferHandler;
 import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -71,9 +72,9 @@ public class ScrollbarWidget implements IGuiEventListener {
 
         if (button == 0 && RenderUtils.inBounds(x, y, width, height, mx, my)) {
             // Prevent accidental scrollbar click after clicking recipe transfer button
-            /* TODO if (JeiIntegration.isLoaded() && System.currentTimeMillis() - GridRecipeTransferHandler.LAST_TRANSFER_TIME <= GridRecipeTransferHandler.TRANSFER_SCROLLBAR_DELAY_MS) {
+            if (JeiIntegration.isLoaded() && System.currentTimeMillis() - GridRecipeTransferHandler.LAST_TRANSFER_TIME <= GridRecipeTransferHandler.TRANSFER_SCROLLBAR_DELAY_MS) {
                 return false;
-            }*/
+            }
 
             updateOffset(my);
 

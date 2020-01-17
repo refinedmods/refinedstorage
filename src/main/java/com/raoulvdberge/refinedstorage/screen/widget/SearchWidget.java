@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.screen.widget;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGrid;
 import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
+import com.raoulvdberge.refinedstorage.integration.jei.RSJeiPlugin;
 import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.gui.FontRenderer;
@@ -28,7 +29,7 @@ public class SearchWidget extends TextFieldWidget {
 
     public void updateJei() {
         if (JeiIntegration.isLoaded() && (mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED || mode == IGrid.SEARCH_BOX_MODE_JEI_SYNCHRONIZED_AUTOSELECTED)) {
-            /// TODO RSJeiPlugin.RUNTIME.getIngredientFilter().setFilterText(getText());
+            RSJeiPlugin.RUNTIME.getIngredientFilter().setFilterText(getText());
         }
     }
 
