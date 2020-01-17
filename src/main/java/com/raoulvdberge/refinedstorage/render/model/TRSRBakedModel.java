@@ -10,6 +10,9 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
+import net.minecraftforge.client.model.ModelDataManager;
+import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.TRSRTransformer;
 import net.minecraftforge.common.model.TransformationHelper;
@@ -65,7 +68,7 @@ public class TRSRBakedModel implements IBakedModel {
             side = Direction.byHorizontalIndex((side.getHorizontalIndex() + this.faceOffset) % 4);
         }
 
-        for (BakedQuad quad : original.getQuads(state, side, rand)) {
+        for (BakedQuad quad : original.getQuads(state, side, rand, EmptyModelData.INSTANCE)) {
             BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
             TRSRTransformer transformer = new TRSRTransformer(builder, transformation.blockCenterToCorner());
 

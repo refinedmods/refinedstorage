@@ -39,23 +39,23 @@ public class PortableGridBakedModel extends DelegateBakedModel {
             List<BakedQuad> quads = new ArrayList<>();
 
             if (key.active) {
-                quads.addAll(new TRSRBakedModel(baseConnected, key.direction).getQuads(key.state, key.side, key.random));
+                quads.addAll(new TRSRBakedModel(baseConnected, key.direction).getQuads(key.state, null, key.random));
             } else {
-                quads.addAll(new TRSRBakedModel(baseDisconnected, key.direction).getQuads(key.state, key.side, key.random));
+                quads.addAll(new TRSRBakedModel(baseDisconnected, key.direction).getQuads(key.state, null, key.random));
             }
 
             switch (key.diskState) {
                 case NORMAL:
-                    quads.addAll(new TRSRBakedModel(disk, key.direction).getQuads(key.state, key.side, key.random));
+                    quads.addAll(new TRSRBakedModel(disk, key.direction).getQuads(key.state, null, key.random));
                     break;
                 case NEAR_CAPACITY:
-                    quads.addAll(new TRSRBakedModel(diskNearCapacity, key.direction).getQuads(key.state, key.side, key.random));
+                    quads.addAll(new TRSRBakedModel(diskNearCapacity, key.direction).getQuads(key.state, null, key.random));
                     break;
                 case FULL:
-                    quads.addAll(new TRSRBakedModel(diskFull, key.direction).getQuads(key.state, key.side, key.random));
+                    quads.addAll(new TRSRBakedModel(diskFull, key.direction).getQuads(key.state, null, key.random));
                     break;
                 case DISCONNECTED:
-                    quads.addAll(new TRSRBakedModel(diskDisconnected, key.direction).getQuads(key.state, key.side, key.random));
+                    quads.addAll(new TRSRBakedModel(diskDisconnected, key.direction).getQuads(key.state, null, key.random));
                     break;
                 case NONE:
                     break;
