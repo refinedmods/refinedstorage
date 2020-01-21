@@ -77,7 +77,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         Pair<ItemStack, Long> deposit = deposits.get(player.getGameProfile().getName());
 
         if (deposit == null) {
-            return ActionResultType.FAIL; // TODO correct?
+            return ActionResultType.FAIL;
         }
 
         ItemStack inserted = deposit.getKey();
@@ -98,11 +98,11 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
     public ActionResultType deposit(PlayerEntity player, ItemStack toInsert) {
         if (network == null) {
-            return ActionResultType.FAIL; // TODO Correct?
+            return ActionResultType.FAIL;
         }
 
         if (!network.getSecurityManager().hasPermission(Permission.INSERT, player)) {
-            return ActionResultType.FAIL; // TODO Correct?
+            return ActionResultType.FAIL;
         }
 
         ItemStack filter = itemFilter.getStackInSlot(0);

@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.8
+- Port to Minecraft 1.15 (raoulvdberge)
+
 ### 1.7.3
 - Fixed severe energy update lag introduced by version 1.7.2 (raoulvdberge)
 

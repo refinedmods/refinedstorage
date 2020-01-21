@@ -99,9 +99,9 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.15.1:6.0.0.1:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.15.1:6.0.0.1")
 
-    //compileOnly 'mouse-tweaks:MouseTweaks:2.12:mc1.14.4'
+    compileOnly 'mouse-tweaks:MouseTweaks:2.13:mc1.15.1'
 
-    //runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.14.4:10.1.3')
+    runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.15.1:11.0.0')
 }
 
 jar {
