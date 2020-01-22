@@ -250,8 +250,6 @@ public class CraftingTask implements ICraftingTask {
             return result;
         }
 
-        crafts.values().stream().filter(x -> x instanceof Processing).forEach(x -> ((Processing) x).finishCalculation());
-
         if (requested.getItem() != null) {
             this.toCraft.add(requested.getItem(), qty * qtyPerCraft);
         } else {
@@ -914,7 +912,12 @@ public class CraftingTask implements ICraftingTask {
         if (executionStarted == -1) {
             executionStarted = System.currentTimeMillis();
 
-            crafts.values().forEach(c -> totalSteps += c.getQuantity());
+            crafts.values().forEach(c -> {
+                totalSteps += c.getQuantity();
+                if (c instanceof Processing) {
+                    ((Processing) c).finishCalculation();
+                }
+            });
         }
 
         ++ticks;
