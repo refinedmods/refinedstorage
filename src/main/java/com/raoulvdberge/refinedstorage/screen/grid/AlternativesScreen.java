@@ -5,7 +5,7 @@ import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.container.AlternativesContainer;
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
-import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
+import com.raoulvdberge.refinedstorage.screen.widget.CheckboxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataManager;
@@ -13,7 +13,6 @@ import com.raoulvdberge.refinedstorage.tile.grid.GridTile;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -98,14 +97,14 @@ public class AlternativesScreen extends BaseScreen {
         } else if (fluid != null) {
             lines.add(new FluidLine(fluid));
 
-            for (ResourceLocation owningTag : FluidTags.func_226157_a_().getOwningTags(fluid.getFluid())) {
+            for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(fluid.getFluid())) {
                 lines.add(new TagLine(owningTag, GridTile.ALLOWED_FLUID_TAGS.getValue().get(slot).contains(owningTag)));
 
                 int fluidCount = 0;
 
                 FluidListLine line = new FluidListLine();
 
-                for (Fluid fluid : FluidTags.func_226157_a_().get(owningTag).getAllElements()) {
+                for (Fluid fluid : FluidTags.getCollection().get(owningTag).getAllElements()) {
                     if (fluidCount > 0 && fluidCount % 8 == 0) {
                         lines.add(line);
                         line = new FluidListLine();
@@ -304,7 +303,7 @@ public class AlternativesScreen extends BaseScreen {
 
     private class TagLine implements Line {
         private final ResourceLocation tagName;
-        private final CheckBoxWidget widget;
+        private final CheckboxWidget widget;
 
         public TagLine(ResourceLocation tagName, boolean checked) {
             this.tagName = tagName;

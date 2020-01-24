@@ -33,7 +33,7 @@ archivesBaseName = 'refinedstorage'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20190719-1.14.3'
+    mappings channel: 'snapshot', version: '20200124-1.15.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -94,14 +94,14 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.1-30.0.41'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.0.0'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.15.1:6.0.0.1:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.15.1:6.0.0.1")
+    compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
 
-    compileOnly 'mouse-tweaks:MouseTweaks:2.13:mc1.15.1'
+    //compileOnly 'mouse-tweaks:MouseTweaks:2.13:mc1.15.1'
 
-    runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.15.1:11.0.0')
+    //runtimeOnly fg.deobf('crafting-tweaks:CraftingTweaks_1.15.1:11.0.0')
 }
 
 jar {

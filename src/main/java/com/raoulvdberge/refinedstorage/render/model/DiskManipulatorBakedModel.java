@@ -131,7 +131,7 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
 
                 trans.add(0, -((6F / 16F) + (3F * y) / 16F), 0); // Remove from Y
                 
-                model.transformation = new TransformationMatrix(trans, model.transformation.func_227989_d_(), model.transformation.getScale(), model.transformation.getRightRot());
+                model.transformation = new TransformationMatrix(trans, model.transformation.getRotationLeft(), model.transformation.getScale(), model.transformation.getRightRot());
 
                 disks.get(facing).get(type).add(model);
             }

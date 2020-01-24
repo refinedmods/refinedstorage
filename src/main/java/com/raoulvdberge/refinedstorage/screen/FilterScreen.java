@@ -7,6 +7,7 @@ import com.raoulvdberge.refinedstorage.container.FilterContainer;
 import com.raoulvdberge.refinedstorage.item.FilterItem;
 import com.raoulvdberge.refinedstorage.network.FilterUpdateMessage;
 import com.raoulvdberge.refinedstorage.render.RenderSettings;
+import com.raoulvdberge.refinedstorage.screen.widget.CheckboxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.FilterTypeSideButton;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -14,7 +15,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.lwjgl.glfw.GLFW;
 
 public class FilterScreen extends BaseScreen<FilterContainer> {
@@ -26,7 +26,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
     private String name;
     private int type;
 
-    private GuiCheckBox modFilterCheckBox;
+    private CheckboxWidget modFilterCheckBox;
     private Button modeButton;
     private TextFieldWidget nameField;
 
@@ -73,7 +73,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
         nameField.setCanLoseFocus(true);
         nameField.setFocused2(false);
         nameField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
-        nameField.func_212954_a(name -> sendUpdate());
+        nameField.setResponder(name -> sendUpdate());
 
         addButton(nameField);
 
@@ -96,7 +96,7 @@ public class FilterScreen extends BaseScreen<FilterContainer> {
             return true;
         }
 
-        if (nameField.keyPressed(key, scanCode, modifiers) || nameField.func_212955_f()) {
+        if (nameField.keyPressed(key, scanCode, modifiers) || nameField.canWrite()) {
             return true;
         }
 

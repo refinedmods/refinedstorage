@@ -36,7 +36,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
         amountField.setCanLoseFocus(true);
         amountField.setFocused2(false);
         amountField.setTextColor(RenderSettings.INSTANCE.getSecondaryColor());
-        amountField.func_212954_a(value -> {
+        amountField.setResponder(value -> {
             try {
                 int result = Integer.parseInt(value);
 
@@ -74,7 +74,7 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
             return true;
         }
 
-        if (amountField.keyPressed(key, scanCode, modifiers) || amountField.func_212955_f()) {
+        if (amountField.keyPressed(key, scanCode, modifiers) || amountField.canWrite()) {
             return true;
         }
 

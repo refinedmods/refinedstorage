@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -35,6 +34,11 @@ public class DelegateBakedModel implements IBakedModel {
     @Override
     public boolean isGui3d() {
         return base.isGui3d();
+    }
+
+    @Override
+    public boolean func_230044_c_() {
+        return base.func_230044_c_();
     }
 
     @Override

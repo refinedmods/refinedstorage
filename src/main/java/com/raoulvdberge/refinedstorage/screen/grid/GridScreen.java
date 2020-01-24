@@ -1,7 +1,6 @@
 package com.raoulvdberge.refinedstorage.screen.grid;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.RSKeyBindings;
@@ -20,6 +19,7 @@ import com.raoulvdberge.refinedstorage.screen.grid.stack.ItemGridStack;
 import com.raoulvdberge.refinedstorage.screen.grid.view.FluidGridView;
 import com.raoulvdberge.refinedstorage.screen.grid.view.IGridView;
 import com.raoulvdberge.refinedstorage.screen.grid.view.ItemGridView;
+import com.raoulvdberge.refinedstorage.screen.widget.CheckboxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.SearchWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.TabListWidget;
@@ -31,13 +31,11 @@ import com.raoulvdberge.refinedstorage.tile.grid.portable.PortableGridTile;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import com.raoulvdberge.refinedstorage.util.TimeUtils;
 import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.LinkedList;
@@ -47,8 +45,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     private IGridView view;
 
     private SearchWidget searchField;
-    private GuiCheckBox exactPattern;
-    private GuiCheckBox processingPattern;
+    private CheckboxWidget exactPattern;
+    private CheckboxWidget processingPattern;
 
     private ScrollbarWidget scrollbar;
 
@@ -104,7 +102,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         if (searchField == null) {
             searchField = new SearchWidget(font, sx, sy, 88 - 6);
-            searchField.func_212954_a(value -> {
+            searchField.setResponder(value -> {
                 searchField.updateJei();
 
                 getView().sort(); // Use getter since this view can be replaced.
@@ -137,7 +135,13 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             });
 
             if (!processingPattern.isChecked()) {
-                exactPattern = addCheckBox(processingPattern.x + processingPattern.getWidth() + 5, y + getTopHeight() + (getVisibleRows() * 18) + 60, I18n.format("misc.refinedstorage.exact"), GridTile.EXACT_PATTERN.getValue(), btn -> TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.isChecked()));
+                exactPattern = addCheckBox(
+                    processingPattern.x + processingPattern.getWidth() + 5,
+                    y + getTopHeight() + (getVisibleRows() * 18) + 60,
+                    I18n.format("misc.refinedstorage.exact"),
+                    GridTile.EXACT_PATTERN.getValue(),
+                    btn -> TileDataManager.setParameter(GridTile.EXACT_PATTERN, exactPattern.isChecked())
+                );
             }
 
             addSideButton(new TypeSideButton(this, GridTile.PROCESSING_TYPE));
@@ -538,7 +542,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.func_212955_f()) {
+        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.canWrite()) {
             return true;
         }
 
@@ -551,7 +555,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     public void updateExactPattern(boolean checked) {
         if (exactPattern != null) {
-            exactPattern.setIsChecked(checked);
+            exactPattern.setChecked(checked);
         }
     }
 

@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -10,14 +9,14 @@ import com.raoulvdberge.refinedstorage.integration.craftingtweaks.CraftingTweaks
 import com.raoulvdberge.refinedstorage.render.FluidRenderer;
 import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import com.raoulvdberge.refinedstorage.screen.grid.AlternativesScreen;
-import com.raoulvdberge.refinedstorage.screen.widget.CheckBoxWidget;
+import com.raoulvdberge.refinedstorage.screen.widget.CheckboxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.SideButton;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
@@ -29,7 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
@@ -244,8 +243,8 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         }
     }
 
-    public CheckBoxWidget addCheckBox(int x, int y, String text, boolean checked, Button.IPressable onPress) {
-        CheckBoxWidget checkBox = new CheckBoxWidget(x, y, text, checked, onPress);
+    public CheckboxWidget addCheckBox(int x, int y, String text, boolean checked, Consumer<CheckboxButton> onPress) {
+        CheckboxWidget checkBox = new CheckboxWidget(x, y, text, checked, onPress);
 
         this.addButton(checkBox);
 
@@ -344,7 +343,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     }
 
     public static boolean isKeyDown(KeyBinding keybinding) {
-        return InputMappings.isKeyDown(Minecraft.getInstance().func_228018_at_().getHandle(), keybinding.getKey().getKeyCode()) &&
+        return InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), keybinding.getKey().getKeyCode()) &&
             keybinding.getKeyConflictContext().isActive() &&
             keybinding.getKeyModifier().isActive(keybinding.getKeyConflictContext());
     }

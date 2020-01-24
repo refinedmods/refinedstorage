@@ -76,7 +76,7 @@ public class PortableGridBlock extends BaseBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         if (!world.isRemote) {
             API.instance().getGridManager().openGrid(PortableGridBlockGridFactory.ID, (ServerPlayerEntity) player, pos);
 

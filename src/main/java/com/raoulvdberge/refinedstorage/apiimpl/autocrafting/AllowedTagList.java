@@ -56,7 +56,7 @@ public class AllowedTagList {
         for (Set<ResourceLocation> tags : tagsPerSlot) {
             ListNBT subList = new ListNBT();
 
-            tags.forEach(t -> subList.add(StringNBT.func_229705_a_(t.toString())));
+            tags.forEach(t -> subList.add(StringNBT.valueOf(t.toString())));
 
             list.add(subList);
         }

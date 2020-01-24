@@ -120,7 +120,7 @@ public class FluidGridStack implements IGridStack {
         if (cachedTags == null) {
             cachedTags = new HashSet<>();
 
-            for (ResourceLocation owningTag : FluidTags.func_226157_a_().getOwningTags(stack.getFluid())) {
+            for (ResourceLocation owningTag : FluidTags.getCollection().getOwningTags(stack.getFluid())) {
                 cachedTags.add(owningTag.getPath());
             }
         }

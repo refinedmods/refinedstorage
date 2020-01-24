@@ -106,7 +106,7 @@ public class DiskDriveTile extends NetworkNodeTile<DiskDriveNetworkNode> {
         ListNBT list = new ListNBT();
 
         for (DiskState state : getNode().getDiskState()) {
-            list.add(IntNBT.func_229692_a_(state.ordinal()));
+            list.add(IntNBT.valueOf(state.ordinal()));
         }
 
         tag.put(NBT_DISK_STATE, list);

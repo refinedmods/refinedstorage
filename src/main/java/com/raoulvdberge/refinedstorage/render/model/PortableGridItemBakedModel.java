@@ -59,6 +59,11 @@ public class PortableGridItemBakedModel implements IBakedModel {
     }
 
     @Override
+    public boolean func_230044_c_() {
+        return base.func_230044_c_();
+    }
+
+    @Override
     public boolean isBuiltInRenderer() {
         return base.isBuiltInRenderer();
     }

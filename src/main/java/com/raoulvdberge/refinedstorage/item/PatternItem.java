@@ -49,7 +49,7 @@ public class PatternItem extends Item implements ICraftingPatternProvider {
     private static final int VERSION = 1;
 
     public PatternItem() {
-        super(new Item.Properties().group(RS.MAIN_GROUP).setTEISR(() -> PatternItemStackTileRenderer::new));
+        super(new Item.Properties().group(RS.MAIN_GROUP).setISTER(() -> PatternItemStackTileRenderer::new));
 
         this.setRegistryName(RS.ID, "pattern");
     }

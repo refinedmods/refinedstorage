@@ -216,30 +216,28 @@ public class ClientSetup {
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_WIRELESS_CRAFTING_MONITOR);
         ClientRegistry.registerKeyBinding(RSKeyBindings.OPEN_PORTABLE_GRID);
 
-        RenderType cutout = RenderType.func_228643_e_();
-
-        RenderTypeLookup.setRenderLayer(RSBlocks.CONTROLLER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.CREATIVE_CONTROLLER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.CABLE, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER_MANAGER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_MONITOR, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.DETECTOR, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.DISK_MANIPULATOR, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.GRID, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_GRID, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.PATTERN_GRID, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.FLUID_GRID, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_RECEIVER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_TRANSMITTER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.RELAY, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.SECURITY_MANAGER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.WIRELESS_TRANSMITTER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.IMPORTER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.EXPORTER, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.EXTERNAL_STORAGE, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR, cutout);
-        RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR, cutout);
+        RenderTypeLookup.setRenderLayer(RSBlocks.CONTROLLER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CREATIVE_CONTROLLER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CABLE, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTER_MANAGER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_MONITOR, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.DETECTOR, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.DISK_MANIPULATOR, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.GRID, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CRAFTING_GRID, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.PATTERN_GRID, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.FLUID_GRID, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_RECEIVER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.NETWORK_TRANSMITTER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.RELAY, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.SECURITY_MANAGER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.WIRELESS_TRANSMITTER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.IMPORTER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.EXPORTER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.EXTERNAL_STORAGE, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.CONSTRUCTOR, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(RSBlocks.DESTRUCTOR, RenderType.cutout());
 
         ClientRegistry.bindTileEntityRenderer(RSTiles.STORAGE_MONITOR, StorageMonitorTileRenderer::new);
 

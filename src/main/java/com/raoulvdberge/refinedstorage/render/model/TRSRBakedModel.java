@@ -10,9 +10,7 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
-import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.TRSRTransformer;
 import net.minecraftforge.common.model.TransformationHelper;
@@ -69,7 +67,7 @@ public class TRSRBakedModel implements IBakedModel {
         }
 
         for (BakedQuad quad : original.getQuads(state, side, rand, EmptyModelData.INSTANCE)) {
-            BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
+            BakedQuadBuilder builder = new BakedQuadBuilder(quad.func_187508_a());
             TRSRTransformer transformer = new TRSRTransformer(builder, transformation.blockCenterToCorner());
 
             quad.pipe(transformer);
@@ -88,6 +86,11 @@ public class TRSRBakedModel implements IBakedModel {
     @Override
     public boolean isGui3d() {
         return original.isGui3d();
+    }
+
+    @Override
+    public boolean func_230044_c_() {
+        return original.func_230044_c_();
     }
 
     @Override

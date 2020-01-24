@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.8.1
+- Port to Minecraft 1.15.2 (raoulvdberge)
+
 ### 1.8
 - Port to Minecraft 1.15 (raoulvdberge)
 

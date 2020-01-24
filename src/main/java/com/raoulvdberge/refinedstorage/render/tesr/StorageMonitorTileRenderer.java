@@ -14,7 +14,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.model.TransformationHelper;
 
 public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonitorTile> {
@@ -23,7 +22,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
     }
 
     @Override
-    public void func_225616_a_(StorageMonitorTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int i, int i1) {
+    public void render(StorageMonitorTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int i, int i1) {
         Direction direction = Direction.NORTH;
 
         BlockState state = tile.getWorld().getBlockState(tile.getPos());
@@ -35,55 +34,55 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
 
         if (tile.getItemStack() != null) {
             // Push
-            matrixStack.func_227860_a_();
+            matrixStack.push();
 
             double r = Math.PI * (360 - direction.getOpposite().getHorizontalIndex() * 90) / 180d;
 
-            matrixStack.func_227861_a_(0.5D, 0.5D, 0.5D);
-            matrixStack.func_227861_a_((float) direction.getXOffset() * 0.4F, 0, (float) direction.getZOffset() * 0.4F);
-            matrixStack.func_227863_a_(TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false));
+            matrixStack.translate(0.5D, 0.5D, 0.5D);
+            matrixStack.translate((float) direction.getXOffset() * 0.8F, 0, (float) direction.getZOffset() * 0.8F);
+            matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false));
 
-            matrixStack.func_227860_a_();
-            matrixStack.func_227862_a_(0.5F, 0.5F, 0.5F);
+            matrixStack.push();
+            matrixStack.scale(0.5F, 0.5F, 0.5F);
 
-            Minecraft.getInstance().getItemRenderer().func_229110_a_(
+            Minecraft.getInstance().getItemRenderer().renderItem(
                 tile.getItemStack(),
                 ItemCameraTransforms.TransformType.FIXED,
                 0x00F000F0,
-                OverlayTexture.field_229196_a_,
+                OverlayTexture.DEFAULT_LIGHT,
                 matrixStack,
                 renderTypeBuffer
             );
 
-            matrixStack.func_227865_b_();
+            matrixStack.pop();
 
             // Pop
-            matrixStack.func_227865_b_();
+            matrixStack.pop();
 
             // Push
-            matrixStack.func_227860_a_();
+            matrixStack.push();
 
             float stringOffset = -(Minecraft.getInstance().fontRenderer.getStringWidth(amount) * 0.01F) / 2F;
 
-            matrixStack.func_227861_a_(0.5D, 0.5D, 0.5D);
-            matrixStack.func_227861_a_(
+            matrixStack.translate(0.5D, 0.5D, 0.5D);
+            matrixStack.translate(
                 ((float) direction.getXOffset() * 0.5F) + (direction.getZOffset() * stringOffset),
                 -0.225,
                 ((float) direction.getZOffset() * 0.5F) - (direction.getXOffset() * stringOffset)
             );
 
-            matrixStack.func_227863_a_(TransformationHelper.quatFromXYZ(new Vector3f(direction.getXOffset() * 180, 0, direction.getZOffset() * 180), true));
-            matrixStack.func_227863_a_(TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false));
+            matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(direction.getXOffset() * 180, 0, direction.getZOffset() * 180), true));
+            matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false));
 
-            matrixStack.func_227862_a_(0.01F, 0.01F, 0.01F);
+            matrixStack.scale(0.01F, 0.01F, 0.01F);
 
-            Minecraft.getInstance().fontRenderer.func_228079_a_(
+            Minecraft.getInstance().fontRenderer.renderString(
                 amount,
                 0,
                 0,
                 -1,
                 false,
-                matrixStack.func_227866_c_().func_227870_a_(),
+                matrixStack.getLast().getPositionMatrix(),
                 renderTypeBuffer,
                 false,
                 0,
@@ -91,7 +90,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             );
 
             // Pop
-            matrixStack.func_227865_b_();
+            matrixStack.pop();
         }
     }
 }

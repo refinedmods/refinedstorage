@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.container.SecurityManagerContainer;
 import com.raoulvdberge.refinedstorage.item.SecurityCardItem;
 import com.raoulvdberge.refinedstorage.network.SecurityManagerUpdateMessage;
+import com.raoulvdberge.refinedstorage.screen.widget.CheckboxWidget;
 import com.raoulvdberge.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
 import com.raoulvdberge.refinedstorage.tile.SecurityManagerTile;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -12,11 +13,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.config.GuiCheckBox;
 
 public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainer> {
     private final SecurityManagerTile securityManager;
-    private GuiCheckBox[] permissions = new GuiCheckBox[Permission.values().length];
+    private CheckboxWidget[] permissions = new CheckboxWidget[Permission.values().length];
 
     public SecurityManagerScreen(SecurityManagerContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 176, 234, inventory, title);
@@ -47,7 +47,7 @@ public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainer> 
         ItemStack card = securityManager.getNode().getEditCard().getStackInSlot(0);
 
         for (Permission permission : Permission.values()) {
-            permissions[permission.getId()].setIsChecked(!card.isEmpty() && SecurityCardItem.hasPermission(card, permission));
+            permissions[permission.getId()].setChecked(!card.isEmpty() && SecurityCardItem.hasPermission(card, permission));
         }
     }
 
@@ -65,7 +65,7 @@ public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainer> 
         renderString(7, 140, I18n.format("container.inventory"));
 
         for (int i = 0; i < permissions.length; ++i) {
-            GuiCheckBox permission = permissions[i];
+            CheckboxWidget permission = permissions[i];
 
             if (RenderUtils.inBounds(permission.x - guiLeft, permission.y - guiTop, permission.getWidth(), permission.getHeight(), mouseX, mouseY)) {
                 renderTooltip(mouseX, mouseY, I18n.format("gui.refinedstorage.security_manager.permission." + i + ".tooltip"));

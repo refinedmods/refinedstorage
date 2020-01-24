@@ -18,11 +18,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.text.ITextComponent;
-import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.Map;
 
-@MouseTweaksDisableWheelTweak
+// TODO @MouseTweaksDisableWheelTweak
 public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> implements IScreenInfoProvider {
     private CrafterManagerNetworkNode crafterManager;
 
@@ -56,7 +55,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
         if (searchField == null) {
             searchField = new SearchWidget(font, sx, sy, 88 - 6);
-            searchField.func_212954_a(value -> {
+            searchField.setResponder(value -> {
                 searchField.updateJei();
 
                 container.initSlots(null);
@@ -152,7 +151,7 @@ public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> im
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.func_212955_f()) {
+        if (searchField.keyPressed(key, scanCode, modifiers) || searchField.canWrite()) {
             return true;
         }
 
