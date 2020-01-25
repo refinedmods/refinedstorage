@@ -100,11 +100,11 @@ public class CraftingPatternFactory {
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfItem.contains(declaredAllowedTag)) {
                         throw new CraftingPatternFactoryException(
-                                new TranslationTextComponent(
-                                        "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
-                                        declaredAllowedTag.toString(),
-                                        input.getDisplayName()
-                                )
+                            new TranslationTextComponent(
+                                "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
+                                declaredAllowedTag.toString(),
+                                input.getDisplayName()
+                            )
                         );
                     } else {
                         for (Item element : ItemTags.getCollection().get(declaredAllowedTag).getAllElements()) {
@@ -139,11 +139,11 @@ public class CraftingPatternFactory {
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfFluid.contains(declaredAllowedTag)) {
                         throw new CraftingPatternFactoryException(
-                                new TranslationTextComponent(
-                                        "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
-                                        declaredAllowedTag.toString(),
-                                        input.getDisplayName()
-                                )
+                            new TranslationTextComponent(
+                                "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
+                                declaredAllowedTag.toString(),
+                                input.getDisplayName()
+                            )
                         );
                     } else {
                         for (Fluid element : FluidTags.getCollection().get(declaredAllowedTag).getAllElements()) {
