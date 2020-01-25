@@ -100,11 +100,11 @@ public class CraftingPatternFactory {
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfItem.contains(declaredAllowedTag)) {
                         throw new CraftingPatternFactoryException(
-                            new TranslationTextComponent(
-                                "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
-                                declaredAllowedTag.toString(),
-                                input.getDisplayName()
-                            )
+                                new TranslationTextComponent(
+                                        "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
+                                        declaredAllowedTag.toString(),
+                                        input.getDisplayName()
+                                )
                         );
                     } else {
                         for (Item element : ItemTags.getCollection().get(declaredAllowedTag).getAllElements()) {
@@ -139,11 +139,11 @@ public class CraftingPatternFactory {
                 for (ResourceLocation declaredAllowedTag : declaredAllowedTags) {
                     if (!tagsOfFluid.contains(declaredAllowedTag)) {
                         throw new CraftingPatternFactoryException(
-                            new TranslationTextComponent(
-                                "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
-                                declaredAllowedTag.toString(),
-                                input.getDisplayName()
-                            )
+                                new TranslationTextComponent(
+                                        "misc.refinedstorage.pattern.error.tag_no_longer_applicable",
+                                        declaredAllowedTag.toString(),
+                                        input.getDisplayName()
+                                )
                         );
                     } else {
                         for (Fluid element : FluidTags.getCollection().get(declaredAllowedTag).getAllElements()) {
@@ -177,8 +177,6 @@ public class CraftingPatternFactory {
             for (int i = 0; i < recipe.getIngredients().size(); ++i) {
                 inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
             }
-        } else {
-            throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.recipe_no_ingredients"));
         }
     }
 }
