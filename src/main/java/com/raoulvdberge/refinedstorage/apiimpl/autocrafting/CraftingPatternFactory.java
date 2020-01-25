@@ -177,8 +177,6 @@ public class CraftingPatternFactory {
             for (int i = 0; i < recipe.getIngredients().size(); ++i) {
                 inputs.add(i, NonNullList.from(ItemStack.EMPTY, recipe.getIngredients().get(i).getMatchingStacks()));
             }
-        } else {
-            throw new CraftingPatternFactoryException(new TranslationTextComponent("misc.refinedstorage.pattern.error.recipe_no_ingredients"));
         }
     }
 }

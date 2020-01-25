@@ -111,7 +111,6 @@
   "misc.refinedstorage.pattern.error.no_output": "Recipe has no output",
   "misc.refinedstorage.pattern.error.recipe_does_not_exist": "Recipe doesn't exist",
   "misc.refinedstorage.pattern.error.tag_no_longer_applicable": "Tag %s is no longer applicable for %s",
-  "misc.refinedstorage.pattern.error.recipe_no_ingredients": "Recipe has no ingredients",
   "misc.refinedstorage.security.no_permission": "You have no permission to perform that action.",
   "misc.refinedstorage.start": "Start",
   "misc.refinedstorage.clear": "Clear",
