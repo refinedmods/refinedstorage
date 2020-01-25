@@ -34,7 +34,7 @@ public class PatternDumpCommand implements Command<CommandSource> {
 
             CraftingPattern pattern = PatternItem.fromCache(context.getSource().getWorld(), stack);
 
-            context.getSource().sendFeedback(new StringTextComponent("Crafting ID: ").setStyle(Styles.YELLOW).appendSibling(new StringTextComponent(pattern.getId().toString()).setStyle(Styles.WHITE)), false);
+            context.getSource().sendFeedback(new StringTextComponent("Crafting task factory ID: ").setStyle(Styles.YELLOW).appendSibling(new StringTextComponent(pattern.getCraftingTaskFactoryId().toString()).setStyle(Styles.WHITE)), false);
 
             if (!pattern.isValid()) {
                 context.getSource().sendFeedback(new StringTextComponent("Pattern is invalid! Reason: ").appendSibling(pattern.getErrorMessage()).setStyle(Styles.RED), false);

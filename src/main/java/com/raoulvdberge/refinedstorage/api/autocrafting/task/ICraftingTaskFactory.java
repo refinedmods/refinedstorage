@@ -1,9 +1,6 @@
-package com.raoulvdberge.refinedstorage.api.autocrafting.registry;
+package com.raoulvdberge.refinedstorage.api.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
-import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import net.minecraft.nbt.CompoundNBT;
 

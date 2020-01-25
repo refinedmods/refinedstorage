@@ -13,7 +13,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.Item
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingPreviewElement;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.raoulvdberge.refinedstorage.apiimpl.network.grid.factory.*;

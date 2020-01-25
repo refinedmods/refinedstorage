@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
+package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5;
 
 import com.google.common.collect.Maps;
 import com.raoulvdberge.refinedstorage.RS;

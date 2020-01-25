@@ -1,7 +1,7 @@
-package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry;
+package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
-import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskRegistry;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;

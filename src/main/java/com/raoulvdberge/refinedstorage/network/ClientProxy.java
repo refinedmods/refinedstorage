@@ -19,7 +19,15 @@ public class ClientProxy {
             screen = ((CraftingSettingsScreen) screen).getParent();
         }
 
-        Minecraft.getInstance().displayGuiScreen(new CraftingPreviewScreen(screen, message.getStacks(), message.getId(), message.getQuantity(), message.isFluids(), new TranslationTextComponent("gui.refinedstorage.crafting_preview")));
+        Minecraft.getInstance().displayGuiScreen(new CraftingPreviewScreen(
+            screen,
+            message.getFactoryId(),
+            message.getStacks(),
+            message.getId(),
+            message.getQuantity(),
+            message.isFluids(),
+            new TranslationTextComponent("gui.refinedstorage.crafting_preview")
+        ));
     }
 
     public static void onReceivedCraftingStartResponseMessage(GridCraftingStartResponseMessage message) {

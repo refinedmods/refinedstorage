@@ -6,9 +6,9 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHa
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
-import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.INetworkManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;
@@ -24,11 +24,11 @@ import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStor
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.api.util.IQuantityFormatter;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingRequestInfo;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.craftingmonitor.CraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskRegistry;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingRequestInfo;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.CraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.raoulvdberge.refinedstorage.apiimpl.network.NetworkNodeRegistry;

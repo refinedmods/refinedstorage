@@ -1,6 +1,5 @@
 package com.raoulvdberge.refinedstorage.screen.grid;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
@@ -13,6 +12,7 @@ import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ItemCrafting
 import com.raoulvdberge.refinedstorage.apiimpl.render.CraftingPreviewElementDrawers;
 import com.raoulvdberge.refinedstorage.item.PatternItem;
 import com.raoulvdberge.refinedstorage.network.grid.GridCraftingStartRequestMessage;
+import com.raoulvdberge.refinedstorage.render.RenderSettings;
 import com.raoulvdberge.refinedstorage.screen.BaseScreen;
 import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidget;
 import com.raoulvdberge.refinedstorage.util.RenderUtils;
@@ -25,6 +25,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
@@ -40,6 +41,7 @@ public class CraftingPreviewScreen extends BaseScreen {
 
     private final List<ICraftingPreviewElement> stacks;
     private final Screen parent;
+    private final ResourceLocation factoryId;
 
     private final ScrollbarWidget scrollbar;
 
@@ -52,7 +54,7 @@ public class CraftingPreviewScreen extends BaseScreen {
 
     private IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
 
-    public CraftingPreviewScreen(Screen parent, List<ICraftingPreviewElement> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
+    public CraftingPreviewScreen(Screen parent, ResourceLocation factoryId, List<ICraftingPreviewElement> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
         super(new Container(null, 0) {
             @Override
             public boolean canInteractWith(PlayerEntity player) {
@@ -62,6 +64,7 @@ public class CraftingPreviewScreen extends BaseScreen {
 
         this.stacks = new ArrayList<>(stacks);
         this.parent = parent;
+        this.factoryId = factoryId;
 
         this.id = id;
         this.quantity = quantity;
@@ -72,10 +75,12 @@ public class CraftingPreviewScreen extends BaseScreen {
 
     @Override
     public void onPostInit(int x, int y) {
-        addButton(x + 55, y + 201 - 20 - 7, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
+        int btnYPos = y + 201 - 20 - 7;
 
-        Button startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, I18n.format("misc.refinedstorage.start"), true, true, btn -> startRequest());
+        Button startButton = addButton(x + 7, btnYPos, 50, 20, I18n.format("misc.refinedstorage.start"), true, true, btn -> startRequest());
         startButton.active = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null;
+
+        addButton(startButton.x + startButton.getWidth() + 5, btnYPos, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
     }
 
     @Override
@@ -109,6 +114,8 @@ public class CraftingPreviewScreen extends BaseScreen {
     @Override
     public void renderForeground(int mouseX, int mouseY) {
         renderString(7, 7, title.getFormattedText());
+
+        font.drawStringWithShadow(factoryId.toString(), xSize - font.getStringWidth(factoryId.toString()) - 7, 201 - 21, RenderSettings.INSTANCE.getSecondaryColor());
 
         int x = 7;
         int y = 15;

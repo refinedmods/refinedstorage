@@ -14,6 +14,7 @@ import com.raoulvdberge.refinedstorage.network.grid.GridCraftingStartResponseMes
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -165,10 +166,13 @@ public class ItemGridHandler implements IItemGridHandler {
 
                 ICraftingTaskError error = task.calculate();
 
+                ResourceLocation factoryId = task.getPattern().getCraftingTaskFactoryId();
+
                 if (error != null) {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
+                            factoryId,
                             Collections.singletonList(new ErrorCraftingPreviewElement(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())),
                             id,
                             quantity,
@@ -183,6 +187,7 @@ public class ItemGridHandler implements IItemGridHandler {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
+                            factoryId,
                             task.getPreviewStacks(),
                             id,
                             quantity,

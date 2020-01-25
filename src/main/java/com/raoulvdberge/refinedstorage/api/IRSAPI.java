@@ -4,9 +4,9 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHa
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.preview.ICraftingPreviewElementRegistry;
-import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskRegistry;
 import com.raoulvdberge.refinedstorage.api.network.INetworkManager;
 import com.raoulvdberge.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.raoulvdberge.refinedstorage.api.network.grid.IGridManager;

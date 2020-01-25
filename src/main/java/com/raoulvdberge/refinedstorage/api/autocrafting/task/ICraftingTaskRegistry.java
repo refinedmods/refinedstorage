@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.api.autocrafting.registry;
+package com.raoulvdberge.refinedstorage.api.autocrafting.task;
 
 import net.minecraft.util.ResourceLocation;
 

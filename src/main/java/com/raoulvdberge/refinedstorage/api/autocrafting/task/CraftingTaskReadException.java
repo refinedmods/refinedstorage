@@ -3,7 +3,7 @@ package com.raoulvdberge.refinedstorage.api.autocrafting.task;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 
 /**
- * Gets thrown from {@link com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory#createFromNbt(INetwork, net.minecraft.nbt.CompoundNBT)}.
+ * Gets thrown from {@link ICraftingTaskFactory#createFromNbt(INetwork, net.minecraft.nbt.CompoundNBT)}.
  */
 public class CraftingTaskReadException extends Exception {
     /**

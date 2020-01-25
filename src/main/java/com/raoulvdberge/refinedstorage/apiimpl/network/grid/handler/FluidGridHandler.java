@@ -15,6 +15,7 @@ import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -127,10 +128,13 @@ public class FluidGridHandler implements IFluidGridHandler {
 
                 ICraftingTaskError error = task.calculate();
 
+                ResourceLocation factoryId = task.getPattern().getCraftingTaskFactoryId();
+
                 if (error != null) {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
+                            factoryId,
                             Collections.singletonList(new ErrorCraftingPreviewElement(error.getType(), error.getRecursedPattern() == null ? ItemStack.EMPTY : error.getRecursedPattern().getStack())),
                             id,
                             quantity,
@@ -145,6 +149,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                     RS.NETWORK_HANDLER.sendTo(
                         player,
                         new GridCraftingPreviewResponseMessage(
+                            factoryId,
                             task.getPreviewStacks(),
                             id,
                             quantity,

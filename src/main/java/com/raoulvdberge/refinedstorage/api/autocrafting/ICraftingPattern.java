@@ -1,5 +1,6 @@
 package com.raoulvdberge.refinedstorage.api.autocrafting;
 
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
@@ -77,9 +78,9 @@ public interface ICraftingPattern {
     NonNullList<FluidStack> getFluidOutputs();
 
     /**
-     * @return the id of the factory that creates a crafting task for this pattern, as defined in the {@link com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskRegistry}
+     * @return the id of the factory that creates a crafting task for this pattern, as defined in the {@link ICraftingTaskRegistry}
      */
-    ResourceLocation getId();
+    ResourceLocation getCraftingTaskFactoryId();
 
     /**
      * @param other the other pattern

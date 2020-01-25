@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
+package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;

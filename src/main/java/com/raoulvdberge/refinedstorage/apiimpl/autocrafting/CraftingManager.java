@@ -5,10 +5,10 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternChainList;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
-import com.raoulvdberge.refinedstorage.api.autocrafting.registry.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskError;
+import com.raoulvdberge.refinedstorage.api.autocrafting.task.ICraftingTaskFactory;
 import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
@@ -98,7 +98,7 @@ public class CraftingManager implements ICraftingManager {
             return null;
         }
 
-        ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getId());
+        ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getCraftingTaskFactoryId());
         if (factory == null) {
             return null;
         }
@@ -114,7 +114,7 @@ public class CraftingManager implements ICraftingManager {
             return null;
         }
 
-        ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getId());
+        ICraftingTaskFactory factory = API.instance().getCraftingTaskRegistry().get(pattern.getCraftingTaskFactoryId());
         if (factory == null) {
             return null;
         }
@@ -202,7 +202,7 @@ public class CraftingManager implements ICraftingManager {
         for (ICraftingTask task : tasks.values()) {
             CompoundNBT taskTag = new CompoundNBT();
 
-            taskTag.putString(NBT_TASK_TYPE, task.getPattern().getId().toString());
+            taskTag.putString(NBT_TASK_TYPE, task.getPattern().getCraftingTaskFactoryId().toString());
             taskTag.put(NBT_TASK_DATA, task.writeToNbt(new CompoundNBT()));
 
             list.add(taskTag);

@@ -4,7 +4,7 @@ import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
@@ -164,7 +164,7 @@ public class CraftingPattern implements ICraftingPattern {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public ResourceLocation getCraftingTaskFactoryId() {
         return CraftingTaskFactory.ID;
     }
 
