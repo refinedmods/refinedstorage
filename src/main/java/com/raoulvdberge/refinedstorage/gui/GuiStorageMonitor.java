@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.gui;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.container.ContainerStorageMonitor;
 import com.raoulvdberge.refinedstorage.gui.control.SideButtonCompare;
+import com.raoulvdberge.refinedstorage.gui.control.SideButtonType;
 import com.raoulvdberge.refinedstorage.tile.TileStorageMonitor;
 
 public class GuiStorageMonitor extends GuiBase {
@@ -12,6 +13,7 @@ public class GuiStorageMonitor extends GuiBase {
 
     @Override
     public void init(int x, int y) {
+        addSideButton(new SideButtonType(this, TileStorageMonitor.TYPE));
         addSideButton(new SideButtonCompare(this, TileStorageMonitor.COMPARE, IComparer.COMPARE_DAMAGE));
         addSideButton(new SideButtonCompare(this, TileStorageMonitor.COMPARE, IComparer.COMPARE_NBT));
     }

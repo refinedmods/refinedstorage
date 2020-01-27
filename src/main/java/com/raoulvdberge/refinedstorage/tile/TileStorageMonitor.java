@@ -2,27 +2,36 @@ package com.raoulvdberge.refinedstorage.tile;
 
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNodeStorageMonitor;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
 
 public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
+    public static final TileDataParameter<Integer, TileStorageMonitor> TYPE = IType.createParameter();
     public static final TileDataParameter<Integer, TileStorageMonitor> COMPARE = IComparable.createParameter();
 
+    private static final String NBT_TYPE = "Type";
     private static final String NBT_STACK = "Stack";
     private static final String NBT_AMOUNT = "Amount";
+    private static final String NBT_FLUIDSTACK = "FluidStack";
 
     private int amount;
+    private int type;
     @Nullable
     private ItemStack itemStack;
+    @Nullable
+    private FluidStack fluidStack;
 
     public TileStorageMonitor() {
         dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(TYPE);
     }
 
     @Override
@@ -45,7 +54,13 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
             tag.setTag(NBT_STACK, stack.writeToNBT(new NBTTagCompound()));
         }
 
+        FluidStack fluid = getNode().getFluidFilters().getFluid(0);
+        if (fluid != null) {
+            tag.setTag(NBT_FLUIDSTACK, fluid.writeToNBT(new NBTTagCompound()));
+        }
+
         tag.setInteger(NBT_AMOUNT, getNode().getAmount());
+        tag.setInteger(NBT_TYPE, getNode().getType());
 
         return tag;
     }
@@ -55,7 +70,9 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
         super.readUpdate(tag);
 
         itemStack = tag.hasKey(NBT_STACK) ? new ItemStack(tag.getCompoundTag(NBT_STACK)) : null;
-        amount = tag.getInteger(NBT_AMOUNT);
+        fluidStack = tag.hasKey(NBT_FLUIDSTACK) ? FluidStack.loadFluidStackFromNBT(tag.getCompoundTag(NBT_FLUIDSTACK)) : null;
+        amount = tag.hasKey(NBT_AMOUNT) ? tag.getInteger(NBT_AMOUNT) : 0;
+        type = tag.hasKey(NBT_TYPE) ? tag.getInteger(NBT_TYPE) : IType.ITEMS;
     }
 
     @Override
@@ -70,8 +87,17 @@ public class TileStorageMonitor extends TileNode<NetworkNodeStorageMonitor> {
         return amount;
     }
 
+    public int getType() {
+        return type;
+    }
+
     @Nullable
     public ItemStack getItemStack() {
         return itemStack;
+    }
+
+    @Nullable
+    public FluidStack getFluidStack() {
+        return fluidStack;
     }
 }
