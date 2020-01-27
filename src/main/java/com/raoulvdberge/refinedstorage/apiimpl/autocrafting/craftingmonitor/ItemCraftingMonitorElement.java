@@ -96,6 +96,11 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
     }
 
     @Override
+    public ResourceLocation getBaseId() {
+        return ID;
+    }
+
+    @Override
     public ResourceLocation getId() {
         return ID;
     }
@@ -140,6 +145,11 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
         }
 
         return false;
+    }
+
+    @Override
+    public int baseElementHashCode() {
+        return elementHashCode();
     }
 
     @Override
