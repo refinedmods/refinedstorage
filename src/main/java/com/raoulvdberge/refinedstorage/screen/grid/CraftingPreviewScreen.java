@@ -115,7 +115,7 @@ public class CraftingPreviewScreen extends BaseScreen {
     public void renderForeground(int mouseX, int mouseY) {
         renderString(7, 7, title.getFormattedText());
 
-        font.drawStringWithShadow(factoryId.toString(), xSize - font.getStringWidth(factoryId.toString()) - 7, 201 - 21, RenderSettings.INSTANCE.getSecondaryColor());
+        font.drawStringWithShadow(factoryId.toString().substring(15), xSize - font.getStringWidth(factoryId.toString().substring(15)) - 7, 201 - 21, RenderSettings.INSTANCE.getSecondaryColor());
 
         int x = 7;
         int y = 15;
