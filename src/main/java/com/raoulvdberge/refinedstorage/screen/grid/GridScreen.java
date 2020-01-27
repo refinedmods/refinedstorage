@@ -37,13 +37,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.glfw.GLFW;
-import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-@MouseTweaksDisableWheelTweak
+//TODO @MouseTweaksDisableWheelTweak
 public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
     private IGridView view;
 
@@ -523,7 +522,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
         if (hasShiftDown() || hasControlDown()) {
-            if (RS.CLIENT_CONFIG.getGrid().getSortGrid()) {
+            if (RS.CLIENT_CONFIG.getGrid().getPreventSortingWhileShiftIsDown()) {
                 doSort = !isOverSlotArea(x - guiLeft, y - guiTop) && !isOverCraftingOutputArea(x - guiLeft, y - guiTop);
             }
             if (isOverInventory(x - guiLeft, y - guiTop)) {
