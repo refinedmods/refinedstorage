@@ -37,10 +37,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.glfw.GLFW;
+import yalter.mousetweaks.api.MouseTweaksDisableWheelTweak;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
+@MouseTweaksDisableWheelTweak
 public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfoProvider {
     private IGridView view;
 
@@ -60,7 +63,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     public GridScreen(GridContainer container, IGrid grid, PlayerInventory inventory, ITextComponent title) {
         super(container, 227, 0, inventory, title);
-
+        this.doSort = true;
         this.grid = grid;
         this.view = grid.getGridType() == GridType.FLUID ? new FluidGridView(this, getDefaultSorter(), getSorters()) : new ItemGridView(this, getDefaultSorter(), getSorters());
         this.wasConnected = this.grid.isGridActive();
@@ -81,7 +84,6 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
     @Override
     protected void onPreInit() {
         super.onPreInit();
-        this.doSort = true;
         this.ySize = getTopHeight() + getBottomHeight() + (getVisibleRows() * 18);
     }
 
@@ -520,7 +522,28 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
-        return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+        if (hasShiftDown() || hasControlDown()) {
+            if (RS.CLIENT_CONFIG.getGrid().getSortGrid()) {
+                doSort = !isOverSlotArea(x - guiLeft, y - guiTop) && !isOverCraftingOutputArea(x - guiLeft, y - guiTop);
+            }
+            if (isOverInventory(x - guiLeft, y - guiTop)) {
+                if (grid.getGridType() != GridType.FLUID && hoveredSlot != null) {
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemInventoryScrollMessage(hoveredSlot.getSlotIndex(), hasShiftDown(), delta > 0));
+                }
+            } else if (isOverSlotArea(x - guiLeft, y - guiTop)) {
+                if (grid.getGridType() != GridType.FLUID) {
+                    RS.NETWORK_HANDLER.sendToServer(new GridItemGridScrollMessage(isOverSlotWithStack() ? view.getStacks().get(slotNumber).getId() : new UUID(0, 0), hasShiftDown(), hasControlDown(), delta > 0));
+                }
+            }
+            return super.mouseScrolled(x, y, delta);
+        } else {
+            return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+        }
+
+    }
+
+    private boolean isOverInventory(double x, double y) {
+        return RenderUtils.inBounds(8, getYPlayerInventory(), 9 * 18 - 2, 4 * 18 + 2, x, y);
     }
 
     @Override

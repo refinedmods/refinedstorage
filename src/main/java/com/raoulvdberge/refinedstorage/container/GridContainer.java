@@ -91,7 +91,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
                             IItemGridHandler itemHandler = grid.getItemHandler();
 
                             if (itemHandler != null) {
-                                slot.putStack(itemHandler.onInsert((ServerPlayerEntity) getPlayer(), stack));
+                                slot.putStack(itemHandler.onInsert((ServerPlayerEntity) getPlayer(), stack, false));
                             } else if (slot instanceof CraftingGridSlot && mergeItemStack(stack, 14, 14 + (9 * 4), false)) {
                                 slot.onSlotChanged();
 
