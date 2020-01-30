@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
 import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,7 +50,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             }
         });
 
-    private FluidInventory fluidFilter = new FluidInventory(1, 1000)
+    private FluidInventory fluidFilter = new FluidInventory(1, FluidAttributes.BUCKET_VOLUME)
         .addListener((handler, slot, reading) -> {
             if (!reading) {
                 WorldUtils.updateBlock(world, pos);
@@ -85,6 +86,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         if (getType() != IType.ITEMS) {
             return ActionResultType.FAIL;
         }
+
         if (network == null) {
             return ActionResultType.FAIL;
         }
@@ -145,10 +147,13 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
     private void depositFluids(PlayerEntity player, ItemStack toInsert) {
         FluidStack filter = fluidFilter.getFluid(0);
+
         Pair<ItemStack, FluidStack> result = StackUtils.getFluid(toInsert, true);
+
         if (filter.isEmpty() || !API.instance().getComparer().isEqual(filter, result.getRight(), compare)) {
             return;
         }
+
         if (!result.getValue().isEmpty() && network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE).isEmpty()) {
             network.getFluidStorageTracker().changed(player, result.getValue().copy());
 
@@ -198,7 +203,6 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     }
 
     private void extractFluids(PlayerEntity player) {
-
         FluidStack filter = fluidFilter.getFluid(0);
 
         if (filter.isEmpty()) {
@@ -212,27 +216,8 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
         boolean shift = player.isCrouching();
         if (shift) {
-            ItemStack bucket = ItemStack.EMPTY;
-
-            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-                ItemStack slot = player.inventory.getStackInSlot(i);
-
-                if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
-                    bucket = StackUtils.EMPTY_BUCKET.copy();
-
-                    player.inventory.decrStackSize(i, 1);
-
-                    break;
-                }
-            }
-
-            if (bucket.isEmpty()) {
-                bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM);
-            }
-
-            if (!bucket.isEmpty()) {
+            NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> {
                 bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
-
                     network.getFluidStorageTracker().changed(player, stack.copy());
 
                     fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
@@ -241,7 +226,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
                         InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
                     }
                 });
-            }
+            });
         }
     }
 
@@ -319,11 +304,13 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             return stored != null ? stored.getCount() : 0;
         } else if (getType() == IType.FLUIDS) {
             FluidStack toCheck = fluidFilter.getFluid(0);
+
             if (toCheck.isEmpty()) {
                 return 0;
             }
 
             FluidStack stored = network.getFluidStorageCache().getList().get(toCheck, compare);
+
             return stored != null ? stored.getAmount() : 0;
         }
         return 0;

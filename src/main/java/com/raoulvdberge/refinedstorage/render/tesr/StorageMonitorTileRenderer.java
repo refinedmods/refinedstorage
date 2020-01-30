@@ -27,15 +27,12 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
 public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonitorTile> {
-    public static final int DEFAULT_LIGHTMAP = 15728880;
-
     public StorageMonitorTileRenderer(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);
     }
 
     @Override
     public void render(StorageMonitorTile tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int i, int i1) {
-        Minecraft.getInstance().getProfiler().startSection("StorageMonitorTileRenderer");
         Direction direction = Direction.NORTH;
 
         BlockState state = tile.getWorld().getBlockState(tile.getPos());
@@ -43,8 +40,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             direction = state.get(RSBlocks.STORAGE_MONITOR.getDirection().getProperty());
         }
 
-        //TODO: we can replace const with 'WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(direction.getDirectionVec()))' for better lightning later
-        final int light = DEFAULT_LIGHTMAP;
+        final int light = 15728880;
         final float rotation = (float) (Math.PI * (360 - direction.getOpposite().getHorizontalIndex() * 90) / 180d);
 
         final int type = tile.getStackType();
@@ -56,14 +52,15 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             renderItem(matrixStack, renderTypeBuffer, direction, rotation, light, itemStack);
 
             String amount = API.instance().getQuantityFormatter().formatWithUnits(tile.getAmount());
+
             renderText(matrixStack, renderTypeBuffer, direction, rotation, light, amount);
         } else if (type == IType.FLUIDS && fluidStack != null && !fluidStack.isEmpty()) {
             renderFluid(matrixStack, renderTypeBuffer, direction, rotation, light, fluidStack);
 
             String amount = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(tile.getAmount());
+
             renderText(matrixStack, renderTypeBuffer, direction, rotation, light, amount);
         }
-        Minecraft.getInstance().getProfiler().endSection();
     }
 
     private void renderText(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, Direction direction, float rotation, int light, String amount) {
@@ -124,7 +121,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         matrixStack.push();
 
         matrixStack.translate(0.5D, 0.5D, 0.5D);
-        matrixStack.translate((float) direction.getXOffset() * 0.5F + 0.0001F, 0.5F, (float) direction.getZOffset() * 0.5F + 0.0001F);
+        matrixStack.translate((float) direction.getXOffset() * 0.51F, 0.5F, (float) direction.getZOffset() * 0.51F);
         matrixStack.rotate(TransformationHelper.quatFromXYZ(new Vector3f(0, rotation, 0), false));
 
         matrixStack.scale(0.5F, 0.5F, 0.5F);
@@ -141,6 +138,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         final int colorGreen = fluidColor >> 8 & 0xFF;
         final int colorBlue = fluidColor & 0xFF;
         final int colorAlpha = fluidColor >> 24 & 0xFF;
+
         buffer.pos(matrixStack.getLast().getPositionMatrix(), -0.5F, -0.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
                 .tex(sprite.getMinU(), sprite.getMinV())

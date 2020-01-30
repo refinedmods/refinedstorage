@@ -2,6 +2,7 @@
 
 ### 1.8.1
 - Port to Minecraft 1.15.2 (raoulvdberge)
+- The Storage Monitor supports fluids as well now (V1RTUOZ)
 
 ### 1.8
 - Port to Minecraft 1.15 (raoulvdberge)

@@ -7,10 +7,10 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.grid.handler.IFluidGridHandler;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.raoulvdberge.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
 import com.raoulvdberge.refinedstorage.network.grid.GridCraftingStartResponseMessage;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
@@ -41,25 +41,7 @@ public class FluidGridHandler implements IFluidGridHandler {
             return;
         }
 
-        ItemStack bucket = ItemStack.EMPTY;
-
-        for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-            ItemStack slot = player.inventory.getStackInSlot(i);
-
-            if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
-                bucket = StackUtils.EMPTY_BUCKET.copy();
-
-                player.inventory.decrStackSize(i, 1);
-
-                break;
-            }
-        }
-
-        if (bucket.isEmpty()) {
-            bucket = network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM);
-        }
-
-        if (!bucket.isEmpty()) {
+        NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> {
             bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
                 network.getFluidStorageTracker().changed(player, stack.copy());
 
@@ -78,7 +60,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
                 network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
             });
-        }
+        });
     }
 
     @Override

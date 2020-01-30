@@ -16,7 +16,6 @@ public class StorageMonitorContainer extends BaseContainer {
 
         addPlayerInventory(8, 55);
 
-        transferManager.addItemFilterTransfer(player.inventory, storageMonitor.getNode().getItemFilters());
-        transferManager.addFluidFilterTransfer(player.inventory, storageMonitor.getNode().getFluidFilters());
+        transferManager.addFilterTransfer(player.inventory, storageMonitor.getNode().getItemFilters(), storageMonitor.getNode().getFluidFilters(), storageMonitor.getNode()::getType);
     }
 }
