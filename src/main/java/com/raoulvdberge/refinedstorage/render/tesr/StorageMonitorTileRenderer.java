@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -40,7 +41,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             direction = state.get(RSBlocks.STORAGE_MONITOR.getDirection().getProperty());
         }
 
-        final int light = 15728880;
+        final int light = WorldRenderer.getCombinedLight(tile.getWorld(), tile.getPos().add(direction.getDirectionVec()));
         final float rotation = (float) (Math.PI * (360 - direction.getOpposite().getHorizontalIndex() * 90) / 180d);
 
         final int type = tile.getStackType();
