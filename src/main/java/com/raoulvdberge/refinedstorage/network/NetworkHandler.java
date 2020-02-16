@@ -40,6 +40,7 @@ public class NetworkHandler {
         handler.registerMessage(id++, GridItemInsertHeldMessage.class, GridItemInsertHeldMessage::encode, GridItemInsertHeldMessage::decode, GridItemInsertHeldMessage::handle);
         handler.registerMessage(id++, GridClearMessage.class, GridClearMessage::encode, GridClearMessage::decode, GridClearMessage::handle);
         handler.registerMessage(id++, GridPatternCreateMessage.class, GridPatternCreateMessage::encode, GridPatternCreateMessage::decode, GridPatternCreateMessage::handle);
+        handler.registerMessage(id++,GridPatternScrollMessage.class,GridPatternScrollMessage::encode,GridPatternScrollMessage::decode,GridPatternScrollMessage::handle);
         handler.registerMessage(id++, SetFilterSlotMessage.class, SetFilterSlotMessage::encode, SetFilterSlotMessage::decode, SetFilterSlotMessage::handle);
         handler.registerMessage(id++, SetFluidFilterSlotMessage.class, SetFluidFilterSlotMessage::encode, SetFluidFilterSlotMessage::decode, SetFluidFilterSlotMessage::handle);
         handler.registerMessage(id++, GridFluidUpdateMessage.class, GridFluidUpdateMessage::encode, GridFluidUpdateMessage::decode, GridFluidUpdateMessage::handle);

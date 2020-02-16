@@ -8,16 +8,22 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class GridClearMessage {
-    public static GridClearMessage decode(PacketBuffer buf) {
-        return new GridClearMessage();
+public class GridPatternScrollMessage {
+    private int offSet;
+
+    public GridPatternScrollMessage(int offSet) {
+        this.offSet = offSet;
     }
 
-    public static void encode(GridClearMessage message, PacketBuffer buf) {
-        // NO OP
+    public static GridPatternScrollMessage decode(PacketBuffer buf) {
+        return new GridPatternScrollMessage(buf.readInt());
     }
 
-    public static void handle(GridClearMessage message, Supplier<NetworkEvent.Context> ctx) {
+    public static void encode(GridPatternScrollMessage message, PacketBuffer buf) {
+        buf.writeInt(message.offSet);
+    }
+
+    public static void handle(GridPatternScrollMessage message, Supplier<NetworkEvent.Context> ctx) {
         PlayerEntity player = ctx.get().getSender();
 
         if (player != null) {
@@ -25,8 +31,7 @@ public class GridClearMessage {
                 Container container = player.openContainer;
 
                 if (container instanceof GridContainer) {
-                    ((GridContainer) container).clearPatternDisplayMatrix();
-                    ((GridContainer) container).getGrid().onClear(player);
+                    ((GridContainer) container).updateContainerSlotPositions(message.offSet);
                 }
             });
         }

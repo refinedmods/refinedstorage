@@ -41,9 +41,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
 
     public GridContainer(IGrid grid, @Nullable BaseTile gridTile, PlayerEntity player, int windowId) {
         super(RSContainers.GRID, gridTile, player, windowId);
-
         this.grid = grid;
-
         grid.addCraftingListener(this);
     }
 
@@ -193,6 +191,7 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
                 }
             }
         }
+        ((GridNetworkNode)grid).getVisibleProcessingMatrix().updateSlotPositions(0);
 
         // Regular patterns
         x = 26;
@@ -284,4 +283,16 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
     protected int getDisabledSlotNumber() {
         return grid.getSlotId();
     }
+
+    public void clearPatternDisplayMatrix() {
+        for (int i = 0; i < 18; i++) {
+            ((GridNetworkNode)grid).getVisibleProcessingMatrix().setStackInSlot(i, ItemStack.EMPTY);
+        }
+    }
+
+    public void updateContainerSlotPositions(int newOffset) {
+        ((GridNetworkNode)grid).getVisibleProcessingMatrix().updateSlotPositions(newOffset * 3);
+    }
+
+
 }

@@ -129,6 +129,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 // Rebuild the inventory slots before the slot change packet arrives.
                 GridTile.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
                 ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
+                this.container.clearPatternDisplayMatrix();
                 this.container.initSlots();
 
                 TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
@@ -520,7 +521,19 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     @Override
     public boolean mouseScrolled(double x, double y, double delta) {
+        if (isOverPatternArea(x - guiLeft, y - guiTop)) {
+            patternScrollBar.mouseScrolled(x, y, delta);
+            return super.mouseScrolled(x, y, delta);
+        }
         return this.scrollbar.mouseScrolled(x, y, delta) || super.mouseScrolled(x, y, delta);
+    }
+
+    private boolean isOverPatternArea(double x, double y) {
+        return RenderUtils.inBounds(8, getTopHeight() + getVisibleRows() * 18, 152, 54, x, y);
+    }
+
+    private boolean isOverInventory(double x, double y) {
+        return RenderUtils.inBounds(8, getYPlayerInventory(), 9 * 18 - 2, 4 * 18 + 2, x, y);
     }
 
     @Override
