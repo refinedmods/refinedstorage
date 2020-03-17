@@ -529,7 +529,7 @@ public class CraftingTask implements ICraftingTask {
 
                         fromNetwork = mutatedFluidStorage.get(possibleInput, IComparer.COMPARE_NBT);
 
-                        toExtractInitialFluids.add(possibleInput);
+                        toExtractInitialFluids.add(possibleInput,toTake);
                     }
                     if (remaining > 0) {
                         ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
