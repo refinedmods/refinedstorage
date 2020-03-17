@@ -1122,7 +1122,7 @@ public class CraftingTask implements ICraftingTask {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
         for (Craft craft : this.crafts.values()) {
-            if (craft instanceof com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting) {
+            if (craft instanceof com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting && craft.getQuantity() > 0) {
                 com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting c = (com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting) craft;
                 for (ItemStack receive : c.getPattern().getOutputs()) {
                     elements.add(new ItemCraftingMonitorElement(receive, 0, 0, 0, 0, receive.getCount() * c.getQuantity()),false);
@@ -1134,7 +1134,7 @@ public class CraftingTask implements ICraftingTask {
                 }
 
                 for (StackListEntry<ItemStack> put : p.getItemsToDisplay().getStacks()) {
-                    if (p.getProcessing() > 0) {
+                    if (p.getProcessing() > 0|| p.getState() !=ProcessingState.READY) {
                         ICraftingMonitorElement element = new ItemCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getCount() * p.getProcessing(), 0, 0);
 
                         if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
@@ -1154,7 +1154,7 @@ public class CraftingTask implements ICraftingTask {
                     }
                 }
                 for (StackListEntry<FluidStack> put : p.getFluidsToUse().getStacks()) {
-                    if (p.getProcessing() > 0) {
+                    if (p.getProcessing() > 0|| p.getState() !=ProcessingState.READY) {
                         ICraftingMonitorElement element = new FluidCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getAmount() * p.getProcessing(), 0, 0);
                         if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_fluid");
@@ -1174,7 +1174,7 @@ public class CraftingTask implements ICraftingTask {
                     }
                 }
             }
-        };
+        }
 
         for (ItemStack stack : this.internalStorage.getStacks()) {
             elements.addStorage(new ItemCraftingMonitorElement(stack, stack.getCount(), 0, 0, 0, 0));

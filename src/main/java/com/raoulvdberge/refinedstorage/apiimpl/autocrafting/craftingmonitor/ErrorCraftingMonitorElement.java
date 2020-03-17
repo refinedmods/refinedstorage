@@ -78,4 +78,8 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     public int elementHashCode() {
         return base.elementHashCode() ^ message.hashCode();
     }
+
+    public void mergeBases(ICraftingMonitorElement element) {
+            this.base.merge(element);
+    }
 }

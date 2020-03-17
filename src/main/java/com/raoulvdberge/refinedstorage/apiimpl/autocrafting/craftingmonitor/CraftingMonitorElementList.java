@@ -28,14 +28,22 @@ public class CraftingMonitorElementList implements ICraftingMonitorElementList {
         if (craftingElements != null) {
             ICraftingMonitorElement existingElement = craftingElements.get(element.baseElementHashCode());
             if (existingElement != null) {
-                existingElement.merge(element);
+                if(existingElement instanceof ErrorCraftingMonitorElement){
+                    ((ErrorCraftingMonitorElement)existingElement).mergeBases(element);
+                } else {
+                    existingElement.merge(element);
+                }
                 merged = true;
             }
         }
         if (processingElements != null) {
             ICraftingMonitorElement existingElement = processingElements.get(element.baseElementHashCode());
             if (existingElement != null) {
-                existingElement.merge(element);
+                if(existingElement instanceof ErrorCraftingMonitorElement){
+                    ((ErrorCraftingMonitorElement)existingElement).mergeBases(element);
+                } else {
+                    existingElement.merge(element);
+                }
                 merged = true;
             }
         }
