@@ -85,12 +85,6 @@ public class StorageBlockItem extends BaseBlockItem {
                     InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), storagePart);
                 }
 
-                ItemStack processor = new ItemStack(RSItems.BASIC_PROCESSOR);
-
-                if (!player.inventory.addItemStackToInventory(processor.copy())) {
-                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), processor);
-                }
-
                 if (disk != null) {
                     API.instance().getStorageDiskManager((ServerWorld) world).remove(diskId);
                     API.instance().getStorageDiskManager((ServerWorld) world).markForSaving();
