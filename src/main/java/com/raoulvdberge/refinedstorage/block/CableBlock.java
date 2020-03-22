@@ -119,18 +119,20 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
         return getState(getDefaultState(), ctx.getWorld(), ctx.getPos());
     }
 
+    @Override
     public IFluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
+    @Override
     public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, IFluidState fluidStateIn) {
         return IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
     }
 
+    @Override
     public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
         return IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
     }
-
 
     private boolean hasNode(IWorld world, BlockPos pos, BlockState state, Direction direction) {
         // Prevent the "holder" of a cable block conflicting with a cable connection.
