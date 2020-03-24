@@ -1122,10 +1122,12 @@ public class CraftingTask implements ICraftingTask {
         ICraftingMonitorElementList elements = API.instance().createCraftingMonitorElementList();
 
         for (Craft craft : this.crafts.values()) {
-            if (craft instanceof com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting && craft.getQuantity() > 0) {
-                com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting c = (com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting) craft;
-                for (ItemStack receive : c.getPattern().getOutputs()) {
-                    elements.add(new ItemCraftingMonitorElement(receive, 0, 0, 0, 0, receive.getCount() * c.getQuantity()),false);
+            if (craft instanceof com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting ) {
+                if(craft.getQuantity() > 0) {
+                    com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting c = (com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.Crafting) craft;
+                    for (ItemStack receive : c.getPattern().getOutputs()) {
+                        elements.add(new ItemCraftingMonitorElement(receive, 0, 0, 0, 0, receive.getCount() * c.getQuantity()), false);
+                    }
                 }
             } else {
                 Processing p = (Processing) craft;
