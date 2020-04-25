@@ -6,6 +6,10 @@ import com.raoulvdberge.refinedstorage.tile.CableTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -21,13 +25,14 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class CableBlock extends NetworkNodeBlock {
+public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     private static final BooleanProperty NORTH = BooleanProperty.create("north");
     private static final BooleanProperty EAST = BooleanProperty.create("east");
     private static final BooleanProperty SOUTH = BooleanProperty.create("south");
     private static final BooleanProperty WEST = BooleanProperty.create("west");
     private static final BooleanProperty UP = BooleanProperty.create("up");
     private static final BooleanProperty DOWN = BooleanProperty.create("down");
+    private static final BooleanProperty WATERLOGGED = BooleanProperty.create("waterlogged");
 
     protected static final VoxelShape HOLDER_NORTH = makeCuboidShape(7, 7, 2, 9, 9, 6);
     protected static final VoxelShape HOLDER_EAST = makeCuboidShape(10, 7, 7, 14, 9, 9);
@@ -46,13 +51,14 @@ public class CableBlock extends NetworkNodeBlock {
 
     public CableBlock(Properties props) {
         super(props);
+        this.setDefaultState(getDefaultState().with(WATERLOGGED, false));
     }
 
     public CableBlock() {
         super(BlockUtils.DEFAULT_GLASS_PROPERTIES);
 
         this.setRegistryName(RS.ID, "cable");
-        this.setDefaultState(getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
+        this.setDefaultState(getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false).with(WATERLOGGED, false));
     }
 
     @Override
@@ -113,6 +119,21 @@ public class CableBlock extends NetworkNodeBlock {
         return getState(getDefaultState(), ctx.getWorld(), ctx.getPos());
     }
 
+    @Override
+    public IFluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, IFluidState fluidStateIn) {
+        return IWaterLoggable.super.receiveFluid(worldIn, pos, state, fluidStateIn);
+    }
+
+    @Override
+    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
+        return IWaterLoggable.super.canContainFluid(worldIn, pos, state, fluidIn);
+    }
+
     private boolean hasNode(IWorld world, BlockPos pos, BlockState state, Direction direction) {
         // Prevent the "holder" of a cable block conflicting with a cable connection.
         if (getDirection() != BlockDirection.NONE && state.get(getDirection().getProperty()).getOpposite() == direction) {
@@ -154,6 +175,6 @@ public class CableBlock extends NetworkNodeBlock {
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
 
-        builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
+        builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN, WATERLOGGED);
     }
 }
