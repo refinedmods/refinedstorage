@@ -130,7 +130,8 @@ public class CommonSetup {
         API.instance().getCraftingMonitorElementRegistry().add(FluidCraftingMonitorElement.ID, FluidCraftingMonitorElement::read);
         API.instance().getCraftingMonitorElementRegistry().add(ErrorCraftingMonitorElement.ID, ErrorCraftingMonitorElement::read);
 
-        API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
+        API.instance().getCraftingTaskRegistry().add( com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory.ID, new com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory());
+        API.instance().getCraftingTaskRegistry().add( com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory.ID, new com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory());
 
         LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
         LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());

@@ -1,4 +1,4 @@
-package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5;
+package com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
@@ -13,16 +13,16 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nonnull;
 
 public class CraftingTaskFactory implements ICraftingTaskFactory {
-    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "v5");
+    public static final ResourceLocation ID = new ResourceLocation(RS.ID, "v6");
 
     @Nonnull
     @Override
     public ICraftingTask create(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
-        return new com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTask(network, requested, quantity, pattern);
+        return new com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask(network, requested, quantity, pattern);
     }
 
     @Override
     public ICraftingTask createFromNbt(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
-        return new com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTask(network, tag);
+        return new com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask(network, tag);
     }
 }
