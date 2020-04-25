@@ -87,7 +87,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
             0,
             -1,
             false,
-            matrixStack.getLast().getPositionMatrix(),
+            matrixStack.getLast().getMatrix(),
             renderTypeBuffer,
             false,
             0,
@@ -107,12 +107,12 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         matrixStack.scale(0.5F, 0.5F, 0.5F);
 
         Minecraft.getInstance().getItemRenderer().renderItem(
-                itemStack,
-                ItemCameraTransforms.TransformType.FIXED,
-                light,
-                OverlayTexture.DEFAULT_LIGHT,
-                matrixStack,
-                renderTypeBuffer
+            itemStack,
+            ItemCameraTransforms.TransformType.FIXED,
+            light,
+            OverlayTexture.NO_OVERLAY,
+            matrixStack,
+            renderTypeBuffer
         );
 
         matrixStack.pop();
@@ -130,32 +130,32 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         final Fluid fluid = fluidStack.getFluid();
         final FluidAttributes attributes = fluid.getAttributes();
         final ResourceLocation fluidStill = attributes.getStillTexture(fluidStack);
-        final TextureAtlasSprite sprite = Minecraft.getInstance().getTextureGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStill);
+        final TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(fluidStill);
         final int fluidColor = attributes.getColor(fluidStack);
 
-        final IVertexBuilder buffer = renderTypeBuffer.getBuffer(RenderType.text(sprite.getAtlasTexture().getBasePath()));
+        final IVertexBuilder buffer = renderTypeBuffer.getBuffer(RenderType.getText(sprite.getAtlasTexture().getTextureLocation()));
 
         final int colorRed = fluidColor >> 16 & 0xFF;
         final int colorGreen = fluidColor >> 8 & 0xFF;
         final int colorBlue = fluidColor & 0xFF;
         final int colorAlpha = fluidColor >> 24 & 0xFF;
 
-        buffer.pos(matrixStack.getLast().getPositionMatrix(), -0.5F, -0.5F, 0F)
+        buffer.pos(matrixStack.getLast().getMatrix(), -0.5F, -0.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
                 .tex(sprite.getMinU(), sprite.getMinV())
                 .lightmap(light)
                 .endVertex();
-        buffer.pos(matrixStack.getLast().getPositionMatrix(), 0.5F, -0.5F, 0F)
+        buffer.pos(matrixStack.getLast().getMatrix(), 0.5F, -0.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
                 .tex(sprite.getMaxU(), sprite.getMinV())
                 .lightmap(light)
                 .endVertex();
-        buffer.pos(matrixStack.getLast().getPositionMatrix(), 0.5F, -1.5F, 0F)
+        buffer.pos(matrixStack.getLast().getMatrix(), 0.5F, -1.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
                 .tex(sprite.getMaxU(), sprite.getMaxV())
                 .lightmap(light)
                 .endVertex();
-        buffer.pos(matrixStack.getLast().getPositionMatrix(), -0.5F, -1.5F, 0F)
+        buffer.pos(matrixStack.getLast().getMatrix(), -0.5F, -1.5F, 0F)
                 .color(colorRed, colorGreen, colorBlue, colorAlpha)
                 .tex(sprite.getMinU(), sprite.getMaxV())
                 .lightmap(light)

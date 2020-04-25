@@ -230,7 +230,7 @@ public final class RenderUtils {
             IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
             MatrixStack textStack = new MatrixStack();
             textStack.translate(0.0D, 0.0D, (double) zLevel);
-            Matrix4f textLocation = textStack.getLast().getPositionMatrix();
+            Matrix4f textLocation = textStack.getLast().getMatrix();
 
             int tooltipTop = tooltipY;
 
@@ -270,7 +270,7 @@ public final class RenderUtils {
                         RenderUtils.getOffsetOnScale(y - (Minecraft.getInstance().getForceUnicodeFont() ? 2 : 0), textScale),
                         -1,
                         true,
-                        smallTextStack.getLast().getPositionMatrix(),
+                        smallTextStack.getLast().getMatrix(),
                         lvt_7_1_,
                         false,
                         0,

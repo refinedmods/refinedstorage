@@ -1,5 +1,13 @@
 # Refined Storage Changelog
 
+### 1.8.2
+- Add Refined Storage silicon to forge:silicon tag for mod compatibility (jeremiahwinsley)
+- Update pt_br translation (Arthur-o-b)
+- Added waterlogging to all cable blocks (Darkere)
+- Fixed storage block dropping extra processor (Darkere)
+- Create zh_tw translation (ForFunPenguin)
+- Re-added zh_cn translation (ppoozl)
+
 ### 1.8.1
 - Port to Minecraft 1.15.2 (raoulvdberge)
 - The Storage Monitor supports fluids as well now (V1RTUOZ)
