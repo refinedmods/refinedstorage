@@ -85,10 +85,16 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                             if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                                 network.getCraftingManager().request(new SlottedCraftingRequest(this, filterSlot), slot, stackSize);
                             }
-                        } else if (ItemHandlerHelper.insertItem(handler, took, true).isEmpty()) {
-                            took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, Action.PERFORM);
+                        } else {
+                            ItemStack remainder = ItemHandlerHelper.insertItem(handler, took, true);
 
-                            ItemHandlerHelper.insertItem(handler, took, false);
+                            int correctedStackSize = took.getCount() - remainder.getCount();
+
+                            if (correctedStackSize > 0) {
+                                took = network.extractItem(slot, correctedStackSize, compare, Action.PERFORM);
+
+                                ItemHandlerHelper.insertItem(handler, took, false);
+                            }
                         }
                     }
 
