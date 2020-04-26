@@ -56,6 +56,10 @@ NOTE: This is an alpha release. Bugs may happen. Remember to take backups.
 
 ### 1.6.16
 - Updated Russian translation (Bytegm)
+- Fixed erroring controller tile entity (ian-rampage)
+- Fixed Inventory Tweaks sorting not respecting locked slots (Landmaster)
+- Fixed OpenComputers driver voiding excess fluids (BlueAgent)
+- Fixed being able to move wireless items in inventory (raoulvdberge, Dabombber)
 
 ### 1.6.15
 - Fixed recipes with more than 1 bucket of fluid not transferring from JEI (Darkere)
