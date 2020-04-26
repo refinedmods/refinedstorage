@@ -17,13 +17,13 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
     private INetworkItemHandler handler;
     private EntityPlayer player;
     private ItemStack stack;
-    private int invIndex;
+    private int slotId;
 
-    public NetworkItemWirelessCraftingMonitor(INetworkItemHandler handler, EntityPlayer player, ItemStack stack, int invIndex) {
+    public NetworkItemWirelessCraftingMonitor(INetworkItemHandler handler, EntityPlayer player, ItemStack stack, int slotId) {
         this.handler = handler;
         this.player = player;
         this.stack = stack;
-        this.invIndex = invIndex;
+        this.slotId = slotId;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class NetworkItemWirelessCraftingMonitor implements INetworkItem {
             return false;
         }
 
-        player.openGui(RS.INSTANCE, RSGui.WIRELESS_CRAFTING_MONITOR, player.getEntityWorld(), invIndex, 0, 0);
+        player.openGui(RS.INSTANCE, RSGui.WIRELESS_CRAFTING_MONITOR, player.getEntityWorld(), slotId, 0, 0);
 
         drainEnergy(RS.INSTANCE.config.wirelessCraftingMonitorOpenUsage);
 

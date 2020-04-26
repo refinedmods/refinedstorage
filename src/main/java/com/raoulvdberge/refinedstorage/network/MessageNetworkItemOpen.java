@@ -25,9 +25,9 @@ public class MessageNetworkItemOpen extends MessageHandlerPlayerToServer<Message
         ItemStack stack = player.inventory.getStackInSlot(message.slotId);
 
         if (stack.getItem() instanceof ItemNetworkItem) {
-            ((ItemNetworkItem) stack.getItem()).applyNetwork(stack, n -> n.getNetworkItemHandler().open(player, player.inventory.getStackInSlot(message.slotId)), player::sendMessage);
+            ((ItemNetworkItem) stack.getItem()).applyNetwork(stack, n -> n.getNetworkItemHandler().open(player, stack, message.slotId), player::sendMessage);
         } else if (stack.getItem() == Item.getItemFromBlock(RSBlocks.PORTABLE_GRID)) { // @Hack
-            API.instance().getGridManager().openGrid(PortableGrid.ID, player, stack);
+            API.instance().getGridManager().openGrid(PortableGrid.ID, player, stack, message.slotId);
         }
     }
 

@@ -82,8 +82,8 @@ public class ContainerCraftingMonitor extends ContainerBase implements ICrafting
     }
 
     @Override
-    protected boolean isHeldItemDisabled() {
-        return craftingMonitor instanceof WirelessCraftingMonitor;
+    protected int getDisabledSlotNumber() {
+        return craftingMonitor.getSlotId();
     }
 
     @Override

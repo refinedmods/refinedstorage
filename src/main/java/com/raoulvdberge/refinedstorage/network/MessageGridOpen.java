@@ -18,12 +18,13 @@ public class MessageGridOpen implements IMessage, IMessageHandler<MessageGridOpe
     private BlockPos pos;
     @Nullable
     private ItemStack stack;
+    private int slotId;
     private int gridId;
 
     public MessageGridOpen() {
     }
 
-    public MessageGridOpen(int windowId, @Nullable BlockPos pos, int gridId, @Nullable ItemStack stack) {
+    public MessageGridOpen(int windowId, @Nullable BlockPos pos, int gridId, @Nullable ItemStack stack, int slotId) {
         if (pos == null && stack == null) {
             throw new IllegalArgumentException("Can't be both null");
         }
@@ -32,12 +33,14 @@ public class MessageGridOpen implements IMessage, IMessageHandler<MessageGridOpe
         this.pos = pos;
         this.stack = stack;
         this.gridId = gridId;
+        this.slotId = slotId;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         windowId = buf.readInt();
         gridId = buf.readInt();
+        slotId = buf.readInt();
 
         if (buf.readBoolean()) {
             pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
@@ -52,6 +55,7 @@ public class MessageGridOpen implements IMessage, IMessageHandler<MessageGridOpe
     public void toBytes(ByteBuf buf) {
         buf.writeInt(windowId);
         buf.writeInt(gridId);
+        buf.writeInt(slotId);
 
         buf.writeBoolean(pos != null);
         if (pos != null) {
@@ -82,6 +86,10 @@ public class MessageGridOpen implements IMessage, IMessageHandler<MessageGridOpe
 
     public int getGridId() {
         return gridId;
+    }
+
+    public int getSlotId() {
+        return slotId;
     }
 
     @Override

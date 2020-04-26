@@ -15,8 +15,9 @@ public interface INetworkItemHandler {
      *
      * @param player the player that opened the network item
      * @param stack  the stack that has been opened
+     * @param slotId the slot id, if applicable, otherwise -1
      */
-    void open(EntityPlayer player, ItemStack stack);
+    void open(EntityPlayer player, ItemStack stack, int slotId);
 
     /**
      * Called when the player closes a network item.

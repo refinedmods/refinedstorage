@@ -53,7 +53,7 @@ public class ContainerFilter extends ContainerBase {
     }
 
     @Override
-    protected boolean isHeldItemDisabled() {
-        return true;
+    protected int getDisabledSlotNumber() {
+        return getPlayer().inventory.currentItem;
     }
 }

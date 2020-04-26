@@ -23,7 +23,7 @@ public class GridOpenHandler implements Runnable {
     public void run() {
         EntityPlayer player = Minecraft.getMinecraft().player;
 
-        Pair<IGrid, TileEntity> grid = API.instance().getGridManager().createGrid(message.getGridId(), player, message.getStack(), message.getPos());
+        Pair<IGrid, TileEntity> grid = API.instance().getGridManager().createGrid(message.getGridId(), player, message.getStack(), message.getPos(), message.getSlotId());
 
         if (grid == null) {
             return;

@@ -30,7 +30,7 @@ public class ItemBlockPortableGrid extends ItemBlockEnergyItem {
         ItemStack stack = player.getHeldItem(hand);
 
         if (!world.isRemote) {
-            API.instance().getGridManager().openGrid(PortableGrid.ID, (EntityPlayerMP) player, stack);
+            API.instance().getGridManager().openGrid(PortableGrid.ID, (EntityPlayerMP) player, stack, player.inventory.currentItem);
         }
 
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
