@@ -511,6 +511,14 @@ public class TileController extends TileBase implements ITickable, INetwork, IRe
     }
 
     @Override
+    public World getWorld()
+    {
+        // This is provided by net.minecraft.TileEntity - and needed as a part of INetworkNode
+        // After obfuscation - these two methods will not be the same - so we have to redefine this here
+        return this.world;
+    }
+
+    @Override
     public void read(NBTTagCompound tag) {
         super.read(tag);
 

@@ -258,10 +258,16 @@ public class EnvironmentNetwork extends AbstractManagedEnvironment {
         }
 
         // Actually do it and return how much fluid we've inserted
-        FluidStack extracted = node.getNetwork().extractFluid(stack, stack.amount, Action.PERFORM);
-        handler.fill(extracted, true);
+        FluidStack extractedActual = node.getNetwork().extractFluid(stack, filledAmountSim, Action.PERFORM);
+        int filledAmountActual = handler.fill(extractedActual, true);
 
-        return new Object[]{filledAmountSim};
+        // Attempt to insert excess fluid back into the network
+        // This shouldn't need to happen for most tanks, unless input cap decreases based on insert amount
+        if (extractedActual != null && extractedActual.amount > filledAmountActual) {
+            node.getNetwork().insertFluid(stack, extractedActual.amount - filledAmountActual, Action.PERFORM);
+        }
+
+        return new Object[]{filledAmountActual};
     }
 
     @Callback(doc = "function(stack:table):table -- Gets a fluid from the network.")
