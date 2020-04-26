@@ -4,6 +4,7 @@
 - Added a new experimental autocrafting engine that's enabled by default. This should improve autocrafting performance (Darkere)
 - Wireless Transmitters can now be placed on any block and in any direction (raoulvdberge)
 - Fixed Exporter not exporting anything when using a Stack Upgrade and there isn't space for 64 items in the inventory (raoulvdberge)
+- Fixed Controller always using the base usage even when turned off (raoulvdberge)
 
 ### 1.8.2
 - Add Refined Storage silicon to forge:silicon tag for mod compatibility (jeremiahwinsley)

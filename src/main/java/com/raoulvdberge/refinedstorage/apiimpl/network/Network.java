@@ -519,7 +519,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     private void updateEnergyUsage() {
-        int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
+        int usage = redstoneMode.isEnabled(world, pos) ? RS.SERVER_CONFIG.getController().getBaseUsage() : 0;
 
         for (INetworkNode node : nodeGraph.all()) {
             if (node.isActive()) {
