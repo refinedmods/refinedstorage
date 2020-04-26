@@ -57,6 +57,8 @@ public abstract class ContainerBase extends Container {
     }
 
     protected void addPlayerInventory(int xInventory, int yInventory) {
+        int disabledSlotNumber = getDisabledSlotNumber();
+
         int id = 9;
         
         for (int y = 0; y < 3; y++) {
@@ -72,8 +74,6 @@ public abstract class ContainerBase extends Container {
         }
         
         id = 0;
-
-        int disabledSlotNumber = getDisabledSlotNumber();
 
         for (int i = 0; i < 9; i++) {
             int x = xInventory + i * 18;
