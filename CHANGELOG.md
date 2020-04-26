@@ -1,5 +1,9 @@
 # Refined Storage Changelog
 
+### 1.8.3
+- Added a new experimental autocrafting engine that's enabled by default. This should improve autocrafting performance (Darkere)
+- Wireless Transmitters can now be placed on any block and in any direction (raoulvdberge)
+
 ### 1.8.2
 - Add Refined Storage silicon to forge:silicon tag for mod compatibility (jeremiahwinsley)
 - Update pt_br translation (Arthur-o-b)
