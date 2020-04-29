@@ -164,7 +164,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
                     couldRun = canRun;
                     throttlingDisabled = false;
 
-                    LOGGER.info("Network at position {} changed running state to {}, causing an invalidation of the node graph", pos, couldRun);
+                    LOGGER.debug("Network at position {} changed running state to {}, causing an invalidation of the node graph", pos, couldRun);
 
                     nodeGraph.invalidate(Action.PERFORM, world, pos);
                     securityManager.invalidate();
