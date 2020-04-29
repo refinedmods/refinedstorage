@@ -6,6 +6,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorage;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageContext;
 import com.raoulvdberge.refinedstorage.api.storage.externalstorage.IExternalStorageProvider;
@@ -33,12 +34,16 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ExternalStorageNetworkNode extends NetworkNode implements IStorageProvider, IStorageScreen, IComparable, IWhitelistBlacklist, IPrioritizable, IType, IAccessType, IExternalStorageContext {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "external_storage");
+
+    private static final Logger LOGGER = LogManager.getLogger(ExternalStorageNetworkNode.class);
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
@@ -69,10 +74,12 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     }
 
     @Override
-    public void onConnectedStateChange(INetwork network, boolean state) {
-        super.onConnectedStateChange(network, state);
+    public void onConnectedStateChange(INetwork network, boolean state, ConnectivityStateChangeCause cause) {
+        super.onConnectedStateChange(network, state, cause);
 
-        updateStorage(network);
+        LOGGER.debug("Connectivity state of external storage at {} changed to {} due to {}", pos, state, cause);
+
+        updateStorage(network, InvalidateCause.CONNECTED_STATE_CHANGED);
     }
 
     @Override
@@ -81,7 +88,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
         if (canUpdate()) {
             if (networkTicks++ == 0) {
-                updateStorage(network);
+                updateStorage(network, InvalidateCause.INITIAL_TICK_INVALIDATION);
 
                 return;
             }
@@ -101,7 +108,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         super.onDirectionChanged(direction);
 
         if (network != null) {
-            updateStorage(network);
+            updateStorage(network, InvalidateCause.DEVICE_CONFIGURATION_CHANGED);
         }
     }
 
@@ -198,7 +205,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         }
     }
 
-    public void updateStorage(INetwork network) {
+    public void updateStorage(INetwork network, InvalidateCause cause) {
         itemStorages.clear();
         fluidStorages.clear();
 
@@ -224,8 +231,8 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
             }
         }
 
-        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE);
-        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE);
+        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE.apply(cause));
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE.apply(cause));
     }
 
     @Override
@@ -298,8 +305,8 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         this.accessType = type;
 
         if (network != null) {
-            network.getItemStorageCache().invalidate();
-            network.getFluidStorageCache().invalidate();
+            network.getItemStorageCache().invalidate(InvalidateCause.DEVICE_CONFIGURATION_CHANGED);
+            network.getFluidStorageCache().invalidate(InvalidateCause.DEVICE_CONFIGURATION_CHANGED);
         }
 
         markDirty();
@@ -322,7 +329,7 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         markDirty();
 
         if (network != null) {
-            updateStorage(network);
+            updateStorage(network, InvalidateCause.DEVICE_CONFIGURATION_CHANGED);
         }
     }
 

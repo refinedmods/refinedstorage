@@ -12,6 +12,7 @@ import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.StorageType;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskProvider;
@@ -212,7 +213,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
         }
 
         if (cache != null) {
-            cache.invalidate();
+            cache.invalidate(InvalidateCause.DISK_INVENTORY_CHANGED);
         }
     }
 

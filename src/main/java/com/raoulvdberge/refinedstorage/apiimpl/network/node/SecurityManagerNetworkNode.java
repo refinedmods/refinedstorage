@@ -129,8 +129,8 @@ public class SecurityManagerNetworkNode extends NetworkNode implements ISecurity
     }
 
     @Override
-    public void onConnectedStateChange(INetwork network, boolean state) {
-        super.onConnectedStateChange(network, state);
+    public void onConnectedStateChange(INetwork network, boolean state, ConnectivityStateChangeCause cause) {
+        super.onConnectedStateChange(network, state, cause);
 
         network.getSecurityManager().invalidate();
     }

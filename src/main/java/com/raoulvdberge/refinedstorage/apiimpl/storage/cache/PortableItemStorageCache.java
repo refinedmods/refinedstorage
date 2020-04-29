@@ -3,6 +3,7 @@ package com.raoulvdberge.refinedstorage.apiimpl.storage.cache;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
@@ -24,7 +25,7 @@ public class PortableItemStorageCache implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public void invalidate() {
+    public void invalidate(InvalidateCause cause) {
         list.clear();
 
         if (portableGrid.getItemStorage() != null) {

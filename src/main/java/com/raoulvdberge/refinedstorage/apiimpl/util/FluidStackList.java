@@ -119,6 +119,7 @@ public class FluidStackList implements IStackList<FluidStack> {
     @Override
     public void clear() {
         stacks.clear();
+        index.clear();
     }
 
     @Override
@@ -138,8 +139,10 @@ public class FluidStackList implements IStackList<FluidStack> {
         FluidStackList list = new FluidStackList();
 
         for (StackListEntry<FluidStack> entry : stacks.values()) {
-            list.stacks.put(entry.getStack().getFluid(), new StackListEntry<>(entry.getId(), entry.getStack().copy()));
-            list.index.put(entry.getId(), entry.getStack());
+            FluidStack newStack = entry.getStack().copy();
+
+            list.stacks.put(entry.getStack().getFluid(), new StackListEntry<>(entry.getId(), newStack));
+            list.index.put(entry.getId(), newStack);
         }
 
         return list;

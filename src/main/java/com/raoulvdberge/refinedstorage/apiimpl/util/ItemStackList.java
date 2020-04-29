@@ -117,6 +117,7 @@ public class ItemStackList implements IStackList<ItemStack> {
     @Override
     public void clear() {
         stacks.clear();
+        index.clear();
     }
 
     @Override
@@ -136,8 +137,10 @@ public class ItemStackList implements IStackList<ItemStack> {
         ItemStackList list = new ItemStackList();
 
         for (StackListEntry<ItemStack> entry : stacks.values()) {
-            list.stacks.put(entry.getStack().getItem(), new StackListEntry<>(entry.getId(), entry.getStack().copy()));
-            list.index.put(entry.getId(), entry.getStack());
+            ItemStack newStack = entry.getStack().copy();
+
+            list.stacks.put(entry.getStack().getItem(), new StackListEntry<>(entry.getId(), newStack));
+            list.index.put(entry.getId(), newStack);
         }
 
         return list;

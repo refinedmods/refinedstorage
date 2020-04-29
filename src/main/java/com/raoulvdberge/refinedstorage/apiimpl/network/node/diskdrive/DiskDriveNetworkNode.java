@@ -5,9 +5,11 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ConnectivityStateChangeCause;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.DiskState;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.cache.FluidStorageCache;
@@ -31,6 +33,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -44,6 +48,8 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private static final int DISK_STATE_UPDATE_THROTTLE = 30;
+
+    private static final Logger LOGGER = LogManager.getLogger(DiskDriveNetworkNode.class);
 
     private int ticksSinceBlockUpdateRequested;
     private boolean blockUpdateRequested;
@@ -70,8 +76,8 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
                 );
 
                 if (network != null) {
-                    network.getItemStorageCache().invalidate();
-                    network.getFluidStorageCache().invalidate();
+                    network.getItemStorageCache().invalidate(InvalidateCause.DISK_INVENTORY_CHANGED);
+                    network.getFluidStorageCache().invalidate(InvalidateCause.DISK_INVENTORY_CHANGED);
                 }
 
                 if (!reading) {
@@ -139,11 +145,13 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
     }
 
     @Override
-    public void onConnectedStateChange(INetwork network, boolean state) {
-        super.onConnectedStateChange(network, state);
+    public void onConnectedStateChange(INetwork network, boolean state, ConnectivityStateChangeCause cause) {
+        super.onConnectedStateChange(network, state, cause);
 
-        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE);
-        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE);
+        LOGGER.debug("Connectivity state of disk drive at {} changed to {} due to {}", pos, state, cause);
+
+        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
 
         WorldUtils.updateBlock(world, pos);
     }
@@ -267,8 +275,8 @@ public class DiskDriveNetworkNode extends NetworkNode implements IStorageProvide
         this.accessType = value;
 
         if (network != null) {
-            network.getFluidStorageCache().invalidate();
-            network.getItemStorageCache().invalidate();
+            network.getFluidStorageCache().invalidate(InvalidateCause.DEVICE_CONFIGURATION_CHANGED);
+            network.getItemStorageCache().invalidate(InvalidateCause.DEVICE_CONFIGURATION_CHANGED);
         }
 
         markDirty();

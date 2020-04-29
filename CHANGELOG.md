@@ -6,6 +6,8 @@
 - Fixed Exporter not exporting anything when using a Stack Upgrade and there isn't space for 64 items in the inventory (raoulvdberge)
 - Fixed Controller always using the base usage even when turned off (raoulvdberge)
 - Added the Regulator Upgrade that can be inserted into a Exporter. This ensures a certain amount of items and fluids is kept in stock in a connected inventory (raoulvdberge)
+- Fixed severe memory leak in the storage cache (raoulvdberge)
+- Added debug logging on the server when an expensive operation occurs (raoulvdberge)
 
 ### 1.8.2
 - Add Refined Storage silicon to forge:silicon tag for mod compatibility (jeremiahwinsley)

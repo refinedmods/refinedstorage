@@ -2,6 +2,7 @@ package com.raoulvdberge.refinedstorage.block;
 
 import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
 import com.raoulvdberge.refinedstorage.container.ExternalStorageContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
@@ -122,7 +123,7 @@ public class ExternalStorageBlock extends CableBlock {
             if (node instanceof ExternalStorageNetworkNode &&
                 node.getNetwork() != null &&
                 fromPos.equals(pos.offset(((ExternalStorageNetworkNode) node).getDirection()))) {
-                ((ExternalStorageNetworkNode) node).updateStorage(node.getNetwork());
+                ((ExternalStorageNetworkNode) node).updateStorage(node.getNetwork(), InvalidateCause.NEIGHBOR_CHANGED);
             }
         }
     }

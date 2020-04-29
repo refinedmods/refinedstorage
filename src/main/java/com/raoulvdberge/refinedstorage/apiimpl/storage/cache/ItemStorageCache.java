@@ -6,10 +6,13 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraft.item.ItemStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -17,9 +20,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ItemStorageCache implements IStorageCache<ItemStack> {
-    public static final Consumer<INetwork> INVALIDATE = network -> network.getItemStorageCache().invalidate();
+    public static final Function<InvalidateCause, Consumer<INetwork>> INVALIDATE = cause -> network -> network.getItemStorageCache().invalidate(cause);
+
+    private static final Logger LOGGER = LogManager.getLogger(ItemStorageCache.class);
 
     private final INetwork network;
     private final CopyOnWriteArrayList<IStorage<ItemStack>> storages = new CopyOnWriteArrayList<>();
@@ -33,7 +39,9 @@ public class ItemStorageCache implements IStorageCache<ItemStack> {
     }
 
     @Override
-    public void invalidate() {
+    public void invalidate(InvalidateCause cause) {
+        LOGGER.debug("Invalidating item storage cache of network at position {} due to {}", network.getPosition(), cause);
+
         storages.clear();
 
         network.getNodeGraph().all().stream()

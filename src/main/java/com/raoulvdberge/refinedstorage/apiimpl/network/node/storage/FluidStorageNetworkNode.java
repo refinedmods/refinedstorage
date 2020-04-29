@@ -5,10 +5,12 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ConnectivityStateChangeCause;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IStorageScreen;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.FluidStorageType;
@@ -32,6 +34,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.UUID;
@@ -42,6 +46,8 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     public static final ResourceLocation THOUSAND_TWENTY_FOUR_K_FLUID_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "1024k_fluid_storage_block");
     public static final ResourceLocation FOUR_THOUSAND_NINETY_SIX_K_FLUID_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "4096k_fluid_storage_block");
     public static final ResourceLocation CREATIVE_FLUID_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "creative_fluid_storage_block");
+
+    private static final Logger LOGGER = LogManager.getLogger(FluidStorageNetworkNode.class);
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
@@ -86,10 +92,12 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
     }
 
     @Override
-    public void onConnectedStateChange(INetwork network, boolean state) {
-        super.onConnectedStateChange(network, state);
+    public void onConnectedStateChange(INetwork network, boolean state, ConnectivityStateChangeCause cause) {
+        super.onConnectedStateChange(network, state, cause);
 
-        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE);
+        LOGGER.debug("Connectivity state of fluid storage block at {} changed to {} due to {}", pos, state, cause);
+
+        network.getNodeGraph().runActionWhenPossible(FluidStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
     }
 
     @Override
@@ -276,7 +284,7 @@ public class FluidStorageNetworkNode extends NetworkNode implements IStorageScre
         this.accessType = value;
 
         if (network != null) {
-            network.getFluidStorageCache().invalidate();
+            network.getFluidStorageCache().invalidate(InvalidateCause.DEVICE_CONFIGURATION_CHANGED);
         }
 
         markDirty();

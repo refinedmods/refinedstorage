@@ -5,10 +5,12 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.storage.AccessType;
 import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDisk;
 import com.raoulvdberge.refinedstorage.api.storage.disk.IStorageDiskContainerContext;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.apiimpl.network.node.ConnectivityStateChangeCause;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.IStorageScreen;
 import com.raoulvdberge.refinedstorage.apiimpl.network.node.NetworkNode;
 import com.raoulvdberge.refinedstorage.apiimpl.storage.ItemStorageType;
@@ -33,6 +35,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +47,8 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     public static final ResourceLocation SIXTEEN_K_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "16k_storage_block");
     public static final ResourceLocation SIXTY_FOUR_K_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "64k_storage_block");
     public static final ResourceLocation CREATIVE_STORAGE_BLOCK_ID = new ResourceLocation(RS.ID, "creative_storage_block");
+
+    private static final Logger LOGGER = LogManager.getLogger(StorageNetworkNode.class);
 
     private static final String NBT_PRIORITY = "Priority";
     private static final String NBT_COMPARE = "Compare";
@@ -86,10 +92,12 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
     }
 
     @Override
-    public void onConnectedStateChange(INetwork network, boolean state) {
-        super.onConnectedStateChange(network, state);
+    public void onConnectedStateChange(INetwork network, boolean state, ConnectivityStateChangeCause cause) {
+        super.onConnectedStateChange(network, state, cause);
 
-        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE);
+        LOGGER.debug("Connectivity state of item storage block at {} changed to {} due to {}", pos, state, cause);
+
+        network.getNodeGraph().runActionWhenPossible(ItemStorageCache.INVALIDATE.apply(InvalidateCause.CONNECTED_STATE_CHANGED));
     }
 
     @Override
@@ -275,7 +283,7 @@ public class StorageNetworkNode extends NetworkNode implements IStorageScreen, I
         this.accessType = value;
 
         if (network != null) {
-            network.getItemStorageCache().invalidate();
+            network.getItemStorageCache().invalidate(InvalidateCause.DEVICE_CONFIGURATION_CHANGED);
         }
 
         markDirty();
