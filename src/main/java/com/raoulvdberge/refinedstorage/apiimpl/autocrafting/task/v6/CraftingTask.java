@@ -261,6 +261,13 @@ public class CraftingTask implements ICraftingTask {
             this.toCraftFluids.add(req);
         }
 
+        crafts.values().forEach(c -> {
+            totalSteps += c.getQuantity();
+            if (c instanceof Processing) {
+                ((Processing) c).finishCalculation();
+            }
+        });
+
         return null;
     }
 
@@ -916,13 +923,6 @@ public class CraftingTask implements ICraftingTask {
 
         if (executionStarted == -1) {
             executionStarted = System.currentTimeMillis();
-
-            crafts.values().forEach(c -> {
-                totalSteps += c.getQuantity();
-                if (c instanceof Processing) {
-                    ((Processing) c).finishCalculation();
-                }
-            });
         }
 
         ++ticks;
