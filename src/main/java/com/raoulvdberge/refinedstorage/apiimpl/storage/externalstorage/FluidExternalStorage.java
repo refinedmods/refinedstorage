@@ -43,11 +43,11 @@ public class FluidExternalStorage implements IExternalStorage<FluidStack> {
     }
 
     @Override
-    public int getCapacity() {
+    public long getCapacity() {
         IFluidHandler fluidHandler = handlerSupplier.get();
 
         if (fluidHandler != null) {
-            int cap = 0;
+            long cap = 0;
 
             for (int i = 0; i < fluidHandler.getTanks(); ++i) {
                 cap += fluidHandler.getTankCapacity(i);

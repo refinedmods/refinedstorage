@@ -44,17 +44,17 @@ public class ItemExternalStorage implements IExternalStorage<ItemStack> {
     }
 
     @Override
-    public int getCapacity() {
+    public long getCapacity() {
         IItemHandler handler = handlerSupplier.get();
 
         if (handler == null) {
             return 0;
         }
 
-        int capacity = 0;
+        long capacity = 0;
 
         for (int i = 0; i < handler.getSlots(); ++i) {
-            capacity += Math.min(handler.getSlotLimit(i), handler.getStackInSlot(i).getMaxStackSize());
+            capacity += handler.getSlotLimit(i);
         }
 
         return capacity;
