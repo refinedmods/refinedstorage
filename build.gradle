@@ -22,7 +22,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.8.1'
+version = '1.8.4'
 def env = System.getenv()
 if (env.BUILD_NUMBER) {
     version = version + "+" + "${env.BUILD_NUMBER}"
@@ -33,14 +33,14 @@ archivesBaseName = 'refinedstorage'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200124-1.15.1'
+    mappings channel: 'snapshot', version: '20200225-1.15.1'
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
         client {
             workingDirectory project.file('run')
             property 'forge.logging.markers', ''
-            property 'forge.logging.console.level', 'info'
+            property 'forge.logging.console.level', 'debug'
             mods {
                 refinedstorage {
                     source sourceSets.main
@@ -94,7 +94,7 @@ processResources {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.0.1'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.1.39'
 
     compileOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")

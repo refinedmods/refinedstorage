@@ -5,10 +5,14 @@ import com.raoulvdberge.refinedstorage.api.network.security.Permission;
 import com.raoulvdberge.refinedstorage.api.util.Action;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.raoulvdberge.refinedstorage.inventory.fluid.FluidInventory;
 import com.raoulvdberge.refinedstorage.inventory.item.BaseItemHandler;
 import com.raoulvdberge.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
+import com.raoulvdberge.refinedstorage.tile.StorageMonitorTile;
 import com.raoulvdberge.refinedstorage.tile.config.IComparable;
+import com.raoulvdberge.refinedstorage.tile.config.IType;
 import com.raoulvdberge.refinedstorage.tile.config.RedstoneMode;
+import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import com.raoulvdberge.refinedstorage.util.StackUtils;
 import com.raoulvdberge.refinedstorage.util.WorldUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,17 +24,23 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class StorageMonitorNetworkNode extends NetworkNode implements IComparable {
+public class StorageMonitorNetworkNode extends NetworkNode implements IComparable, IType {
     public static final int DEPOSIT_ALL_MAX_DELAY = 500;
 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "storage_monitor");
 
     private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_TYPE = "Type";
+    private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
     private BaseItemHandler itemFilter = new BaseItemHandler(1)
         .addListener(new NetworkNodeInventoryListener(this))
@@ -40,9 +50,16 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             }
         });
 
+    private FluidInventory fluidFilter = new FluidInventory(1, FluidAttributes.BUCKET_VOLUME)
+        .addListener((handler, slot, reading) -> {
+            if (!reading) {
+                WorldUtils.updateBlock(world, pos);
+            }
+        });
     private Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
 
     private int compare = IComparer.COMPARE_NBT;
+    private int type = IType.ITEMS;
 
     private int oldAmount = -1;
 
@@ -66,6 +83,10 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     }
 
     public ActionResultType depositAll(PlayerEntity player) {
+        if (getType() != IType.ITEMS) {
+            return ActionResultType.FAIL;
+        }
+
         if (network == null) {
             return ActionResultType.FAIL;
         }
@@ -105,6 +126,16 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             return ActionResultType.FAIL;
         }
 
+        if (getType() == IType.ITEMS) {
+            depositItems(player, toInsert);
+        } else if (getType() == IType.FLUIDS) {
+            depositFluids(player, toInsert);
+        }
+
+        return ActionResultType.SUCCESS;
+    }
+
+    private void depositItems(PlayerEntity player, ItemStack toInsert) {
         ItemStack filter = itemFilter.getStackInSlot(0);
 
         if (!filter.isEmpty() && API.instance().getComparer().isEqual(filter, toInsert, compare)) {
@@ -112,8 +143,31 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
             deposits.put(player.getGameProfile().getName(), Pair.of(toInsert, System.currentTimeMillis()));
         }
+    }
 
-        return ActionResultType.SUCCESS;
+    private void depositFluids(PlayerEntity player, ItemStack toInsert) {
+        FluidStack filter = fluidFilter.getFluid(0);
+
+        Pair<ItemStack, FluidStack> result = StackUtils.getFluid(toInsert, true);
+
+        if (filter.isEmpty() || !API.instance().getComparer().isEqual(filter, result.getRight(), compare)) {
+            return;
+        }
+
+        if (!result.getValue().isEmpty() && network.insertFluid(result.getValue(), result.getValue().getAmount(), Action.SIMULATE).isEmpty()) {
+            network.getFluidStorageTracker().changed(player, result.getValue().copy());
+
+            result = StackUtils.getFluid(toInsert, false);
+
+            network.insertFluidTracked(result.getValue(), result.getValue().getAmount());
+
+            player.inventory.setInventorySlotContents(player.inventory.currentItem, ItemStack.EMPTY);
+
+            ItemStack container = result.getLeft();
+            if (!player.inventory.addItemStackToInventory(container.copy())) {
+                InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), container);
+            }
+        }
     }
 
     public void extract(PlayerEntity player, Direction side) {
@@ -125,6 +179,14 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             return;
         }
 
+        if (getType() == IType.ITEMS) {
+            extractItems(player);
+        } else if (getType() == IType.FLUIDS) {
+            extractFluids(player);
+        }
+    }
+
+    private void extractItems(PlayerEntity player) {
         ItemStack filter = itemFilter.getStackInSlot(0);
 
         int toExtract = player.isCrouching() ? 1 : 64;
@@ -132,9 +194,39 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         if (!filter.isEmpty()) {
             ItemStack result = network.extractItem(filter, toExtract, compare, Action.PERFORM);
 
-            if (!result.isEmpty() && !player.inventory.addItemStackToInventory(result.copy())) {
-                InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), result);
+            if (!result.isEmpty()) {
+                if (!player.inventory.addItemStackToInventory(result.copy())) {
+                    InventoryHelper.spawnItemStack(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), result);
+                }
             }
+        }
+    }
+
+    private void extractFluids(PlayerEntity player) {
+        FluidStack filter = fluidFilter.getFluid(0);
+
+        if (filter.isEmpty()) {
+            return;
+        }
+
+        FluidStack stack = network.getFluidStorageCache().getList().get(filter);
+        if (stack == null || stack.getAmount() < FluidAttributes.BUCKET_VOLUME) {
+            return;
+        }
+
+        boolean shift = player.isCrouching();
+        if (shift) {
+            NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> {
+                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
+                    network.getFluidStorageTracker().changed(player, stack.copy());
+
+                    fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
+
+                    if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
+                        InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
+                    }
+                });
+            });
         }
     }
 
@@ -167,8 +259,11 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
         super.writeConfiguration(tag);
 
         tag.putInt(NBT_COMPARE, compare);
+        tag.putInt(NBT_TYPE, type);
 
         StackUtils.writeItems(itemFilter, 0, tag);
+
+        tag.put(NBT_FLUID_FILTERS, fluidFilter.writeToNbt());
 
         return tag;
     }
@@ -181,7 +276,15 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             compare = tag.getInt(NBT_COMPARE);
         }
 
+        if (tag.contains(NBT_TYPE)) {
+            type = tag.getInt(NBT_TYPE);
+        }
+
         StackUtils.readItems(itemFilter, 0, tag);
+
+        if (tag.contains(NBT_FLUID_FILTERS)) {
+            fluidFilter.readFromNbt(tag.getCompound(NBT_FLUID_FILTERS));
+        }
     }
 
     public int getAmount() {
@@ -189,19 +292,50 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             return 0;
         }
 
-        ItemStack toCheck = itemFilter.getStackInSlot(0);
+        if (getType() == IType.ITEMS) {
+            ItemStack toCheck = itemFilter.getStackInSlot(0);
 
-        if (toCheck.isEmpty()) {
-            return 0;
+            if (toCheck.isEmpty()) {
+                return 0;
+            }
+
+            ItemStack stored = network.getItemStorageCache().getList().get(toCheck, compare);
+
+            return stored != null ? stored.getCount() : 0;
+        } else if (getType() == IType.FLUIDS) {
+            FluidStack toCheck = fluidFilter.getFluid(0);
+
+            if (toCheck.isEmpty()) {
+                return 0;
+            }
+
+            FluidStack stored = network.getFluidStorageCache().getList().get(toCheck, compare);
+
+            return stored != null ? stored.getAmount() : 0;
         }
+        return 0;
+    }
 
-        ItemStack stored = network.getItemStorageCache().getList().get(toCheck, compare);
+    @Override
+    public int getType() {
+        return world.isRemote ? StorageMonitorTile.TYPE.getValue() : type;
+    }
 
-        return stored != null ? stored.getCount() : 0;
+    @Override
+    public void setType(int type) {
+        this.type = type;
+
+        WorldUtils.updateBlock(world, pos);
+        markDirty();
     }
 
     public BaseItemHandler getItemFilters() {
         return itemFilter;
+    }
+
+    @Override
+    public FluidInventory getFluidFilters() {
+        return fluidFilter;
     }
 
     @Override

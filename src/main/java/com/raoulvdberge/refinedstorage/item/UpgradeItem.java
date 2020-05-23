@@ -22,7 +22,8 @@ public class UpgradeItem extends Item {
         SILK_TOUCH("silk_touch"),
         FORTUNE_1("fortune_1"),
         FORTUNE_2("fortune_2"),
-        FORTUNE_3("fortune_3");
+        FORTUNE_3("fortune_3"),
+        REGULATOR("regulator");
 
         private final String name;
 
@@ -54,6 +55,8 @@ public class UpgradeItem extends Item {
                     return RS.SERVER_CONFIG.getUpgrades().getFortune2UpgradeUsage();
                 case FORTUNE_3:
                     return RS.SERVER_CONFIG.getUpgrades().getFortune3UpgradeUsage();
+                case REGULATOR:
+                    return RS.SERVER_CONFIG.getUpgrades().getRegulatorUpgradeUsage();
                 default:
                     throw new IllegalStateException("What even am I?");
             }

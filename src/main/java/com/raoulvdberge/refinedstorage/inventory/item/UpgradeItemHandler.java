@@ -69,24 +69,6 @@ public class UpgradeItemHandler extends BaseItemHandler {
         return usage;
     }
 
-    public int getFortuneLevel() {
-        int maxFortune = 0;
-
-        for (int i = 0; i < getSlots(); ++i) {
-            ItemStack slot = getStackInSlot(i);
-
-            if (slot.getItem() instanceof UpgradeItem) {
-                int fortune = ((UpgradeItem) slot.getItem()).getType().getFortuneLevel();
-
-                if (fortune > maxFortune) {
-                    maxFortune = fortune;
-                }
-            }
-        }
-
-        return maxFortune;
-    }
-
     public int getStackInteractCount() {
         return hasUpgrade(UpgradeItem.Type.STACK) ? 64 : 1;
     }

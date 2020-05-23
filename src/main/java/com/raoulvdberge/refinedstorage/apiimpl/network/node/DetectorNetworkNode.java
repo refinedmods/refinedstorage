@@ -100,8 +100,8 @@ public class DetectorNetworkNode extends NetworkNode implements IComparable, ITy
     }
 
     @Override
-    public void onConnectedStateChange(INetwork network, boolean state) {
-        super.onConnectedStateChange(network, state);
+    public void onConnectedStateChange(INetwork network, boolean state, ConnectivityStateChangeCause cause) {
+        super.onConnectedStateChange(network, state, cause);
 
         if (!state) {
             powered = false;

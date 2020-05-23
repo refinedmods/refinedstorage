@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.container.ImporterContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.ImporterTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
+import com.raoulvdberge.refinedstorage.util.CollisionUtils;
 import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,33 +72,39 @@ public class ImporterBlock extends CableBlock {
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
         VoxelShape shape = super.getShape(state, world, pos, ctx);
 
+        shape = VoxelShapes.or(shape, getLineShape(state));
+
+        return shape;
+    }
+
+    private VoxelShape getLineShape(BlockState state) {
         Direction direction = state.get(getDirection().getProperty());
 
         if (direction == Direction.NORTH) {
-            shape = VoxelShapes.or(shape, LINE_NORTH);
+            return LINE_NORTH;
         }
 
         if (direction == Direction.EAST) {
-            shape = VoxelShapes.or(shape, LINE_EAST);
+            return LINE_EAST;
         }
 
         if (direction == Direction.SOUTH) {
-            shape = VoxelShapes.or(shape, LINE_SOUTH);
+            return LINE_SOUTH;
         }
 
         if (direction == Direction.WEST) {
-            shape = VoxelShapes.or(shape, LINE_WEST);
+            return LINE_WEST;
         }
 
         if (direction == Direction.UP) {
-            shape = VoxelShapes.or(shape, LINE_UP);
+            return LINE_UP;
         }
 
         if (direction == Direction.DOWN) {
-            shape = VoxelShapes.or(shape, LINE_DOWN);
+            return LINE_DOWN;
         }
 
-        return shape;
+        return VoxelShapes.empty();
     }
 
     @Nullable
@@ -108,8 +115,8 @@ public class ImporterBlock extends CableBlock {
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if (!world.isRemote && CollisionUtils.isInBounds(getLineShape(state), pos, hit.getHitVec())) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<ImporterTile>(

@@ -1,7 +1,25 @@
 # Refined Storage Changelog
 
+### 1.8.3
+- Added a new experimental autocrafting engine that's enabled by default. This should improve autocrafting performance (Darkere)
+- Wireless Transmitters can now be placed on any block and in any direction (raoulvdberge)
+- Fixed Exporter not exporting anything when using a Stack Upgrade and there isn't space for 64 items in the inventory (raoulvdberge)
+- Fixed Controller always using the base usage even when turned off (raoulvdberge)
+- Added the Regulator Upgrade that can be inserted into a Exporter. This ensures a certain amount of items and fluids is kept in stock in a connected inventory (raoulvdberge)
+- Fixed severe memory leak in the storage cache (raoulvdberge)
+- Added debug logging on the server when an expensive operation occurs (raoulvdberge)
+
+### 1.8.2
+- Add Refined Storage silicon to forge:silicon tag for mod compatibility (jeremiahwinsley)
+- Update pt_br translation (Arthur-o-b)
+- Added waterlogging to all cable blocks (Darkere)
+- Fixed storage block dropping extra processor (Darkere)
+- Create zh_tw translation (ForFunPenguin)
+- Re-added zh_cn translation (ppoozl)
+
 ### 1.8.1
 - Port to Minecraft 1.15.2 (raoulvdberge)
+- The Storage Monitor supports fluids as well now (V1RTUOZ)
 
 ### 1.8
 - Port to Minecraft 1.15 (raoulvdberge)
@@ -47,6 +65,10 @@ NOTE: This is an alpha release. Bugs may happen. Remember to take backups.
 
 ### 1.6.16
 - Updated Russian translation (Bytegm)
+- Fixed erroring controller tile entity (ian-rampage)
+- Fixed Inventory Tweaks sorting not respecting locked slots (Landmaster)
+- Fixed OpenComputers driver voiding excess fluids (BlueAgent)
+- Fixed being able to move wireless items in inventory (raoulvdberge, Dabombber)
 
 ### 1.6.15
 - Fixed recipes with more than 1 bucket of fluid not transferring from JEI (Darkere)

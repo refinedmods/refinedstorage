@@ -43,11 +43,6 @@ public interface ICraftingTask {
     int getQuantity();
 
     /**
-     * @return the amount that this task gives back
-     */
-    int getQuantityPerCraft();
-
-    /**
      * @return the completion percentage
      */
     default int getCompletionPercentage() {

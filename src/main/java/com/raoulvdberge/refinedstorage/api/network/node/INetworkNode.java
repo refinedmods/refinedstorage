@@ -38,6 +38,8 @@ public interface INetworkNode {
 
     /**
      * Called when this node is disconnected from a network.
+     * This happens when the node is removed, or if the network is removed.
+     * If the network runs out of power or no longer runs due to redstone mode settings, this won't be called and has to be detected manually.
      *
      * @param network the network
      */

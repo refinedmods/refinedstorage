@@ -6,10 +6,13 @@ import com.raoulvdberge.refinedstorage.api.storage.IStorage;
 import com.raoulvdberge.refinedstorage.api.storage.IStorageProvider;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCache;
 import com.raoulvdberge.refinedstorage.api.storage.cache.IStorageCacheListener;
+import com.raoulvdberge.refinedstorage.api.storage.cache.InvalidateCause;
 import com.raoulvdberge.refinedstorage.api.util.IStackList;
 import com.raoulvdberge.refinedstorage.api.util.StackListResult;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -17,9 +20,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class FluidStorageCache implements IStorageCache<FluidStack> {
-    public static final Consumer<INetwork> INVALIDATE = n -> n.getFluidStorageCache().invalidate();
+    public static final Function<InvalidateCause, Consumer<INetwork>> INVALIDATE = cause -> network -> network.getFluidStorageCache().invalidate(cause);
+
+    private static final Logger LOGGER = LogManager.getLogger(FluidStorageCache.class);
 
     private final INetwork network;
     private final CopyOnWriteArrayList<IStorage<FluidStack>> storages = new CopyOnWriteArrayList<>();
@@ -33,7 +39,9 @@ public class FluidStorageCache implements IStorageCache<FluidStack> {
     }
 
     @Override
-    public void invalidate() {
+    public void invalidate(InvalidateCause cause) {
+        LOGGER.debug("Invalidating fluid storage cache of network at position {} due to {}", network.getPosition(), cause);
+
         storages.clear();
 
         network.getNodeGraph().all().stream()

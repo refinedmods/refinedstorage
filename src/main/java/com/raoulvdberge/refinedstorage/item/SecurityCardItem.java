@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -45,7 +44,7 @@ public class SecurityCardItem extends Item {
             stack.getTag().putString(NBT_OWNER_NAME, player.getGameProfile().getName());
         }
 
-        return ActionResult.func_226248_a_(stack);
+        return ActionResult.resultSuccess(stack);
     }
 
     @Nullable

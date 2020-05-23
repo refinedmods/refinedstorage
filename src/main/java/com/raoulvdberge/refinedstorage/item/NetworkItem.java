@@ -47,7 +47,7 @@ public abstract class NetworkItem extends EnergyItem implements INetworkItemProv
             applyNetwork(world.getServer(), stack, n -> n.getNetworkItemManager().open(player, player.getHeldItem(hand), player.inventory.currentItem), player::sendMessage);
         }
 
-        return ActionResult.func_226248_a_(stack);
+        return ActionResult.resultSuccess(stack);
     }
 
     public void applyNetwork(MinecraftServer server, ItemStack stack, Consumer<INetwork> onNetwork, Consumer<ITextComponent> onError) {

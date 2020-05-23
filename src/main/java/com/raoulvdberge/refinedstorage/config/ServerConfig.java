@@ -311,6 +311,7 @@ public class ServerConfig {
         private final ForgeConfigSpec.IntValue fortune1UpgradeUsage;
         private final ForgeConfigSpec.IntValue fortune2UpgradeUsage;
         private final ForgeConfigSpec.IntValue fortune3UpgradeUsage;
+        private final ForgeConfigSpec.IntValue regulatorUpgradeUsage;
 
         public Upgrades() {
             builder.push("upgrades");
@@ -323,6 +324,7 @@ public class ServerConfig {
             fortune1UpgradeUsage = builder.comment("The additional energy used by the Fortune 1 Upgrade").defineInRange("fortune1UpgradeUsage", 10, 0, Integer.MAX_VALUE);
             fortune2UpgradeUsage = builder.comment("The additional energy used by the Fortune 2 Upgrade").defineInRange("fortune2UpgradeUsage", 12, 0, Integer.MAX_VALUE);
             fortune3UpgradeUsage = builder.comment("The additional energy used by the Fortune 3 Upgrade").defineInRange("fortune3UpgradeUsage", 14, 0, Integer.MAX_VALUE);
+            regulatorUpgradeUsage = builder.comment("The additional energy used by the Regulator Upgrade").defineInRange("regulatorUpgradeUsage", 15, 0, Integer.MAX_VALUE);
 
             builder.pop();
         }
@@ -357,6 +359,10 @@ public class ServerConfig {
 
         public int getFortune3UpgradeUsage() {
             return fortune3UpgradeUsage.get();
+        }
+
+        public int getRegulatorUpgradeUsage() {
+            return regulatorUpgradeUsage.get();
         }
     }
 
@@ -914,15 +920,19 @@ public class ServerConfig {
 
     public class Autocrafting {
         private final ForgeConfigSpec.IntValue calculationTimeoutMs;
+        private final ForgeConfigSpec.BooleanValue useExperimental;
 
         public Autocrafting() {
             builder.push("autocrafting");
 
+            useExperimental = builder.comment("Use the experimental autocrafting engine").define("useExperimental", true);
             calculationTimeoutMs = builder.comment("The autocrafting calculation timeout in milliseconds, crafting tasks taking longer than this to calculate are cancelled to avoid server strain").defineInRange("calculationTimeoutMs", 5000, 5000, Integer.MAX_VALUE);
 
             builder.pop();
         }
-
+        public boolean useExperimentalAutocrafting(){
+            return useExperimental.get();
+        }
         public int getCalculationTimeoutMs() {
             return calculationTimeoutMs.get();
         }

@@ -44,6 +44,8 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.util.function.Predicate;
@@ -55,6 +57,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
     private static final String NBT_ENERGY = "Energy";
     private static final String NBT_ITEM_STORAGE_TRACKER = "ItemStorageTracker";
     private static final String NBT_FLUID_STORAGE_TRACKER = "FluidStorageTracker";
+
+    private static final Logger LOGGER = LogManager.getLogger(Network.class);
 
     private final IItemGridHandler itemGridHandler = new ItemGridHandler(this);
     private final IFluidGridHandler fluidGridHandler = new FluidGridHandler(this);
@@ -159,6 +163,8 @@ public class Network implements INetwork, IRedstoneConfigurable {
                     ticksSinceUpdateChanged = 0;
                     couldRun = canRun;
                     throttlingDisabled = false;
+
+                    LOGGER.debug("Network at position {} changed running state to {}, causing an invalidation of the node graph", pos, couldRun);
 
                     nodeGraph.invalidate(Action.PERFORM, world, pos);
                     securityManager.invalidate();
@@ -519,7 +525,7 @@ public class Network implements INetwork, IRedstoneConfigurable {
     }
 
     private void updateEnergyUsage() {
-        int usage = RS.SERVER_CONFIG.getController().getBaseUsage();
+        int usage = redstoneMode.isEnabled(world, pos) ? RS.SERVER_CONFIG.getController().getBaseUsage() : 0;
 
         for (INetworkNode node : nodeGraph.all()) {
             if (node.isActive()) {

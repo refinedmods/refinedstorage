@@ -4,8 +4,11 @@ import com.raoulvdberge.refinedstorage.api.network.INetwork;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNode;
 import com.raoulvdberge.refinedstorage.api.network.node.INetworkNodeProxy;
 import com.raoulvdberge.refinedstorage.api.network.security.Permission;
+import com.raoulvdberge.refinedstorage.api.util.Action;
+import com.raoulvdberge.refinedstorage.apiimpl.API;
 import com.raoulvdberge.refinedstorage.capability.NetworkNodeProxyCapability;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -13,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public class NetworkUtils {
     @Nullable
@@ -61,5 +65,24 @@ public class NetworkUtils {
         action.run();
 
         return ActionResultType.SUCCESS;
+    }
+
+    public static void extractBucketFromPlayerInventoryOrNetwork(PlayerEntity player, INetwork network, Consumer<ItemStack> onBucketFound) {
+        for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+            ItemStack slot = player.inventory.getStackInSlot(i);
+
+            if (API.instance().getComparer().isEqualNoQuantity(StackUtils.EMPTY_BUCKET, slot)) {
+                player.inventory.decrStackSize(i, 1);
+
+                onBucketFound.accept(StackUtils.EMPTY_BUCKET.copy());
+
+                return;
+            }
+        }
+
+        ItemStack fromNetwork = network.extractItem(StackUtils.EMPTY_BUCKET, 1, Action.PERFORM);
+        if (!fromNetwork.isEmpty()) {
+            onBucketFound.accept(fromNetwork);
+        }
     }
 }

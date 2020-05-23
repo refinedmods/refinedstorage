@@ -78,7 +78,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     @Override
     public void onConnected(INetwork network) {
-        onConnectedStateChange(network, true);
+        onConnectedStateChange(network, true, ConnectivityStateChangeCause.GRAPH_CHANGE);
 
         this.network = network;
     }
@@ -87,10 +87,10 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
     public void onDisconnected(INetwork network) {
         this.network = null;
 
-        onConnectedStateChange(network, false);
+        onConnectedStateChange(network, false, ConnectivityStateChangeCause.GRAPH_CHANGE);
     }
 
-    protected void onConnectedStateChange(INetwork network, boolean state) {
+    protected void onConnectedStateChange(INetwork network, boolean state, ConnectivityStateChangeCause cause) {
         // NO OP
     }
 
@@ -106,7 +106,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
         return redstoneMode.isEnabled(world, pos);
     }
 
-    protected boolean canUpdate() {
+    protected final boolean canUpdate() {
         if (isActive() && network != null) {
             return network.canRun();
         }
@@ -120,10 +120,6 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
 
     protected int getUpdateThrottleActiveToInactive() {
         return 4;
-    }
-
-    public void setThrottlingDisabled() {
-        throttlingDisabled = true;
     }
 
     @Override
@@ -147,7 +143,7 @@ public abstract class NetworkNode implements INetworkNode, INetworkNodeVisitor {
                 }
 
                 if (network != null) {
-                    onConnectedStateChange(network, canUpdate);
+                    onConnectedStateChange(network, canUpdate, ConnectivityStateChangeCause.REDSTONE_MODE_OR_NETWORK_ENERGY_CHANGE);
 
                     if (shouldRebuildGraphOnChange()) {
                         network.getNodeGraph().invalidate(Action.PERFORM, network.getWorld(), network.getPosition());

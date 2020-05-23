@@ -42,6 +42,11 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     }
 
     @Override
+    public ResourceLocation getBaseId() {
+        return base.getId();
+    }
+
+    @Override
     public void write(PacketBuffer buf) {
         buf.writeResourceLocation(base.getId());
         buf.writeString(message);
@@ -65,7 +70,16 @@ public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     }
 
     @Override
+    public int baseElementHashCode() {
+        return base.elementHashCode();
+    }
+
+    @Override
     public int elementHashCode() {
         return base.elementHashCode() ^ message.hashCode();
+    }
+
+    public void mergeBases(ICraftingMonitorElement element) {
+            this.base.merge(element);
     }
 }

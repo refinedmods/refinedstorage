@@ -148,8 +148,8 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
-    protected void onConnectedStateChange(INetwork network, boolean state) {
-        super.onConnectedStateChange(network, state);
+    protected void onConnectedStateChange(INetwork network, boolean state, ConnectivityStateChangeCause cause) {
+        super.onConnectedStateChange(network, state, cause);
 
         network.getCraftingManager().invalidate();
     }

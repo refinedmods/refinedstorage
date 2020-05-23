@@ -5,6 +5,7 @@ import com.raoulvdberge.refinedstorage.container.DestructorContainer;
 import com.raoulvdberge.refinedstorage.container.factory.PositionalTileContainerProvider;
 import com.raoulvdberge.refinedstorage.tile.DestructorTile;
 import com.raoulvdberge.refinedstorage.util.BlockUtils;
+import com.raoulvdberge.refinedstorage.util.CollisionUtils;
 import com.raoulvdberge.refinedstorage.util.NetworkUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,39 +55,45 @@ public class DestructorBlock extends CableBlock {
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
         VoxelShape shape = super.getShape(state, world, pos, ctx);
 
+        shape = VoxelShapes.or(shape, getHeadShape(state));
+
+        return shape;
+    }
+
+    private VoxelShape getHeadShape(BlockState state) {
         Direction direction = state.get(getDirection().getProperty());
 
         if (direction == Direction.NORTH) {
-            shape = VoxelShapes.or(shape, HEAD_NORTH);
+            return HEAD_NORTH;
         }
 
         if (direction == Direction.EAST) {
-            shape = VoxelShapes.or(shape, HEAD_EAST);
+            return HEAD_EAST;
         }
 
         if (direction == Direction.SOUTH) {
-            shape = VoxelShapes.or(shape, HEAD_SOUTH);
+            return HEAD_SOUTH;
         }
 
         if (direction == Direction.WEST) {
-            shape = VoxelShapes.or(shape, HEAD_WEST);
+            return HEAD_WEST;
         }
 
         if (direction == Direction.UP) {
-            shape = VoxelShapes.or(shape, HEAD_UP);
+            return HEAD_UP;
         }
 
         if (direction == Direction.DOWN) {
-            shape = VoxelShapes.or(shape, HEAD_DOWN);
+            return HEAD_DOWN;
         }
 
-        return shape;
+        return VoxelShapes.empty();
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!world.isRemote) {
+        if (!world.isRemote && CollisionUtils.isInBounds(getHeadShape(state), pos, hit.getHitVec())) {
             return NetworkUtils.attemptModify(world, pos, hit.getFace(), player, () -> NetworkHooks.openGui(
                 (ServerPlayerEntity) player,
                 new PositionalTileContainerProvider<DestructorTile>(

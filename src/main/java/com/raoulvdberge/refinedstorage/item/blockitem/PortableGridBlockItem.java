@@ -54,7 +54,7 @@ public class PortableGridBlockItem extends EnergyBlockItem {
             API.instance().getGridManager().openGrid(PortableGridGridFactory.ID, (ServerPlayerEntity) player, stack, player.inventory.currentItem);
         }
 
-        return ActionResult.func_226248_a_(stack);
+        return ActionResult.resultSuccess(stack);
     }
 
     @Override

@@ -1,10 +1,10 @@
 package com.raoulvdberge.refinedstorage.apiimpl.autocrafting;
 
+import com.raoulvdberge.refinedstorage.RS;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
@@ -165,7 +165,8 @@ public class CraftingPattern implements ICraftingPattern {
 
     @Override
     public ResourceLocation getCraftingTaskFactoryId() {
-        return CraftingTaskFactory.ID;
+        return RS.SERVER_CONFIG.getAutocrafting().useExperimentalAutocrafting() ? com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory.ID :
+            com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory.ID;
     }
 
     @Override
@@ -270,6 +271,19 @@ public class CraftingPattern implements ICraftingPattern {
         }
 
         return result;
+    }
+
+    @Override
+    public int hashCode() {
+        return getChainHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof CraftingPattern) {
+            return canBeInChainWith((CraftingPattern) obj);
+        }
+        return false;
     }
 
     public static class DummyCraftingInventory extends CraftingInventory {

@@ -18,11 +18,11 @@ public class CraftingTaskFactory implements ICraftingTaskFactory {
     @Nonnull
     @Override
     public ICraftingTask create(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
-        return new CraftingTask(network, requested, quantity, pattern);
+        return new com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTask(network, requested, quantity, pattern);
     }
 
     @Override
     public ICraftingTask createFromNbt(INetwork network, CompoundNBT tag) throws CraftingTaskReadException {
-        return new CraftingTask(network, tag);
+        return new com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTask(network, tag);
     }
 }

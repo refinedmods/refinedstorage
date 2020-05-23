@@ -20,8 +20,10 @@ public interface IStorageCache<T> {
      * Invalidates the cache.
      * Will also call {@link IStorageCache#sort()} to sort the storages correctly.
      * Typically called when a {@link IStorageProvider} is added or removed from the network.
+     *
+     * @param cause the cause of the invalidate
      */
-    void invalidate();
+    void invalidate(InvalidateCause cause);
 
     /**
      * Adds a stack to the cache.
