@@ -134,10 +134,10 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
         if (grid.getGridType() == GridType.PATTERN) {
             patternScrollbar = new ScrollbarWidget(this, 160, getTopHeight() + getVisibleRows() * 18 + 4, 6, 18 * 3 - 2, true);
-            container.updatePatternSlotPositions(patternScrollOffset);
-            patternScrollOffsetAbsoluteMax = ((GridNetworkNode) grid).getProcessingMatrix().getSlots() / 2 / 3 - 3;
+            patternScrollOffsetAbsoluteMax = GridNetworkNode.processingMatrixSize / 3 - 3;
             patternScrollbar.setMaxOffset(patternScrollOffsetAbsoluteMax);
-            patternScrollbar.setOffset(patternScrollOffset);
+            patternScrollbar.setOffset(patternScrollOffset); // keep offset when changing between fluid and item view
+            container.updatePatternSlotPositions(patternScrollOffset);
             patternScrollbar.addListener((oldOffset, newOffset) -> {
                 patternScrollOffset = newOffset;
                 container.updatePatternSlotPositions(newOffset);
@@ -148,7 +148,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 GridTile.PROCESSING_PATTERN.setValue(false, processingPattern.isChecked());
                 ((GridNetworkNode) grid).clearMatrix(); // The server does this but let's do it earlier so the client doesn't notice.
                 this.container.initSlots();
-                patternScrollOffset = 0;
+                patternScrollOffset = 0; // reset offset when switching between crafting and processing
                 TileDataManager.setParameter(GridTile.PROCESSING_PATTERN, processingPattern.isChecked());
             });
 
@@ -169,7 +169,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 @Override
                 public void onPress() {
                     super.onPress();
-                    updateMaxPatternOffset();
+                    updatePatternOffsetMax();
                 }
             });
         }
@@ -198,7 +198,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         }
 
         if(updatePatternOffset){
-            updateMaxPatternOffset();
+            updatePatternOffsetMax();
             updatePatternOffset = false;
         }
 
@@ -615,20 +615,19 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             exactPattern.setChecked(checked);
         }
     }
-    private void updateMaxPatternOffset(){
+    private void updatePatternOffsetMax(){
         GridNetworkNode node = (GridNetworkNode) grid;
         int filledInputSlots = 0;
         int filledOutputSlots = 0;
         int lastFilledInputSlot = 0;
         int lastFilledOutputSlot = 0;
         boolean isItems = GridTile.PROCESSING_TYPE.getValue() == IType.ITEMS;
-        int size = isItems ? node.getProcessingMatrix().getSlots() : node.getProcessingMatrixFluids().getSlots();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < GridNetworkNode.processingMatrixSize*2; i++) {
             if (isItems) {
                 if (!node.getProcessingMatrix().getStackInSlot(i).isEmpty()){
-                    if(i > size/2-1){
+                    if(i > GridNetworkNode.processingMatrixSize-1){
                         filledOutputSlots++;
-                        lastFilledOutputSlot = i - size/2-1;
+                        lastFilledOutputSlot = i - GridNetworkNode.processingMatrixSize-1;
                     } else {
                         filledInputSlots++;
                         lastFilledInputSlot = i;
@@ -637,9 +636,9 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 }
             } else {
                 if (!node.getProcessingMatrixFluids().getFluid(i).isEmpty()) {
-                    if(i > size/2-1){
+                    if(i > GridNetworkNode.processingMatrixSize-1){
                         filledOutputSlots++;
-                        lastFilledOutputSlot = i - size/2-1;
+                        lastFilledOutputSlot = i - GridNetworkNode.processingMatrixSize-1;
                     } else {
                         filledInputSlots++;
                         lastFilledInputSlot = i;
