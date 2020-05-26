@@ -260,13 +260,14 @@ public class CraftingTask implements ICraftingTask {
             req.setAmount(qty);
             this.toCraftFluids.add(req);
         }
-
-        crafts.values().forEach(c -> {
-            totalSteps += c.getQuantity();
-            if (c instanceof Processing) {
-                ((Processing) c).finishCalculation();
-            }
-        });
+        if(missing.isEmpty()){
+            crafts.values().forEach(c -> {
+                totalSteps += c.getQuantity();
+                if (c instanceof Processing) {
+                    ((Processing) c).finishCalculation();
+                }
+            });
+        }
 
         return null;
     }
