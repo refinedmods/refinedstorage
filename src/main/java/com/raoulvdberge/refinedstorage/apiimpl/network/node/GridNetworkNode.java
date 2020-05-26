@@ -98,7 +98,6 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     private ICraftingRecipe currentRecipe;
     private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
     private CraftResultInventory result = new CraftResultInventory();
-    private BaseItemHandler visibleProcessingMatrix = new DisplayItemHandler(9 * 2);
     private BaseItemHandler processingMatrix = new BaseItemHandler(processingMatrixSize * 2)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
@@ -355,10 +354,6 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     public BaseItemHandler getProcessingMatrix() {
         return processingMatrix;
-    }
-
-    public DisplayItemHandler getVisibleProcessingMatrix() {
-        return (DisplayItemHandler)visibleProcessingMatrix;
     }
 
     public FluidInventory getProcessingMatrixFluids() {
@@ -755,40 +750,6 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
                 return new CombinedInvWrapper(filter, patterns);
             default:
                 return new CombinedInvWrapper(filter);
-        }
-    }
-
-    public class DisplayItemHandler extends BaseItemHandler {
-        boolean propagate = true;
-        int currentFirstSlot;
-
-        public DisplayItemHandler(int size) {
-            super(size);
-        }
-
-        @Override
-        protected void onContentsChanged(int slot) {
-            if (propagate) {
-                if (slot > 8) {
-                    getProcessingMatrix().setStackInSlot(slot - 9 + currentFirstSlot + GridNetworkNode.processingMatrixSize, this.getStackInSlot(slot));
-                } else {
-                    getProcessingMatrix().setStackInSlot(slot + currentFirstSlot, this.getStackInSlot(slot));
-                }
-
-            }
-
-            super.onContentsChanged(slot);
-        }
-
-
-        public void updateSlotPositions(int currentFirstSlot) {
-            this.currentFirstSlot = currentFirstSlot;
-            propagate = false;
-            for (int i = 0; i < 9; i++) {
-                this.setStackInSlot(i, getProcessingMatrix().getStackInSlot(i + currentFirstSlot));
-                this.setStackInSlot(i + 9, getProcessingMatrix().getStackInSlot(i + currentFirstSlot + GridNetworkNode.processingMatrixSize));
-            }
-            propagate = true;
         }
     }
 }

@@ -25,7 +25,6 @@ public class GridClearMessage {
                 Container container = player.openContainer;
 
                 if (container instanceof GridContainer) {
-                    ((GridContainer) container).clearPatternDisplayMatrix();
                     ((GridContainer) container).getGrid().onClear(player);
                 }
             });
