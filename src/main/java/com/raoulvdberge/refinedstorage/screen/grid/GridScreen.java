@@ -169,7 +169,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
                 @Override
                 public void onPress() {
                     super.onPress();
-                    updatePatternOffsetMax();
+                    updatePatternOffsetMax(GridTile.PROCESSING_TYPE.getValue() != IType.ITEMS);
                 }
             });
         }
@@ -198,7 +198,7 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
         }
 
         if(updatePatternOffset){
-            updatePatternOffsetMax();
+            updatePatternOffsetMax(GridTile.PROCESSING_TYPE.getValue() == IType.ITEMS);
             updatePatternOffset = false;
         }
 
@@ -615,13 +615,12 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
             exactPattern.setChecked(checked);
         }
     }
-    private void updatePatternOffsetMax(){
+    private void updatePatternOffsetMax(boolean isItems){
         GridNetworkNode node = (GridNetworkNode) grid;
         int filledInputSlots = 0;
         int filledOutputSlots = 0;
         int lastFilledInputSlot = 0;
         int lastFilledOutputSlot = 0;
-        boolean isItems = GridTile.PROCESSING_TYPE.getValue() == IType.ITEMS;
         for (int i = 0; i < GridNetworkNode.processingMatrixSize*2; i++) {
             if (isItems) {
                 if (!node.getProcessingMatrix().getStackInSlot(i).isEmpty()){

@@ -175,12 +175,12 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
 
         for (int i = 0; i < GridNetworkNode.processingMatrixSize*2; ++i) {
             int itemFilterSlotConfig = FilterSlot.FILTER_ALLOW_SIZE;
-            if (i <= GridNetworkNode.processingMatrixSize) {
+            if (i < GridNetworkNode.processingMatrixSize) {
                 itemFilterSlotConfig |= FilterSlot.FILTER_ALLOW_ALTERNATIVES;
             }
 
             int fluidFilterSlotConfig = FluidFilterSlot.FILTER_ALLOW_SIZE;
-            if (i <= GridNetworkNode.processingMatrixSize) {
+            if (i < GridNetworkNode.processingMatrixSize) {
                 fluidFilterSlotConfig |= FluidFilterSlot.FILTER_ALLOW_ALTERNATIVES;
             }
 
