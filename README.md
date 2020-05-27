@@ -1,4 +1,4 @@
-# Refined Storage [![Build Status](https://jenkins.raoulvdberge.com/buildStatus/icon?job=refinedstorage-mc1.15)](https://jenkins.raoulvdberge.com/job/refinedstorage-mc1.15/) [![CurseForge](http://cf.way2muchnoise.eu/full_243076_downloads.svg)](http://minecraft.curseforge.com/projects/refined-storage)
+# Refined Storage [![Build Status](https://ci.refinedmods.com/buildStatus/icon?job=refinedstorage-mc1.15)](https://ci.refinedmods.com/job/refinedstorage-mc1.15/) [![CurseForge](http://cf.way2muchnoise.eu/full_243076_downloads.svg)](http://minecraft.curseforge.com/projects/refined-storage)
 
 **Refined Storage is a mass storage mod for Minecraft that offers the player a network-based storage system, allowing them to store items and fluids on a massively expandable device network.**
 
