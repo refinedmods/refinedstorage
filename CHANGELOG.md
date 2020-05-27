@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.8.4
+- Fixed autocrafting Crafting Monitor crash (Darkere)
+
 ### 1.8.3
 - Added a new experimental autocrafting engine that's enabled by default. This should improve autocrafting performance (Darkere)
 - Wireless Transmitters can now be placed on any block and in any direction (raoulvdberge)

@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[31,)"
-issueTrackerURL="https://github.com/raoulvdberge/refinedstorage"
+issueTrackerURL="https://github.com/refinedmods/refinedstorage"
 [[mods]]
 modId="refinedstorage"
 version="${version}"
@@ -8,7 +8,7 @@ displayName="Refined Storage"
 updateJSONURL="https://refinedstorage.raoulvdberge.com/update"
 displayURL="https://refinedstorage.raoulvdberge.com"
 logoFile="logo.png"
-authors="Refined Storage authors"
+authors="Refined Mods"
 description='''
 An elegant solution to your hoarding problem
 '''
