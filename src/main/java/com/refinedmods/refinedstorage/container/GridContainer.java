@@ -47,6 +47,10 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         grid.addCraftingListener(this);
     }
 
+    public IScreenInfoProvider getScreenInfoProvider() {
+        return screenInfoProvider;
+    }
+
     public void setScreenInfoProvider(IScreenInfoProvider screenInfoProvider) {
         this.screenInfoProvider = screenInfoProvider;
     }
