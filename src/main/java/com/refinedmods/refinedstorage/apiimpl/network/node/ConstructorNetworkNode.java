@@ -104,7 +104,6 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
             }
         } else if (world.isAirBlock(front) && FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerWorld) world, getOwner()), world, Hand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack)) {
             // We manually have to check world.isAirBlock in the else if statement because tryPlaceFluid ignores this.
-            network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM);
         }
     }
 
