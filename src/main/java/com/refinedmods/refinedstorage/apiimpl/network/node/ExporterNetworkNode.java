@@ -40,7 +40,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (!getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR)) {
+            if (!reading && !getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR)) {
                 boolean changed = false;
 
                 for (int i = 0; i < itemFilters.getSlots(); ++i) {
