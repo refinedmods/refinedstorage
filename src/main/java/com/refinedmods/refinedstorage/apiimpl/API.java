@@ -197,7 +197,7 @@ public class API implements IRSAPI {
     public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
         ServerWorld world = anyWorld.getServer().getWorld(DimensionType.OVERWORLD);
 
-        return world.getSavedData().getOrCreate(() -> new StorageDiskManager(StorageDiskManager.NAME, world), StorageDiskManager.NAME);
+        return StorageDiskManager.getOrCreate(world);
     }
 
     @Nonnull
