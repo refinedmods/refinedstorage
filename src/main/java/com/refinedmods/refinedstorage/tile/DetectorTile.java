@@ -26,7 +26,7 @@ public class DetectorTile extends NetworkNodeTile<DetectorNetworkNode> {
     public static final TileDataParameter<Integer, DetectorTile> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getAmount(), (t, v) -> {
         t.getNode().setAmount(v);
         t.getNode().markDirty();
-    },(initial, value) -> BaseScreen.executeLater(DetectorScreen.class, detectorScreen->detectorScreen.updateAmountField(value)));
+    }, (initial, value) -> BaseScreen.executeLater(DetectorScreen.class, detectorScreen -> detectorScreen.updateAmountField(value)));
 
     private static final String NBT_POWERED = "Powered";
 
