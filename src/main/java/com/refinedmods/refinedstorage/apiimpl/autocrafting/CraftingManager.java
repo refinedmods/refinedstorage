@@ -13,6 +13,7 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -41,6 +42,7 @@ public class CraftingManager implements ICraftingManager {
 
     private Map<ITextComponent, List<IItemHandlerModifiable>> containerInventories = new LinkedHashMap<>();
     private Map<ICraftingPattern, Set<ICraftingPatternContainer>> patternToContainer = new HashMap<>();
+    private Map<UUID, Map<UUID, Integer>> reservedIngredients = new HashMap<>();
 
     private List<ICraftingPattern> patterns = new ArrayList<>();
 
@@ -55,6 +57,21 @@ public class CraftingManager implements ICraftingManager {
 
     public CraftingManager(INetwork network) {
         this.network = network;
+    }
+
+    @Override
+    public void reserveIngredients(CraftingTask task, Map<UUID, Integer> reserved) {
+        reservedIngredients.put(task.getId(), reserved);
+    }
+
+    @Override
+    public Collection<Map<UUID, Integer>> getReservedIngredients() {
+        return reservedIngredients.values();
+    }
+
+    @Override
+    public void clearReservedIngredients(CraftingTask task) {
+        reservedIngredients.remove(task.getId());
     }
 
     @Override

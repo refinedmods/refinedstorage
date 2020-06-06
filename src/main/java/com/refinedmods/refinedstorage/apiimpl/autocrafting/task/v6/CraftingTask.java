@@ -240,12 +240,27 @@ public class CraftingTask implements ICraftingTask {
 
         IStackList<ItemStack> storage = network.getItemStorageCache().getList().copy();
         IStackList<FluidStack> fluidStorage = network.getFluidStorageCache().getList().copy();
+        Map<UUID, Integer> reservedIngredients = new HashMap<>();
+
+        for (Map<UUID, Integer> reservedIngredient : network.getCraftingManager().getReservedIngredients()) {
+            reservedIngredient.forEach((id, amount) -> {
+                ItemStack stack = storage.get(id);
+                if (stack != null) {
+                    stack.shrink(amount);
+                } else {
+                    FluidStack fluidStack = fluidStorage.get(id);
+                    if (fluidStack != null) {
+                        fluidStack.shrink(amount);
+                    }
+                }
+            });
+        }
 
         int qtyPerCraft = getQuantityPerCraft(requested.getItem(), requested.getFluid(), this.pattern);
         int qty = ((this.quantity - 1) / qtyPerCraft) + 1; //CeilDiv
 
 
-        ICraftingTaskError result = calculateInternal(qty, storage, fluidStorage, results, fluidResults, this.pattern, true);
+        ICraftingTaskError result = calculateInternal(qty, storage, fluidStorage, reservedIngredients, results, fluidResults, this.pattern, true);
 
         if (result != null) {
             return result;
@@ -260,7 +275,8 @@ public class CraftingTask implements ICraftingTask {
             req.setAmount(qty);
             this.toCraftFluids.add(req);
         }
-        if(missing.isEmpty()){
+        if (missing.isEmpty()) {
+            network.getCraftingManager().reserveIngredients(this, reservedIngredients);
             crafts.values().forEach(c -> {
                 totalSteps += c.getQuantity();
                 if (c instanceof Processing) {
@@ -361,6 +377,7 @@ public class CraftingTask implements ICraftingTask {
         int qty,
         IStackList<ItemStack> mutatedStorage,
         IStackList<FluidStack> mutatedFluidStorage,
+        Map<UUID, Integer> reservedIngredients,
         IStackList<ItemStack> results,
         IStackList<FluidStack> fluidResults,
         ICraftingPattern pattern,
@@ -399,7 +416,8 @@ public class CraftingTask implements ICraftingTask {
             ItemStack possibleInput = possibleInputs.get();
 
             ItemStack fromSelf = results.get(possibleInput);
-            ItemStack fromNetwork = mutatedStorage.get(possibleInput);
+            StackListEntry<ItemStack> fromNetworkEntry = mutatedStorage.getEntry(possibleInput, IComparer.COMPARE_NBT);
+            ItemStack fromNetwork = fromNetworkEntry == null ? null : fromNetworkEntry.getStack();
 
             int remaining = pair.getRight() * qty;
 
@@ -430,7 +448,10 @@ public class CraftingTask implements ICraftingTask {
 
                     remaining -= toTake;
 
-                    fromNetwork = mutatedStorage.get(possibleInput);
+                    reservedIngredients.put(fromNetworkEntry.getId(), toTake);
+
+                    fromNetworkEntry = mutatedStorage.getEntry(possibleInput, IComparer.COMPARE_NBT);
+                    fromNetwork = fromNetworkEntry == null ? null : fromNetworkEntry.getStack();
 
                     toExtractInitial.add(possibleInput, toTake);
                 }
@@ -441,7 +462,7 @@ public class CraftingTask implements ICraftingTask {
                         int qtyPerCraft = getQuantityPerCraft(possibleInput, null, subPattern);
                         int subQty = ((remaining - 1) / qtyPerCraft) + 1; //CeilDiv
 
-                        ICraftingTaskError result = calculateInternal(subQty, mutatedStorage, mutatedFluidStorage, results, fluidResults, subPattern, false);
+                        ICraftingTaskError result = calculateInternal(subQty, mutatedStorage, mutatedFluidStorage, reservedIngredients, results, fluidResults, subPattern, false);
 
                         if (result != null) {
                             return result;
@@ -452,7 +473,8 @@ public class CraftingTask implements ICraftingTask {
                             throw new IllegalStateException("Recursive calculation didn't yield anything");
                         }
 
-                        fromNetwork = mutatedStorage.get(possibleInput);
+                        fromNetworkEntry = mutatedStorage.getEntry(possibleInput, IComparer.COMPARE_NBT);
+                        fromNetwork = fromNetworkEntry == null ? null : fromNetworkEntry.getStack();
                         // fromSelf contains the amount crafted after the loop.
                         this.toCraft.add(fromSelf.copy());
 
@@ -472,7 +494,8 @@ public class CraftingTask implements ICraftingTask {
                             possibleInput = possibleInputs.get();
 
                             fromSelf = results.get(possibleInput);
-                            fromNetwork = mutatedStorage.get(possibleInput);
+                            fromNetworkEntry = mutatedStorage.getEntry(possibleInput, IComparer.COMPARE_NBT);
+                            fromNetwork = fromNetworkEntry == null ? null : fromNetworkEntry.getStack();
                         }
                     }
                 }
@@ -505,7 +528,8 @@ public class CraftingTask implements ICraftingTask {
                 FluidStack possibleInput = possibleInputs.get();
 
                 FluidStack fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
-                FluidStack fromNetwork = mutatedFluidStorage.get(possibleInput, IComparer.COMPARE_NBT);
+                StackListEntry<FluidStack> fromNetworkEntry = mutatedFluidStorage.getEntry(possibleInput, IComparer.COMPARE_NBT);
+                FluidStack fromNetwork = fromNetworkEntry == null ? null : fromNetworkEntry.getStack();
 
                 int remaining = possibleInput.getAmount() * qty;
 
@@ -535,9 +559,10 @@ public class CraftingTask implements ICraftingTask {
 
                         remaining -= toTake;
 
-                        fromNetwork = mutatedFluidStorage.get(possibleInput, IComparer.COMPARE_NBT);
+                        fromNetworkEntry = mutatedFluidStorage.getEntry(possibleInput, IComparer.COMPARE_NBT);
+                        fromNetwork = fromNetworkEntry == null ? null : fromNetworkEntry.getStack();
 
-                        toExtractInitialFluids.add(possibleInput,toTake);
+                        toExtractInitialFluids.add(possibleInput, toTake);
                     }
                     if (remaining > 0) {
                         ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
@@ -546,7 +571,7 @@ public class CraftingTask implements ICraftingTask {
                             int qtyPerCraft = getQuantityPerCraft(null, possibleInput, subPattern);
                             int subQty = ((remaining - 1) / qtyPerCraft) + 1; //CeilDiv
 
-                            ICraftingTaskError result = calculateInternal(subQty, mutatedStorage, mutatedFluidStorage, results, fluidResults, subPattern, false);
+                            ICraftingTaskError result = calculateInternal(subQty, mutatedStorage, mutatedFluidStorage, reservedIngredients, results, fluidResults, subPattern, false);
 
                             if (result != null) {
                                 return result;
@@ -557,7 +582,8 @@ public class CraftingTask implements ICraftingTask {
                                 throw new IllegalStateException("Recursive fluid calculation didn't yield anything");
                             }
 
-                            fromNetwork = mutatedFluidStorage.get(possibleInput, IComparer.COMPARE_NBT);
+                            fromNetworkEntry = mutatedFluidStorage.getEntry(possibleInput, IComparer.COMPARE_NBT);
+                            fromNetwork = fromNetworkEntry == null ? null : fromNetworkEntry.getStack();
 
                             // fromSelf contains the amount crafted after the loop.
                             this.toCraftFluids.add(fromSelf.copy());
@@ -632,6 +658,7 @@ public class CraftingTask implements ICraftingTask {
                 network.getCraftingManager().onTaskChanged();
             }
         }
+        network.getCraftingManager().clearReservedIngredients(this);
     }
 
     private void combineCommonStacks(NonNullList<ItemStack> recipe, List<Pair<NonNullList<ItemStack>, Integer>> ingredients, ICraftingPattern pattern) {
@@ -1137,7 +1164,7 @@ public class CraftingTask implements ICraftingTask {
                 }
 
                 for (StackListEntry<ItemStack> put : p.getItemsToDisplay().getStacks()) {
-                    if (p.getProcessing() > 0|| p.getState() !=ProcessingState.READY) {
+                    if (p.getProcessing() > 0 || p.getState() != ProcessingState.READY) {
                         ICraftingMonitorElement element = new ItemCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getCount() * p.getProcessing(), 0, 0);
 
                         if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
@@ -1147,17 +1174,17 @@ public class CraftingTask implements ICraftingTask {
                         } else if (p.getState() == ProcessingState.LOCKED) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
                         }
-                        elements.add(element,true);
+                        elements.add(element, true);
                     }
                 }
                 for (StackListEntry<ItemStack> receive : p.getItemsToReceive().getStacks()) {
                     int count = p.getNeeded(receive.getStack());
                     if (count > 0) {
-                        elements.add(new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0),true);
+                        elements.add(new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0), true);
                     }
                 }
                 for (StackListEntry<FluidStack> put : p.getFluidsToUse().getStacks()) {
-                    if (p.getProcessing() > 0|| p.getState() !=ProcessingState.READY) {
+                    if (p.getProcessing() > 0 || p.getState() != ProcessingState.READY) {
                         ICraftingMonitorElement element = new FluidCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getAmount() * p.getProcessing(), 0, 0);
                         if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_fluid");
@@ -1166,14 +1193,14 @@ public class CraftingTask implements ICraftingTask {
                         } else if (p.getState() == ProcessingState.LOCKED) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
                         }
-                        elements.add(element,true);
+                        elements.add(element, true);
                     }
                 }
 
                 for (StackListEntry<FluidStack> receive : p.getFluidsToReceive().getStacks()) {
                     int count = p.getNeeded(receive.getStack());
                     if (count > 0) {
-                        elements.add(new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0),true);
+                        elements.add(new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0), true);
                     }
                 }
             }

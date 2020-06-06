@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.api.autocrafting;
 
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorListener;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
@@ -175,4 +176,24 @@ public interface ICraftingManager {
      */
 
     Set<ICraftingPatternContainer> getAllContainer(ICraftingPattern pattern);
+
+    /**
+     * Reserve a Ingredients so that they may not be used in Autocrafting Calculation
+     * @param task the CraftingTask that the Ingredients are reserved by
+     * @param reserved Map of reserved UUID's corresponding to the UUID of Entries in the StorageCache
+     */
+    void reserveIngredients(CraftingTask task, Map<UUID,Integer> reserved);
+
+    /**
+     * Get all reserved Ingredients
+     * @return Collection of all reserved Ingredients
+     */
+
+    Collection<Map<UUID,Integer>> getReservedIngredients();
+
+    /**
+     * Remove the reserved Ingredients for this CraftingTask
+     * @param task CraftingTask that no longer reserves Items
+     */
+    void clearReservedIngredients(CraftingTask task);
 }
