@@ -2,6 +2,8 @@ package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.RSTiles;
 import com.refinedmods.refinedstorage.apiimpl.network.node.DetectorNetworkNode;
+import com.refinedmods.refinedstorage.screen.BaseScreen;
+import com.refinedmods.refinedstorage.screen.DetectorScreen;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
@@ -24,7 +26,7 @@ public class DetectorTile extends NetworkNodeTile<DetectorNetworkNode> {
     public static final TileDataParameter<Integer, DetectorTile> AMOUNT = new TileDataParameter<>(DataSerializers.VARINT, 0, t -> t.getNode().getAmount(), (t, v) -> {
         t.getNode().setAmount(v);
         t.getNode().markDirty();
-    });
+    },(initial, value) -> BaseScreen.executeLater(DetectorScreen.class, detectorScreen->detectorScreen.updateAmountField(value)));
 
     private static final String NBT_POWERED = "Powered";
 
