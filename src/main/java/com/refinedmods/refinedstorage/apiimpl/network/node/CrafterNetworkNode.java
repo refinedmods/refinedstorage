@@ -430,6 +430,11 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     }
 
     @Override
+    public void unlock() {
+        locked = false;
+    }
+
+    @Override
     public void onUsedForProcessing() {
         Optional<ICraftingPatternContainer> root = getRootContainerNotSelf();
         if (root.isPresent()) {
