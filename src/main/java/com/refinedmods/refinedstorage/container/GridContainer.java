@@ -72,7 +72,11 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         transferManager.setNotFoundHandler(slotIndex -> {
             if (!getPlayer().getEntityWorld().isRemote) {
                 Slot slot = inventorySlots.get(slotIndex);
-
+                if (grid instanceof IPortableGrid && slot instanceof SlotItemHandler) {
+                    if (((SlotItemHandler) slot).getItemHandler().equals(((IPortableGrid) grid).getDisk())) {
+                        return ItemStack.EMPTY;
+                    }
+                }
                 if (slot.getHasStack()) {
                     if (slot == craftingResultSlot) {
                         grid.onCraftedShift(getPlayer());
