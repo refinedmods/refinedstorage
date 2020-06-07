@@ -969,6 +969,11 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public void onCancelled() {
+        crafts.values().forEach(c -> {
+            if (c instanceof Processing) {
+                network.getCraftingManager().getAllContainer(c.getPattern()).forEach(ICraftingPatternContainer::unlock);
+            }
+        });
         for (ItemStack remainder : internalStorage.getStacks()) {
             network.insertItem(remainder, remainder.getCount(), Action.PERFORM);
         }
