@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IFilter;
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.AllowedTagList;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
@@ -55,10 +56,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, IType {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "grid");
@@ -422,8 +420,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     }
 
     @Override
-    public void onCrafted(PlayerEntity player) {
-        API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player);
+    public void onCrafted(PlayerEntity player, IStackList<ItemStack> networkItems, IStackList<ItemStack> extractedItems) {
+        API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player, networkItems, extractedItems);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.IFilter;
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
@@ -203,7 +204,7 @@ public interface IGrid {
      *
      * @param player the player that crafted the item
      */
-    void onCrafted(PlayerEntity player);
+    void onCrafted(PlayerEntity player, IStackList<ItemStack> networkCraftingItems, IStackList<ItemStack> extractedItems);
 
     /**
      * Called when the clear button is pressed in the pattern grid or crafting grid.

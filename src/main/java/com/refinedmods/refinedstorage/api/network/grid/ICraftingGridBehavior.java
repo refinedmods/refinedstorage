@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.api.network.grid;
 
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
@@ -10,12 +11,13 @@ import net.minecraft.item.crafting.ICraftingRecipe;
 public interface ICraftingGridBehavior {
     /**
      * Logic for regular crafting.
-     *
      * @param grid   the grid
      * @param recipe the recipe
      * @param player the player
+     * @param networkItems
+     * @param usedItems
      */
-    void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player);
+    void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player, IStackList<ItemStack> networkItems, IStackList<ItemStack> usedItems);
 
     /**
      * Logic for crafting with shift click (mass crafting).

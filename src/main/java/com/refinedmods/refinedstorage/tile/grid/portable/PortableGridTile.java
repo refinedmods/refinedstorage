@@ -18,6 +18,7 @@ import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskContainerCont
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDiskProvider;
 import com.refinedmods.refinedstorage.api.storage.tracker.IStorageTracker;
 import com.refinedmods.refinedstorage.api.util.IFilter;
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.handler.PortableFluidGridHandler;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.handler.PortableItemGridHandler;
@@ -490,7 +491,7 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     }
 
     @Override
-    public void onCrafted(PlayerEntity player) {
+    public void onCrafted(PlayerEntity player, IStackList<ItemStack> networkCraftingItems, IStackList<ItemStack> extractedItems) {
         // NO OP
     }
 

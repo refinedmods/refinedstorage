@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.api.network.grid.INetworkAwareGrid;
 import com.refinedmods.refinedstorage.api.network.security.Permission;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,8 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingGridBehavior implements ICraftingGridBehavior {
+
     @Override
-    public void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player) {
+    public void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player, IStackList<ItemStack> networkCraftingItems, IStackList<ItemStack> extractedItems) {
         NonNullList<ItemStack> remainder = recipe.getRemainingItems(grid.getCraftingMatrix());
 
         INetwork network = grid.getNetwork();
@@ -52,7 +54,18 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 }
             } else if (!slot.isEmpty()) { // We don't have a remainder, but the slot is not empty.
                 if (slot.getCount() == 1 && network != null) { // Attempt to refill the slot with the same item from the network, only if we have a network and only if it's the last item.
-                    ItemStack refill = network.extractItem(slot, 1, Action.PERFORM);
+                    ItemStack refill;
+                    if (networkCraftingItems == null) { // for regular crafting
+                        refill = network.extractItem(slot, 1, Action.PERFORM);
+                    } else { // for shift crafting
+                        if (networkCraftingItems.get(slot) != null) {
+                            refill = networkCraftingItems.remove(slot, 1).getStack().copy();
+                            refill.setCount(1);
+                            extractedItems.add(refill);
+                        } else {
+                            refill = ItemStack.EMPTY;
+                        }
+                    }
 
                     matrix.setInventorySlotContents(i, refill);
 
@@ -70,24 +83,52 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
 
     @Override
     public void onCraftedShift(INetworkAwareGrid grid, PlayerEntity player) {
+        CraftingInventory matrix = grid.getCraftingMatrix();
+        INetwork network = grid.getNetwork();
         List<ItemStack> craftedItemsList = new ArrayList<>();
-        int amountCrafted = 0;
         ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
+
+        int amountCrafted = 0;
+        boolean useNetwork = network != null;
+
+        IStackList<ItemStack> networkCraftingItems = null;
+        if (useNetwork) {
+            // We need a modifiable list of the items in storage that are relevant for this craft.
+            networkCraftingItems = API.instance().createItemStackList();
+            for (int i = 0; i < matrix.getSizeInventory(); ++i) {
+                ItemStack stack = network.getItemStorageCache().getList().get(matrix.getStackInSlot(i));
+
+                //Don't add the same item twice into the list. Items may appear twice in a recipe but not in storage.
+                if (stack != null && networkCraftingItems.get(stack) == null) {
+                    networkCraftingItems.add(stack);
+                }
+            }
+        }
+
+        //A second list to remember which items have been extracted
+        IStackList<ItemStack> extractedItems = API.instance().createItemStackList();
 
         // Do while the item is still craftable (aka is the result slot still the same as the original item?) and we don't exceed the max stack size.
         do {
-            grid.onCrafted(player);
+            grid.onCrafted(player, networkCraftingItems, extractedItems);
 
             craftedItemsList.add(crafted.copy());
 
             amountCrafted += crafted.getCount();
         } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted < crafted.getMaxStackSize());
 
-        INetwork network = grid.getNetwork();
+        if (useNetwork) {
+            extractedItems.getStacks().forEach(x -> network.extractItem(x.getStack(), x.getStack().getCount(), Action.PERFORM));
+        }
 
         for (ItemStack craftedItem : craftedItemsList) {
             if (!player.inventory.addItemStackToInventory(craftedItem.copy())) {
-                ItemStack remainder = network == null ? craftedItem : network.insertItem(craftedItem, craftedItem.getCount(), Action.PERFORM);
+
+                ItemStack remainder = craftedItem;
+
+                if (useNetwork) {
+                    remainder = network.insertItem(craftedItem, craftedItem.getCount(), Action.PERFORM);
+                }
 
                 if (!remainder.isEmpty()) {
                     InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), remainder);
