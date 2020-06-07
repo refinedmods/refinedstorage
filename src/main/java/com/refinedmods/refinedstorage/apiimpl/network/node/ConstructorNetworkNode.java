@@ -109,18 +109,19 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     private void extractAndPlaceBlock(ItemStack stack) {
-        if (!network.extractItem(stack, 1, compare, Action.SIMULATE).isEmpty()) {
+        ItemStack took = network.extractItem(stack, 1, compare, Action.SIMULATE);
+        if (!took.isEmpty()) {
             BlockItemUseContext ctx = new ConstructorBlockItemUseContext(
                 world,
                 WorldUtils.getFakePlayer((ServerWorld) world, getOwner()),
                 Hand.MAIN_HAND,
-                ItemHandlerHelper.copyStackWithSize(stack, 1),
+                took,
                 new BlockRayTraceResult(Vec3d.ZERO, getDirection(), pos, false)
             );
 
             ActionResultType result = ForgeHooks.onPlaceItemIntoWorld(ctx);
             if (result == ActionResultType.SUCCESS) {
-                network.extractItem(stack, 1, Action.PERFORM);
+                network.extractItem(took, 1, Action.PERFORM);
             }
         } else if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
             ItemStack craft = itemFilters.getStackInSlot(0);
