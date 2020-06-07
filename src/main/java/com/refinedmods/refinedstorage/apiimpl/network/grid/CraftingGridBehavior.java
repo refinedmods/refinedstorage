@@ -74,6 +74,16 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         int amountCrafted = 0;
         ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
 
+
+        //limit iterations to the smallest stack count in the crafting grid
+        // or to the getMaxStackSize of the result if every stack is size 1
+        int maxCrafted = crafted.getMaxStackSize();
+        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
+            if (grid.getCraftingMatrix().getStackInSlot(i).getCount() > 1) {
+                maxCrafted = Math.min(maxCrafted, grid.getCraftingMatrix().getStackInSlot(i).getCount() * crafted.getCount());
+            }
+        }
+
         // Do while the item is still craftable (aka is the result slot still the same as the original item?) and we don't exceed the max stack size.
         do {
             grid.onCrafted(player);
@@ -81,7 +91,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             craftedItemsList.add(crafted.copy());
 
             amountCrafted += crafted.getCount();
-        } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted < crafted.getMaxStackSize());
+        } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted < maxCrafted && amountCrafted + crafted.getCount() <= maxCrafted );
 
         INetwork network = grid.getNetwork();
 
