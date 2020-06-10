@@ -1,6 +1,7 @@
 package com.refinedmods.refinedstorage.container.slot.filter;
 
 import com.refinedmods.refinedstorage.container.slot.BaseSlot;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
@@ -44,6 +45,11 @@ public class FilterSlot extends BaseSlot {
         }
 
         super.putStack(stack);
+    }
+
+    @Override
+    public boolean canTakeStack(PlayerEntity playerIn) {
+        return false;
     }
 
     public boolean isSizeAllowed() {
