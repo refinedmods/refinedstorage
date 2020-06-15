@@ -15,6 +15,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.hooks.BasicEventHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -74,7 +75,6 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         int amountCrafted = 0;
         ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
 
-
         //limit iterations to the smallest stack count in the crafting grid
         // or to the getMaxStackSize of the result if every stack is size 1
         int maxCrafted = crafted.getMaxStackSize();
@@ -83,6 +83,8 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
                 maxCrafted = Math.min(maxCrafted, grid.getCraftingMatrix().getStackInSlot(i).getCount() * crafted.getCount());
             }
         }
+
+        ForgeHooks.setCraftingPlayer(player);
 
         // Do while the item is still craftable (aka is the result slot still the same as the original item?) and we don't exceed the max stack size.
         do {
@@ -110,6 +112,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         // For regular crafting, this is already called in ResultCraftingGridSlot#onTake -> onCrafting(stack)
         crafted.onCrafting(player.world, player, amountCrafted);
         BasicEventHooks.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
+        ForgeHooks.setCraftingPlayer(null);
     }
 
     @Override
