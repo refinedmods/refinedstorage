@@ -16,6 +16,7 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.hooks.BasicEventHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -108,6 +109,8 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         //A second list to remember which items have been extracted
         IStackList<ItemStack> extractedItems = API.instance().createItemStackList();
 
+        ForgeHooks.setCraftingPlayer(player);
+      
         // Do while the item is still craftable (aka is the result slot still the same as the original item?) and we don't exceed the max stack size.
         do {
             grid.onCrafted(player, networkCraftingItems, extractedItems);
@@ -141,6 +144,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         // For regular crafting, this is already called in ResultCraftingGridSlot#onTake -> onCrafting(stack)
         crafted.onCrafting(player.world, player, amountCrafted);
         BasicEventHooks.firePlayerCraftingEvent(player, ItemHandlerHelper.copyStackWithSize(crafted, amountCrafted), grid.getCraftingMatrix());
+        ForgeHooks.setCraftingPlayer(null);
     }
 
     @Override
