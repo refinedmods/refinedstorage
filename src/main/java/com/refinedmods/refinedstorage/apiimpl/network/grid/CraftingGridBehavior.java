@@ -75,14 +75,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         int amountCrafted = 0;
         ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
 
-        //limit iterations to the smallest stack count in the crafting grid
-        // or to the getMaxStackSize of the result if every stack is size 1
         int maxCrafted = crafted.getMaxStackSize();
-        for (int i = 0; i < grid.getCraftingMatrix().getSizeInventory(); ++i) {
-            if (grid.getCraftingMatrix().getStackInSlot(i).getCount() > 1) {
-                maxCrafted = Math.min(maxCrafted, grid.getCraftingMatrix().getStackInSlot(i).getCount() * crafted.getCount());
-            }
-        }
 
         ForgeHooks.setCraftingPlayer(player);
 
