@@ -24,11 +24,9 @@
   "gui.refinedstorage.wireless_transmitter.distance": "%d blokken",
   "gui.refinedstorage.crafter": "Crafter",
   "gui.refinedstorage.filter": "Filter",
-    "gui.refinedstorage.filter.compare_damage": "Schade",
   "gui.refinedstorage.filter.compare_nbt": "NBT",
   "gui.refinedstorage.network_transmitter": "Netwerkzender",
   "gui.refinedstorage.network_transmitter.distance": "%d blokken",
-    "gui.refinedstorage.network_transmitter.dimension": "Dimensie %d",
   "gui.refinedstorage.network_transmitter.missing_card": "Geen netwerkkaart",
   "gui.refinedstorage.fluid_interface": "Vloeistof interface",
   "gui.refinedstorage.fluid_interface.in": "In",
@@ -53,16 +51,11 @@
   "misc.refinedstorage.pattern.inputs": "Inputs",
   "misc.refinedstorage.pattern.outputs": "Outputs",
   "misc.refinedstorage.pattern.invalid": "Ongeldig patroon",
-    "misc.refinedstorage.pattern.oredict": "Gebruikt de ore dictionary",
 
   "misc.refinedstorage.start": "Start",
   "misc.refinedstorage.clear": "Legen",
   "misc.refinedstorage.cancel_all": "Annuleer alles",
   "misc.refinedstorage.priority": "Prioriteit",
-    "misc.refinedstorage.oredict": "Gebruik oredict",
-
-    "sidebutton.refinedstorage.compare.1": "Vergelijken op schade",
-    "sidebutton.refinedstorage.compare.2": "Vergelijken op NBT",
 
   "sidebutton.refinedstorage.redstone_mode": "Redstone Mode",
   "sidebutton.refinedstorage.redstone_mode.0": "Redstone negeren",
@@ -101,8 +94,6 @@
   "sidebutton.refinedstorage.detector.mode.0": "Redstone signaal aan wanneer onder het aantal",
   "sidebutton.refinedstorage.detector.mode.1": "Redstone signaal aan wanneer op het aantal",
   "sidebutton.refinedstorage.detector.mode.2": "Redstone signaal aan wanneer boven het aantal",
-
-    "sidebutton.refinedstorage.crafter.triggered_autocrafting": "Autocrafting triggeren met redstone signaal",
 
   "block.refinedstorage.controller": "Controller",
   "block.refinedstorage.creative_controller": "Creative Controller",
@@ -144,13 +135,11 @@
   "item.refinedstorage.16k_storage_disk": "16k opslagschijf",
   "item.refinedstorage.64k_storage_disk": "64k opslagschijf",
   "item.refinedstorage.creative_storage_disk": "Creative opslagschijf",
-    "item.refinedstorage.storage_disk.5": "Debug opslagschijf",
   "item.refinedstorage.64k_fluid_storage_disk": "64k vloeistof opslagschijf",
   "item.refinedstorage.256k_fluid_storage_disk": "256k vloeistof opslagschijf",
   "item.refinedstorage.1024k_fluid_storage_disk": "1024k vloeistof opslagschijf",
   "item.refinedstorage.4096k_fluid_storage_disk": "4096k vloeistof opslagschijf",
   "item.refinedstorage.creative_fluid_storage_disk": "Creative vloeistof opslagschijf",
-    "item.refinedstorage.fluid_storage_disk.5": "Debug vloeistof opslagschijf",
   "item.refinedstorage.wireless_grid": "Draadloos rooster",
   "item.refinedstorage.creative_wireless_grid": "Creative draadloos rooster",
   "item.refinedstorage.quartz_enriched_iron": "Quartz verrijkte ijzerstaaf",
@@ -176,5 +165,5 @@
   "item.refinedstorage.stack_upgrade": "Stack upgrade",
   "item.refinedstorage.storage_housing": "Opslagomhulsel",
   "item.refinedstorage.filter": "Filter",
-  "item.refinedstorage.network_card": "Netwerk kaart"
+  "item.refinedstorage.network_card": "Netwerkkaart"
 }

@@ -13,7 +13,7 @@
 - Fixed shift crafting in a Grid not using the player (Darkere)
 - Re-added all the language files (TheDirectorX)
 - Added Japanese translation file (KusozakoAtama10k)
-  
+
 ### 1.8.4
 - Fixed autocrafting Crafting Monitor crash (Darkere)
 
