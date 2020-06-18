@@ -14,6 +14,7 @@
 - Re-added all the language files (TheDirectorX)
 - Added Japanese translation file (KusozakoAtama10k)
 - Changed package name to "com.refinedmods.refinedstorage", this is a breaking change for addons (raoulvdberge)
+- Fixed bug where shift clicking gives too many items (Darkere)
 
 ### 1.8.4
 - Fixed autocrafting Crafting Monitor crash (Darkere)
