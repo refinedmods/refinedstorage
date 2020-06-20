@@ -183,7 +183,6 @@
   "sidebutton.refinedstorage.grid.size.1": "Small",
   "sidebutton.refinedstorage.grid.size.2": "Medium",
   "sidebutton.refinedstorage.grid.size.3": "Large",
-  "gui.refinedstorage:jei.tooltip.error.recipe.transfer.missing.autocraft":"Autocrafting available",
   "sidebutton.refinedstorage.mode": "Mode",
   "sidebutton.refinedstorage.mode.whitelist": "Whitelist",
   "sidebutton.refinedstorage.mode.blacklist": "Blacklist",
