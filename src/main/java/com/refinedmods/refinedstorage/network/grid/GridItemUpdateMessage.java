@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.screen.grid.view.ItemGridView;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.ArrayList;
@@ -43,6 +44,12 @@ public class GridItemUpdateMessage {
             stacks.add(StackUtils.readItemGridStack(buf));
         }
 
+        int fluidSize = buf.readInt();
+
+        for (int i = 0; i < fluidSize; ++i) {
+            stacks.add(StackUtils.readFluidGridStack(buf));
+        }
+
         return new GridItemUpdateMessage(canCraft, stacks);
     }
 
@@ -63,6 +70,22 @@ public class GridItemUpdateMessage {
             StackListEntry<ItemStack> regularEntry = message.network.getItemStorageCache().getList().getEntry(stack.getStack(), IComparer.COMPARE_NBT);
 
             StackUtils.writeItemGridStack(buf, stack.getStack(), stack.getId(), regularEntry != null ? regularEntry.getId() : null, true, message.network.getItemStorageTracker().get(stack.getStack()));
+        }
+
+        int fluidsize = message.network.getFluidStorageCache().getList().getStacks().size() + message.network.getFluidStorageCache().getCraftablesList().getStacks().size();
+
+        buf.writeInt(fluidsize);
+
+        for (StackListEntry<FluidStack> stack : message.network.getFluidStorageCache().getList().getStacks()) {
+            StackListEntry<FluidStack> craftingEntry = message.network.getFluidStorageCache().getCraftablesList().getEntry(stack.getStack(), IComparer.COMPARE_NBT);
+
+            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), craftingEntry != null ? craftingEntry.getId() : null, false, message.network.getFluidStorageTracker().get(stack.getStack()));
+        }
+
+        for (StackListEntry<FluidStack> stack : message.network.getFluidStorageCache().getCraftablesList().getStacks()) {
+            StackListEntry<FluidStack> regularEntry = message.network.getFluidStorageCache().getList().getEntry(stack.getStack(), IComparer.COMPARE_NBT);
+
+            StackUtils.writeFluidGridStack(buf, stack.getStack(), stack.getId(), regularEntry != null ? regularEntry.getId() : null, true, message.network.getFluidStorageTracker().get(stack.getStack()));
         }
     }
 
