@@ -5,6 +5,7 @@ import com.refinedmods.refinedstorage.screen.grid.GridScreen;
 import com.refinedmods.refinedstorage.screen.grid.filtering.GridFilterParser;
 import com.refinedmods.refinedstorage.screen.grid.sorting.IGridSorter;
 import com.refinedmods.refinedstorage.screen.grid.sorting.SortingDirection;
+import com.refinedmods.refinedstorage.screen.grid.stack.FluidGridStack;
 import com.refinedmods.refinedstorage.screen.grid.stack.IGridStack;
 
 import javax.annotation.Nullable;
@@ -66,6 +67,10 @@ public abstract class BaseGridView implements IGridView {
 
             while (it.hasNext()) {
                 IGridStack stack = it.next();
+
+                if (this instanceof ItemGridView && stack instanceof FluidGridStack) {
+                   it.remove();
+                }
 
                 // If this is a crafting stack,
                 // and there is a regular matching stack in the view too,
