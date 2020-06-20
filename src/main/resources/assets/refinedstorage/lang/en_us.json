@@ -88,6 +88,7 @@
   "gui.refinedstorage.crafter_manager": "Crafter Manager",
   "gui.refinedstorage.alternatives": "Alternatives",
   "gui.refinedstorage.alternatives.apply": "Apply",
+  "gui.refinedstorage:jei.tooltip.error.recipe.transfer.missing.autocraft":"Autocrafting available",
 
   "misc.refinedstorage.energy_stored": "%d / %d FE",
   "misc.refinedstorage.energy_usage": "Usage: %d FE/t",
@@ -186,7 +187,7 @@
   "sidebutton.refinedstorage.mode": "Mode",
   "sidebutton.refinedstorage.mode.whitelist": "Whitelist",
   "sidebutton.refinedstorage.mode.blacklist": "Blacklist",
-  "gui.refinedstorage:jei.tooltip.error.recipe.transfer.missing.autocraft":"Autocrafting available",
+
 
   "sidebutton.refinedstorage.iomode": "IO mode",
   "sidebutton.refinedstorage.iomode.insert": "Insert into network",
