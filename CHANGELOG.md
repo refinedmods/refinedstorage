@@ -1,5 +1,8 @@
 # Refined Storage Changelog
 
+### 1.8.6
+- Fixed Constructor duplication bug (Darkere)
+
 ### 1.8.5
 - Cancelling a crafting task now also unlocks all Crafters related to that task (Darkere)
 - External Storage will now always show the exact maximum capacity as reported by the attached inventory (Darkere)
