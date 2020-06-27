@@ -59,7 +59,7 @@ public class TRSRBakedModel implements IBakedModel {
     @Nonnull
     @Override
     @SuppressWarnings("deprecation")
-    public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
+    public List<BakedQuad> getQuads(BlockState state, Direction side, @Nonnull Random rand) {
         ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
         if (side != null && side.getHorizontalIndex() > -1) {

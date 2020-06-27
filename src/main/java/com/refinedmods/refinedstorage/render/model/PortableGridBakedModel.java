@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
     private final LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         @SuppressWarnings("deprecation")
-        public List<BakedQuad> load(CacheKey key) {
+        public List<BakedQuad> load(@Nonnull CacheKey key) {
             List<BakedQuad> quads = new ArrayList<>();
 
             if (key.active) {
