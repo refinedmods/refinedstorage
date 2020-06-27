@@ -2,6 +2,7 @@
 
 ### 1.8.7
 - Fixed Regulator mode item and fluid counts not saving properly (raoulvdberge)
+- Fixed Wireless Crafting Monitor not closing properly (raoulvdberge)
 
 ### 1.8.6
 - Fixed Constructor duplication bug (Darkere)
