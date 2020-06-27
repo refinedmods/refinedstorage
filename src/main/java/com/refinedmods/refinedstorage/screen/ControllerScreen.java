@@ -23,7 +23,7 @@ public class ControllerScreen extends BaseScreen<ControllerContainer> {
     private static final int ENERGY_BAR_WIDTH = 16;
     private static final int ENERGY_BAR_HEIGHT = 59;
 
-    private ScrollbarWidget scrollbar;
+    private final ScrollbarWidget scrollbar;
 
     public ControllerScreen(ControllerContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 176, 181, inventory, title);

@@ -35,7 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PatternItem extends Item implements ICraftingPatternProvider {
-    private static Map<ItemStack, CraftingPattern> CACHE = new HashMap<>();
+    private static final Map<ItemStack, CraftingPattern> CACHE = new HashMap<>();
 
     private static final String NBT_VERSION = "Version";
     private static final String NBT_INPUT_SLOT = "Input_%d";

@@ -7,8 +7,8 @@ public enum FluidStorageType {
     FOUR_THOUSAND_NINETY_SIX_K("4096k", 4096_000),
     CREATIVE("creative", -1);
 
-    private String name;
-    private int capacity;
+    private final String name;
+    private final int capacity;
 
     FluidStorageType(String name, int capacity) {
         this.name = name;

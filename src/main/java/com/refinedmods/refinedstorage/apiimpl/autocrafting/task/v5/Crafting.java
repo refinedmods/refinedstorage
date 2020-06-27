@@ -17,10 +17,10 @@ class Crafting {
     private static final String NBT_TO_EXTRACT = "ToExtract";
     private static final String NBT_ROOT = "Root";
 
-    private ICraftingPattern pattern;
-    private NonNullList<ItemStack> took;
-    private IStackList<ItemStack> toExtract;
-    private boolean root;
+    private final ICraftingPattern pattern;
+    private final NonNullList<ItemStack> took;
+    private final IStackList<ItemStack> toExtract;
+    private final boolean root;
 
     public Crafting(ICraftingPattern pattern, NonNullList<ItemStack> took, IStackList<ItemStack> toExtract, boolean root) {
         this.pattern = pattern;

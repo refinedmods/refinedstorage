@@ -14,7 +14,7 @@ public interface IType {
     int ITEMS = 0;
     int FLUIDS = 1;
 
-    static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Integer, T> createParameter(@Nullable TileDataParameterClientListener<Integer> clientListener) {
+    static <T extends TileEntity & INetworkNodeProxy<?>> TileDataParameter<Integer, T> createParameter(@Nullable TileDataParameterClientListener<Integer> clientListener) {
         return new TileDataParameter<>(DataSerializers.VARINT, ITEMS, t -> ((IType) t.getNode()).getType(), (t, v) -> {
             if (v == IType.ITEMS || v == IType.FLUIDS) {
                 ((IType) t.getNode()).setType(v);
@@ -22,7 +22,7 @@ public interface IType {
         }, clientListener);
     }
 
-    static <T extends TileEntity & INetworkNodeProxy> TileDataParameter<Integer, T> createParameter() {
+    static <T extends TileEntity & INetworkNodeProxy<?>> TileDataParameter<Integer, T> createParameter() {
         return createParameter(null);
     }
 

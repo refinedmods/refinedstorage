@@ -29,16 +29,17 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.glfw.GLFW;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class CraftingPreviewScreen extends BaseScreen {
+public class CraftingPreviewScreen extends BaseScreen<Container> {
     private static final int VISIBLE_ROWS = 5;
 
-    private final List<ICraftingPreviewElement> stacks;
+    private final List<ICraftingPreviewElement<?>> stacks;
     private final Screen parent;
     private final ResourceLocation factoryId;
 
@@ -51,12 +52,12 @@ public class CraftingPreviewScreen extends BaseScreen {
     private ItemStack hoveringStack;
     private FluidStack hoveringFluid;
 
-    private IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
+    private final IElementDrawers drawers = new CraftingPreviewElementDrawers(this, font);
 
-    public CraftingPreviewScreen(Screen parent, ResourceLocation factoryId, List<ICraftingPreviewElement> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
+    public CraftingPreviewScreen(Screen parent, ResourceLocation factoryId, List<ICraftingPreviewElement<?>> stacks, UUID id, int quantity, boolean fluids, ITextComponent title) {
         super(new Container(null, 0) {
             @Override
-            public boolean canInteractWith(PlayerEntity player) {
+            public boolean canInteractWith(@Nonnull PlayerEntity player) {
                 return false;
             }
         }, 254, 201, null, title);

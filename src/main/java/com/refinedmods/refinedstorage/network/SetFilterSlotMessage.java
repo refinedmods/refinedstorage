@@ -15,8 +15,8 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.function.Supplier;
 
 public class SetFilterSlotMessage {
-    private int containerSlot;
-    private ItemStack stack;
+    private final int containerSlot;
+    private final ItemStack stack;
 
     public SetFilterSlotMessage(int containerSlot, ItemStack stack) {
         this.containerSlot = containerSlot;

@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ItemExternalStorage implements IExternalStorage<ItemStack> {
-    private IExternalStorageContext context;
-    private Supplier<IItemHandler> handlerSupplier;
-    private boolean connectedToInterface;
-    private ItemExternalStorageCache cache = new ItemExternalStorageCache();
+    private final IExternalStorageContext context;
+    private final Supplier<IItemHandler> handlerSupplier;
+    private final boolean connectedToInterface;
+    private final ItemExternalStorageCache cache = new ItemExternalStorageCache();
 
     public ItemExternalStorage(IExternalStorageContext context, Supplier<IItemHandler> handlerSupplier, boolean connectedToInterface) {
         this.context = context;

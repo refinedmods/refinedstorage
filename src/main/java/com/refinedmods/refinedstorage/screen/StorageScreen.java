@@ -21,15 +21,15 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
     private static final int BAR_WIDTH = 16;
     private static final int BAR_HEIGHT = 70;
 
-    private String texture;
-    private TileDataParameter<Integer, ?> typeParameter;
-    private TileDataParameter<Integer, ?> redstoneModeParameter;
-    private TileDataParameter<Integer, ?> exactModeParameter;
-    private TileDataParameter<Integer, ?> whitelistBlacklistParameter;
-    private TileDataParameter<Integer, ?> priorityParameter;
-    private TileDataParameter<AccessType, ?> accessTypeParameter;
-    private Supplier<Long> storedSupplier;
-    private Supplier<Long> capacitySupplier;
+    private final String texture;
+    private final TileDataParameter<Integer, ?> typeParameter;
+    private final TileDataParameter<Integer, ?> redstoneModeParameter;
+    private final TileDataParameter<Integer, ?> exactModeParameter;
+    private final TileDataParameter<Integer, ?> whitelistBlacklistParameter;
+    private final TileDataParameter<Integer, ?> priorityParameter;
+    private final TileDataParameter<AccessType, ?> accessTypeParameter;
+    private final Supplier<Long> storedSupplier;
+    private final Supplier<Long> capacitySupplier;
 
     public StorageScreen(T container,
                          PlayerInventory inventory,
@@ -79,9 +79,7 @@ public class StorageScreen<T extends Container> extends BaseScreen<T> {
 
         int buttonWidth = 10 + font.getStringWidth(I18n.format("misc.refinedstorage.priority"));
 
-        addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, I18n.format("misc.refinedstorage.priority"), true, true, btn -> {
-            minecraft.displayGuiScreen(new PriorityScreen(this, priorityParameter, playerInventory));
-        });
+        addButton(x + 169 - buttonWidth, y + 41, buttonWidth, 20, I18n.format("misc.refinedstorage.priority"), true, true, btn -> minecraft.displayGuiScreen(new PriorityScreen(this, priorityParameter, playerInventory)));
     }
 
     @Override

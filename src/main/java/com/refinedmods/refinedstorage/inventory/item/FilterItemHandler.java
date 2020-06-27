@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FilterItemHandler extends BaseItemHandler {
-    private List<IFilter> filters;
-    private List<IGridTab> tabs;
+    private final List<IFilter> filters;
+    private final List<IGridTab> tabs;
 
     public FilterItemHandler(List<IFilter> filters, List<IGridTab> tabs) {
         super(4);

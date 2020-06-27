@@ -7,7 +7,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskError;
 import javax.annotation.Nullable;
 
 public class CraftingTaskError implements ICraftingTaskError {
-    private CraftingTaskErrorType type;
+    private final CraftingTaskErrorType type;
     private ICraftingPattern recursedPattern;
 
     public CraftingTaskError(CraftingTaskErrorType type) {

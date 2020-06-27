@@ -29,9 +29,9 @@ public class ItemStorageDisk implements IStorageDisk<ItemStack> {
     public static final int VERSION = 1;
 
     @Nullable
-    private ServerWorld world;
-    private int capacity;
-    private Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
+    private final ServerWorld world;
+    private final int capacity;
+    private final Multimap<Item, ItemStack> stacks = ArrayListMultimap.create();
 
     @Nullable
     private IStorageDiskListener listener;

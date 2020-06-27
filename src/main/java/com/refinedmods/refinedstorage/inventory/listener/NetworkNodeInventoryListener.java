@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 
 public class NetworkNodeInventoryListener implements InventoryListener<BaseItemHandler> {
-    private INetworkNode node;
+    private final INetworkNode node;
 
     public NetworkNodeInventoryListener(INetworkNode node) {
         this.node = node;

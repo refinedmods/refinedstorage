@@ -11,9 +11,9 @@ public abstract class SideButton extends Button {
     public static final int WIDTH = 18;
     public static final int HEIGHT = 18;
 
-    protected BaseScreen screen;
+    protected final BaseScreen<?> screen;
 
-    public SideButton(BaseScreen screen) {
+    public SideButton(BaseScreen<?> screen) {
         super(-1, -1, 18, 18, "", btn -> {
         });
 

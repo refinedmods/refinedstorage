@@ -18,13 +18,13 @@ class Processing {
     private static final String NBT_STATE = "State";
     private static final String NBT_ROOT = "Root";
 
-    private ICraftingPattern pattern;
-    private IStackList<ItemStack> itemsToReceive;
-    private IStackList<FluidStack> fluidsToReceive;
-    private IStackList<ItemStack> itemsToPut;
-    private IStackList<FluidStack> fluidsToPut;
+    private final ICraftingPattern pattern;
+    private final IStackList<ItemStack> itemsToReceive;
+    private final IStackList<FluidStack> fluidsToReceive;
+    private final IStackList<ItemStack> itemsToPut;
+    private final IStackList<FluidStack> fluidsToPut;
     private ProcessingState state = ProcessingState.READY;
-    private boolean root;
+    private final boolean root;
 
     public Processing(ICraftingPattern pattern, IStackList<ItemStack> itemsToReceive, IStackList<FluidStack> fluidsToReceive, IStackList<ItemStack> itemsToPut, IStackList<FluidStack> fluidsToPut, boolean root) {
         this.pattern = pattern;

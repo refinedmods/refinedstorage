@@ -6,8 +6,8 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 
 public class ProxyItemHandler implements IItemHandler {
-    private IItemHandler insertHandler;
-    private IItemHandler extractHandler;
+    private final IItemHandler insertHandler;
+    private final IItemHandler extractHandler;
 
     public ProxyItemHandler(IItemHandler insertHandler, IItemHandler extractHandler) {
         this.insertHandler = insertHandler;

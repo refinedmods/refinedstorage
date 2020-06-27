@@ -93,9 +93,7 @@ public class CraftingMonitorNetworkNode extends NetworkNode implements ICrafting
 
         tag.putInt(NBT_TAB_PAGE, tabPage);
 
-        if (tabSelected.isPresent()) {
-            tag.putUniqueId(NBT_TAB_SELECTED, tabSelected.get());
-        }
+        tabSelected.ifPresent(uuid -> tag.putUniqueId(NBT_TAB_SELECTED, uuid));
 
         return tag;
     }

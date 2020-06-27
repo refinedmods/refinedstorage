@@ -7,7 +7,7 @@ import net.minecraftforge.energy.EnergyStorage;
 public class ItemEnergyStorage extends EnergyStorage {
     private static final String NBT_ENERGY = "Energy";
 
-    private ItemStack stack;
+    private final ItemStack stack;
 
     public ItemEnergyStorage(ItemStack stack, int capacity) {
         super(capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);

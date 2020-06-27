@@ -13,7 +13,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 
 public class CraftingSettingsScreen extends AmountSpecifyingScreen<CraftingSettingsContainer> {
-    private IGridStack stack;
+    private final IGridStack stack;
 
     public CraftingSettingsScreen(BaseScreen parent, PlayerEntity player, IGridStack stack) {
         super(parent, new CraftingSettingsContainer(player, stack), 172, 99, player.inventory, new TranslationTextComponent("container.crafting"));

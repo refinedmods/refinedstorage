@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class FluidCraftingPreviewElement implements ICraftingPreviewElement<FluidStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
 
-    private FluidStack stack;
+    private final FluidStack stack;
     private int available;
     private boolean missing;
     // If missing is true then toCraft is the missing amount

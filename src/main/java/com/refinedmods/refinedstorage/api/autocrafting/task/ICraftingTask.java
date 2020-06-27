@@ -89,7 +89,7 @@ public interface ICraftingTask {
      *
      * @return get a list of {@link ICraftingPreviewElement}s
      */
-    List<ICraftingPreviewElement> getPreviewStacks();
+    List<ICraftingPreviewElement<?>> getPreviewStacks();
 
     /**
      * @return the crafting pattern corresponding to this task

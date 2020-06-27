@@ -11,9 +11,9 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GridCraftingStartRequestMessage {
-    private UUID id;
-    private int quantity;
-    private boolean fluids;
+    private final UUID id;
+    private final int quantity;
+    private final boolean fluids;
 
     public GridCraftingStartRequestMessage(UUID id, int quantity, boolean fluids) {
         this.id = id;

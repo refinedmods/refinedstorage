@@ -371,5 +371,5 @@
   "advancements.refinedstorage.interface_to_the_world": "Интерфейс к миру",
   "advancements.refinedstorage.interface_to_the_world.description": "Экспортируйте и импортируйте предметы одновременно с помощью интерфейса",
   "advancements.refinedstorage.storing_externally": "Внешнее хранение",
-  "advancements.refinedstorage.storing_externally.description": "Используйте шину внешнего хранения для подключения к сети внешнего хранилища, например сундука",
+  "advancements.refinedstorage.storing_externally.description": "Используйте шину внешнего хранения для подключения к сети внешнего хранилища, например сундука"
 }

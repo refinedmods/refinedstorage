@@ -20,24 +20,24 @@ public class TabListWidget {
         void onPageChanged(int page);
     }
 
-    private BaseScreen gui;
-    private ElementDrawers drawers;
+    private final BaseScreen<?> screen;
+    private final ElementDrawers drawers;
 
-    private Supplier<List<IGridTab>> tabs;
+    private final Supplier<List<IGridTab>> tabs;
     private int tabHovering;
-    private int tabsPerPage;
-    private Supplier<Integer> pages;
-    private Supplier<Integer> page;
-    private Supplier<Integer> selected;
+    private final int tabsPerPage;
+    private final Supplier<Integer> pages;
+    private final Supplier<Integer> page;
+    private final Supplier<Integer> selected;
     private boolean hadTabs;
 
-    private List<ITabListListener> listeners = new LinkedList<>();
+    private final List<ITabListListener> listeners = new LinkedList<>();
 
     private Button left;
     private Button right;
 
-    public TabListWidget(BaseScreen gui, ElementDrawers drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
-        this.gui = gui;
+    public TabListWidget(BaseScreen<?> screen, ElementDrawers drawers, Supplier<List<IGridTab>> tabs, Supplier<Integer> pages, Supplier<Integer> page, Supplier<Integer> selected, int tabsPerPage) {
+        this.screen = screen;
         this.drawers = drawers;
         this.tabs = tabs;
         this.pages = pages;
@@ -47,8 +47,8 @@ public class TabListWidget {
     }
 
     public void init(int width) {
-        this.left = gui.addButton(gui.getGuiLeft(), gui.getGuiTop() - 22, 20, 20, "<", true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() - 1)));
-        this.right = gui.addButton(gui.getGuiLeft() + width - 22, gui.getGuiTop() - 22, 20, 20, ">", true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() + 1)));
+        this.left = screen.addButton(screen.getGuiLeft(), screen.getGuiTop() - 22, 20, 20, "<", true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() - 1)));
+        this.right = screen.addButton(screen.getGuiLeft() + width - 22, screen.getGuiTop() - 22, 20, 20, ">", true, pages.get() > 0, btn -> listeners.forEach(t -> t.onPageChanged(page.get() + 1)));
     }
 
     public void addListener(ITabListListener listener) {
@@ -80,7 +80,7 @@ public class TabListWidget {
         if (this.hadTabs != hasTabs) {
             this.hadTabs = hasTabs;
 
-            gui.init();
+            screen.init();
         }
 
         if (page.get() > pages.get()) {
@@ -127,7 +127,7 @@ public class TabListWidget {
 
         RenderSystem.enableAlphaTest();
 
-        gui.bindTexture(RS.ID, "icons.png");
+        screen.bindTexture(RS.ID, "icons.png");
 
         if (!isSelected) {
             ty += 3;
@@ -151,14 +151,14 @@ public class TabListWidget {
             uvx = 199;
         }
 
-        gui.blit(tx, ty, uvx, uvy, tbw, IGridTab.TAB_HEIGHT);
+        screen.blit(tx, ty, uvx, uvy, tbw, IGridTab.TAB_HEIGHT);
 
         tab.drawIcon(otx + 6, ty + 9 - (!isSelected ? 3 : 0), drawers.getItemDrawer(), drawers.getFluidDrawer());
     }
 
     public void drawTooltip(FontRenderer fontRenderer, int mouseX, int mouseY) {
         if (tabHovering >= 0 && tabHovering < tabs.get().size()) {
-            tabs.get().get(tabHovering).drawTooltip(mouseX, mouseY, gui.width, gui.height, fontRenderer);
+            tabs.get().get(tabHovering).drawTooltip(mouseX, mouseY, screen.width, screen.height, fontRenderer);
         }
     }
 

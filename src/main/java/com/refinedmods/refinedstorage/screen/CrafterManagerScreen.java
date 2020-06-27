@@ -23,7 +23,7 @@ import java.util.Map;
 
 // TODO @MouseTweaksDisableWheelTweak
 public class CrafterManagerScreen extends BaseScreen<CrafterManagerContainer> implements IScreenInfoProvider {
-    private CrafterManagerNetworkNode crafterManager;
+    private final CrafterManagerNetworkNode crafterManager;
 
     private ScrollbarWidget scrollbar;
     private SearchWidget searchField;

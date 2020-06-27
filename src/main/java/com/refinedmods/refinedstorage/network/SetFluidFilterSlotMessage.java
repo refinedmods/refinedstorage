@@ -13,8 +13,8 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SetFluidFilterSlotMessage {
-    private int containerSlot;
-    private FluidStack stack;
+    private final int containerSlot;
+    private final FluidStack stack;
 
     public SetFluidFilterSlotMessage(int containerSlot, FluidStack stack) {
         this.containerSlot = containerSlot;

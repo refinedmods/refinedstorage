@@ -51,9 +51,9 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     private int tabPage;
     private int size;
 
-    private List<IFilter> filters = new ArrayList<>();
-    private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
         .addListener(((handler, slot, reading) -> {
             if (!stack.hasTag()) {
                 stack.setTag(new CompoundNBT());

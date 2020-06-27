@@ -28,9 +28,9 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
     public static final int VERSION = 1;
 
     @Nullable
-    private ServerWorld world;
-    private int capacity;
-    private Multimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
+    private final ServerWorld world;
+    private final int capacity;
+    private final Multimap<Fluid, FluidStack> stacks = ArrayListMultimap.create();
 
     @Nullable
     private IStorageDiskListener listener;
@@ -155,7 +155,7 @@ public class FluidStorageDisk implements IStorageDisk<FluidStack> {
 
     @Override
     public int getStored() {
-        return stacks.values().stream().mapToInt(s -> s.getAmount()).sum();
+        return stacks.values().stream().mapToInt(FluidStack::getAmount).sum();
     }
 
     @Override

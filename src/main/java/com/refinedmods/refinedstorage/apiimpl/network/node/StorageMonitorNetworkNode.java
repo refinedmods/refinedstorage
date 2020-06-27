@@ -42,7 +42,7 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
     private static final String NBT_TYPE = "Type";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private BaseItemHandler itemFilter = new BaseItemHandler(1)
+    private final BaseItemHandler itemFilter = new BaseItemHandler(1)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading) {
@@ -50,13 +50,13 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
             }
         });
 
-    private FluidInventory fluidFilter = new FluidInventory(1, FluidAttributes.BUCKET_VOLUME)
+    private final FluidInventory fluidFilter = new FluidInventory(1, FluidAttributes.BUCKET_VOLUME)
         .addListener((handler, slot, reading) -> {
             if (!reading) {
                 WorldUtils.updateBlock(world, pos);
             }
         });
-    private Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
+    private final Map<String, Pair<ItemStack, Long>> deposits = new HashMap<>();
 
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
@@ -216,17 +216,15 @@ public class StorageMonitorNetworkNode extends NetworkNode implements IComparabl
 
         boolean shift = player.isCrouching();
         if (shift) {
-            NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> {
-                bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
-                    network.getFluidStorageTracker().changed(player, stack.copy());
+            NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
+                network.getFluidStorageTracker().changed(player, stack.copy());
 
-                    fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
+                fluidHandler.fill(network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM), IFluidHandler.FluidAction.EXECUTE);
 
-                    if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                        InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
-                    }
-                });
-            });
+                if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
+                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
+                }
+            }));
         }
     }
 

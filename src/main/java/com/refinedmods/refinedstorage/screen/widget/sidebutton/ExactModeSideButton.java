@@ -10,9 +10,9 @@ import net.minecraft.util.text.TextFormatting;
 public class ExactModeSideButton extends SideButton {
     private static final int MASK = IComparer.COMPARE_NBT;
 
-    private TileDataParameter<Integer, ?> parameter;
+    private final TileDataParameter<Integer, ?> parameter;
 
-    public ExactModeSideButton(BaseScreen screen, TileDataParameter<Integer, ?> parameter) {
+    public ExactModeSideButton(BaseScreen<?> screen, TileDataParameter<Integer, ?> parameter) {
         super(screen);
 
         this.parameter = parameter;

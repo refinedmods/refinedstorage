@@ -11,9 +11,9 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SecurityManagerUpdateMessage {
-    private BlockPos pos;
-    private Permission permission;
-    private boolean state;
+    private final BlockPos pos;
+    private final Permission permission;
+    private final boolean state;
 
     public SecurityManagerUpdateMessage(BlockPos pos, Permission permission, boolean state) {
         this.pos = pos;

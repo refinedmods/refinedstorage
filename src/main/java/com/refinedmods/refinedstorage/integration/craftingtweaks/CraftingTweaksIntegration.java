@@ -17,7 +17,7 @@ public final class CraftingTweaksIntegration {
         return ModList.get().isLoaded(ID);
     }
 
-    public static boolean isCraftingTweaksClass(Class clazz) {
+    public static boolean isCraftingTweaksClass(Class<?> clazz) {
         return clazz.getName().startsWith("net.blay09.mods.craftingtweaks");
     }
 

@@ -26,14 +26,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class WirelessCraftingMonitor implements ICraftingMonitor {
-    private ItemStack stack;
+    private final ItemStack stack;
     @Nullable
-    private MinecraftServer server;
-    private DimensionType nodeDimension;
-    private BlockPos nodePos;
+    private final MinecraftServer server;
+    private final DimensionType nodeDimension;
+    private final BlockPos nodePos;
     private int tabPage;
     private Optional<UUID> tabSelected;
-    private int slotId;
+    private final int slotId;
 
     public WirelessCraftingMonitor(ItemStack stack, @Nullable MinecraftServer server, int slotId) {
         this.stack = stack;

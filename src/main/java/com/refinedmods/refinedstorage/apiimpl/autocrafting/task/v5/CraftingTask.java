@@ -68,34 +68,34 @@ public class CraftingTask implements ICraftingTask {
 
     private static final Logger LOGGER = LogManager.getLogger(CraftingTask.class);
 
-    private INetwork network;
-    private ICraftingRequestInfo requested;
-    private int quantity;
-    private ICraftingPattern pattern;
+    private final INetwork network;
+    private final ICraftingRequestInfo requested;
+    private final int quantity;
+    private final ICraftingPattern pattern;
     private UUID id = UUID.randomUUID();
     private int ticks;
     private long calculationStarted = -1;
     private long executionStarted = -1;
     private int totalSteps;
-    private Set<ICraftingPattern> patternsUsed = new HashSet<>();
+    private final Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
-    private IStorageDisk<ItemStack> internalStorage;
-    private IStorageDisk<FluidStack> internalFluidStorage;
+    private final IStorageDisk<ItemStack> internalStorage;
+    private final IStorageDisk<FluidStack> internalFluidStorage;
 
     private IStackList<ItemStack> toExtractInitial = API.instance().createItemStackList();
     private IStackList<FluidStack> toExtractInitialFluids = API.instance().createFluidStackList();
 
-    private List<Crafting> crafting = new ArrayList<>();
-    private List<Processing> processing = new ArrayList<>();
+    private final List<Crafting> crafting = new ArrayList<>();
+    private final List<Processing> processing = new ArrayList<>();
 
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
     private IStackList<FluidStack> missingFluids = API.instance().createFluidStackList();
 
-    private IStackList<ItemStack> toTake = API.instance().createItemStackList();
-    private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
+    private final IStackList<ItemStack> toTake = API.instance().createItemStackList();
+    private final IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
 
-    private IStackList<ItemStack> toCraft = API.instance().createItemStackList();
-    private IStackList<FluidStack> toCraftFluids = API.instance().createFluidStackList();
+    private final IStackList<ItemStack> toCraft = API.instance().createItemStackList();
+    private final IStackList<FluidStack> toCraftFluids = API.instance().createFluidStackList();
 
     public CraftingTask(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
         this.network = network;
@@ -281,7 +281,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     static class PossibleInputs {
-        private List<ItemStack> possibilities;
+        private final List<ItemStack> possibilities;
         private int pos;
 
         PossibleInputs(List<ItemStack> possibilities) {
@@ -323,7 +323,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     static class PossibleFluidInputs {
-        private List<FluidStack> possibilities;
+        private final List<FluidStack> possibilities;
         private int pos;
 
         PossibleFluidInputs(List<FluidStack> possibilities) {
@@ -698,7 +698,7 @@ public class CraftingTask implements ICraftingTask {
 
                     network.getCraftingManager().onTaskChanged();
 
-                    counter.merge(container, 1, (a, b) -> a + b);
+                    counter.merge(container, 1, Integer::sum);
                 }
             }
         }
@@ -816,7 +816,7 @@ public class CraftingTask implements ICraftingTask {
 
                         p.getPattern().getContainer().onUsedForProcessing();
 
-                        counter.merge(container, 1, (a, b) -> a + b);
+                        counter.merge(container, 1, Integer::sum);
                     }
                 }
 
@@ -1163,7 +1163,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public List<ICraftingPreviewElement> getPreviewStacks() {
+    public List<ICraftingPreviewElement<?>> getPreviewStacks() {
         Map<Integer, ItemCraftingPreviewElement> map = new LinkedHashMap<>();
         Map<Integer, FluidCraftingPreviewElement> mapFluids = new LinkedHashMap<>();
 
@@ -1253,7 +1253,7 @@ public class CraftingTask implements ICraftingTask {
             mapFluids.put(hash, previewStack);
         }
 
-        List<ICraftingPreviewElement> elements = new ArrayList<>();
+        List<ICraftingPreviewElement<?>> elements = new ArrayList<>();
 
         elements.addAll(map.values());
         elements.addAll(mapFluids.values());

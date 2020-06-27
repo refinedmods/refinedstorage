@@ -120,6 +120,7 @@ public class CableBlock extends NetworkNodeBlock implements IWaterLoggable {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public IFluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }

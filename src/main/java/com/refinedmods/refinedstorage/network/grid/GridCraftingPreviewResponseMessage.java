@@ -13,13 +13,13 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class GridCraftingPreviewResponseMessage {
-    private ResourceLocation factoryId;
-    private List<ICraftingPreviewElement> stacks;
-    private UUID id;
-    private int quantity;
-    private boolean fluids;
+    private final ResourceLocation factoryId;
+    private final List<ICraftingPreviewElement<?>> stacks;
+    private final UUID id;
+    private final int quantity;
+    private final boolean fluids;
 
-    public GridCraftingPreviewResponseMessage(ResourceLocation factoryId, List<ICraftingPreviewElement> stacks, UUID id, int quantity, boolean fluids) {
+    public GridCraftingPreviewResponseMessage(ResourceLocation factoryId, List<ICraftingPreviewElement<?>> stacks, UUID id, int quantity, boolean fluids) {
         this.factoryId = factoryId;
         this.stacks = stacks;
         this.id = id;
@@ -31,7 +31,7 @@ public class GridCraftingPreviewResponseMessage {
         return factoryId;
     }
 
-    public List<ICraftingPreviewElement> getStacks() {
+    public List<ICraftingPreviewElement<?>> getStacks() {
         return stacks;
     }
 
@@ -53,7 +53,7 @@ public class GridCraftingPreviewResponseMessage {
         int quantity = buf.readInt();
         boolean fluids = buf.readBoolean();
 
-        List<ICraftingPreviewElement> stacks = new LinkedList<>();
+        List<ICraftingPreviewElement<?>> stacks = new LinkedList<>();
 
         int size = buf.readInt();
 
@@ -72,7 +72,7 @@ public class GridCraftingPreviewResponseMessage {
         buf.writeBoolean(message.fluids);
         buf.writeInt(message.stacks.size());
 
-        for (ICraftingPreviewElement stack : message.stacks) {
+        for (ICraftingPreviewElement<?> stack : message.stacks) {
             buf.writeResourceLocation(stack.getId());
             stack.write(buf);
         }

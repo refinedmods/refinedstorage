@@ -12,14 +12,14 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class BaseGridView implements IGridView {
-    private GridScreen screen;
+    private final GridScreen screen;
     private boolean canCraft;
 
-    private IGridSorter defaultSorter;
-    private List<IGridSorter> sorters;
+    private final IGridSorter defaultSorter;
+    private final List<IGridSorter> sorters;
 
     private List<IGridStack> stacks = new ArrayList<>();
-    protected Map<UUID, IGridStack> map = new HashMap<>();
+    protected final Map<UUID, IGridStack> map = new HashMap<>();
 
     public BaseGridView(GridScreen screen, IGridSorter defaultSorter, List<IGridSorter> sorters) {
         this.screen = screen;

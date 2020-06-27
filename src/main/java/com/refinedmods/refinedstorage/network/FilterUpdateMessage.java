@@ -10,11 +10,11 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class FilterUpdateMessage {
-    private int compare;
-    private int mode;
-    private boolean modFilter;
-    private String name;
-    private int type;
+    private final int compare;
+    private final int mode;
+    private final boolean modFilter;
+    private final String name;
+    private final int type;
 
     public FilterUpdateMessage(int compare, int mode, boolean modFilter, String name, int type) {
         this.compare = compare;

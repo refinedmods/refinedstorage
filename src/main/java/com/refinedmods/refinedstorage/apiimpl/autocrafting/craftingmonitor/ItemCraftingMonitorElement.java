@@ -25,7 +25,7 @@ public class ItemCraftingMonitorElement implements ICraftingMonitorElement {
 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
 
-    private ItemStack stack;
+    private final ItemStack stack;
     private int stored;
     private int missing;
     private int processing;

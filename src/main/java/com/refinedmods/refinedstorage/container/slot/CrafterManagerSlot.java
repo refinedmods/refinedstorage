@@ -5,9 +5,9 @@ import com.refinedmods.refinedstorage.screen.IScreenInfoProvider;
 import net.minecraftforge.items.IItemHandler;
 
 public class CrafterManagerSlot extends BaseSlot {
-    private boolean visible;
-    private CrafterManagerNetworkNode crafterManager;
-    private IScreenInfoProvider display;
+    private final boolean visible;
+    private final CrafterManagerNetworkNode crafterManager;
+    private final IScreenInfoProvider display;
 
     public CrafterManagerSlot(IItemHandler itemHandler, int inventoryIndex, int x, int y, boolean visible, IScreenInfoProvider display, CrafterManagerNetworkNode crafterManager) {
         super(itemHandler, inventoryIndex, x, y);

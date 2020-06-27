@@ -79,7 +79,7 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     private final AllowedTagList allowedTagList = new AllowedTagList(this::updateAllowedTags);
 
-    private Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
+    private final Container craftingContainer = new Container(ContainerType.CRAFTING, 0) {
         @Override
         public boolean canInteractWith(PlayerEntity player) {
             return false;
@@ -93,16 +93,16 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
         }
     };
     private ICraftingRecipe currentRecipe;
-    private CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
-    private CraftResultInventory result = new CraftResultInventory();
-    private BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2)
+    private final CraftingInventory matrix = new CraftingInventory(craftingContainer, 3, 3);
+    private final CraftResultInventory result = new CraftResultInventory();
+    private final BaseItemHandler processingMatrix = new BaseItemHandler(9 * 2)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && slot < 9) {
                 allowedTagList.clearItemTags(slot);
             }
         });
-    private FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64)
+    private final FluidInventory processingMatrixFluids = new FluidInventory(9 * 2, FluidAttributes.BUCKET_VOLUME * 64)
         .addListener(new NetworkNodeFluidInventoryListener(this))
         .addListener((handler, slot, reading) -> {
             if (!reading && slot < 9) {
@@ -112,9 +112,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
 
     private boolean reading;
 
-    private Set<ICraftingGridListener> craftingListeners = new HashSet<>();
+    private final Set<ICraftingGridListener> craftingListeners = new HashSet<>();
 
-    private BaseItemHandler patterns = new BaseItemHandler(2) {
+    private final BaseItemHandler patterns = new BaseItemHandler(2) {
         @Override
         public int getSlotLimit(int slot) {
             return slot == 1 ? 1 : super.getSlotLimit(slot);
@@ -171,9 +171,9 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
             }
         }));
 
-    private List<IFilter> filters = new ArrayList<>();
-    private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new NetworkNodeInventoryListener(this));
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new NetworkNodeInventoryListener(this));
 
     private final GridType type;
 

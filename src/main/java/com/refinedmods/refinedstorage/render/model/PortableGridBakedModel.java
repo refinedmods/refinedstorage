@@ -32,7 +32,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
 
     private final CustomItemOverrideList itemOverrideList = new CustomItemOverrideList();
 
-    private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
+    private final LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
@@ -93,7 +93,7 @@ public class PortableGridBakedModel extends DelegateBakedModel {
             boolean active = state.get(PortableGridBlock.ACTIVE);
             PortableGridDiskState diskState = state.get(PortableGridBlock.DISK_STATE);
 
-            return cache.getUnchecked(new CacheKey(direction, diskState, active, rand, state, side));
+            return cache.getUnchecked(new CacheKey(direction, diskState, active, rand, state));
         }
 
         return super.getQuads(state, side, rand);
@@ -132,21 +132,19 @@ public class PortableGridBakedModel extends DelegateBakedModel {
         }
     }
 
-    private class CacheKey {
+    private static class CacheKey {
         private final Direction direction;
         private final PortableGridDiskState diskState;
         private final boolean active;
         private final Random random;
         private final BlockState state;
-        private final Direction side;
 
-        public CacheKey(Direction direction, PortableGridDiskState diskState, boolean active, Random random, BlockState state, Direction side) {
+        public CacheKey(Direction direction, PortableGridDiskState diskState, boolean active, Random random, BlockState state) {
             this.direction = direction;
             this.diskState = diskState;
             this.active = active;
             this.random = random;
             this.state = state;
-            this.side = side;
         }
 
         @Override

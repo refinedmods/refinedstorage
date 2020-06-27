@@ -13,8 +13,8 @@ public class FluidInventory {
 
     private final List<InventoryListener<FluidInventory>> listeners = new ArrayList<>();
 
-    private FluidStack[] fluids;
-    private int maxAmount;
+    private final FluidStack[] fluids;
+    private final int maxAmount;
     private boolean empty = true;
 
     public FluidInventory(int size, int maxAmount) {

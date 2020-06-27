@@ -27,7 +27,7 @@ public abstract class NetworkNodeTile<N extends NetworkNode> extends BaseTile im
     private N clientNode;
     private N removedNode;
 
-    private LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
+    private final LazyOptional<INetworkNodeProxy<N>> networkNodeProxy = LazyOptional.of(() -> this);
 
     public NetworkNodeTile(TileEntityType<?> tileType) {
         super(tileType);

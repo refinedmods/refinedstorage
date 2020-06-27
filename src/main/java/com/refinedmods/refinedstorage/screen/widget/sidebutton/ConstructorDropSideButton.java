@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.refinedmods.refinedstorage.container.ConstructorContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.ConstructorTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
@@ -7,7 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class ConstructorDropSideButton extends SideButton {
-    public ConstructorDropSideButton(BaseScreen screen) {
+    public ConstructorDropSideButton(BaseScreen<ConstructorContainer> screen) {
         super(screen);
     }
 

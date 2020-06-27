@@ -19,15 +19,14 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class ItemGridStack implements IGridStack {
-    private Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
     private UUID id;
     @Nullable
     private UUID otherId;
-    private ItemStack stack;
+    private final ItemStack stack;
     private boolean craftable;
     @Nullable
     private StorageTrackerEntry entry;
@@ -145,7 +144,7 @@ public class ItemGridStack implements IGridStack {
     public String getTooltip() {
         if (cachedTooltip == null) {
             try {
-                cachedTooltip = RenderUtils.getTooltipFromItem(stack).stream().collect(Collectors.joining("\n"));
+                cachedTooltip = String.join("\n", RenderUtils.getTooltipFromItem(stack));
             } catch (Throwable t) {
                 logger.warn("Could not retrieve item tooltip of " + stack.getItem().toString(), t);
 
@@ -172,7 +171,7 @@ public class ItemGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(BaseScreen gui, int x, int y) {
+    public void draw(BaseScreen<?> screen, int x, int y) {
         String text = null;
         int color = RenderSettings.INSTANCE.getSecondaryColor();
 
@@ -185,7 +184,7 @@ public class ItemGridStack implements IGridStack {
             text = API.instance().getQuantityFormatter().formatWithUnits(getQuantity());
         }
 
-        gui.renderItem(x, y, stack, true, text, color);
+        screen.renderItem(x, y, stack, true, text, color);
     }
 
     @Override

@@ -14,10 +14,10 @@ import java.util.List;
 public class ScrollbarWidget implements IGuiEventListener {
     private static final int SCROLLER_HEIGHT = 15;
 
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
     private boolean enabled = false;
 
     private int offset;
@@ -25,11 +25,11 @@ public class ScrollbarWidget implements IGuiEventListener {
 
     private boolean clicked = false;
 
-    private List<ScrollbarWidgetListener> listeners = new LinkedList<>();
+    private final List<ScrollbarWidgetListener> listeners = new LinkedList<>();
 
-    private BaseScreen screen;
+    private final BaseScreen<?> screen;
 
-    public ScrollbarWidget(BaseScreen screen, int x, int y, int width, int height) {
+    public ScrollbarWidget(BaseScreen<?> screen, int x, int y, int width, int height) {
         this.screen = screen;
         this.x = x;
         this.y = y;

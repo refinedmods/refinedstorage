@@ -119,9 +119,9 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     private static final String NBT_ENERGY = "Energy";
     private static final String NBT_ENCHANTMENTS = "ench"; // @Volatile: minecraft specific nbt key
     private EnergyStorage energyStorage = createEnergyStorage(0);
-    private LazyOptional<EnergyStorage> energyStorageCap = LazyOptional.of(() -> energyStorage);
+    private final LazyOptional<EnergyStorage> energyStorageCap = LazyOptional.of(() -> energyStorage);
 
-    private PortableGridBlockItem.Type type;
+    private final PortableGridBlockItem.Type type;
 
     private RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 
@@ -134,11 +134,11 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
 
     private GridType clientGridType;
 
-    private List<IFilter> filters = new ArrayList<>();
-    private List<IGridTab> tabs = new ArrayList<>();
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
 
-    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new TileInventoryListener(this));
-    private BaseItemHandler disk = new BaseItemHandler(1)
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs).addListener(new TileInventoryListener(this));
+    private final BaseItemHandler disk = new BaseItemHandler(1)
         .addValidator(new StorageDiskItemValidator())
         .addListener(new TileInventoryListener(this))
         .addListener((handler, slot, reading) -> {
@@ -158,14 +158,14 @@ public class PortableGridTile extends BaseTile implements IGrid, IPortableGrid, 
     @Nullable
     private IStorageCache cache;
 
-    private PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
-    private PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
+    private final PortableItemGridHandler itemHandler = new PortableItemGridHandler(this, this);
+    private final PortableFluidGridHandler fluidHandler = new PortableFluidGridHandler(this);
 
     private PortableGridDiskState diskState = PortableGridDiskState.NONE;
     private boolean active;
 
-    private ItemStorageTracker storageTracker = new ItemStorageTracker(this::markDirty);
-    private FluidStorageTracker fluidStorageTracker = new FluidStorageTracker(this::markDirty);
+    private final ItemStorageTracker storageTracker = new ItemStorageTracker(this::markDirty);
+    private final FluidStorageTracker fluidStorageTracker = new FluidStorageTracker(this::markDirty);
 
     private ListNBT enchants = null;
 

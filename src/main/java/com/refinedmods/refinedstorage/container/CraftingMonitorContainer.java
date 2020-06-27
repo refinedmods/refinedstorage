@@ -15,7 +15,7 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nullable;
 
 public class CraftingMonitorContainer extends BaseContainer implements ICraftingMonitorListener {
-    private ICraftingMonitor craftingMonitor;
+    private final ICraftingMonitor craftingMonitor;
     private boolean addedListener;
 
     public CraftingMonitorContainer(ContainerType<CraftingMonitorContainer> type, ICraftingMonitor craftingMonitor, @Nullable CraftingMonitorTile craftingMonitorTile, PlayerEntity player, int windowId) {

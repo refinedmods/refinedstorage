@@ -10,7 +10,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class PriorityScreen extends AmountSpecifyingScreen<Container> {
-    private TileDataParameter<Integer, ?> priority;
+    private final TileDataParameter<Integer, ?> priority;
 
     public PriorityScreen(BaseScreen parent, TileDataParameter<Integer, ?> priority, PlayerInventory inventory) {
         super(parent, new Container(null, 0) {

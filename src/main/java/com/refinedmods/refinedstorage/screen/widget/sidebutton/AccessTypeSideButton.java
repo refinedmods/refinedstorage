@@ -9,9 +9,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class AccessTypeSideButton extends SideButton {
-    private TileDataParameter<AccessType, ?> parameter;
+    private final TileDataParameter<AccessType, ?> parameter;
 
-    public AccessTypeSideButton(BaseScreen screen, TileDataParameter<AccessType, ?> parameter) {
+    public AccessTypeSideButton(BaseScreen<?> screen, TileDataParameter<AccessType, ?> parameter) {
         super(screen);
 
         this.parameter = parameter;

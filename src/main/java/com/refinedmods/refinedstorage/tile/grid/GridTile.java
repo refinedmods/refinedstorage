@@ -88,7 +88,7 @@ public class GridTile extends NetworkNodeTile<GridNetworkNode> {
 
     private final GridType type;
 
-    private LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
+    private final LazyOptional<IItemHandler> diskCapability = LazyOptional.of(() -> getNode().getPatterns());
 
     public GridTile(GridType type) {
         super(GridUtils.getTileEntityType(type));

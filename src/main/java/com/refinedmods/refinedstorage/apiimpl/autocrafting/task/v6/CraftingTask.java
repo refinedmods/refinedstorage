@@ -71,35 +71,35 @@ public class CraftingTask implements ICraftingTask {
 
     private static final Logger LOGGER = LogManager.getLogger(CraftingTask.class);
 
-    private INetwork network;
-    private ICraftingRequestInfo requested;
-    private int quantity;
-    private ICraftingPattern pattern;
+    private final INetwork network;
+    private final ICraftingRequestInfo requested;
+    private final int quantity;
+    private final ICraftingPattern pattern;
     private UUID id = UUID.randomUUID();
     private int ticks;
     private long calculationStarted = -1;
     private long executionStarted = -1;
     private int totalSteps;
     private int currentstep;
-    private Set<ICraftingPattern> patternsUsed = new HashSet<>();
+    private final Set<ICraftingPattern> patternsUsed = new HashSet<>();
 
-    private IStorageDisk<ItemStack> internalStorage;
-    private IStorageDisk<FluidStack> internalFluidStorage;
+    private final IStorageDisk<ItemStack> internalStorage;
+    private final IStorageDisk<FluidStack> internalFluidStorage;
 
     private IStackList<ItemStack> toExtractInitial = API.instance().createItemStackList();
     private IStackList<FluidStack> toExtractInitialFluids = API.instance().createFluidStackList();
 
-    private Map<ICraftingPattern, Craft> crafts = new LinkedHashMap<>();
-    private List<Craft> toRemove = new ArrayList<>();
+    private final Map<ICraftingPattern, Craft> crafts = new LinkedHashMap<>();
+    private final List<Craft> toRemove = new ArrayList<>();
 
     private IStackList<ItemStack> missing = API.instance().createItemStackList();
     private IStackList<FluidStack> missingFluids = API.instance().createFluidStackList();
 
-    private IStackList<ItemStack> toTake = API.instance().createItemStackList();
-    private IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
+    private final IStackList<ItemStack> toTake = API.instance().createItemStackList();
+    private final IStackList<FluidStack> toTakeFluids = API.instance().createFluidStackList();
 
-    private List<ItemStack> toCraft = new ArrayList<>();
-    private List<FluidStack> toCraftFluids = new ArrayList<>();
+    private final List<ItemStack> toCraft = new ArrayList<>();
+    private final List<FluidStack> toCraftFluids = new ArrayList<>();
 
     public CraftingTask(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
         this.network = network;
@@ -273,7 +273,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     static class PossibleInputs {
-        private List<ItemStack> possibilities;
+        private final List<ItemStack> possibilities;
         private int pos;
 
         PossibleInputs(List<ItemStack> possibilities) {
@@ -315,7 +315,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     static class PossibleFluidInputs {
-        private List<FluidStack> possibilities;
+        private final List<FluidStack> possibilities;
         private int pos;
 
         PossibleFluidInputs(List<FluidStack> possibilities) {
@@ -327,6 +327,7 @@ public class CraftingTask implements ICraftingTask {
         }
 
         // Return false if we're exhausted.
+        // TODO: never called?
         boolean cycle() {
             if (pos + 1 >= possibilities.size()) {
                 pos = 0;
@@ -1199,7 +1200,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public List<ICraftingPreviewElement> getPreviewStacks() {
+    public List<ICraftingPreviewElement<?>> getPreviewStacks() {
         Map<Integer, ItemCraftingPreviewElement> map = new LinkedHashMap<>();
         Map<Integer, FluidCraftingPreviewElement> mapFluids = new LinkedHashMap<>();
 
@@ -1289,7 +1290,7 @@ public class CraftingTask implements ICraftingTask {
             mapFluids.put(hash, previewStack);
         }
 
-        List<ICraftingPreviewElement> elements = new ArrayList<>();
+        List<ICraftingPreviewElement<?>> elements = new ArrayList<>();
 
         elements.addAll(map.values());
         elements.addAll(mapFluids.values());
