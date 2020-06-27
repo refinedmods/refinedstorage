@@ -61,8 +61,11 @@ public class FluidInventory {
 
         fluids[slot] = stack;
 
-        listeners.forEach(l -> l.onChanged(this, slot, false));
+        onChanged(slot);
+    }
 
+    public void onChanged(int slot) {
+        listeners.forEach(l -> l.onChanged(this, slot, false));
         updateEmptyState();
     }
 

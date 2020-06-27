@@ -87,6 +87,8 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         List<ItemStack> craftedItemsList = new ArrayList<>();
         ItemStack crafted = grid.getCraftingResult().getStackInSlot(0);
 
+        int maxCrafted = crafted.getMaxStackSize();
+
         int amountCrafted = 0;
         boolean useNetwork = network != null;
 
@@ -100,7 +102,6 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         IStackList<ItemStack> extractedItems = API.instance().createItemStackList();
 
         ForgeHooks.setCraftingPlayer(player);
-      
         // Do while the item is still craftable (aka is the result slot still the same as the original item?) and we don't exceed the max stack size.
         do {
             grid.onCrafted(player, networkCraftingItems, extractedItems);
@@ -108,7 +109,7 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             craftedItemsList.add(crafted.copy());
 
             amountCrafted += crafted.getCount();
-        } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted < crafted.getMaxStackSize());
+        } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted < maxCrafted && amountCrafted + crafted.getCount() <= maxCrafted );
 
         if (useNetwork) {
             extractedItems.getStacks().forEach(stack -> network.extractItem(stack.getStack(), stack.getStack().getCount(), Action.PERFORM));

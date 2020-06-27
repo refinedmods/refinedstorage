@@ -974,6 +974,7 @@ public class CraftingTask implements ICraftingTask {
                 network.getCraftingManager().getAllContainer(c.getPattern()).forEach(ICraftingPatternContainer::unlock);
             }
         });
+
         for (ItemStack remainder : internalStorage.getStacks()) {
             network.insertItem(remainder, remainder.getCount(), Action.PERFORM);
         }

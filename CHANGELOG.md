@@ -1,5 +1,15 @@
 # Refined Storage Changelog
 
+### 1.8.7
+- Fixed Regulator mode item and fluid counts not saving properly (raoulvdberge)
+- Fixed Wireless Crafting Monitor not closing properly (raoulvdberge)
+- Fixed Controller always using energy, even when disabled with redstone (raoulvdberge)
+- Fixed internal crafting inventory not being returned when Controller is broken (raoulvdberge)
+- Removed autocrafting engine version from crafting preview screen (raoulvdberge)
+
+### 1.8.6
+- Fixed Constructor duplication bug (Darkere)
+
 ### 1.8.5
 - Cancelling a crafting task now also unlocks all Crafters related to that task (Darkere)
 - External Storage will now always show the exact maximum capacity as reported by the attached inventory (Darkere)
@@ -13,6 +23,8 @@
 - Fixed shift crafting in a Grid not using the player (Darkere)
 - Re-added all the language files (TheDirectorX)
 - Added Japanese translation file (KusozakoAtama10k)
+- Changed package name to "com.refinedmods.refinedstorage", this is a breaking change for addons (raoulvdberge)
+- Fixed bug where shift clicking gives too many items (Darkere)
 
 ### 1.8.4
 - Fixed autocrafting Crafting Monitor crash (Darkere)
