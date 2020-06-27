@@ -4,6 +4,8 @@
 - Fixed Regulator mode item and fluid counts not saving properly (raoulvdberge)
 - Fixed Wireless Crafting Monitor not closing properly (raoulvdberge)
 - Fixed Controller always using energy, even when disabled with redstone (raoulvdberge)
+- Fixed internal crafting inventory not being returned when Controller is broken (raoulvdberge)
+- Removed autocrafting engine version from crafting preview screen (raoulvdberge)
 
 ### 1.8.6
 - Fixed Constructor duplication bug (Darkere)

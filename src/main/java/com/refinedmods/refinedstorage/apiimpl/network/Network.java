@@ -2,6 +2,7 @@ package com.refinedmods.refinedstorage.apiimpl.network;
 
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingManager;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkNodeGraph;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
@@ -203,6 +204,10 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
     @Override
     public void onRemoved() {
+        for (ICraftingTask task : craftingManager.getTasks()) {
+            task.onCancelled();
+        }
+
         nodeGraph.disconnectAll();
     }
 
@@ -322,7 +327,6 @@ public class Network implements INetwork, IRedstoneConfigurable {
 
         return newStack;
     }
-
 
     @Override
     @Nonnull
