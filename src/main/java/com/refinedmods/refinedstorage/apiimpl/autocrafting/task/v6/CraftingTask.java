@@ -82,6 +82,7 @@ public class CraftingTask implements ICraftingTask {
     private int totalSteps;
     private int currentstep;
     private final Set<ICraftingPattern> patternsUsed = new HashSet<>();
+    private CraftingTaskState state = CraftingTaskState.UNKNOWN;
 
     private final IStorageDisk<ItemStack> internalStorage;
     private final IStorageDisk<FluidStack> internalFluidStorage;
@@ -233,6 +234,7 @@ public class CraftingTask implements ICraftingTask {
             throw new IllegalStateException("Task already started!");
         }
 
+        this.state = CraftingTaskState.CALCULATING;
         this.calculationStarted = System.currentTimeMillis();
 
         IStackList<ItemStack> results = API.instance().createItemStackList();
@@ -244,10 +246,11 @@ public class CraftingTask implements ICraftingTask {
         int qtyPerCraft = getQuantityPerCraft(requested.getItem(), requested.getFluid(), this.pattern);
         int qty = ((this.quantity - 1) / qtyPerCraft) + 1; //CeilDiv
 
-
         ICraftingTaskError result = calculateInternal(qty, storage, fluidStorage, results, fluidResults, this.pattern, true);
 
         if (result != null) {
+            this.state = CraftingTaskState.CALCULATED;
+
             return result;
         }
 
@@ -260,14 +263,18 @@ public class CraftingTask implements ICraftingTask {
             req.setAmount(qty);
             this.toCraftFluids.add(req);
         }
-        if(missing.isEmpty()){
+
+        if (missing.isEmpty()) {
             crafts.values().forEach(c -> {
                 totalSteps += c.getQuantity();
+
                 if (c instanceof Processing) {
                     ((Processing) c).finishCalculation();
                 }
             });
         }
+
+        this.state = CraftingTaskState.CALCULATED;
 
         return null;
     }
@@ -929,9 +936,9 @@ public class CraftingTask implements ICraftingTask {
 
         ++ticks;
 
-        extractInitial();
-
         if (this.crafts.isEmpty()) {
+            this.state = CraftingTaskState.DONE;
+
             List<Runnable> toPerform = new ArrayList<>();
 
             for (ItemStack stack : internalStorage.getStacks()) {
@@ -951,6 +958,10 @@ public class CraftingTask implements ICraftingTask {
 
             return internalStorage.getStacks().isEmpty() && internalFluidStorage.getStacks().isEmpty();
         } else {
+            this.state = CraftingTaskState.RUNNING;
+
+            extractInitial();
+
             for (Craft craft : crafts.values()) {
                 if (craft instanceof Crafting) {
                     updateCrafting((Crafting) craft);
@@ -1321,5 +1332,10 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public UUID getId() {
         return id;
+    }
+
+    @Override
+    public CraftingTaskState getState() {
+        return state;
     }
 }

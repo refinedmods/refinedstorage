@@ -46,9 +46,7 @@ public interface ICraftingTask {
     /**
      * @return the completion percentage
      */
-    default int getCompletionPercentage() {
-        return 0;
-    }
+    int getCompletionPercentage();
 
     /**
      * @return the stack requested
@@ -122,4 +120,9 @@ public interface ICraftingTask {
      * @return the id of this task
      */
     UUID getId();
+
+    /**
+     * @return the state of this crafting task
+     */
+    CraftingTaskState getState();
 }

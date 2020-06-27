@@ -1,5 +1,5 @@
-# Autocrafting v5
-This is the fifth iteration of the autocrafting code.
+# Autocrafting
+Autocrafting has had several refactors.
 
 Some history:
 
