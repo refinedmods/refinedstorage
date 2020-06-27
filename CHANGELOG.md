@@ -3,6 +3,7 @@
 ### 1.8.7
 - Fixed Regulator mode item and fluid counts not saving properly (raoulvdberge)
 - Fixed Wireless Crafting Monitor not closing properly (raoulvdberge)
+- Fixed Controller always using energy, even when disabled with redstone (raoulvdberge)
 
 ### 1.8.6
 - Fixed Constructor duplication bug (Darkere)
