@@ -12,7 +12,6 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingP
 import com.refinedmods.refinedstorage.apiimpl.render.CraftingPreviewElementDrawers;
 import com.refinedmods.refinedstorage.item.PatternItem;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingStartRequestMessage;
-import com.refinedmods.refinedstorage.render.RenderSettings;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidget;
 import com.refinedmods.refinedstorage.util.RenderUtils;
@@ -75,12 +74,10 @@ public class CraftingPreviewScreen extends BaseScreen {
 
     @Override
     public void onPostInit(int x, int y) {
-        int btnYPos = y + 201 - 20 - 7;
+        addButton(x + 55, y + 201 - 20 - 7, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
 
-        Button startButton = addButton(x + 7, btnYPos, 50, 20, I18n.format("misc.refinedstorage.start"), true, true, btn -> startRequest());
+        Button startButton = addButton(x + 129, y + 201 - 20 - 7, 50, 20, I18n.format("misc.refinedstorage.start"), true, true, btn -> startRequest());
         startButton.active = stacks.stream().noneMatch(ICraftingPreviewElement::hasMissing) && getErrorType() == null;
-
-        addButton(startButton.x + startButton.getWidth() + 5, btnYPos, 50, 20, I18n.format("gui.cancel"), true, true, btn -> close());
     }
 
     @Override
@@ -114,8 +111,6 @@ public class CraftingPreviewScreen extends BaseScreen {
     @Override
     public void renderForeground(int mouseX, int mouseY) {
         renderString(7, 7, title.getFormattedText());
-
-        font.drawStringWithShadow(factoryId.toString(), xSize - font.getStringWidth(factoryId.toString()) - 7, 201 - 21, RenderSettings.INSTANCE.getSecondaryColor());
 
         int x = 7;
         int y = 15;
