@@ -9,12 +9,12 @@ import java.util.function.Function;
 
 public class TileDataParameter<T, E extends TileEntity> {
     private int id;
-    private IDataSerializer<T> serializer;
-    private Function<E, T> valueProducer;
+    private final IDataSerializer<T> serializer;
+    private final Function<E, T> valueProducer;
     @Nullable
-    private BiConsumer<E, T> valueConsumer;
+    private final BiConsumer<E, T> valueConsumer;
     @Nullable
-    private TileDataParameterClientListener<T> listener;
+    private final TileDataParameterClientListener<T> listener;
     private T value;
 
     public TileDataParameter(IDataSerializer<T> serializer, T defaultValue, Function<E, T> producer) {

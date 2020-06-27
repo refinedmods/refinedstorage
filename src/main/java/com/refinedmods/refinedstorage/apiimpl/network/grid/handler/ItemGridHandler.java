@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class ItemGridHandler implements IItemGridHandler {
-    private INetwork network;
+    private final INetwork network;
 
     public ItemGridHandler(INetwork network) {
         this.network = network;

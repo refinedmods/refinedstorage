@@ -16,7 +16,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class SecurityManagerScreen extends BaseScreen<SecurityManagerContainer> {
     private final SecurityManagerTile securityManager;
-    private CheckboxWidget[] permissions = new CheckboxWidget[Permission.values().length];
+    private final CheckboxWidget[] permissions = new CheckboxWidget[Permission.values().length];
 
     public SecurityManagerScreen(SecurityManagerContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 176, 234, inventory, title);

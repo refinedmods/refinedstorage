@@ -28,7 +28,7 @@ public class NetworkTransmitterTile extends NetworkNodeTile<NetworkTransmitterNe
         return Optional.empty();
     });
 
-    private LazyOptional<IItemHandler> networkCardCapability = LazyOptional.of(() -> getNode().getNetworkCard());
+    private final LazyOptional<IItemHandler> networkCardCapability = LazyOptional.of(() -> getNode().getNetworkCard());
 
     public NetworkTransmitterTile() {
         super(RSTiles.NETWORK_TRANSMITTER);

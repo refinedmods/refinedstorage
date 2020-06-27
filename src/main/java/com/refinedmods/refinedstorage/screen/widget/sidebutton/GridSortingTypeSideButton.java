@@ -3,15 +3,16 @@ package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 import com.refinedmods.refinedstorage.api.network.grid.GridType;
 import com.refinedmods.refinedstorage.api.network.grid.IGrid;
 import com.refinedmods.refinedstorage.apiimpl.network.node.GridNetworkNode;
+import com.refinedmods.refinedstorage.container.GridContainer;
 import com.refinedmods.refinedstorage.integration.inventorytweaks.InventoryTweaksIntegration;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class GridSortingTypeSideButton extends SideButton {
-    private IGrid grid;
+    private final IGrid grid;
 
-    public GridSortingTypeSideButton(BaseScreen screen, IGrid grid) {
+    public GridSortingTypeSideButton(BaseScreen<GridContainer> screen, IGrid grid) {
         super(screen);
 
         this.grid = grid;

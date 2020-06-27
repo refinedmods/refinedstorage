@@ -12,13 +12,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class AmountSpecifyingScreen<T extends Container> extends BaseScreen<T> {
-    private BaseScreen parent;
+    private final BaseScreen<T> parent;
 
     protected TextFieldWidget amountField;
     protected Button okButton;
     protected Button cancelButton;
 
-    public AmountSpecifyingScreen(BaseScreen parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
+    public AmountSpecifyingScreen(BaseScreen<T> parent, T container, int width, int height, PlayerInventory playerInventory, ITextComponent title) {
         super(container, width, height, playerInventory, title);
 
         this.parent = parent;
@@ -175,7 +175,7 @@ public abstract class AmountSpecifyingScreen<T extends Container> extends BaseSc
         minecraft.displayGuiScreen(parent);
     }
 
-    public BaseScreen getParent() {
+    public BaseScreen<T> getParent() {
         return parent;
     }
 }

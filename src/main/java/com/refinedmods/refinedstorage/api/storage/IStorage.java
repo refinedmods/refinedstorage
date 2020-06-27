@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Comparator;
 
 public interface IStorage<T> {
-    Comparator<IStorage> COMPARATOR = (left, right) -> {
+    Comparator<IStorage<?>> COMPARATOR = (left, right) -> {
         int compare = Integer.compare(right.getPriority(), left.getPriority());
 
         return compare != 0 ? compare : Integer.compare(right.getStored(), left.getStored());

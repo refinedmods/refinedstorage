@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 public class NetworkTransmitterNetworkNode extends NetworkNode {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "network_transmitter");
 
-    private BaseItemHandler networkCard = new BaseItemHandler(1)
+    private final BaseItemHandler networkCard = new BaseItemHandler(1)
         .addValidator(new ItemValidator(RSItems.NETWORK_CARD))
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {

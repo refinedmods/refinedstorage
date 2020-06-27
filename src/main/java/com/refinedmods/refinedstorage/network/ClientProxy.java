@@ -2,7 +2,6 @@ package com.refinedmods.refinedstorage.network;
 
 import com.refinedmods.refinedstorage.network.craftingmonitor.CraftingMonitorUpdateMessage;
 import com.refinedmods.refinedstorage.network.grid.GridCraftingPreviewResponseMessage;
-import com.refinedmods.refinedstorage.network.grid.GridCraftingStartResponseMessage;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.screen.CraftingMonitorScreen;
 import com.refinedmods.refinedstorage.screen.grid.CraftingPreviewScreen;
@@ -30,7 +29,7 @@ public class ClientProxy {
         ));
     }
 
-    public static void onReceivedCraftingStartResponseMessage(GridCraftingStartResponseMessage message) {
+    public static void onReceivedCraftingStartResponseMessage() {
         Screen screen = Minecraft.getInstance().currentScreen;
 
         if (screen instanceof CraftingSettingsScreen) {

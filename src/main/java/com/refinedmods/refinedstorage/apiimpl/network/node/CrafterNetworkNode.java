@@ -62,7 +62,7 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
     private static final String NBT_LOCKED = "Locked";
     private static final String NBT_WAS_POWERED = "WasPowered";
 
-    private BaseItemHandler patternsInventory = new BaseItemHandler(9) {
+    private final BaseItemHandler patternsInventory = new BaseItemHandler(9) {
         @Override
         public int getSlotLimit(int slot) {
             return 1;
@@ -82,9 +82,9 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             }
         });
 
-    private List<ICraftingPattern> patterns = new ArrayList<>();
+    private final List<ICraftingPattern> patterns = new ArrayList<>();
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED)
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED)
         .addListener(new NetworkNodeInventoryListener(this));
 
     // Used to prevent infinite recursion on getRootContainer() when there's e.g. two crafters facing each other.
@@ -427,6 +427,11 @@ public class CrafterNetworkNode extends NetworkNode implements ICraftingPatternC
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void unlock() {
+        locked = false;
     }
 
     @Override

@@ -19,10 +19,10 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class WirelessCraftingMonitorNetworkItem implements INetworkItem {
-    private INetworkItemManager handler;
-    private PlayerEntity player;
-    private ItemStack stack;
-    private int slotId;
+    private final INetworkItemManager handler;
+    private final PlayerEntity player;
+    private final ItemStack stack;
+    private final int slotId;
 
     public WirelessCraftingMonitorNetworkItem(INetworkItemManager handler, PlayerEntity player, ItemStack stack, int slotId) {
         this.handler = handler;

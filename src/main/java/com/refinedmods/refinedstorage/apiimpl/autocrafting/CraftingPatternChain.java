@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingPatternChain implements ICraftingPatternChain {
-    private List<ICraftingPattern> patterns = new ArrayList<>();
+    private final List<ICraftingPattern> patterns = new ArrayList<>();
     private int pos;
 
     public void addPattern(ICraftingPattern pattern) {

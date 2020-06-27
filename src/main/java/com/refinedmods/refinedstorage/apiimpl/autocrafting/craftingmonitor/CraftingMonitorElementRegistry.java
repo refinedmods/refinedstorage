@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class CraftingMonitorElementRegistry implements ICraftingMonitorElementRegistry {
-    private Map<ResourceLocation, Function<PacketBuffer, ICraftingMonitorElement>> registry = new HashMap<>();
+    private final Map<ResourceLocation, Function<PacketBuffer, ICraftingMonitorElement>> registry = new HashMap<>();
 
     @Override
     public void add(ResourceLocation id, Function<PacketBuffer, ICraftingMonitorElement> factory) {

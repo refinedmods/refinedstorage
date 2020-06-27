@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 public class FluidGridHandler implements IFluidGridHandler {
-    private INetwork network;
+    private final INetwork network;
 
     public FluidGridHandler(INetwork network) {
         this.network = network;
@@ -41,26 +41,24 @@ public class FluidGridHandler implements IFluidGridHandler {
             return;
         }
 
-        NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> {
-            bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
-                network.getFluidStorageTracker().changed(player, stack.copy());
+        NetworkUtils.extractBucketFromPlayerInventoryOrNetwork(player, network, bucket -> bucket.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null).ifPresent(fluidHandler -> {
+            network.getFluidStorageTracker().changed(player, stack.copy());
 
-                FluidStack extracted = network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM);
+            FluidStack extracted = network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM);
 
-                fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
+            fluidHandler.fill(extracted, IFluidHandler.FluidAction.EXECUTE);
 
-                if (shift) {
-                    if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
-                        InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
-                    }
-                } else {
-                    player.inventory.setItemStack(fluidHandler.getContainer());
-                    player.updateHeldItem();
+            if (shift) {
+                if (!player.inventory.addItemStackToInventory(fluidHandler.getContainer().copy())) {
+                    InventoryHelper.spawnItemStack(player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), fluidHandler.getContainer());
                 }
+            } else {
+                player.inventory.setItemStack(fluidHandler.getContainer());
+                player.updateHeldItem();
+            }
 
-                network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
-            });
-        });
+            network.getNetworkItemManager().drainEnergy(player, RS.SERVER_CONFIG.getWirelessFluidGrid().getExtractUsage());
+        }));
     }
 
     @Override

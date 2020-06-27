@@ -13,7 +13,7 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.ItemC
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ErrorCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.FluidCraftingPreviewElement;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.ItemCraftingPreviewElement;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory;
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkListener;
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkNodeListener;
 import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.*;
@@ -131,7 +131,6 @@ public class CommonSetup {
         API.instance().getCraftingMonitorElementRegistry().add(ErrorCraftingMonitorElement.ID, ErrorCraftingMonitorElement::read);
 
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
-        API.instance().getCraftingTaskRegistry().add(com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory.ID, new com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory());
 
         LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
         LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());

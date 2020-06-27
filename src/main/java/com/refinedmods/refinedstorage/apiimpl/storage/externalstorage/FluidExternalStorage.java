@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class FluidExternalStorage implements IExternalStorage<FluidStack> {
-    private IExternalStorageContext context;
-    private Supplier<IFluidHandler> handlerSupplier;
-    private boolean connectedToInterface;
-    private FluidExternalStorageCache cache = new FluidExternalStorageCache();
+    private final IExternalStorageContext context;
+    private final Supplier<IFluidHandler> handlerSupplier;
+    private final boolean connectedToInterface;
+    private final FluidExternalStorageCache cache = new FluidExternalStorageCache();
 
     public FluidExternalStorage(IExternalStorageContext context, Supplier<IFluidHandler> handlerSupplier, boolean connectedToInterface) {
         this.context = context;
@@ -43,11 +43,11 @@ public class FluidExternalStorage implements IExternalStorage<FluidStack> {
     }
 
     @Override
-    public int getCapacity() {
+    public long getCapacity() {
         IFluidHandler fluidHandler = handlerSupplier.get();
 
         if (fluidHandler != null) {
-            int cap = 0;
+            long cap = 0;
 
             for (int i = 0; i < fluidHandler.getTanks(); ++i) {
                 cap += fluidHandler.getTankCapacity(i);

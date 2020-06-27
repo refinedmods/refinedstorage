@@ -39,7 +39,6 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,11 +53,11 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
 
     private static final int BASE_SPEED = 20;
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(1).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(1)
+    private final BaseItemHandler itemFilters = new BaseItemHandler(1).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(1)
         .addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK)
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK)
         .addListener(new NetworkNodeInventoryListener(this));
 
     private int compare = IComparer.COMPARE_NBT;
@@ -102,19 +101,19 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
             if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
                 network.getCraftingManager().request(this, stack, FluidAttributes.BUCKET_VOLUME);
             }
-        } else if (world.isAirBlock(front) && FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerWorld) world, getOwner()), world, Hand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack)) {
-            // We manually have to check world.isAirBlock in the else if statement because tryPlaceFluid ignores this.
-            network.extractFluid(stack, FluidAttributes.BUCKET_VOLUME, Action.PERFORM);
+        } else {
+            FluidUtil.tryPlaceFluid(WorldUtils.getFakePlayer((ServerWorld) world, getOwner()), world, Hand.MAIN_HAND, front, new NetworkFluidHandler(StackUtils.copy(stack, FluidAttributes.BUCKET_VOLUME)), stack);
         }
     }
 
     private void extractAndPlaceBlock(ItemStack stack) {
-        if (!network.extractItem(stack, 1, compare, Action.SIMULATE).isEmpty()) {
+        ItemStack took = network.extractItem(stack, 1, compare, Action.SIMULATE);
+        if (!took.isEmpty()) {
             BlockItemUseContext ctx = new ConstructorBlockItemUseContext(
                 world,
                 WorldUtils.getFakePlayer((ServerWorld) world, getOwner()),
                 Hand.MAIN_HAND,
-                ItemHandlerHelper.copyStackWithSize(stack, 1),
+                took,
                 new BlockRayTraceResult(Vec3d.ZERO, getDirection(), pos, false)
             );
 
@@ -273,7 +272,7 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
     }
 
     private class NetworkFluidHandler implements IFluidHandler {
-        private FluidStack resource;
+        private final FluidStack resource;
 
         public NetworkFluidHandler(FluidStack resource) {
             this.resource = resource;
@@ -318,9 +317,9 @@ public class ConstructorNetworkNode extends NetworkNode implements IComparable, 
         }
     }
 
-    private class ConstructorBlockItemUseContext extends BlockItemUseContext {
-        public ConstructorBlockItemUseContext(World worldIn, @Nullable PlayerEntity playerIn, Hand handIn, ItemStack stackIn, BlockRayTraceResult rayTraceResultIn) {
-            super(worldIn, playerIn, handIn, stackIn, rayTraceResultIn);
+    private static class ConstructorBlockItemUseContext extends BlockItemUseContext {
+        public ConstructorBlockItemUseContext(World world, @Nullable PlayerEntity player, Hand hand, ItemStack stack, BlockRayTraceResult rayTraceResult) {
+            super(world, player, hand, stack, rayTraceResult);
         }
     }
 }

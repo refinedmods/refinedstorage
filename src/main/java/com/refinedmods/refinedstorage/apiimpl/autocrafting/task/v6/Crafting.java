@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.Constants;
 
 class Crafting extends Craft {
     private static final String NBT_RECIPE = "Recipe";
-    private NonNullList<ItemStack> recipe;
+    private final NonNullList<ItemStack> recipe;
 
     Crafting(ICraftingPattern pattern, boolean root, NonNullList<ItemStack> recipe) {
         super(pattern, root);

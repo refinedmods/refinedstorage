@@ -36,7 +36,7 @@ public class CraftingPatternChainList implements ICraftingPatternChainList {
         return chain;
     }
 
-    private class Key {
+    private static class Key {
         private final ICraftingPattern pattern;
 
         public Key(ICraftingPattern pattern) {

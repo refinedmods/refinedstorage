@@ -11,7 +11,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class GridPatternCreateMessage {
-    private BlockPos pos;
+    private final BlockPos pos;
 
     public GridPatternCreateMessage(BlockPos pos) {
         this.pos = pos;

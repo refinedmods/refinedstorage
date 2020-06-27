@@ -39,7 +39,7 @@ public class ControllerBlock extends BaseBlock {
         NEARLY_ON("nearly_on"),
         ON("on");
 
-        private String name;
+        private final String name;
 
         EnergyType(String name) {
             this.name = name;
@@ -58,7 +58,7 @@ public class ControllerBlock extends BaseBlock {
 
     public static final EnumProperty<EnergyType> ENERGY_TYPE = EnumProperty.create("energy_type", EnergyType.class);
 
-    private NetworkType type;
+    private final NetworkType type;
 
     public ControllerBlock(NetworkType type) {
         super(BlockUtils.DEFAULT_ROCK_PROPERTIES);

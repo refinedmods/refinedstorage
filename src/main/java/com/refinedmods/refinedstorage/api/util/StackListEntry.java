@@ -8,8 +8,8 @@ import java.util.UUID;
  * @param <T> the stack type
  */
 public class StackListEntry<T> {
-    private UUID id;
-    private T stack;
+    private final UUID id;
+    private final T stack;
 
     public StackListEntry(T stack) {
         this.stack = stack;

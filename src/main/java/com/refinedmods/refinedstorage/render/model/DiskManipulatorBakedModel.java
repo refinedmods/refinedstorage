@@ -15,15 +15,16 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.data.IModelData;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
 public class DiskManipulatorBakedModel extends DelegateBakedModel {
-    private class CacheKey {
-        private BlockState state;
-        private Direction side;
-        private DiskState[] diskState;
-        private Random random;
+    private static class CacheKey {
+        private final BlockState state;
+        private final Direction side;
+        private final DiskState[] diskState;
+        private final Random random;
 
         CacheKey(BlockState state, @Nullable Direction side, DiskState[] diskState, Random random) {
             this.state = state;
@@ -64,11 +65,11 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
         }
     }
 
-    private Map<Direction, IBakedModel> modelsConnected = new HashMap<>();
-    private Map<Direction, IBakedModel> modelsDisconnected = new HashMap<>();
-    private Map<Direction, Map<DiskState, List<IBakedModel>>> disks = new HashMap<>();
+    private final Map<Direction, IBakedModel> modelsConnected = new HashMap<>();
+    private final Map<Direction, IBakedModel> modelsDisconnected = new HashMap<>();
+    private final Map<Direction, Map<DiskState, List<IBakedModel>>> disks = new HashMap<>();
 
-    private LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
+    private final LoadingCache<CacheKey, List<BakedQuad>> cache = CacheBuilder.newBuilder().build(new CacheLoader<CacheKey, List<BakedQuad>>() {
         @Override
         @SuppressWarnings("deprecation")
         public List<BakedQuad> load(CacheKey key) {
@@ -139,7 +140,8 @@ public class DiskManipulatorBakedModel extends DelegateBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand, IModelData data) {
+    @Nonnull
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
         DiskState[] diskState = data.getData(DiskManipulatorTile.DISK_STATE_PROPERTY);
 
         if (diskState == null) {

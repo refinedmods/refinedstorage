@@ -26,12 +26,6 @@ public class GridManager implements IGridManager {
     }
 
     @Override
-    @Nullable
-    public IGridFactory get(ResourceLocation id) {
-        return factories.get(id);
-    }
-
-    @Override
     public void openGrid(ResourceLocation id, ServerPlayerEntity player, BlockPos pos) {
         openGrid(id, player, null, pos, -1);
     }
@@ -67,7 +61,7 @@ public class GridManager implements IGridManager {
     @Override
     @Nullable
     public Pair<IGrid, TileEntity> createGrid(ResourceLocation id, PlayerEntity player, @Nullable ItemStack stack, @Nullable BlockPos pos, int slotId) {
-        IGridFactory factory = get(id);
+        IGridFactory factory = factories.get(id);
 
         if (factory == null) {
             return null;

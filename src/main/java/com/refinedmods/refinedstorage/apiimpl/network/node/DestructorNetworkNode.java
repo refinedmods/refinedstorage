@@ -58,14 +58,12 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     private static final int BASE_SPEED = 20;
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.SILK_TOUCH, UpgradeItem.Type.FORTUNE_1, UpgradeItem.Type.FORTUNE_2, UpgradeItem.Type.FORTUNE_3)
         .addListener(new NetworkNodeInventoryListener(this))
-        .addListener((handler, slot, reading) -> {
-            tool = createTool();
-        });
+        .addListener((handler, slot, reading) -> tool = createTool());
 
     private int compare = IComparer.COMPARE_NBT;
     private int mode = IWhitelistBlacklist.BLACKLIST;
@@ -314,10 +312,6 @@ public class DestructorNetworkNode extends NetworkNode implements IComparable, I
 
     public IItemHandler getUpgrades() {
         return upgrades;
-    }
-
-    public IItemHandler getInventory() {
-        return itemFilters;
     }
 
     @Override

@@ -10,7 +10,7 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class StorageDiskSizeRequestMessage {
-    private UUID id;
+    private final UUID id;
 
     public StorageDiskSizeRequestMessage(UUID id) {
         this.id = id;

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class OrGridFilter implements Predicate<IGridStack> {
-    private List<List<Predicate<IGridStack>>> orPartFilters;
+    private final List<List<Predicate<IGridStack>>> orPartFilters;
 
     public OrGridFilter(List<List<Predicate<IGridStack>>> orPartFilters) {
         this.orPartFilters = orPartFilters;

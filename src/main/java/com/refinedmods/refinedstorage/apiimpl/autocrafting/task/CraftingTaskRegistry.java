@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CraftingTaskRegistry implements ICraftingTaskRegistry {
-    private Map<ResourceLocation, ICraftingTaskFactory> registry = new HashMap<>();
+    private final Map<ResourceLocation, ICraftingTaskFactory> registry = new HashMap<>();
 
     @Override
     public void add(ResourceLocation id, ICraftingTaskFactory factory) {

@@ -31,7 +31,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nullable;
 
 public class GridContainer extends BaseContainer implements ICraftingGridListener {
-    private IGrid grid;
+    private final IGrid grid;
     private IStorageCache cache;
     private IStorageCacheListener listener;
     private IScreenInfoProvider screenInfoProvider;
@@ -72,7 +72,11 @@ public class GridContainer extends BaseContainer implements ICraftingGridListene
         transferManager.setNotFoundHandler(slotIndex -> {
             if (!getPlayer().getEntityWorld().isRemote) {
                 Slot slot = inventorySlots.get(slotIndex);
-
+                if (grid instanceof IPortableGrid && slot instanceof SlotItemHandler) {
+                    if (((SlotItemHandler) slot).getItemHandler().equals(((IPortableGrid) grid).getDisk())) {
+                        return ItemStack.EMPTY;
+                    }
+                }
                 if (slot.getHasStack()) {
                     if (slot == craftingResultSlot) {
                         grid.onCraftedShift(getPlayer());

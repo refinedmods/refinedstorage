@@ -13,8 +13,8 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SetFluidFilterSlotMessage {
-    private int containerSlot;
-    private FluidStack stack;
+    private final int containerSlot;
+    private final FluidStack stack;
 
     public SetFluidFilterSlotMessage(int containerSlot, FluidStack stack) {
         this.containerSlot = containerSlot;
@@ -47,6 +47,7 @@ public class SetFluidFilterSlotMessage {
                             // Avoid resetting allowed tag list in the pattern grid.
                             if (API.instance().getComparer().isEqual(fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()), message.stack, IComparer.COMPARE_NBT)) {
                                 fluidFilterSlot.getFluidInventory().getFluid(slot.getSlotIndex()).setAmount(message.stack.getAmount());
+                                fluidFilterSlot.getFluidInventory().onChanged(slot.getSlotIndex());
                             } else {
                                 fluidFilterSlot.getFluidInventory().setFluid(slot.getSlotIndex(), message.stack);
                             }

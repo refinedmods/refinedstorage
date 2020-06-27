@@ -28,9 +28,9 @@ public class NetworkNodeManager extends WorldSavedData implements INetworkNodeMa
 
     private final World world;
 
-    private Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
-    private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
     public NetworkNodeManager(String name, World world) {
         super(name);

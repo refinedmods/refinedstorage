@@ -50,8 +50,8 @@ public class GridScreen extends BaseScreen<GridContainer> implements IScreenInfo
 
     private ScrollbarWidget scrollbar;
 
-    private IGrid grid;
-    private TabListWidget tabs;
+    private final IGrid grid;
+    private final TabListWidget tabs;
 
     private boolean wasConnected;
     private boolean doSort;

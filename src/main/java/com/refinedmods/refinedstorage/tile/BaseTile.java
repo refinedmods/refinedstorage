@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntityType;
 import javax.annotation.Nullable;
 
 public abstract class BaseTile extends TileEntity {
-    protected TileDataManager dataManager = new TileDataManager(this);
+    protected final TileDataManager dataManager = new TileDataManager(this);
 
     public BaseTile(TileEntityType<?> tileType) {
         super(tileType);

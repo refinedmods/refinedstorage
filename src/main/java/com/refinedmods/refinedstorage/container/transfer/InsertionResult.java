@@ -3,7 +3,7 @@ package com.refinedmods.refinedstorage.container.transfer;
 import net.minecraft.item.ItemStack;
 
 class InsertionResult {
-    private InsertionResultType type;
+    private final InsertionResultType type;
     private ItemStack value;
 
     InsertionResult(ItemStack value) {

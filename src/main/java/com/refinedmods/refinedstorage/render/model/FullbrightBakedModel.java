@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
@@ -33,7 +34,8 @@ public class FullbrightBakedModel extends DelegateBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand, IModelData data) {
+    @Nonnull
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
         if (state == null) {
             return base.getQuads(state, side, rand, data);
         }
@@ -77,12 +79,12 @@ public class FullbrightBakedModel extends DelegateBakedModel {
         );
     }
 
-    private class CacheKey {
-        private IBakedModel base;
-        private Set<ResourceLocation> textures;
-        private Random random;
-        private BlockState state;
-        private Direction side;
+    private static class CacheKey {
+        private final IBakedModel base;
+        private final Set<ResourceLocation> textures;
+        private final Random random;
+        private final BlockState state;
+        private final Direction side;
 
         public CacheKey(IBakedModel base, Set<ResourceLocation> textures, Random random, BlockState state, Direction side) {
             this.base = base;

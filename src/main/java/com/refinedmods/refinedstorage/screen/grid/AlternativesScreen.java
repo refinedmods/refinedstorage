@@ -31,7 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AlternativesScreen extends BaseScreen {
+public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
     private final Screen parent;
     private final ScrollbarWidget scrollbar;
 
@@ -325,10 +325,8 @@ public class AlternativesScreen extends BaseScreen {
     private class ItemListLine implements Line {
         private final List<ItemStack> items = new ArrayList<>();
 
-        public ItemListLine addItem(ItemStack stack) {
+        public void addItem(ItemStack stack) {
             items.add(stack);
-
-            return this;
         }
 
         @Override
@@ -355,10 +353,8 @@ public class AlternativesScreen extends BaseScreen {
     private class FluidListLine implements Line {
         private final List<FluidStack> fluids = new ArrayList<>();
 
-        public FluidListLine addFluid(FluidStack stack) {
+        public void addFluid(FluidStack stack) {
             fluids.add(stack);
-
-            return this;
         }
 
         @Override

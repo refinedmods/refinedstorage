@@ -17,8 +17,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class UpgradeWithEnchantedBookRecipe extends ShapedRecipe {
-    private EnchantmentData enchant;
-    private ItemStack result;
+    private final EnchantmentData enchant;
+    private final ItemStack result;
 
     public UpgradeWithEnchantedBookRecipe(ResourceLocation recipeId, Enchantment enchantment, int enchantmentLevel, ItemStack result) {
         super(recipeId, "", 3, 3, NonNullList.from(Ingredient.EMPTY,

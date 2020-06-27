@@ -7,11 +7,11 @@ import net.minecraft.util.ResourceLocation;
 import java.util.*;
 
 public class CraftingMonitorElementList implements ICraftingMonitorElementList {
-    private List<ICraftingMonitorElement> elements = new LinkedList<>();
-    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentLists = new LinkedHashMap<>();
-    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentCraftingLists = new LinkedHashMap<>();
-    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentProcessingLists = new LinkedHashMap<>();
-    private Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentStorageLists = new LinkedHashMap<>();
+    private final List<ICraftingMonitorElement> elements = new LinkedList<>();
+    private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentLists = new LinkedHashMap<>();
+    private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentCraftingLists = new LinkedHashMap<>();
+    private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentProcessingLists = new LinkedHashMap<>();
+    private final Map<ResourceLocation, Map<Integer, ICraftingMonitorElement>> currentStorageLists = new LinkedHashMap<>();
 
 
     @Override

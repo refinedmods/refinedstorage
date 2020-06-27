@@ -3,11 +3,11 @@ package com.refinedmods.refinedstorage.config;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ClientConfig {
-    private ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
-    private ForgeConfigSpec spec;
+    private final ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+    private final ForgeConfigSpec spec;
 
-    private Grid grid;
-    private CrafterManager crafterManager;
+    private final Grid grid;
+    private final CrafterManager crafterManager;
 
     public ClientConfig() {
         grid = new Grid();

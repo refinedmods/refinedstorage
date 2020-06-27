@@ -18,15 +18,15 @@ import java.util.Set;
 import java.util.UUID;
 
 public class FluidGridStack implements IGridStack {
-    private Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
-    private UUID id;
+    private final UUID id;
     @Nullable
     private UUID otherId;
-    private FluidStack stack;
+    private final FluidStack stack;
     @Nullable
     private StorageTrackerEntry entry;
-    private boolean craftable;
+    private final boolean craftable;
     private boolean zeroed;
 
     private Set<String> cachedTags;
@@ -159,7 +159,7 @@ public class FluidGridStack implements IGridStack {
     }
 
     @Override
-    public void draw(BaseScreen gui, int x, int y) {
+    public void draw(BaseScreen<?> screen, int x, int y) {
         FluidRenderer.INSTANCE.render(x, y, stack);
 
         String text;
@@ -174,7 +174,7 @@ public class FluidGridStack implements IGridStack {
             text = API.instance().getQuantityFormatter().formatInBucketFormWithOnlyTrailingDigitsIfZero(getQuantity());
         }
 
-        gui.renderQuantity(x, y, text, color);
+        screen.renderQuantity(x, y, text, color);
     }
 
     @Override

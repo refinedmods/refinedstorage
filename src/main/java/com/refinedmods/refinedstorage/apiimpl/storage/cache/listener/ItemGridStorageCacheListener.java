@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemGridStorageCacheListener implements IStorageCacheListener<ItemStack> {
-    private ServerPlayerEntity player;
-    private INetwork network;
+    private final ServerPlayerEntity player;
+    private final INetwork network;
 
     public ItemGridStorageCacheListener(ServerPlayerEntity player, INetwork network) {
         this.player = player;

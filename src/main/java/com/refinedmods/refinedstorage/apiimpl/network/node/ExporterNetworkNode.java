@@ -34,13 +34,13 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     private static final String NBT_TYPE = "Type";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.CRAFTING, UpgradeItem.Type.STACK, UpgradeItem.Type.REGULATOR)
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
-            if (!getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR)) {
+            if (!reading && !getUpgrades().hasUpgrade(UpgradeItem.Type.REGULATOR)) {
                 boolean changed = false;
 
                 for (int i = 0; i < itemFilters.getSlots(); ++i) {

@@ -11,8 +11,8 @@ import net.minecraft.util.ResourceLocation;
 public class ErrorCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "error");
 
-    private CraftingTaskErrorType type;
-    private ItemStack stack;
+    private final CraftingTaskErrorType type;
+    private final ItemStack stack;
 
     public ErrorCraftingPreviewElement(CraftingTaskErrorType type, ItemStack stack) {
         this.type = type;

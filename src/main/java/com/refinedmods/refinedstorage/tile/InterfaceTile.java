@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public class InterfaceTile extends NetworkNodeTile<InterfaceNetworkNode> {
     public static final TileDataParameter<Integer, InterfaceTile> COMPARE = IComparable.createParameter();
 
-    private LazyOptional<IItemHandler> itemsCapability = LazyOptional.of(() -> getNode().getItems());
+    private final LazyOptional<IItemHandler> itemsCapability = LazyOptional.of(() -> getNode().getItems());
 
     public InterfaceTile() {
         super(RSTiles.INTERFACE);

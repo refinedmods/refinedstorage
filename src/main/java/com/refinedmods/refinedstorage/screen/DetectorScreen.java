@@ -49,6 +49,10 @@ public class DetectorScreen extends BaseScreen<DetectorContainer> {
         addButton(amountField);
     }
 
+    public void updateAmountField(int amount) {
+        amountField.setText(String.valueOf(amount));
+    }
+
     @Override
     public void tick(int x, int y) {
     }

@@ -15,7 +15,7 @@ public class GridCraftingStartResponseMessage {
     }
 
     public static void handle(GridCraftingStartResponseMessage message, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientProxy.onReceivedCraftingStartResponseMessage(message));
+        ctx.get().enqueueWork(() -> ClientProxy.onReceivedCraftingStartResponseMessage());
         ctx.get().setPacketHandled(true);
     }
 }

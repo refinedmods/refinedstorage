@@ -15,12 +15,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class GridTab implements IGridTab {
-    private List<IFilter> filters;
-    private String name;
+    private final List<IFilter> filters;
+    private final String name;
     @Nonnull
-    private ItemStack icon;
+    private final ItemStack icon;
     @Nullable
-    private FluidStack fluidIcon;
+    private final FluidStack fluidIcon;
 
     public GridTab(List<IFilter> filters, String name, @Nonnull ItemStack icon, @Nullable FluidStack fluidIcon) {
         this.filters = filters;
