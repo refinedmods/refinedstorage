@@ -13,6 +13,7 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -76,6 +77,7 @@ public class CraftingManager implements ICraftingManager {
     @Override
     public void add(@Nonnull ICraftingTask task) {
         tasksToAdd.add(task);
+        ((CraftingTask) task).extractInitial();
 
         network.markDirty();
     }

@@ -588,7 +588,7 @@ public class CraftingTask implements ICraftingTask {
         return null;
     }
 
-    private void extractInitial() {
+    public void extractInitial() {
         if (!toExtractInitial.isEmpty()) {
             List<ItemStack> toRemove = new ArrayList<>();
 
