@@ -420,8 +420,8 @@ public class GridNetworkNode extends NetworkNode implements INetworkAwareGrid, I
     }
 
     @Override
-    public void onCrafted(PlayerEntity player, IStackList<ItemStack> networkItems, IStackList<ItemStack> extractedItems) {
-        API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player, networkItems, extractedItems);
+    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
+        API.instance().getCraftingGridBehavior().onCrafted(this, currentRecipe, player, availableItems, usedItems);
     }
 
     @Override

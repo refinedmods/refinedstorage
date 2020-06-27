@@ -202,9 +202,11 @@ public interface IGrid {
     /**
      * Called when an item is crafted in a crafting grid.
      *
-     * @param player the player that crafted the item
+     * @param player         the player that crafted the item
+     * @param availableItems the items available for shift crafting
+     * @param usedItems      the items used by shift crafting
      */
-    void onCrafted(PlayerEntity player, IStackList<ItemStack> networkCraftingItems, IStackList<ItemStack> extractedItems);
+    void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems);
 
     /**
      * Called when the clear button is pressed in the pattern grid or crafting grid.

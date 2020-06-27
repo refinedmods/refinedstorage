@@ -20,12 +20,13 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.hooks.BasicEventHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingGridBehavior implements ICraftingGridBehavior {
     @Override
-    public void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player, IStackList<ItemStack> networkCraftingItems, IStackList<ItemStack> extractedItems) {
+    public void onCrafted(INetworkAwareGrid grid, ICraftingRecipe recipe, PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         NonNullList<ItemStack> remainder = recipe.getRemainingItems(grid.getCraftingMatrix());
 
         INetwork network = grid.getNetwork();
@@ -55,12 +56,12 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
             } else if (!slot.isEmpty()) { // We don't have a remainder, but the slot is not empty.
                 if (slot.getCount() == 1 && network != null) { // Attempt to refill the slot with the same item from the network, only if we have a network and only if it's the last item.
                     ItemStack refill;
-                    if (networkCraftingItems == null) { // for regular crafting
+                    if (availableItems == null) { // for regular crafting
                         refill = network.extractItem(slot, 1, Action.PERFORM);
                     } else { // for shift crafting
-                        if (networkCraftingItems.get(slot) != null) {
-                            refill = networkCraftingItems.remove(slot, 1).getStack().copy();
-                            extractedItems.add(refill);
+                        if (availableItems.get(slot) != null) {
+                            refill = availableItems.remove(slot, 1).getStack().copy();
+                            usedItems.add(refill);
                         } else {
                             refill = ItemStack.EMPTY;
                         }
@@ -92,27 +93,28 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
         int amountCrafted = 0;
         boolean useNetwork = network != null;
 
-        IStackList<ItemStack> networkCraftingItems = null;
+        IStackList<ItemStack> availableItems = null;
         if (useNetwork) {
             // We need a modifiable list of the items in storage that are relevant for this craft.
-            networkCraftingItems = createFilteredItemList(network,matrix);
+            // For performance reason we extract these into an extra list
+            availableItems = createFilteredItemList(network, matrix);
         }
 
         //A second list to remember which items have been extracted
-        IStackList<ItemStack> extractedItems = API.instance().createItemStackList();
+        IStackList<ItemStack> usedItems = API.instance().createItemStackList();
 
         ForgeHooks.setCraftingPlayer(player);
         // Do while the item is still craftable (aka is the result slot still the same as the original item?) and we don't exceed the max stack size.
         do {
-            grid.onCrafted(player, networkCraftingItems, extractedItems);
+            grid.onCrafted(player, availableItems, usedItems);
 
             craftedItemsList.add(crafted.copy());
 
             amountCrafted += crafted.getCount();
-        } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted < maxCrafted && amountCrafted + crafted.getCount() <= maxCrafted );
+        } while (API.instance().getComparer().isEqual(crafted, grid.getCraftingResult().getStackInSlot(0)) && amountCrafted < maxCrafted && amountCrafted + crafted.getCount() <= maxCrafted);
 
         if (useNetwork) {
-            extractedItems.getStacks().forEach(stack -> network.extractItem(stack.getStack(), stack.getStack().getCount(), Action.PERFORM));
+            usedItems.getStacks().forEach(stack -> network.extractItem(stack.getStack(), stack.getStack().getCount(), Action.PERFORM));
         }
 
         for (ItemStack craftedItem : craftedItemsList) {
@@ -139,16 +141,16 @@ public class CraftingGridBehavior implements ICraftingGridBehavior {
     }
 
     private IStackList<ItemStack> createFilteredItemList(INetwork network, CraftingInventory matrix) {
-        IStackList<ItemStack> networkCraftingItems = API.instance().createItemStackList();
+        IStackList<ItemStack> availableItems = API.instance().createItemStackList();
         for (int i = 0; i < matrix.getSizeInventory(); ++i) {
             ItemStack stack = network.getItemStorageCache().getList().get(matrix.getStackInSlot(i));
 
             //Don't add the same item twice into the list. Items may appear twice in a recipe but not in storage.
-            if (stack != null && networkCraftingItems.get(stack) == null) {
-                networkCraftingItems.add(stack);
+            if (stack != null && availableItems.get(stack) == null) {
+                availableItems.add(stack);
             }
         }
-        return networkCraftingItems;
+        return availableItems;
     }
 
     @Override

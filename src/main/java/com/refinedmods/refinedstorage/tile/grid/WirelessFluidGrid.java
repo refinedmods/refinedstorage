@@ -272,7 +272,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public void onCrafted(PlayerEntity player, IStackList<ItemStack> networkCraftingItems, IStackList<ItemStack> extractedItems) {
+    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         // NO OP
     }
 
