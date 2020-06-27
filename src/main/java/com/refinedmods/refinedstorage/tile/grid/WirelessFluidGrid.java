@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.IFilter;
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.FluidGridStorageCacheListener;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
 import com.refinedmods.refinedstorage.item.WirelessFluidGridItem;
@@ -271,7 +272,7 @@ public class WirelessFluidGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public void onCrafted(PlayerEntity player) {
+    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         // NO OP
     }
 

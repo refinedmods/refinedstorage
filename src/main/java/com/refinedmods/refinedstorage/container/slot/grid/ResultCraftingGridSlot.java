@@ -23,7 +23,7 @@ public class ResultCraftingGridSlot extends CraftingResultSlot {
         onCrafting(stack);
 
         if (!player.getEntityWorld().isRemote) {
-            grid.onCrafted(player);
+            grid.onCrafted(player, null, null);
         }
 
         return ItemStack.EMPTY;
