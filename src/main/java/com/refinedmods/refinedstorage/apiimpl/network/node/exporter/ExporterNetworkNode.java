@@ -36,6 +36,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     private static final String NBT_COMPARE = "Compare";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
+    private static final String NBT_CRAFT_ONLY = "CraftOnly";
 
     private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
     private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
@@ -72,6 +73,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
     private int compare = IComparer.COMPARE_NBT;
     private int type = IType.ITEMS;
+    private boolean craftOnly = false;
 
     private int filterSlot;
 
@@ -95,10 +97,6 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                 updateFluidMode();
             }
         }
-    }
-
-    private boolean isCraftOnly() {
-        return true;
     }
 
     public IItemHandler getFacingItemHandler() {
@@ -135,7 +133,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                 }
 
                 if (stackSize > 0) {
-                    if (isCraftOnly()) {
+                    if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING) && craftOnly) {
                         ICraftingTask task = network.getCraftingManager().request(new SlottedCraftingRequest(this, filterSlot), slot, stackSize);
 
                         if (task != null) {
@@ -214,7 +212,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                 }
 
                 if (stackSize > 0) {
-                    if (isCraftOnly()) {
+                    if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING) && craftOnly) {
                         ICraftingTask task = network.getCraftingManager().request(new SlottedCraftingRequest(this, filterSlot), slot, stackSize);
 
                         if (task != null) {
@@ -302,6 +300,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
 
         tag.putInt(NBT_COMPARE, compare);
         tag.putInt(NBT_TYPE, type);
+        tag.putBoolean(NBT_CRAFT_ONLY, craftOnly);
 
         StackUtils.writeItems(itemFilters, 0, tag);
 
@@ -329,6 +328,10 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
             type = tag.getInt(NBT_TYPE);
         }
 
+        if (tag.contains(NBT_CRAFT_ONLY)) {
+            craftOnly = tag.getBoolean(NBT_CRAFT_ONLY);
+        }
+
         StackUtils.readItems(itemFilters, 0, tag);
 
         if (tag.contains(NBT_FLUID_FILTERS)) {
@@ -343,6 +346,14 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
     @Override
     public IItemHandler getDrops() {
         return upgrades;
+    }
+
+    public boolean isCraftOnly() {
+        return craftOnly;
+    }
+
+    public void setCraftOnly(boolean craftOnly) {
+        this.craftOnly = craftOnly;
     }
 
     @Override

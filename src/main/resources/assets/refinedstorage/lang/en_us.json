@@ -201,16 +201,15 @@
   "sidebutton.refinedstorage.detector.mode.0": "Emit signal when under the amount",
   "sidebutton.refinedstorage.detector.mode.1": "Emit signal when on the amount",
   "sidebutton.refinedstorage.detector.mode.2": "Emit signal when above the amount",
-
   "sidebutton.refinedstorage.constructor.drop": "Drop blocks instead of placing",
-
   "sidebutton.refinedstorage.destructor.pickup": "Pickup items instead of breaking",
-
   "sidebutton.refinedstorage.access_type": "Access type",
   "sidebutton.refinedstorage.access_type.0": "Insert and extract",
   "sidebutton.refinedstorage.access_type.1": "Insert only",
   "sidebutton.refinedstorage.access_type.2": "Extract only",
-
+  "sidebutton.refinedstorage.craft_only": "Exporting mode",
+  "sidebutton.refinedstorage.craft_only.yes": "Only use newly autocrafted items and fluids",
+  "sidebutton.refinedstorage.craft_only.no": "Use existing items and fluids, autocraft when necessary",
   "block.refinedstorage.controller": "Controller",
   "block.refinedstorage.creative_controller": "Creative Controller",
   "block.refinedstorage.cable": "Cable",
