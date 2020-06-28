@@ -83,7 +83,6 @@ public class CraftingTask implements ICraftingTask {
     private int totalSteps;
     private int currentstep;
     private final Set<ICraftingPattern> patternsUsed = new HashSet<>();
-    private CraftingTaskState state = CraftingTaskState.UNKNOWN;
 
     private final IStorageDisk<ItemStack> internalStorage;
     private final IStorageDisk<FluidStack> internalFluidStorage;
@@ -236,7 +235,6 @@ public class CraftingTask implements ICraftingTask {
             throw new IllegalStateException("Task already started!");
         }
 
-        this.state = CraftingTaskState.CALCULATING;
         this.calculationStarted = System.currentTimeMillis();
 
         IStackList<ItemStack> results = API.instance().createItemStackList();
@@ -251,8 +249,6 @@ public class CraftingTask implements ICraftingTask {
         ICraftingTaskError result = calculateInternal(qty, storage, fluidStorage, results, fluidResults, this.pattern, true);
 
         if (result != null) {
-            this.state = CraftingTaskState.CALCULATED;
-
             return result;
         }
 
@@ -275,8 +271,6 @@ public class CraftingTask implements ICraftingTask {
                 }
             });
         }
-
-        this.state = CraftingTaskState.CALCULATED;
 
         return null;
     }
@@ -967,8 +961,6 @@ public class CraftingTask implements ICraftingTask {
         ++ticks;
 
         if (this.crafts.isEmpty()) {
-            this.state = CraftingTaskState.DONE;
-
             List<Runnable> toPerform = new ArrayList<>();
 
             for (ItemStack stack : internalStorage.getStacks()) {
@@ -988,8 +980,6 @@ public class CraftingTask implements ICraftingTask {
 
             return internalStorage.getStacks().isEmpty() && internalFluidStorage.getStacks().isEmpty();
         } else {
-            this.state = CraftingTaskState.RUNNING;
-
             extractInitial();
 
             for (Craft craft : crafts.values()) {
@@ -1358,11 +1348,6 @@ public class CraftingTask implements ICraftingTask {
     @Override
     public UUID getId() {
         return id;
-    }
-
-    @Override
-    public CraftingTaskState getState() {
-        return state;
     }
 
     @Override

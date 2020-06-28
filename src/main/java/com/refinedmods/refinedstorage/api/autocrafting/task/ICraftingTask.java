@@ -122,11 +122,6 @@ public interface ICraftingTask {
     UUID getId();
 
     /**
-     * @return the state of this crafting task
-     */
-    CraftingTaskState getState();
-
-    /**
      * Adds a output hook.
      *
      * @param outputHook the hook
