@@ -7,6 +7,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewE
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskRegistry;
+import com.refinedmods.refinedstorage.api.autocrafting.task.interceptor.IOutputInterceptorRegistry;
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
@@ -105,6 +106,12 @@ public interface IRSAPI {
      */
     @Nonnull
     ICraftingMonitorElementList createCraftingMonitorElementList();
+
+    /**
+     * @return the output interceptor registry
+     */
+    @Nonnull
+    IOutputInterceptorRegistry getOutputInterceptorRegistry();
 
     /**
      * @return the grid manager

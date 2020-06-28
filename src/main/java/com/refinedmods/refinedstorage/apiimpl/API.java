@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewE
 import com.refinedmods.refinedstorage.api.autocrafting.task.CraftingTaskReadException;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingRequestInfo;
 import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskRegistry;
+import com.refinedmods.refinedstorage.api.autocrafting.task.interceptor.IOutputInterceptorRegistry;
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.grid.ICraftingGridBehavior;
 import com.refinedmods.refinedstorage.api.network.grid.IGridManager;
@@ -29,6 +30,7 @@ import com.refinedmods.refinedstorage.apiimpl.autocrafting.craftingmonitor.Craft
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.preview.CraftingPreviewElementRegistry;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.CraftingRequestInfo;
 import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.CraftingTaskRegistry;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.interceptor.OutputInterceptorRegistry;
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkManager;
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkNodeManager;
 import com.refinedmods.refinedstorage.apiimpl.network.NetworkNodeRegistry;
@@ -68,6 +70,7 @@ public class API implements IRSAPI {
     private final ICraftingTaskRegistry craftingTaskRegistry = new CraftingTaskRegistry();
     private final ICraftingMonitorElementRegistry craftingMonitorElementRegistry = new CraftingMonitorElementRegistry();
     private final ICraftingPreviewElementRegistry craftingPreviewElementRegistry = new CraftingPreviewElementRegistry();
+    private final IOutputInterceptorRegistry outputInterceptorRegistry = new OutputInterceptorRegistry();
     private final IGridManager gridManager = new GridManager();
     private final ICraftingGridBehavior craftingGridBehavior = new CraftingGridBehavior();
     private final IStorageDiskRegistry storageDiskRegistry = new StorageDiskRegistry();
@@ -172,6 +175,12 @@ public class API implements IRSAPI {
     @Nonnull
     public ICraftingMonitorElementList createCraftingMonitorElementList() {
         return new CraftingMonitorElementList();
+    }
+
+    @Nonnull
+    @Override
+    public IOutputInterceptorRegistry getOutputInterceptorRegistry() {
+        return outputInterceptorRegistry;
     }
 
     @Nonnull

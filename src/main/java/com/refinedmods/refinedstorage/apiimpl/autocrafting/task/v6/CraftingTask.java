@@ -10,6 +10,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICrafting
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.*;
 import com.refinedmods.refinedstorage.api.autocrafting.task.interceptor.IOutputInterceptor;
+import com.refinedmods.refinedstorage.api.autocrafting.task.interceptor.IOutputInterceptorFactory;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
@@ -32,6 +33,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -68,6 +70,7 @@ public class CraftingTask implements ICraftingTask {
     private static final String NBT_CURRENT_STEP = "CurrentStep";
     private static final String NBT_PATTERN_STACK = "Stack";
     private static final String NBT_PATTERN_CONTAINER_POS = "ContainerPos";
+    private static final String NBT_OUTPUT_INTERCEPTORS = "OutputInterceptors";
 
     private static final int DEFAULT_EXTRACT_FLAGS = IComparer.COMPARE_NBT;
 
@@ -142,6 +145,23 @@ public class CraftingTask implements ICraftingTask {
             crafts.put(c.getPattern(), c);
         }
 
+        if (tag.contains(NBT_OUTPUT_INTERCEPTORS)) {
+            ListNBT outputInterceptorList = tag.getList(NBT_OUTPUT_INTERCEPTORS, Constants.NBT.TAG_COMPOUND);
+
+            for (int i = 0; i < outputInterceptorList.size(); ++i) {
+                CompoundNBT interceptorTag = outputInterceptorList.getCompound(i);
+
+                ResourceLocation type = new ResourceLocation(interceptorTag.getString("Type"));
+
+                IOutputInterceptorFactory factory = API.instance().getOutputInterceptorRegistry().get(type);
+                if (factory == null) {
+                    throw new CraftingTaskReadException("Output interceptor with type " + type + " not found");
+                }
+
+                outputInterceptors.add(factory.create(interceptorTag));
+            }
+        }
+
         this.missing = readItemStackList(tag.getList(NBT_MISSING, Constants.NBT.TAG_COMPOUND));
         this.missingFluids = readFluidStackList(tag.getList(NBT_MISSING_FLUIDS, Constants.NBT.TAG_COMPOUND));
     }
@@ -166,6 +186,17 @@ public class CraftingTask implements ICraftingTask {
             craftingList.add(craft.writeToNbt());
         }
         tag.put(NBT_CRAFTS, craftingList);
+
+        ListNBT outputInterceptorList = new ListNBT();
+        for (IOutputInterceptor interceptor : this.outputInterceptors) {
+            CompoundNBT interceptorTag = new CompoundNBT();
+            interceptorTag.putString("Type", interceptor.getId().toString());
+            interceptorTag = interceptor.writeToNbt(interceptorTag);
+
+            outputInterceptorList.add(interceptorTag);
+        }
+
+        tag.put(NBT_OUTPUT_INTERCEPTORS, outputInterceptorList);
 
         tag.put(NBT_MISSING, writeItemStackList(missing));
         tag.put(NBT_MISSING_FLUIDS, writeFluidStackList(missingFluids));
@@ -720,7 +751,7 @@ public class CraftingTask implements ICraftingTask {
         output = ItemHandlerHelper.copyStackWithSize(output, count);
 
         for (IOutputInterceptor interceptor : this.outputInterceptors) {
-            output = interceptor.intercept(output);
+            output = interceptor.intercept(network.getWorld().getServer(), output);
             if (output.isEmpty()) {
                 return;
             }
@@ -735,7 +766,7 @@ public class CraftingTask implements ICraftingTask {
         output = StackUtils.copy(output, count);
 
         for (IOutputInterceptor interceptor : this.outputInterceptors) {
-            output = interceptor.intercept(output);
+            output = interceptor.intercept(network.getWorld().getServer(), output);
             if (output.isEmpty()) {
                 return;
             }
@@ -960,6 +991,9 @@ public class CraftingTask implements ICraftingTask {
         }
 
         ++ticks;
+        if (ticks < 20 * 10) {
+            return false;
+        }
 
         if (this.crafts.isEmpty()) {
             List<Runnable> toPerform = new ArrayList<>();
