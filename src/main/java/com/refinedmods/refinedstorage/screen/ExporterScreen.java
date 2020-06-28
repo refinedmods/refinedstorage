@@ -34,7 +34,7 @@ public class ExporterScreen extends BaseScreen<ExporterContainer> {
         addSideButton(new RedstoneModeSideButton(this, ExporterTile.REDSTONE_MODE));
         addSideButton(new TypeSideButton(this, ExporterTile.TYPE));
         addSideButton(new ExactModeSideButton(this, ExporterTile.COMPARE));
-        addSideButton(craftOnlyButton = new CraftOnlySideButton(this));
+        addSideButton(craftOnlyButton = new CraftOnlySideButton(this, ExporterTile.CRAFT_ONLY));
         craftOnlyButton.visible = hasCraftingUpgrade;
     }
 

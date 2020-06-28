@@ -1,17 +1,23 @@
-package com.refinedmods.refinedstorage.apiimpl.network.node;
+package com.refinedmods.refinedstorage.apiimpl.network.node.iface;
 
 import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTask;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.Action;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.network.node.ExternalStorageNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.NetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.SlottedCraftingRequest;
 import com.refinedmods.refinedstorage.apiimpl.storage.externalstorage.ItemExternalStorage;
 import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.ProxyItemHandler;
 import com.refinedmods.refinedstorage.inventory.item.UpgradeItemHandler;
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
+import com.refinedmods.refinedstorage.tile.InterfaceTile;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
+import com.refinedmods.refinedstorage.tile.config.ICraftOnly;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -24,10 +30,11 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
-public class InterfaceNetworkNode extends NetworkNode implements IComparable {
+public class InterfaceNetworkNode extends NetworkNode implements IComparable, ICraftOnly {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "interface");
 
     private static final String NBT_COMPARE = "Compare";
+    private static final String NBT_CRAFT_ONLY = "CraftOnly";
 
     private final BaseItemHandler importItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
@@ -40,6 +47,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
         .addListener(new NetworkNodeInventoryListener(this));
 
     private int compare = IComparer.COMPARE_NBT;
+    private boolean craftOnly = false;
 
     private int currentSlot = 0;
 
@@ -90,33 +98,41 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
                 int delta = got.isEmpty() ? wanted.getCount() : (wanted.getCount() - got.getCount());
 
                 if (delta > 0) {
-                    final boolean actingAsStorage = isActingAsStorage();
+                    if (upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING) && craftOnly) {
+                        ICraftingTask task = network.getCraftingManager().request(new SlottedCraftingRequest(this, i), wanted, delta);
+                        if (task != null) {
+                            task.addOutputInterceptor(new InterfaceOutputInterceptor(wanted.copy(), world.getDimension().getType(), pos, i));
+                        }
+                    } else {
+                        final boolean actingAsStorage = isActingAsStorage();
 
-                    ItemStack result = network.extractItem(wanted, delta, compare, Action.PERFORM, s -> {
-                        // If we are not an interface acting as a storage, we can extract from anywhere.
-                        if (!actingAsStorage) {
-                            return true;
+                        ItemStack result = network.extractItem(wanted, delta, compare, Action.PERFORM, s -> {
+                            // If we are not an interface acting as a storage, we can extract from anywhere.
+                            if (!actingAsStorage) {
+                                return true;
+                            }
+
+                            // If we are an interface acting as a storage, we don't want to extract from other interfaces to
+                            // avoid stealing from each other.
+                            return !(s instanceof ItemExternalStorage) || !((ItemExternalStorage) s).isConnectedToInterface();
+                        });
+
+                        if (!result.isEmpty()) {
+                            if (exportItems.getStackInSlot(i).isEmpty()) {
+                                exportItems.setStackInSlot(i, result);
+                            } else {
+                                exportItems.getStackInSlot(i).grow(result.getCount());
+                                markDirty();
+                            }
                         }
 
-                        // If we are an interface acting as a storage, we don't want to extract from other interfaces to
-                        // avoid stealing from each other.
-                        return !(s instanceof ItemExternalStorage) || !((ItemExternalStorage) s).isConnectedToInterface();
-                    });
+                        // Example: our delta is 5, we extracted 3 items.
+                        // That means we still have to autocraft 2 items.
+                        delta -= result.getCount();
 
-                    if (!result.isEmpty()) {
-                        if (exportItems.getStackInSlot(i).isEmpty()) {
-                            exportItems.setStackInSlot(i, result);
-                        } else {
-                            exportItems.getStackInSlot(i).grow(result.getCount());
+                        if (delta > 0 && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
+                            network.getCraftingManager().request(new SlottedCraftingRequest(this, i), wanted, delta);
                         }
-                    }
-
-                    // Example: our delta is 5, we extracted 3 items.
-                    // That means we still have to autocraft 2 items.
-                    delta -= result.getCount();
-
-                    if (delta > 0 && upgrades.hasUpgrade(UpgradeItem.Type.CRAFTING)) {
-                        network.getCraftingManager().request(new SlottedCraftingRequest(this, i), wanted, delta);
                     }
                 } else if (delta < 0) {
                     ItemStack remainder = network.insertItemTracked(got, Math.abs(delta));
@@ -155,6 +171,18 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
     }
 
     @Override
+    public boolean isCraftOnly() {
+        return world.isRemote ? InterfaceTile.CRAFT_ONLY.getValue() : craftOnly;
+    }
+
+    @Override
+    public void setCraftOnly(boolean craftOnly) {
+        this.craftOnly = craftOnly;
+
+        markDirty();
+    }
+
+    @Override
     public void read(CompoundNBT tag) {
         super.read(tag);
 
@@ -186,6 +214,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
         StackUtils.writeItems(exportFilterItems, 1, tag);
 
         tag.putInt(NBT_COMPARE, compare);
+        tag.putBoolean(NBT_CRAFT_ONLY, craftOnly);
 
         return tag;
     }
@@ -199,6 +228,10 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
         if (tag.contains(NBT_COMPARE)) {
             compare = tag.getInt(NBT_COMPARE);
         }
+
+        if (tag.contains(NBT_CRAFT_ONLY)) {
+            craftOnly = tag.getBoolean(NBT_CRAFT_ONLY);
+        }
     }
 
     public IItemHandler getImportItems() {
@@ -209,7 +242,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
         return exportFilterItems;
     }
 
-    public IItemHandler getExportItems() {
+    public BaseItemHandler getExportItems() {
         return exportItems;
     }
 
@@ -217,7 +250,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
         return items;
     }
 
-    public IItemHandler getUpgrades() {
+    public UpgradeItemHandler getUpgrades() {
         return upgrades;
     }
 

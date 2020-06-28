@@ -23,6 +23,9 @@ import com.refinedmods.refinedstorage.apiimpl.network.node.diskmanipulator.DiskM
 import com.refinedmods.refinedstorage.apiimpl.network.node.exporter.ExporterNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.exporter.ExporterOutputInterceptor;
 import com.refinedmods.refinedstorage.apiimpl.network.node.exporter.ExporterOutputInterceptorFactory;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.InterfaceNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.InterfaceOutputInterceptor;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.InterfaceOutputInterceptorFactory;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;
@@ -136,6 +139,7 @@ public class CommonSetup {
         API.instance().getCraftingTaskRegistry().add(CraftingTaskFactory.ID, new CraftingTaskFactory());
 
         API.instance().getOutputInterceptorRegistry().add(ExporterOutputInterceptor.ID, new ExporterOutputInterceptorFactory());
+        API.instance().getOutputInterceptorRegistry().add(InterfaceOutputInterceptor.ID, new InterfaceOutputInterceptorFactory());
 
         LootFunctionManager.registerFunction(new StorageBlockLootFunctionSerializer());
         LootFunctionManager.registerFunction(new PortableGridBlockLootFunctionSerializer());

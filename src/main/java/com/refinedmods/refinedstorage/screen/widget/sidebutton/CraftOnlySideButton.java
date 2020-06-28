@@ -1,28 +1,32 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
 import com.refinedmods.refinedstorage.screen.BaseScreen;
-import com.refinedmods.refinedstorage.tile.ExporterTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
+import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class CraftOnlySideButton extends SideButton {
-    public CraftOnlySideButton(BaseScreen<?> screen) {
+    private final TileDataParameter<Boolean, ?> parameter;
+
+    public CraftOnlySideButton(BaseScreen<?> screen, TileDataParameter<Boolean, ?> parameter) {
         super(screen);
+
+        this.parameter = parameter;
     }
 
     @Override
     protected void renderButtonIcon(int x, int y) {
-        screen.blit(x, y, (ExporterTile.CRAFT_ONLY.getValue() ? 16 : 0), 144, 16, 16);
+        screen.blit(x, y, (parameter.getValue() ? 16 : 0), 144, 16, 16);
     }
 
     @Override
     public String getTooltip() {
-        return I18n.format("sidebutton.refinedstorage.craft_only") + "\n" + TextFormatting.GRAY + I18n.format(ExporterTile.CRAFT_ONLY.getValue() ? "sidebutton.refinedstorage.craft_only.yes" : "sidebutton.refinedstorage.craft_only.no");
+        return I18n.format("sidebutton.refinedstorage.craft_only") + "\n" + TextFormatting.GRAY + I18n.format(parameter.getValue() ? "sidebutton.refinedstorage.craft_only.yes" : "sidebutton.refinedstorage.craft_only.no");
     }
 
     @Override
     public void onPress() {
-        TileDataManager.setParameter(ExporterTile.CRAFT_ONLY, !ExporterTile.CRAFT_ONLY.getValue());
+        TileDataManager.setParameter(parameter, !parameter.getValue());
     }
 }

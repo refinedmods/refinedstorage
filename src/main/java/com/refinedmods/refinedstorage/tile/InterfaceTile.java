@@ -1,8 +1,9 @@
 package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.RSTiles;
-import com.refinedmods.refinedstorage.apiimpl.network.node.InterfaceNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.iface.InterfaceNetworkNode;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
+import com.refinedmods.refinedstorage.tile.config.ICraftOnly;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +18,7 @@ import javax.annotation.Nullable;
 
 public class InterfaceTile extends NetworkNodeTile<InterfaceNetworkNode> {
     public static final TileDataParameter<Integer, InterfaceTile> COMPARE = IComparable.createParameter();
+    public static final TileDataParameter<Boolean, InterfaceTile> CRAFT_ONLY = ICraftOnly.createParameter();
 
     private final LazyOptional<IItemHandler> itemsCapability = LazyOptional.of(() -> getNode().getItems());
 
@@ -24,6 +26,7 @@ public class InterfaceTile extends NetworkNodeTile<InterfaceNetworkNode> {
         super(RSTiles.INTERFACE);
 
         dataManager.addWatchedParameter(COMPARE);
+        dataManager.addWatchedParameter(CRAFT_ONLY);
     }
 
     @Nonnull

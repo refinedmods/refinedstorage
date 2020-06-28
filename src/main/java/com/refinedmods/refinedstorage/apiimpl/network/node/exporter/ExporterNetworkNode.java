@@ -15,6 +15,7 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryLis
 import com.refinedmods.refinedstorage.item.UpgradeItem;
 import com.refinedmods.refinedstorage.tile.ExporterTile;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
+import com.refinedmods.refinedstorage.tile.config.ICraftOnly;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import com.refinedmods.refinedstorage.util.WorldUtils;
@@ -30,7 +31,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ExporterNetworkNode extends NetworkNode implements IComparable, IType {
+public class ExporterNetworkNode extends NetworkNode implements IComparable, IType, ICraftOnly {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "exporter");
 
     private static final String NBT_COMPARE = "Compare";
@@ -348,12 +349,16 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
         return upgrades;
     }
 
+    @Override
     public boolean isCraftOnly() {
-        return craftOnly;
+        return world.isRemote ? ExporterTile.CRAFT_ONLY.getValue() : craftOnly;
     }
 
+    @Override
     public void setCraftOnly(boolean craftOnly) {
         this.craftOnly = craftOnly;
+
+        markDirty();
     }
 
     @Override
