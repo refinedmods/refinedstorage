@@ -38,6 +38,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -290,18 +291,8 @@ public class CraftingTask implements ICraftingTask {
             this.toCraft.add(req);
         } else {
             FluidStack req = requested.getFluid().copy();
-            req.setAmount(qty);
+            req.setAmount(qty * FluidAttributes.BUCKET_VOLUME);
             this.toCraftFluids.add(req);
-        }
-
-        if (missing.isEmpty()) {
-            crafts.values().forEach(c -> {
-                totalSteps += c.getQuantity();
-
-                if (c instanceof Processing) {
-                    ((Processing) c).finishCalculation();
-                }
-            });
         }
 
         return null;
@@ -491,8 +482,6 @@ public class CraftingTask implements ICraftingTask {
                         fromNetwork = mutatedStorage.get(possibleInput);
                         // fromSelf contains the amount crafted after the loop.
                         this.toCraft.add(fromSelf.copy());
-
-
                     } else {
                         if (!possibleInputs.cycle()) {
                             // Give up.
@@ -516,14 +505,12 @@ public class CraftingTask implements ICraftingTask {
         }
 
         if (craft instanceof Crafting) {
-
             ItemStack output = pattern.getOutput(recipe);
             results.add(output, output.getCount() * qty);
 
             for (ItemStack byproduct : pattern.getByproducts(recipe)) {
                 results.add(byproduct, byproduct.getCount() * qty);
             }
-
         } else {
             Processing processing = (Processing) craft;
 
@@ -561,6 +548,7 @@ public class CraftingTask implements ICraftingTask {
 
                         fromSelf = fluidResults.get(possibleInput, IComparer.COMPARE_NBT);
                     }
+
                     if (fromNetwork != null && remaining > 0) {
 
                         int toTake = Math.min(remaining, fromNetwork.getAmount());
@@ -575,6 +563,7 @@ public class CraftingTask implements ICraftingTask {
 
                         toExtractInitialFluids.add(possibleInput, toTake);
                     }
+
                     if (remaining > 0) {
                         ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
 
@@ -608,13 +597,14 @@ public class CraftingTask implements ICraftingTask {
                 }
             }
 
-            pattern.getOutputs().forEach(x -> results.add(x, x.getCount() * qty));
-            pattern.getFluidOutputs().forEach(x -> fluidResults.add(x, x.getAmount() * qty));
+            pattern.getOutputs().forEach(stack -> results.add(stack, stack.getCount() * qty));
+            pattern.getFluidOutputs().forEach(stack -> fluidResults.add(stack, stack.getAmount() * qty));
 
             //only add this once
             if (processing.getItemsToReceive().isEmpty()) {
                 pattern.getOutputs().forEach(processing::addItemsToReceive);
             }
+
             if (processing.getFluidsToReceive().isEmpty()) {
                 pattern.getFluidOutputs().forEach(processing::addFluidsToReceive);
             }
