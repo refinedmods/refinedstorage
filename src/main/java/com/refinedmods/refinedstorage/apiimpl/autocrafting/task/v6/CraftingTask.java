@@ -38,7 +38,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -287,11 +286,11 @@ public class CraftingTask implements ICraftingTask {
 
         if (requested.getItem() != null) {
             ItemStack req = requested.getItem().copy();
-            req.setCount(qty);
+            req.setCount(qty * qtyPerCraft);
             this.toCraft.add(req);
         } else {
             FluidStack req = requested.getFluid().copy();
-            req.setAmount(qty * FluidAttributes.BUCKET_VOLUME);
+            req.setAmount(qty * qtyPerCraft);
             this.toCraftFluids.add(req);
         }
 
