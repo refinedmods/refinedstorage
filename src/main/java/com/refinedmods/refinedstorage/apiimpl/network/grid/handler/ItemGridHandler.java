@@ -180,7 +180,7 @@ public class ItemGridHandler implements IItemGridHandler {
                         )
                     );
                 } else if (noPreview && !task.hasMissing()) {
-                    network.getCraftingManager().add(task);
+                    network.getCraftingManager().start(task);
 
                     RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
                 } else {
@@ -217,7 +217,7 @@ public class ItemGridHandler implements IItemGridHandler {
 
             ICraftingTaskError error = task.calculate();
             if (error == null && !task.hasMissing()) {
-                network.getCraftingManager().add(task);
+                network.getCraftingManager().start(task);
             }
         }
     }

@@ -128,4 +128,9 @@ public interface ICraftingTask {
      * @param interceptor the interceptor
      */
     void addOutputInterceptor(IOutputInterceptor interceptor);
+
+    /**
+     * Start the crafting task.
+     */
+    void start();
 }

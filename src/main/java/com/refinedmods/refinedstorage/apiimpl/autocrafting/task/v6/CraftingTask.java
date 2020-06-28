@@ -624,6 +624,23 @@ public class CraftingTask implements ICraftingTask {
         return null;
     }
 
+    @Override
+    public void start() {
+        if (hasMissing()) {
+            LOGGER.warn("Crafting task with missing items or fluids cannot execute, cancelling...");
+            return;
+        }
+
+        crafts.values().forEach(craft -> {
+            totalSteps += craft.getQuantity();
+            craft.finishCalculation();
+        });
+
+        executionStarted = System.currentTimeMillis();
+
+        extractInitial();
+    }
+
     private void extractInitial() {
         if (!toExtractInitial.isEmpty()) {
             List<ItemStack> toRemove = new ArrayList<>();
@@ -986,14 +1003,7 @@ public class CraftingTask implements ICraftingTask {
             return true;
         }
 
-        if (executionStarted == -1) {
-            executionStarted = System.currentTimeMillis();
-        }
-
         ++ticks;
-        if (ticks < 20 * 10) {
-            return false;
-        }
 
         if (this.crafts.isEmpty()) {
             List<Runnable> toPerform = new ArrayList<>();
