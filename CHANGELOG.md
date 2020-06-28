@@ -1,10 +1,13 @@
 # Refined Storage Changelog
 
 ### 1.8.7
+- Added a craft-only option to the Exporter (raoulvdberge)
 - Fixed Regulator mode item and fluid counts not saving properly (raoulvdberge)
 - Fixed Wireless Crafting Monitor not closing properly (raoulvdberge)
 - Fixed Controller always using energy, even when disabled with redstone (raoulvdberge)
 - Fixed internal crafting inventory not being returned when Controller is broken (raoulvdberge)
+- Fixed bug where autocrafting tasks started on the same tick make the wrong assumption about available items and fluids (Darkere)
+- Fixed bug where the "To craft" amount in the Crafting Preview window is wrong (raoulvdberge)
 - Drastically improved shift clicking performance in Crafting Grid (Darkere)
 - Removed autocrafting engine version from crafting preview screen (raoulvdberge)
 
