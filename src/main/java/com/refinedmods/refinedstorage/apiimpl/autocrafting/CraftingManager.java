@@ -75,9 +75,9 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void add(@Nonnull ICraftingTask task) {
+    public void start(@Nonnull ICraftingTask task) {
+        task.start();
         tasksToAdd.add(task);
-        ((CraftingTask) task).extractInitial();
 
         network.markDirty();
     }
@@ -255,7 +255,7 @@ public class CraftingManager implements ICraftingManager {
                 ICraftingTaskError error = task.calculate();
 
                 if (error == null && !task.hasMissing()) {
-                    this.add(task);
+                    this.start(task);
 
                     return task;
                 } else {
@@ -291,7 +291,7 @@ public class CraftingManager implements ICraftingManager {
                 ICraftingTaskError error = task.calculate();
 
                 if (error == null && !task.hasMissing()) {
-                    this.add(task);
+                    this.start(task);
 
                     return task;
                 } else {

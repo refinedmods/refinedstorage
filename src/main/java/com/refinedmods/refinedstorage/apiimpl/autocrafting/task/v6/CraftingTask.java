@@ -264,16 +264,6 @@ public class CraftingTask implements ICraftingTask {
             this.toCraftFluids.add(req);
         }
 
-        if (missing.isEmpty()) {
-            crafts.values().forEach(c -> {
-                totalSteps += c.getQuantity();
-
-                if (c instanceof Processing) {
-                    ((Processing) c).finishCalculation();
-                }
-            });
-        }
-
         this.state = CraftingTaskState.CALCULATED;
 
         return null;
@@ -595,6 +585,19 @@ public class CraftingTask implements ICraftingTask {
         patternsUsed.remove(pattern);
         return null;
     }
+
+    @Override
+    public void start() {
+        crafts.values().forEach(craft -> {
+            totalSteps += craft.getQuantity();
+            craft.finishCalculation();
+        });
+
+        executionStarted = System.currentTimeMillis();
+
+        extractInitial();
+    }
+
 
     public void extractInitial() {
         if (!toExtractInitial.isEmpty()) {
@@ -928,10 +931,6 @@ public class CraftingTask implements ICraftingTask {
             LOGGER.warn("Crafting task with missing items or fluids cannot execute, cancelling...");
 
             return true;
-        }
-
-        if (executionStarted == -1) {
-            executionStarted = System.currentTimeMillis();
         }
 
         ++ticks;

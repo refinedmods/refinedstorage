@@ -125,4 +125,9 @@ public interface ICraftingTask {
      * @return the state of this crafting task
      */
     CraftingTaskState getState();
+
+    /**
+     * Start the CraftingTask
+     */
+    void start();
 }
