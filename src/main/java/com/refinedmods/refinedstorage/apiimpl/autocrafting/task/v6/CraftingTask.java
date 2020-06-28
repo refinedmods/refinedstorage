@@ -264,16 +264,6 @@ public class CraftingTask implements ICraftingTask {
             this.toCraftFluids.add(req);
         }
 
-        if (missing.isEmpty()) {
-            crafts.values().forEach(c -> {
-                totalSteps += c.getQuantity();
-
-                if (c instanceof Processing) {
-                    ((Processing) c).finishCalculation();
-                }
-            });
-        }
-
         this.state = CraftingTaskState.CALCULATED;
 
         return null;
@@ -545,7 +535,7 @@ public class CraftingTask implements ICraftingTask {
 
                         fromNetwork = mutatedFluidStorage.get(possibleInput, IComparer.COMPARE_NBT);
 
-                        toExtractInitialFluids.add(possibleInput,toTake);
+                        toExtractInitialFluids.add(possibleInput, toTake);
                     }
                     if (remaining > 0) {
                         ICraftingPattern subPattern = network.getCraftingManager().getPattern(possibleInput);
@@ -595,6 +585,24 @@ public class CraftingTask implements ICraftingTask {
         patternsUsed.remove(pattern);
         return null;
     }
+
+    @Override
+    public void start() {
+        if (hasMissing()) {
+            LOGGER.warn("Crafting task with missing items or fluids cannot execute, cancelling...");
+            return;
+        }
+
+        crafts.values().forEach(craft -> {
+            totalSteps += craft.getQuantity();
+            craft.finishCalculation();
+        });
+
+        executionStarted = System.currentTimeMillis();
+
+        extractInitial();
+    }
+
 
     private void extractInitial() {
         if (!toExtractInitial.isEmpty()) {
@@ -930,10 +938,6 @@ public class CraftingTask implements ICraftingTask {
             return true;
         }
 
-        if (executionStarted == -1) {
-            executionStarted = System.currentTimeMillis();
-        }
-
         ++ticks;
 
         if (this.crafts.isEmpty()) {
@@ -1155,7 +1159,7 @@ public class CraftingTask implements ICraftingTask {
                 }
 
                 for (StackListEntry<ItemStack> put : p.getItemsToDisplay().getStacks()) {
-                    if (p.getProcessing() > 0|| p.getState() !=ProcessingState.READY) {
+                    if (p.getProcessing() > 0 || p.getState() != ProcessingState.READY) {
                         ICraftingMonitorElement element = new ItemCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getCount() * p.getProcessing(), 0, 0);
 
                         if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
@@ -1165,17 +1169,17 @@ public class CraftingTask implements ICraftingTask {
                         } else if (p.getState() == ProcessingState.LOCKED) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
                         }
-                        elements.add(element,true);
+                        elements.add(element, true);
                     }
                 }
                 for (StackListEntry<ItemStack> receive : p.getItemsToReceive().getStacks()) {
                     int count = p.getNeeded(receive.getStack());
                     if (count > 0) {
-                        elements.add(new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0),true);
+                        elements.add(new ItemCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0), true);
                     }
                 }
                 for (StackListEntry<FluidStack> put : p.getFluidsToUse().getStacks()) {
-                    if (p.getProcessing() > 0|| p.getState() !=ProcessingState.READY) {
+                    if (p.getProcessing() > 0 || p.getState() != ProcessingState.READY) {
                         ICraftingMonitorElement element = new FluidCraftingMonitorElement(put.getStack(), 0, 0, put.getStack().getAmount() * p.getProcessing(), 0, 0);
                         if (p.getState() == ProcessingState.MACHINE_DOES_NOT_ACCEPT) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.machine_does_not_accept_fluid");
@@ -1184,14 +1188,14 @@ public class CraftingTask implements ICraftingTask {
                         } else if (p.getState() == ProcessingState.LOCKED) {
                             element = new ErrorCraftingMonitorElement(element, "gui.refinedstorage.crafting_monitor.crafter_is_locked");
                         }
-                        elements.add(element,true);
+                        elements.add(element, true);
                     }
                 }
 
                 for (StackListEntry<FluidStack> receive : p.getFluidsToReceive().getStacks()) {
                     int count = p.getNeeded(receive.getStack());
                     if (count > 0) {
-                        elements.add(new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0),true);
+                        elements.add(new FluidCraftingMonitorElement(receive.getStack(), 0, 0, 0, count, 0), true);
                     }
                 }
             }

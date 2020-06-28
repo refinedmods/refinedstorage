@@ -138,4 +138,8 @@ public abstract class Craft {
         return tag;
     }
 
+    void finishCalculation() {
+        //NOOP
+    }
+
 }

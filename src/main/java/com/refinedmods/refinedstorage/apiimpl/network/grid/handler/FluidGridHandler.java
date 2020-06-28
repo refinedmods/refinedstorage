@@ -122,7 +122,7 @@ public class FluidGridHandler implements IFluidGridHandler {
                         )
                     );
                 } else if (noPreview && !task.hasMissing()) {
-                    network.getCraftingManager().add(task);
+                    network.getCraftingManager().start(task);
 
                     RS.NETWORK_HANDLER.sendTo(player, new GridCraftingStartResponseMessage());
                 } else {
@@ -159,7 +159,7 @@ public class FluidGridHandler implements IFluidGridHandler {
 
             ICraftingTaskError error = task.calculate();
             if (error == null && !task.hasMissing()) {
-                network.getCraftingManager().add(task);
+                network.getCraftingManager().start(task);
             }
         }
     }

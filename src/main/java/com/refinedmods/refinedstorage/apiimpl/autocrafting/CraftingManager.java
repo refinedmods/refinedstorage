@@ -13,6 +13,7 @@ import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTask;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -74,7 +75,8 @@ public class CraftingManager implements ICraftingManager {
     }
 
     @Override
-    public void add(@Nonnull ICraftingTask task) {
+    public void start(@Nonnull ICraftingTask task) {
+        task.start();
         tasksToAdd.add(task);
 
         network.markDirty();
@@ -253,7 +255,7 @@ public class CraftingManager implements ICraftingManager {
                 ICraftingTaskError error = task.calculate();
 
                 if (error == null && !task.hasMissing()) {
-                    this.add(task);
+                    this.start(task);
 
                     return task;
                 } else {
@@ -289,7 +291,7 @@ public class CraftingManager implements ICraftingManager {
                 ICraftingTaskError error = task.calculate();
 
                 if (error == null && !task.hasMissing()) {
-                    this.add(task);
+                    this.start(task);
 
                     return task;
                 } else {
