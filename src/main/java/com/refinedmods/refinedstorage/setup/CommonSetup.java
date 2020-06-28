@@ -20,6 +20,7 @@ import com.refinedmods.refinedstorage.apiimpl.network.grid.factory.*;
 import com.refinedmods.refinedstorage.apiimpl.network.node.*;
 import com.refinedmods.refinedstorage.apiimpl.network.node.diskdrive.DiskDriveNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.diskmanipulator.DiskManipulatorNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.exporter.ExporterNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.FluidStorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.network.node.storage.StorageNetworkNode;
 import com.refinedmods.refinedstorage.apiimpl.storage.FluidStorageType;

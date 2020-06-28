@@ -125,4 +125,11 @@ public interface ICraftingTask {
      * @return the state of this crafting task
      */
     CraftingTaskState getState();
+
+    /**
+     * Adds a output hook.
+     *
+     * @param outputHook the hook
+     */
+    void addOutputHook(ICraftingTaskOutputHook outputHook);
 }

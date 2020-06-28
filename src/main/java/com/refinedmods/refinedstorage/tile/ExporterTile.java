@@ -1,7 +1,7 @@
 package com.refinedmods.refinedstorage.tile;
 
 import com.refinedmods.refinedstorage.RSTiles;
-import com.refinedmods.refinedstorage.apiimpl.network.node.ExporterNetworkNode;
+import com.refinedmods.refinedstorage.apiimpl.network.node.exporter.ExporterNetworkNode;
 import com.refinedmods.refinedstorage.tile.config.IComparable;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
