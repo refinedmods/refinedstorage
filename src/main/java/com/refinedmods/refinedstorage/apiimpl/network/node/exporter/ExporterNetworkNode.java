@@ -126,7 +126,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
             FluidStack slot = fluidFilters.getFluid(filterSlot);
 
             if (!slot.isEmpty()) {
-                int stackSize = upgrades.getStackInteractCount();
+                int stackSize = FluidAttributes.BUCKET_VOLUME * upgrades.getStackInteractCount();
 
                 if (upgrades.hasUpgrade(UpgradeItem.Type.REGULATOR)) {
                     stackSize = getStackInteractCountForRegulatorUpgrade(handler, slot, stackSize);
