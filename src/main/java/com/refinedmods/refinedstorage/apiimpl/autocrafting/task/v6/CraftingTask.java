@@ -588,6 +588,11 @@ public class CraftingTask implements ICraftingTask {
 
     @Override
     public void start() {
+        if (hasMissing()) {
+            LOGGER.warn("Crafting task with missing items or fluids cannot execute, cancelling...");
+            return;
+        }
+
         crafts.values().forEach(craft -> {
             totalSteps += craft.getQuantity();
             craft.finishCalculation();
@@ -599,7 +604,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
 
-    public void extractInitial() {
+    private void extractInitial() {
         if (!toExtractInitial.isEmpty()) {
             List<ItemStack> toRemove = new ArrayList<>();
 
