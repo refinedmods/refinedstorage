@@ -68,7 +68,7 @@ public class InterfaceOutputInterceptor implements IOutputInterceptor {
                 toInsert = stack.getCount();
             }
 
-            if (toInsert > 0) { // 3 > 0
+            if (toInsert > 0) {
                 if (got.isEmpty()) {
                     iface.getExportItems().setStackInSlot(slot, ItemHandlerHelper.copyStackWithSize(stack, toInsert));
                 } else {

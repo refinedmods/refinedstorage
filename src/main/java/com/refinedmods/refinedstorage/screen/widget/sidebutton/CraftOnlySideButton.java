@@ -9,10 +9,25 @@ import net.minecraft.util.text.TextFormatting;
 public class CraftOnlySideButton extends SideButton {
     private final TileDataParameter<Boolean, ?> parameter;
 
-    public CraftOnlySideButton(BaseScreen<?> screen, TileDataParameter<Boolean, ?> parameter) {
+    private boolean hasCraftingUpgrade;
+
+    public CraftOnlySideButton(BaseScreen<?> screen, TileDataParameter<Boolean, ?> parameter, boolean hasCraftingUpgrade) {
         super(screen);
 
         this.parameter = parameter;
+        this.hasCraftingUpgrade = hasCraftingUpgrade;
+        this.updateVisibility();
+    }
+
+    public void tick(boolean hasCraftingUpgrade) {
+        if (this.hasCraftingUpgrade != hasCraftingUpgrade) {
+            this.hasCraftingUpgrade = hasCraftingUpgrade;
+            this.updateVisibility();
+        }
+    }
+
+    private void updateVisibility() {
+        this.visible = hasCraftingUpgrade;
     }
 
     @Override

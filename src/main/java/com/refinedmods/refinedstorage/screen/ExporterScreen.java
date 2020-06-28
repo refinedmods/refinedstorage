@@ -3,7 +3,10 @@ package com.refinedmods.refinedstorage.screen;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.container.ExporterContainer;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
-import com.refinedmods.refinedstorage.screen.widget.sidebutton.*;
+import com.refinedmods.refinedstorage.screen.widget.sidebutton.CraftOnlySideButton;
+import com.refinedmods.refinedstorage.screen.widget.sidebutton.ExactModeSideButton;
+import com.refinedmods.refinedstorage.screen.widget.sidebutton.RedstoneModeSideButton;
+import com.refinedmods.refinedstorage.screen.widget.sidebutton.TypeSideButton;
 import com.refinedmods.refinedstorage.tile.ExporterTile;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,14 +14,12 @@ import net.minecraft.util.text.ITextComponent;
 
 public class ExporterScreen extends BaseScreen<ExporterContainer> {
     private boolean hasRegulatorUpgrade;
-    private boolean hasCraftingUpgrade;
-    private SideButton craftOnlyButton;
+    private CraftOnlySideButton craftOnlyButton;
 
     public ExporterScreen(ExporterContainer container, PlayerInventory playerInventory, ITextComponent title) {
         super(container, 211, 137, playerInventory, title);
 
         this.hasRegulatorUpgrade = hasRegulatorUpgrade();
-        this.hasCraftingUpgrade = hasCraftingUpgrade();
     }
 
     private boolean hasRegulatorUpgrade() {
@@ -34,8 +35,7 @@ public class ExporterScreen extends BaseScreen<ExporterContainer> {
         addSideButton(new RedstoneModeSideButton(this, ExporterTile.REDSTONE_MODE));
         addSideButton(new TypeSideButton(this, ExporterTile.TYPE));
         addSideButton(new ExactModeSideButton(this, ExporterTile.COMPARE));
-        addSideButton(craftOnlyButton = new CraftOnlySideButton(this, ExporterTile.CRAFT_ONLY));
-        craftOnlyButton.visible = hasCraftingUpgrade;
+        addSideButton(craftOnlyButton = new CraftOnlySideButton(this, ExporterTile.CRAFT_ONLY, hasCraftingUpgrade()));
     }
 
     @Override
@@ -47,12 +47,7 @@ public class ExporterScreen extends BaseScreen<ExporterContainer> {
             container.initSlots();
         }
 
-        boolean updatedHasCraftingUpgrade = hasCraftingUpgrade();
-        if (hasCraftingUpgrade != updatedHasCraftingUpgrade) {
-            hasCraftingUpgrade = updatedHasCraftingUpgrade;
-
-            craftOnlyButton.visible = hasCraftingUpgrade;
-        }
+        craftOnlyButton.tick(hasCraftingUpgrade());
     }
 
     @Override
