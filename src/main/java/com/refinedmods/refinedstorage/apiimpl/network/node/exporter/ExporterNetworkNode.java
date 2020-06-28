@@ -139,7 +139,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                         ICraftingTask task = network.getCraftingManager().request(new SlottedCraftingRequest(this, filterSlot), slot, stackSize);
 
                         if (task != null) {
-                            task.addOutputHook(new ExporterCraftingTaskOutputHook(ItemStack.EMPTY, slot.copy(), this));
+                            task.addOutputInterceptor(new ExporterOutputInterceptor(ItemStack.EMPTY, slot.copy(), this));
                         }
                     } else {
                         FluidStack took = network.extractFluid(slot, stackSize, compare, Action.SIMULATE);
@@ -218,7 +218,7 @@ public class ExporterNetworkNode extends NetworkNode implements IComparable, ITy
                         ICraftingTask task = network.getCraftingManager().request(new SlottedCraftingRequest(this, filterSlot), slot, stackSize);
 
                         if (task != null) {
-                            task.addOutputHook(new ExporterCraftingTaskOutputHook(slot.copy(), FluidStack.EMPTY, this));
+                            task.addOutputInterceptor(new ExporterOutputInterceptor(slot.copy(), FluidStack.EMPTY, this));
                         }
                     } else {
                         ItemStack took = network.extractItem(slot, Math.min(slot.getMaxStackSize(), stackSize), compare, Action.SIMULATE);

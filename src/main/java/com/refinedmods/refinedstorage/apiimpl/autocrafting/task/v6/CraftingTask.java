@@ -9,6 +9,7 @@ import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICrafting
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElementList;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
 import com.refinedmods.refinedstorage.api.autocrafting.task.*;
+import com.refinedmods.refinedstorage.api.autocrafting.task.interceptor.IOutputInterceptor;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.node.INetworkNode;
 import com.refinedmods.refinedstorage.api.storage.disk.IStorageDisk;
@@ -102,7 +103,7 @@ public class CraftingTask implements ICraftingTask {
     private final List<ItemStack> toCraft = new ArrayList<>();
     private final List<FluidStack> toCraftFluids = new ArrayList<>();
 
-    private final Set<ICraftingTaskOutputHook> outputHooks = new HashSet<>();
+    private final Set<IOutputInterceptor> outputInterceptors = new HashSet<>();
 
     public CraftingTask(INetwork network, ICraftingRequestInfo requested, int quantity, ICraftingPattern pattern) {
         this.network = network;
@@ -718,8 +719,8 @@ public class CraftingTask implements ICraftingTask {
     private void insertOutput(ItemStack output, int count) {
         output = ItemHandlerHelper.copyStackWithSize(output, count);
 
-        for (ICraftingTaskOutputHook hook : this.outputHooks) {
-            output = hook.intercept(output);
+        for (IOutputInterceptor interceptor : this.outputInterceptors) {
+            output = interceptor.intercept(output);
             if (output.isEmpty()) {
                 return;
             }
@@ -733,8 +734,8 @@ public class CraftingTask implements ICraftingTask {
     private void insertOutput(FluidStack output, int count) {
         output = StackUtils.copy(output, count);
 
-        for (ICraftingTaskOutputHook hook : this.outputHooks) {
-            output = hook.intercept(output);
+        for (IOutputInterceptor interceptor : this.outputInterceptors) {
+            output = interceptor.intercept(output);
             if (output.isEmpty()) {
                 return;
             }
@@ -1351,7 +1352,7 @@ public class CraftingTask implements ICraftingTask {
     }
 
     @Override
-    public void addOutputHook(ICraftingTaskOutputHook outputHook) {
-        outputHooks.add(outputHook);
+    public void addOutputInterceptor(IOutputInterceptor interceptor) {
+        outputInterceptors.add(interceptor);
     }
 }

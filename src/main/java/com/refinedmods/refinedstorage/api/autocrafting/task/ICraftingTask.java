@@ -3,6 +3,7 @@ package com.refinedmods.refinedstorage.api.autocrafting.task;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.craftingmonitor.ICraftingMonitorElement;
 import com.refinedmods.refinedstorage.api.autocrafting.preview.ICraftingPreviewElement;
+import com.refinedmods.refinedstorage.api.autocrafting.task.interceptor.IOutputInterceptor;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.util.IStackList;
 import net.minecraft.item.ItemStack;
@@ -122,9 +123,9 @@ public interface ICraftingTask {
     UUID getId();
 
     /**
-     * Adds a output hook.
+     * Adds an output interceptor.
      *
-     * @param outputHook the hook
+     * @param interceptor the interceptor
      */
-    void addOutputHook(ICraftingTaskOutputHook outputHook);
+    void addOutputInterceptor(IOutputInterceptor interceptor);
 }

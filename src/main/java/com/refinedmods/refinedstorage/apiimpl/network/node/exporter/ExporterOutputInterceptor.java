@@ -1,6 +1,6 @@
 package com.refinedmods.refinedstorage.apiimpl.network.node.exporter;
 
-import com.refinedmods.refinedstorage.api.autocrafting.task.ICraftingTaskOutputHook;
+import com.refinedmods.refinedstorage.api.autocrafting.task.interceptor.IOutputInterceptor;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.item.UpgradeItem;
@@ -11,12 +11,12 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ExporterCraftingTaskOutputHook implements ICraftingTaskOutputHook {
+public class ExporterOutputInterceptor implements IOutputInterceptor {
     private final ItemStack interestedItemStack;
     private final FluidStack interestedFluidStack;
     private final ExporterNetworkNode exporter;
 
-    public ExporterCraftingTaskOutputHook(ItemStack interestedItemStack, FluidStack interestedFluidStack, ExporterNetworkNode exporter) {
+    public ExporterOutputInterceptor(ItemStack interestedItemStack, FluidStack interestedFluidStack, ExporterNetworkNode exporter) {
         this.interestedItemStack = interestedItemStack;
         this.interestedFluidStack = interestedFluidStack;
         this.exporter = exporter;
