@@ -39,11 +39,11 @@ import com.refinedmods.refinedstorage.apiimpl.util.Comparer;
 import com.refinedmods.refinedstorage.apiimpl.util.FluidStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.ItemStackList;
 import com.refinedmods.refinedstorage.apiimpl.util.QuantityFormatter;
+import com.refinedmods.refinedstorage.util.SaveDataManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.ModList;
@@ -126,16 +126,14 @@ public class API implements IRSAPI {
 
     @Override
     public INetworkNodeManager getNetworkNodeManager(ServerWorld world) {
-        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkNodeManager.NAME;
 
-        return world.getSavedData().getOrCreate(() -> new NetworkNodeManager(name, world), name);
+        return SaveDataManager.getNetworkNodeManager(world);
     }
 
     @Override
     public INetworkManager getNetworkManager(ServerWorld world) {
-        String name = world.getDimension().getType().getRegistryName().getNamespace() + "_" + world.getDimension().getType().getRegistryName().getPath() + "_" + NetworkManager.NAME;
 
-        return world.getSavedData().getOrCreate(() -> new NetworkManager(name, world), name);
+        return SaveDataManager.getNetworkManager(world);
     }
 
     @Override
@@ -195,9 +193,8 @@ public class API implements IRSAPI {
     @Nonnull
     @Override
     public IStorageDiskManager getStorageDiskManager(ServerWorld anyWorld) {
-        ServerWorld world = anyWorld.getServer().getWorld(DimensionType.OVERWORLD);
 
-        return StorageDiskManager.getOrCreate(world);
+        return SaveDataManager.getStorageDiskManager();
     }
 
     @Nonnull

@@ -3,11 +3,12 @@ package com.refinedmods.refinedstorage.apiimpl.network;
 import com.refinedmods.refinedstorage.api.network.INetwork;
 import com.refinedmods.refinedstorage.api.network.INetworkManager;
 import com.refinedmods.refinedstorage.api.network.NetworkType;
+import com.refinedmods.refinedstorage.util.ISaveData;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,28 +17,26 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class NetworkManager extends WorldSavedData implements INetworkManager {
-    public static final String NAME = "refinedstorage_networks";
+public class NetworkManager implements INetworkManager, ISaveData {
+    public static final String NAME = "refinedstorage_networks.dat";
 
     private static final String NBT_NETWORKS = "Networks";
     private static final String NBT_TYPE = "Type";
     private static final String NBT_DATA = "Data";
     private static final String NBT_POS = "Pos";
 
-    private final World world;
-
+    private boolean dirty;
+    private DimensionType dimensionType;
     private Logger logger = LogManager.getLogger(getClass());
 
     private ConcurrentHashMap<BlockPos, INetwork> networks = new ConcurrentHashMap<>();
 
-    public NetworkManager(String name, World world) {
-        super(name);
-
-        this.world = world;
+    public NetworkManager(DimensionType type) {
+        this.dimensionType = type;
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundNBT tag, ServerWorld world) {
         if (tag.contains(NBT_NETWORKS)) {
             ListNBT networksTag = tag.getList(NBT_NETWORKS, Constants.NBT.TAG_COMPOUND);
 
@@ -64,7 +63,13 @@ public class NetworkManager extends WorldSavedData implements INetworkManager {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public String getFileName() {
+        //TODO 1.16 remove double identifier? file is already in the data folder for this world, no need to give it the world as name
+        return dimensionType.getRegistryName().getNamespace() + "_" + dimensionType.getRegistryName().getPath() + "_" + NAME;
+    }
+
+    @Override
+    public void write(CompoundNBT tag) {
         ListNBT list = new ListNBT();
 
         for (INetwork network : all()) {
@@ -82,8 +87,16 @@ public class NetworkManager extends WorldSavedData implements INetworkManager {
         }
 
         tag.put(NBT_NETWORKS, list);
+    }
 
-        return tag;
+    @Override
+    public boolean isMarkedForSaving() {
+        return dirty;
+    }
+
+    @Override
+    public void markSaved() {
+        dirty = false;
     }
 
     @Nullable
@@ -121,6 +134,6 @@ public class NetworkManager extends WorldSavedData implements INetworkManager {
 
     @Override
     public void markForSaving() {
-        markDirty();
+        dirty = true;
     }
 }

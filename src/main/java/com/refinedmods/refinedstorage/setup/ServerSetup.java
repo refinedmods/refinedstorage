@@ -1,12 +1,11 @@
 package com.refinedmods.refinedstorage.setup;
 
-import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.storage.disk.StorageDiskManager;
 import com.refinedmods.refinedstorage.command.PatternDumpCommand;
+import com.refinedmods.refinedstorage.util.SaveDataManager;
 import net.minecraft.command.Commands;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 
@@ -21,14 +20,15 @@ public class ServerSetup {
 
     @SubscribeEvent
     public void onWorldSave(WorldEvent.Save e) {
-        API.instance().getStorageDiskManager((ServerWorld) e.getWorld()).save();
+        if (!e.getWorld().isRemote()) {
+            SaveDataManager.save((ServerWorld) e.getWorld());
+        }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onWorldLoad(WorldEvent.Load e) {
-        //load gets called for each dimension. But we only need to call this once.
-        if (!e.getWorld().isRemote() && e.getWorld().getDimension().getType().equals(DimensionType.OVERWORLD)) {
-            API.instance().getStorageDiskManager((ServerWorld) e.getWorld()).read();
+        if (!e.getWorld().isRemote()) {
+            SaveDataManager.read((ServerWorld) e.getWorld());
         }
     }
 
@@ -36,8 +36,8 @@ public class ServerSetup {
     public void onWorldUnload(WorldEvent.Unload e) {
         //Overworld is the only dimension that only gets unloaded when the save game is switched
         //Other dimensions may get unloaded at any point
-        if (!e.getWorld().isRemote() && e.getWorld().getDimension().getType().equals(DimensionType.OVERWORLD)) {
-            StorageDiskManager.resetManager();
+        if (!e.getWorld().isRemote()) {
+            SaveDataManager.removeManagers((ServerWorld) e.getWorld());
         }
     }
 }

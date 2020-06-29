@@ -53,13 +53,4 @@ public interface IStorageDiskManager {
      */
     void markForSaving();
 
-    /**
-     * Save disks to file
-     */
-    void save();
-
-    /**
-     * read disks from file
-     */
-    void read();
 }
