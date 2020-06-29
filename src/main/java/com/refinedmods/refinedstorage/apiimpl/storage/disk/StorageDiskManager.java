@@ -139,5 +139,4 @@ public class StorageDiskManager implements IStorageDiskManager, ISaveData {
     public void markSaved() {
         dirty = false;
     }
-
 }

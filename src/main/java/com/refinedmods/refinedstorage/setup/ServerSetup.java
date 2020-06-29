@@ -25,7 +25,7 @@ public class ServerSetup {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load e) {
         if (!e.getWorld().isRemote()) {
             SaveDataManager.read((ServerWorld) e.getWorld());

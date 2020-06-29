@@ -38,7 +38,6 @@ public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
         this.dimensionType = type;
     }
 
-
     @Override
     public void read(CompoundNBT tag, ServerWorld world) {
         if (tag.contains(NBT_NODES)) {

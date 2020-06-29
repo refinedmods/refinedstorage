@@ -46,10 +46,12 @@ public class SaveDataManager {
 
     public static void save(ServerWorld world) {
         for (ISaveData saveDatum : worldSaveData.get(world.getDimension().getType())) {
-            CompoundNBT nbt = new CompoundNBT();
-            saveDatum.write(nbt);
-            writeTagToFile(world, saveDatum.getFileName(), nbt);
-            saveDatum.markSaved();
+            if (saveDatum.isMarkedForSaving()) {
+                CompoundNBT nbt = new CompoundNBT();
+                saveDatum.write(nbt);
+                writeTagToFile(world, saveDatum.getFileName(), nbt);
+                saveDatum.markSaved();
+            }
         }
     }
 
@@ -143,5 +145,4 @@ public class SaveDataManager {
         nbt = NBTUtil.update(world.getSaveHandler().getFixer(), DefaultTypeReferences.SAVED_DATA, nbt, i, SharedConstants.getVersion().getWorldVersion());
         return nbt.getCompound(NBT_MINECRAFT_DATA);
     }
-
 }

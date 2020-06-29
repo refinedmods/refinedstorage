@@ -31,5 +31,4 @@ public interface ISaveData {
      * mark file as not in need of saving
      */
     void markSaved();
-
 }
