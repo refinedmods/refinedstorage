@@ -64,7 +64,7 @@ public class ItemStorageTracker implements IStorageTracker<ItemStack> {
         return list;
     }
 
-    private class Key {
+    private static class Key {
         private final ItemStack stack;
 
         public Key(ItemStack stack) {

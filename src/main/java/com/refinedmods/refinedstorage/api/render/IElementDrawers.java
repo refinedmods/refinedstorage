@@ -36,7 +36,7 @@ public interface IElementDrawers {
         return getNullDrawer();
     }
 
-    default IElementDrawer getErrorDrawer() {
+    default IElementDrawer<?> getErrorDrawer() {
         return getNullDrawer();
     }
 

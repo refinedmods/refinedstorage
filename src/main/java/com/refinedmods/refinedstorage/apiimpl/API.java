@@ -92,7 +92,7 @@ public class API implements IRSAPI {
 
         for (ModFileScanData.AnnotationData annotation : annotations) {
             try {
-                Class clazz = Class.forName(annotation.getClassType().getClassName());
+                Class<?> clazz = Class.forName(annotation.getClassType().getClassName());
                 Field field = clazz.getField(annotation.getMemberName());
 
                 if (field.getType() == IRSAPI.class) {
@@ -293,8 +293,8 @@ public class API implements IRSAPI {
     }
 
     private int getHashCode(ListNBT tag, int result) {
-        for (int i = 0; i < tag.size(); ++i) {
-            result = getHashCode(tag.get(i), result);
+        for (INBT tagItem : tag) {
+            result = getHashCode(tagItem, result);
         }
 
         return result;

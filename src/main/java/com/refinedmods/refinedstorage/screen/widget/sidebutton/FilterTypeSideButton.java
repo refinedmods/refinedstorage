@@ -6,7 +6,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class FilterTypeSideButton extends SideButton {
-    private FilterScreen screen;
+    private final FilterScreen screen;
 
     public FilterTypeSideButton(FilterScreen screen) {
         super(screen);

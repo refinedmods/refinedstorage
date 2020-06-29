@@ -9,6 +9,7 @@ public interface ICraftingMonitorElementList {
      * @param element the {@link ICraftingMonitorElement}
      */
     void directAdd(ICraftingMonitorElement element);
+
     /**
      * Add a element to the Storage list, similar elements will be merged.
      * A {@link #commit()} will stop any following adds to be merged with previous ones.
@@ -16,6 +17,7 @@ public interface ICraftingMonitorElementList {
      * @param element the {@link ICraftingMonitorElement}
      */
     void addStorage(ICraftingMonitorElement element);
+
     /**
      * Add a element to the Processing or Crafting list, similar elements will be merged.
      * A {@link #commit()} will stop any following adds to be merged with previous ones.

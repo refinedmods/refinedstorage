@@ -11,8 +11,8 @@ import net.minecraftforge.items.wrapper.RangedWrapper;
 import java.util.Objects;
 
 class InventoryInventoryWrapper implements IInventoryWrapper {
-    private IInventory inventory;
-    private IItemHandler wrapper;
+    private final IInventory inventory;
+    private final IItemHandler wrapper;
 
     InventoryInventoryWrapper(IInventory inventory) {
         this.inventory = inventory;

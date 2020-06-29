@@ -1,5 +1,6 @@
 package com.refinedmods.refinedstorage.screen.widget.sidebutton;
 
+import com.refinedmods.refinedstorage.container.CrafterContainer;
 import com.refinedmods.refinedstorage.screen.BaseScreen;
 import com.refinedmods.refinedstorage.tile.CrafterTile;
 import com.refinedmods.refinedstorage.tile.data.TileDataManager;
@@ -7,7 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class CrafterModeSideButton extends SideButton {
-    public CrafterModeSideButton(BaseScreen screen) {
+    public CrafterModeSideButton(BaseScreen<CrafterContainer> screen) {
         super(screen);
     }
 

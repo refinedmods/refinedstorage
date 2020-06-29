@@ -18,8 +18,8 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class StorageDiskItemManipulatorWrapper implements IStorageDisk<ItemStack> {
-    private DiskManipulatorNetworkNode diskManipulator;
-    private IStorageDisk<ItemStack> parent;
+    private final DiskManipulatorNetworkNode diskManipulator;
+    private final IStorageDisk<ItemStack> parent;
     private DiskState lastState;
 
     public StorageDiskItemManipulatorWrapper(DiskManipulatorNetworkNode diskManipulator, IStorageDisk<ItemStack> parent) {

@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import java.util.UUID;
 
 public class PortableFluidGridHandler implements IFluidGridHandler {
-    private IPortableGrid portableGrid;
+    private final IPortableGrid portableGrid;
 
     public PortableFluidGridHandler(IPortableGrid portableGrid) {
         this.portableGrid = portableGrid;

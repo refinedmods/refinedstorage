@@ -20,7 +20,6 @@ import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeFluidInvento
 import com.refinedmods.refinedstorage.inventory.listener.NetworkNodeInventoryListener;
 import com.refinedmods.refinedstorage.tile.ExternalStorageTile;
 import com.refinedmods.refinedstorage.tile.config.*;
-import com.refinedmods.refinedstorage.tile.data.TileDataParameter;
 import com.refinedmods.refinedstorage.util.AccessTypeUtils;
 import com.refinedmods.refinedstorage.util.StackUtils;
 import net.minecraft.item.ItemStack;
@@ -51,8 +50,8 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     private static final String NBT_TYPE = "Type";
     private static final String NBT_FLUID_FILTERS = "FluidFilters";
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
     private int priority = 0;
     private int compare = IComparer.COMPARE_NBT;
@@ -61,8 +60,8 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     private AccessType accessType = AccessType.INSERT_EXTRACT;
     private int networkTicks;
 
-    private List<IExternalStorage<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
-    private List<IExternalStorage<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
+    private final List<IExternalStorage<ItemStack>> itemStorages = new CopyOnWriteArrayList<>();
+    private final List<IExternalStorage<FluidStack>> fluidStorages = new CopyOnWriteArrayList<>();
 
     public ExternalStorageNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -213,17 +212,17 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
 
         if (facing != null) {
             if (type == IType.ITEMS) {
-                for (IExternalStorageProvider provider : API.instance().getExternalStorageProviders(StorageType.ITEM)) {
+                for (IExternalStorageProvider<ItemStack> provider : API.instance().getExternalStorageProviders(StorageType.ITEM)) {
                     if (provider.canProvide(facing, getDirection())) {
-                        itemStorages.add(provider.provide(this, () -> getFacingTile(), getDirection()));
+                        itemStorages.add(provider.provide(this, this::getFacingTile, getDirection()));
 
                         break;
                     }
                 }
             } else if (type == IType.FLUIDS) {
-                for (IExternalStorageProvider provider : API.instance().getExternalStorageProviders(StorageType.FLUID)) {
+                for (IExternalStorageProvider<FluidStack> provider : API.instance().getExternalStorageProviders(StorageType.FLUID)) {
                     if (provider.canProvide(facing, getDirection())) {
-                        fluidStorages.add(provider.provide(this, () -> getFacingTile(), getDirection()));
+                        fluidStorages.add(provider.provide(this, this::getFacingTile, getDirection()));
 
                         break;
                     }
@@ -248,31 +247,6 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
     @Override
     public ITextComponent getTitle() {
         return new TranslationTextComponent("gui.refinedstorage:external_storage");
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getRedstoneModeParameter() {
-        return ExternalStorageTile.REDSTONE_MODE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getCompareParameter() {
-        return ExternalStorageTile.COMPARE;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getWhitelistBlacklistParameter() {
-        return ExternalStorageTile.WHITELIST_BLACKLIST;
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getPriorityParameter() {
-        return ExternalStorageTile.PRIORITY;
-    }
-
-    @Override
-    public TileDataParameter<AccessType, ?> getAccessTypeParameter() {
-        return ExternalStorageTile.ACCESS_TYPE;
     }
 
     @Override
@@ -310,11 +284,6 @@ public class ExternalStorageNetworkNode extends NetworkNode implements IStorageP
         }
 
         markDirty();
-    }
-
-    @Override
-    public TileDataParameter<Integer, ?> getTypeParameter() {
-        return ExternalStorageTile.TYPE;
     }
 
     @Override

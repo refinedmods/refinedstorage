@@ -24,7 +24,7 @@ public class FluidCraftingMonitorElement implements ICraftingMonitorElement {
 
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "fluid");
 
-    private FluidStack stack;
+    private final FluidStack stack;
     private int stored;
     private int missing;
     private int processing;

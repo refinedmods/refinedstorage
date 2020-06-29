@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class GridSizeSideButton extends SideButton {
-    private Supplier<Integer> sizeSupplier;
-    private Consumer<Integer> listener;
+    private final Supplier<Integer> sizeSupplier;
+    private final Consumer<Integer> listener;
 
     public GridSizeSideButton(BaseScreen screen, Supplier<Integer> sizeSupplier, Consumer<Integer> listener) {
         super(screen);

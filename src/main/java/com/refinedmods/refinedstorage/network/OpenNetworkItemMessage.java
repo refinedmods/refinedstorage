@@ -12,7 +12,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class OpenNetworkItemMessage {
-    private int slotId;
+    private final int slotId;
 
     public OpenNetworkItemMessage(int slotId) {
         this.slotId = slotId;

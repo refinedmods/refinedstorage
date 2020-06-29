@@ -17,7 +17,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class ItemCraftingPreviewElement implements ICraftingPreviewElement<ItemStack> {
     public static final ResourceLocation ID = new ResourceLocation(RS.ID, "item");
 
-    private ItemStack stack;
+    private final ItemStack stack;
     private int available;
     private boolean missing;
     // If missing is true then toCraft is the missing amount

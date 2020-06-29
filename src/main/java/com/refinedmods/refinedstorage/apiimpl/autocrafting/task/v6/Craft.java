@@ -27,11 +27,11 @@ public abstract class Craft {
     private static final String NBT_QUANTITY = "Quantity";
     private static final String NBT_NEEDED_PER_CRAFT = "NeededPerCraft";
 
-    private boolean root;
+    private final boolean root;
     protected int quantity;
-    private ICraftingPattern pattern;
-    private Map<Integer, IStackList<ItemStack>> itemsToUse = new LinkedHashMap<>();
-    private Map<Integer, Integer> neededPerCraft = new LinkedHashMap<>();
+    private final ICraftingPattern pattern;
+    private final Map<Integer, IStackList<ItemStack>> itemsToUse = new LinkedHashMap<>();
+    private final Map<Integer, Integer> neededPerCraft = new LinkedHashMap<>();
 
     Craft(ICraftingPattern pattern, boolean root) {
         this.pattern = pattern;
@@ -136,6 +136,10 @@ public abstract class Craft {
 
 
         return tag;
+    }
+
+    void finishCalculation() {
+        //NOOP
     }
 
 }

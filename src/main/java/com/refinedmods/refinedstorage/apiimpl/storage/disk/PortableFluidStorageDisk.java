@@ -15,8 +15,8 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class PortableFluidStorageDisk implements IStorageDisk<FluidStack> {
-    private IStorageDisk<FluidStack> parent;
-    private IPortableGrid portableGrid;
+    private final IStorageDisk<FluidStack> parent;
+    private final IPortableGrid portableGrid;
 
     public PortableFluidStorageDisk(IStorageDisk<FluidStack> parent, IPortableGrid portableGrid) {
         this.parent = parent;

@@ -32,7 +32,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class ClientSetup {
-    private BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
+    private final BakedModelOverrideRegistry bakedModelOverrideRegistry = new BakedModelOverrideRegistry();
 
     public ClientSetup() {
         IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();

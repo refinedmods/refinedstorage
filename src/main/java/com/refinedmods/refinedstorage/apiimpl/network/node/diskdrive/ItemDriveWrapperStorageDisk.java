@@ -17,8 +17,8 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 public class ItemDriveWrapperStorageDisk implements IStorageDisk<ItemStack> {
-    private DiskDriveNetworkNode diskDrive;
-    private IStorageDisk<ItemStack> parent;
+    private final DiskDriveNetworkNode diskDrive;
+    private final IStorageDisk<ItemStack> parent;
     private DiskState lastState;
 
     public ItemDriveWrapperStorageDisk(DiskDriveNetworkNode diskDrive, IStorageDisk<ItemStack> parent) {

@@ -14,8 +14,8 @@ import javax.annotation.Nullable;
 public class ErrorCraftingMonitorElement implements ICraftingMonitorElement {
     public static final ResourceLocation ID = new ResourceLocation("error");
 
-    private ICraftingMonitorElement base;
-    private String message;
+    private final ICraftingMonitorElement base;
+    private final String message;
 
     public ErrorCraftingMonitorElement(ICraftingMonitorElement base, String message) {
         this.base = base;

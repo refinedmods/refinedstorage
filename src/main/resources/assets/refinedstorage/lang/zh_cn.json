@@ -1,10 +1,8 @@
 {
-	"itemGroup.refinedstorage": "Refined Storage",
+    "itemGroup.refinedstorage": "Refined Storage",
     "itemGroup.refinedstorage.covers": "Refined Storage 伪装板",
-
     "key.refinedstorage.focusSearchBar": "跳转终端搜索条",
     "key.refinedstorage.clearGridCraftingMatrix": "清空合成网格",
-
     "key.refinedstorage.openWirelessGrid": "打开无线面板",
     "key.refinedstorage.openWirelessFluidGrid": "打开无线流体面板",
     "key.refinedstorage.openPortableGrid": "打开便携面板",
@@ -246,11 +244,9 @@
     "block.refinedstorage.creative_portable_grid": "创造便携式终端",
     "block.refinedstorage.portable_grid.tooltip": "Shift进行放置",
     "block.refinedstorage.crafter_manager": "合成管理器",
-
-
-	"item.refinedstorage.raw_basic_processor": "未处理基础处理器",
-	"item.refinedstorage.raw_improved_processor": "未处理进阶处理器",
-	"item.refinedstorage.raw_advanced_processor": "未处理高级处理器",
+    "item.refinedstorage.raw_basic_processor": "未处理基础处理器",
+    "item.refinedstorage.raw_improved_processor": "未处理进阶处理器",
+    "item.refinedstorage.raw_advanced_processor": "未处理高级处理器",
     "item.refinedstorage.1k_storage_disk": "1k 存储磁盘",
     "item.refinedstorage.4k_storage_disk": "4k 存储磁盘",
     "item.refinedstorage.16k_storage_disk": "16k 存储磁盘",

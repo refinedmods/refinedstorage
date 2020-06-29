@@ -18,12 +18,12 @@ import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.glfw.GLFW;
 
 public class FilterScreen extends BaseScreen<FilterContainer> {
-    private ItemStack stack;
+    private final ItemStack stack;
 
     private int compare;
     private int mode;
     private boolean modFilter;
-    private String name;
+    private final String name;
     private int type;
 
     private CheckboxWidget modFilterCheckBox;

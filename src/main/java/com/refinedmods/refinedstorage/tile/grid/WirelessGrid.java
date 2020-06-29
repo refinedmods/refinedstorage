@@ -8,6 +8,7 @@ import com.refinedmods.refinedstorage.api.network.grid.handler.IItemGridHandler;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCache;
 import com.refinedmods.refinedstorage.api.storage.cache.IStorageCacheListener;
 import com.refinedmods.refinedstorage.api.util.IFilter;
+import com.refinedmods.refinedstorage.api.util.IStackList;
 import com.refinedmods.refinedstorage.apiimpl.storage.cache.listener.ItemGridStorageCacheListener;
 import com.refinedmods.refinedstorage.inventory.item.FilterItemHandler;
 import com.refinedmods.refinedstorage.item.WirelessGridItem;
@@ -51,9 +52,9 @@ public class WirelessGrid implements INetworkAwareGrid {
     private int tabPage;
     private int size;
 
-    private List<IFilter> filters = new ArrayList<>();
-    private List<IGridTab> tabs = new ArrayList<>();
-    private FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
+    private final List<IFilter> filters = new ArrayList<>();
+    private final List<IGridTab> tabs = new ArrayList<>();
+    private final FilterItemHandler filter = (FilterItemHandler) new FilterItemHandler(filters, tabs)
         .addListener((handler, slot, reading) -> {
             if (!stack.hasTag()) {
                 stack.setTag(new CompoundNBT());
@@ -277,7 +278,7 @@ public class WirelessGrid implements INetworkAwareGrid {
     }
 
     @Override
-    public void onCrafted(PlayerEntity player) {
+    public void onCrafted(PlayerEntity player, @Nullable IStackList<ItemStack> availableItems, @Nullable IStackList<ItemStack> usedItems) {
         // NO OP
     }
 

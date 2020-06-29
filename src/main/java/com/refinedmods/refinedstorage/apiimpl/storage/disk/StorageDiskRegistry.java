@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StorageDiskRegistry implements IStorageDiskRegistry {
-    private Map<ResourceLocation, IStorageDiskFactory> factories = new HashMap<>();
+    private final Map<ResourceLocation, IStorageDiskFactory> factories = new HashMap<>();
 
     @Override
     public void add(ResourceLocation id, IStorageDiskFactory factory) {

@@ -30,9 +30,9 @@ public class NetworkNodeManager implements INetworkNodeManager, ISaveData {
     private boolean dirty;
     private DimensionType dimensionType;
 
-    private Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
-    private ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<BlockPos, INetworkNode> nodes = new ConcurrentHashMap<>();
 
     public NetworkNodeManager(DimensionType type) {
         this.dimensionType = type;

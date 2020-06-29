@@ -7,7 +7,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import java.util.Objects;
 
 class ItemHandlerInventoryWrapper implements IInventoryWrapper {
-    private IItemHandler handler;
+    private final IItemHandler handler;
 
     ItemHandlerInventoryWrapper(IItemHandler handler) {
         this.handler = handler;

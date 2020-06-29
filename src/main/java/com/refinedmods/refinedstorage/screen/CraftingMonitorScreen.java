@@ -35,12 +35,12 @@ import java.util.UUID;
 
 public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> {
     public static class Task implements IGridTab {
-        private UUID id;
-        private ICraftingRequestInfo requested;
-        private int qty;
-        private long executionStarted;
-        private int completionPercentage;
-        private List<ICraftingMonitorElement> elements;
+        private final UUID id;
+        private final ICraftingRequestInfo requested;
+        private final int qty;
+        private final long executionStarted;
+        private final int completionPercentage;
+        private final List<ICraftingMonitorElement> elements;
 
         public Task(UUID id, ICraftingRequestInfo requested, int qty, long executionStarted, int completionPercentage, List<ICraftingMonitorElement> elements) {
             this.id = id;
@@ -94,14 +94,14 @@ public class CraftingMonitorScreen extends BaseScreen<CraftingMonitorContainer> 
     private Button cancelButton;
     private Button cancelAllButton;
 
-    private ScrollbarWidget scrollbar;
+    private final ScrollbarWidget scrollbar;
 
-    private ICraftingMonitor craftingMonitor;
+    private final ICraftingMonitor craftingMonitor;
 
     private List<IGridTab> tasks = Collections.emptyList();
-    private TabListWidget tabs;
+    private final TabListWidget tabs;
 
-    private IElementDrawers drawers = new CraftingMonitorElementDrawers(this, font, ITEM_WIDTH, ITEM_HEIGHT);
+    private final IElementDrawers drawers = new CraftingMonitorElementDrawers(this, font, ITEM_WIDTH, ITEM_HEIGHT);
 
     public CraftingMonitorScreen(CraftingMonitorContainer container, PlayerInventory inventory, ITextComponent title) {
         super(container, 254, 201, inventory, title);

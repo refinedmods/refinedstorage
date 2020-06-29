@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
 class FluidFilterInventoryWrapper implements IInventoryWrapper {
-    private FluidInventory filterInv;
+    private final FluidInventory filterInv;
 
     FluidFilterInventoryWrapper(FluidInventory filterInv) {
         this.filterInv = filterInv;

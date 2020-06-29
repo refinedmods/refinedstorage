@@ -8,9 +8,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class TypeSideButton extends SideButton {
-    private TileDataParameter<Integer, ?> type;
+    private final TileDataParameter<Integer, ?> type;
 
-    public TypeSideButton(BaseScreen screen, TileDataParameter<Integer, ?> type) {
+    public TypeSideButton(BaseScreen<?> screen, TileDataParameter<Integer, ?> type) {
         super(screen);
 
         this.type = type;

@@ -28,10 +28,10 @@ import java.util.function.Predicate;
 
 public class CrafterManagerContainer extends BaseContainer {
     private IScreenInfoProvider screenInfoProvider;
-    private CrafterManagerNetworkNode crafterManager;
+    private final CrafterManagerNetworkNode crafterManager;
     private Map<String, Integer> containerData;
-    private Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
-    private Map<String, Integer> headings = new HashMap<>();
+    private final Map<String, IItemHandlerModifiable> dummyInventories = new HashMap<>();
+    private final Map<String, Integer> headings = new HashMap<>();
     private int rows;
 
     public CrafterManagerContainer(CrafterManagerTile crafterManager, PlayerEntity player, int windowId) {

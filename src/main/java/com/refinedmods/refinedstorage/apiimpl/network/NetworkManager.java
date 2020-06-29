@@ -29,7 +29,7 @@ public class NetworkManager implements INetworkManager, ISaveData {
     private DimensionType dimensionType;
     private Logger logger = LogManager.getLogger(getClass());
 
-    private ConcurrentHashMap<BlockPos, INetwork> networks = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<BlockPos, INetwork> networks = new ConcurrentHashMap<>();
 
     public NetworkManager(DimensionType type) {
         this.dimensionType = type;

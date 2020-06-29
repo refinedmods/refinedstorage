@@ -56,10 +56,10 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
     private int type = IType.ITEMS;
     private int ioMode = IO_MODE_INSERT;
 
-    private IStorageDisk<ItemStack>[] itemDisks = new IStorageDisk[6];
-    private IStorageDisk<FluidStack>[] fluidDisks = new IStorageDisk[6];
+    private final IStorageDisk<ItemStack>[] itemDisks = new IStorageDisk[6];
+    private final IStorageDisk<FluidStack>[] fluidDisks = new IStorageDisk[6];
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK) {
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK) {
         @Override
         public int getStackInteractCount() {
             int count = super.getStackInteractCount();
@@ -72,7 +72,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
         }
     }.addListener(new NetworkNodeInventoryListener(this));
 
-    private BaseItemHandler inputDisks = new BaseItemHandler(3)
+    private final BaseItemHandler inputDisks = new BaseItemHandler(3)
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener((handler, slot, reading) -> {
@@ -93,7 +93,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
             }
         });
 
-    private BaseItemHandler outputDisks = new BaseItemHandler(3)
+    private final BaseItemHandler outputDisks = new BaseItemHandler(3)
         .addValidator(new StorageDiskItemValidator())
         .addListener(new NetworkNodeInventoryListener(this))
         .addListener(((handler, slot, reading) -> {
@@ -114,10 +114,10 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
             }
         }));
 
-    private ProxyItemHandler disks = new ProxyItemHandler(inputDisks, outputDisks);
+    private final ProxyItemHandler disks = new ProxyItemHandler(inputDisks, outputDisks);
 
-    private BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
+    private final BaseItemHandler itemFilters = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final FluidInventory fluidFilters = new FluidInventory(9).addListener(new NetworkNodeFluidInventoryListener(this));
 
     public DiskManipulatorNetworkNode(World world, BlockPos pos) {
         super(world, pos);
@@ -149,7 +149,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
             IStorageDisk<ItemStack> storage = itemDisks[slot];
 
             if (ioMode == IO_MODE_INSERT) {
-                insertItemIntoNetwork(storage, slot);
+                insertItemIntoNetwork(storage);
             } else if (ioMode == IO_MODE_EXTRACT) {
                 extractItemFromNetwork(storage, slot);
             }
@@ -172,8 +172,9 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
         }
     }
 
-    private void insertItemIntoNetwork(IStorageDisk<ItemStack> storage, int slot) {
+    private void insertItemIntoNetwork(IStorageDisk<ItemStack> storage) {
         List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
+
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack stack = stacks.get(i);
 
@@ -209,6 +210,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
             }
 
         List<ItemStack> stacks = new ArrayList<>(storage.getStacks());
+
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack stack = stacks.get(i);
 
@@ -222,6 +224,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
                 return false;
             }
         }
+
         return true;
     }
 
@@ -304,6 +307,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
             }
 
         List<FluidStack> stacks = new ArrayList<>(storage.getStacks());
+
         for (int i = 0; i < stacks.size(); ++i) {
             FluidStack stack = stacks.get(i);
 
@@ -317,6 +321,7 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
                 return false;
             }
         }
+
         return true;
     }
 
@@ -463,14 +468,6 @@ public class DiskManipulatorNetworkNode extends NetworkNode implements IComparab
 
     public IItemHandler getUpgrades() {
         return upgrades;
-    }
-
-    public IStorageDisk[] getItemDisks() {
-        return itemDisks;
-    }
-
-    public IStorageDisk[] getFluidDisks() {
-        return fluidDisks;
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.refinedmods.refinedstorage.inventory.item.BaseItemHandler;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileInventoryListener implements InventoryListener<BaseItemHandler> {
-    private TileEntity tile;
+    private final TileEntity tile;
 
     public TileInventoryListener(TileEntity tile) {
         this.tile = tile;

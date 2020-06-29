@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SecurityCard implements ISecurityCard {
-    private UUID owner;
-    private Map<Permission, Boolean> permissions = new HashMap<>();
+    private final UUID owner;
+    private final Map<Permission, Boolean> permissions = new HashMap<>();
 
     public SecurityCard(@Nullable UUID owner) {
         this.owner = owner;

@@ -162,7 +162,7 @@ public final class RenderUtils {
 
             if (needsWrap) {
                 int wrappedTooltipWidth = 0;
-                List<String> wrappedTextLines = new ArrayList<String>();
+                List<String> wrappedTextLines = new ArrayList<>();
                 for (int i = 0; i < textLines.size(); i++) {
                     String textLine = textLines.get(i);
                     List<String> wrappedLine = font.listFormattedStringToWidth(textLine, tooltipTextWidth);
@@ -229,7 +229,7 @@ public final class RenderUtils {
 
             IRenderTypeBuffer.Impl renderType = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
             MatrixStack textStack = new MatrixStack();
-            textStack.translate(0.0D, 0.0D, (double) zLevel);
+            textStack.translate(0.0D, 0.0D, zLevel);
             Matrix4f textLocation = textStack.getLast().getMatrix();
 
             int tooltipTop = tooltipY;
@@ -260,7 +260,7 @@ public final class RenderUtils {
 
                     // FontRenderer#drawStringWithShadow - call to func_228078_a_ (private)
                     MatrixStack smallTextStack = new MatrixStack();
-                    smallTextStack.translate(0.0D, 0.0D, (double) zLevel);
+                    smallTextStack.translate(0.0D, 0.0D, zLevel);
                     smallTextStack.scale(textScale, textScale, 1);
 
                     IRenderTypeBuffer.Impl lvt_7_1_ = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());

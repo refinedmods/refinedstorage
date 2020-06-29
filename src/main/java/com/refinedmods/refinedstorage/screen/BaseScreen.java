@@ -46,7 +46,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
     private static final Map<Class, Queue<Consumer>> ACTIONS = new HashMap<>();
 
-    private Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
     private int sideButtonY;
 
@@ -155,9 +155,7 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
 
         renderForeground(mouseX, mouseY);
 
-        for (int i = 0; i < this.buttons.size(); ++i) {
-            Widget button = buttons.get(i);
-
+        for (Widget button : this.buttons) {
             if (button instanceof SideButton && button.isHovered()) {
                 renderTooltip(mouseX, mouseY, ((SideButton) button).getTooltip());
             }
@@ -262,15 +260,13 @@ public abstract class BaseScreen<T extends Container> extends ContainerScreen<T>
         return button;
     }
 
-    public SideButton addSideButton(SideButton button) {
+    public void addSideButton(SideButton button) {
         button.x = guiLeft + -SideButton.WIDTH - 2;
         button.y = guiTop + sideButtonY;
 
         sideButtonY += SideButton.HEIGHT + 2;
 
         this.addButton(button);
-
-        return button;
     }
 
     public void bindTexture(String namespace, String filenameInTexturesFolder) {

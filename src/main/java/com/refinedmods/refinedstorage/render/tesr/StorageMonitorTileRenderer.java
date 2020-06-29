@@ -97,6 +97,7 @@ public class StorageMonitorTileRenderer extends TileEntityRenderer<StorageMonito
         matrixStack.pop();
     }
 
+    @SuppressWarnings("deprecation")
     private void renderItem(MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, Direction direction, float rotation, int light, ItemStack itemStack) {
         matrixStack.push();
 

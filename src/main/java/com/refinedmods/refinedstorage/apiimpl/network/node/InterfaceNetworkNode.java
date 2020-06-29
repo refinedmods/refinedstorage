@@ -29,14 +29,14 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable {
 
     private static final String NBT_COMPARE = "Compare";
 
-    private BaseItemHandler importItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final BaseItemHandler importItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
-    private BaseItemHandler exportFilterItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
-    private BaseItemHandler exportItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final BaseItemHandler exportFilterItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
+    private final BaseItemHandler exportItems = new BaseItemHandler(9).addListener(new NetworkNodeInventoryListener(this));
 
-    private IItemHandler items = new ProxyItemHandler(importItems, exportItems);
+    private final IItemHandler items = new ProxyItemHandler(importItems, exportItems);
 
-    private UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING)
+    private final UpgradeItemHandler upgrades = (UpgradeItemHandler) new UpgradeItemHandler(4, UpgradeItem.Type.SPEED, UpgradeItem.Type.STACK, UpgradeItem.Type.CRAFTING)
         .addListener(new NetworkNodeInventoryListener(this));
 
     private int compare = IComparer.COMPARE_NBT;

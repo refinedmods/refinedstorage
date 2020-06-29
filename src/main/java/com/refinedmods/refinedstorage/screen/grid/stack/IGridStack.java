@@ -29,7 +29,7 @@ public interface IGridStack {
 
     String getFormattedFullQuantity();
 
-    void draw(BaseScreen gui, int x, int y);
+    void draw(BaseScreen<?> screen, int x, int y);
 
     Object getIngredient();
 

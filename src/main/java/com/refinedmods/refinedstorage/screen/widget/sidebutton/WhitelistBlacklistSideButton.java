@@ -8,9 +8,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 public class WhitelistBlacklistSideButton extends SideButton {
-    private TileDataParameter<Integer, ?> parameter;
+    private final TileDataParameter<Integer, ?> parameter;
 
-    public WhitelistBlacklistSideButton(BaseScreen screen, TileDataParameter<Integer, ?> parameter) {
+    public WhitelistBlacklistSideButton(BaseScreen<?> screen, TileDataParameter<Integer, ?> parameter) {
         super(screen);
 
         this.parameter = parameter;

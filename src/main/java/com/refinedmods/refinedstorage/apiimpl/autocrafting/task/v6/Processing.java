@@ -48,6 +48,7 @@ class Processing extends Craft {
         this.itemsToDisplay = CraftingTask.readItemStackList(tag.getList(NBT_ITEMS_TO_DISPLAY, Constants.NBT.TAG_COMPOUND));
     }
 
+    @Override
     void finishCalculation() {
         this.totalQuantity = quantity;
         updateItemsToDisplay();

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PortableFluidGridStorageCacheListener implements IStorageCacheListener<FluidStack> {
-    private IPortableGrid portableGrid;
-    private ServerPlayerEntity player;
+    private final IPortableGrid portableGrid;
+    private final ServerPlayerEntity player;
 
     public PortableFluidGridStorageCacheListener(IPortableGrid portableGrid, ServerPlayerEntity player) {
         this.portableGrid = portableGrid;
