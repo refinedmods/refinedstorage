@@ -30,7 +30,6 @@ public class SaveDataManager {
     private static final String NBT_MINECRAFT_DATA = "data"; //native minecraft nbt string
     private static final String NBT_MINECRAFT_DATA_VERSION = "DataVersion"; //native minecraft nbt string
 
-
     public static void read(ServerWorld world) {
         DimensionType type = world.getDimension().getType();
         if (!worldSaveData.containsKey(type)) {
@@ -110,7 +109,6 @@ public class SaveDataManager {
     }
 
     private static CompoundNBT readTagFromFile(ServerWorld world, String fileName) {
-
         String dataDirectory = world.getSaveHandler().getWorldDirectory().getPath() + "/data";
         File backupFile = new File(dataDirectory, fileName + "_backup");
         File file = new File(dataDirectory, fileName);

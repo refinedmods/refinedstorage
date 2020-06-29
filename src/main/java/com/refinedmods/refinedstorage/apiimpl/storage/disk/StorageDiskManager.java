@@ -88,7 +88,6 @@ public class StorageDiskManager implements IStorageDiskManager, ISaveData {
         dirty = true;
     }
 
-
     @Override
     public void read(CompoundNBT nbt, ServerWorld world) {
         if (nbt.contains(NBT_DISKS)) {

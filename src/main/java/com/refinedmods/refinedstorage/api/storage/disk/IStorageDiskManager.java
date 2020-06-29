@@ -52,5 +52,4 @@ public interface IStorageDiskManager {
      * Marks this manager for saving.
      */
     void markForSaving();
-
 }
