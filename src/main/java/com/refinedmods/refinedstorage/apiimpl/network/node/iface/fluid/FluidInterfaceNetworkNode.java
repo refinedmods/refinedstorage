@@ -114,9 +114,8 @@ public class FluidInterfaceNetworkNode extends NetworkNode {
             } else {
                 int delta = got.isEmpty() ? wanted.getAmount() : (wanted.getAmount() - got.getAmount());
 
-                // fluid iface => 1000 mB -> dan crafting starten voor 1000 mb -> dan veranderen naar 500 mb -> 500 mb in fluid iface en 1000 in system?!
                 if (delta > 0) {
-                    if (true) {
+                    if (true) { // TODO: Fix toggle.
                         ICraftingTask task = network.getCraftingManager().request(this, wanted, delta);
                         if (task != null) {
                             task.addOutputInterceptor(new FluidInterfaceOutputInterceptor(wanted, world.getDimension().getType(), pos));

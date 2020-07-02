@@ -117,6 +117,7 @@ public class InterfaceNetworkNode extends NetworkNode implements IComparable, IC
                             return !(s instanceof ItemExternalStorage) || !((ItemExternalStorage) s).isConnectedToInterface();
                         });
 
+                        // TODO iface => 1000 -> dan crafting starten voor 1000 -> dan veranderen naar 500 -> 500 in iface en 1000 in system?!
                         if (!result.isEmpty()) {
                             if (exportItems.getStackInSlot(i).isEmpty()) {
                                 exportItems.setStackInSlot(i, result);
