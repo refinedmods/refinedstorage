@@ -63,20 +63,20 @@ public class InterfaceOutputInterceptor implements IOutputInterceptor {
 
             ItemStack got = iface.getExportItems().getStackInSlot(slot);
 
-            int toInsert = wanted.getCount() - got.getCount();
-            if (toInsert > stack.getCount()) {
-                toInsert = stack.getCount();
+            int needed = wanted.getCount() - got.getCount();
+            if (needed > stack.getCount()) {
+                needed = stack.getCount();
             }
 
-            if (toInsert > 0) {
+            if (needed > 0) {
                 if (got.isEmpty()) {
-                    iface.getExportItems().setStackInSlot(slot, ItemHandlerHelper.copyStackWithSize(stack, toInsert));
+                    iface.getExportItems().setStackInSlot(slot, ItemHandlerHelper.copyStackWithSize(stack, needed));
                 } else {
-                    iface.getExportItems().getStackInSlot(slot).grow(toInsert);
+                    iface.getExportItems().getStackInSlot(slot).grow(needed);
                     iface.markDirty();
                 }
 
-                stack.shrink(toInsert);
+                stack.shrink(needed);
             }
         }
 

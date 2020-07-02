@@ -69,26 +69,21 @@ public class FluidInterfaceOutputInterceptor implements IOutputInterceptor {
 
             FluidStack got = fluidInterface.getTankOut().getFluid();
 
-            int toInsertIntoNetwork = 0;
-            int toInsertIntoInventory = stack.getAmount();
-
             int needed = wanted.getAmount() - got.getAmount();
-
-            if (toInsertIntoInventory > needed) {
-                toInsertIntoNetwork = toInsertIntoInventory - needed;
-                toInsertIntoInventory = needed;
+            if (needed > stack.getAmount()) {
+                needed = stack.getAmount();
             }
 
-            if (toInsertIntoInventory > 0) {
+            if (needed > 0) {
                 if (got.isEmpty()) {
-                    fluidInterface.getTankOut().setFluid(StackUtils.copy(stack, toInsertIntoInventory));
+                    fluidInterface.getTankOut().setFluid(StackUtils.copy(stack, needed));
                 } else {
-                    fluidInterface.getTankOut().getFluid().grow(toInsertIntoInventory);
+                    fluidInterface.getTankOut().getFluid().grow(needed);
                     fluidInterface.markDirty();
                 }
-            }
 
-            stack = StackUtils.copy(stack, toInsertIntoNetwork);
+                stack.shrink(needed);
+            }
         }
 
         return stack;
